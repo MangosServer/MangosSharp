@@ -1,0 +1,350 @@
+﻿// 
+// Copyright (C) 2013-2020 getMaNGOS <https://getmangos.eu>
+// 
+// This program is free software. You can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation. either version 2 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY. Without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// 
+
+// Note: Temp place holder
+using System;
+using System.Data;
+using Mangos.Common.Enums.Global;
+using Mangos.Common.Enums.Player;
+using Microsoft.VisualBasic;
+
+namespace Mangos.Common.Globals
+{
+    public class Functions
+    {
+        private readonly global::Global_Constants _Global_Constants;
+
+        public Functions(global::Global_Constants globalConstants)
+        {
+            _Global_Constants = globalConstants;
+        }
+
+        public bool GuidIsCreature(ulong guid)
+        {
+            if (GuidHigh2(guid) == _Global_Constants.GUID_UNIT)
+                return true;
+            return false;
+        }
+
+        public bool GuidIsPet(ulong guid)
+        {
+            if (GuidHigh2(guid) == _Global_Constants.GUID_PET)
+                return true;
+            return false;
+        }
+
+        public bool GuidIsItem(ulong guid)
+        {
+            if (GuidHigh2(guid) == _Global_Constants.GUID_ITEM)
+                return true;
+            return false;
+        }
+
+        public bool GuidIsGameObject(ulong guid)
+        {
+            if (GuidHigh2(guid) == _Global_Constants.GUID_GAMEOBJECT)
+                return true;
+            return false;
+        }
+
+        public bool GuidIsDnyamicObject(ulong guid)
+        {
+            if (GuidHigh2(guid) == _Global_Constants.GUID_DYNAMICOBJECT)
+                return true;
+            return false;
+        }
+
+        public bool GuidIsTransport(ulong guid)
+        {
+            if (GuidHigh2(guid) == _Global_Constants.GUID_TRANSPORT)
+                return true;
+            return false;
+        }
+
+        public bool GuidIsMoTransport(ulong guid)
+        {
+            if (GuidHigh2(guid) == _Global_Constants.GUID_MO_TRANSPORT)
+                return true;
+            return false;
+        }
+
+        public bool GuidIsCorpse(ulong guid)
+        {
+            if (GuidHigh2(guid) == _Global_Constants.GUID_CORPSE)
+                return true;
+            return false;
+        }
+
+        public bool GuidIsPlayer(ulong guid)
+        {
+            if (GuidHigh2(guid) == _Global_Constants.GUID_PLAYER)
+                return true;
+            return false;
+        }
+
+        public ulong GuidHigh2(ulong guid)
+        {
+            return guid & _Global_Constants.GUID_MASK_HIGH;
+        }
+
+        public uint GuidHigh(ulong guid)
+        {
+            return (uint)((guid & _Global_Constants.GUID_MASK_HIGH) >> 32UL);
+        }
+
+        public uint GuidLow(ulong guid)
+        {
+            return (uint)(guid & (ulong)_Global_Constants.GUID_MASK_LOW);
+        }
+
+        public int GetShapeshiftModel(ShapeshiftForm form, Races race, int model)
+        {
+            switch (form)
+            {
+                case Global.ShapeshiftForm.FORM_CAT:
+                    {
+                        if (race == Races.RACE_NIGHT_ELF)
+                            return 892;
+                        if (race == Races.RACE_TAUREN)
+                            return 8571;
+                        break;
+                    }
+
+                case Global.ShapeshiftForm.FORM_BEAR:
+                case Global.ShapeshiftForm.FORM_DIREBEAR:
+                    {
+                        if (race == Races.RACE_NIGHT_ELF)
+                            return 2281;
+                        if (race == Races.RACE_TAUREN)
+                            return 2289;
+                        break;
+                    }
+
+                case Global.ShapeshiftForm.FORM_MOONKIN:
+                    {
+                        if (race == Races.RACE_NIGHT_ELF)
+                            return 15374;
+                        if (race == Races.RACE_TAUREN)
+                            return 15375;
+                        break;
+                    }
+
+                case Global.ShapeshiftForm.FORM_TRAVEL:
+                    {
+                        return 632;
+                    }
+
+                case Global.ShapeshiftForm.FORM_AQUA:
+                    {
+                        return 2428;
+                    }
+
+                case Global.ShapeshiftForm.FORM_FLIGHT:
+                    {
+                        if (race == Races.RACE_NIGHT_ELF)
+                            return 20857;
+                        if (race == Races.RACE_TAUREN)
+                            return 20872;
+                        break;
+                    }
+
+                case Global.ShapeshiftForm.FORM_SWIFT:
+                    {
+                        if (race == Races.RACE_NIGHT_ELF)
+                            return 21243;
+                        if (race == Races.RACE_TAUREN)
+                            return 21244;
+                        break;
+                    }
+
+                case Global.ShapeshiftForm.FORM_GHOUL:
+                    {
+                        if (race == Races.RACE_NIGHT_ELF)
+                            return 10045;
+                        else
+                            return model;
+                        break;
+                    }
+
+                case Global.ShapeshiftForm.FORM_CREATUREBEAR:
+                    {
+                        return 902;
+                    }
+
+                case Global.ShapeshiftForm.FORM_GHOSTWOLF:
+                    {
+                        return 4613;
+                    }
+
+                case Global.ShapeshiftForm.FORM_SPIRITOFREDEMPTION:
+                    {
+                        return 12824;
+                    }
+
+                default:
+                    {
+                        return model;
+                    }
+                    // Case ShapeshiftForm.FORM_CREATURECAT
+                    // Case ShapeshiftForm.FORM_AMBIENT
+                    // Case ShapeshiftForm.FORM_SHADOW
+            }
+
+            return default;
+        }
+
+        public ManaTypes GetShapeshiftManaType(ShapeshiftForm form, ManaTypes manaType)
+        {
+            switch (form)
+            {
+                case Global.ShapeshiftForm.FORM_CAT:
+                case Global.ShapeshiftForm.FORM_STEALTH:
+                    {
+                        return Global.ManaTypes.TYPE_ENERGY;
+                    }
+
+                case Global.ShapeshiftForm.FORM_AQUA:
+                case Global.ShapeshiftForm.FORM_TRAVEL:
+                case Global.ShapeshiftForm.FORM_MOONKIN:
+                case var @case when @case == Global.ShapeshiftForm.FORM_MOONKIN:
+                case var case1 when case1 == Global.ShapeshiftForm.FORM_MOONKIN:
+                case Global.ShapeshiftForm.FORM_SPIRITOFREDEMPTION:
+                case Global.ShapeshiftForm.FORM_FLIGHT:
+                case Global.ShapeshiftForm.FORM_SWIFT:
+                    {
+                        return Global.ManaTypes.TYPE_MANA;
+                    }
+
+                case Global.ShapeshiftForm.FORM_BEAR:
+                case Global.ShapeshiftForm.FORM_DIREBEAR:
+                    {
+                        return Global.ManaTypes.TYPE_RAGE;
+                    }
+
+                default:
+                    {
+                        return manaType;
+                    }
+            }
+        }
+
+        public bool CheckRequiredDbVersion(ref SQL thisDatabase, ServerDb thisServerDb)
+        {
+            var mySqlQuery = new DataTable();
+            // thisDatabase.Query(String.Format("SELECT column_name FROM information_schema.columns WHERE table_name='" & thisTableName & "'  AND TABLE_SCHEMA='" & thisDatabase.SQLDBName & "'"), mySqlQuery)
+            thisDatabase.Query("SELECT `version`,`structure`,`content` FROM db_version ORDER BY VERSION DESC, structure DESC, content DESC LIMIT 0,1", ref mySqlQuery);
+            // Check database version against code version
+
+            int coreDbVersion = 0;
+            int coreDbStructure = 0;
+            int coreDbContent = 0;
+            switch (thisServerDb)
+            {
+                case Global.ServerDb.Realm:
+                    {
+                        coreDbVersion = _Global_Constants.RevisionDbRealmVersion;
+                        coreDbStructure = _Global_Constants.RevisionDbRealmStructure;
+                        coreDbContent = _Global_Constants.RevisionDbRealmContent;
+                        break;
+                    }
+
+                case Global.ServerDb.Character:
+                    {
+                        coreDbVersion = _Global_Constants.RevisionDbCharactersVersion;
+                        coreDbStructure = _Global_Constants.RevisionDbCharactersStructure;
+                        coreDbContent = _Global_Constants.RevisionDbCharactersContent;
+                        break;
+                    }
+
+                case Global.ServerDb.World:
+                    {
+                        coreDbVersion = _Global_Constants.RevisionDbMangosVersion;
+                        coreDbStructure = _Global_Constants.RevisionDbMangosStructure;
+                        coreDbContent = _Global_Constants.RevisionDbMangosContent;
+                        break;
+                    }
+            }
+
+            if (mySqlQuery.Rows.Count > 0)
+            {
+                // For Each row As DataRow In mySqlQuery.Rows
+                // dtVersion = row.Item("column_name").ToString
+                // Next
+                int dbVersion = Convert.ToInt32(mySqlQuery.Rows[0]["version"].ToString());
+                int dbStructure = Convert.ToInt32(mySqlQuery.Rows[0]["structure"].ToString());
+                int dbContent = Convert.ToInt32(mySqlQuery.Rows[0]["content"].ToString());
+
+                // NOTES: Version or Structure mismatch is a hard error, Content mismatch as a warning
+
+                if (dbVersion == coreDbVersion & dbStructure == coreDbStructure & dbContent == coreDbContent) // Full Match
+                {
+                    Console.WriteLine("[{0}] Db Version Matched", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    return true;
+                }
+                else if (dbVersion == coreDbVersion & dbStructure == coreDbStructure & dbContent != coreDbContent) // Content MisMatch, only a warning
+                {
+                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] -- WARNING: CONTENT VERSION MISMATCH                        --", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}]  Your Database " + thisDatabase.SQLDBName + " requires updating.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}]  You have: Rev{1}.{2}.{3}, however the core expects Rev{4}.{5}.{6}", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent);
+                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}]  The server will run, but you may be missing some database fixes", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    return true;
+                }
+                else // Oh no they do not match
+                {
+                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] -- FATAL ERROR: VERSION MISMATCH                            --", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}]  Your Database " + thisDatabase.SQLDBName + " requires updating.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}]  You have: Rev{1}.{2}.{3}, however the core expects Rev{4}.{5}.{6}", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent);
+                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}]  The server is unable to run until the required updates are run", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] You must apply all updates after Rev{1}.{2}.{3} ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), coreDbVersion, coreDbStructure, coreDbContent);
+                    Console.WriteLine("[{0}] These updates are included in the sql/updates folder.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                    // Console.WriteLine("*************************")
+                    // Console.WriteLine("* Press any key to exit *")
+                    // Console.WriteLine("*************************")
+                    // Console.ReadKey()
+                    return false;
+                }
+            }
+            else
+            {
+                Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                Console.WriteLine("[{0}] The table `db_version` in database " + thisDatabase.SQLDBName + " is missing", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                Console.WriteLine("[{0}] MaNGOSVB cannot find the version info required, please update", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                Console.WriteLine("[{0}] your database to check that the db is up to date.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                Console.WriteLine("[{0}] your database to Rev{1}.{2}.{3} ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), coreDbVersion, coreDbStructure, coreDbContent);
+                // Console.WriteLine("*************************")
+                // Console.WriteLine("* Press any key to exit *")
+                // Console.WriteLine("*************************")
+                // Console.ReadKey()
+                return false;
+            }
+        }
+    }
+}

@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  realm:
+    image: mangosvb/realm
+    container_name: realm
+    ports: 
+      - 3724:3724
+    build: 
+      context: ..
+      dockerfile: ./.docker/RealmServer.Dockerfile
+    networks:
+      - mangosvb
+
+  cluster:
+    image: mangosvb/cluster
+    container_name: cluster
+    ports: 
+      - 8085:8085
+    build: 
+      context: ..
+      dockerfile: ./.docker/WorldCluster.Dockerfile
+    networks:
+      - mangosvb
+  
+  world:
+    image: mangosvb/world
+    container_name: world
+    build: 
+      context: ..
+      dockerfile: ./.docker/WorldServer.Dockerfile
+    networks:
+      - mangosvb
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    volumes:
+      - mangosvb:/var/lib/mysql
+    ports: 
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 'rootpass'
+    networks:
+      - mangosvb
+
+volumes:
+  mangosvb:
+    name: mangosvb
+
+networks:
+  mangosvb:

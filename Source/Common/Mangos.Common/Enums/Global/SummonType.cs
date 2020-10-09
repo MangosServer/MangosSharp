@@ -1,0 +1,26 @@
+﻿
+namespace Mangos.Common.Enums.Global
+{
+    public enum SummonType
+    {
+        SUMMON_TYPE_CRITTER = 41,
+        SUMMON_TYPE_GUARDIAN = 61,
+        SUMMON_TYPE_TOTEM_SLOT1 = 63,
+        SUMMON_TYPE_WILD = 64,
+        SUMMON_TYPE_POSESSED = 65,
+        SUMMON_TYPE_DEMON = 66,
+        SUMMON_TYPE_SUMMON = 67,
+        SUMMON_TYPE_TOTEM_SLOT2 = 81,
+        SUMMON_TYPE_TOTEM_SLOT3 = 82,
+        SUMMON_TYPE_TOTEM_SLOT4 = 83,
+        SUMMON_TYPE_TOTEM = 121,
+        SUMMON_TYPE_UNKNOWN3 = 181,
+        SUMMON_TYPE_UNKNOWN4 = 187,
+        SUMMON_TYPE_UNKNOWN1 = 247,
+        SUMMON_TYPE_UNKNOWN5 = 307,
+        SUMMON_TYPE_CRITTER2 = 407,
+        SUMMON_TYPE_UNKNOWN6 = 409,
+        SUMMON_TYPE_UNKNOWN2 = 427,
+        SUMMON_TYPE_POSESSED2 = 428
+    }
+}

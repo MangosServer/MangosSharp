@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../Mangos.props" />
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>DBCExtractor</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MpqTool.netstandard" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.vbproj" />
+  </ItemGroup>
+</Project>

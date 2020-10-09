@@ -1,0 +1,15 @@
+﻿
+namespace Mangos.Common.Enums.Item
+{
+    public enum ITEM_QUALITY_NAMES : byte
+    {
+        ITEM_QUALITY_POOR_GREY = 0,
+        ITEM_QUALITY_NORMAL_WHITE = 1,
+        ITEM_QUALITY_UNCOMMON_GREEN = 2,
+        ITEM_QUALITY_RARE_BLUE = 3,
+        ITEM_QUALITY_EPIC_PURPLE = 4,
+        ITEM_QUALITY_LEGENDARY_ORANGE = 5,
+        ITEM_QUALITY_ARTIFACT_LIGHT_YELLOW = 6,
+        ITEM_QUALITY_HEIRLOOM = 7
+    }
+}

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../Mangos.props" />
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>WorldServer</AssemblyName>
+    <ApplicationIcon>mvb0___vanilla_256x256.ico</ApplicationIcon>
+    <OutputPath>..\..\..\Bin\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.0.0" />
+    <PackageReference Include="System.CodeDom" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.vbproj" />
+    <ProjectReference Include="..\..\Common\Mangos.SignalR\Mangos.SignalR.vbproj" />
+  </ItemGroup>
+</Project>
