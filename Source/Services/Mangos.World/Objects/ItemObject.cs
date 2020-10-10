@@ -35,6 +35,7 @@ using Mangos.World.Server;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using ObjectType = Mangos.Common.Globals.ObjectType;
 
 namespace Mangos.World.Objects
 {
@@ -78,73 +79,73 @@ namespace Mangos.World.Objects
         {
             if (ItemInfo.ContainerSlots > 0)
             {
-                update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_GUID, GUID);
-                update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, ObjectType.TYPE_CONTAINER + ObjectType.TYPE_OBJECT);
-                update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_ENTRY, ItemEntry);
-                update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_SCALE_X, 1.0f);
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_OWNER, OwnerGUID);
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_CONTAINED, OwnerGUID);
+                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
+                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_TYPE, (int)ObjectType.TYPE_CONTAINER, (int)ObjectType.TYPE_OBJECT);
+                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, ItemEntry);
+                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, 1.0f);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_OWNER, OwnerGUID);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_CONTAINED, OwnerGUID);
                 if (CreatorGUID > 0m)
-                    update.SetUpdateFlag(EItemFields.ITEM_FIELD_CREATOR, CreatorGUID);
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_GIFTCREATOR, GiftCreatorGUID);
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_STACK_COUNT, StackCount);
+                    update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_CREATOR, CreatorGUID);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_GIFTCREATOR, GiftCreatorGUID);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_STACK_COUNT, StackCount);
                 // Update.SetUpdateFlag(EItemFields.ITEM_FIELD_DURATION, 0)
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_FLAGS, _flags);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_FLAGS, _flags);
                 // Update.SetUpdateFlag(EItemFields.ITEM_FIELD_ITEM_TEXT_ID, ItemText)
 
-                update.SetUpdateFlag(EContainerFields.CONTAINER_FIELD_NUM_SLOTS, ItemInfo.ContainerSlots);
+                update.SetUpdateFlag((int)EContainerFields.CONTAINER_FIELD_NUM_SLOTS, ItemInfo.ContainerSlots);
                 // DONE: Here list in bag items
                 for (byte i = 0; i <= 35; i++)
                 {
                     if (Items.ContainsKey(i))
                     {
-                        update.SetUpdateFlag(EContainerFields.CONTAINER_FIELD_SLOT_1 + (int)i * 2, Conversions.ToLong(Items[i].GUID));
+                        update.SetUpdateFlag((int)(EContainerFields.CONTAINER_FIELD_SLOT_1 + (i * 2)), Conversions.ToLong(Items[i].GUID));
                     }
                     else
                     {
-                        update.SetUpdateFlag(EContainerFields.CONTAINER_FIELD_SLOT_1 + (int)i * 2, 0);
+                        update.SetUpdateFlag((int)(EContainerFields.CONTAINER_FIELD_SLOT_1 + (i * 2)), 0);
                     }
                 }
             }
             else
             {
-                update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_GUID, GUID);
-                update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, ObjectType.TYPE_ITEM + ObjectType.TYPE_OBJECT);
-                update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_ENTRY, ItemEntry);
-                update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_SCALE_X, 1.0f);
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_OWNER, OwnerGUID);
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_CONTAINED, OwnerGUID);
+                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
+                update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, (int)ObjectType.TYPE_ITEM, (int)ObjectType.TYPE_OBJECT);
+                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, ItemEntry);
+                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, (float)1.0f);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_OWNER, OwnerGUID);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_CONTAINED, OwnerGUID);
                 if (CreatorGUID > 0m)
-                    update.SetUpdateFlag(EItemFields.ITEM_FIELD_CREATOR, CreatorGUID);
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_GIFTCREATOR, GiftCreatorGUID);
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_STACK_COUNT, StackCount);
+                    update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_CREATOR, CreatorGUID);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_GIFTCREATOR, GiftCreatorGUID);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_STACK_COUNT, StackCount);
                 // Update.SetUpdateFlag(EItemFields.ITEM_FIELD_DURATION, 0)
                 for (int i = 0; i <= 4; i++)
                 {
                     if (ItemInfo.Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.USE || ItemInfo.Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.NO_DELAY_USE)
                     {
-                        update.SetUpdateFlag(EItemFields.ITEM_FIELD_SPELL_CHARGES + i, ChargesLeft);
+                        update.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_SPELL_CHARGES + i), ChargesLeft);
                     }
                     else
                     {
-                        update.SetUpdateFlag(EItemFields.ITEM_FIELD_SPELL_CHARGES + i, -1);
+                        update.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_SPELL_CHARGES + i), -1);
                     }
                 }
 
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_FLAGS, _flags);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_FLAGS, _flags);
 
                 // Update.SetUpdateFlag(EItemFields.ITEM_FIELD_PROPERTY_SEED, 0)
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_RANDOM_PROPERTIES_ID, RandomProperties);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_RANDOM_PROPERTIES_ID, RandomProperties);
                 foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> enchant in Enchantments)
                 {
-                    update.SetUpdateFlag(EItemFields.ITEM_FIELD_ENCHANTMENT + (int)enchant.Key * 3, enchant.Value.ID);
-                    update.SetUpdateFlag(EItemFields.ITEM_FIELD_ENCHANTMENT + (int)enchant.Key * 3 + 1, enchant.Value.Duration);
-                    update.SetUpdateFlag(EItemFields.ITEM_FIELD_ENCHANTMENT + (int)enchant.Key * 3 + 2, enchant.Value.Charges);
+                    update.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + enchant.Key * 3), enchant.Value.ID);
+                    update.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + enchant.Key * 3 + 1), enchant.Value.Duration);
+                    update.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + enchant.Key * 3 + 2), enchant.Value.Charges);
                 }
 
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_ITEM_TEXT_ID, ItemText);
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_DURABILITY, Durability);
-                update.SetUpdateFlag(EItemFields.ITEM_FIELD_MAXDURABILITY, WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_ITEM_TEXT_ID, ItemText);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_DURABILITY, Durability);
+                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_MAXDURABILITY, WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability);
             }
         }
 
@@ -215,7 +216,7 @@ namespace Mangos.World.Objects
                     return 255;
                 {
                     var withBlock = WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID];
-                    for (byte i = InventorySlots.INVENTORY_SLOT_BAG_1, loopTo = InventorySlots.INVENTORY_SLOT_BAG_END - 1; i <= loopTo; i++)
+                    for (byte i = (byte)InventorySlots.INVENTORY_SLOT_BAG_1, loopTo = (byte)(InventorySlots.INVENTORY_SLOT_BAG_END - 1); i <= loopTo; i++)
                     {
                         if (withBlock.Items.ContainsKey(i))
                         {
@@ -243,7 +244,7 @@ namespace Mangos.World.Objects
                     return -1;
                 {
                     var withBlock = WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID];
-                    for (byte i = EquipmentSlots.EQUIPMENT_SLOT_START, loopTo = InventoryPackSlots.INVENTORY_SLOT_ITEM_END - 1; i <= loopTo; i++)
+                    for (byte i = (byte)EquipmentSlots.EQUIPMENT_SLOT_START, loopTo = (byte)(InventoryPackSlots.INVENTORY_SLOT_ITEM_END - 1); i <= loopTo; i++)
                     {
                         if (withBlock.Items.ContainsKey(i))
                         {
@@ -252,7 +253,7 @@ namespace Mangos.World.Objects
                         }
                     }
 
-                    for (byte i = KeyRingSlots.KEYRING_SLOT_START, loopTo1 = KeyRingSlots.KEYRING_SLOT_END - 1; i <= loopTo1; i++)
+                    for (byte i = (byte)KeyRingSlots.KEYRING_SLOT_START, loopTo1 = (byte)(KeyRingSlots.KEYRING_SLOT_END - 1); i <= loopTo1; i++)
                     {
                         if (withBlock.Items.ContainsKey(i))
                         {
@@ -261,7 +262,7 @@ namespace Mangos.World.Objects
                         }
                     }
 
-                    for (byte i = InventorySlots.INVENTORY_SLOT_BAG_1, loopTo2 = InventorySlots.INVENTORY_SLOT_BAG_END - 1; i <= loopTo2; i++)
+                    for (byte i = (byte)InventorySlots.INVENTORY_SLOT_BAG_1, loopTo2 = (byte)(InventorySlots.INVENTORY_SLOT_BAG_END - 1); i <= loopTo2; i++)
                     {
                         if (withBlock.Items.ContainsKey(i))
                         {
@@ -559,8 +560,8 @@ namespace Mangos.World.Objects
             packet.AddInt32(1);      // Operations.Count
             packet.AddInt8(0);
             var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
-            tmpUpdate.SetUpdateFlag(EItemFields.ITEM_FIELD_DURABILITY, Durability);
-            tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
+            tmpUpdate.SetUpdateFlag((int)EItemFields.ITEM_FIELD_DURABILITY, Durability);
+            tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
             tmpUpdate.Dispose();
             client.Send(ref packet);
         }
@@ -576,9 +577,9 @@ namespace Mangos.World.Objects
                         lostDurability = DataStores.WS_DBCDatabase.DurabilityCosts_MAX;
                     int subClass = 0;
                     if (ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON)
-                        subClass = ItemInfo.SubClass;
+                        subClass = (int)ItemInfo.SubClass;
                     else
-                        subClass = ItemInfo.SubClass + 21;
+                        subClass = (int)(ItemInfo.SubClass + 21);
                     uint durabilityCost = (uint)(lostDurability * (WorldServiceLocator._WS_DBCDatabase.DurabilityCosts[ItemInfo.Level, subClass] / 40d * 100d));
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Durability cost: {0}", durabilityCost);
                     return durabilityCost;
@@ -629,7 +630,7 @@ namespace Mangos.World.Objects
                                     {
                                         case var @case when @case == SpellEffects_Names.SPELL_EFFECT_APPLY_AURA:
                                             {
-                                                WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[(int)j].ApplyAuraIndex].Invoke(ref objCharacter, ref objCharacter, ref spellInfo.SpellEffects[(int)j], spellInfo.ID, 1, AuraAction.AURA_ADD);
+                                                WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[j].ApplyAuraIndex].Invoke(ref (WS_Base.BaseUnit)objCharacter, ref (WS_Base.BaseObject)objCharacter, ref spellInfo.SpellEffects[j], spellInfo.ID, 1, AuraAction.AURA_ADD);
                                                 break;
                                             }
                                     }
@@ -665,7 +666,7 @@ namespace Mangos.World.Objects
                                                 var argTarget = tmp[OwnerGUID];
                                                 var tmp1 = WorldServiceLocator._WorldServer.CHARACTERs;
                                                 var argCaster = tmp1[OwnerGUID];
-                                                WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[(int)j].ApplyAuraIndex].Invoke(ref argTarget, ref argCaster, ref spellInfo.SpellEffects[(int)j], spellInfo.ID, 1, AuraAction.AURA_REMOVE);
+                                                WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[j].ApplyAuraIndex].Invoke(ref (WS_Base.BaseUnit)argTarget, ref (WS_Base.BaseObject)argCaster, ref spellInfo.SpellEffects[j], spellInfo.ID, 1, AuraAction.AURA_REMOVE);
                                                 tmp[OwnerGUID] = argTarget;
                                                 tmp1[OwnerGUID] = argCaster;
                                                 break;
@@ -694,10 +695,10 @@ namespace Mangos.World.Objects
                 packet.AddInt32(1);      // Operations.Count
                 packet.AddInt8(0);
                 var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
-                tmpUpdate.SetUpdateFlag(EItemFields.ITEM_FIELD_ENCHANTMENT + (int)slot * 3, 0);
-                tmpUpdate.SetUpdateFlag(EItemFields.ITEM_FIELD_ENCHANTMENT + (int)slot * 3 + 1, 0);
-                tmpUpdate.SetUpdateFlag(EItemFields.ITEM_FIELD_ENCHANTMENT + (int)slot * 3 + 2, 0);
-                tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
+                tmpUpdate.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + slot * 3), 0);
+                tmpUpdate.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + slot * 3 + 1), 0);
+                tmpUpdate.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + slot * 3 + 2), 0);
+                tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
                 WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID].client.Send(ref packet);
                 packet.Dispose();
                 tmpUpdate.Dispose();
@@ -720,7 +721,7 @@ namespace Mangos.World.Objects
                 packet.AddInt32(1);      // Operations.Count
                 packet.AddInt8(0);
                 var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
-                tmpUpdate.SetUpdateFlag(EItemFields.ITEM_FIELD_FLAGS, _flags);
+                tmpUpdate.SetUpdateFlag((int)EItemFields.ITEM_FIELD_FLAGS, _flags);
                 tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
                 client.Send(ref packet);
                 packet.Dispose();

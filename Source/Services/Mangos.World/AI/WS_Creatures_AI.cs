@@ -1108,32 +1108,32 @@ namespace Mangos.World.AI
                 {
                     case 58: // Kiss
                         {
-                            aiCreature.DoEmote(Emotes.ONESHOT_BOW);
+                            aiCreature.DoEmote((int)Emotes.ONESHOT_BOW);
                             break;
                         }
 
                     case 101: // Wave
                         {
-                            aiCreature.DoEmote(Emotes.ONESHOT_WAVE);
+                            aiCreature.DoEmote((int)Emotes.ONESHOT_WAVE);
                             break;
                         }
 
                     case 78: // Salute
                         {
-                            aiCreature.DoEmote(Emotes.ONESHOT_SALUTE);
+                            aiCreature.DoEmote((int)Emotes.ONESHOT_SALUTE);
                             break;
                         }
 
                     case 84: // Shy
                         {
-                            aiCreature.DoEmote(Emotes.ONESHOT_FLEX);
+                            aiCreature.DoEmote((int)Emotes.ONESHOT_FLEX);
                             break;
                         }
 
                     case 77:
                     case 22: // Rude, Chicken
                         {
-                            aiCreature.DoEmote(Emotes.ONESHOT_POINT);
+                            aiCreature.DoEmote((int)Emotes.ONESHOT_POINT);
                             break;
                         }
                 }

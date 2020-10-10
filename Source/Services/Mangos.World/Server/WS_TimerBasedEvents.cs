@@ -208,27 +208,27 @@ namespace Mangos.World.Server
                                 {
                                     _updateFlag = true;
                                     withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
-                                    withBlock.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1, withBlock.Mana.Current);
+                                    withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_POWER1, withBlock.Mana.Current);
                                 }
 
                                 if (BaseRage != withBlock.Rage.Current | (withBlock.cUnitFlags & UnitFlags.UNIT_FLAG_IN_COMBAT) == UnitFlags.UNIT_FLAG_IN_COMBAT)
                                 {
                                     _updateFlag = true;
                                     withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
-                                    withBlock.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER2, withBlock.Rage.Current);
+                                    withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_POWER2, withBlock.Rage.Current);
                                 }
 
                                 if (BaseEnergy != withBlock.Energy.Current)
                                 {
                                     _updateFlag = true;
                                     withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
-                                    withBlock.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER4, withBlock.Energy.Current);
+                                    withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_POWER4, withBlock.Energy.Current);
                                 }
 
                                 if (BaseLife != withBlock.Life.Current)
                                 {
                                     _updateFlag = true;
-                                    withBlock.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, withBlock.Life.Current);
+                                    withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, withBlock.Life.Current);
                                     withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_HP;
                                 }
 
@@ -442,7 +442,7 @@ namespace Mangos.World.Server
                                 {
                                     if (objCharacter.ActiveSpells[i] is object && objCharacter.ActiveSpells[i].Aura[j] is object && objCharacter.ActiveSpells[i].Aura_Info[j] is object && objCharacter.ActiveSpells[i].Aura_Info[j].Amplitude != 0 && (objCharacter.ActiveSpells[i].GetSpellInfo.GetDuration - objCharacter.ActiveSpells[i].SpellDuration) % objCharacter.ActiveSpells[i].Aura_Info[j].Amplitude == 0)
                                     {
-                                        objCharacter.ActiveSpells[i].Aura[(int)j].Invoke(ref objCharacter, ref objCharacter.ActiveSpells[i].SpellCaster, ref objCharacter.ActiveSpells[i].Aura_Info[(int)j], objCharacter.ActiveSpells[i].SpellID, objCharacter.ActiveSpells[i].StackCount + 1, AuraAction.AURA_UPDATE);
+                                        objCharacter.ActiveSpells[i].Aura[(int)j].Invoke(ref objCharacter, ref (WS_Base.BaseObject)objCharacter.ActiveSpells[i].SpellCaster, ref objCharacter.ActiveSpells[i].Aura_Info[(int)j], objCharacter.ActiveSpells[i].SpellID, objCharacter.ActiveSpells[i].StackCount + 1, AuraAction.AURA_UPDATE);
                                     }
                                 }
 

@@ -104,8 +104,8 @@ namespace Mangos.Cluster.Handlers
                 LevelMax = 60;
                 MapType = rMapType;
                 _map = rMap;
-                _maxPlayersPerTeam = (int)ClusterServiceLocator._WS_DBCDatabase.Battlegrounds[(byte)rMapType].MaxPlayersPerTeam;
-                _minPlayersPerTeam = (int)ClusterServiceLocator._WS_DBCDatabase.Battlegrounds[(byte)rMapType].MinPlayersPerTeam;
+                _maxPlayersPerTeam = ClusterServiceLocator._WS_DBCDatabase.Battlegrounds[(byte)rMapType].MaxPlayersPerTeam;
+                _minPlayersPerTeam = ClusterServiceLocator._WS_DBCDatabase.Battlegrounds[(byte)rMapType].MinPlayersPerTeam;
                 ClusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs_Lock.AcquireWriterLock(ClusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                 ClusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs.Add(ID, this);
                 ClusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs_Lock.ReleaseWriterLock();

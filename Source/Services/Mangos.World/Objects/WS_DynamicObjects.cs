@@ -88,17 +88,17 @@ namespace Mangos.World.Objects
 
             public void FillAllUpdateFlags(ref Packets.UpdateClass Update)
             {
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_GUID, GUID);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
                 Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, ObjectType.TYPE_DYNAMICOBJECT + ObjectType.TYPE_OBJECT);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_SCALE_X, 0.5f * Radius);
-                Update.SetUpdateFlag(EDynamicObjectFields.DYNAMICOBJECT_CASTER, Caster.GUID);
-                Update.SetUpdateFlag(EDynamicObjectFields.DYNAMICOBJECT_BYTES, Bytes);
-                Update.SetUpdateFlag(EDynamicObjectFields.DYNAMICOBJECT_SPELLID, SpellID);
-                Update.SetUpdateFlag(EDynamicObjectFields.DYNAMICOBJECT_RADIUS, Radius);
-                Update.SetUpdateFlag(EDynamicObjectFields.DYNAMICOBJECT_POS_X, positionX);
-                Update.SetUpdateFlag(EDynamicObjectFields.DYNAMICOBJECT_POS_Y, positionY);
-                Update.SetUpdateFlag(EDynamicObjectFields.DYNAMICOBJECT_POS_Z, positionZ);
-                Update.SetUpdateFlag(EDynamicObjectFields.DYNAMICOBJECT_FACING, orientation);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, (float)(0.5f * Radius));
+                Update.SetUpdateFlag((int)EDynamicObjectFields.DYNAMICOBJECT_CASTER, Caster.GUID);
+                Update.SetUpdateFlag((int)EDynamicObjectFields.DYNAMICOBJECT_BYTES, Bytes);
+                Update.SetUpdateFlag((int)EDynamicObjectFields.DYNAMICOBJECT_SPELLID, SpellID);
+                Update.SetUpdateFlag((int)EDynamicObjectFields.DYNAMICOBJECT_RADIUS, Radius);
+                Update.SetUpdateFlag((int)EDynamicObjectFields.DYNAMICOBJECT_POS_X, positionX);
+                Update.SetUpdateFlag((int)EDynamicObjectFields.DYNAMICOBJECT_POS_Y, positionY);
+                Update.SetUpdateFlag((int)EDynamicObjectFields.DYNAMICOBJECT_POS_Z, positionZ);
+                Update.SetUpdateFlag((int)EDynamicObjectFields.DYNAMICOBJECT_FACING, orientation);
                 // Update.SetUpdateFlag(EDynamicObjectFields.DYNAMICOBJECT_CASTTIME, CastTime)
             }
 

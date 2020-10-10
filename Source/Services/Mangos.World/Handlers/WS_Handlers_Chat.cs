@@ -32,15 +32,15 @@ namespace Mangos.World.Handlers
         {
             if (objCharacter.GM)
             {
-                return ChatFlag.FLAGS_GM;
+                return (byte)ChatFlag.FLAGS_GM;
             }
             else if (objCharacter.AFK)
             {
-                return ChatFlag.FLAGS_AFK;
+                return (byte)ChatFlag.FLAGS_AFK;
             }
             else if (objCharacter.DND)
             {
-                return ChatFlag.FLAGS_DND;
+                return (byte)ChatFlag.FLAGS_DND;
             }
             else
             {
@@ -54,8 +54,8 @@ namespace Mangos.World.Handlers
             if (packet.Data.Length - 1 < 14)
                 return;
             packet.GetInt16();
-            ChatMsg msgType = packet.GetInt32();
-            LANGUAGES msgLanguage = packet.GetInt32();
+            ChatMsg msgType = (ChatMsg)packet.GetInt32();
+            LANGUAGES msgLanguage = (LANGUAGES)packet.GetInt32();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MESSAGECHAT [{2}:{3}]", client.IP, client.Port, msgType, msgLanguage);
 
             // TODO: Check if we really are able to speak this language!
@@ -90,7 +90,7 @@ namespace Mangos.World.Handlers
                         }
                         else
                         {
-                            client.Character.SendChatMessage(ref client.Character, Message, msgType, msgLanguage, "", true);
+                            client.Character.SendChatMessage(ref client.Character, Message, msgType, (int)msgLanguage, "", true);
                         }
 
                         break;
@@ -107,7 +107,7 @@ namespace Mangos.World.Handlers
                                 client.Character.DND = false;
                             }
 
-                            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+                            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
                             client.Character.SendCharacterUpdate();
                         }
 
@@ -125,7 +125,7 @@ namespace Mangos.World.Handlers
                                 client.Character.AFK = false;
                             }
 
-                            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+                            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
                             client.Character.SendCharacterUpdate();
                         }
 

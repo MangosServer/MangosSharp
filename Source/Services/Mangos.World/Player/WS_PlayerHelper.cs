@@ -313,7 +313,7 @@ namespace Mangos.World.Player
                     }
 
                     if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(CharacterGUID))
-                        WorldServiceLocator._WorldServer.CHARACTERs[CharacterGUID].StopMirrorTimer(1);
+                        WorldServiceLocator._WorldServer.CHARACTERs[CharacterGUID].StopMirrorTimer((MirrorTimer)1);
                 }
 
                 _disposedValue = true;

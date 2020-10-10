@@ -118,7 +118,7 @@ namespace Mangos.World.Objects
             {
                 // DONE: Get the money
                 client.Character.Copper -= spellCost;
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                 client.Character.SendCharacterUpdate(false);
 
                 // DONE: Cast the spell
@@ -323,7 +323,7 @@ namespace Mangos.World.Objects
                     {
                         okPckt.AddUInt64(vendorGuid);
                         okPckt.AddUInt64(itemGuid);
-                        okPckt.AddInt8(SELL_ERROR.SELL_ERR_CANT_FIND_ITEM);
+                        okPckt.AddInt8((byte)SELL_ERROR.SELL_ERR_CANT_FIND_ITEM);
                         client.Send(ref okPckt);
                     }
                     finally
@@ -341,7 +341,7 @@ namespace Mangos.World.Objects
                     {
                         okPckt.AddUInt64(vendorGuid);
                         okPckt.AddUInt64(itemGuid);
-                        okPckt.AddInt8(SELL_ERROR.SELL_ERR_CANT_FIND_ITEM);
+                        okPckt.AddInt8((byte)SELL_ERROR.SELL_ERR_CANT_FIND_ITEM);
                         client.Send(ref okPckt);
                     }
                     finally
@@ -359,7 +359,7 @@ namespace Mangos.World.Objects
                     {
                         okPckt.AddUInt64(vendorGuid);
                         okPckt.AddUInt64(itemGuid);
-                        okPckt.AddInt8(SELL_ERROR.SELL_ERR_CANT_FIND_VENDOR);
+                        okPckt.AddInt8((byte)SELL_ERROR.SELL_ERR_CANT_FIND_VENDOR);
                         client.Send(ref okPckt);
                     }
                     finally
@@ -377,7 +377,7 @@ namespace Mangos.World.Objects
                     {
                         okPckt.AddUInt64(vendorGuid);
                         okPckt.AddUInt64(itemGuid);
-                        okPckt.AddInt8(SELL_ERROR.SELL_ERR_CANT_SELL_ITEM);
+                        okPckt.AddInt8((byte)SELL_ERROR.SELL_ERR_CANT_SELL_ITEM);
                         client.Send(ref okPckt);
                     }
                     finally
@@ -388,14 +388,14 @@ namespace Mangos.World.Objects
                     return;
                 }
                 // DONE: Can't cheat and sell items that are located in the buyback
-                for (byte i = BuyBackSlots.BUYBACK_SLOT_START, loopTo = BuyBackSlots.BUYBACK_SLOT_END - 1; i <= loopTo; i++)
+                for (byte i = (byte)BuyBackSlots.BUYBACK_SLOT_START, loopTo = (byte)(BuyBackSlots.BUYBACK_SLOT_END - 1); i <= loopTo; i++)
                 {
                     if (client.Character.Items.ContainsKey(i) && client.Character.Items[i].GUID == itemGuid)
                     {
                         var okPckt = new Packets.PacketClass(OPCODES.SMSG_SELL_ITEM);
                         okPckt.AddUInt64(vendorGuid);
                         okPckt.AddUInt64(itemGuid);
-                        okPckt.AddInt8(SELL_ERROR.SELL_ERR_CANT_FIND_ITEM);
+                        okPckt.AddInt8((byte)SELL_ERROR.SELL_ERR_CANT_FIND_ITEM);
                         client.Send(ref okPckt);
                         okPckt.Dispose();
                         return;
@@ -413,7 +413,7 @@ namespace Mangos.World.Objects
                     tmpItem.StackCount = count;
                     client.Character.ItemADD_BuyBack(ref tmpItem);
                     client.Character.Copper = (uint)(client.Character.Copper + WorldServiceLocator._WorldServer.ITEMDatabase[WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ItemEntry].SellPrice * count);
-                    client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                    client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                     client.Character.SendItemUpdate(WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid]);
                     WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].Save(false);
                 }
@@ -427,7 +427,7 @@ namespace Mangos.World.Objects
                         if (item.Value.GUID == itemGuid)
                         {
                             client.Character.Copper = (uint)(client.Character.Copper + WorldServiceLocator._WorldServer.ITEMDatabase[item.Value.ItemEntry].SellPrice * item.Value.StackCount);
-                            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                             if (item.Key < InventorySlots.INVENTORY_SLOT_BAG_END)
                             {
                                 var argItem = item.Value;
@@ -449,7 +449,7 @@ namespace Mangos.World.Objects
                         }
                     }
 
-                    for (byte bag = InventorySlots.INVENTORY_SLOT_BAG_1, loopTo1 = InventorySlots.INVENTORY_SLOT_BAG_4; bag <= loopTo1; bag++)
+                    for (byte bag = (byte)InventorySlots.INVENTORY_SLOT_BAG_1, loopTo1 = (byte)InventorySlots.INVENTORY_SLOT_BAG_4; bag <= loopTo1; bag++)
                     {
                         if (client.Character.Items.ContainsKey(bag))
                         {
@@ -458,7 +458,7 @@ namespace Mangos.World.Objects
                                 if (item.Value.GUID == itemGuid)
                                 {
                                     client.Character.Copper = (uint)(client.Character.Copper + WorldServiceLocator._WorldServer.ITEMDatabase[item.Value.ItemEntry].SellPrice * item.Value.StackCount);
-                                    client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                                    client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                                     client.Character.ItemREMOVE(item.Value.GUID, false, true);
                                     var argItem2 = item.Value;
                                     client.Character.ItemADD_BuyBack(ref argItem2);
@@ -519,7 +519,7 @@ namespace Mangos.World.Objects
                 {
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(itemID);
-                    errorPckt.AddInt8(BUY_ERROR.BUY_ERR_SELLER_DONT_LIKE_YOU);
+                    errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_SELLER_DONT_LIKE_YOU);
                     client.Send(ref errorPckt);
                 }
                 finally
@@ -543,7 +543,7 @@ namespace Mangos.World.Objects
                 {
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(itemID);
-                    errorPckt.AddInt8(BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
+                    errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
                     client.Send(ref errorPckt);
                 }
                 finally
@@ -555,7 +555,7 @@ namespace Mangos.World.Objects
             }
 
             client.Character.Copper = (uint)(client.Character.Copper - itemPrice * count);
-            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
             client.Character.SendCharacterUpdate(false);
             var tmpItem = new ItemObject(itemID, client.Character.GUID) { StackCount = count * WorldServiceLocator._WorldServer.ITEMDatabase[itemID].BuyCount };
 
@@ -565,7 +565,7 @@ namespace Mangos.World.Objects
             {
                 tmpItem.Delete();
                 client.Character.Copper = (uint)(client.Character.Copper + itemPrice);
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
             }
             else
             {
@@ -610,7 +610,7 @@ namespace Mangos.World.Objects
                 var errorPckt = new Packets.PacketClass(OPCODES.SMSG_BUY_FAILED);
                 errorPckt.AddUInt64(vendorGuid);
                 errorPckt.AddInt32(itemID);
-                errorPckt.AddInt8(BUY_ERROR.BUY_ERR_SELLER_DONT_LIKE_YOU);
+                errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_SELLER_DONT_LIKE_YOU);
                 client.Send(ref errorPckt);
                 errorPckt.Dispose();
                 return;
@@ -624,7 +624,7 @@ namespace Mangos.World.Objects
                 var errorPckt = new Packets.PacketClass(OPCODES.SMSG_BUY_FAILED);
                 errorPckt.AddUInt64(vendorGuid);
                 errorPckt.AddInt32(itemID);
-                errorPckt.AddInt8(BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
+                errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
                 client.Send(ref errorPckt);
                 errorPckt.Dispose();
                 return;
@@ -640,7 +640,7 @@ namespace Mangos.World.Objects
                     var errorPckt = new Packets.PacketClass(OPCODES.SMSG_BUY_FAILED);
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(itemID);
-                    errorPckt.AddInt8(BUY_ERROR.BUY_ERR_CANT_CARRY_MORE);
+                    errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_CANT_CARRY_MORE);
                     client.Send(ref errorPckt);
                     errorPckt.Dispose();
                     return;
@@ -651,7 +651,7 @@ namespace Mangos.World.Objects
                 // Store in bag
                 byte i;
                 var loopTo = InventorySlots.INVENTORY_SLOT_BAG_4;
-                for (i = InventorySlots.INVENTORY_SLOT_BAG_1; i <= loopTo; i++)
+                for (i = (byte)InventorySlots.INVENTORY_SLOT_BAG_1; i <= loopTo; i++)
                 {
                     if (client.Character.Items[i].GUID == clientGuid)
                     {
@@ -665,7 +665,7 @@ namespace Mangos.World.Objects
                     var okPckt = new Packets.PacketClass(OPCODES.SMSG_BUY_FAILED);
                     okPckt.AddUInt64(vendorGuid);
                     okPckt.AddInt32(itemID);
-                    okPckt.AddInt8(BUY_ERROR.BUY_ERR_CANT_FIND_ITEM);
+                    okPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_CANT_FIND_ITEM);
                     client.Send(ref okPckt);
                     okPckt.Dispose();
                     return;
@@ -676,7 +676,7 @@ namespace Mangos.World.Objects
                     var errorPckt = new Packets.PacketClass(OPCODES.SMSG_BUY_FAILED);
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(itemID);
-                    errorPckt.AddInt8(BUY_ERROR.BUY_ERR_CANT_CARRY_MORE);
+                    errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_CANT_CARRY_MORE);
                     client.Send(ref errorPckt);
                     errorPckt.Dispose();
                     return;
@@ -684,7 +684,7 @@ namespace Mangos.World.Objects
             }
 
             var tmpItem = new ItemObject(itemID, client.Character.GUID) { StackCount = count };
-            byte errCode = client.Character.ItemCANEQUIP(tmpItem, bag, slot);
+            byte errCode = (byte)client.Character.ItemCANEQUIP(tmpItem, bag, slot);
             if (errCode != InventoryChangeFailure.EQUIP_ERR_OK)
             {
                 if (errCode != InventoryChangeFailure.EQUIP_ERR_YOU_MUST_REACH_LEVEL_N)
@@ -704,12 +704,12 @@ namespace Mangos.World.Objects
             else
             {
                 client.Character.Copper = (uint)(client.Character.Copper - itemPrice * count);
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                 if (!client.Character.ItemSETSLOT(ref tmpItem, slot, bag))
                 {
                     tmpItem.Delete();
                     client.Character.Copper = (uint)(client.Character.Copper + itemPrice);
-                    client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                    client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                 }
                 else
                 {
@@ -748,7 +748,7 @@ namespace Mangos.World.Objects
                 {
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(0);
-                    errorPckt.AddInt8(BUY_ERROR.BUY_ERR_CANT_FIND_ITEM);
+                    errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_CANT_FIND_ITEM);
                     client.Send(ref errorPckt);
                 }
                 finally
@@ -767,7 +767,7 @@ namespace Mangos.World.Objects
                 {
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(tmpItem.ItemEntry);
-                    errorPckt.AddInt8(BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
+                    errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
                     client.Send(ref errorPckt);
                 }
                 finally
@@ -785,9 +785,9 @@ namespace Mangos.World.Objects
                 byte eSlot = slot - BuyBackSlots.BUYBACK_SLOT_START;
                 client.Character.Copper = (uint)(client.Character.Copper - tmpItem.ItemInfo.SellPrice * tmpItem.StackCount);
                 client.Character.BuyBackTimeStamp[eSlot] = 0;
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_BUYBACK_TIMESTAMP_1 + eSlot, 0);
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_BUYBACK_PRICE_1 + eSlot, 0);
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                client.Character.SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_BUYBACK_TIMESTAMP_1 + eSlot), 0);
+                client.Character.SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_BUYBACK_PRICE_1 + eSlot), 0);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                 client.Character.SendCharacterUpdate();
             }
             else
@@ -823,14 +823,14 @@ namespace Mangos.World.Objects
                 if (client.Character.Copper >= price)
                 {
                     client.Character.Copper -= price;
-                    client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                    client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                     client.Character.SendCharacterUpdate(false);
                     WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ModifyToDurability(100.0f, ref client);
                 }
             }
             else
             {
-                for (byte i = 0, loopTo = EquipmentSlots.EQUIPMENT_SLOT_END - 1; i <= loopTo; i++)
+                for (byte i = 0, loopTo = (byte)(EquipmentSlots.EQUIPMENT_SLOT_END - 1); i <= loopTo; i++)
                 {
                     if (client.Character.Items.ContainsKey(i))
                     {
@@ -838,7 +838,7 @@ namespace Mangos.World.Objects
                         if (client.Character.Copper >= price)
                         {
                             client.Character.Copper -= price;
-                            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                             client.Character.SendCharacterUpdate(false);
                             client.Character.Items[i].ModifyToDurability(100.0f, ref client);
                         }
@@ -931,7 +931,7 @@ namespace Mangos.World.Objects
             if (srcBag == 255)
                 srcBag = 0;
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTOBANK_ITEM [srcSlot={2}:{3}]", client.IP, client.Port, srcBag, srcSlot);
-            for (byte dstSlot = BankItemSlots.BANK_SLOT_ITEM_START, loopTo = BankItemSlots.BANK_SLOT_ITEM_END; dstSlot <= loopTo; dstSlot++)
+            for (byte dstSlot = (byte)BankItemSlots.BANK_SLOT_ITEM_START, loopTo = (byte)BankItemSlots.BANK_SLOT_ITEM_END; dstSlot <= loopTo; dstSlot++)
             {
                 if (!client.Character.Items.ContainsKey(dstSlot))
                 {
@@ -940,7 +940,7 @@ namespace Mangos.World.Objects
                 }
             }
 
-            for (byte dstBag = BankBagSlots.BANK_SLOT_BAG_START, loopTo1 = BankBagSlots.BANK_SLOT_BAG_END - 1; dstBag <= loopTo1; dstBag++)
+            for (byte dstBag = (byte)BankBagSlots.BANK_SLOT_BAG_START, loopTo1 = (byte)(BankBagSlots.BANK_SLOT_BAG_END - 1); dstBag <= loopTo1; dstBag++)
             {
                 if (client.Character.Items.ContainsKey(dstBag))
                 {
@@ -978,7 +978,7 @@ namespace Mangos.World.Objects
             if (srcBag == 255)
                 srcBag = 0;
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTOSTORE_BANK_ITEM [srcSlot={2}:{3}]", client.IP, client.Port, srcBag, srcSlot);
-            for (byte dstSlot = InventoryPackSlots.INVENTORY_SLOT_ITEM_START, loopTo = InventoryPackSlots.INVENTORY_SLOT_ITEM_END; dstSlot <= loopTo; dstSlot++)
+            for (byte dstSlot = (byte)InventoryPackSlots.INVENTORY_SLOT_ITEM_START, loopTo = (byte)InventoryPackSlots.INVENTORY_SLOT_ITEM_END; dstSlot <= loopTo; dstSlot++)
             {
                 if (!client.Character.Items.ContainsKey(dstSlot))
                 {
@@ -987,7 +987,7 @@ namespace Mangos.World.Objects
                 }
             }
 
-            for (byte bag = InventorySlots.INVENTORY_SLOT_BAG_START, loopTo1 = InventorySlots.INVENTORY_SLOT_BAG_END - 1; bag <= loopTo1; bag++)
+            for (byte bag = (byte)InventorySlots.INVENTORY_SLOT_BAG_START, loopTo1 = (byte)(InventorySlots.INVENTORY_SLOT_BAG_END - 1); bag <= loopTo1; bag++)
             {
                 if (client.Character.Items.ContainsKey(bag))
                 {
@@ -1023,8 +1023,8 @@ namespace Mangos.World.Objects
                 client.Character.Copper = (uint)(client.Character.Copper - DbcBankBagSlotPrices[client.Character.Items_AvailableBankSlots]);
                 client.Character.Items_AvailableBankSlots = (byte)(client.Character.Items_AvailableBankSlots + 1);
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters SET char_bankSlots = {0}, char_copper = {1};", client.Character.Items_AvailableBankSlots, client.Character.Copper));
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_BYTES_2, client.Character.cPlayerBytes2);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_BYTES_2, client.Character.cPlayerBytes2);
                 client.Character.SendCharacterUpdate(false);
             }
             else
@@ -1034,7 +1034,7 @@ namespace Mangos.World.Objects
                 {
                     errorPckt.AddUInt64(0UL);
                     errorPckt.AddInt32(0);
-                    errorPckt.AddInt8(BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
+                    errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
                     client.Send(ref errorPckt);
                 }
                 finally
@@ -1183,7 +1183,7 @@ namespace Mangos.World.Objects
 
                 // DONE: Reset Talentpoints to Level - 9
                 client.Character.TalentPoints = (byte)(client.Character.Level - 9);
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_CHARACTER_POINTS1, client.Character.TalentPoints);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_CHARACTER_POINTS1, client.Character.TalentPoints);
                 client.Character.SendCharacterUpdate(true);
 
                 // DONE: Use spell 14867
@@ -1251,13 +1251,13 @@ namespace Mangos.World.Objects
                 {
                     if (creatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_VENDOR || creatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_ARMORER)
                     {
-                        npcMenu.AddMenu("Let me browse your goods.", MenuIcon.MENUICON_VENDOR);
+                        npcMenu.AddMenu("Let me browse your goods.", (byte)MenuIcon.MENUICON_VENDOR);
                         objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_VENDOR);
                     }
 
                     if (creatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_TAXIVENDOR)
                     {
-                        npcMenu.AddMenu("I want to continue my journey.", MenuIcon.MENUICON_TAXI);
+                        npcMenu.AddMenu("I want to continue my journey.", (byte)MenuIcon.MENUICON_TAXI);
                         objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_TAXIVENDOR);
                     }
 
@@ -1331,13 +1331,13 @@ namespace Mangos.World.Objects
                             }
                             else
                             {
-                                string localGetClassName() { var argClasse = objCharacter.Classe; var ret = WorldServiceLocator._Functions.GetClassName(ref argClasse); objCharacter.Classe = argClasse; return ret; }
+                                string localGetClassName() { var argClasse = objCharacter.Classe; var ret = WorldServiceLocator._Functions.GetClassName(ref (int)argClasse); objCharacter.Classe = argClasse; return ret; }
 
-                                npcMenu.AddMenu("I am interested in " + localGetClassName() + " training.", MenuIcon.MENUICON_TRAINER);
+                                npcMenu.AddMenu("I am interested in " + localGetClassName() + " training.", (byte)MenuIcon.MENUICON_TRAINER);
                                 objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_TRAINER);
                                 if (objCharacter.Level >= 10)
                                 {
-                                    npcMenu.AddMenu("I want to unlearn all my talents.", MenuIcon.MENUICON_GOSSIP);
+                                    npcMenu.AddMenu("I want to unlearn all my talents.", (byte)MenuIcon.MENUICON_GOSSIP);
                                     objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_TALENTWIPE);
                                 }
                             }
@@ -1404,7 +1404,7 @@ namespace Mangos.World.Objects
                             }
                             else
                             {
-                                npcMenu.AddMenu("I am interested in mount training.", MenuIcon.MENUICON_TRAINER);
+                                npcMenu.AddMenu("I am interested in mount training.", (byte)MenuIcon.MENUICON_TRAINER);
                                 objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_TRAINER);
                             }
                         }
@@ -1420,7 +1420,7 @@ namespace Mangos.World.Objects
                             }
                             else
                             {
-                                npcMenu.AddMenu("I am interested in professions training.", MenuIcon.MENUICON_TRAINER);
+                                npcMenu.AddMenu("I am interested in professions training.", (byte)MenuIcon.MENUICON_TRAINER);
                                 objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_TRAINER);
                             }
                         }
@@ -1436,7 +1436,7 @@ namespace Mangos.World.Objects
                             }
                             else
                             {
-                                npcMenu.AddMenu("I am interested in pet training.", MenuIcon.MENUICON_TRAINER);
+                                npcMenu.AddMenu("I am interested in pet training.", (byte)MenuIcon.MENUICON_TRAINER);
                                 objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_TRAINER);
                             }
                         }
@@ -1445,13 +1445,13 @@ namespace Mangos.World.Objects
                     if (creatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_SPIRITHEALER)
                     {
                         textID = 580;
-                        npcMenu.AddMenu("Return me to life", MenuIcon.MENUICON_GOSSIP);
+                        npcMenu.AddMenu("Return me to life", (byte)MenuIcon.MENUICON_GOSSIP);
                         objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_SPIRITHEALER);
                     }
                     // UNIT_NPC_FLAG_GUARD
                     if (creatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_INNKEEPER)
                     {
-                        npcMenu.AddMenu("Make this inn your home.", MenuIcon.MENUICON_BINDER);
+                        npcMenu.AddMenu("Make this inn your home.", (byte)MenuIcon.MENUICON_BINDER);
                         objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_INNKEEPER);
                     }
 
@@ -1462,31 +1462,31 @@ namespace Mangos.World.Objects
 
                     if (creatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_PETITIONER)
                     {
-                        npcMenu.AddMenu("I am interested in guilds.", MenuIcon.MENUICON_PETITION);
+                        npcMenu.AddMenu("I am interested in guilds.", (byte)MenuIcon.MENUICON_PETITION);
                         objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_ARENACHARTER);
                     }
 
                     if (creatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_TABARDVENDOR)
                     {
-                        npcMenu.AddMenu("I want to purchase a tabard.", MenuIcon.MENUICON_TABARD);
+                        npcMenu.AddMenu("I want to purchase a tabard.", (byte)MenuIcon.MENUICON_TABARD);
                         objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_TABARDVENDOR);
                     }
 
                     if (creatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_BATTLEFIELDPERSON)
                     {
-                        npcMenu.AddMenu("My blood hungers for battle.", MenuIcon.MENUICON_BATTLEMASTER);
+                        npcMenu.AddMenu("My blood hungers for battle.", (byte)MenuIcon.MENUICON_BATTLEMASTER);
                         objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_BATTLEFIELD);
                     }
 
                     if (creatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_AUCTIONEER)
                     {
-                        npcMenu.AddMenu("Wanna auction something?", MenuIcon.MENUICON_AUCTIONER);
+                        npcMenu.AddMenu("Wanna auction something?", (byte)MenuIcon.MENUICON_AUCTIONER);
                         objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_AUCTIONEER);
                     }
 
                     if (creatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_STABLE)
                     {
-                        npcMenu.AddMenu("Let me check my pet.", MenuIcon.MENUICON_VENDOR);
+                        npcMenu.AddMenu("Let me check my pet.", (byte)MenuIcon.MENUICON_VENDOR);
                         objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_STABLEPET);
                     }
 
@@ -1508,10 +1508,10 @@ namespace Mangos.World.Objects
                                     var tmpQuest = new WS_QuestInfo(questID);
                                 }
 
-                                QuestgiverStatusFlag status = qMenu.Icons[0];
+                                QuestgiverStatusFlag status = (QuestgiverStatusFlag)qMenu.Icons[0];
                                 if (status == QuestgiverStatusFlag.DIALOG_STATUS_INCOMPLETE)
                                 {
-                                    for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+                                    for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
                                     {
                                         if (objCharacter.TalkQuests[i] is object && objCharacter.TalkQuests[i].ID == questID)
                                         {

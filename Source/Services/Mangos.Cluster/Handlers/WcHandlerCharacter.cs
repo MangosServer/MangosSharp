@@ -172,7 +172,7 @@ namespace Mangos.Cluster.Handlers
             {
                 // DONE: Get character info from DB
                 var MySQLQuery = new DataTable();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters WHERE char_guid = {0};", (object)Guid), ref MySQLQuery);
+                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters WHERE char_guid = {0};", Guid), ref MySQLQuery);
                 if (MySQLQuery.Rows.Count > 0)
                 {
                     Race = (Races)Conversions.ToByte(MySQLQuery.Rows[0]["char_race"]);
@@ -322,7 +322,7 @@ namespace Mangos.Cluster.Handlers
 
                 // DONE: SMSG_TRIGGER_CINEMATIC
                 var q = new DataTable();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT char_moviePlayed FROM characters WHERE char_guid = {0} AND char_moviePlayed = 0;", (object)Guid), ref q);
+                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT char_moviePlayed FROM characters WHERE char_guid = {0} AND char_moviePlayed = 0;", Guid), ref q);
                 if (q.Rows.Count > 0)
                 {
                     ClusterServiceLocator._WorldCluster.CharacterDatabase.Update("UPDATE characters SET char_moviePlayed = 1 WHERE char_guid = " + Guid + ";");

@@ -42,27 +42,27 @@ namespace Mangos.World.Objects
             public int Bytes2 = 0;
             public int Model = 0;
             public int Guild = 0;
-            public int[] Items = new int[EquipmentSlots.EQUIPMENT_SLOT_END];
+            public int[] Items = new int[(int)EquipmentSlots.EQUIPMENT_SLOT_END];
 
             public void FillAllUpdateFlags(ref Packets.UpdateClass Update)
             {
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_GUID, GUID);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
                 Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, ObjectType.TYPE_CORPSE + ObjectType.TYPE_OBJECT);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_ENTRY, 0);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_SCALE_X, 1.0f);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_OWNER, Owner);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_FACING, orientation);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_POS_X, positionX);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_POS_Y, positionY);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_POS_Z, positionZ);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_DISPLAY_ID, Model);
-                for (int i = 0, loopTo = EquipmentSlots.EQUIPMENT_SLOT_END - 1; i <= loopTo; i++)
-                    Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_ITEM + i, Items[i]);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_BYTES_1, Bytes1);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_BYTES_2, Bytes2);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_GUILD, Guild);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_FLAGS, Flags);
-                Update.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_DYNAMIC_FLAGS, DynFlags);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, 0);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, (float)1.0f);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_OWNER, Owner);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_FACING, orientation);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_POS_X, positionX);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_POS_Y, positionY);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_POS_Z, positionZ);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_DISPLAY_ID, Model);
+                for (int i = 0, loopTo = (int)(EquipmentSlots.EQUIPMENT_SLOT_END - 1); i <= loopTo; i++)
+                    Update.SetUpdateFlag((int)(ECorpseFields.CORPSE_FIELD_ITEM + i), Items[i]);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_BYTES_1, Bytes1);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_BYTES_2, Bytes2);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_GUILD, Guild);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_FLAGS, Flags);
+                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_DYNAMIC_FLAGS, DynFlags);
             }
 
             public void ConvertToBones()
@@ -71,7 +71,7 @@ namespace Mangos.World.Objects
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("DELETE FROM corpse WHERE player = \"{0}\";", Owner));
                 Flags = 5;
                 Owner = 0UL;
-                for (int i = 0, loopTo = EquipmentSlots.EQUIPMENT_SLOT_END - 1; i <= loopTo; i++)
+                for (int i = 0, loopTo = (int)(EquipmentSlots.EQUIPMENT_SLOT_END - 1); i <= loopTo; i++)
                     Items[i] = 0;
                 var packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
                 try
@@ -81,10 +81,10 @@ namespace Mangos.World.Objects
                     var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
                     try
                     {
-                        tmpUpdate.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_OWNER, 0);
-                        tmpUpdate.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_FLAGS, 5);
-                        for (int i = 0, loopTo1 = EquipmentSlots.EQUIPMENT_SLOT_END - 1; i <= loopTo1; i++)
-                            tmpUpdate.SetUpdateFlag(ECorpseFields.CORPSE_FIELD_ITEM + i, 0);
+                        tmpUpdate.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_OWNER, 0);
+                        tmpUpdate.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_FLAGS, 5);
+                        for (int i = 0, loopTo1 = (int)(EquipmentSlots.EQUIPMENT_SLOT_END - 1); i <= loopTo1; i++)
+                            tmpUpdate.SetUpdateFlag((int)(ECorpseFields.CORPSE_FIELD_ITEM + i), 0);
                         tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
                         SendToNearPlayers(ref packet);
                     }
@@ -214,7 +214,7 @@ namespace Mangos.World.Objects
                 }
 
                 Character.corpseCorpseType = CorpseType;
-                for (byte i = 0, loopTo = EquipmentSlots.EQUIPMENT_SLOT_END - 1; i <= loopTo; i++)
+                for (byte i = 0, loopTo = (byte)(EquipmentSlots.EQUIPMENT_SLOT_END - 1); i <= loopTo; i++)
                 {
                     if (Character.Items.ContainsKey(i))
                     {
@@ -255,7 +255,7 @@ namespace Mangos.World.Objects
                 MapID = Conversions.ToUInteger(Info["map"]);
                 instance = Conversions.ToUInteger(Info["instance"]);
                 Owner = Conversions.ToULong(Info["player"]);
-                CorpseType = Info["corpse_type"];
+                CorpseType = (CorpseType)Info["corpse_type"];
                 // Bytes1 = Info.Item("corpse_bytes1")
                 // Bytes2 = Info.Item("corpse_bytes2")
                 // Model = Info.Item("corpse_model")

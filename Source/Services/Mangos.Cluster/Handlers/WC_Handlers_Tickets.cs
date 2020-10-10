@@ -61,7 +61,7 @@ namespace Mangos.Cluster.Handlers
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GMTICKET_GETTICKET", client.IP, client.Port);
             var SMSG_GMTICKET_GETTICKET = new Packets.PacketClass(OPCODES.SMSG_GMTICKET_GETTICKET);
             var MySQLResult = new DataTable();
-            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters_tickets WHERE char_guid = {0};", (object)client.Character.Guid), ref MySQLResult);
+            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters_tickets WHERE char_guid = {0};", client.Character.Guid), ref MySQLResult);
             if (MySQLResult.Rows.Count > 0)
             {
                 SMSG_GMTICKET_GETTICKET.AddInt32((int)GMTicketGetResult.GMTICKET_AVAILABLE);
@@ -95,7 +95,7 @@ namespace Mangos.Cluster.Handlers
             float ticket_z = packet.GetFloat();
             string ticket_text = ClusterServiceLocator._Functions.EscapeString(packet.GetString());
             var MySQLResult = new DataTable();
-            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters_tickets WHERE char_guid = {0};", (object)client.Character.Guid), ref MySQLResult);
+            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters_tickets WHERE char_guid = {0};", client.Character.Guid), ref MySQLResult);
             var SMSG_GMTICKET_CREATE = new Packets.PacketClass(OPCODES.SMSG_GMTICKET_CREATE);
             if (MySQLResult.Rows.Count > 0)
             {

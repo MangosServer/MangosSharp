@@ -332,7 +332,7 @@ namespace Mangos.World.Warden
                             bool bUnload = true;
                             if (Header.dwSizeOfCode < dwModuleSize)
                             {
-                                int dwOffset = Header.dwSizeOfCode + 0xFFF & 0xFFFFF000;
+                                int dwOffset = (int)(Header.dwSizeOfCode + 0xFFF & 0xFFFFF000);
                                 if (dwOffset >= Header.dwSizeOfCode && dwOffset > dwModuleSize)
                                 {
                                     NativeMethods.VirtualFree(m_Mod + dwOffset, dwModuleSize - dwOffset, 0x4000, "");
@@ -764,14 +764,14 @@ namespace Mangos.World.Warden
             public Packets.PacketClass GetPacket()
             {
                 var packet = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
-                packet.AddInt8(MaievOpcode.MAIEV_MODULE_RUN);
+                packet.AddInt8((byte)MaievOpcode.MAIEV_MODULE_RUN);
                 foreach (string tmpStr in UsedStrings)
                     packet.AddString2(tmpStr);
                 packet.AddInt8(0);
                 byte i = 0;
                 foreach (CheatCheck Check in Checks)
                 {
-                    byte xorCheck = WorldServiceLocator._WS_Warden.Maiev.CheckIDs[Check.Type] ^ Character.WardenData.xorByte;
+                    byte xorCheck = (byte)(WorldServiceLocator._WS_Warden.Maiev.CheckIDs[Check.Type] ^ Character.WardenData.xorByte);
                     var checkData = Check.ToData(xorCheck, ref i);
                     packet.AddByteArray(checkData);
                 }

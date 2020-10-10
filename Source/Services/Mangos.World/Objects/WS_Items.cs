@@ -37,8 +37,8 @@ namespace Mangos.World.Objects
     {
 
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        private readonly int[] ItemWeaponSkills = new int[] { SKILL_IDs.SKILL_AXES, SKILL_IDs.SKILL_TWO_HANDED_AXES, SKILL_IDs.SKILL_BOWS, SKILL_IDs.SKILL_GUNS, SKILL_IDs.SKILL_MACES, SKILL_IDs.SKILL_TWO_HANDED_MACES, SKILL_IDs.SKILL_POLEARMS, SKILL_IDs.SKILL_SWORDS, SKILL_IDs.SKILL_TWO_HANDED_SWORDS, 0, SKILL_IDs.SKILL_STAVES, 0, 0, 0, 0, SKILL_IDs.SKILL_DAGGERS, SKILL_IDs.SKILL_THROWN, SKILL_IDs.SKILL_SPEARS, SKILL_IDs.SKILL_CROSSBOWS, SKILL_IDs.SKILL_WANDS, SKILL_IDs.SKILL_FISHING };
-        private readonly int[] ItemArmorSkills = new int[] { 0, SKILL_IDs.SKILL_CLOTH, SKILL_IDs.SKILL_LEATHER, SKILL_IDs.SKILL_MAIL, SKILL_IDs.SKILL_PLATE_MAIL, 0, SKILL_IDs.SKILL_SHIELD, 0, 0, 0 };
+        private readonly int[] ItemWeaponSkills = new int[] { (int)SKILL_IDs.SKILL_AXES, (int)SKILL_IDs.SKILL_TWO_HANDED_AXES, (int)SKILL_IDs.SKILL_BOWS, (int)SKILL_IDs.SKILL_GUNS, (int)SKILL_IDs.SKILL_MACES, (int)SKILL_IDs.SKILL_TWO_HANDED_MACES, (int)SKILL_IDs.SKILL_POLEARMS, (int)SKILL_IDs.SKILL_SWORDS, (int)SKILL_IDs.SKILL_TWO_HANDED_SWORDS, 0, (int)SKILL_IDs.SKILL_STAVES, 0, 0, 0, 0, (int)SKILL_IDs.SKILL_DAGGERS, (int)SKILL_IDs.SKILL_THROWN, (int)SKILL_IDs.SKILL_SPEARS, (int)SKILL_IDs.SKILL_CROSSBOWS, (int)SKILL_IDs.SKILL_WANDS, (int)SKILL_IDs.SKILL_FISHING };
+        private readonly int[] ItemArmorSkills = new int[] { 0, (int)SKILL_IDs.SKILL_CLOTH, (int)SKILL_IDs.SKILL_LEATHER, (int)SKILL_IDs.SKILL_MAIL, (int)SKILL_IDs.SKILL_PLATE_MAIL, 0, (int)SKILL_IDs.SKILL_SHIELD, 0, 0, 0 };
 
 
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
@@ -85,7 +85,7 @@ namespace Mangos.World.Objects
                 Material = Conversions.ToInteger(mySqlQuery.Rows[0]["Material"]);
                 // -1=Consumables 1=Metal 2=Wood 3=Liquid 4=Jewelry 5=Chain 6=Plate 7=Cloth 8=Leather
                 Durability = Conversions.ToInteger(mySqlQuery.Rows[0]["MaxDurability"]);
-                Sheath = mySqlQuery.Rows[0]["sheath"];
+                Sheath = (SHEATHE_TYPE)mySqlQuery.Rows[0]["sheath"];
                 Bonding = Conversions.ToInteger(mySqlQuery.Rows[0]["bonding"]);
                 BuyCount = Conversions.ToInteger(mySqlQuery.Rows[0]["buycount"]);
                 BuyPrice = Conversions.ToInteger(mySqlQuery.Rows[0]["buyprice"]);
@@ -94,9 +94,9 @@ namespace Mangos.World.Objects
                 // Item's Characteristics
                 Id = Conversions.ToInteger(mySqlQuery.Rows[0]["entry"]);
                 Flags = Conversions.ToInteger(mySqlQuery.Rows[0]["flags"]);
-                ObjectClass = mySqlQuery.Rows[0]["class"];
-                SubClass = mySqlQuery.Rows[0]["subclass"];
-                InventoryType = mySqlQuery.Rows[0]["inventorytype"];
+                ObjectClass = (ITEM_CLASS)mySqlQuery.Rows[0]["class"];
+                SubClass = (ITEM_SUBCLASS)mySqlQuery.Rows[0]["subclass"];
+                InventoryType = (INVENTORY_TYPES)mySqlQuery.Rows[0]["inventorytype"];
                 Level = Conversions.ToInteger(mySqlQuery.Rows[0]["itemlevel"]);
                 AvailableClasses = BitConverter.ToUInt32(BitConverter.GetBytes(mySqlQuery.Rows[0]["allowableclass"]), 0);
                 AvailableRaces = BitConverter.ToUInt32(BitConverter.GetBytes(mySqlQuery.Rows[0]["allowablerace"]), 0);
@@ -123,7 +123,7 @@ namespace Mangos.World.Objects
                 StartQuest = Conversions.ToInteger(mySqlQuery.Rows[0]["startquest"]);
                 ContainerSlots = Conversions.ToInteger(mySqlQuery.Rows[0]["ContainerSlots"]);
                 LanguageID = Conversions.ToInteger(mySqlQuery.Rows[0]["LanguageID"]);
-                BagFamily = mySqlQuery.Rows[0]["BagFamily"];
+                BagFamily = (ITEM_BAG)mySqlQuery.Rows[0]["BagFamily"];
                 Delay = Conversions.ToInteger(mySqlQuery.Rows[0]["delay"]);
                 Range = Conversions.ToSingle(mySqlQuery.Rows[0]["RangedModRange"]);
                 Damage[0].Minimum = Conversions.ToSingle(mySqlQuery.Rows[0]["dmg_min1"]);
@@ -141,15 +141,15 @@ namespace Mangos.World.Objects
                 Damage[4].Minimum = Conversions.ToSingle(mySqlQuery.Rows[0]["dmg_min5"]);
                 Damage[4].Maximum = Conversions.ToSingle(mySqlQuery.Rows[0]["dmg_max5"]);
                 Damage[4].Type = Conversions.ToInteger(mySqlQuery.Rows[0]["dmg_type5"]);
-                Resistances[DamageTypes.DMG_PHYSICAL] = mySqlQuery.Rows[0]["armor"];        // Armor
-                Resistances[DamageTypes.DMG_HOLY] = mySqlQuery.Rows[0]["holy_res"];          // Holy
-                Resistances[DamageTypes.DMG_FIRE] = mySqlQuery.Rows[0]["fire_res"];          // Fire
-                Resistances[DamageTypes.DMG_NATURE] = mySqlQuery.Rows[0]["nature_res"];      // Nature
-                Resistances[DamageTypes.DMG_FROST] = mySqlQuery.Rows[0]["frost_res"];        // Frost
-                Resistances[DamageTypes.DMG_SHADOW] = mySqlQuery.Rows[0]["shadow_res"];      // Shadow
-                Resistances[DamageTypes.DMG_ARCANE] = mySqlQuery.Rows[0]["arcane_res"];      // Arcane
+                (object)Resistances[DamageTypes.DMG_PHYSICAL] = mySqlQuery.Rows[0]["armor"];        // Armor
+                (object)Resistances[DamageTypes.DMG_HOLY] = mySqlQuery.Rows[0]["holy_res"];          // Holy
+                (object)Resistances[DamageTypes.DMG_FIRE] = mySqlQuery.Rows[0]["fire_res"];          // Fire
+                (object)Resistances[DamageTypes.DMG_NATURE] = mySqlQuery.Rows[0]["nature_res"];      // Nature
+                (object)Resistances[DamageTypes.DMG_FROST] = mySqlQuery.Rows[0]["frost_res"];        // Frost
+                (object)Resistances[DamageTypes.DMG_SHADOW] = mySqlQuery.Rows[0]["shadow_res"];      // Shadow
+                (object)Resistances[DamageTypes.DMG_ARCANE] = mySqlQuery.Rows[0]["arcane_res"];      // Arcane
                 Spells[0].SpellID = Conversions.ToInteger(mySqlQuery.Rows[0]["spellid_1"]);
-                Spells[0].SpellTrigger = mySqlQuery.Rows[0]["spelltrigger_1"];
+                Spells[0].SpellTrigger = (ITEM_SPELLTRIGGER_TYPE)mySqlQuery.Rows[0]["spelltrigger_1"];
                 // 0="Use:" 1="Equip:" 2="Chance on Hit:"
                 Spells[0].SpellCharges = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcharges_1"]);
                 // 0=Doesn't disappear after use -1=Disappears after use
@@ -157,7 +157,7 @@ namespace Mangos.World.Objects
                 Spells[0].SpellCategory = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcategory_1"]);
                 Spells[0].SpellCategoryCooldown = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcategorycooldown_1"]);
                 Spells[1].SpellID = Conversions.ToInteger(mySqlQuery.Rows[0]["spellid_2"]);
-                Spells[1].SpellTrigger = mySqlQuery.Rows[0]["spelltrigger_2"];
+                Spells[1].SpellTrigger = (ITEM_SPELLTRIGGER_TYPE)mySqlQuery.Rows[0]["spelltrigger_2"];
                 // 0="Use:" 1="Equip:" 2="Chance on Hit:"
                 Spells[1].SpellCharges = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcharges_2"]);
                 // 0=Doesn't disappear after use -1=Disappears after use
@@ -165,7 +165,7 @@ namespace Mangos.World.Objects
                 Spells[1].SpellCategory = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcategory_2"]);
                 Spells[1].SpellCategoryCooldown = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcategorycooldown_2"]);
                 Spells[2].SpellID = Conversions.ToInteger(mySqlQuery.Rows[0]["spellid_3"]);
-                Spells[2].SpellTrigger = mySqlQuery.Rows[0]["spelltrigger_3"];
+                Spells[2].SpellTrigger = (ITEM_SPELLTRIGGER_TYPE)mySqlQuery.Rows[0]["spelltrigger_3"];
                 // 0="Use:" 1="Equip:" 2="Chance on Hit:"
                 Spells[2].SpellCharges = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcharges_3"]);
                 // 0=Doesn't disappear after use -1=Disappears after use
@@ -173,7 +173,7 @@ namespace Mangos.World.Objects
                 Spells[2].SpellCategory = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcategory_3"]);
                 Spells[2].SpellCategoryCooldown = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcategorycooldown_3"]);
                 Spells[3].SpellID = Conversions.ToInteger(mySqlQuery.Rows[0]["spellid_4"]);
-                Spells[3].SpellTrigger = mySqlQuery.Rows[0]["spelltrigger_4"];
+                Spells[3].SpellTrigger = (ITEM_SPELLTRIGGER_TYPE)mySqlQuery.Rows[0]["spelltrigger_4"];
                 // 0="Use:" 1="Equip:" 2="Chance on Hit:"
                 Spells[3].SpellCharges = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcharges_4"]);
                 // 0=Doesn't disappear after use -1=Disappears after use
@@ -181,7 +181,7 @@ namespace Mangos.World.Objects
                 Spells[3].SpellCategory = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcategory_4"]);
                 Spells[3].SpellCategoryCooldown = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcategorycooldown_4"]);
                 Spells[4].SpellID = Conversions.ToInteger(mySqlQuery.Rows[0]["spellid_5"]);
-                Spells[4].SpellTrigger = mySqlQuery.Rows[0]["spelltrigger_5"];
+                Spells[4].SpellTrigger = (ITEM_SPELLTRIGGER_TYPE)mySqlQuery.Rows[0]["spelltrigger_5"];
                 // 0="Use:" 1="Equip:" 2="Chance on Hit:"
                 Spells[4].SpellCharges = Conversions.ToInteger(mySqlQuery.Rows[0]["spellcharges_5"]);
                 // 0=Doesn't disappear after use -1=Disappears after use
@@ -342,133 +342,133 @@ namespace Mangos.World.Objects
                     {
                         case var @case when @case == INVENTORY_TYPES.INVTYPE_HEAD:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_HEAD };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_HEAD };
                             }
 
                         case var case1 when case1 == INVENTORY_TYPES.INVTYPE_NECK:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_NECK };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_NECK };
                             }
 
                         case var case2 when case2 == INVENTORY_TYPES.INVTYPE_SHOULDERS:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_SHOULDERS };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_SHOULDERS };
                             }
 
                         case var case3 when case3 == INVENTORY_TYPES.INVTYPE_BODY:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_BODY };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_BODY };
                             }
 
                         case var case4 when case4 == INVENTORY_TYPES.INVTYPE_CHEST:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_CHEST };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_CHEST };
                             }
 
                         case var case5 when case5 == INVENTORY_TYPES.INVTYPE_ROBE:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_CHEST };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_CHEST };
                             }
 
                         case var case6 when case6 == INVENTORY_TYPES.INVTYPE_WAIST:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_WAIST };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_WAIST };
                             }
 
                         case var case7 when case7 == INVENTORY_TYPES.INVTYPE_LEGS:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_LEGS };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_LEGS };
                             }
 
                         case var case8 when case8 == INVENTORY_TYPES.INVTYPE_FEET:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_FEET };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_FEET };
                             }
 
                         case var case9 when case9 == INVENTORY_TYPES.INVTYPE_WRISTS:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_WRISTS };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_WRISTS };
                             }
 
                         case var case10 when case10 == INVENTORY_TYPES.INVTYPE_HANDS:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_HANDS };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_HANDS };
                             }
 
                         case var case11 when case11 == INVENTORY_TYPES.INVTYPE_FINGER:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_FINGER1, EquipmentSlots.EQUIPMENT_SLOT_FINGER2 };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_FINGER1, (byte)EquipmentSlots.EQUIPMENT_SLOT_FINGER2 };
                             }
 
                         case var case12 when case12 == INVENTORY_TYPES.INVTYPE_TRINKET:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_TRINKET1, EquipmentSlots.EQUIPMENT_SLOT_TRINKET2 };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_TRINKET1, (byte)EquipmentSlots.EQUIPMENT_SLOT_TRINKET2 };
                             }
 
                         case var case13 when case13 == INVENTORY_TYPES.INVTYPE_CLOAK:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_BACK };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_BACK };
                             }
 
                         case var case14 when case14 == INVENTORY_TYPES.INVTYPE_WEAPON:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_MAINHAND, EquipmentSlots.EQUIPMENT_SLOT_OFFHAND };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_MAINHAND, (byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND };
                             }
 
                         case var case15 when case15 == INVENTORY_TYPES.INVTYPE_SHIELD:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_OFFHAND };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND };
                             }
 
                         case var case16 when case16 == INVENTORY_TYPES.INVTYPE_RANGED:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_RANGED };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED };
                             }
 
                         case var case17 when case17 == INVENTORY_TYPES.INVTYPE_TWOHAND_WEAPON:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_MAINHAND };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_MAINHAND };
                             }
 
                         case var case18 when case18 == INVENTORY_TYPES.INVTYPE_TABARD:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_TABARD };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_TABARD };
                             }
 
                         case var case19 when case19 == INVENTORY_TYPES.INVTYPE_WEAPONMAINHAND:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_MAINHAND };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_MAINHAND };
                             }
 
                         case var case20 when case20 == INVENTORY_TYPES.INVTYPE_WEAPONOFFHAND:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_OFFHAND };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND };
                             }
 
                         case var case21 when case21 == INVENTORY_TYPES.INVTYPE_HOLDABLE:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_OFFHAND };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND };
                             }
 
                         case var case22 when case22 == INVENTORY_TYPES.INVTYPE_THROWN:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_RANGED };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED };
                             }
 
                         case var case23 when case23 == INVENTORY_TYPES.INVTYPE_RANGEDRIGHT:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_RANGED };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED };
                             }
 
                         case var case24 when case24 == INVENTORY_TYPES.INVTYPE_BAG:
                             {
-                                return new byte[] { InventorySlots.INVENTORY_SLOT_BAG_1, InventorySlots.INVENTORY_SLOT_BAG_2, InventorySlots.INVENTORY_SLOT_BAG_3, InventorySlots.INVENTORY_SLOT_BAG_4 };
+                                return new byte[] { (byte)InventorySlots.INVENTORY_SLOT_BAG_1, (byte)InventorySlots.INVENTORY_SLOT_BAG_2, (byte)InventorySlots.INVENTORY_SLOT_BAG_3, (byte)InventorySlots.INVENTORY_SLOT_BAG_4 };
 
                             }
 
                         case var case25 when case25 == INVENTORY_TYPES.INVTYPE_RELIC:
                             {
-                                return new byte[] { EquipmentSlots.EQUIPMENT_SLOT_RANGED };
+                                return new byte[] { (byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED };
                             }
 
                         default:
@@ -678,7 +678,7 @@ namespace Mangos.World.Objects
         {
             public float Minimum = 0f;
             public float Maximum = 0f;
-            public int Type = DamageTypes.DMG_PHYSICAL;
+            public int Type = (int)DamageTypes.DMG_PHYSICAL;
         }
 
         public class TEnchantmentInfo
@@ -732,14 +732,14 @@ namespace Mangos.World.Objects
             }
 
             response.AddInt32(item.Id);
-            response.AddInt32(item.ObjectClass);
+            response.AddInt32((int)item.ObjectClass);
             if (item.ObjectClass == ITEM_CLASS.ITEM_CLASS_CONSUMABLE)
             {
                 response.AddInt32(0);
             }
             else
             {
-                response.AddInt32(item.SubClass);
+                response.AddInt32((int)item.SubClass);
             }
 
             response.AddString(item.Name);
@@ -751,7 +751,7 @@ namespace Mangos.World.Objects
             response.AddInt32(item.Flags);
             response.AddInt32(item.BuyPrice);
             response.AddInt32(item.SellPrice);
-            response.AddInt32(item.InventoryType);
+            response.AddInt32((int)item.InventoryType);
             response.AddUInt32(item.AvailableClasses);
             response.AddUInt32(item.AvailableRaces);
             response.AddInt32(item.Level);
@@ -799,7 +799,7 @@ namespace Mangos.World.Objects
                 else
                 {
                     response.AddInt32(item.Spells[i].SpellID);
-                    response.AddInt32(item.Spells[i].SpellTrigger);
+                    response.AddInt32((int)item.Spells[i].SpellTrigger);
                     response.AddInt32(item.Spells[i].SpellCharges);
                     if (item.Spells[i].SpellCooldown > 0 || item.Spells[i].SpellCategoryCooldown > 0)
                     {
@@ -824,14 +824,14 @@ namespace Mangos.World.Objects
             response.AddInt32(item.StartQuest);
             response.AddInt32(item.LockID);
             response.AddInt32(item.Material);
-            response.AddInt32(item.Sheath);
+            response.AddInt32((int)item.Sheath);
             response.AddInt32(item.Extra);
             response.AddInt32(item.Block);
             response.AddInt32(item.ItemSet);
             response.AddInt32(item.Durability);
             response.AddInt32(item.ZoneNameID);
             response.AddInt32(item.MapID); // Added in 1.12.1 client branch
-            response.AddInt32(item.BagFamily);
+            response.AddInt32((int)item.BagFamily);
 
             // response.AddInt32(Item.TotemCategory)
             // response.AddInt32(Item.ReqDisenchantSkill)
@@ -870,7 +870,7 @@ namespace Mangos.World.Objects
             var response = new Packets.PacketClass(OPCODES.SMSG_ITEM_NAME_QUERY_RESPONSE);
             response.AddInt32(itemID);
             response.AddString(item.Name);
-            response.AddInt32(item.InventoryType);
+            response.AddInt32((int)item.InventoryType);
             client.Send(ref response);
             response.Dispose();
         }
@@ -898,12 +898,12 @@ namespace Mangos.World.Objects
                 if (srcBag == 255)
                     srcBag = 0;
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTOEQUIP_ITEM [srcSlot={3}:{2}]", client.IP, client.Port, srcSlot, srcBag);
-                byte errCode = InventoryChangeFailure.EQUIP_ERR_ITEM_CANT_BE_EQUIPPED;
+                byte errCode = (byte)InventoryChangeFailure.EQUIP_ERR_ITEM_CANT_BE_EQUIPPED;
 
                 // DONE: Check owner of the item
                 if (client.Character.ItemGET(srcBag, srcSlot).OwnerGUID != client.Character.GUID)
                 {
-                    errCode = InventoryChangeFailure.EQUIP_ERR_DONT_OWN_THAT_ITEM;
+                    errCode = (byte)InventoryChangeFailure.EQUIP_ERR_DONT_OWN_THAT_ITEM;
                 }
                 else if (srcBag == 0 && client.Character.Items.ContainsKey(srcSlot))
                 {
@@ -913,12 +913,12 @@ namespace Mangos.World.Objects
                         if (!client.Character.Items.ContainsKey(tmpSlot))
                         {
                             client.Character.ItemSWAP(srcBag, srcSlot, 0, tmpSlot);
-                            errCode = InventoryChangeFailure.EQUIP_ERR_OK;
+                            errCode = (byte)InventoryChangeFailure.EQUIP_ERR_OK;
                             break;
                         }
                         else
                         {
-                            errCode = InventoryChangeFailure.EQUIP_ERR_NO_EQUIPMENT_SLOT_AVAILABLE;
+                            errCode = (byte)InventoryChangeFailure.EQUIP_ERR_NO_EQUIPMENT_SLOT_AVAILABLE;
                         }
                     }
 
@@ -927,7 +927,7 @@ namespace Mangos.World.Objects
                         foreach (byte tmpSlot in slots)
                         {
                             client.Character.ItemSWAP(srcBag, srcSlot, 0, tmpSlot);
-                            errCode = InventoryChangeFailure.EQUIP_ERR_OK;
+                            errCode = (byte)InventoryChangeFailure.EQUIP_ERR_OK;
                             break;
                         }
                     }
@@ -940,12 +940,12 @@ namespace Mangos.World.Objects
                         if (!client.Character.Items.ContainsKey(tmpSlot))
                         {
                             client.Character.ItemSWAP(srcBag, srcSlot, 0, tmpSlot);
-                            errCode = InventoryChangeFailure.EQUIP_ERR_OK;
+                            errCode = (byte)InventoryChangeFailure.EQUIP_ERR_OK;
                             break;
                         }
                         else
                         {
-                            errCode = InventoryChangeFailure.EQUIP_ERR_NO_EQUIPMENT_SLOT_AVAILABLE;
+                            errCode = (byte)InventoryChangeFailure.EQUIP_ERR_NO_EQUIPMENT_SLOT_AVAILABLE;
                         }
                     }
 
@@ -954,14 +954,14 @@ namespace Mangos.World.Objects
                         foreach (byte tmpSlot in slots)
                         {
                             client.Character.ItemSWAP(srcBag, srcSlot, 0, tmpSlot);
-                            errCode = InventoryChangeFailure.EQUIP_ERR_OK;
+                            errCode = (byte)InventoryChangeFailure.EQUIP_ERR_OK;
                             break;
                         }
                     }
                 }
                 else
                 {
-                    errCode = InventoryChangeFailure.EQUIP_ERR_ITEM_NOT_FOUND;
+                    errCode = (byte)InventoryChangeFailure.EQUIP_ERR_ITEM_NOT_FOUND;
                 }
 
                 if (errCode != InventoryChangeFailure.EQUIP_ERR_OK)
@@ -1055,13 +1055,13 @@ namespace Mangos.World.Objects
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_READ_ITEM [srcSlot={3}:{2}]", client.IP, client.Port, srcSlot, srcBag);
 
             // TODO: If InCombat/Dead
-            short opcode = OPCODES.SMSG_READ_ITEM_FAILED;
+            short opcode = (short)OPCODES.SMSG_READ_ITEM_FAILED;
             ulong guid = 0UL;
             if (srcBag == 0)
             {
                 if (client.Character.Items.ContainsKey(srcSlot))
                 {
-                    opcode = OPCODES.SMSG_READ_ITEM_OK;
+                    opcode = (short)OPCODES.SMSG_READ_ITEM_OK;
                     if (client.Character.Items[srcSlot].ItemInfo.PageText > 0)
                         guid = client.Character.Items[srcSlot].GUID;
                 }
@@ -1070,7 +1070,7 @@ namespace Mangos.World.Objects
             {
                 if (client.Character.Items[srcBag].Items.ContainsKey(srcSlot))
                 {
-                    opcode = OPCODES.SMSG_READ_ITEM_OK;
+                    opcode = (short)OPCODES.SMSG_READ_ITEM_OK;
                     if (client.Character.Items[srcBag].Items[srcSlot].ItemInfo.PageText > 0)
                         guid = client.Character.Items[srcBag].Items[srcSlot].GUID;
                 }
@@ -1078,7 +1078,7 @@ namespace Mangos.World.Objects
 
             if (guid != 0m)
             {
-                var response = new Packets.PacketClass(opcode);
+                var response = new Packets.PacketClass((OPCODES)opcode);
                 response.AddUInt64(guid);
                 client.Send(ref response);
                 response.Dispose();
@@ -1331,10 +1331,10 @@ namespace Mangos.World.Objects
                             var argItem = tmp[itemGuid];
                             var tmpSpell = new WS_Spells.CastSpellParameters(ref targets, ref argCaster1, itemInfo.Spells[i].SpellID, ref argItem, InstantCast);
                             tmp[itemGuid] = argItem;
-                            byte castResult = SpellFailedReason.SPELL_NO_ERROR;
+                            byte castResult = (byte)SpellFailedReason.SPELL_NO_ERROR;
                             try
                             {
-                                castResult = WorldServiceLocator._WS_Spells.SPELLs[itemInfo.Spells[i].SpellID].CanCast(ref client.Character, targets, true);
+                                castResult = (byte)WorldServiceLocator._WS_Spells.SPELLs[itemInfo.Spells[i].SpellID].CanCast(ref client.Character, targets, true);
 
                                 // Only instant cast send ERR_OK for cast result?
                                 if (castResult == SpellFailedReason.SPELL_NO_ERROR)
@@ -1344,13 +1344,13 @@ namespace Mangos.World.Objects
                                 }
                                 else
                                 {
-                                    WorldServiceLocator._WS_Spells.SendCastResult(castResult, ref client, itemInfo.Spells[(int)i].SpellID);
+                                    WorldServiceLocator._WS_Spells.SendCastResult((SpellFailedReason)castResult, ref client, itemInfo.Spells[(int)i].SpellID);
                                 }
                             }
                             catch (Exception e)
                             {
                                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error casting spell {0}.{1}", itemInfo.Spells[i].SpellID, Environment.NewLine + e.ToString());
-                                WorldServiceLocator._WS_Spells.SendCastResult(castResult, ref client, itemInfo.Spells[(int)i].SpellID);
+                                WorldServiceLocator._WS_Spells.SendCastResult((SpellFailedReason)castResult, ref client, itemInfo.Spells[(int)i].SpellID);
                             }
 
                             return;
@@ -1398,7 +1398,7 @@ namespace Mangos.World.Objects
         public void SendInventoryChangeFailure(ref WS_PlayerData.CharacterObject objCharacter, InventoryChangeFailure errorCode, ulong guid1, ulong guid2)
         {
             var packet = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
-            packet.AddInt8(errorCode);
+            packet.AddInt8((byte)errorCode);
             if (errorCode == InventoryChangeFailure.EQUIP_ERR_YOU_MUST_REACH_LEVEL_N)
             {
                 packet.AddInt32(WorldServiceLocator._WorldServer.WORLD_ITEMs[guid1].ItemInfo.ReqLevel);

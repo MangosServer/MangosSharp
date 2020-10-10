@@ -140,20 +140,20 @@ namespace Mangos.World.Objects
             public float transportO = 0.0f;
             public float BoundingRadius = 0.389f;
             public float CombatReach = 1.5f;
-            public int cUnitFlags = UnitFlags.UNIT_FLAG_ATTACKABLE;
+            public int cUnitFlags = (int)UnitFlags.UNIT_FLAG_ATTACKABLE;
             public int cDynamicFlags = 0; // DynamicFlags.UNIT_DYNFLAG_SPECIALINFO
 
             // <<0                <<8             <<16                <<24
             public int cBytes0 = 0;                       // Race               Classe          Gender              ManaType
             public int cBytes1 = 0;                       // StandState,        PetLoyalty,     ShapeShift,         StealthFlag [CType(Invisibility > InvisibilityLevel.VISIBLE, Integer) * 2 << 24]
-            public int cBytes2 = 0xEEEEEE00;              // ?                  ?               ?                   ?
+            public int cBytes2 = (int)0xEEEEEE00;              // ?                  ?               ?                   ?
 
             // cBytes0 subfields
             public virtual ManaTypes ManaType
             {
                 get
                 {
-                    return (cBytes0 & 0xFF000000) >> 24;
+                    return (ManaTypes)((cBytes0 & 0xFF000000) >> 24);
                 }
 
                 set
@@ -166,7 +166,7 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    return (cBytes0 & 0xFF0000) >> 16;
+                    return (Genders)((cBytes0 & 0xFF0000) >> 16);
                 }
 
                 set
@@ -179,7 +179,7 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    return (cBytes0 & 0xFF00) >> 8;
+                    return (Classes)((cBytes0 & 0xFF00) >> 8);
                 }
 
                 set
@@ -192,7 +192,7 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    return (cBytes0 & 0xFF) >> 0;
+                    return (Races)((cBytes0 & 0xFF) >> 0);
                 }
 
                 set
@@ -230,7 +230,7 @@ namespace Mangos.World.Objects
 
                 set
                 {
-                    cBytes1 = cBytes1 & 0xFFFFFF00 | value << 0;
+                    cBytes1 = (int)(cBytes1 & 0xFFFFFF00 | value << 0);
                 }
             }
 
@@ -243,7 +243,7 @@ namespace Mangos.World.Objects
 
                 set
                 {
-                    cBytes1 = cBytes1 & 0xFFFF00FF | value << 8;
+                    cBytes1 = (int)(cBytes1 & 0xFFFF00FF | value << 8);
                 }
             }
 
@@ -251,7 +251,7 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    return (cBytes1 & 0xFF0000) >> 16;
+                    return (ShapeshiftForm)((cBytes1 & 0xFF0000) >> 16);
                 }
 
                 set
@@ -410,10 +410,10 @@ namespace Mangos.World.Objects
                 {
                     if (this is WS_PlayerData.CharacterObject)
                     {
-                        ((WS_PlayerData.CharacterObject)this).SetUpdateFlag(EUnitFields.UNIT_FIELD_AURA + Slot, SpellID);
-                        ((WS_PlayerData.CharacterObject)this).SetUpdateFlag(EUnitFields.UNIT_FIELD_AURAFLAGS + AuraFlag_Slot, ActiveSpells_Flags[AuraFlag_Slot]);
-                        ((WS_PlayerData.CharacterObject)this).SetUpdateFlag(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + AuraLevel_Slot, ActiveSpells_Count[AuraLevel_Slot]);
-                        ((WS_PlayerData.CharacterObject)this).SetUpdateFlag(EUnitFields.UNIT_FIELD_AURALEVELS + AuraLevel_Slot, ActiveSpells_Level[AuraLevel_Slot]);
+                        ((WS_PlayerData.CharacterObject)this).SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURA + Slot), SpellID);
+                        ((WS_PlayerData.CharacterObject)this).SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAFLAGS + AuraFlag_Slot), ActiveSpells_Flags[AuraFlag_Slot]);
+                        ((WS_PlayerData.CharacterObject)this).SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + AuraLevel_Slot), ActiveSpells_Count[AuraLevel_Slot]);
+                        ((WS_PlayerData.CharacterObject)this).SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURALEVELS + AuraLevel_Slot), ActiveSpells_Level[AuraLevel_Slot]);
                         ((WS_PlayerData.CharacterObject)this).SendCharacterUpdate(true);
                         var SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(OPCODES.SMSG_UPDATE_AURA_DURATION);
                         try
@@ -433,10 +433,10 @@ namespace Mangos.World.Objects
                         var tmpPacket = new Packets.UpdatePacketClass();
                         try
                         {
-                            tmpUpdate.SetUpdateFlag(EUnitFields.UNIT_FIELD_AURA + Slot, SpellID);
-                            tmpUpdate.SetUpdateFlag(EUnitFields.UNIT_FIELD_AURAFLAGS + AuraFlag_Slot, ActiveSpells_Flags[AuraFlag_Slot]);
-                            tmpUpdate.SetUpdateFlag(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + AuraLevel_Slot, ActiveSpells_Count[AuraLevel_Slot]);
-                            tmpUpdate.SetUpdateFlag(EUnitFields.UNIT_FIELD_AURALEVELS + AuraLevel_Slot, ActiveSpells_Level[AuraLevel_Slot]);
+                            tmpUpdate.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURA + Slot), SpellID);
+                            tmpUpdate.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAFLAGS + AuraFlag_Slot), ActiveSpells_Flags[AuraFlag_Slot]);
+                            tmpUpdate.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + AuraLevel_Slot), ActiveSpells_Count[AuraLevel_Slot]);
+                            tmpUpdate.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURALEVELS + AuraLevel_Slot), ActiveSpells_Level[AuraLevel_Slot]);
                             tmpUpdate.AddToPacket(tmpPacket, ObjectUpdateType.UPDATETYPE_VALUES, (WS_Creatures.CreatureObject)this);
                             Packets.PacketClass argpacket = tmpPacket;
                             SendToNearPlayers(ref argpacket);
@@ -533,7 +533,7 @@ namespace Mangos.World.Objects
                         if (ActiveSpells[Slot].Aura[j] is object)
                         {
                             var argTarget = this;
-                            ActiveSpells[Slot].Aura[(int)j].Invoke(ref argTarget, ref Caster, ref ActiveSpells[Slot].Aura_Info[(int)j], ActiveSpells[Slot].SpellID, ActiveSpells[Slot].StackCount + 1, RemoveAction);
+                            ActiveSpells[Slot].Aura[(int)j].Invoke(ref argTarget, ref (BaseObject)Caster, ref ActiveSpells[Slot].Aura_Info[(int)j], ActiveSpells[Slot].SpellID, ActiveSpells[Slot].StackCount + 1, RemoveAction);
                         }
                     }
                 }
@@ -758,7 +758,7 @@ namespace Mangos.World.Objects
                 SetAuraStackCount(Slot, (byte)ActiveSpells[Slot].StackCount);
                 if (this is WS_PlayerData.CharacterObject)
                 {
-                    ((WS_PlayerData.CharacterObject)this).SetUpdateFlag(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + AuraFlag_Slot, ActiveSpells_Count[AuraFlag_Slot]);
+                    ((WS_PlayerData.CharacterObject)this).SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + AuraFlag_Slot), ActiveSpells_Count[AuraFlag_Slot]);
                     ((WS_PlayerData.CharacterObject)this).SendCharacterUpdate(true);
                     var SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(OPCODES.SMSG_UPDATE_AURA_DURATION);
                     try
@@ -778,7 +778,7 @@ namespace Mangos.World.Objects
                     var tmpPacket = new Packets.UpdatePacketClass();
                     try
                     {
-                        tmpUpdate.SetUpdateFlag(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + AuraFlag_Slot, ActiveSpells_Count[AuraFlag_Slot]);
+                        tmpUpdate.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + AuraFlag_Slot), ActiveSpells_Count[AuraFlag_Slot]);
                         tmpUpdate.AddToPacket(tmpPacket, ObjectUpdateType.UPDATETYPE_VALUES, (WS_Creatures.CreatureObject)this);
                         Packets.PacketClass argpacket = tmpPacket;
                         SendToNearPlayers(ref argpacket);
@@ -938,14 +938,14 @@ namespace Mangos.World.Objects
                     case var case3 when case3 == SpellType.SPELL_TYPE_NONMELEE:
                         {
                             var argTarget = this;
-                            WorldServiceLocator._WS_Spells.SendNonMeleeDamageLog(ref Caster, ref argTarget, SpellID, DamageType, Damage, Resist, Absorb, IsCrit);
+                            WorldServiceLocator._WS_Spells.SendNonMeleeDamageLog(ref Caster, ref argTarget, SpellID, (int)DamageType, Damage, Resist, Absorb, IsCrit);
                             break;
                         }
 
                     case var case4 when case4 == SpellType.SPELL_TYPE_DOT:
                         {
                             var argTarget1 = this;
-                            WorldServiceLocator._WS_Spells.SendPeriodicAuraLog(ref Caster, ref argTarget1, SpellID, DamageType, Damage, EffectInfo.ApplyAuraIndex);
+                            WorldServiceLocator._WS_Spells.SendPeriodicAuraLog(ref Caster, ref argTarget1, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
                             break;
                         }
 
@@ -959,7 +959,7 @@ namespace Mangos.World.Objects
                     case var case6 when case6 == SpellType.SPELL_TYPE_HEALDOT:
                         {
                             var argTarget3 = this;
-                            WorldServiceLocator._WS_Spells.SendPeriodicAuraLog(ref Caster, ref argTarget3, SpellID, DamageType, Damage, EffectInfo.ApplyAuraIndex);
+                            WorldServiceLocator._WS_Spells.SendPeriodicAuraLog(ref Caster, ref argTarget3, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
                             break;
                         }
                 }
@@ -982,10 +982,10 @@ namespace Mangos.World.Objects
                 }
 
                 // Increase from attacker SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT auras
-                modHitChance += Caster.GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT, Spell.SchoolMask);
+                modHitChance += Caster.GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT, (int)Spell.SchoolMask);
 
                 // Chance hit from victim SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE auras
-                modHitChance += GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, Spell.SchoolMask);
+                modHitChance += GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, (int)Spell.SchoolMask);
 
                 // Reduce spell hit chance for Area of effect spells from victim SPELL_AURA_MOD_AOE_AVOIDANCE aura
                 if (Spell.IsAOE)
@@ -1123,21 +1123,21 @@ namespace Mangos.World.Objects
                         {
                             case var @case when @case == WeaponAttackType.BASE_ATTACK:
                                 {
-                                    if (withBlock.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND))
+                                    if (withBlock.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_MAINHAND))
                                         item = withBlock.Items(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND);
                                     break;
                                 }
 
                             case var case1 when case1 == WeaponAttackType.OFF_ATTACK:
                                 {
-                                    if (withBlock.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND))
+                                    if (withBlock.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND))
                                         item = withBlock.Items(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND);
                                     break;
                                 }
 
                             case var case2 when case2 == WeaponAttackType.RANGED_ATTACK:
                                 {
-                                    if (withBlock.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_RANGED))
+                                    if (withBlock.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED))
                                         item = withBlock.Items(EquipmentSlots.EQUIPMENT_SLOT_RANGED);
                                     break;
                                 }
@@ -1265,7 +1265,7 @@ namespace Mangos.World.Objects
                     int Schools = (int)(tmpSpell.Value >> 23U);
                     int AbsorbDamage = (int)(tmpSpell.Value & 0x7FFFFFL);
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Spell: {0} [{1}]", AbsorbDamage, Schools);
-                    if (WorldServiceLocator._Functions.HaveFlag(Schools, School))
+                    if (WorldServiceLocator._Functions.HaveFlag((uint)Schools, (byte)School))
                     {
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Apmongo, yes?!");
                         if (Damage == AbsorbDamage)
@@ -1319,7 +1319,7 @@ namespace Mangos.World.Objects
 
             public BaseUnit()
             {
-                for (byte i = DamageTypes.DMG_PHYSICAL, loopTo = DamageTypes.DMG_ARCANE; i <= loopTo; i++)
+                for (byte i = (byte)DamageTypes.DMG_PHYSICAL, loopTo = (byte)DamageTypes.DMG_ARCANE; i <= loopTo; i++)
                     Resistances[i] = new WS_PlayerHelper.TStat();
             }
         }

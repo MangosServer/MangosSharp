@@ -116,7 +116,7 @@ namespace Mangos.World.Social
                 var response = new Packets.PacketClass(OPCODES.SMSG_BUY_FAILED);
                 response.AddUInt64(GUID);
                 response.AddInt32(CharterID);
-                response.AddInt8(BUY_ERROR.BUY_ERR_CANT_FIND_ITEM);
+                response.AddInt8((byte)BUY_ERROR.BUY_ERR_CANT_FIND_ITEM);
                 client.Send(ref response);
                 response.Dispose();
                 return;
@@ -127,14 +127,14 @@ namespace Mangos.World.Social
                 var response = new Packets.PacketClass(OPCODES.SMSG_BUY_FAILED);
                 response.AddUInt64(GUID);
                 response.AddInt32(CharterID);
-                response.AddInt8(BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
+                response.AddInt8((byte)BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
                 client.Send(ref response);
                 response.Dispose();
                 return;
             }
 
             client.Character.Copper = (uint)(client.Character.Copper - CharterPrice);
-            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
             client.Character.SendCharacterUpdate(false);
 
             // Client.Character.AddItem(PETITION_GUILD)
@@ -295,7 +295,7 @@ namespace Mangos.World.Social
             var response = new Packets.PacketClass(OPCODES.SMSG_PETITION_SIGN_RESULTS);
             response.AddUInt64(itemGuid);
             response.AddUInt64(client.Character.GUID);
-            response.AddInt32(PetitionSignError.PETITIONSIGN_OK);
+            response.AddInt32((int)PetitionSignError.PETITIONSIGN_OK);
             client.SendMultiplyPackets(ref response);
             if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Conversions.ToULong(MySQLQuery.Rows[0]["petition_owner"])))
                 WorldServiceLocator._WorldServer.CHARACTERs[Conversions.ToULong(MySQLQuery.Rows[0]["petition_owner"])].client.SendMultiplyPackets(ref response);
@@ -397,9 +397,9 @@ namespace Mangos.World.Social
         public void SendGuildResult(ref WS_Network.ClientClass client, GuildCommand Command, GuildError Result, string Text = "")
         {
             var response = new Packets.PacketClass(OPCODES.SMSG_GUILD_COMMAND_RESULT);
-            response.AddInt32(Command);
+            response.AddInt32((int)Command);
             response.AddString(Text);
-            response.AddInt32(Result);
+            response.AddInt32((int)Result);
             client.Send(ref response);
             response.Dispose();
         }

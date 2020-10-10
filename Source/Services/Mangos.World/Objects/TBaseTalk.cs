@@ -33,7 +33,7 @@ namespace Mangos.World.Objects
 
         public virtual int OnQuestStatus(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
         {
-            return QuestgiverStatusFlag.DIALOG_STATUS_NONE;
+            return (int)QuestgiverStatusFlag.DIALOG_STATUS_NONE;
         }
 
         public virtual bool OnQuestHello(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)

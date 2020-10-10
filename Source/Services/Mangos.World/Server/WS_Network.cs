@@ -466,7 +466,7 @@ namespace Mangos.World.Server
                                     try
                                     {
                                         var argclient = this;
-                                        WorldServiceLocator._WorldServer.PacketHandlers(p.OpCode).Invoke(ref p, ref argclient);
+                                        WorldServiceLocator._WorldServer.PacketHandlers[p.OpCode].Invoke(ref p, ref argclient);
                                         if (WorldServiceLocator._NativeMethods.timeGetTime("") - start > 100)
                                         {
                                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Packet processing took too long: {0}, {1}ms", p.OpCode, WorldServiceLocator._NativeMethods.timeGetTime("") - start);
@@ -657,15 +657,6 @@ namespace Mangos.World.Server
             /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
             public void Delete()
             {
-                ;
-#error Cannot convert OnErrorResumeNextStatementSyntax - see comment for details
-                /* Cannot convert OnErrorResumeNextStatementSyntax, CONVERSION ERROR: Conversion for OnErrorResumeNextStatement not implemented, please report this issue in 'On Error Resume Next' at character 33693
-
-
-                Input:
-                                On Error Resume Next
-
-                 */
                 WorldServiceLocator._WorldServer.CLIENTs.Remove(Index);
                 if (Character is object)
                 {

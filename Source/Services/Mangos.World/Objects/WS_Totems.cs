@@ -65,7 +65,7 @@ namespace Mangos.World.Objects
                                 if (ActiveSpells[i] is object && ActiveSpells[i].Aura[j] is object && ActiveSpells[i].Aura_Info[j].Amplitude != 0 && (Duration - ActiveSpells[i].SpellDuration) % ActiveSpells[i].Aura_Info[j].Amplitude == 0)
                                 {
                                     var argTarget = this;
-                                    ActiveSpells[i].Aura[(int)j].Invoke(ref argTarget, ref ActiveSpells[i].SpellCaster, ref ActiveSpells[i].Aura_Info[(int)j], ActiveSpells[i].SpellID, ActiveSpells[i].StackCount + 1, AuraAction.AURA_UPDATE);
+                                    ActiveSpells[i].Aura[(int)j].Invoke(ref (WS_Base.BaseUnit)argTarget, ref (WS_Base.BaseObject)ActiveSpells[i].SpellCaster, ref ActiveSpells[i].Aura_Info[(int)j], ActiveSpells[i].SpellID, ActiveSpells[i].StackCount + 1, AuraAction.AURA_UPDATE);
                                 }
                             }
 

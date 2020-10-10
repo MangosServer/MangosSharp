@@ -45,7 +45,7 @@ namespace Mangos.World.Handlers
             // END
 
             packet.GetInt16();
-            MaievResponse Response = packet.GetInt8();
+            MaievResponse Response = (MaievResponse)packet.GetInt8();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_WARDEN_DATA [{2}]", client.IP, client.Port, Response);
             if (client.Character.WardenData.Ready)
             {
@@ -78,7 +78,7 @@ namespace Mangos.World.Handlers
 
                             WorldServiceLocator._WS_Warden.Maiev.GenerateNewRC4Keys(client.Character.WardenData.K);
                             var PacketData = new byte[17];
-                            PacketData[0] = MaievOpcode.MAIEV_MODULE_SEED;
+                            PacketData[0] = (byte)MaievOpcode.MAIEV_MODULE_SEED;
                             Buffer.BlockCopy(client.Character.WardenData.Seed, 0, PacketData, 1, 16);
                             int HandledBytes = WorldServiceLocator._WS_Warden.Maiev.HandlePacket(PacketData);
                             if (HandledBytes <= 0)
@@ -142,7 +142,7 @@ namespace Mangos.World.Handlers
                 throw new ApplicationException("Maiev.mod not ready!");
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [{2}]", objCharacter.client.IP, objCharacter.client.Port, WorldServiceLocator._WS_Warden.Maiev.ModuleName);
             var r = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
-            r.AddInt8(MaievOpcode.MAIEV_MODULE_INFORMATION);     // Opcode
+            r.AddInt8((byte)MaievOpcode.MAIEV_MODULE_INFORMATION);     // Opcode
             r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.WardenModule);                  // MD5 checksum of the modules compressed encrypted data
             r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.ModuleKey);                     // RC4 seed for decryption of the module
             r.AddUInt32((uint)WorldServiceLocator._WS_Warden.Maiev.ModuleSize);                       // Module Compressed Length - Size of the packet
@@ -158,7 +158,7 @@ namespace Mangos.World.Handlers
             while (size > 500)
             {
                 var r = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
-                r.AddInt8(MaievOpcode.MAIEV_MODULE_TRANSFER);                // Opcode
+                r.AddInt8((byte)MaievOpcode.MAIEV_MODULE_TRANSFER);                // Opcode
                 r.AddInt16(500);                                             // Payload Length
                 for (int i = 1; i <= 500; i++)                                 // Payload
                     r.AddInt8((byte)file.ReadByte());
@@ -172,7 +172,7 @@ namespace Mangos.World.Handlers
             if (size > 0)
             {
                 var r = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
-                r.AddInt8(MaievOpcode.MAIEV_MODULE_TRANSFER);                // Opcode
+                r.AddInt8((byte)MaievOpcode.MAIEV_MODULE_TRANSFER);                // Opcode
                 r.AddUInt16((ushort)size);                                           // Payload Length
                 for (int i = 1, loopTo = size; i <= loopTo; i++)                                // Payload
                     r.AddInt8((byte)file.ReadByte());
@@ -188,7 +188,7 @@ namespace Mangos.World.Handlers
             var unk = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
             try
             {
-                unk.AddInt8(MaievOpcode.MAIEV_MODULE_UNK);
+                unk.AddInt8((byte)MaievOpcode.MAIEV_MODULE_UNK);
                 unk.AddByteArray(new byte[] { 0x14, 0x0, 0x60, 0xD0, 0xFE, 0x2C, 0x1, 0x0, 0x2, 0x0, 0x20, 0x1A, 0x36, 0x0, 0xC0, 0xE3, 0x35, 0x0, 0x50, 0xF1, 0x35, 0x0, 0xC0, 0xF5, 0x35, 0x0, 0x3, 0x8, 0x0, 0x77, 0x6C, 0x93, 0xA9, 0x4, 0x0, 0x0, 0x60, 0xA8, 0x40, 0x0, 0x1, 0x3, 0x8, 0x0, 0x36, 0x85, 0xEA, 0xF0, 0x1, 0x1, 0x0, 0x90, 0xF4, 0x45, 0x0, 0x1 });
                 WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref unk);
             }
@@ -217,7 +217,7 @@ namespace Mangos.World.Handlers
         public void MaievSendSeed(ref WS_PlayerData.CharacterObject objCharacter)
         {
             var r = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
-            r.AddInt8(MaievOpcode.MAIEV_MODULE_SEED);
+            r.AddInt8((byte)MaievOpcode.MAIEV_MODULE_SEED);
             r.AddByteArray(objCharacter.WardenData.Seed);
             WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
         }
@@ -370,7 +370,7 @@ namespace Mangos.World.Handlers
                     temp = key[key[257] & 0xFF];
                     key[key[257]] = key[key[256]];
                     key[key[256]] = temp;
-                    data[i] = data[i] ^ key[key[key[257]] + Conversions.ToInteger(key[key[256]]) & 0xFF];
+                    data[i] = (byte)(data[i] ^ key[key[key[257]] + Conversions.ToInteger(key[key[256]]) & 0xFF]);
                 }
             }
         }

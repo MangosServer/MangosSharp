@@ -171,11 +171,11 @@ namespace Mangos.World.Maps
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading.... {0} Graveyard Locations", tmpDBC.Rows - 1);
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    locationIndex = tmpDBC.Item(i, 0);
-                    locationMapID = tmpDBC.Item(i, 1);
-                    locationPosX = tmpDBC.Item(i, 2, DBCValueType.DBC_FLOAT);
-                    locationPosY = tmpDBC.Item(i, 3, DBCValueType.DBC_FLOAT);
-                    locationPosZ = tmpDBC.Item(i, 4, DBCValueType.DBC_FLOAT);
+                    locationIndex = (int)tmpDBC.Item(i, 0);
+                    locationMapID = (int)tmpDBC.Item(i, 1);
+                    locationPosX = (float)tmpDBC.Item(i, 2, DBCValueType.DBC_FLOAT);
+                    locationPosY = (float)tmpDBC.Item(i, 3, DBCValueType.DBC_FLOAT);
+                    locationPosZ = (float)tmpDBC.Item(i, 4, DBCValueType.DBC_FLOAT);
                     if (WorldServiceLocator._WorldServer.Config.Maps.Contains(locationMapID.ToString()))
                     {
                         Graveyards.Add(locationIndex, new TGraveyard(locationPosX, locationPosY, locationPosZ, locationMapID));
@@ -358,9 +358,9 @@ namespace Mangos.World.Maps
                             Character.Mana.Current = Character.Mana.Maximum;
                         if (selectedGraveyard.Map == Character.MapID)
                         {
-                            Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, Character.Life.Current);
+                            Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Character.Life.Current);
                             if (Character.ManaType == ManaTypes.TYPE_MANA)
-                                Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1, Character.Mana.Current);
+                                Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_POWER1, Character.Mana.Current);
                             Character.SendCharacterUpdate();
                         }
                     }

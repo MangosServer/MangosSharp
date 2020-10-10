@@ -108,7 +108,7 @@ namespace Mangos.World.Handlers
                             packet.AddInt32(myItem.StackCount);              // ITEM_FIELD_STACK_COUNT
                             packet.AddInt32(0);                              // Unk.. probably gift=1, created_by=0?
                             packet.AddUInt64(myItem.GiftCreatorGUID);        // ITEM_FIELD_GIFTCREATOR
-                            if (myItem.Enchantments.ContainsKey(EnchantSlots.ENCHANTMENT_PERM))
+                            if (myItem.Enchantments.ContainsKey((byte)EnchantSlots.ENCHANTMENT_PERM))
                             {
                                 packet.AddInt32(myItem.Enchantments(EnchantSlots.ENCHANTMENT_PERM).ID);
                             }
@@ -170,7 +170,7 @@ namespace Mangos.World.Handlers
                             packet.AddInt32(myItem.StackCount);              // ITEM_FIELD_STACK_COUNT
                             packet.AddInt32(0);                              // Unk.. probably gift=1, created_by=0?
                             packet.AddUInt64(myItem.GiftCreatorGUID);        // ITEM_FIELD_GIFTCREATOR
-                            if (myItem.Enchantments.ContainsKey(EnchantSlots.ENCHANTMENT_PERM))
+                            if (myItem.Enchantments.ContainsKey((byte)EnchantSlots.ENCHANTMENT_PERM))
                             {
                                 packet.AddInt32(myItem.Enchantments(EnchantSlots.ENCHANTMENT_PERM).ID);
                             }
@@ -208,7 +208,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_STATUS_COMPLETE);
+                    response.AddInt32((int)TradeStatus.TRADE_STATUS_COMPLETE);
                     if (ReferenceEquals(Trader, Who))
                     {
                         Target.client.SendMultiplyPackets(ref response);
@@ -249,7 +249,7 @@ namespace Mangos.World.Handlers
                         var responseUnAccept = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                         try
                         {
-                            responseUnAccept.AddInt32(TradeStatus.TRADE_STATUS_UNACCEPT);
+                            responseUnAccept.AddInt32((int)TradeStatus.TRADE_STATUS_UNACCEPT);
                             Target.client.SendMultiplyPackets(ref responseUnAccept);
                             TraderAccept = false;
                             Trader.client.SendMultiplyPackets(ref responseUnAccept);
@@ -263,7 +263,7 @@ namespace Mangos.World.Handlers
                         var responseNoSlot = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
                         try
                         {
-                            responseNoSlot.AddInt8(InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL);
+                            responseNoSlot.AddInt8((byte)InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL);
                             responseNoSlot.AddUInt64(0UL);
                             responseNoSlot.AddUInt64(0UL);
                             responseNoSlot.AddInt8(0);
@@ -282,7 +282,7 @@ namespace Mangos.World.Handlers
                         var responseUnAccept = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                         try
                         {
-                            responseUnAccept.AddInt32(TradeStatus.TRADE_STATUS_UNACCEPT);
+                            responseUnAccept.AddInt32((int)TradeStatus.TRADE_STATUS_UNACCEPT);
                             Target.client.SendMultiplyPackets(ref responseUnAccept);
                             TraderAccept = false;
                             Trader.client.SendMultiplyPackets(ref responseUnAccept);
@@ -296,7 +296,7 @@ namespace Mangos.World.Handlers
                         var responseNoSlot = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
                         try
                         {
-                            responseNoSlot.AddInt8(InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL);
+                            responseNoSlot.AddInt8((byte)InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL);
                             responseNoSlot.AddUInt64(0UL);
                             responseNoSlot.AddUInt64(0UL);
                             responseNoSlot.AddInt8(0);
@@ -315,8 +315,8 @@ namespace Mangos.World.Handlers
                     {
                         Trader.Copper = Trader.Copper - TraderGold + TargetGold;
                         Target.Copper = Target.Copper + TraderGold - TargetGold;
-                        Trader.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, Trader.Copper);
-                        Target.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, Target.Copper);
+                        Trader.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, Trader.Copper);
+                        Target.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, Target.Copper);
                     }
 
                     // TODO: For item set ITEM_FIELD_GIFTCREATOR
@@ -372,7 +372,7 @@ namespace Mangos.World.Handlers
                     var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                     try
                     {
-                        response.AddInt32(TradeStatus.TRADE_COMPLETE);
+                        response.AddInt32((int)TradeStatus.TRADE_COMPLETE);
                         Target.client.SendMultiplyPackets(ref response);
                         Trader.client.SendMultiplyPackets(ref response);
                     }
@@ -401,7 +401,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_STATUS_CANCELED);
+                    response.AddInt32((int)TradeStatus.TRADE_STATUS_CANCELED);
                     if (client.Character.tradeInfo.Target is object)
                         client.Character.tradeInfo.Target.client.SendMultiplyPackets(ref response);
                     if (client.Character.tradeInfo.Trader is object)
@@ -487,7 +487,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_DEAD);
+                    response.AddInt32((int)TradeStatus.TRADE_DEAD);
                     client.Send(ref response);
                 }
                 finally
@@ -502,7 +502,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_LOGOUT);
+                    response.AddInt32((int)TradeStatus.TRADE_LOGOUT);
                     client.Send(ref response);
                 }
                 finally
@@ -517,7 +517,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_STUNNED);
+                    response.AddInt32((int)TradeStatus.TRADE_STUNNED);
                     client.Send(ref response);
                 }
                 finally
@@ -533,7 +533,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_TARGET_MISSING);
+                    response.AddInt32((int)TradeStatus.TRADE_TARGET_MISSING);
                     client.Send(ref response);
                 }
                 finally
@@ -548,7 +548,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_TARGET_DEAD);
+                    response.AddInt32((int)TradeStatus.TRADE_TARGET_DEAD);
                     client.Send(ref response);
                 }
                 finally
@@ -563,7 +563,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_TARGET_LOGOUT);
+                    response.AddInt32((int)TradeStatus.TRADE_TARGET_LOGOUT);
                     client.Send(ref response);
                 }
                 finally
@@ -578,7 +578,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_STUNNED);
+                    response.AddInt32((int)TradeStatus.TRADE_STUNNED);
                     client.Send(ref response);
                 }
                 finally
@@ -594,7 +594,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_TARGET_UNAVIABLE);
+                    response.AddInt32((int)TradeStatus.TRADE_TARGET_UNAVIABLE);
                     client.Send(ref response);
                 }
                 finally
@@ -610,7 +610,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_TARGET_UNAVIABLE2);
+                    response.AddInt32((int)TradeStatus.TRADE_TARGET_UNAVIABLE2);
                     client.Send(ref response);
                 }
                 finally
@@ -626,7 +626,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_TARGET_DIFF_FACTION);
+                    response.AddInt32((int)TradeStatus.TRADE_TARGET_DIFF_FACTION);
                     client.Send(ref response);
                 }
                 finally
@@ -642,7 +642,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_TARGET_TOO_FAR);
+                    response.AddInt32((int)TradeStatus.TRADE_TARGET_TOO_FAR);
                     client.Send(ref response);
                 }
                 finally
@@ -658,7 +658,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_TRIAL_ACCOUNT);
+                    response.AddInt32((int)TradeStatus.TRADE_TRIAL_ACCOUNT);
                     client.Send(ref response);
                 }
                 finally
@@ -674,7 +674,7 @@ namespace Mangos.World.Handlers
                 var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
                 try
                 {
-                    response.AddInt32(TradeStatus.TRADE_TRIAL_ACCOUNT);
+                    response.AddInt32((int)TradeStatus.TRADE_TRIAL_ACCOUNT);
                     client.Send(ref response);
                 }
                 finally
@@ -693,7 +693,7 @@ namespace Mangos.World.Handlers
             var response_ok = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
             try
             {
-                response_ok.AddInt32(TradeStatus.TRADE_STATUS_OK);
+                response_ok.AddInt32((int)TradeStatus.TRADE_STATUS_OK);
                 response_ok.AddUInt64(client.Character.GUID);
                 client.Character.tradeInfo.Target.client.Send(ref response_ok);
             }
@@ -710,7 +710,7 @@ namespace Mangos.World.Handlers
             var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
             try
             {
-                response.AddInt32(TradeStatus.TRADE_TRADE_WINDOW_OPEN);
+                response.AddInt32((int)TradeStatus.TRADE_TRADE_WINDOW_OPEN);
                 response.AddInt32(client.Character.tradeInfo.ID);
                 client.Character.tradeInfo.Trader.client.SendMultiplyPackets(ref response);
                 client.Character.tradeInfo.Target.client.SendMultiplyPackets(ref response);
@@ -727,7 +727,7 @@ namespace Mangos.World.Handlers
             var response = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
             try
             {
-                response.AddInt32(TradeStatus.TRADE_STATUS_UNACCEPT);
+                response.AddInt32((int)TradeStatus.TRADE_STATUS_UNACCEPT);
                 if (ReferenceEquals(client.Character.tradeInfo.Trader, client.Character))
                 {
                     client.Character.tradeInfo.Target.client.SendMultiplyPackets(ref response);

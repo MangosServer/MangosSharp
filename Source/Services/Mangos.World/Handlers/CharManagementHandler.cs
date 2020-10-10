@@ -79,7 +79,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     LOGOUT_RESPONSE_DENIED.AddInt32(0);
-                    LOGOUT_RESPONSE_DENIED.AddInt8(LogoutResponseCode.LOGOUT_RESPONSE_DENIED);
+                    LOGOUT_RESPONSE_DENIED.AddInt8((byte)LogoutResponseCode.LOGOUT_RESPONSE_DENIED);
                     client.Send(ref LOGOUT_RESPONSE_DENIED);
                 }
                 finally
@@ -102,14 +102,14 @@ namespace Mangos.World.Handlers
 
                     // DONE: Disable Turn
                     client.Character.cUnitFlags = client.Character.cUnitFlags | UnitFlags.UNIT_FLAG_STUNTED;
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
 
                     // DONE: StandState -> Sit
-                    client.Character.StandState = StandStates.STANDSTATE_SIT;
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
+                    client.Character.StandState = (byte)StandStates.STANDSTATE_SIT;
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
 
                     // DONE: Send packet
-                    UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, client.Character);
+                    UpdateData.AddToPacket(ref SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
                     client.Character.SendToNearPlayers(ref SMSG_UPDATE_OBJECT);
                 }
                 finally
@@ -120,7 +120,7 @@ namespace Mangos.World.Handlers
                 var packetACK = new Packets.PacketClass(OPCODES.SMSG_STANDSTATE_CHANGE_ACK);
                 try
                 {
-                    packetACK.AddInt8(StandStates.STANDSTATE_SIT);
+                    packetACK.AddInt8((byte)StandStates.STANDSTATE_SIT);
                     client.Send(ref packetACK);
                 }
                 finally
@@ -134,7 +134,7 @@ namespace Mangos.World.Handlers
             try
             {
                 SMSG_LOGOUT_RESPONSE.AddInt32(0);
-                SMSG_LOGOUT_RESPONSE.AddInt8(LogoutResponseCode.LOGOUT_RESPONSE_ACCEPTED);     // Logout Accepted
+                SMSG_LOGOUT_RESPONSE.AddInt8((byte)LogoutResponseCode.LOGOUT_RESPONSE_ACCEPTED);     // Logout Accepted
                 client.Send(ref SMSG_LOGOUT_RESPONSE);
             }
             finally
@@ -189,14 +189,14 @@ namespace Mangos.World.Handlers
 
                     // DONE: Enable turn
                     client.Character.cUnitFlags = client.Character.cUnitFlags & !UnitFlags.UNIT_FLAG_STUNTED;
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
 
                     // DONE: StandState -> Stand
-                    client.Character.StandState = StandStates.STANDSTATE_STAND;
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
+                    client.Character.StandState = (byte)StandStates.STANDSTATE_STAND;
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
 
                     // DONE: Send packet
-                    UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, client.Character);
+                    UpdateData.AddToPacket(ref SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
                     client.Send(ref SMSG_UPDATE_OBJECT);
                 }
                 finally
@@ -207,7 +207,7 @@ namespace Mangos.World.Handlers
                 var packetACK = new Packets.PacketClass(OPCODES.SMSG_STANDSTATE_CHANGE_ACK);
                 try
                 {
-                    packetACK.AddInt8(StandStates.STANDSTATE_STAND);
+                    packetACK.AddInt8((byte)StandStates.STANDSTATE_STAND);
                     client.Send(ref packetACK);
                 }
                 finally
@@ -245,11 +245,11 @@ namespace Mangos.World.Handlers
             byte StandState = packet.GetInt8();
             if (StandState == StandStates.STANDSTATE_STAND)
             {
-                client.Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_NOT_SEATED);
+                client.Character.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_NOT_SEATED);
             }
 
             client.Character.StandState = StandState;
-            client.Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
+            client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
             client.Character.SendCharacterUpdate();
             var packetACK = new Packets.PacketClass(OPCODES.SMSG_STANDSTATE_CHANGE_ACK);
             try
@@ -302,7 +302,7 @@ namespace Mangos.World.Handlers
         {
             if (WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(AmmoID) == false)
                 return false;
-            if (objCharacter.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_RANGED) == false || objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_RANGED).IsBroken)
+            if (objCharacter.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED) == false || objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_RANGED).IsBroken)
                 return false;
             if (objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_RANGED).ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_WEAPON)
                 return false;

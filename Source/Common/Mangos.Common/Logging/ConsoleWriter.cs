@@ -36,7 +36,7 @@ namespace Mangos.Common.Logging
         {
             if (LogLevel > type)
                 return;
-            Console.WriteLine(L[(int)type] + ":" + "[" + Strings.Format((object)DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
+            Console.WriteLine(L[(int)type] + ":" + "[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
         }
 
         public override string ReadLine()

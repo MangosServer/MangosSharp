@@ -83,7 +83,7 @@ namespace Mangos.World.Quests
                 if (Quest.ObjectivesCastSpell[bytLoop] > 0)
                 {
                     ObjectiveFlags = ObjectiveFlags | QuestObjectiveFlag.QUEST_OBJECTIVE_CAST;
-                    ObjectivesType[bytLoop] = QuestObjectiveFlag.QUEST_OBJECTIVE_CAST;
+                    ObjectivesType[bytLoop] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_CAST;
                     ObjectivesSpell[bytLoop] = Quest.ObjectivesCastSpell[bytLoop];
                     ObjectivesObject[0] = Quest.ObjectivesKill[bytLoop];
                     ObjectivesCount[0] = (byte)Quest.ObjectivesKill_Count[bytLoop];
@@ -100,7 +100,7 @@ namespace Mangos.World.Quests
                         if (ObjectivesType[bytLoop2] == 0)
                         {
                             ObjectiveFlags = ObjectiveFlags | QuestObjectiveFlag.QUEST_OBJECTIVE_KILL;
-                            ObjectivesType[bytLoop2] = QuestObjectiveFlag.QUEST_OBJECTIVE_KILL;
+                            ObjectivesType[bytLoop2] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_KILL;
                             ObjectivesObject[bytLoop2] = Quest.ObjectivesKill[bytLoop];
                             ObjectivesCount[bytLoop2] = (byte)Quest.ObjectivesKill_Count[bytLoop];
                             break;
@@ -115,7 +115,7 @@ namespace Mangos.World.Quests
                 if (Quest.ObjectivesItem[bytLoop] > 0)
                 {
                     ObjectiveFlags = ObjectiveFlags | QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM;
-                    ObjectivesType[bytLoop] = QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM;
+                    ObjectivesType[bytLoop] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM;
                     ObjectivesItem[bytLoop] = Quest.ObjectivesItem[bytLoop];
                     ObjectivesItemCount[bytLoop] = (byte)Quest.ObjectivesItem_Count[bytLoop];
                 }
@@ -127,7 +127,7 @@ namespace Mangos.World.Quests
                 ObjectiveFlags = ObjectiveFlags | QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE;
                 for (byte bytLoop = 0; bytLoop <= 3; bytLoop++)
                 {
-                    ObjectivesType[bytLoop] = QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE;
+                    ObjectivesType[bytLoop] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE;
                     ObjectivesExplore[bytLoop] = Quest.ObjectivesTrigger[bytLoop];
                 }
             }
@@ -139,7 +139,7 @@ namespace Mangos.World.Quests
                 {
                     if (ObjectivesType[i] == 0)
                     {
-                        ObjectivesType[i] = QuestObjectiveFlag.QUEST_OBJECTIVE_EVENT;
+                        ObjectivesType[i] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_EVENT;
                         ObjectivesCount[i] = 1;
                     }
                 }
@@ -209,7 +209,7 @@ namespace Mangos.World.Quests
                     tmpItem.Delete();
                     var response = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_FAILED);
                     response.AddInt32(ID);
-                    response.AddInt32(QuestFailedReason.FAILED_INVENTORY_FULL);
+                    response.AddInt32((int)QuestFailedReason.FAILED_INVENTORY_FULL);
                     objCharacter.client.Send(ref response);
                     response.Dispose();
                     return;

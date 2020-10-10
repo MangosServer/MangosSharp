@@ -321,12 +321,12 @@ namespace Mangos.World.Maps
                         int tmpMap;
                         for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                         {
-                            tmpMap = tmpDBC.Item(i, 0);
+                            tmpMap = (int)tmpDBC.Item(i, 0);
                             if (tmpMap == Map)
                             {
                                 ID = Map;
-                                Type = tmpDBC.Item(i, 2, DBCValueType.DBC_INTEGER);
-                                Name = tmpDBC.Item(i, 4, DBCValueType.DBC_STRING);
+                                Type = (MapTypes)tmpDBC.Item(i, 2, DBCValueType.DBC_INTEGER);
+                                Name = (string)tmpDBC.Item(i, 4, DBCValueType.DBC_STRING);
                                 break;
                             }
                         }
@@ -737,7 +737,7 @@ namespace Mangos.World.Maps
             ulong InstanceGuidAdd = 0UL;
             if (TileInstance > 0L)
             {
-                InstanceGuidAdd = (ulong)(1000000UL + (TileInstance - 1UL) * 100000UL);
+                InstanceGuidAdd = 1000000UL + (TileInstance - 1UL) * 100000UL;
             }
 
             // DONE: Creatures
@@ -906,7 +906,7 @@ namespace Mangos.World.Maps
             try
             {
                 p.AddInt32(Map);
-                p.AddInt16(Reason);
+                p.AddInt16((short)Reason);
                 client.Send(ref p);
             }
             finally

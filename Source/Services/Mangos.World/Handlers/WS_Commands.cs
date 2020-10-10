@@ -235,8 +235,8 @@ namespace Mangos.World.Handlers
                 objCharacter.client.Send(ref packet3);
                 packet3.Dispose();
                 objCharacter.cUnitFlags = objCharacter.cUnitFlags & !UnitFlags.UNIT_FLAG_UNK21;
-                objCharacter.SetUpdateFlag(EPlayerFields.PLAYER_FARSIGHT, 0);
-                objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
+                objCharacter.SetUpdateFlag((int)EPlayerFields.PLAYER_FARSIGHT, 0);
+                objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
                 objCharacter.SendCharacterUpdate(false);
                 objCharacter.MindControl = null;
                 objCharacter.CommandResponse("Removed control over the unit.");
@@ -268,8 +268,8 @@ namespace Mangos.World.Handlers
             objCharacter.client.Send(ref packet2);
             packet2.Dispose();
             objCharacter.cUnitFlags = objCharacter.cUnitFlags | UnitFlags.UNIT_FLAG_UNK21;
-            objCharacter.SetUpdateFlag(EPlayerFields.PLAYER_FARSIGHT, objCharacter.TargetGUID);
-            objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
+            objCharacter.SetUpdateFlag((int)EPlayerFields.PLAYER_FARSIGHT, objCharacter.TargetGUID);
+            objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
             objCharacter.SendCharacterUpdate(false);
             objCharacter.CommandResponse("Taken control over a unit.");
             return true;
@@ -516,7 +516,7 @@ namespace Mangos.World.Handlers
             foreach (KeyValuePair<int, WS_PlayerHelper.TSkill> skill in objCharacter.Skills)
             {
                 skill.Value.Current = (short)skill.Value.Maximum;
-                objCharacter.SetUpdateFlag(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (int)objCharacter.SkillsPositions[skill.Key] * 3 + 1, objCharacter.Skills[skill.Key].GetSkill);
+                objCharacter.SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (int)objCharacter.SkillsPositions[skill.Key] * 3 + 1), objCharacter.Skills[skill.Key].GetSkill);
             }
 
             objCharacter.SendCharacterUpdate(false);
@@ -577,8 +577,8 @@ namespace Mangos.World.Handlers
             {
                 WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].RestBonus += XP;
                 WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].RestState = XPSTATE.Rested;
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(EPlayerFields.PLAYER_REST_STATE_EXPERIENCE, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].RestBonus);
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(EPlayerFields.PLAYER_BYTES_2, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].cPlayerBytes2);
+                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag((int)EPlayerFields.PLAYER_REST_STATE_EXPERIENCE, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].RestBonus);
+                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag((int)EPlayerFields.PLAYER_BYTES_2, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].cPlayerBytes2);
                 WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SendCharacterUpdate();
             }
             else
@@ -726,7 +726,7 @@ namespace Mangos.World.Handlers
                     if (Spell.Value.Cooldown > 0U)
                     {
                         Spell.Value.Cooldown = 0U;
-                        Spell.Value.CooldownItem = 0U;
+                        Spell.Value.CooldownItem = (int)0U;
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_spells SET cooldown={2}, cooldownitem={3} WHERE guid = {0} AND spellid = {1};", objCharacter.GUID, Spell.Key, 0, 0));
                         cooldownSpells.Add(Spell.Key);
                     }
@@ -882,7 +882,7 @@ namespace Mangos.World.Handlers
                 objCharacter.Copper = (uint)(objCharacter.Copper + Copper);
             }
 
-            objCharacter.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, objCharacter.Copper);
+            objCharacter.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, objCharacter.Copper);
             objCharacter.SendCharacterUpdate(false);
             return true;
         }
@@ -1031,9 +1031,9 @@ namespace Mangos.World.Handlers
                 objCharacter.CombatReach = WorldServiceLocator._WS_DBCDatabase.CreatureModel[value].CombatReach;
             }
 
-            objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_BOUNDINGRADIUS, objCharacter.BoundingRadius);
-            objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_COMBATREACH, objCharacter.CombatReach);
-            objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_DISPLAYID, value);
+            objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BOUNDINGRADIUS, objCharacter.BoundingRadius);
+            objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_COMBATREACH, objCharacter.CombatReach);
+            objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_DISPLAYID, value);
             objCharacter.SendCharacterUpdate();
             return true;
         }
@@ -1045,7 +1045,7 @@ namespace Mangos.World.Handlers
             int value;
             if (int.TryParse(Message, out value) == false || value < 0)
                 return false;
-            objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, value);
+            objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, value);
             objCharacter.SendCharacterUpdate();
             return true;
         }
@@ -1063,7 +1063,7 @@ namespace Mangos.World.Handlers
             if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
                 WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Current = (int)(WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Current - WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Maximum * 0.1d);
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Current);
+                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Current);
                 WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SendCharacterUpdate();
                 return true;
             }
@@ -1748,7 +1748,7 @@ namespace Mangos.World.Handlers
                 objCharacter.CommandResponse("GameMaster Invisibility turned on.");
             }
 
-            objCharacter.SetUpdateFlag(EPlayerFields.PLAYER_FLAGS, objCharacter.cPlayerFlags);
+            objCharacter.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, objCharacter.cPlayerFlags);
             objCharacter.SendCharacterUpdate();
             WorldServiceLocator._WS_CharMovement.UpdateCell(ref objCharacter);
             return true;
@@ -1767,7 +1767,7 @@ namespace Mangos.World.Handlers
             }
             else
             {
-                WorldServiceLocator._WS_Weather.WeatherZones[objCharacter.ZoneID].CurrentWeather = Type;
+                WorldServiceLocator._WS_Weather.WeatherZones[objCharacter.ZoneID].CurrentWeather = (WeatherType)Type;
                 WorldServiceLocator._WS_Weather.WeatherZones[objCharacter.ZoneID].Intensity = Intensity;
                 WorldServiceLocator._WS_Weather.SendWeather(objCharacter.ZoneID, ref objCharacter.client);
             }
@@ -2026,7 +2026,7 @@ namespace Mangos.World.Handlers
             }
             else
             {
-                AccessLevel targetLevel = result.Rows[0]["gmlevel"];
+                AccessLevel targetLevel = (AccessLevel)result.Rows[0]["gmlevel"];
                 if (targetLevel >= objCharacter.Access)
                 {
                     objCharacter.CommandResponse("You cannot change password for accounts with the same or a higher access level than yourself.");
@@ -2065,7 +2065,7 @@ namespace Mangos.World.Handlers
                 return true;
             }
 
-            AccessLevel newLevel = aLevel;
+            AccessLevel newLevel = (AccessLevel)aLevel;
             if (newLevel >= objCharacter.Access)
             {
                 objCharacter.CommandResponse("You cannot set access levels to your own or above your own access level.");
@@ -2079,7 +2079,7 @@ namespace Mangos.World.Handlers
             }
             else
             {
-                AccessLevel targetLevel = result.Rows[0]["gmlevel"];
+                AccessLevel targetLevel = (AccessLevel)result.Rows[0]["gmlevel"];
                 if (targetLevel >= objCharacter.Access)
                 {
                     objCharacter.CommandResponse("You cannot set access levels to accounts with the same or a higher access level than yourself.");

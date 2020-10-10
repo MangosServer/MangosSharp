@@ -104,9 +104,9 @@ namespace Mangos.World.Handlers
                         {
                             SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
                             SMSG_NAME_QUERY_RESPONSE.AddString(WorldServiceLocator._WorldServer.CHARACTERs[GUID].Name);
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32(WorldServiceLocator._WorldServer.CHARACTERs[GUID].Race);
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32(WorldServiceLocator._WorldServer.CHARACTERs[GUID].Gender);
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32(WorldServiceLocator._WorldServer.CHARACTERs[GUID].Classe);
+                            SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Race);
+                            SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Gender);
+                            SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Classe);
                             client.Send(ref SMSG_NAME_QUERY_RESPONSE);
                         }
                         finally
@@ -216,7 +216,7 @@ namespace Mangos.World.Handlers
                 client.Character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_HIDE_HELM;
             }
 
-            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
             client.Character.SendCharacterUpdate(true);
         }
 
@@ -232,7 +232,7 @@ namespace Mangos.World.Handlers
                 client.Character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK;
             }
 
-            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
             client.Character.SendCharacterUpdate(true);
         }
 
@@ -241,8 +241,8 @@ namespace Mangos.World.Handlers
             packet.GetInt16();
             byte ActionBar = packet.GetInt8();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTIONBAR_TOGGLES [{2:X}]", client.IP, client.Port, ActionBar);
-            client.Character.cPlayerFieldBytes = client.Character.cPlayerFieldBytes & 0xFFF0FFFF | ActionBar << 16;
-            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_BYTES, client.Character.cPlayerFieldBytes);
+            client.Character.cPlayerFieldBytes = (int)(client.Character.cPlayerFieldBytes & 0xFFF0FFFF | ActionBar << 16);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_BYTES, client.Character.cPlayerFieldBytes);
             client.Character.SendCharacterUpdate(true);
         }
 
@@ -315,7 +315,7 @@ namespace Mangos.World.Handlers
                 else if (WorldServiceLocator._WS_DBCDatabase.EmotesState[WorldServiceLocator._WS_DBCDatabase.EmotesText[TextEmote]] == 2)
                 {
                     client.Character.cEmoteState = WorldServiceLocator._WS_DBCDatabase.EmotesText[TextEmote];
-                    client.Character.SetUpdateFlag(EUnitFields.UNIT_NPC_EMOTESTATE, client.Character.cEmoteState);
+                    client.Character.SetUpdateFlag((int)EUnitFields.UNIT_NPC_EMOTESTATE, client.Character.cEmoteState);
                     client.Character.SendCharacterUpdate(true);
                 }
             }
@@ -476,12 +476,12 @@ namespace Mangos.World.Handlers
                     client.Character.ApplySpell(8326);
                 }
 
-                client.Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, 1);
+                client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, 1);
                 client.Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + client.Character.ManaType, 0);
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
-                client.Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
-                client.Character.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, client.Character.cDynamicFlags);
-                client.Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_1, 0x1000000);       // Set standing so always be standing
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+                client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
+                client.Character.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, client.Character.cDynamicFlags);
+                client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, 0x1000000);       // Set standing so always be standing
                 client.Character.SendCharacterUpdate();
 
                 // DONE: Get closest graveyard
@@ -524,10 +524,10 @@ namespace Mangos.World.Handlers
                 Character.RemoveAuraBySpell(8326);
             }
 
-            Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, Character.Life.Current);
-            Character.SetUpdateFlag(EPlayerFields.PLAYER_FLAGS, Character.cPlayerFlags);
-            Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, Character.cUnitFlags);
-            Character.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, Character.cDynamicFlags);
+            Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Character.Life.Current);
+            Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, Character.cPlayerFlags);
+            Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, Character.cUnitFlags);
+            Character.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, Character.cDynamicFlags);
             Character.SendCharacterUpdate();
 
             // DONE: Spawn Bones, Delete Corpse
@@ -559,7 +559,7 @@ namespace Mangos.World.Handlers
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TOGGLE_PVP", client.IP, client.Port);
             client.Character.isPvP = !client.Character.isPvP;
-            client.Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
+            client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
             client.Character.SendCharacterUpdate();
         }
 
@@ -577,7 +577,7 @@ namespace Mangos.World.Handlers
             {
                 response.AddUInt64(GUID);
                 WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                response.AddInt8(WorldServiceLocator._WorldServer.CHARACTERs[GUID].HonorRank);                                                            // Highest Rank
+                response.AddInt8((byte)WorldServiceLocator._WorldServer.CHARACTERs[GUID].HonorRank);                                                            // Highest Rank
                 response.AddInt32(WorldServiceLocator._WorldServer.CHARACTERs[GUID].HonorKillsToday + WorldServiceLocator._WorldServer.CHARACTERs[GUID].DishonorKillsToday << 16);   // PLAYER_FIELD_SESSION_KILLS                - Today Honorable and Dishonorable Kills
                 response.AddInt32(WorldServiceLocator._WorldServer.CHARACTERs[GUID].HonorKillsYesterday);                                                 // PLAYER_FIELD_YESTERDAY_KILLS              - Yesterday Honorable Kills
                 response.AddInt32(WorldServiceLocator._WorldServer.CHARACTERs[GUID].HonorKillsLastWeek);                                                  // PLAYER_FIELD_LAST_WEEK_KILLS              - Last Week Honorable Kills
@@ -588,7 +588,7 @@ namespace Mangos.World.Handlers
                 response.AddInt32(WorldServiceLocator._WorldServer.CHARACTERs[GUID].HonorPointsLastWeek);                                                 // PLAYER_FIELD_LAST_WEEK_CONTRIBUTION       - Last Week Honor
                 response.AddInt32(WorldServiceLocator._WorldServer.CHARACTERs[GUID].HonorPointsThisWeek);                                                 // PLAYER_FIELD_THIS_WEEK_CONTRIBUTION       - This Week Honor
                 response.AddInt32(WorldServiceLocator._WorldServer.CHARACTERs[GUID].StandingLastWeek);                                                    // PLAYER_FIELD_LAST_WEEK_RANK               - Last Week Standing
-                response.AddInt8(WorldServiceLocator._WorldServer.CHARACTERs[GUID].HonorHighestRank);                                                     // ?!
+                response.AddInt8((byte)WorldServiceLocator._WorldServer.CHARACTERs[GUID].HonorHighestRank);                                                     // ?!
                 WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                 client.Send(ref response);
             }
@@ -673,7 +673,7 @@ namespace Mangos.World.Handlers
             if (faction < 0 || faction > 255)
                 return;
             client.Character.WatchedFactionIndex = (byte)faction;
-            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, faction);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, faction);
             client.Character.SendCharacterUpdate(false);
         }
 

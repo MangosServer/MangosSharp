@@ -342,7 +342,7 @@ namespace Mangos.Cluster.Handlers
                 ClusterServiceLocator._WorldCluster.AccountDatabase.Query(string.Format("SELECT id FROM account WHERE username = '{0}';", client.Account), ref MySQLQuery);
                 Account_ID = Conversions.ToInteger(MySQLQuery.Rows[0]["id"]);
                 MySQLQuery.Clear();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters WHERE account_id = '{0}' ORDER BY char_guid;", (object)Account_ID), ref MySQLQuery);
+                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters WHERE account_id = '{0}' ORDER BY char_guid;", Account_ID), ref MySQLQuery);
 
                 // DONE: Make The Packet
                 response.AddInt8((byte)MySQLQuery.Rows.Count);
@@ -417,7 +417,7 @@ namespace Mangos.Cluster.Handlers
                     var ItemsMySQLQuery = new DataTable();
                     string characterDB = ClusterServiceLocator._WorldCluster.CharacterDatabase.SQLDBName;
                     string worldDB = ClusterServiceLocator._WorldCluster.WorldDatabase.SQLDBName;
-                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT item_slot, displayid, inventorytype FROM " + characterDB + ".characters_inventory, " + worldDB + ".item_template WHERE item_bag = {0} AND item_slot <> 255 AND entry = item_id  ORDER BY item_slot;", (object)GUID), ref ItemsMySQLQuery);
+                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT item_slot, displayid, inventorytype FROM " + characterDB + ".characters_inventory, " + worldDB + ".item_template WHERE item_bag = {0} AND item_slot <> 255 AND entry = item_id  ORDER BY item_slot;", GUID), ref ItemsMySQLQuery);
                     var e = ItemsMySQLQuery.Rows.GetEnumerator();
                     e.Reset();
                     e.MoveNext();
@@ -481,7 +481,7 @@ namespace Mangos.Cluster.Handlers
                     return;
                 }
 
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT char_guid FROM characters WHERE account_id = \"{0}\" AND char_guid = \"{1}\";", q.Rows[0]["id"], (object)guid), ref q);
+                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT char_guid FROM characters WHERE account_id = \"{0}\" AND char_guid = \"{1}\";", q.Rows[0]["id"], guid), ref q);
                 if (q.Rows.Count == 0)
                 {
                     response.AddInt8((byte)AuthResult.WOW_FAIL_BANNED);
@@ -492,7 +492,7 @@ namespace Mangos.Cluster.Handlers
                 }
 
                 q.Clear();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT item_guid FROM characters_inventory WHERE item_bag = {0};", (object)guid), ref q);
+                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT item_guid FROM characters_inventory WHERE item_bag = {0};", guid), ref q);
                 foreach (DataRow row in q.Rows)
                 {
                     // DONE: Delete items
@@ -501,9 +501,9 @@ namespace Mangos.Cluster.Handlers
                     ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM characters_inventory WHERE item_bag = \"{0}\";", Conversions.ToULong(row["item_guid"]) + ClusterServiceLocator._Global_Constants.GUID_ITEM));
                 }
 
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT item_guid FROM characters_inventory WHERE item_owner = {0};", (object)guid), ref q);
+                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT item_guid FROM characters_inventory WHERE item_owner = {0};", guid), ref q);
                 q.Clear();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT mail_id FROM characters_mail WHERE mail_receiver = \"{0}\";", (object)guid), ref q);
+                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT mail_id FROM characters_mail WHERE mail_receiver = \"{0}\";", guid), ref q);
                 foreach (DataRow row in q.Rows)
                 {
                     // TODO: Return mails?
@@ -523,7 +523,7 @@ namespace Mangos.Cluster.Handlers
                 ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM characters_tickets WHERE char_guid = \"{0}\";", guid));
                 ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM corpse WHERE guid = \"{0}\";", guid));
                 q.Clear();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT guild_id FROM guilds WHERE guild_leader = \"{0}\";", (object)guid), ref q);
+                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT guild_id FROM guilds WHERE guild_leader = \"{0}\";", guid), ref q);
                 if (q.Rows.Count > 0)
                 {
                     ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildid = 0, char_guildrank = 0, char_guildpnote = '', charguildoffnote = '' WHERE char_guildid = \"{0}\";", q.Rows[0]["guild_id"]));

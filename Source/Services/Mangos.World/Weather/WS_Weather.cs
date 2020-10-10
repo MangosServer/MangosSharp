@@ -193,15 +193,15 @@ namespace Mangos.World.Weather
                         {
                             if (Intensity < 0.333333343f)
                             {
-                                return WeatherSounds.WEATHER_SOUND_RAINLIGHT;
+                                return (int)WeatherSounds.WEATHER_SOUND_RAINLIGHT;
                             }
                             else if (Intensity < 0.6666667f)
                             {
-                                return WeatherSounds.WEATHER_SOUND_RAINMEDIUM;
+                                return (int)WeatherSounds.WEATHER_SOUND_RAINMEDIUM;
                             }
                             else
                             {
-                                return WeatherSounds.WEATHER_SOUND_RAINHEAVY;
+                                return (int)WeatherSounds.WEATHER_SOUND_RAINHEAVY;
                             }
 
                             break;
@@ -211,15 +211,15 @@ namespace Mangos.World.Weather
                         {
                             if (Intensity < 0.333333343f)
                             {
-                                return WeatherSounds.WEATHER_SOUND_SNOWLIGHT;
+                                return (int)WeatherSounds.WEATHER_SOUND_SNOWLIGHT;
                             }
                             else if (Intensity < 0.6666667f)
                             {
-                                return WeatherSounds.WEATHER_SOUND_SNOWMEDIUM;
+                                return (int)WeatherSounds.WEATHER_SOUND_SNOWMEDIUM;
                             }
                             else
                             {
-                                return WeatherSounds.WEATHER_SOUND_SNOWHEAVY;
+                                return (int)WeatherSounds.WEATHER_SOUND_SNOWHEAVY;
                             }
 
                             break;
@@ -229,15 +229,15 @@ namespace Mangos.World.Weather
                         {
                             if (Intensity < 0.333333343f)
                             {
-                                return WeatherSounds.WEATHER_SOUND_SANDSTORMLIGHT;
+                                return (int)WeatherSounds.WEATHER_SOUND_SANDSTORMLIGHT;
                             }
                             else if (Intensity < 0.6666667f)
                             {
-                                return WeatherSounds.WEATHER_SOUND_SANDSTORMMEDIUM;
+                                return (int)WeatherSounds.WEATHER_SOUND_SANDSTORMMEDIUM;
                             }
                             else
                             {
-                                return WeatherSounds.WEATHER_SOUND_SANDSTORMHEAVY;
+                                return (int)WeatherSounds.WEATHER_SOUND_SANDSTORMHEAVY;
                             }
 
                             break;
@@ -245,7 +245,7 @@ namespace Mangos.World.Weather
 
                     default:
                         {
-                            return WeatherSounds.WEATHER_SOUND_NOSOUND;
+                            return (int)WeatherSounds.WEATHER_SOUND_NOSOUND;
                         }
                 }
             }
@@ -253,7 +253,7 @@ namespace Mangos.World.Weather
             public void SendUpdate()
             {
                 var SMSG_WEATHER = new Packets.PacketClass(OPCODES.SMSG_WEATHER);
-                SMSG_WEATHER.AddInt32(CurrentWeather);
+                SMSG_WEATHER.AddInt32((int)CurrentWeather);
                 SMSG_WEATHER.AddSingle(Intensity);
                 SMSG_WEATHER.AddInt32(GetSound());
                 try
@@ -297,7 +297,7 @@ namespace Mangos.World.Weather
                 return;
             var Weather = WeatherZones[ZoneID];
             var SMSG_WEATHER = new Packets.PacketClass(OPCODES.SMSG_WEATHER);
-            SMSG_WEATHER.AddInt32(Weather.CurrentWeather);
+            SMSG_WEATHER.AddInt32((int)Weather.CurrentWeather);
             SMSG_WEATHER.AddSingle(Weather.Intensity);
             SMSG_WEATHER.AddInt32(Weather.GetSound());
             client.Send(ref SMSG_WEATHER);

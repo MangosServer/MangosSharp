@@ -110,7 +110,7 @@ namespace Mangos.Common.Globals
 
         public uint GuidLow(ulong guid)
         {
-            return (uint)(guid & (ulong)_Global_Constants.GUID_MASK_LOW);
+            return (uint)(guid & _Global_Constants.GUID_MASK_LOW);
         }
 
         public int GetShapeshiftModel(ShapeshiftForm form, Races race, int model)

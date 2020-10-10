@@ -82,9 +82,9 @@ namespace Mangos.World.Handlers
             {
                 if (client.Character.Pet.FollowOwner)
                 {
-                    float angle = client.Character.orientation - PId2;
+                    float angle = (float)(client.Character.orientation - PId2);
                     if (angle < 0f)
-                        angle += PIx2;
+                        (void)(angle += PIx2);
                     client.Character.Pet.SetToRealPosition();
                     float tmpX = (float)(client.Character.positionX + Math.Cos(angle) * 2.0d);
                     float tmpY = (float)(client.Character.positionY + Math.Sin(angle) * 2.0d);
@@ -180,7 +180,7 @@ namespace Mangos.World.Handlers
                         SMSG_EXPLORATION_EXPERIENCE.AddInt32(GainedXP);
                         client.Send(ref SMSG_EXPLORATION_EXPERIENCE);
                         SMSG_EXPLORATION_EXPERIENCE.Dispose();
-                        client.Character.SetUpdateFlag(EPlayerFields.PLAYER_EXPLORED_ZONES_1 + areaFlagOffset, client.Character.ZonesExplored[(int)areaFlagOffset]);
+                        client.Character.SetUpdateFlag((int)(EPlayerFields.PLAYER_EXPLORED_ZONES_1 + areaFlagOffset), client.Character.ZonesExplored[(int)areaFlagOffset]);
                         client.Character.AddXP(GainedXP, 0, 0UL, true);
 
                         // DONE: Fire quest event to check for if this area is used in explore area quest
@@ -196,7 +196,7 @@ namespace Mangos.World.Handlers
                 if (client.Character.cEmoteState > 0)
                 {
                     client.Character.cEmoteState = 0;
-                    client.Character.SetUpdateFlag(EUnitFields.UNIT_NPC_EMOTESTATE, client.Character.cEmoteState);
+                    client.Character.SetUpdateFlag((int)EUnitFields.UNIT_NPC_EMOTESTATE, client.Character.cEmoteState);
                     client.Character.SendCharacterUpdate(true);
                 }
 
@@ -212,13 +212,13 @@ namespace Mangos.World.Handlers
                     }
                 }
 
-                client.Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_MOVE);
+                client.Character.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_MOVE);
             }
 
             // If character is turning
             if (client.Character.isTurning)
             {
-                client.Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_TURNING);
+                client.Character.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_TURNING);
             }
 
             // DONE: Movement time calculation
@@ -241,12 +241,12 @@ namespace Mangos.World.Handlers
             // DONE: Remove auras that requires you to not move
             if (client.Character.isMoving)
             {
-                client.Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_MOVE);
+                client.Character.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_MOVE);
             }
             // DONE: Remove auras that requires you to not turn
             if (client.Character.isTurning)
             {
-                client.Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_TURNING);
+                client.Character.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_TURNING);
             }
         }
 
@@ -423,7 +423,7 @@ namespace Mangos.World.Handlers
 
                 // DONE: Handling quest triggers
                 q.Clear();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT entry, quest FROM quest_relations WHERE actor=2 and role=0 and entry = {0};", (object)triggerID), q);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT entry, quest FROM quest_relations WHERE actor=2 and role=0 and entry = {0};", (object)triggerID), ref q);
                 if (q.Rows.Count > 0)
                 {
                     WorldServiceLocator._WorldServer.ALLQUESTS.OnQuestExplore(ref client.Character, triggerID);
@@ -432,18 +432,18 @@ namespace Mangos.World.Handlers
 
                 // TODO: Handling tavern triggers
                 q.Clear();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM areatrigger_tavern WHERE id = {0};", (object)triggerID), q);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM areatrigger_tavern WHERE id = {0};", (object)triggerID), ref q);
                 if (q.Rows.Count > 0)
                 {
                     client.Character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_RESTING;
-                    client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+                    client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)client.Character.cPlayerFlags);
                     client.Character.SendCharacterUpdate(true);
                     return;
                 }
 
                 // DONE: Handling teleport triggers
                 q.Clear();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM areatrigger_teleport WHERE id = {0};", (object)triggerID), q);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM areatrigger_teleport WHERE id = {0};", (object)triggerID), ref q);
                 if (q.Rows.Count > 0)
                 {
                     float posX = Conversions.ToSingle(q.Rows[0]["target_position_x"]);
@@ -568,7 +568,7 @@ namespace Mangos.World.Handlers
                                 if (FallDamage > client.Character.Life.Maximum)
                                     FallDamage = client.Character.Life.Maximum;
                                 // Deal the damage
-                                client.Character.LogEnvironmentalDamage(EnvironmentalDamage.DAMAGE_FALL, FallDamage);
+                                client.Character.LogEnvironmentalDamage((DamageTypes)EnvironmentalDamage.DAMAGE_FALL, FallDamage);
                                 WS_Base.BaseUnit argAttacker = null;
                                 client.Character.DealDamage(FallDamage, Attacker: ref argAttacker);
 
@@ -598,13 +598,13 @@ namespace Mangos.World.Handlers
 
                         // DONE: Disable Turn
                         client.Character.cUnitFlags = client.Character.cUnitFlags | UnitFlags.UNIT_FLAG_STUNTED;
-                        UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
+                        UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
                         // DONE: StandState -> Sit
-                        client.Character.StandState = StandStates.STANDSTATE_SIT;
-                        UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
+                        client.Character.StandState = (byte)StandStates.STANDSTATE_SIT;
+                        UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
 
                         // DONE: Send packet
-                        UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, client.Character);
+                        UpdateData.AddToPacket(ref SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
                         client.Send(ref SMSG_UPDATE_OBJECT);
                     }
                     finally
@@ -615,7 +615,7 @@ namespace Mangos.World.Handlers
                     var packetACK = new Packets.PacketClass(OPCODES.SMSG_STANDSTATE_CHANGE_ACK);
                     try
                     {
-                        packetACK.AddInt8(StandStates.STANDSTATE_SIT);
+                        packetACK.AddInt8((byte)StandStates.STANDSTATE_SIT);
                         client.Send(ref packetACK);
                     }
                     finally
@@ -642,7 +642,7 @@ namespace Mangos.World.Handlers
             client.Character.ZoneCheck();
 
             // DONE: Update zone on cluster
-            WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientUpdate(client.Index, client.Character.ZoneID, client.Character.Level);
+            WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientUpdate(client.Index, (uint)client.Character.ZoneID, client.Character.Level);
 
             // DONE: Send weather
             if (WorldServiceLocator._WS_Weather.WeatherZones.ContainsKey(newZone))
@@ -1137,7 +1137,7 @@ namespace Mangos.World.Handlers
                         packet.AddInt8(0);
                         var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                         WorldServiceLocator._WorldServer.CHARACTERs[GUID].FillAllUpdateFlags(ref tmpUpdate);
-                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
+                        tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
                         tmpUpdate.Dispose();
                         Character.client.Send(ref packet);
                         packet.Dispose();
@@ -1158,7 +1158,7 @@ namespace Mangos.World.Handlers
                         myPacket.AddInt8(0);
                         var myTmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                         Character.FillAllUpdateFlags(ref myTmpUpdate);
-                        myTmpUpdate.AddToPacket(myPacket, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, Character);
+                        myTmpUpdate.AddToPacket(ref myPacket, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref Character);
                         myTmpUpdate.Dispose();
                         WorldServiceLocator._WorldServer.CHARACTERs[GUID].client.Send(ref myPacket);
                         myPacket.Dispose();
@@ -1184,7 +1184,7 @@ namespace Mangos.World.Handlers
                     {
                         var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].FillAllUpdateFlags(ref tmpUpdate);
-                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
+                        tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
                         tmpUpdate.Dispose();
                         Character.creaturesNear.Add(GUID);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SeenBy.Add(Character.GUID);
@@ -1283,7 +1283,7 @@ namespace Mangos.World.Handlers
                         packet.AddInt8(0);
                         var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].FillAllUpdateFlags(ref tmpUpdate);
-                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
+                        tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
                         tmpUpdate.Dispose();
                         Character.client.Send(ref packet);
                         packet.Dispose();
@@ -1313,7 +1313,7 @@ namespace Mangos.World.Handlers
                         packet.AddInt8(0);
                         var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].FillAllUpdateFlags(ref tmpUpdate, ref Character);
-                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID]);
+                        tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID]);
                         tmpUpdate.Dispose();
                         Character.client.Send(ref packet);
                         packet.Dispose();
@@ -1341,7 +1341,7 @@ namespace Mangos.World.Handlers
                         packet.AddInt8(0);
                         var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
                         WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID].FillAllUpdateFlags(ref tmpUpdate);
-                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID]);
+                        tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID]);
                         tmpUpdate.Dispose();
                         Character.client.Send(ref packet);
                         packet.Dispose();

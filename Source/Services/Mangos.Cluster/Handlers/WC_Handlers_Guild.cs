@@ -63,7 +63,7 @@ namespace Mangos.Cluster.Handlers
 
             // DONE: Create guild data
             var MySQLQuery = new DataTable();
-            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES (\"{0}\", {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = \"{0}\";", guildName, (object)client.Character.Guid, (object)(DateAndTime.Now.Year - 2006), (object)DateAndTime.Now.Month, (object)DateAndTime.Now.Day), ref MySQLQuery);
+            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES (\"{0}\", {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = \"{0}\";", guildName, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref MySQLQuery);
             ClusterServiceLocator._WC_Guild.AddCharacterToGuild(client.Character, Conversions.ToInteger(MySQLQuery.Rows[0]["guild_id"]), 0);
         }
 
@@ -787,7 +787,7 @@ namespace Mangos.Cluster.Handlers
             var q2 = new DataTable();
 
             // DONE: Create guild and add members
-            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES ('{0}', {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = '{0}';", Name, (object)client.Character.Guid, (object)(DateAndTime.Now.Year - 2006), (object)DateAndTime.Now.Month, (object)DateAndTime.Now.Day), ref q2);
+            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES ('{0}', {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = '{0}';", Name, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref q2);
             ClusterServiceLocator._WC_Guild.AddCharacterToGuild(client.Character, Conversions.ToInteger(q2.Rows[0]["guild_id"]), 0);
 
             // DONE: Adding 9 more signed _WorldCluster.CHARACTERs

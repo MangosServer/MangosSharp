@@ -248,7 +248,7 @@ namespace Mangos.World.Loots
                 {
                     // DONE: Loot owning!
                     var notMy = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
-                    notMy.AddInt8(InventoryChangeFailure.EQUIP_ERR_OBJECT_IS_BUSY);
+                    notMy.AddInt8((byte)InventoryChangeFailure.EQUIP_ERR_OBJECT_IS_BUSY);
                     notMy.AddUInt64(0UL);
                     notMy.AddUInt64(0UL);
                     notMy.AddInt8(0);
@@ -259,7 +259,7 @@ namespace Mangos.World.Loots
 
                 var response = new Packets.PacketClass(OPCODES.SMSG_LOOT_RESPONSE);
                 response.AddUInt64(GUID);
-                response.AddInt8(LootType);
+                response.AddInt8((byte)LootType);
                 response.AddInt32(Money);
                 response.AddInt8((byte)Items.Count);
                 for (byte i = 0, loopTo = (byte)(Items.Count - 1); i <= loopTo; i++)
@@ -326,7 +326,7 @@ namespace Mangos.World.Loots
                     if (Items[Slot] is null)
                     {
                         var response = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
-                        response.AddInt8(InventoryChangeFailure.EQUIP_ERR_ALREADY_LOOTED);
+                        response.AddInt8((byte)InventoryChangeFailure.EQUIP_ERR_ALREADY_LOOTED);
                         response.AddUInt64(0UL);
                         response.AddUInt64(0UL);
                         response.AddInt8(0);
@@ -338,7 +338,7 @@ namespace Mangos.World.Loots
                     if (GroupLootInfo.ContainsKey(Slot))
                     {
                         var response = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
-                        response.AddInt8(InventoryChangeFailure.EQUIP_ERR_OBJECT_IS_BUSY);
+                        response.AddInt8((byte)InventoryChangeFailure.EQUIP_ERR_OBJECT_IS_BUSY);
                         response.AddUInt64(0UL);
                         response.AddUInt64(0UL);
                         response.AddInt8(0);
@@ -376,7 +376,7 @@ namespace Mangos.World.Loots
                     {
                         tmpItem.Delete();
                         var response = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
-                        response.AddInt8(InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL);
+                        response.AddInt8((byte)InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL);
                         response.AddUInt64(0UL);
                         response.AddUInt64(0UL);
                         response.AddInt8(0);
@@ -545,7 +545,7 @@ namespace Mangos.World.Loots
                     byte GroupID = Conversions.ToByte(LootRow["groupid"]);
                     int MinCountOrRef = Conversions.ToInteger(LootRow["mincountOrRef"]);
                     byte MaxCount = Conversions.ToByte(LootRow["maxcount"]);
-                    ConditionType LootCondition = LootRow["condition_id"];
+                    ConditionType LootCondition = (ConditionType)LootRow["condition_id"];
                     // Dim ConditionValue1 As Integer = LootRow.Item("condition_value1")
                     // Dim ConditionValue2 As Integer = LootRow.Item("condition_value2")
 
@@ -697,7 +697,7 @@ namespace Mangos.World.Loots
                 else
                 {
                     var response = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
-                    response.AddInt8(InventoryChangeFailure.EQUIP_ERR_ALREADY_LOOTED);
+                    response.AddInt8((byte)InventoryChangeFailure.EQUIP_ERR_ALREADY_LOOTED);
                     response.AddUInt64(0UL);
                     response.AddUInt64(0UL);
                     response.AddInt8(0);
@@ -728,7 +728,7 @@ namespace Mangos.World.Loots
                 {
                     character.client.SendMultiplyPackets(ref sharePcket);
                     character.Copper = (uint)(character.Copper + copper);
-                    character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, character.Copper);
+                    character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, character.Copper);
                     character.SaveCharacter();
                 }
 
@@ -748,7 +748,7 @@ namespace Mangos.World.Loots
                 lootPacket.Dispose();
             }
 
-            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
             client.Character.SendCharacterUpdate(false);
             client.Character.SaveCharacter();
 
@@ -769,7 +769,7 @@ namespace Mangos.World.Loots
 
             // DONE: Make sure other players sees that you're looting
             client.Character.cUnitFlags = client.Character.cUnitFlags | UnitFlags.UNIT_FLAG_LOOTING;
-            client.Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
+            client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
             client.Character.SendCharacterUpdate();
             if (LootTable.ContainsKey(GUID))
             {
@@ -795,7 +795,7 @@ namespace Mangos.World.Loots
 
             // DONE: Remove looting for other players
             client.Character.cUnitFlags = client.Character.cUnitFlags & !UnitFlags.UNIT_FLAG_LOOTING;
-            client.Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
+            client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
             client.Character.SendCharacterUpdate();
             if (LootTable.ContainsKey(GUID))
             {
@@ -825,8 +825,8 @@ namespace Mangos.World.Loots
                             response.AddInt32(1);
                             response.AddInt8(0);
                             var UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                            UpdateData.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
-                            UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
+                            UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
+                            UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
                             UpdateData.AddToPacket(response, ObjectUpdateType.UPDATETYPE_VALUES, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
                             WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response);
                             response.Dispose();
@@ -866,12 +866,12 @@ namespace Mangos.World.Loots
                         }
                         else
                         {
-                            WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = DynamicFlags.UNIT_DYNFLAG_LOOTABLE;
+                            WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = (int)DynamicFlags.UNIT_DYNFLAG_LOOTABLE;
                             var response = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
                             response.AddInt32(1);
                             response.AddInt8(0);
                             var UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                            UpdateData.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
+                            UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
                             UpdateData.AddToPacket(response, ObjectUpdateType.UPDATETYPE_VALUES, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
                             WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response);
                             response.Dispose();
@@ -934,8 +934,8 @@ namespace Mangos.World.Loots
                     response.AddInt32(1);
                     response.AddInt8(0);
                     var UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
                     UpdateData.AddToPacket(response, ObjectUpdateType.UPDATETYPE_VALUES, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
                     WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response);
                     response.Dispose();
@@ -950,7 +950,7 @@ namespace Mangos.World.Loots
         {
             var response = new Packets.PacketClass(OPCODES.SMSG_LOOT_RESPONSE);
             response.AddUInt64(GUID);
-            response.AddInt8(LootType);
+            response.AddInt8((byte)LootType);
             response.AddInt32(0);
             response.AddInt8(0);
             client.Send(ref response);

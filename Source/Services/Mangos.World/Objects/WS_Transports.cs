@@ -723,20 +723,20 @@ namespace Mangos.World.Objects
 
             public override void FillAllUpdateFlags(ref Packets.UpdateClass Update, ref WS_PlayerData.CharacterObject Character)
             {
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_GUID, GUID);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
                 Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, ObjectType.TYPE_GAMEOBJECT + ObjectType.TYPE_OBJECT);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_ENTRY, ID);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_SCALE_X, Size);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_POS_X, positionX);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_POS_Y, positionY);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_POS_Z, positionZ);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, ID);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, Size);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_POS_X, positionX);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_POS_Y, positionY);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_POS_Z, positionZ);
                 // Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_FACING, orientation)
 
                 Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_STATE, 0, State);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_TYPE_ID, Type);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_FACTION, Faction);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_FLAGS, Flags);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_DISPLAYID, ObjectInfo.Model);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_TYPE_ID, Type);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_FACTION, Faction);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_FLAGS, Flags);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_DISPLAYID, ObjectInfo.Model);
                 // Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION, Rotations(0))
                 // Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION + 1, Rotations(1))
                 // Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION + 2, Rotations(2))

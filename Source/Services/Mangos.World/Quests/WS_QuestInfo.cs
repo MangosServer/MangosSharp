@@ -58,10 +58,10 @@ namespace Mangos.World.Quests
         public int RewMoneyMaxLevel; // = 0
         public int RewardSpell; // = 0
         public int RewardSpellCast; // = 0
-        public int[] RewardItems = new int[QuestInfo.QUEST_REWARD_CHOICES_COUNT + 1];
-        public int[] RewardItems_Count = new int[QuestInfo.QUEST_REWARD_CHOICES_COUNT + 1];
-        public int[] RewardStaticItems = new int[QuestInfo.QUEST_REWARDS_COUNT + 1];
-        public int[] RewardStaticItems_Count = new int[QuestInfo.QUEST_REWARDS_COUNT + 1];
+        public int[] RewardItems = new int[(int)(QuestInfo.QUEST_REWARD_CHOICES_COUNT + 1)];
+        public int[] RewardItems_Count = new int[(int)(QuestInfo.QUEST_REWARD_CHOICES_COUNT + 1)];
+        public int[] RewardStaticItems = new int[(int)(QuestInfo.QUEST_REWARDS_COUNT + 1)];
+        public int[] RewardStaticItems_Count = new int[(int)(QuestInfo.QUEST_REWARDS_COUNT + 1)];
         public int[] RewardRepFaction = new int[5];
         public int[] RewardRepValue = new int[5];
         public int RewMailTemplateId;

@@ -259,7 +259,7 @@ namespace Mangos.Cluster.Globals
             if (account.Rows.Count > 0)
             {
                 int accId = Conversions.ToInteger(account.Rows[0]["id"]);
-                ClusterServiceLocator._WorldCluster.AccountDatabase.Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", (object)accId), ref bannedAccount);
+                ClusterServiceLocator._WorldCluster.AccountDatabase.Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", accId), ref bannedAccount);
                 if (bannedAccount.Rows.Count > 0)
                 {
                     ClusterServiceLocator._WorldCluster.AccountDatabase.Update("UPDATE account_banned SET active = 1 WHERE id = '" + accId + "';");

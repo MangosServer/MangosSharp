@@ -276,8 +276,8 @@ namespace Mangos.World.Objects
             public void SendTargetUpdate(ulong TargetGUID)
             {
                 var packet = new Packets.UpdatePacketClass();
-                var tmpUpdate = new Packets.UpdateClass(EUnitFields.UNIT_END);
-                tmpUpdate.SetUpdateFlag(EUnitFields.UNIT_FIELD_TARGET, TargetGUID);
+                var tmpUpdate = new Packets.UpdateClass((int)EUnitFields.UNIT_END);
+                tmpUpdate.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_TARGET, TargetGUID);
                 tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
                 tmpUpdate.Dispose();
                 SendToNearPlayers(ref (Packets.PacketClass)packet);
@@ -304,45 +304,45 @@ namespace Mangos.World.Objects
 
             public void FillAllUpdateFlags(ref Packets.UpdateClass Update)
             {
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_GUID, GUID);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_SCALE_X, Size);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, Size);
                 Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, ObjectType.TYPE_OBJECT + ObjectType.TYPE_UNIT);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_ENTRY, ID);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, ID);
                 if (aiScript is object && aiScript.aiTarget is object)
                 {
-                    Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_TARGET, aiScript.aiTarget.GUID);
+                    Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_TARGET, aiScript.aiTarget.GUID);
                 }
 
                 if (SummonedBy > 0m)
-                    Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_SUMMONEDBY, SummonedBy);
+                    Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_SUMMONEDBY, SummonedBy);
                 if (CreatedBy > 0m)
-                    Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_CREATEDBY, CreatedBy);
+                    Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_CREATEDBY, CreatedBy);
                 if (CreatedBySpell > 0)
-                    Update.SetUpdateFlag(EUnitFields.UNIT_CREATED_BY_SPELL, CreatedBySpell);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_DISPLAYID, Model);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_NATIVEDISPLAYID, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].GetFirstModel);
+                    Update.SetUpdateFlag((int)EUnitFields.UNIT_CREATED_BY_SPELL, CreatedBySpell);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_DISPLAYID, Model);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_NATIVEDISPLAYID, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].GetFirstModel);
                 if (Mount > 0)
-                    Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, Mount);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_0, cBytes0);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_1, cBytes1);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_2, cBytes2);
-                Update.SetUpdateFlag(EUnitFields.UNIT_NPC_EMOTESTATE, cEmoteState);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + WorldServiceLocator._WorldServer.CREATURESDatabase[ID].ManaType, Mana.Current);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_MAXHEALTH, Life.Maximum);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_MAXPOWER1 + WorldServiceLocator._WorldServer.CREATURESDatabase[ID].ManaType, Mana.Maximum);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_LEVEL, Level);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_FACTIONTEMPLATE, Faction);
-                Update.SetUpdateFlag(EUnitFields.UNIT_NPC_FLAGS, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].cNpcFlags);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
-                Update.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_PHYSICAL, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_PHYSICAL]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_HOLY, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_HOLY]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_FIRE, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_FIRE]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_NATURE, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_NATURE]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_FROST, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_FROST]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_SHADOW, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_SHADOW]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_ARCANE, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_ARCANE]);
+                    Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, Mount);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_0, cBytes0);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, cBytes1);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_2, cBytes2);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_NPC_EMOTESTATE, cEmoteState);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
+                Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_POWER1 + WorldServiceLocator._WorldServer.CREATURESDatabase[ID].ManaType), Mana.Current);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXHEALTH, Life.Maximum);
+                Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_MAXPOWER1 + WorldServiceLocator._WorldServer.CREATURESDatabase[ID].ManaType), Mana.Maximum);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_LEVEL, Level);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FACTIONTEMPLATE, Faction);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_NPC_FLAGS, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].cNpcFlags);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags);
+                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_PHYSICAL, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_PHYSICAL]);
+                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_HOLY, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_HOLY]);
+                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_FIRE, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_FIRE]);
+                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_NATURE, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_NATURE]);
+                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_FROST, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_FROST]);
+                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_SHADOW, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_SHADOW]);
+                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_ARCANE, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_ARCANE]);
                 if (EquipmentID > 0)
                 {
                     try
@@ -350,15 +350,15 @@ namespace Mangos.World.Objects
                         if (WorldServiceLocator._WS_DBCDatabase.CreatureEquip.ContainsKey(EquipmentID))
                         {
                             var EquipmentInfo = WorldServiceLocator._WS_DBCDatabase.CreatureEquip[EquipmentID];
-                            Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, EquipmentInfo.EquipModel[0]);
-                            Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_INFO, EquipmentInfo.EquipInfo[0]);
-                            Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 1, EquipmentInfo.EquipSlot[0]);
-                            Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY + 1, EquipmentInfo.EquipModel[1]);
-                            Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 2, EquipmentInfo.EquipInfo[1]);
-                            Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 2 + 1, EquipmentInfo.EquipSlot[1]);
-                            Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY + 2, EquipmentInfo.EquipModel[2]);
-                            Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 4, EquipmentInfo.EquipInfo[2]);
-                            Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 4 + 1, EquipmentInfo.EquipSlot[2]);
+                            Update.SetUpdateFlag((int)EUnitFields.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, EquipmentInfo.EquipModel[0]);
+                            Update.SetUpdateFlag((int)EUnitFields.UNIT_VIRTUAL_ITEM_INFO, EquipmentInfo.EquipInfo[0]);
+                            Update.SetUpdateFlag((int)(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 1), EquipmentInfo.EquipSlot[0]);
+                            Update.SetUpdateFlag((int)(EUnitFields.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY + 1), EquipmentInfo.EquipModel[1]);
+                            Update.SetUpdateFlag((int)(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 2), EquipmentInfo.EquipInfo[1]);
+                            Update.SetUpdateFlag((int)(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 2 + 1), EquipmentInfo.EquipSlot[1]);
+                            Update.SetUpdateFlag((int)(EUnitFields.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY + 2), EquipmentInfo.EquipModel[2]);
+                            Update.SetUpdateFlag((int)(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 4), EquipmentInfo.EquipInfo[2]);
+                            Update.SetUpdateFlag((int)(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 4 + 1), EquipmentInfo.EquipSlot[2]);
                         }
                     }
                     catch (DataException)
@@ -375,8 +375,8 @@ namespace Mangos.World.Objects
                 // Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_ATTACK_POWER, _WorldServer.CREATURESDatabase(ID).AtackPower)
                 // Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RANGED_ATTACK_POWER, _WorldServer.CREATURESDatabase(ID).RangedAtackPower)
 
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_BOUNDINGRADIUS, BoundingRadius);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_COMBATREACH, CombatReach);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BOUNDINGRADIUS, BoundingRadius);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_COMBATREACH, CombatReach);
                 // Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_MINRANGEDDAMAGE, _WorldServer.CREATURESDatabase(ID).RangedDamage.Minimum)
                 // Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_MAXRANGEDDAMAGE, _WorldServer.CREATURESDatabase(ID).RangedDamage.Maximum)
 
@@ -384,16 +384,16 @@ namespace Mangos.World.Objects
                 {
                     if (ActiveSpells[i] is object)
                     {
-                        Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_AURA + i, ActiveSpells[i].SpellID);
+                        Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURA + i), ActiveSpells[i].SpellID);
                     }
                 }
 
                 for (int i = 0, loopTo1 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_FLAGs - 1; i <= loopTo1; i++)
-                    Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_AURAFLAGS + i, ActiveSpells_Flags[i]);
+                    Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAFLAGS + i), ActiveSpells_Flags[i]);
                 for (int i = 0, loopTo2 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_LEVELSs - 1; i <= loopTo2; i++)
                 {
-                    Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + i, ActiveSpells_Count[i]);
-                    Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_AURALEVELS + i, ActiveSpells_Level[i]);
+                    Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + i), ActiveSpells_Count[i]);
+                    Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURALEVELS + i), ActiveSpells_Level[i]);
                 }
             }
 
@@ -614,7 +614,7 @@ namespace Mangos.World.Objects
 
             public override void Die(ref WS_Base.BaseUnit Attacker)
             {
-                cUnitFlags = UnitFlags.UNIT_FLAG_DEAD; // cUnitFlags Or UnitFlags.UNIT_FLAG_DEAD
+                cUnitFlags = (int)UnitFlags.UNIT_FLAG_DEAD; // cUnitFlags Or UnitFlags.UNIT_FLAG_DEAD
                 Life.Current = 0;
                 Mana.Current = 0;
 
@@ -643,7 +643,7 @@ namespace Mangos.World.Objects
 
                 // DONE: Send the update
                 var packetForNear = new Packets.UpdatePacketClass();
-                var UpdateData = new Packets.UpdateClass(EUnitFields.UNIT_END);
+                var UpdateData = new Packets.UpdateClass((int)EUnitFields.UNIT_END);
 
                 // DONE: Remove all spells when the creature die
                 for (int i = 0, loopTo = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1; i <= loopTo; i++)
@@ -651,13 +651,13 @@ namespace Mangos.World.Objects
                     if (ActiveSpells[i] is object)
                     {
                         RemoveAura(i, ref ActiveSpells[i].SpellCaster, SendUpdate: false);
-                        UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_AURA + i, 0);
+                        UpdateData.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURA + i), 0);
                     }
                 }
 
-                UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
+                UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
                 UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + base.ManaType, Mana.Current);
-                UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
+                UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                 UpdateData.AddToPacket(packetForNear, ObjectUpdateType.UPDATETYPE_VALUES, this);
                 Packets.PacketClass argpacket = packetForNear;
                 SendToNearPlayers(ref argpacket);
@@ -689,7 +689,7 @@ namespace Mangos.World.Objects
                     return;
 
                 // DONE: Break some spells when taking any damage
-                RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_DAMAGE);
+                RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_DAMAGE);
                 Life.Current -= Damage;
 
                 // DONE: Generate hate
@@ -715,8 +715,8 @@ namespace Mangos.World.Objects
                 if (SeenBy.Count > 0)
                 {
                     var packetForNear = new Packets.UpdatePacketClass();
-                    var UpdateData = new Packets.UpdateClass(EUnitFields.UNIT_END);
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
+                    var UpdateData = new Packets.UpdateClass((int)EUnitFields.UNIT_END);
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
                     UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + base.ManaType, Mana.Current);
                     UpdateData.AddToPacket(packetForNear, ObjectUpdateType.UPDATETYPE_VALUES, this);
                     SendToNearPlayers(ref (Packets.PacketClass)packetForNear);
@@ -735,8 +735,8 @@ namespace Mangos.World.Objects
                 if (SeenBy.Count > 0)
                 {
                     var packetForNear = new Packets.UpdatePacketClass();
-                    var UpdateData = new Packets.UpdateClass(EUnitFields.UNIT_END);
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
+                    var UpdateData = new Packets.UpdateClass((int)EUnitFields.UNIT_END);
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
                     UpdateData.AddToPacket(packetForNear, ObjectUpdateType.UPDATETYPE_VALUES, this);
                     SendToNearPlayers(ref (Packets.PacketClass)packetForNear);
                     packetForNear.Dispose();
@@ -754,7 +754,7 @@ namespace Mangos.World.Objects
                 if (SeenBy.Count > 0)
                 {
                     var packetForNear = new Packets.UpdatePacketClass();
-                    var UpdateData = new Packets.UpdateClass(EUnitFields.UNIT_END);
+                    var UpdateData = new Packets.UpdateClass((int)EUnitFields.UNIT_END);
                     UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + base.ManaType, Mana.Current);
                     UpdateData.AddToPacket(packetForNear, ObjectUpdateType.UPDATETYPE_VALUES, this);
                     SendToNearPlayers(ref (Packets.PacketClass)packetForNear);
@@ -767,7 +767,7 @@ namespace Mangos.World.Objects
             {
                 if (GenerateLoot(ref Character, LootType.LOOTTYPE_CORPSE))
                 {
-                    cDynamicFlags = DynamicFlags.UNIT_DYNFLAG_LOOTABLE;
+                    cDynamicFlags = (int)DynamicFlags.UNIT_DYNFLAG_LOOTABLE;
                 }
                 else if (CreatureInfo.SkinLootID > 0)
                 {
@@ -784,8 +784,8 @@ namespace Mangos.World.Objects
                 packet.AddInt32(1);
                 packet.AddInt8(0);
                 var UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                UpdateData.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags);
-                UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
+                UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags);
+                UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                 UpdateData.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
                 UpdateData.Dispose();
                 if (WorldServiceLocator._WS_Loot.LootTable.ContainsKey(GUID) == false && (cUnitFlags & UnitFlags.UNIT_FLAG_SKINNABLE) == UnitFlags.UNIT_FLAG_SKINNABLE)
@@ -1192,8 +1192,8 @@ namespace Mangos.World.Objects
             {
                 var packet = new Packets.PacketClass(OPCODES.SMSG_MESSAGECHAT);
                 byte flag = 0;
-                packet.AddInt8(msgType);
-                packet.AddInt32(msgLanguage);
+                packet.AddInt8((byte)msgType);
+                packet.AddInt32((int)msgLanguage);
                 switch (msgType)
                 {
                     case var @case when @case == ChatMsg.CHAT_MSG_MONSTER_SAY:
@@ -1237,13 +1237,13 @@ namespace Mangos.World.Objects
                 if (Size == 0f)
                     Size = 1f;
                 Model = WorldServiceLocator._WorldServer.CREATURESDatabase[ID].GetRandomModel;
-                ManaType = WorldServiceLocator._WorldServer.CREATURESDatabase[ID].ManaType;
+                ManaType = (ManaTypes)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].ManaType;
                 Mana.Base = WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Mana;
                 Mana.Current = Mana.Maximum;
                 Life.Base = WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Life;
                 Life.Current = Life.Maximum;
                 Faction = WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Faction;
-                for (byte i = DamageTypes.DMG_PHYSICAL, loopTo = DamageTypes.DMG_ARCANE; i <= loopTo; i++)
+                for (byte i = (byte)DamageTypes.DMG_PHYSICAL, loopTo = (byte)DamageTypes.DMG_ARCANE; i <= loopTo; i++)
                     Resistances[i].Base = WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[i];
                 if (EquipmentID == 0 && WorldServiceLocator._WorldServer.CREATURESDatabase[ID].EquipmentID > 0)
                 {
@@ -1264,12 +1264,12 @@ namespace Mangos.World.Objects
                 if ((WorldServiceLocator._WorldServer.CREATURESDatabase[ID].cNpcFlags & NPCFlags.UNIT_NPC_FLAG_SPIRITHEALER) == NPCFlags.UNIT_NPC_FLAG_SPIRITHEALER)
                 {
                     Invisibility = InvisibilityLevel.DEAD;
-                    cUnitFlags = UnitFlags.UNIT_FLAG_SPIRITHEALER;
+                    cUnitFlags = (int)UnitFlags.UNIT_FLAG_SPIRITHEALER;
                 }
 
                 cDynamicFlags = WorldServiceLocator._WorldServer.CREATURESDatabase[ID].DynFlags;
                 StandState = cStandState;
-                cBytes2 = SHEATHE_SLOT.SHEATHE_WEAPON;
+                cBytes2 = (int)SHEATHE_SLOT.SHEATHE_WEAPON;
                 if (this is WS_Pets.PetObject)
                 {
                     // DONE: Load pet AI
@@ -1602,11 +1602,11 @@ namespace Mangos.World.Objects
                 if (SeenBy.Count > 0)
                 {
                     var packetForNear = new Packets.UpdatePacketClass();
-                    var UpdateData = new Packets.UpdateClass(EUnitFields.UNIT_END);
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
+                    var UpdateData = new Packets.UpdateClass((int)EUnitFields.UNIT_END);
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
                     UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + base.ManaType, Mana.Current);
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags);
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
+                    UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags);
                     UpdateData.AddToPacket(packetForNear, ObjectUpdateType.UPDATETYPE_VALUES, this);
                     Packets.PacketClass argpacket = packetForNear;
                     SendToNearPlayers(ref argpacket);
@@ -1823,7 +1823,7 @@ namespace Mangos.World.Objects
             if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Evade)
                 return;
             WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].StopMoving();
-            client.Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_TALK);
+            client.Character.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_TALK);
             try
             {
                 if (WorldServiceLocator._WorldServer.CREATURESDatabase[WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].ID].TalkScript is null)
@@ -1887,7 +1887,7 @@ namespace Mangos.World.Objects
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SPIRIT_HEALER_ACTIVATE [GUID={2}]", client.IP, client.Port, GUID);
             try
             {
-                for (byte i = 0, loopTo = EquipmentSlots.EQUIPMENT_SLOT_END - 1; i <= loopTo; i++)
+                for (byte i = 0, loopTo = (byte)(EquipmentSlots.EQUIPMENT_SLOT_END - 1); i <= loopTo; i++)
                 {
                     if (client.Character.Items.ContainsKey(i))
                         client.Character.Items[i].ModifyDurability(0.25f, ref client);

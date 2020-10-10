@@ -59,19 +59,19 @@ namespace Mangos.World.Handlers
             {
                 case var @case when @case == WeaponAttackType.BASE_ATTACK:
                     {
-                        WepSlot = EquipmentSlots.EQUIPMENT_SLOT_MAINHAND;
+                        WepSlot = (byte)EquipmentSlots.EQUIPMENT_SLOT_MAINHAND;
                         break;
                     }
 
                 case var case1 when case1 == WeaponAttackType.OFF_ATTACK:
                     {
-                        WepSlot = EquipmentSlots.EQUIPMENT_SLOT_OFFHAND;
+                        WepSlot = (byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND;
                         break;
                     }
 
                 case var case2 when case2 == WeaponAttackType.RANGED_ATTACK:
                     {
-                        WepSlot = EquipmentSlots.EQUIPMENT_SLOT_RANGED;
+                        WepSlot = (byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED;
                         break;
                     }
 
@@ -127,7 +127,7 @@ namespace Mangos.World.Handlers
             {
                 case var case2 when case2 == WeaponAttackType.BASE_ATTACK:
                     {
-                        if (((WS_PlayerData.CharacterObject)objCharacter).Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND) == false)
+                        if (((WS_PlayerData.CharacterObject)objCharacter).Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_MAINHAND) == false)
                             return 2.4f; // Fist attack
                         Weapon = ((WS_PlayerData.CharacterObject)objCharacter).Items(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND);
                         break;
@@ -135,7 +135,7 @@ namespace Mangos.World.Handlers
 
                 case var case3 when case3 == WeaponAttackType.OFF_ATTACK:
                     {
-                        if (((WS_PlayerData.CharacterObject)objCharacter).Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND) == false)
+                        if (((WS_PlayerData.CharacterObject)objCharacter).Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND) == false)
                             return 2.4f; // Fist attack
                         Weapon = ((WS_PlayerData.CharacterObject)objCharacter).Items(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND);
                         break;
@@ -143,7 +143,7 @@ namespace Mangos.World.Handlers
 
                 case var case4 when case4 == WeaponAttackType.RANGED_ATTACK:
                     {
-                        if (((WS_PlayerData.CharacterObject)objCharacter).Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_RANGED) == false)
+                        if (((WS_PlayerData.CharacterObject)objCharacter).Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED) == false)
                             return 0.0f;
                         Weapon = ((WS_PlayerData.CharacterObject)objCharacter).Items(EquipmentSlots.EQUIPMENT_SLOT_RANGED);
                         break;
@@ -187,7 +187,7 @@ namespace Mangos.World.Handlers
 
         public void CalculateMinMaxDamage(ref WS_PlayerData.CharacterObject objCharacter, WeaponAttackType AttackType)
         {
-            float AttSpeed = GetAPMultiplier(ref objCharacter, AttackType, true);
+            float AttSpeed = GetAPMultiplier(ref (WS_Base.BaseUnit)objCharacter, AttackType, true);
             float BasePercent = 1f;
             float BaseValue;
             switch (AttackType)
@@ -237,8 +237,8 @@ namespace Mangos.World.Handlers
                     {
                         objCharacter.Damage.Minimum = MinDamage;
                         objCharacter.Damage.Maximum = MaxDamage;
-                        objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_MINDAMAGE, objCharacter.Damage.Minimum);
-                        objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_MAXDAMAGE, objCharacter.Damage.Maximum);
+                        objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINDAMAGE, objCharacter.Damage.Minimum);
+                        objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXDAMAGE, objCharacter.Damage.Maximum);
                         break;
                     }
 
@@ -246,8 +246,8 @@ namespace Mangos.World.Handlers
                     {
                         objCharacter.OffHandDamage.Minimum = MinDamage;
                         objCharacter.OffHandDamage.Maximum = MaxDamage;
-                        objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_MINOFFHANDDAMAGE, objCharacter.OffHandDamage.Minimum);
-                        objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_MAXOFFHANDDAMAGE, objCharacter.OffHandDamage.Maximum);
+                        objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINOFFHANDDAMAGE, objCharacter.OffHandDamage.Minimum);
+                        objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXOFFHANDDAMAGE, objCharacter.OffHandDamage.Maximum);
                         break;
                     }
 
@@ -255,8 +255,8 @@ namespace Mangos.World.Handlers
                     {
                         objCharacter.RangedDamage.Minimum = MinDamage;
                         objCharacter.RangedDamage.Maximum = MaxDamage;
-                        objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_MINRANGEDDAMAGE, objCharacter.RangedDamage.Minimum);
-                        objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_MAXRANGEDDAMAGE, objCharacter.RangedDamage.Maximum);
+                        objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINRANGEDDAMAGE, objCharacter.RangedDamage.Minimum);
+                        objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXRANGEDDAMAGE, objCharacter.RangedDamage.Maximum);
                         break;
                     }
             }
@@ -276,7 +276,7 @@ namespace Mangos.World.Handlers
                 result.HitInfo = result.HitInfo | AttackHitState.HITINFO_LEFTSWING;
             if (Ability is object)
             {
-                result.DamageType = Ability.School;
+                result.DamageType = (DamageTypes)Ability.School;
             }
             // TODO: Get creature damage type
             else if (Attacker is WS_PlayerData.CharacterObject)
@@ -285,19 +285,19 @@ namespace Mangos.World.Handlers
                     var withBlock = (WS_PlayerData.CharacterObject)Attacker;
                     if (Ranged)
                     {
-                        if (withBlock.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_RANGED))
+                        if (withBlock.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED))
                         {
                             result.DamageType = withBlock.Items(EquipmentSlots.EQUIPMENT_SLOT_RANGED).ItemInfo.Damage(0).Type;
                         }
                     }
                     else if (DualWield)
                     {
-                        if (withBlock.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND))
+                        if (withBlock.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND))
                         {
                             result.DamageType = withBlock.Items(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND).ItemInfo.Damage(0).Type;
                         }
                     }
-                    else if (withBlock.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND))
+                    else if (withBlock.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_MAINHAND))
                     {
                         result.DamageType = withBlock.Items(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND).ItemInfo.Damage(0).Type;
                     }
@@ -324,7 +324,7 @@ namespace Mangos.World.Handlers
             // http://www.wowwiki.com/Defense
             skillDiference -= GetSkillDefence(ref Victim);
             if (Victim is WS_PlayerData.CharacterObject)
-                ((WS_PlayerData.CharacterObject)Victim).UpdateSkill(SKILL_IDs.SKILL_DEFENSE);
+                ((WS_PlayerData.CharacterObject)Victim).UpdateSkill((int)SKILL_IDs.SKILL_DEFENSE);
 
             // DONE: Final calculations
             float chanceToMiss = GetBasePercentMiss(ref Attacker, skillDiference);
@@ -405,12 +405,12 @@ namespace Mangos.World.Handlers
                         // DONE: Dodge attack
                         result.Damage = 0;
                         result.victimState = AttackVictimState.VICTIMSTATE_DODGE;
-                        DoEmote(Emotes.ONESHOT_PARRYUNARMED, ref Victim);
+                        DoEmote((int)Emotes.ONESHOT_PARRYUNARMED, ref (WS_Base.BaseObject)Victim);
                         // TODO: Remove after 5 secs?
                         Victim.AuraState = Victim.AuraState | SpellAuraStates.AURASTATE_FLAG_DODGE_BLOCK;
                         if (Victim is WS_PlayerData.CharacterObject)
                         {
-                            ((WS_PlayerData.CharacterObject)Victim).SetUpdateFlag(EUnitFields.UNIT_FIELD_AURASTATE, Victim.AuraState);
+                            ((WS_PlayerData.CharacterObject)Victim).SetUpdateFlag((int)EUnitFields.UNIT_FIELD_AURASTATE, Victim.AuraState);
                             ((WS_PlayerData.CharacterObject)Victim).SendCharacterUpdate();
                         }
 
@@ -422,12 +422,12 @@ namespace Mangos.World.Handlers
                         // DONE: Parry attack
                         result.Damage = 0;
                         result.victimState = AttackVictimState.VICTIMSTATE_PARRY;
-                        DoEmote(Emotes.ONESHOT_PARRYUNARMED, ref Victim);
+                        DoEmote((int)Emotes.ONESHOT_PARRYUNARMED, ref (WS_Base.BaseObject)Victim);
                         // TODO: Remove after 5 secs?
                         Victim.AuraState = Victim.AuraState | SpellAuraStates.AURASTATE_FLAG_PARRY;
                         if (Victim is WS_PlayerData.CharacterObject)
                         {
-                            ((WS_PlayerData.CharacterObject)Victim).SetUpdateFlag(EUnitFields.UNIT_FIELD_AURASTATE, Victim.AuraState);
+                            ((WS_PlayerData.CharacterObject)Victim).SetUpdateFlag((int)EUnitFields.UNIT_FIELD_AURASTATE, Victim.AuraState);
                             ((WS_PlayerData.CharacterObject)Victim).SendCharacterUpdate();
                         }
 
@@ -451,11 +451,11 @@ namespace Mangos.World.Handlers
                             result.Blocked = (int)(((WS_PlayerData.CharacterObject)Victim).combatBlockValue + ((WS_PlayerData.CharacterObject)Victim).Strength.Base / 20d);     // ... hits you for 60. (40 blocked)
                             if (((WS_PlayerData.CharacterObject)Victim).combatBlockValue != 0)
                             {
-                                DoEmote(Emotes.ONESHOT_PARRYSHIELD, ref Victim);
+                                DoEmote((int)Emotes.ONESHOT_PARRYSHIELD, ref (WS_Base.BaseObject)Victim);
                             }
                             else
                             {
-                                DoEmote(Emotes.ONESHOT_PARRYUNARMED, ref Victim);
+                                DoEmote((int)Emotes.ONESHOT_PARRYUNARMED, ref (WS_Base.BaseObject)Victim);
                             }
 
                             result.victimState = AttackVictimState.VICTIMSTATE_BLOCKS;
@@ -473,7 +473,7 @@ namespace Mangos.World.Handlers
                         result.Damage *= 2;
                         result.HitInfo = result.HitInfo | AttackHitState.HITINFO_HITANIMATION;
                         result.HitInfo = result.HitInfo | AttackHitState.HITINFO_CRITICALHIT;
-                        DoEmote(Emotes.ONESHOT_WOUNDCRITICAL, ref Victim);
+                        DoEmote((int)Emotes.ONESHOT_WOUNDCRITICAL, ref (WS_Base.BaseObject)Victim);
                         break;
                     }
 
@@ -619,7 +619,7 @@ namespace Mangos.World.Handlers
                     {
 
                         // NOTE: Character is with selected hand weapons
-                        if (withBlock.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND))
+                        if (withBlock.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND))
                         {
                             // NOTE: Character is with equiped offhand item, checking if it is weapon
                             if (withBlock.Items(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND).ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON)
@@ -804,17 +804,17 @@ namespace Mangos.World.Handlers
                     {
                         case var @case when @case == SHEATHE_SLOT.SHEATHE_NONE:
                             {
-                                tmpSkill = SKILL_IDs.SKILL_UNARMED;
+                                tmpSkill = (int)SKILL_IDs.SKILL_UNARMED;
                                 break;
                             }
 
                         case var case1 when case1 == SHEATHE_SLOT.SHEATHE_WEAPON:
                             {
-                                if (DualWield && withBlock.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND))
+                                if (DualWield && withBlock.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND))
                                 {
                                     tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase(withBlock.Items(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND).ItemEntry).GetReqSkill;
                                 }
-                                else if (withBlock.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND))
+                                else if (withBlock.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_MAINHAND))
                                 {
                                     tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase(withBlock.Items(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND).ItemEntry).GetReqSkill;
                                 }
@@ -824,7 +824,7 @@ namespace Mangos.World.Handlers
 
                         case var case2 when case2 == SHEATHE_SLOT.SHEATHE_RANGED:
                             {
-                                if (withBlock.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_RANGED))
+                                if (withBlock.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED))
                                 {
                                     tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase(withBlock.Items(EquipmentSlots.EQUIPMENT_SLOT_RANGED).ItemEntry).GetReqSkill;
                                 }
@@ -852,7 +852,7 @@ namespace Mangos.World.Handlers
         {
             if (objCharacter is WS_PlayerData.CharacterObject)
             {
-                ((WS_PlayerData.CharacterObject)objCharacter).UpdateSkill(SKILL_IDs.SKILL_DEFENSE, 0.01d);
+                ((WS_PlayerData.CharacterObject)objCharacter).UpdateSkill((int)SKILL_IDs.SKILL_DEFENSE, (float)0.01d);
                 return ((WS_PlayerData.CharacterObject)objCharacter).Skills(SKILL_IDs.SKILL_DEFENSE).CurrentWithBonus;
             }
 
@@ -905,7 +905,7 @@ namespace Mangos.World.Handlers
                     {
                         case var @case when @case == SHEATHE_SLOT.SHEATHE_NONE:
                             {
-                                result.HitInfo = AttackHitState.HITINFO_NORMALSWING;
+                                result.HitInfo = (int)AttackHitState.HITINFO_NORMALSWING;
                                 result.DamageType = DamageTypes.DMG_PHYSICAL;
                                 result.Damage = WorldServiceLocator._WorldServer.Rnd.Next(withBlock.BaseUnarmedDamage, withBlock.BaseUnarmedDamage + 1);
                                 break;
@@ -921,7 +921,7 @@ namespace Mangos.World.Handlers
                                 }
                                 else
                                 {
-                                    result.HitInfo = AttackHitState.HITINFO_HITANIMATION;
+                                    result.HitInfo = (int)AttackHitState.HITINFO_HITANIMATION;
                                     result.DamageType = DamageTypes.DMG_PHYSICAL;
                                     result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)withBlock.Damage.Minimum, (int)(withBlock.Damage.Maximum + 1f)) + withBlock.BaseUnarmedDamage;
                                 }
@@ -1080,7 +1080,7 @@ namespace Mangos.World.Handlers
                 }
 
                 LastAttack = WorldServiceLocator._NativeMethods.timeGetTime("");
-                Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_START_ATTACK);
+                Character.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_START_ATTACK);
                 try
                 {
                     if (Ranged)
@@ -1196,8 +1196,8 @@ namespace Mangos.World.Handlers
                         return;
                     }
 
-                    bool HaveMainHand = (int)Character.AttackTime(0) > 0 && Character.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND);
-                    bool HaveOffHand = (int)Character.AttackTime(1) > 0 && Character.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND);
+                    bool HaveMainHand = (int)Character.AttackTime(0) > 0 && Character.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_MAINHAND);
+                    bool HaveOffHand = (int)Character.AttackTime(1) > 0 && Character.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND);
 
                     // DONE: Spells that add to attack
                     if (!combatNextAttackSpell)
@@ -1430,7 +1430,7 @@ namespace Mangos.World.Handlers
                     IsCrit = true;
                 }
 
-                WorldServiceLocator._WS_Spells.SendNonMeleeDamageLog(ref Character, ref Victim2, SpellID, damageInfo.DamageType, damageInfo.Damage, 0, damageInfo.Absorbed, IsCrit);
+                WorldServiceLocator._WS_Spells.SendNonMeleeDamageLog(ref (WS_Base.BaseUnit)Character, ref (WS_Base.BaseUnit)Victim2, SpellID, (int)damageInfo.DamageType, damageInfo.Damage, 0, damageInfo.Absorbed, IsCrit);
                 if (Victim2 is WS_Creatures.CreatureObject)
                 {
                     WS_Base.BaseUnit argAttacker1 = Character;
@@ -1469,15 +1469,15 @@ namespace Mangos.World.Handlers
         public void SetPlayerInCombat(ref WS_PlayerData.CharacterObject objCharacter)
         {
             objCharacter.cUnitFlags = objCharacter.cUnitFlags | UnitFlags.UNIT_FLAG_IN_COMBAT;
-            objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
+            objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
             objCharacter.SendCharacterUpdate(false);
-            objCharacter.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_ENTER_COMBAT);
+            objCharacter.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_ENTER_COMBAT);
         }
 
         public void SetPlayerOutOfCombat(ref WS_PlayerData.CharacterObject objCharacter)
         {
             objCharacter.cUnitFlags = objCharacter.cUnitFlags & !UnitFlags.UNIT_FLAG_IN_COMBAT;
-            objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
+            objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
             objCharacter.SendCharacterUpdate(false);
         }
 
@@ -1489,7 +1489,7 @@ namespace Mangos.World.Handlers
                 return;
             packet.GetInt16();
             client.Character.TargetGUID = packet.GetUInt64();
-            client.Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_TARGET, client.Character.TargetGUID);
+            client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_TARGET, client.Character.TargetGUID);
             client.Character.SendCharacterUpdate();
         }
 
@@ -1583,7 +1583,7 @@ namespace Mangos.World.Handlers
                 }
 
                 client.Character.AmmoID = AmmoID;
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_AMMO_ID, client.Character.AmmoID);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_AMMO_ID, client.Character.AmmoID);
                 client.Character.SendCharacterUpdate(false);
             }
             else if (Conversions.ToBoolean(client.Character.AmmoID)) // Remove Ammo
@@ -1591,7 +1591,7 @@ namespace Mangos.World.Handlers
                 client.Character.AmmoDPS = 0f;
                 CalculateMinMaxDamage(ref client.Character, WeaponAttackType.RANGED_ATTACK);
                 client.Character.AmmoID = 0;
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_AMMO_ID, 0);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_AMMO_ID, 0);
                 client.Character.SendCharacterUpdate(false);
             }
         }
@@ -1601,7 +1601,7 @@ namespace Mangos.World.Handlers
             if (packet.Data.Length - 1 < 9)
                 return;
             packet.GetInt16();
-            SHEATHE_SLOT sheathed = packet.GetInt32();
+            SHEATHE_SLOT sheathed = (SHEATHE_SLOT)packet.GetInt32();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SETSHEATHED [{2}]", client.IP, client.Port, sheathed);
             SetSheath(ref client.Character, sheathed);
         }
@@ -1611,7 +1611,7 @@ namespace Mangos.World.Handlers
             objCharacter.attackSheathState = State;
             objCharacter.combatCanDualWield = false;
             objCharacter.cBytes2 = objCharacter.cBytes2 & ~0xFF | State;
-            objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_2, objCharacter.cBytes2);
+            objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_2, objCharacter.cBytes2);
             switch (State)
             {
                 case var @case when @case == SHEATHE_SLOT.SHEATHE_NONE:
@@ -1627,7 +1627,7 @@ namespace Mangos.World.Handlers
 
                 case var case1 when case1 == SHEATHE_SLOT.SHEATHE_WEAPON:
                     {
-                        if (objCharacter.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND) && !objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND).IsBroken)
+                        if (objCharacter.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_MAINHAND) && !objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND).IsBroken)
                         {
                             var argItem3 = objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_MAINHAND);
                             SetVirtualItemInfo(objCharacter, 0, ref argItem3);
@@ -1640,7 +1640,7 @@ namespace Mangos.World.Handlers
                             objCharacter.attackSheathState = SHEATHE_SLOT.SHEATHE_NONE;
                         }
 
-                        if (objCharacter.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND) && !objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND).IsBroken)
+                        if (objCharacter.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_OFFHAND) && !objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND).IsBroken)
                         {
                             var argItem5 = objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_OFFHAND);
                             SetVirtualItemInfo(objCharacter, 1, ref argItem5);
@@ -1668,7 +1668,7 @@ namespace Mangos.World.Handlers
                         SetVirtualItemInfo(objCharacter, 0, ref argItem8);
                         ItemObject argItem9 = null;
                         SetVirtualItemInfo(objCharacter, 1, ref argItem9);
-                        if (objCharacter.Items.ContainsKey(EquipmentSlots.EQUIPMENT_SLOT_RANGED) && !objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_RANGED).IsBroken)
+                        if (objCharacter.Items.ContainsKey((byte)EquipmentSlots.EQUIPMENT_SLOT_RANGED) && !objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_RANGED).IsBroken)
                         {
                             var argItem10 = objCharacter.Items(EquipmentSlots.EQUIPMENT_SLOT_RANGED);
                             SetVirtualItemInfo(objCharacter, 2, ref argItem10);
@@ -1748,13 +1748,13 @@ namespace Mangos.World.Handlers
             packet.AddInt32(damageInfo.GetDamage);                               // RealDamage
 
             // TODO: How do we know what type of swing it is?
-            packet.AddInt8(SwingTypes.SINGLEHANDEDSWING);                        // Swing type
-            packet.AddUInt32(damageInfo.DamageType); // Damage type
+            packet.AddInt8((byte)SwingTypes.SINGLEHANDEDSWING);                        // Swing type
+            packet.AddUInt32((uint)damageInfo.DamageType); // Damage type
             packet.AddSingle(damageInfo.GetDamage);                                 // Damage float
             packet.AddInt32(damageInfo.GetDamage);                                  // Damage amount
             packet.AddInt32(damageInfo.Absorbed);                            // Damage absorbed
             packet.AddInt32(damageInfo.Resist);                              // Damage resisted
-            packet.AddInt32(damageInfo.victimState);                              // Victim state
+            packet.AddInt32((int)damageInfo.victimState);                              // Victim state
             if (damageInfo.Absorbed == 0)
             {
                 packet.AddInt32(0x3E8);

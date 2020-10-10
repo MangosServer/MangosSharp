@@ -68,7 +68,7 @@ namespace Mangos.World.Objects
             MaxLife = Conversions.ToInteger(MySQLQuery.Rows[0]["MaxLevelHealth"]);
             MinMana = Conversions.ToInteger(MySQLQuery.Rows[0]["MinLevelMana"]);
             MaxMana = Conversions.ToInteger(MySQLQuery.Rows[0]["MaxLevelMana"]);
-            ManaType = ManaTypes.TYPE_MANA;
+            ManaType = (byte)ManaTypes.TYPE_MANA;
             Faction = Conversions.ToShort(MySQLQuery.Rows[0]["factionAlliance"]);
             // TODO: factionHorde?
             Elite = Conversions.ToByte(MySQLQuery.Rows[0]["rank"]);
@@ -306,10 +306,10 @@ namespace Mangos.World.Objects
         public int MinMana = 1;
         public int MaxMana = 1;
         public byte ManaType = 0;
-        public short Faction = FactionTemplates.None;
-        public byte CreatureType = UNIT_TYPE.NONE;
-        public byte CreatureFamily = CREATURE_FAMILY.NONE;
-        public byte Elite = CREATURE_ELITE.NORMAL;
+        public short Faction = (short)FactionTemplates.None;
+        public byte CreatureType = (byte)UNIT_TYPE.NONE;
+        public byte CreatureFamily = (byte)CREATURE_FAMILY.NONE;
+        public byte Elite = (byte)CREATURE_ELITE.NORMAL;
         public byte HonorRank = 0;
         public WS_Items.TDamage Damage = new WS_Items.TDamage();
         public WS_Items.TDamage RangedDamage = new WS_Items.TDamage();

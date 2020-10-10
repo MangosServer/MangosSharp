@@ -57,7 +57,7 @@ namespace Mangos.World.Social
             WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_mail SET mail_time = {1}, mail_read = 0, mail_receiver = (mail_receiver + mail_sender), mail_sender = (mail_receiver - mail_sender), mail_receiver = (mail_receiver - mail_sender) WHERE mail_id = {0};", MailID, MailTime));
             var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
             response.AddInt32(MailID);
-            response.AddInt32(MailResult.MAIL_RETURNED);
+            response.AddInt32((int)MailResult.MAIL_RETURNED);
             response.AddInt32(0);
             client.Send(ref response);
             response.Dispose();
@@ -74,7 +74,7 @@ namespace Mangos.World.Social
             WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("DELETE FROM characters_mail WHERE mail_id = {0};", MailID));
             var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
             response.AddInt32(MailID);
-            response.AddInt32(MailResult.MAIL_DELETED);
+            response.AddInt32((int)MailResult.MAIL_DELETED);
             response.AddInt32(0);
             client.Send(ref response);
             response.Dispose();
@@ -175,7 +175,7 @@ namespace Mangos.World.Social
                         {
                             tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(Conversions.ToULong(MySQLQuery.Rows[i]["item_guid"]));
                             response.AddInt32(tmpItem.ItemEntry);
-                            if (tmpItem.Enchantments.ContainsKey(EnchantSlots.ENCHANTMENT_PERM))
+                            if (tmpItem.Enchantments.ContainsKey((byte)EnchantSlots.ENCHANTMENT_PERM))
                             {
                                 packet.AddInt32(tmpItem.Enchantments(EnchantSlots.ENCHANTMENT_PERM).ID);
                             }
@@ -237,8 +237,8 @@ namespace Mangos.World.Social
                 {
                     var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(MailID);
-                    response.AddInt32(MailResult.MAIL_ITEM_REMOVED);
-                    response.AddInt32(MailSentError.INTERNAL_ERROR);
+                    response.AddInt32((int)MailResult.MAIL_ITEM_REMOVED);
+                    response.AddInt32((int)MailSentError.INTERNAL_ERROR);
                     client.Send(ref response);
                     response.Dispose();
                     return;
@@ -251,8 +251,8 @@ namespace Mangos.World.Social
                     {
                         var noMoney = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                         noMoney.AddInt32(MailID);
-                        noMoney.AddInt32(MailResult.MAIL_SENT);
-                        noMoney.AddInt32(MailSentError.NOT_ENOUGHT_MONEY);
+                        noMoney.AddInt32((int)MailResult.MAIL_SENT);
+                        noMoney.AddInt32((int)MailSentError.NOT_ENOUGHT_MONEY);
                         client.Send(ref noMoney);
                         noMoney.Dispose();
                         return;
@@ -276,8 +276,8 @@ namespace Mangos.World.Social
                 {
                     var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(MailID);
-                    response.AddInt32(MailResult.MAIL_ITEM_REMOVED);
-                    response.AddInt32(MailSentError.INTERNAL_ERROR);
+                    response.AddInt32((int)MailResult.MAIL_ITEM_REMOVED);
+                    response.AddInt32((int)MailSentError.INTERNAL_ERROR);
                     client.Send(ref response);
                     response.Dispose();
                     return;
@@ -294,8 +294,8 @@ namespace Mangos.World.Social
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("DELETE FROM mail_items WHERE mail_id = {0};", MailID));
                     var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(MailID);
-                    response.AddInt32(MailResult.MAIL_ITEM_REMOVED);
-                    response.AddInt32(MailSentError.NO_ERROR);
+                    response.AddInt32((int)MailResult.MAIL_ITEM_REMOVED);
+                    response.AddInt32((int)MailSentError.NO_ERROR);
                     client.Send(ref response);
                     response.Dispose();
                 }
@@ -304,8 +304,8 @@ namespace Mangos.World.Social
                     tmpItem.Dispose();
                     var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(MailID);
-                    response.AddInt32(MailResult.MAIL_ITEM_REMOVED);
-                    response.AddInt32(MailSentError.BAG_FULL);
+                    response.AddInt32((int)MailResult.MAIL_ITEM_REMOVED);
+                    response.AddInt32((int)MailSentError.BAG_FULL);
                     client.Send(ref response);
                     response.Dispose();
                 }
@@ -337,10 +337,10 @@ namespace Mangos.World.Social
                 client.Character.Copper = Conversions.ToUInteger(client.Character.Copper + MySQLQuery.Rows[0]["mail_money"]);
             }
 
-            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
             var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
             response.AddInt32(MailID);
-            response.AddInt32(MailResult.MAIL_MONEY_REMOVED);
+            response.AddInt32((int)MailResult.MAIL_MONEY_REMOVED);
             response.AddInt32(0);
             client.Send(ref response);
             response.Dispose();
@@ -423,8 +423,8 @@ namespace Mangos.World.Social
                 {
                     var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(0);
-                    response.AddInt32(MailResult.MAIL_SENT);
-                    response.AddInt32(MailSentError.CHARACTER_NOT_FOUND);
+                    response.AddInt32((int)MailResult.MAIL_SENT);
+                    response.AddInt32((int)MailSentError.CHARACTER_NOT_FOUND);
                     client.Send(ref response);
                     response.Dispose();
                     return;
@@ -436,8 +436,8 @@ namespace Mangos.World.Social
                 {
                     var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(0);
-                    response.AddInt32(MailResult.MAIL_SENT);
-                    response.AddInt32(MailSentError.CANNOT_SEND_TO_SELF);
+                    response.AddInt32((int)MailResult.MAIL_SENT);
+                    response.AddInt32((int)MailSentError.CANNOT_SEND_TO_SELF);
                     client.Send(ref response);
                     response.Dispose();
                     return;
@@ -447,8 +447,8 @@ namespace Mangos.World.Social
                 {
                     var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(0);
-                    response.AddInt32(MailResult.MAIL_SENT);
-                    response.AddInt32(MailSentError.NOT_ENOUGHT_MONEY);
+                    response.AddInt32((int)MailResult.MAIL_SENT);
+                    response.AddInt32((int)MailSentError.NOT_ENOUGHT_MONEY);
                     client.Send(ref response);
                     response.Dispose();
                     return;
@@ -460,8 +460,8 @@ namespace Mangos.World.Social
                 {
                     var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(0);
-                    response.AddInt32(MailResult.MAIL_SENT);
-                    response.AddInt32(MailSentError.INTERNAL_ERROR);
+                    response.AddInt32((int)MailResult.MAIL_SENT);
+                    response.AddInt32((int)MailSentError.INTERNAL_ERROR);
                     client.Send(ref response);
                     response.Dispose();
                     return;
@@ -472,8 +472,8 @@ namespace Mangos.World.Social
                 {
                     var response = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(0);
-                    response.AddInt32(MailResult.MAIL_SENT);
-                    response.AddInt32(MailSentError.NOT_YOUR_ALLIANCE);
+                    response.AddInt32((int)MailResult.MAIL_SENT);
+                    response.AddInt32((int)MailSentError.NOT_YOUR_ALLIANCE);
                     client.Send(ref response);
                     response.Dispose();
                     return;
@@ -483,7 +483,7 @@ namespace Mangos.World.Social
                 if (client.Character.ItemGETByGUID(itemGuid) is null)
                     itemGuid = 0UL;
                 client.Character.Copper = (uint)(client.Character.Copper - (30L + Money));
-                client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                 int MailTime = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + TimeConstant.DAY * 30; // Add 30 days to the current date/time
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format(@"INSERT INTO characters_mail (mail_sender, mail_receiver, mail_type, mail_stationary, mail_subject, mail_body, mail_money, mail_COD, mail_time, mail_read, item_guid) VALUES
                 ({0},{1},{2},{3},'{4}','{5}',{6},{7},{8},{9},{10});", client.Character.GUID, ReceiverGUID, 0, 41, Subject.Replace("'", "`"), Body.Replace("'", "`"), Money, COD, MailTime, Conversions.ToByte(MailReadInfo.Unread), itemGuid == WorldServiceLocator._Global_Constants.GUID_ITEM));
@@ -493,8 +493,8 @@ namespace Mangos.World.Social
                 // Tell the client we succeded
                 var sendOK = new Packets.PacketClass(OPCODES.SMSG_SEND_MAIL_RESULT);
                 sendOK.AddInt32(0);
-                sendOK.AddInt32(MailResult.MAIL_SENT);
-                sendOK.AddInt32(MailSentError.NO_ERROR);
+                sendOK.AddInt32((int)MailResult.MAIL_SENT);
+                sendOK.AddInt32((int)MailSentError.NO_ERROR);
                 client.Send(ref sendOK);
                 sendOK.Dispose();
                 WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);

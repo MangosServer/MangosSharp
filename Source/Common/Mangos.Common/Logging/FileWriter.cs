@@ -75,7 +75,7 @@ namespace Mangos.Common.Logging
                 return;
             if (LastDate != DateAndTime.Now.Date)
                 CreateNewFile();
-            Output.WriteLine(L[(int)type] + ":[" + Strings.Format((object)DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
+            Output.WriteLine(L[(int)type] + ":[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
         }
     }
 }

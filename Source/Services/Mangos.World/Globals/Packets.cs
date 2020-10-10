@@ -110,7 +110,7 @@ namespace Mangos.World.Globals
             /// <param name="pos">The pos.</param>
             /// <param name="value">The value.</param>
             /// <returns></returns>
-            public void SetUpdateFlag(int pos, int value)
+            public void SetUpdateFlag(EObjectFields oBJECT_FIELD_TYPE, int pos, int value)
             {
                 UpdateMask.Set(pos, true);
                 UpdateData[pos] = value;
@@ -142,7 +142,7 @@ namespace Mangos.World.Globals
             /// <param name="pos">The pos.</param>
             /// <param name="value">The value.</param>
             /// <returns></returns>
-            public void SetUpdateFlag(int pos, uint value)
+            public void SetUpdateFlag(EObjectFields oBJECT_FIELD_TYPE, int pos, uint value)
             {
                 UpdateMask.Set(pos, true);
                 UpdateData[pos] = value;
@@ -197,11 +197,11 @@ namespace Mangos.World.Globals
             /// <returns></returns>
             public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_Creatures.CreatureObject updateObject)
             {
-                packet.AddInt8(updateType);
+                packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
                 if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT)
                 {
-                    packet.AddInt8(ObjectTypeID.TYPEID_UNIT);
+                    packet.AddInt8((byte)ObjectTypeID.TYPEID_UNIT);
                 }
 
                 if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_MOVEMENT)
@@ -271,11 +271,11 @@ namespace Mangos.World.Globals
             /// <returns></returns>
             public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_PlayerData.CharacterObject updateObject)
             {
-                packet.AddInt8(updateType);
+                packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
                 if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
                 {
-                    packet.AddInt8(ObjectTypeID.TYPEID_PLAYER);
+                    packet.AddInt8((byte)ObjectTypeID.TYPEID_PLAYER);
                 }
 
                 if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF || updateType == ObjectUpdateType.UPDATETYPE_MOVEMENT)
@@ -358,17 +358,17 @@ namespace Mangos.World.Globals
             /// <returns></returns>
             public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref ItemObject updateObject)
             {
-                packet.AddInt8(updateType);
+                packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
                 if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT)
                 {
                     if (WorldServiceLocator._WorldServer.ITEMDatabase[updateObject.ItemEntry].ContainerSlots > 0)
                     {
-                        packet.AddInt8(ObjectTypeID.TYPEID_CONTAINER);
+                        packet.AddInt8((byte)ObjectTypeID.TYPEID_CONTAINER);
                     }
                     else
                     {
-                        packet.AddInt8(ObjectTypeID.TYPEID_ITEM);
+                        packet.AddInt8((byte)ObjectTypeID.TYPEID_ITEM);
                     }
 
                     packet.AddInt8(0x18);
@@ -421,7 +421,7 @@ namespace Mangos.World.Globals
             /// <returns></returns>
             public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_GameObjects.GameObjectObject updateObject)
             {
-                packet.AddInt8(updateType);
+                packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
                 switch (updateObject.Type)
                 {
@@ -437,7 +437,7 @@ namespace Mangos.World.Globals
 
                 if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
                 {
-                    packet.AddInt8(ObjectTypeID.TYPEID_GAMEOBJECT);
+                    packet.AddInt8((byte)ObjectTypeID.TYPEID_GAMEOBJECT);
 
                     // packet.AddInt8(&H58)
                     if (updateObject.Type == GameObjectType.GAMEOBJECT_TYPE_TRANSPORT || updateObject.Type == GameObjectType.GAMEOBJECT_TYPE_MO_TRANSPORT)
@@ -518,11 +518,11 @@ namespace Mangos.World.Globals
             /// <returns></returns>
             public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_DynamicObjects.DynamicObjectObject updateObject)
             {
-                packet.AddInt8(updateType);
+                packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
                 if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
                 {
-                    packet.AddInt8(ObjectTypeID.TYPEID_DYNAMICOBJECT);
+                    packet.AddInt8((byte)ObjectTypeID.TYPEID_DYNAMICOBJECT);
                     packet.AddInt8(0x58);
                     packet.AddSingle(updateObject.positionX);
                     packet.AddSingle(updateObject.positionY);
@@ -577,11 +577,11 @@ namespace Mangos.World.Globals
             /// <returns></returns>
             public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_Corpses.CorpseObject updateObject)
             {
-                packet.AddInt8(updateType);
+                packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
                 if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT)
                 {
-                    packet.AddInt8(ObjectTypeID.TYPEID_CORPSE);
+                    packet.AddInt8((byte)ObjectTypeID.TYPEID_CORPSE);
                     packet.AddInt8(0x58);
                     packet.AddSingle(updateObject.positionX);
                     packet.AddSingle(updateObject.positionY);
@@ -673,7 +673,7 @@ namespace Mangos.World.Globals
                 {
                     if (Information.UBound(Data) > 2)
                     {
-                        return Data[2] + Data[3] * 256;
+                        return (OPCODES)(Data[2] + Data[3] * 256);
                     }
                     else
                     {

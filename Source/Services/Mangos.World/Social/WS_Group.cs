@@ -147,9 +147,9 @@ namespace Mangos.World.Social
             {
                 byte memberFlags = (byte)Globals.Functions.PartyMemberStatsStatus.STATUS_ONLINE;
                 if (objCharacter.isPvP)
-                    memberFlags = memberFlags | (byte)Globals.Functions.PartyMemberStatsStatus.STATUS_PVP;
+                    memberFlags = (byte)(memberFlags | (byte)Globals.Functions.PartyMemberStatsStatus.STATUS_PVP);
                 if (objCharacter.DEAD)
-                    memberFlags = memberFlags | (byte)Globals.Functions.PartyMemberStatsStatus.STATUS_DEAD;
+                    memberFlags = (byte)(memberFlags | (byte)Globals.Functions.PartyMemberStatsStatus.STATUS_DEAD);
                 packet.AddInt8(memberFlags);
             }
 
@@ -158,7 +158,7 @@ namespace Mangos.World.Social
             if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_MAX_HP))
                 packet.AddUInt16((ushort)objCharacter.Life.Maximum);
             if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POWER_TYPE))
-                packet.AddInt8(objCharacter.ManaType);
+                packet.AddInt8((byte)objCharacter.ManaType);
             if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER))
             {
                 if (objCharacter.ManaType == ManaTypes.TYPE_RAGE)
@@ -283,7 +283,7 @@ namespace Mangos.World.Social
             {
                 if (objCharacter.Pet is object)
                 {
-                    packet.AddInt8(ManaTypes.TYPE_FOCUS);
+                    packet.AddInt8((byte)ManaTypes.TYPE_FOCUS);
                 }
                 else
                 {

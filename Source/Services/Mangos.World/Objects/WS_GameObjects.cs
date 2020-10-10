@@ -67,7 +67,7 @@ namespace Mangos.World.Objects
 
                 found_ = true;
                 Model = Conversions.ToInteger(MySQLQuery.Rows[0]["displayId"]);
-                Type = MySQLQuery.Rows[0]["type"];
+                Type = (GameObjectType)MySQLQuery.Rows[0]["type"];
                 Name = Conversions.ToString(MySQLQuery.Rows[0]["name"]);
                 Faction = Conversions.ToShort(MySQLQuery.Rows[0]["faction"]);
                 Flags = Conversions.ToInteger(MySQLQuery.Rows[0]["flags"]);
@@ -326,21 +326,21 @@ namespace Mangos.World.Objects
 
             public virtual void FillAllUpdateFlags(ref Packets.UpdateClass Update, ref WS_PlayerData.CharacterObject Character)
             {
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_GUID, GUID);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
                 Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, ObjectType.TYPE_GAMEOBJECT + ObjectType.TYPE_OBJECT);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_ENTRY, ID);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_SCALE_X, Size);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, ID);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, Size);
                 if (Owner > 0UL)
-                    Update.SetUpdateFlag(EGameObjectFields.OBJECT_FIELD_CREATED_BY, Owner);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_POS_X, positionX);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_POS_Y, positionY);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_POS_Z, positionZ);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_FACING, orientation);
+                    Update.SetUpdateFlag((int)EGameObjectFields.OBJECT_FIELD_CREATED_BY, Owner);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_POS_X, positionX);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_POS_Y, positionY);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_POS_Z, positionZ);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_FACING, orientation);
                 long Rotation = 0L;
                 float f_rot1 = (float)Math.Sin(orientation / 2f);
                 long i_rot1 = (long)(f_rot1 / Math.Atan(Math.Pow(2d, -20)));
                 Rotation = Rotation | i_rot1 << 43 >> 43 & 0x1FFFFFL;
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION, Rotation);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_ROTATION, Rotation);
 
                 // If a game object has bit 4 set in the flag it needs to be activated (used for quests)
                 // DynFlags = Activate a game object (Chest = 9, Goober = 1)
@@ -365,18 +365,18 @@ namespace Mangos.World.Objects
                 }
 
                 if (Conversions.ToBoolean(DynFlags))
-                    Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_DYN_FLAGS, DynFlags);
+                    Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_DYN_FLAGS, DynFlags);
                 Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_STATE, 0, State);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_TYPE_ID, Type);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_TYPE_ID, Type);
                 if (Level > 0)
-                    Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_LEVEL, Level);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_FACTION, Faction);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_FLAGS, Flags);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_DISPLAYID, ObjectInfo.Model);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION, Rotations[0]);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION + 1, Rotations[1]);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION + 2, Rotations[2]);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION + 3, Rotations[3]);
+                    Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_LEVEL, Level);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_FACTION, Faction);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_FLAGS, Flags);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_DISPLAYID, ObjectInfo.Model);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_ROTATION, Rotations[0]);
+                Update.SetUpdateFlag((int)(EGameObjectFields.GAMEOBJECT_ROTATION + 1), Rotations[1]);
+                Update.SetUpdateFlag((int)(EGameObjectFields.GAMEOBJECT_ROTATION + 2), Rotations[2]);
+                Update.SetUpdateFlag((int)(EGameObjectFields.GAMEOBJECT_ROTATION + 3), Rotations[3]);
                 // Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_TIMESTAMP, msTime) ' Changed in 1.12.x client branch?
             }
 
@@ -506,7 +506,7 @@ namespace Mangos.World.Objects
                 ID = Conversions.ToInteger(Info["id"]);
                 AnimProgress = Conversions.ToInteger(Info["animprogress"]);
                 SpawnTime = Conversions.ToInteger(Info["spawntimesecs"]);
-                State = Info["state"];
+                State = (GameObjectLootState)Info["state"];
 
                 // If Not Info.Item("event") Is DBNull.Value Then
                 // GameEvent = Info.Item("event")
@@ -646,7 +646,7 @@ namespace Mangos.World.Objects
                 packet.AddInt32(1);
                 packet.AddInt8(0);
                 var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
-                tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_FLAGS, Flags);
+                tmpUpdate.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_FLAGS, Flags);
                 tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_STATE, 0, State);
                 tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
                 tmpUpdate.Dispose();
@@ -662,7 +662,7 @@ namespace Mangos.World.Objects
                 packet.AddInt32(1);
                 packet.AddInt8(0);
                 var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
-                tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_FLAGS, Flags);
+                tmpUpdate.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_FLAGS, Flags);
                 tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_STATE, 0, state);
                 tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
                 tmpUpdate.Dispose();
@@ -733,7 +733,7 @@ namespace Mangos.World.Objects
                 if (!Operators.ConditionalCompareObjectEqual(state, GameObjectLootState.DOOR_CLOSED, false))
                     return;
                 state = GameObjectLootState.DOOR_OPEN;
-                Flags = GameObjectFlags.GO_FLAG_NODESPAWN;
+                Flags = (int)GameObjectFlags.GO_FLAG_NODESPAWN;
                 Loot = new WS_Loot.LootObject(GUID, LootType.LOOTTYPE_FISHING) { LootOwner = Owner };
                 int AreaFlag = WorldServiceLocator._WS_Maps.GetAreaFlag(positionX, positionY, (int)MapID);
                 int AreaID = WorldServiceLocator._WS_Maps.AreaTable[AreaFlag].ID;
@@ -747,7 +747,7 @@ namespace Mangos.World.Objects
                 packet.AddInt32(1);
                 packet.AddInt8(0);
                 var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
-                tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_FLAGS, Flags);
+                tmpUpdate.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_FLAGS, Flags);
                 tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_STATE, 0, state);
                 tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
                 tmpUpdate.Dispose();
@@ -766,7 +766,7 @@ namespace Mangos.World.Objects
             {
                 if (!Operators.ConditionalCompareObjectEqual(state, GameObjectLootState.DOOR_OPEN, false))
                     return;
-                Flags = GameObjectFlags.GO_FLAG_LOCKED;
+                Flags = (int)GameObjectFlags.GO_FLAG_LOCKED;
                 if (Loot is object)
                 {
                     Loot.Dispose();
@@ -911,11 +911,11 @@ namespace Mangos.World.Objects
                     packet.AddInt32(2);
                     packet.AddInt8(0);
                     var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
-                    tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_FACING, orientation);
-                    tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION, Rotations[0]);
-                    tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION + 1, Rotations[1]);
-                    tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION + 2, Rotations[2]);
-                    tmpUpdate.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_ROTATION + 3, Rotations[3]);
+                    tmpUpdate.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_FACING, orientation);
+                    tmpUpdate.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_ROTATION, Rotations[0]);
+                    tmpUpdate.SetUpdateFlag((int)(EGameObjectFields.GAMEOBJECT_ROTATION + 1), Rotations[1]);
+                    tmpUpdate.SetUpdateFlag((int)(EGameObjectFields.GAMEOBJECT_ROTATION + 2), Rotations[2]);
+                    tmpUpdate.SetUpdateFlag((int)(EGameObjectFields.GAMEOBJECT_ROTATION + 3), Rotations[3]);
                     tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
                     tmpUpdate.Dispose();
                     SendToNearPlayers(ref packet);
@@ -1017,7 +1017,7 @@ namespace Mangos.World.Objects
                 }
 
                 response.AddInt32(GameObject.ID);
-                response.AddInt32(GameObject.Type);
+                response.AddInt32((int)GameObject.Type);
                 response.AddInt32(GameObject.Model);
                 response.AddString(GameObject.Name);
                 response.AddInt16(0); // Name2
@@ -1045,7 +1045,7 @@ namespace Mangos.World.Objects
             if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GameObjectGUID) == false)
                 return;
             var GO = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID];
-            client.Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_USE);
+            client.Character.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_USE);
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "GameObjectType: {0}", WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].Type);
             switch (GO.Type)
             {
@@ -1216,7 +1216,7 @@ namespace Mangos.World.Objects
                                 GO.Loot.SendLoot(ref client);
 
                                 // DONE: Update skill!
-                                client.Character.UpdateSkill(SKILL_IDs.SKILL_FISHING, 0.01d);
+                                client.Character.UpdateSkill((int)SKILL_IDs.SKILL_FISHING, (float)0.01d);
                             }
                             else
                             {

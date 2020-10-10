@@ -36,9 +36,9 @@ namespace Mangos.World.Player
 
             // DONE: Make name capitalized as on official
             Character.Name = WorldServiceLocator._Functions.CapitalizeName(ref Name);
-            Character.Race = Race;
-            Character.Classe = Classe;
-            Character.Gender = Gender;
+            Character.Race = (Common.Enums.Player.Races)Race;
+            Character.Classe = (Common.Enums.Player.Classes)Classe;
+            Character.Gender = (Common.Enums.Player.Genders)Gender;
             Character.Skin = Skin;
             Character.Face = Face;
             Character.HairStyle = HairStyle;
@@ -48,11 +48,11 @@ namespace Mangos.World.Player
             // DONE: Query Access Level and Account ID
             WorldServiceLocator._WorldServer.AccountDatabase.Query(string.Format("SELECT id, gmlevel FROM account WHERE username = \"{0}\";", Account), MySQLQuery);
             int Account_ID = Conversions.ToInteger(MySQLQuery.Rows[0]["id"]);
-            AccessLevel Account_Access = MySQLQuery.Rows[0]["gmlevel"];
+            AccessLevel Account_Access = (AccessLevel)MySQLQuery.Rows[0]["gmlevel"];
             Character.Access = Account_Access;
             if (!WorldServiceLocator._Functions.ValidateName(Character.Name))
             {
-                return CharResponse.CHAR_NAME_INVALID_CHARACTER;
+                return (int)CharResponse.CHAR_NAME_INVALID_CHARACTER;
             }
 
             // DONE: Name In Use
@@ -62,18 +62,18 @@ namespace Mangos.World.Player
                 WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT char_name FROM characters WHERE char_name = \"{0}\";", Character.Name), MySQLQuery);
                 if (MySQLQuery.Rows.Count > 0)
                 {
-                    return CharResponse.CHAR_CREATE_NAME_IN_USE;
+                    return (int)CharResponse.CHAR_CREATE_NAME_IN_USE;
                 }
             }
             catch
             {
-                return CharResponse.CHAR_CREATE_FAILED;
+                return (int)CharResponse.CHAR_CREATE_FAILED;
             }
 
             // DONE: Check for disabled class/race, only for non GM/Admin
             if (WorldServiceLocator._Global_Constants.SERVER_CONFIG_DISABLED_CLASSES(Character.Classe - 1) == true || WorldServiceLocator._Global_Constants.SERVER_CONFIG_DISABLED_RACES(Character.Race - 1) == true && Account_Access < AccessLevel.GameMaster)
             {
-                return CharResponse.CHAR_CREATE_DISABLED;
+                return (int)CharResponse.CHAR_CREATE_DISABLED;
             }
 
             // DONE: Check for both horde and alliance
@@ -86,7 +86,7 @@ namespace Mangos.World.Player
                 {
                     if (Character.IsHorde != WorldServiceLocator._Functions.GetCharacterSide(Conversions.ToByte(MySQLQuery.Rows[0]["char_race"])))
                     {
-                        return CharResponse.CHAR_CREATE_PVP_TEAMS_VIOLATION;
+                        return (int)CharResponse.CHAR_CREATE_PVP_TEAMS_VIOLATION;
                     }
                 }
             }
@@ -96,7 +96,7 @@ namespace Mangos.World.Player
             WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT char_name FROM characters WHERE account_id = \"{0}\";", (object)Account_ID), MySQLQuery);
             if (MySQLQuery.Rows.Count >= 10)
             {
-                return CharResponse.CHAR_CREATE_SERVER_LIMIT;
+                return (int)CharResponse.CHAR_CREATE_SERVER_LIMIT;
             }
 
             // DONE: Check for max characters in total on all realms
@@ -104,7 +104,7 @@ namespace Mangos.World.Player
             WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT char_name FROM characters WHERE account_id = \"{0}\";", (object)Account_ID), MySQLQuery);
             if (MySQLQuery.Rows.Count >= 10)
             {
-                return CharResponse.CHAR_CREATE_ACCOUNT_LIMIT;
+                return (int)CharResponse.CHAR_CREATE_ACCOUNT_LIMIT;
             }
 
             // DONE: Generate GUID, MySQL Auto generation
@@ -122,14 +122,14 @@ namespace Mangos.World.Player
             catch (Exception err)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error initializing character! {0} {1}", Environment.NewLine, err.ToString());
-                return CharResponse.CHAR_CREATE_FAILED;
+                return (int)CharResponse.CHAR_CREATE_FAILED;
             }
             finally
             {
                 Character.Dispose();
             }
 
-            return CharResponse.CHAR_CREATE_SUCCESS;
+            return (int)CharResponse.CHAR_CREATE_SUCCESS;
         }
 
         public void CreateCharacter(ref WS_PlayerData.CharacterObject objCharacter)
@@ -184,7 +184,7 @@ namespace Mangos.World.Player
             objCharacter.ManaType = WorldServiceLocator._WS_Player_Initializator.GetClassManaType(objCharacter.Classe);
 
             // Set Character Create Information
-            objCharacter.Model = WorldServiceLocator._Functions.GetRaceModel(objCharacter.Race, objCharacter.Gender);
+            objCharacter.Model = WorldServiceLocator._Functions.GetRaceModel(objCharacter.Race, (int)objCharacter.Gender);
             objCharacter.Faction = WorldServiceLocator._WS_DBCDatabase.CharRaces(objCharacter.Race).FactionID;
             objCharacter.MapID = Conversions.ToUInteger(CreateInfo.Rows[0]["map"]);
             objCharacter.ZoneID = Conversions.ToInteger(CreateInfo.Rows[0]["zone"]);

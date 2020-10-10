@@ -43,7 +43,7 @@ namespace Mangos.World.Handlers
             var taxiFailed = new Packets.PacketClass(OPCODES.SMSG_ACTIVATETAXIREPLY);
             try
             {
-                taxiFailed.AddInt32(reply);
+                taxiFailed.AddInt32((int)reply);
                 client.Send(ref taxiFailed);
             }
             finally
@@ -454,8 +454,8 @@ namespace Mangos.World.Handlers
             character.Mount = 0;
             character.cUnitFlags = character.cUnitFlags & !UnitFlags.UNIT_FLAG_DISABLE_MOVE;
             character.cUnitFlags = character.cUnitFlags & !UnitFlags.UNIT_FLAG_TAXI_FLIGHT;
-            character.SetUpdateFlag(EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, character.Mount);
-            character.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, character.cUnitFlags);
+            character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, character.Mount);
+            character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, character.cUnitFlags);
             character.SendCharacterUpdate();
         }
 
@@ -470,9 +470,9 @@ namespace Mangos.World.Handlers
             character.Mount = mount;
             character.cUnitFlags = character.cUnitFlags | UnitFlags.UNIT_FLAG_DISABLE_MOVE;
             character.cUnitFlags = character.cUnitFlags | UnitFlags.UNIT_FLAG_TAXI_FLIGHT;
-            character.SetUpdateFlag(EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, character.Mount);
-            character.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, character.cUnitFlags);
-            character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, character.Copper);
+            character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, character.Mount);
+            character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, character.cUnitFlags);
+            character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, character.Copper);
             character.SendCharacterUpdate();
         }
 
@@ -527,7 +527,7 @@ namespace Mangos.World.Handlers
                         if (character.Copper < price)
                             break;
                         character.Copper = (uint)(character.Copper - price);
-                        character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, character.Copper);
+                        character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, character.Copper);
                         character.SendCharacterUpdate(false);
                         Console.WriteLine("Paying {0}", price);
                     }

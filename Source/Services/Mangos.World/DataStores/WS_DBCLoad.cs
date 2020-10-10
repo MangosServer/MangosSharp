@@ -45,8 +45,8 @@ namespace Mangos.World.DataStores
 
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    radiusID = tmpDBC.Item(i, 0);
-                    radiusValue = tmpDBC.Item(i, 1, DBCValueType.DBC_FLOAT);
+                    radiusID = (int)tmpDBC.Item(i, 0);
+                    radiusValue = (float)tmpDBC.Item(i, 1, DBCValueType.DBC_FLOAT);
                     // radiusValue2 = tmpDBC.Item(i, 3, DBCValueType.DBC_FLOAT) ' May be needed in the future
 
                     WorldServiceLocator._WS_Spells.SpellRadius[radiusID] = radiusValue;
@@ -72,8 +72,8 @@ namespace Mangos.World.DataStores
                 int spellCastTimeS;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    spellCastID = tmpDBC.Item(i, 0);
-                    spellCastTimeS = tmpDBC.Item(i, 1);
+                    spellCastID = (int)tmpDBC.Item(i, 0);
+                    spellCastTimeS = (int)tmpDBC.Item(i, 1);
                     WorldServiceLocator._WS_Spells.SpellCastTime[spellCastID] = spellCastTimeS;
                 }
 
@@ -98,9 +98,9 @@ namespace Mangos.World.DataStores
                 float spellRangeMax;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    spellRangeIndex = tmpDBC.Item(i, 0);
+                    spellRangeIndex = (int)tmpDBC.Item(i, 0);
                     // spellRangeMin = tmpDBC.Item(i, 1, DBCValueType.DBC_FLOAT) ' Added back may be needed in the future
-                    spellRangeMax = tmpDBC.Item(i, 2, DBCValueType.DBC_FLOAT);
+                    spellRangeMax = (float)tmpDBC.Item(i, 2, DBCValueType.DBC_FLOAT);
                     WorldServiceLocator._WS_Spells.SpellRange[spellRangeIndex] = spellRangeMax;
                 }
 
@@ -126,10 +126,10 @@ namespace Mangos.World.DataStores
                 int attackSpeed;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    id = tmpDBC.Item(i, 0);
-                    flags1 = tmpDBC.Item(i, 11);
-                    creatureType = tmpDBC.Item(i, 12);
-                    attackSpeed = tmpDBC.Item(i, 13);
+                    id = (int)tmpDBC.Item(i, 0);
+                    flags1 = (int)tmpDBC.Item(i, 11);
+                    creatureType = (int)tmpDBC.Item(i, 12);
+                    attackSpeed = (int)tmpDBC.Item(i, 13);
                     WorldServiceLocator._WS_DBCDatabase.SpellShapeShiftForm.Add(new WS_DBCDatabase.TSpellShapeshiftForm(id, flags1, creatureType, attackSpeed));
                 }
 
@@ -153,8 +153,8 @@ namespace Mangos.World.DataStores
                 string spellFocusObjectName;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    spellFocusIndex = tmpDBC.Item(i, 0);
-                    spellFocusObjectName = tmpDBC.Item(i, 1, DBCValueType.DBC_STRING);
+                    spellFocusIndex = (int)tmpDBC.Item(i, 0);
+                    spellFocusObjectName = (string)tmpDBC.Item(i, 1, DBCValueType.DBC_STRING);
                     WorldServiceLocator._WS_Spells.SpellFocusObject[spellFocusIndex] = spellFocusObjectName;
                 }
 
@@ -181,8 +181,8 @@ namespace Mangos.World.DataStores
 
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    spellDurationIndex = tmpDBC.Item(i, 0);
-                    spellDurationValue = tmpDBC.Item(i, 1);
+                    spellDurationIndex = (int)tmpDBC.Item(i, 0);
+                    spellDurationValue = (int)tmpDBC.Item(i, 1);
                     // SpellDurationValue2 = tmpDBC.Item(i, 2) ' May be needed in the future
                     // SpellDurationValue3 = tmpDBC.Item(i, 3) ' May be needed in the future
 
@@ -212,101 +212,101 @@ namespace Mangos.World.DataStores
                 {
                     try
                     {
-                        id = spellDBC.Item(i, 0);
+                        id = (int)spellDBC.Item((int)i, 0);
                         // 3 = Not Used
                         // AttributesEx3 = SpellDBC.Item(i, 9)
                         // AttributesEx4 = SpellDBC.Item(i, 10)
                         WorldServiceLocator._WS_Spells.SPELLs[id] = new WS_Spells.SpellInfo()
                         {
                             ID = id,
-                            School = spellDBC.Item(i, 1),
-                            Category = spellDBC.Item(i, 2),
-                            DispellType = spellDBC.Item(i, 4),
-                            Mechanic = spellDBC.Item(i, 5),
-                            Attributes = spellDBC.Item(i, 6),
-                            AttributesEx = spellDBC.Item(i, 7),
-                            AttributesEx2 = spellDBC.Item(i, 8),
-                            RequredCasterStance = spellDBC.Item(i, 11), // RequiredShapeShift
-                            ShapeshiftExclude = spellDBC.Item(i, 12),
-                            Target = spellDBC.Item(i, 13),
-                            TargetCreatureType = spellDBC.Item(i, 14),
-                            FocusObjectIndex = spellDBC.Item(i, 15),
-                            CasterAuraState = spellDBC.Item(i, 16),
-                            TargetAuraState = spellDBC.Item(i, 17),
-                            SpellCastTimeIndex = spellDBC.Item(i, 18),
-                            SpellCooldown = spellDBC.Item(i, 19),
-                            CategoryCooldown = spellDBC.Item(i, 20),
-                            interruptFlags = spellDBC.Item(i, 21),
-                            auraInterruptFlags = spellDBC.Item(i, 22),
-                            channelInterruptFlags = spellDBC.Item(i, 23),
-                            procFlags = spellDBC.Item(i, 24),
-                            procChance = spellDBC.Item(i, 25),
-                            procCharges = spellDBC.Item(i, 26),
-                            maxLevel = spellDBC.Item(i, 27),
-                            baseLevel = spellDBC.Item(i, 28),
-                            spellLevel = spellDBC.Item(i, 29),
-                            DurationIndex = spellDBC.Item(i, 30),
-                            powerType = spellDBC.Item(i, 31),
-                            manaCost = spellDBC.Item(i, 32),
-                            manaCostPerlevel = spellDBC.Item(i, 33),
-                            manaPerSecond = spellDBC.Item(i, 34),
-                            manaPerSecondPerLevel = spellDBC.Item(i, 35),
-                            rangeIndex = spellDBC.Item(i, 36),
-                            Speed = spellDBC.Item(i, 37, DBCValueType.DBC_FLOAT),
-                            modalNextSpell = spellDBC.Item(i, 38), // Not Used
-                            maxStack = spellDBC.Item(i, 39)
+                            School = (int)spellDBC.Item((int)i, 1),
+                            Category = (int)spellDBC.Item((int)i, 2),
+                            DispellType = (int)spellDBC.Item((int)i, 4),
+                            Mechanic = (int)spellDBC.Item((int)i, 5),
+                            Attributes = (int)spellDBC.Item((int)i, 6),
+                            AttributesEx = (int)spellDBC.Item((int)i, 7),
+                            AttributesEx2 = (int)spellDBC.Item((int)i, 8),
+                            RequredCasterStance = (int)spellDBC.Item((int)i, 11), // RequiredShapeShift
+                            ShapeshiftExclude = (int)spellDBC.Item((int)i, 12),
+                            Target = (int)spellDBC.Item((int)i, 13),
+                            TargetCreatureType = (int)spellDBC.Item((int)i, 14),
+                            FocusObjectIndex = (int)spellDBC.Item((int)i, 15),
+                            CasterAuraState = (int)spellDBC.Item((int)i, 16),
+                            TargetAuraState = (int)spellDBC.Item((int)i, 17),
+                            SpellCastTimeIndex = (int)spellDBC.Item((int)i, 18),
+                            SpellCooldown = (int)spellDBC.Item((int)i, 19),
+                            CategoryCooldown = (int)spellDBC.Item((int)i, 20),
+                            interruptFlags = (int)spellDBC.Item((int)i, 21),
+                            auraInterruptFlags = (int)spellDBC.Item((int)i, 22),
+                            channelInterruptFlags = (int)spellDBC.Item((int)i, 23),
+                            procFlags = (int)spellDBC.Item((int)i, 24),
+                            procChance = (int)spellDBC.Item((int)i, 25),
+                            procCharges = (int)spellDBC.Item((int)i, 26),
+                            maxLevel = (int)spellDBC.Item((int)i, 27),
+                            baseLevel = (int)spellDBC.Item((int)i, 28),
+                            spellLevel = (int)spellDBC.Item((int)i, 29),
+                            DurationIndex = (int)spellDBC.Item((int)i, 30),
+                            powerType = (int)spellDBC.Item((int)i, 31),
+                            manaCost = (int)spellDBC.Item((int)i, 32),
+                            manaCostPerlevel = (int)spellDBC.Item((int)i, 33),
+                            manaPerSecond = (int)spellDBC.Item((int)i, 34),
+                            manaPerSecondPerLevel = (int)spellDBC.Item((int)i, 35),
+                            rangeIndex = (int)spellDBC.Item((int)i, 36),
+                            Speed = (float)spellDBC.Item((int)i, 37, DBCValueType.DBC_FLOAT),
+                            modalNextSpell = (int)spellDBC.Item((int)i, 38), // Not Used
+                            maxStack = (int)spellDBC.Item((int)i, 39)
                         };
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Totem[0] = spellDBC.Item(i, 40);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Totem[1] = spellDBC.Item(i, 41);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Totem[0] = (int)spellDBC.Item((int)i, 40);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Totem[1] = (int)spellDBC.Item((int)i, 41);
 
                         // -CORRECT-
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[0] = spellDBC.Item(i, 42);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[1] = spellDBC.Item(i, 43);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[2] = spellDBC.Item(i, 44);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[3] = spellDBC.Item(i, 45);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[4] = spellDBC.Item(i, 46);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[5] = spellDBC.Item(i, 47);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[6] = spellDBC.Item(i, 48);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[7] = spellDBC.Item(i, 49);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[0] = spellDBC.Item(i, 50);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[1] = spellDBC.Item(i, 51);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[2] = spellDBC.Item(i, 52);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[3] = spellDBC.Item(i, 53);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[4] = spellDBC.Item(i, 54);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[5] = spellDBC.Item(i, 55);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[6] = spellDBC.Item(i, 56);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[7] = spellDBC.Item(i, 57);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[0] = (int)spellDBC.Item((int)i, 42);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[1] = (int)spellDBC.Item((int)i, 43);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[2] = (int)spellDBC.Item((int)i, 44);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[3] = (int)spellDBC.Item((int)i, 45);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[4] = (int)spellDBC.Item((int)i, 46);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[5] = (int)spellDBC.Item((int)i, 47);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[6] = (int)spellDBC.Item((int)i, 48);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[7] = (int)spellDBC.Item((int)i, 49);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[0] = (int)spellDBC.Item((int)i, 50);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[1] = (int)spellDBC.Item((int)i, 51);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[2] = (int)spellDBC.Item((int)i, 52);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[3] = (int)spellDBC.Item((int)i, 53);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[4] = (int)spellDBC.Item((int)i, 54);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[5] = (int)spellDBC.Item((int)i, 55);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[6] = (int)spellDBC.Item((int)i, 56);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[7] = (int)spellDBC.Item((int)i, 57);
                         // -/CORRECT-
 
-                        WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemClass = spellDBC.Item(i, 58); // Value
-                        WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemSubClass = spellDBC.Item(i, 59); // Mask
-                        WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemInventoryType = spellDBC.Item(i, 60); // Mask
+                        WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemClass = (int)spellDBC.Item((int)i, 58); // Value
+                        WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemSubClass = (int)spellDBC.Item((int)i, 59); // Mask
+                        WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemInventoryType = (int)spellDBC.Item((int)i, 60); // Mask
                         for (int j = 0; j <= 2; j++)
                         {
-                            if (spellDBC.Item(i, 61 + j) != 0)
+                            if (spellDBC.Item((int)i, 61 + j) != 0)
                             {
                                 var tmp = WorldServiceLocator._WS_Spells.SPELLs;
                                 var argSpell = tmp[id];
                                 WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects[j] = new WS_Spells.SpellEffect(ref argSpell)
                                 {
-                                    ID = spellDBC.Item(i, 61 + j),
-                                    valueDie = spellDBC.Item(i, 64 + j),
-                                    diceBase = spellDBC.Item(i, 67 + j),
-                                    dicePerLevel = spellDBC.Item(i, 70 + j, DBCValueType.DBC_FLOAT),
-                                    valuePerLevel = spellDBC.Item(i, 73 + j, DBCValueType.DBC_FLOAT),
-                                    valueBase = spellDBC.Item(i, 76 + j),
-                                    Mechanic = spellDBC.Item(i, 79 + j),
-                                    implicitTargetA = spellDBC.Item(i, 82 + j),
-                                    implicitTargetB = spellDBC.Item(i, 85 + j),
-                                    RadiusIndex = spellDBC.Item(i, 88 + j), // spellradius.dbc
-                                    ApplyAuraIndex = spellDBC.Item(i, 91 + j),
-                                    Amplitude = spellDBC.Item(i, 94 + j),
-                                    MultipleValue = spellDBC.Item(i, 97 + j),
-                                    ChainTarget = spellDBC.Item(i, 100 + j),
-                                    ItemType = spellDBC.Item(i, 103 + j),
-                                    MiscValue = spellDBC.Item(i, 106 + j),
-                                    TriggerSpell = spellDBC.Item(i, 109 + j),
-                                    valuePerComboPoint = spellDBC.Item(i, 112 + j)
+                                    ID = (Common.Enums.Spell.SpellEffects_Names)spellDBC.Item((int)i, 61 + j),
+                                    valueDie = (int)spellDBC.Item((int)i, 64 + j),
+                                    diceBase = (int)spellDBC.Item((int)i, 67 + j),
+                                    dicePerLevel = (float)spellDBC.Item((int)i, 70 + j, DBCValueType.DBC_FLOAT),
+                                    valuePerLevel = (int)spellDBC.Item((int)i, 73 + j, DBCValueType.DBC_FLOAT),
+                                    valueBase = (int)spellDBC.Item((int)i, 76 + j),
+                                    Mechanic = (int)spellDBC.Item((int)i, 79 + j),
+                                    implicitTargetA = (int)spellDBC.Item((int)i, 82 + j),
+                                    implicitTargetB = (int)spellDBC.Item((int)i, 85 + j),
+                                    RadiusIndex = (int)spellDBC.Item((int)i, 88 + j), // spellradius.dbc
+                                    ApplyAuraIndex = (int)spellDBC.Item((int)i, 91 + j),
+                                    Amplitude = (int)spellDBC.Item((int)i, 94 + j),
+                                    MultipleValue = (int)spellDBC.Item((int)i, 97 + j),
+                                    ChainTarget = (int)spellDBC.Item((int)i, 100 + j),
+                                    ItemType = (int)spellDBC.Item((int)i, 103 + j),
+                                    MiscValue = (int)spellDBC.Item((int)i, 106 + j),
+                                    TriggerSpell = (int)spellDBC.Item((int)i, 109 + j),
+                                    valuePerComboPoint = (int)spellDBC.Item((int)i, 112 + j)
                                 };
                                 tmp[id] = argSpell;
                             }
@@ -316,12 +316,12 @@ namespace Mangos.World.DataStores
                             }
                         }
 
-                        WorldServiceLocator._WS_Spells.SPELLs[id].SpellVisual = spellDBC.Item(i, 115);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].SpellVisual = (int)spellDBC.Item((int)i, 115);
                         // 116 = Always zero? - SpellVisual2 - Not Used
-                        WorldServiceLocator._WS_Spells.SPELLs[id].SpellIconID = spellDBC.Item(i, 117);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].ActiveIconID = spellDBC.Item(i, 118);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].SpellIconID = (int)spellDBC.Item((int)i, 117);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].ActiveIconID = (int)spellDBC.Item((int)i, 118);
                         // 119 = spellPriority
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Name = spellDBC.Item(i, 120, DBCValueType.DBC_STRING);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Name = (string)spellDBC.Item((int)i, 120, DBCValueType.DBC_STRING);
                         // 121 = Always zero?
                         // 122 = Always zero?
                         // 123 = Always zero?
@@ -330,7 +330,7 @@ namespace Mangos.World.DataStores
                         // 126 = Always zero?
                         // 127 = Always zero?
                         // 128 = Always zero?
-                        WorldServiceLocator._WS_Spells.SPELLs[id].Rank = spellDBC.Item(i, 129, DBCValueType.DBC_STRING);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].Rank = (string)spellDBC.Item((int)i, 129, DBCValueType.DBC_STRING);
                         // 130 = Always zero?
                         // 131 = Always zero?
                         // 132 = Always zero?
@@ -357,14 +357,14 @@ namespace Mangos.World.DataStores
                         // 153 = Always zero?
                         // 154 = Always zero?
                         // 155 = ToolTipFlags - Not Used
-                        WorldServiceLocator._WS_Spells.SPELLs[id].manaCostPercent = spellDBC.Item(i, 156);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].StartRecoveryCategory = spellDBC.Item(i, 157);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].StartRecoveryTime = spellDBC.Item(i, 158);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].AffectedTargetLevel = spellDBC.Item(i, 159);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].SpellFamilyName = spellDBC.Item(i, 160);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].SpellFamilyFlags = spellDBC.Item(i, 161); // ClassFamilyMask SpellFamilyFlags;                   // 161+162
-                        WorldServiceLocator._WS_Spells.SPELLs[id].MaxTargets = spellDBC.Item(i, 163);
-                        WorldServiceLocator._WS_Spells.SPELLs[id].DamageType = spellDBC.Item(i, 164); // defenseType
+                        WorldServiceLocator._WS_Spells.SPELLs[id].manaCostPercent = (int)spellDBC.Item((int)i, 156);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].StartRecoveryCategory = (int)spellDBC.Item((int)i, 157);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].StartRecoveryTime = (int)spellDBC.Item((int)i, 158);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].AffectedTargetLevel = (int)spellDBC.Item((int)i, 159);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].SpellFamilyName = (int)spellDBC.Item((int)i, 160);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].SpellFamilyFlags = (int)spellDBC.Item((int)i, 161); // ClassFamilyMask SpellFamilyFlags;                   // 161+162
+                        WorldServiceLocator._WS_Spells.SPELLs[id].MaxTargets = (int)spellDBC.Item((int)i, 163);
+                        WorldServiceLocator._WS_Spells.SPELLs[id].DamageType = (int)spellDBC.Item((int)i, 164); // defenseType
                         // SPELLs(ID).PreventionType = SpellDBC.Item(i, 165)
                         // 166 = StanceBarOrder - Not Used
 
@@ -372,7 +372,7 @@ namespace Mangos.World.DataStores
                         {
                             if (WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects[j] is object)
                             {
-                                WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects[j].DamageMultiplier = spellDBC.Item(i, 167 + j, DBCValueType.DBC_FLOAT);
+                                WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects[j].DamageMultiplier = (float)spellDBC.Item((int)i, 167 + j, DBCValueType.DBC_FLOAT);
                             }
                         }
 
@@ -404,7 +404,7 @@ namespace Mangos.World.DataStores
             try
             {
                 var spellChainQuery = new DataTable();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT spell_id, prev_spell FROM spell_chain", spellChainQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT spell_id, prev_spell FROM spell_chain", ref spellChainQuery);
                 foreach (DataRow spellChain in spellChainQuery.Rows)
                     WorldServiceLocator._WS_Spells.SpellChains.Add(Conversions.ToInteger(spellChain["spell_id"]), Conversions.ToInteger(spellChain["prev_spell"]));
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Database: {0} SpellChains initialized.", spellChainQuery.Rows.Count);
@@ -432,13 +432,13 @@ namespace Mangos.World.DataStores
                 int taxiMountTypeAlliance;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    taxiNode = tmpDBC.Item(i, 0);
-                    taxiMapID = tmpDBC.Item(i, 1);
-                    taxiPosX = tmpDBC.Item(i, 2, DBCValueType.DBC_FLOAT);
-                    taxiPosY = tmpDBC.Item(i, 3, DBCValueType.DBC_FLOAT);
-                    taxiPosZ = tmpDBC.Item(i, 4, DBCValueType.DBC_FLOAT);
-                    taxiMountTypeHorde = tmpDBC.Item(i, 14);
-                    taxiMountTypeAlliance = tmpDBC.Item(i, 15);
+                    taxiNode = (int)tmpDBC.Item(i, 0);
+                    taxiMapID = (int)tmpDBC.Item(i, 1);
+                    taxiPosX = (float)tmpDBC.Item(i, 2, DBCValueType.DBC_FLOAT);
+                    taxiPosY = (float)tmpDBC.Item(i, 3, DBCValueType.DBC_FLOAT);
+                    taxiPosZ = (float)tmpDBC.Item(i, 4, DBCValueType.DBC_FLOAT);
+                    taxiMountTypeHorde = (int)tmpDBC.Item(i, 14);
+                    taxiMountTypeAlliance = (int)tmpDBC.Item(i, 15);
                     if (WorldServiceLocator._WorldServer.Config.Maps.Contains(taxiMapID.ToString()))
                     {
                         WorldServiceLocator._WS_DBCDatabase.TaxiNodes.Add(taxiNode, new WS_DBCDatabase.TTaxiNode(taxiPosX, taxiPosY, taxiPosZ, taxiMapID, taxiMountTypeHorde, taxiMountTypeAlliance));
@@ -467,10 +467,10 @@ namespace Mangos.World.DataStores
                 int taxiPrice;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    taxiNode = tmpDBC.Item(i, 0);
-                    taxiFrom = tmpDBC.Item(i, 1);
-                    taxiTo = tmpDBC.Item(i, 2);
-                    taxiPrice = tmpDBC.Item(i, 3);
+                    taxiNode = (int)tmpDBC.Item(i, 0);
+                    taxiFrom = (int)tmpDBC.Item(i, 1);
+                    taxiTo = (int)tmpDBC.Item(i, 2);
+                    taxiPrice = (int)tmpDBC.Item(i, 3);
                     WorldServiceLocator._WS_DBCDatabase.TaxiPaths.Add(taxiNode, new WS_DBCDatabase.TTaxiPath(taxiFrom, taxiTo, taxiPrice));
                 }
 
@@ -503,14 +503,14 @@ namespace Mangos.World.DataStores
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
                     // taxiNode = tmpDBC.Item(i, 0)
-                    taxiPath = tmpDBC.Item(i, 1);
-                    taxiSeq = tmpDBC.Item(i, 2);
-                    taxiMapID = tmpDBC.Item(i, 3);
-                    taxiPosX = tmpDBC.Item(i, 4, DBCValueType.DBC_FLOAT);
-                    taxiPosY = tmpDBC.Item(i, 5, DBCValueType.DBC_FLOAT);
-                    taxiPosZ = tmpDBC.Item(i, 6, DBCValueType.DBC_FLOAT);
-                    taxiAction = tmpDBC.Item(i, 7);
-                    taxiWait = tmpDBC.Item(i, 8);
+                    taxiPath = (int)tmpDBC.Item(i, 1);
+                    taxiSeq = (int)tmpDBC.Item(i, 2);
+                    taxiMapID = (int)tmpDBC.Item(i, 3);
+                    taxiPosX = (float)tmpDBC.Item(i, 4, DBCValueType.DBC_FLOAT);
+                    taxiPosY = (float)tmpDBC.Item(i, 5, DBCValueType.DBC_FLOAT);
+                    taxiPosZ = (float)tmpDBC.Item(i, 6, DBCValueType.DBC_FLOAT);
+                    taxiAction = (int)tmpDBC.Item(i, 7);
+                    taxiWait = (int)tmpDBC.Item(i, 8);
                     if (WorldServiceLocator._WorldServer.Config.Maps.Contains(taxiMapID.ToString()))
                     {
                         if (WorldServiceLocator._WS_DBCDatabase.TaxiPathNodes.ContainsKey(taxiPath) == false)
@@ -548,8 +548,8 @@ namespace Mangos.World.DataStores
 
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    skillID = tmpDBC.Item(i, 0);
-                    skillLine = tmpDBC.Item(i, 1); // Type or Category?
+                    skillID = (int)tmpDBC.Item(i, 0);
+                    skillLine = (int)tmpDBC.Item(i, 1); // Type or Category?
                     // skillUnk1 = tmpDBC.Item(i, 2) ' May be needed in the future
                     // skillName = tmpDBC.Item(i, 3) ' May be needed in the future
                     // skillName = tmpDBC.Item(i, 3, DBCValueType.DBC_STRING)
@@ -579,18 +579,18 @@ namespace Mangos.World.DataStores
                 {
                     var tmpSkillLineAbility = new WS_DBCDatabase.TSkillLineAbility()
                     {
-                        ID = tmpDBC.Item(i, 0),
-                        SkillID = tmpDBC.Item(i, 1),
-                        SpellID = tmpDBC.Item(i, 2),
-                        Unknown1 = tmpDBC.Item(i, 3), // May be needed in the future
-                        Unknown2 = tmpDBC.Item(i, 4), // May be needed in the future
-                        Unknown3 = tmpDBC.Item(i, 5), // May be needed in the future
-                        Unknown4 = tmpDBC.Item(i, 6), // May be needed in the future
-                        Required_Skill_Value = tmpDBC.Item(i, 7),
-                        Forward_SpellID = tmpDBC.Item(i, 8),
-                        Unknown5 = tmpDBC.Item(i, 9), // May be needed in the future
-                        Max_Value = tmpDBC.Item(i, 10),
-                        Min_Value = tmpDBC.Item(i, 11)
+                        ID = (int)tmpDBC.Item(i, 0),
+                        SkillID = (int)tmpDBC.Item(i, 1),
+                        SpellID = (int)tmpDBC.Item(i, 2),
+                        Unknown1 = (int)tmpDBC.Item(i, 3), // May be needed in the future
+                        Unknown2 = (int)tmpDBC.Item(i, 4), // May be needed in the future
+                        Unknown3 = (int)tmpDBC.Item(i, 5), // May be needed in the future
+                        Unknown4 = (int)tmpDBC.Item(i, 6), // May be needed in the future
+                        Required_Skill_Value = (int)tmpDBC.Item(i, 7),
+                        Forward_SpellID = (int)tmpDBC.Item(i, 8),
+                        Unknown5 = (int)tmpDBC.Item(i, 9), // May be needed in the future
+                        Max_Value = (int)tmpDBC.Item(i, 10),
+                        Min_Value = (int)tmpDBC.Item(i, 11)
                     };
                     WorldServiceLocator._WS_DBCDatabase.SkillLineAbility.Add(tmpSkillLineAbility.ID, tmpSkillLineAbility);
                 }
@@ -620,19 +620,19 @@ namespace Mangos.World.DataStores
                 int reqLockSkill;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    lockID = tmpDBC.Item(i, 0);
-                    keyType[0] = tmpDBC.Item(i, 1);
-                    keyType[1] = tmpDBC.Item(i, 2);
-                    keyType[2] = tmpDBC.Item(i, 3);
-                    keyType[3] = tmpDBC.Item(i, 4);
-                    keyType[4] = tmpDBC.Item(i, 5);
-                    key[0] = tmpDBC.Item(i, 9);
-                    key[1] = tmpDBC.Item(i, 10);
-                    key[2] = tmpDBC.Item(i, 11);
-                    key[3] = tmpDBC.Item(i, 12);
-                    key[4] = tmpDBC.Item(i, 13);
-                    reqMining = tmpDBC.Item(i, 17); // Not sure about this one leaving it like it is
-                    reqLockSkill = tmpDBC.Item(i, 17);
+                    lockID = (int)tmpDBC.Item(i, 0);
+                    keyType[0] = (byte)tmpDBC.Item(i, 1);
+                    keyType[1] = (byte)tmpDBC.Item(i, 2);
+                    keyType[2] = (byte)tmpDBC.Item(i, 3);
+                    keyType[3] = (byte)tmpDBC.Item(i, 4);
+                    keyType[4] = (byte)tmpDBC.Item(i, 5);
+                    key[0] = (int)tmpDBC.Item(i, 9);
+                    key[1] = (int)tmpDBC.Item(i, 10);
+                    key[2] = (int)tmpDBC.Item(i, 11);
+                    key[3] = (int)tmpDBC.Item(i, 12);
+                    key[4] = (int)tmpDBC.Item(i, 13);
+                    reqMining = (int)tmpDBC.Item(i, 17); // Not sure about this one leaving it like it is
+                    reqLockSkill = (int)tmpDBC.Item(i, 17);
                     WorldServiceLocator._WS_Loot.Locks[lockID] = new WS_Loot.TLock(keyType, key, (short)reqMining, (short)reqLockSkill);
                 }
 
@@ -665,17 +665,17 @@ namespace Mangos.World.DataStores
 
                 for (int i = 0, loopTo = tmpDbc.Rows - 1; i <= loopTo; i++)
                 {
-                    areaID = tmpDbc.Item(i, 0);
-                    areaMapID = tmpDbc.Item(i, 1); // May be needed in the future
-                    areaZone = tmpDbc.Item(i, 2);    // Parent Map
-                    areaExploreFlag = tmpDbc.Item(i, 3);
-                    areaZoneType = tmpDbc.Item(i, 4); // 312 For Cities - Flags
+                    areaID = (int)tmpDbc.Item(i, 0);
+                    areaMapID = (int)tmpDbc.Item(i, 1); // May be needed in the future
+                    areaZone = (int)tmpDbc.Item(i, 2);    // Parent Map
+                    areaExploreFlag = (int)tmpDbc.Item(i, 3);
+                    areaZoneType = (int)tmpDbc.Item(i, 4); // 312 For Cities - Flags
                     // 5        m_SoundProviderPref
                     // 6        m_SoundProviderPrefUnderwater
                     // 7        m_AmbienceID
                     // areaEXP = tmpDBC.Item(i, 8) ' May be needed in the future - m_ZoneMusic
                     // 9        m_IntroSound
-                    areaLevel = tmpDbc.Item(i, 10);
+                    areaLevel = (int)tmpDbc.Item(i, 10);
                     // areaName = tmpDBC.Item(i, 11) ' May be needed in the future
                     // 19 string flags
                     // areaTeam = tmpDBC.Item(i, 20)
@@ -719,8 +719,8 @@ namespace Mangos.World.DataStores
                 int emoteState;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    emoteID = tmpDBC.Item(i, 0);
-                    emoteState = tmpDBC.Item(i, 4);
+                    emoteID = (int)tmpDBC.Item(i, 0);
+                    emoteState = (int)tmpDBC.Item(i, 4);
                     if (emoteID != 0)
                         WorldServiceLocator._WS_DBCDatabase.EmotesState[emoteID] = emoteState;
                 }
@@ -751,8 +751,8 @@ namespace Mangos.World.DataStores
 
                 for (int i = 0, loopTo = tmpDbc.Rows - 1; i <= loopTo; i++)
                 {
-                    textEmoteID = tmpDbc.Item(i, 0);
-                    emoteID = tmpDbc.Item(i, 2);
+                    textEmoteID = (int)tmpDbc.Item(i, 0);
+                    emoteID = (int)tmpDbc.Item(i, 2);
                     // EmoteID2 = tmpDBC.Item(i, 3) ' May be needed in the future
                     // EmoteID3 = tmpDBC.Item(i, 4) ' May be needed in the future
                     // EmoteID4 = tmpDBC.Item(i, 5) ' May be needed in the future
@@ -789,20 +789,20 @@ namespace Mangos.World.DataStores
 
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    factionID = tmpDBC.Item(i, 0);
-                    factionFlag = tmpDBC.Item(i, 1);
-                    flags[0] = tmpDBC.Item(i, 2);
-                    flags[1] = tmpDBC.Item(i, 3);
-                    flags[2] = tmpDBC.Item(i, 4);
-                    flags[3] = tmpDBC.Item(i, 5);
-                    reputationStats[0] = tmpDBC.Item(i, 10);
-                    reputationStats[1] = tmpDBC.Item(i, 11);
-                    reputationStats[2] = tmpDBC.Item(i, 12);
-                    reputationStats[3] = tmpDBC.Item(i, 13);
-                    reputationFlags[0] = tmpDBC.Item(i, 14);
-                    reputationFlags[1] = tmpDBC.Item(i, 15);
-                    reputationFlags[2] = tmpDBC.Item(i, 16);
-                    reputationFlags[3] = tmpDBC.Item(i, 17);
+                    factionID = (int)tmpDBC.Item(i, 0);
+                    factionFlag = (int)tmpDBC.Item(i, 1);
+                    flags[0] = (int)tmpDBC.Item(i, 2);
+                    flags[1] = (int)tmpDBC.Item(i, 3);
+                    flags[2] = (int)tmpDBC.Item(i, 4);
+                    flags[3] = (int)tmpDBC.Item(i, 5);
+                    reputationStats[0] = (int)tmpDBC.Item(i, 10);
+                    reputationStats[1] = (int)tmpDBC.Item(i, 11);
+                    reputationStats[2] = (int)tmpDBC.Item(i, 12);
+                    reputationStats[3] = (int)tmpDBC.Item(i, 13);
+                    reputationFlags[0] = (int)tmpDBC.Item(i, 14);
+                    reputationFlags[1] = (int)tmpDBC.Item(i, 15);
+                    reputationFlags[2] = (int)tmpDBC.Item(i, 16);
+                    reputationFlags[3] = (int)tmpDBC.Item(i, 17);
                     // factionName = tmpDBC.Item(i, 19) ' May be needed in the future
 
                     WorldServiceLocator._WS_DBCDatabase.FactionInfo[factionID] = new WS_DBCDatabase.TFaction((short)factionID, (short)factionFlag, flags[0], flags[1], flags[2], flags[3], reputationStats[0], reputationStats[1], reputationStats[2], reputationStats[3], reputationFlags[0], reputationFlags[1], reputationFlags[2], reputationFlags[3]);
@@ -828,20 +828,20 @@ namespace Mangos.World.DataStores
                 int templateID;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    templateID = tmpDBC.Item(i, 0);
+                    templateID = (int)tmpDBC.Item(i, 0);
                     WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo.Add(templateID, new WS_DBCDatabase.TFactionTemplate());
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].FactionID = tmpDBC.Item(i, 1);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].ourMask = tmpDBC.Item(i, 3);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendMask = tmpDBC.Item(i, 4);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyMask = tmpDBC.Item(i, 5);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction1 = tmpDBC.Item(i, 6);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction2 = tmpDBC.Item(i, 7);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction3 = tmpDBC.Item(i, 8);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction4 = tmpDBC.Item(i, 9);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction1 = tmpDBC.Item(i, 10);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction2 = tmpDBC.Item(i, 11);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction3 = tmpDBC.Item(i, 12);
-                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction4 = tmpDBC.Item(i, 13);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].FactionID = (int)tmpDBC.Item(i, 1);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].ourMask = (uint)tmpDBC.Item(i, 3);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendMask = (uint)tmpDBC.Item(i, 4);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyMask = (uint)tmpDBC.Item(i, 5);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction1 = (int)tmpDBC.Item(i, 6);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction2 = (int)tmpDBC.Item(i, 7);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction3 = (int)tmpDBC.Item(i, 8);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction4 = (int)tmpDBC.Item(i, 9);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction1 = (int)tmpDBC.Item(i, 10);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction2 = (int)tmpDBC.Item(i, 11);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction3 = (int)tmpDBC.Item(i, 12);
+                    WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction4 = (int)tmpDBC.Item(i, 13);
                 }
 
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} FactionTemplates initialized.", tmpDBC.Rows - 1);
@@ -871,14 +871,14 @@ namespace Mangos.World.DataStores
                 string name;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    raceID = tmpDBC.Item(i, 0);
-                    factionID = tmpDBC.Item(i, 2);
-                    modelM = tmpDBC.Item(i, 4);
-                    modelF = tmpDBC.Item(i, 5);
-                    teamID = tmpDBC.Item(i, 8);
-                    taxiMask = tmpDBC.Item(i, 14);
-                    cinematicID = tmpDBC.Item(i, 16);
-                    name = tmpDBC.Item(i, 17, DBCValueType.DBC_STRING);
+                    raceID = (int)tmpDBC.Item(i, 0);
+                    factionID = (int)tmpDBC.Item(i, 2);
+                    modelM = (int)tmpDBC.Item(i, 4);
+                    modelF = (int)tmpDBC.Item(i, 5);
+                    teamID = (int)tmpDBC.Item(i, 8);
+                    taxiMask = (uint)tmpDBC.Item(i, 14);
+                    cinematicID = (int)tmpDBC.Item(i, 16);
+                    name = (string)tmpDBC.Item(i, 17, DBCValueType.DBC_STRING);
                     WorldServiceLocator._WS_DBCDatabase.CharRaces[(byte)raceID] = new WS_DBCDatabase.TCharRace((short)factionID, modelM, modelF, (byte)teamID, taxiMask, cinematicID, name);
                 }
 
@@ -903,8 +903,8 @@ namespace Mangos.World.DataStores
                 int cinematicID;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    classID = tmpDBC.Item(i, 0);
-                    cinematicID = tmpDBC.Item(i, 5);
+                    classID = (int)tmpDBC.Item(i, 0);
+                    cinematicID = (int)tmpDBC.Item(i, 5);
                     WorldServiceLocator._WS_DBCDatabase.CharClasses[(byte)classID] = new WS_DBCDatabase.TCharClass(cinematicID);
                 }
 
@@ -930,11 +930,11 @@ namespace Mangos.World.DataStores
                 int itemPrice;
                 for (int i = 0, loopTo = tmpDBC.Rows - 1; i <= loopTo; i++)
                 {
-                    itemBroken = tmpDBC.Item(i, 0);
+                    itemBroken = (int)tmpDBC.Item(i, 0);
                     var loopTo1 = tmpDBC.Columns - 1;
                     for (itemType = 1; itemType <= loopTo1; itemType++)
                     {
-                        itemPrice = tmpDBC.Item(i, itemType);
+                        itemPrice = (int)tmpDBC.Item(i, itemType);
                         WorldServiceLocator._WS_DBCDatabase.DurabilityCosts[itemBroken, itemType - 1] = (short)itemPrice;
                     }
                 }
@@ -961,20 +961,20 @@ namespace Mangos.World.DataStores
                 {
                     tmpInfo = new WS_DBCDatabase.TalentInfo()
                     {
-                        TalentID = dbc.Item(i, 0),
-                        TalentTab = dbc.Item(i, 1),
-                        Row = dbc.Item(i, 2),
-                        Col = dbc.Item(i, 3)
+                        TalentID = (int)dbc.Item(i, 0),
+                        TalentTab = (int)dbc.Item(i, 1),
+                        Row = (int)dbc.Item(i, 2),
+                        Col = (int)dbc.Item(i, 3)
                     };
-                    tmpInfo.RankID[0] = dbc.Item(i, 4);
-                    tmpInfo.RankID[1] = dbc.Item(i, 5);
-                    tmpInfo.RankID[2] = dbc.Item(i, 6);
-                    tmpInfo.RankID[3] = dbc.Item(i, 7);
-                    tmpInfo.RankID[4] = dbc.Item(i, 8);
-                    tmpInfo.RequiredTalent[0] = dbc.Item(i, 13); // dependson
+                    tmpInfo.RankID[0] = (int)dbc.Item(i, 4);
+                    tmpInfo.RankID[1] = (int)dbc.Item(i, 5);
+                    tmpInfo.RankID[2] = (int)dbc.Item(i, 6);
+                    tmpInfo.RankID[3] = (int)dbc.Item(i, 7);
+                    tmpInfo.RankID[4] = (int)dbc.Item(i, 8);
+                    tmpInfo.RequiredTalent[0] = (int)dbc.Item(i, 13); // dependson
                     // tmpInfo.RequiredTalent(1) = DBC.Item(i, 14) ' ???
                     // tmpInfo.RequiredTalent(2) = DBC.Item(i, 15) ' ???
-                    tmpInfo.RequiredPoints[0] = dbc.Item(i, 16); // dependsonrank
+                    tmpInfo.RequiredPoints[0] = (int)dbc.Item(i, 16); // dependsonrank
                     // tmpInfo.RequiredPoints(1) = DBC.Item(i, 17) ' ???
                     // tmpInfo.RequiredPoints(2) = DBC.Item(i, 18) ' ???
 
@@ -1003,8 +1003,8 @@ namespace Mangos.World.DataStores
 
                 for (int i = 0, loopTo = dbc.Rows - 1; i <= loopTo; i++)
                 {
-                    talentTab = dbc.Item(i, 0);
-                    talentMask = dbc.Item(i, 12);
+                    talentTab = (int)dbc.Item(i, 0);
+                    talentMask = (int)dbc.Item(i, 12);
                     // TalentTabPage = dbc.Item(i, 13) ' May be needed in the future
 
                     WorldServiceLocator._WS_DBCDatabase.TalentsTab.Add(talentTab, talentMask);
@@ -1035,9 +1035,9 @@ namespace Mangos.World.DataStores
 
                 for (int i = 0, loopTo = dbc.Rows - 1; i <= loopTo; i++)
                 {
-                    ahId = dbc.Item(i, 0);
-                    fee = dbc.Item(i, 2);
-                    tax = dbc.Item(i, 3);
+                    ahId = (int)dbc.Item(i, 0);
+                    fee = (int)dbc.Item(i, 2);
+                    tax = (int)dbc.Item(i, 3);
 
                     // TODO: This needs to be put into a class or dictionary collection
                     WorldServiceLocator._WS_Auction.AuctionID = ahId;
@@ -1073,18 +1073,18 @@ namespace Mangos.World.DataStores
 
                 for (int i = 0, loopTo = dbc.Rows - 1; i <= loopTo; i++)
                 {
-                    id = dbc.Item(i, 0);
-                    type[0] = dbc.Item(i, 1);
-                    type[1] = dbc.Item(i, 2);
+                    id = (int)dbc.Item(i, 0);
+                    type[0] = (int)dbc.Item(i, 1);
+                    type[1] = (int)dbc.Item(i, 2);
                     // Type(2) = DBC.Item(i, 3)
-                    amount[0] = dbc.Item(i, 4);
-                    amount[1] = dbc.Item(i, 7);
+                    amount[0] = (int)dbc.Item(i, 4);
+                    amount[1] = (int)dbc.Item(i, 7);
                     // Amount(2) = DBC.Item(i, 6)
-                    spellID[0] = dbc.Item(i, 10);
-                    spellID[1] = dbc.Item(i, 11);
+                    spellID[0] = (int)dbc.Item(i, 10);
+                    spellID[1] = (int)dbc.Item(i, 11);
                     // SpellID(2) = DBC.Item(i, 12)
-                    auraID = dbc.Item(i, 22);
-                    slot = dbc.Item(i, 23);
+                    auraID = (int)dbc.Item(i, 22);
+                    slot = (int)dbc.Item(i, 23);
                     // EnchantmentConditions = DBC.Item(i, 23) ' TODO: Correct?
 
                     WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments.Add(id, new WS_DBCDatabase.TSpellItemEnchantment(type, amount, spellID, auraID, slot)); // , EnchantmentConditions))
@@ -1115,16 +1115,16 @@ namespace Mangos.World.DataStores
                 var requiredSkillValue = default(int);
                 for (int i = 0, loopTo = dbc.Rows - 1; i <= loopTo; i++)
                 {
-                    id = dbc.Item(i, 0);
-                    name = dbc.Item(i, 1, DBCValueType.DBC_STRING);
-                    itemID[0] = dbc.Item(i, 10); // 10 - 26
-                    itemID[1] = dbc.Item(i, 11);
-                    itemID[2] = dbc.Item(i, 12);
-                    itemID[3] = dbc.Item(i, 13);
-                    itemID[4] = dbc.Item(i, 14);
-                    itemID[5] = dbc.Item(i, 15);
-                    itemID[6] = dbc.Item(i, 16);
-                    itemID[7] = dbc.Item(i, 17);
+                    id = (int)dbc.Item(i, 0);
+                    name = (string)dbc.Item(i, 1, DBCValueType.DBC_STRING);
+                    itemID[0] = (int)dbc.Item(i, 10); // 10 - 26
+                    itemID[1] = (int)dbc.Item(i, 11);
+                    itemID[2] = (int)dbc.Item(i, 12);
+                    itemID[3] = (int)dbc.Item(i, 13);
+                    itemID[4] = (int)dbc.Item(i, 14);
+                    itemID[5] = (int)dbc.Item(i, 15);
+                    itemID[6] = (int)dbc.Item(i, 16);
+                    itemID[7] = (int)dbc.Item(i, 17);
                     // SpellID(0) = DBC.Item(i, 27) ' 27 - 34
                     // SpellID(1) = DBC.Item(i, 28)
                     // SpellID(2) = DBC.Item(i, 29)
@@ -1168,9 +1168,9 @@ namespace Mangos.World.DataStores
                 {
                     tmpItemDisplayInfo = new WS_DBCDatabase.TItemDisplayInfo()
                     {
-                        ID = dbc.Item(i, 0),
-                        RandomPropertyChance = dbc.Item(i, 11),
-                        Unknown = dbc.Item(i, 22)
+                        ID = (int)dbc.Item(i, 0),
+                        RandomPropertyChance = (int)dbc.Item(i, 11),
+                        Unknown = (int)dbc.Item(i, 22)
                     };
                     WorldServiceLocator._WS_DBCDatabase.ItemDisplayInfo.Add(tmpItemDisplayInfo.ID, tmpItemDisplayInfo);
                 }
@@ -1194,10 +1194,10 @@ namespace Mangos.World.DataStores
                 WS_DBCDatabase.TItemRandomPropertiesInfo tmpInfo;
                 for (int i = 0, loopTo = dbc.Rows - 1; i <= loopTo; i++)
                 {
-                    tmpInfo = new WS_DBCDatabase.TItemRandomPropertiesInfo() { ID = dbc.Item(i, 0) };
-                    tmpInfo.Enchant_ID[0] = dbc.Item(i, 2);
-                    tmpInfo.Enchant_ID[1] = dbc.Item(i, 3);
-                    tmpInfo.Enchant_ID[2] = dbc.Item(i, 4);
+                    tmpInfo = new WS_DBCDatabase.TItemRandomPropertiesInfo() { ID = (int)dbc.Item(i, 0) };
+                    tmpInfo.Enchant_ID[0] = (int)dbc.Item(i, 2);
+                    tmpInfo.Enchant_ID[1] = (int)dbc.Item(i, 3);
+                    tmpInfo.Enchant_ID[2] = (int)dbc.Item(i, 4);
                     WorldServiceLocator._WS_DBCDatabase.ItemRandomPropertiesInfo.Add(tmpInfo.ID, tmpInfo);
                 }
 
@@ -1219,7 +1219,7 @@ namespace Mangos.World.DataStores
             try
             {
                 var gossipQuery = new DataTable();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM npc_gossip;", gossipQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM npc_gossip;", ref gossipQuery);
                 ulong guid;
                 foreach (DataRow gossip in gossipQuery.Rows)
                 {
@@ -1250,11 +1250,11 @@ namespace Mangos.World.DataStores
                 {
                     tmpInfo = new WS_DBCDatabase.CreatureFamilyInfo()
                     {
-                        ID = dbc.Item(i, 0),
-                        Unknown1 = dbc.Item(i, 5),
-                        Unknown2 = dbc.Item(i, 6),
-                        PetFoodID = dbc.Item(i, 7),
-                        Name = dbc.Item(i, 12, DBCValueType.DBC_STRING)
+                        ID = (int)dbc.Item(i, 0),
+                        Unknown1 = (int)dbc.Item(i, 5),
+                        Unknown2 = (int)dbc.Item(i, 6),
+                        PetFoodID = (int)dbc.Item(i, 7),
+                        Name = (string)dbc.Item(i, 12, DBCValueType.DBC_STRING)
                     };
                     WorldServiceLocator._WS_DBCDatabase.CreaturesFamily.Add(tmpInfo.ID, tmpInfo);
                 }
@@ -1275,7 +1275,7 @@ namespace Mangos.World.DataStores
             try
             {
                 var movementsQuery = new DataTable();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM waypoint_data ORDER BY id, point;", movementsQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM waypoint_data ORDER BY id, point;", ref movementsQuery);
                 int id;
                 foreach (DataRow movement in movementsQuery.Rows)
                 {
@@ -1303,7 +1303,7 @@ namespace Mangos.World.DataStores
             try
             {
                 var equipQuery = new DataTable();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM creature_equip_template_raw;", equipQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM creature_equip_template_raw;", ref equipQuery);
                 // _WorldServer.WorldDatabase.Query("SELECT creature_equip_template.*, COALESCE(A.displayid,0) AS equipmodel1, COALESCE(B.displayid,0) AS equipmodel2,  COALESCE(C.displayid,0) AS equipmodel3, COALESCE(A.`inventory_type`,0) AS equipslot1, COALESCE(B.`inventory_type`,0) AS equipslot2,  COALESCE(C.`inventory_type`,0) AS equipslot3, 0 AS equipinfo1,  0 AS equipinfo2,  0 AS equipinfo3  FROM creature_equip_template LEFT JOIN `creature_item_template` A ON creature_equip_template.equipentry1 = A.entry LEFT JOIN `creature_item_template` B ON creature_equip_template.equipentry2 = B.entry LEFT JOIN `creature_item_template` C ON creature_equip_template.equipentry3 = C.entry;", equipQuery)
 
                 int entry;
@@ -1339,7 +1339,7 @@ namespace Mangos.World.DataStores
             try
             {
                 var modelQuery = new DataTable();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM creature_model_info;", modelQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM creature_model_info;", ref modelQuery);
                 int entry;
                 foreach (DataRow modelInfo in modelQuery.Rows)
                 {
@@ -1363,7 +1363,7 @@ namespace Mangos.World.DataStores
         public void LoadQuestStartersAndFinishers()
         {
             var questStarters = new DataTable();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=0 and role =0;", questStarters);
+            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=0 and role =0;", ref questStarters);
             foreach (DataRow starter in questStarters.Rows)
             {
                 int entry = Conversions.ToInteger(starter["entry"]);
@@ -1375,7 +1375,7 @@ namespace Mangos.World.DataStores
 
             int questStartersAmount = questStarters.Rows.Count;
             questStarters.Clear();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=1 and role=0;", questStarters);
+            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=1 and role=0;", ref questStarters);
             foreach (DataRow starter in questStarters.Rows)
             {
                 int entry = Conversions.ToInteger(starter["entry"]);
@@ -1389,7 +1389,7 @@ namespace Mangos.World.DataStores
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Database: {0} queststarters initated for {1} creatures and {2} gameobjects.", questStartersAmount, WorldServiceLocator._WorldServer.CreatureQuestStarters.Count, WorldServiceLocator._WorldServer.GameobjectQuestStarters.Count);
             questStarters.Clear();
             var questFinishers = new DataTable();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=0 and role=1;", questFinishers);
+            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=0 and role=1;", ref questFinishers);
             foreach (DataRow starter in questFinishers.Rows)
             {
                 int entry = Conversions.ToInteger(starter["entry"]);
@@ -1401,7 +1401,7 @@ namespace Mangos.World.DataStores
 
             int questFinishersAmount = questFinishers.Rows.Count;
             questFinishers.Clear();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=1 and role=1;", questFinishers);
+            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=1 and role=1;", ref questFinishers);
             foreach (DataRow starter in questFinishers.Rows)
             {
                 int entry = Conversions.ToInteger(starter["entry"]);
@@ -1436,7 +1436,7 @@ namespace Mangos.World.DataStores
             try
             {
                 var weatherQuery = new DataTable();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM game_weather;", weatherQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM game_weather;", ref weatherQuery);
                 foreach (DataRow weather in weatherQuery.Rows)
                 {
                     int zone = Conversions.ToInteger(weather["zone"]);

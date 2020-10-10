@@ -126,7 +126,7 @@ namespace Mangos.World.Auction
         {
             var packet = new Packets.PacketClass(OPCODES.MSG_AUCTION_HELLO);
             packet.AddUInt64(GUID);
-            packet.AddInt32(GetAuctionSide(GUID));          // AuctionID (on this is based the fees shown in client side)
+            packet.AddInt32((int)GetAuctionSide(GUID));          // AuctionID (on this is based the fees shown in client side)
             objCharacter.client.Send(ref packet);
             packet.Dispose();
         }
@@ -164,8 +164,8 @@ namespace Mangos.World.Auction
         {
             var response = new Packets.PacketClass(OPCODES.SMSG_AUCTION_COMMAND_RESULT);
             response.AddInt32(AuctionID);
-            response.AddInt32(AuctionAction);
-            response.AddInt32(AuctionError);
+            response.AddInt32((int)AuctionAction);
+            response.AddInt32((int)AuctionError);
             // If AuctionError <> AuctionError.AUCTION_OK AndAlso AuctionAction <> AuctionAction.AUCTION_SELL_ITEM Then
             response.AddInt32(BidError);
             client.Send(ref response);
@@ -333,7 +333,7 @@ namespace Mangos.World.Auction
             WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT auction_id FROM auctionhouse WHERE auction_itemGuid = " + (iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";", MySQLQuery);
             if (MySQLQuery.Rows.Count == 0)
                 return;
-            SendAuctionCommandResult(ref client, MySQLQuery.Rows[0]["auction_id"], AuctionAction.AUCTION_SELL_ITEM, AuctionError.AUCTION_OK, 0);
+            SendAuctionCommandResult(ref client, (int)MySQLQuery.Rows[0]["auction_id"], AuctionAction.AUCTION_SELL_ITEM, AuctionError.AUCTION_OK, 0);
 
             // NOTE: Not needed, client would request it
             // SendAuctionListOwnerItems(Client)
@@ -439,11 +439,11 @@ namespace Mangos.World.Auction
             }
 
             client.Character.Copper = (uint)(client.Character.Copper - Bid);
-            client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
             client.Character.SendCharacterUpdate(false);
 
             // DONE: Send result packet
-            SendAuctionCommandResult(ref client, MySQLQuery.Rows[0]["auction_id"], AuctionAction.AUCTION_PLACE_BID, AuctionError.AUCTION_OK, 0);
+            SendAuctionCommandResult(ref client, (int)MySQLQuery.Rows[0]["auction_id"], AuctionAction.AUCTION_PLACE_BID, AuctionError.AUCTION_OK, 0);
 
             // NOTE: Not needed, client would request it
             // SendAuctionListBidderItems(Client)

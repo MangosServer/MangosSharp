@@ -661,7 +661,7 @@ namespace Mangos.World.Globals
             var packet = new Packets.PacketClass(OPCODES.SMSG_TRIGGER_CINEMATIC);
             try
             {
-                if (WorldServiceLocator._WS_DBCDatabase.CharRaces.ContainsKey(Character.Race))
+                if (WorldServiceLocator._WS_DBCDatabase.CharRaces.ContainsKey((int)Character.Race))
                 {
                     packet.AddInt32(WorldServiceLocator._WS_DBCDatabase.CharRaces(Character.Race).CinematicID);
                 }
@@ -752,8 +752,8 @@ namespace Mangos.World.Globals
             var packet = new Packets.PacketClass(OPCODES.SMSG_MESSAGECHAT);
             try
             {
-                packet.AddInt8(msgType);
-                packet.AddInt32(msgLanguage);
+                packet.AddInt8((byte)msgType);
+                packet.AddInt32((int)msgLanguage);
                 switch (msgType)
                 {
                     case var @case when @case == ChatMsg.CHAT_MSG_CHANNEL:

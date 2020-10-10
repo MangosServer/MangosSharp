@@ -180,14 +180,14 @@ namespace Mangos.World.Quests
             {
                 try
                 {
-                    for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+                    for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
                     {
                         if (objCharacter.TalkQuests[i] is object)
                         {
                             alreadyHave.Add(objCharacter.TalkQuests[i].ID);
                             if (WorldServiceLocator._WorldServer.CreatureQuestFinishers[creatureEntry].Contains(objCharacter.TalkQuests[i].ID))
                             {
-                                questMenu.AddMenu(objCharacter.TalkQuests[i].Title, objCharacter.TalkQuests[i].ID, 0, QuestgiverStatusFlag.DIALOG_STATUS_INCOMPLETE);
+                                questMenu.AddMenu(objCharacter.TalkQuests[i].Title, (short)objCharacter.TalkQuests[i].ID, 0, (byte)QuestgiverStatusFlag.DIALOG_STATUS_INCOMPLETE);
                             }
                         }
                     }
@@ -217,7 +217,7 @@ namespace Mangos.World.Quests
                                 {
                                     if (tmpQuest.SatisfyQuestLevel(ref objCharacter))
                                     {
-                                        questMenu.AddMenu(tmpQuest.Title, questID, tmpQuest.Level_Normal, QuestgiverStatusFlag.DIALOG_STATUS_AVAILABLE);
+                                        questMenu.AddMenu(tmpQuest.Title, (short)questID, tmpQuest.Level_Normal, (byte)QuestgiverStatusFlag.DIALOG_STATUS_AVAILABLE);
                                     }
                                 }
                             }
@@ -230,7 +230,7 @@ namespace Mangos.World.Quests
                         {
                             if (WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).SatisfyQuestLevel(ref objCharacter))
                             {
-                                questMenu.AddMenu(WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Title, questID, WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Level_Normal, QuestgiverStatusFlag.DIALOG_STATUS_AVAILABLE);
+                                questMenu.AddMenu(WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Title, (short)questID, WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Level_Normal, (byte)QuestgiverStatusFlag.DIALOG_STATUS_AVAILABLE);
                             }
                         }
                     }
@@ -261,14 +261,14 @@ namespace Mangos.World.Quests
             {
                 try
                 {
-                    for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+                    for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
                     {
                         if (objCharacter.TalkQuests[i] is object)
                         {
                             alreadyHave.Add(objCharacter.TalkQuests[i].ID);
                             if (WorldServiceLocator._WorldServer.GameobjectQuestFinishers[gOEntry].Contains(objCharacter.TalkQuests[i].ID))
                             {
-                                questMenu.AddMenu(objCharacter.TalkQuests[i].Title, objCharacter.TalkQuests[i].ID, 0, QuestgiverStatusFlag.DIALOG_STATUS_INCOMPLETE);
+                                questMenu.AddMenu(objCharacter.TalkQuests[i].Title, (short)objCharacter.TalkQuests[i].ID, 0, (byte)QuestgiverStatusFlag.DIALOG_STATUS_INCOMPLETE);
                             }
                         }
                     }
@@ -295,7 +295,7 @@ namespace Mangos.World.Quests
                             {
                                 if (tmpQuest.SatisfyQuestLevel(ref objCharacter))
                                 {
-                                    questMenu.AddMenu(tmpQuest.Title, questID, tmpQuest.Level_Normal, QuestgiverStatusFlag.DIALOG_STATUS_AVAILABLE);
+                                    questMenu.AddMenu(tmpQuest.Title, (short)questID, tmpQuest.Level_Normal, (byte)QuestgiverStatusFlag.DIALOG_STATUS_AVAILABLE);
                                 }
                             }
                         }
@@ -303,7 +303,7 @@ namespace Mangos.World.Quests
                         {
                             if (WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).SatisfyQuestLevel(ref objCharacter))
                             {
-                                questMenu.AddMenu(WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Title, questID, WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Level_Normal, QuestgiverStatusFlag.DIALOG_STATUS_AVAILABLE);
+                                questMenu.AddMenu(WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Title, (short)questID, WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Level_Normal, (byte)QuestgiverStatusFlag.DIALOG_STATUS_AVAILABLE);
                             }
                         }
                     }
@@ -387,7 +387,7 @@ namespace Mangos.World.Quests
                 int questRewardsCount = 0;
                 try
                 {
-                    for (int i = 0, loopTo = QuestInfo.QUEST_REWARD_CHOICES_COUNT; i <= loopTo; i++)
+                    for (int i = 0, loopTo = (int)QuestInfo.QUEST_REWARD_CHOICES_COUNT; i <= loopTo; i++)
                     {
                         if (quest.RewardItems[i] != 0)
                             questRewardsCount += 1;
@@ -401,7 +401,7 @@ namespace Mangos.World.Quests
                 packet.AddInt32(questRewardsCount);
                 try
                 {
-                    for (int i = 0, loopTo1 = QuestInfo.QUEST_REWARD_CHOICES_COUNT; i <= loopTo1; i++)
+                    for (int i = 0, loopTo1 = (int)QuestInfo.QUEST_REWARD_CHOICES_COUNT; i <= loopTo1; i++)
                     {
                         if (quest.RewardItems[i] != 0)
                         {
@@ -433,7 +433,7 @@ namespace Mangos.World.Quests
                 }
                 // QuestRewards (Static)
                 questRewardsCount = 0;
-                for (int i = 0, loopTo2 = QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo2; i++)
+                for (int i = 0, loopTo2 = (int)QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo2; i++)
                 {
                     if (quest.RewardStaticItems[i] != 0)
                         questRewardsCount += 1;
@@ -442,7 +442,7 @@ namespace Mangos.World.Quests
                 packet.AddInt32(questRewardsCount);
                 try
                 {
-                    for (int i = 0, loopTo3 = QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo3; i++)
+                    for (int i = 0, loopTo3 = (int)QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo3; i++)
                     {
                         if (quest.RewardStaticItems[i] != 0)
                         {
@@ -574,7 +574,7 @@ namespace Mangos.World.Quests
                 packet.AddUInt32((uint)(quest.QuestFlags & 0xFFFF));
                 try
                 {
-                    for (int i = 0, loopTo = QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo; i++)
+                    for (int i = 0, loopTo = (int)QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo; i++)
                     {
                         packet.AddUInt32((uint)quest.RewardStaticItems[i]);
                         packet.AddUInt32((uint)quest.RewardStaticItems_Count[i]);
@@ -587,7 +587,7 @@ namespace Mangos.World.Quests
 
                 try
                 {
-                    for (int i = 0, loopTo1 = QuestInfo.QUEST_REWARD_CHOICES_COUNT; i <= loopTo1; i++)
+                    for (int i = 0, loopTo1 = (int)QuestInfo.QUEST_REWARD_CHOICES_COUNT; i <= loopTo1; i++)
                     {
                         packet.AddUInt32((uint)quest.RewardItems[i]);
                         packet.AddUInt32((uint)quest.RewardItems_Count[i]);
@@ -610,7 +610,7 @@ namespace Mangos.World.Quests
                 packet.AddString(quest.TextEnd);
 
                 // Objectives
-                for (int i = 0, loopTo2 = QuestInfo.QUEST_OBJECTIVES_COUNT - 1; i <= loopTo2; i++)
+                for (int i = 0, loopTo2 = (int)(QuestInfo.QUEST_OBJECTIVES_COUNT - 1); i <= loopTo2; i++)
                 {
                     packet.AddUInt32((uint)quest.ObjectivesKill[i]);
                     packet.AddUInt32((uint)quest.ObjectivesKill_Count[i]);
@@ -622,7 +622,7 @@ namespace Mangos.World.Quests
                         WorldServiceLocator._WS_Items.SendItemInfo(ref client, quest.ObjectivesItem[i]);
                 }
 
-                for (int i = 0, loopTo3 = QuestInfo.QUEST_OBJECTIVES_COUNT - 1; i <= loopTo3; i++)
+                for (int i = 0, loopTo3 = (int)(QuestInfo.QUEST_OBJECTIVES_COUNT - 1); i <= loopTo3; i++)
                     packet.AddString(quest.ObjectivesText[i]);
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_QUEST_QUERY_RESPONSE [Quest={2}]", client.IP, client.Port, quest.ID);
 
@@ -677,7 +677,7 @@ namespace Mangos.World.Quests
             {
                 packet.AddInt32(questID);
                 if (killID < 0)
-                    killID = -killID | 0x80000000; // Gameobject
+                    killID = (int)(-killID | 0x80000000); // Gameobject
                 packet.AddInt32(killID);
                 packet.AddInt32(killCurrentCount);
                 packet.AddInt32(killCount);
@@ -769,14 +769,14 @@ namespace Mangos.World.Quests
                 packet.AddInt32(gold);
                 packet.AddInt32(quest.RewardHonor); // bonus honor...used in BG quests
                 int rewardsCount = 0;
-                for (int i = 0, loopTo = QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo; i++)
+                for (int i = 0, loopTo = (int)QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo; i++)
                 {
                     if (quest.RewardStaticItems[i] > 0)
                         rewardsCount += 1;
                 }
 
                 packet.AddInt32(rewardsCount);
-                for (int i = 0, loopTo1 = QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo1; i++)
+                for (int i = 0, loopTo1 = (int)QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo1; i++)
                 {
                     if (quest.RewardStaticItems[i] > 0)
                     {
@@ -826,14 +826,14 @@ namespace Mangos.World.Quests
                 }
 
                 int questRewardsCount = 0;
-                for (int i = 0, loopTo1 = QuestInfo.QUEST_REWARD_CHOICES_COUNT; i <= loopTo1; i++)
+                for (int i = 0, loopTo1 = (int)QuestInfo.QUEST_REWARD_CHOICES_COUNT; i <= loopTo1; i++)
                 {
                     if (quest.RewardItems[i] != 0)
                         questRewardsCount += 1;
                 }
 
                 packet.AddInt32(questRewardsCount);
-                for (int i = 0, loopTo2 = QuestInfo.QUEST_REWARD_CHOICES_COUNT; i <= loopTo2; i++)
+                for (int i = 0, loopTo2 = (int)QuestInfo.QUEST_REWARD_CHOICES_COUNT; i <= loopTo2; i++)
                 {
                     if (quest.RewardItems[i] != 0)
                     {
@@ -854,14 +854,14 @@ namespace Mangos.World.Quests
                 }
 
                 questRewardsCount = 0;
-                for (int i = 0, loopTo3 = QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo3; i++)
+                for (int i = 0, loopTo3 = (int)QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo3; i++)
                 {
                     if (quest.RewardStaticItems[i] != 0)
                         questRewardsCount += 1;
                 }
 
                 packet.AddInt32(questRewardsCount);
-                for (int i = 0, loopTo4 = QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo4; i++)
+                for (int i = 0, loopTo4 = (int)QuestInfo.QUEST_REWARDS_COUNT; i <= loopTo4; i++)
                 {
                     if (quest.RewardStaticItems[i] != 0)
                     {
@@ -1071,7 +1071,7 @@ namespace Mangos.World.Quests
                 return;
 
             // DONE: Count kills
-            for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+            for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
             {
                 if (objCharacter.TalkQuests[i] is object && objCharacter.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_KILL && (objCharacter.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_CAST) == 0)
                 {
@@ -1108,7 +1108,7 @@ namespace Mangos.World.Quests
                     continue;
                 {
                     var withBlock1 = WorldServiceLocator._WorldServer.CHARACTERs[guid];
-                    for (int i = 0, loopTo1 = QuestInfo.QUEST_SLOTS; i <= loopTo1; i++)
+                    for (int i = 0, loopTo1 = (int)QuestInfo.QUEST_SLOTS; i <= loopTo1; i++)
                     {
                         if (withBlock1.TalkQuests[i] is object && withBlock1.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_KILL && (withBlock1.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_CAST) == 0)
                         {
@@ -1142,7 +1142,7 @@ namespace Mangos.World.Quests
         {
             // DONE: Count spell casts
             // DONE: Check if we're casting it on the correct creature
-            for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+            for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
             {
                 if (objCharacter.TalkQuests[i] is object && objCharacter.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_CAST)
                 {
@@ -1184,7 +1184,7 @@ namespace Mangos.World.Quests
         {
             // DONE: Count spell casts
             // DONE: Check if we're casting it on the correct gameobject
-            for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+            for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
             {
                 if (objCharacter.TalkQuests[i] is object && objCharacter.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_CAST)
                 {
@@ -1229,7 +1229,7 @@ namespace Mangos.World.Quests
 
             // DONE: Count spell casts
             // DONE: Check if we're casting it on the correct gameobject
-            for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+            for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
             {
                 if (objCharacter.TalkQuests[i] is object && objCharacter.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_EMOTE)
                 {
@@ -1281,7 +1281,7 @@ namespace Mangos.World.Quests
                 {
                     {
                         var withBlock = WorldServiceLocator._WorldServer.CHARACTERs[guid];
-                        for (int j = 0, loopTo = QuestInfo.QUEST_SLOTS; j <= loopTo; j++)
+                        for (int j = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; j <= loopTo; j++)
                         {
                             if (withBlock.TalkQuests[j] is object && withBlock.TalkQuests[j].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM && isRaid == false)
                             {
@@ -1303,7 +1303,7 @@ namespace Mangos.World.Quests
             }
             else
             {
-                for (int j = 0, loopTo1 = QuestInfo.QUEST_SLOTS; j <= loopTo1; j++)
+                for (int j = 0, loopTo1 = (int)QuestInfo.QUEST_SLOTS; j <= loopTo1; j++)
                 {
                     if (objCharacter.TalkQuests[j] is object && objCharacter.TalkQuests[j].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM)
                     {
@@ -1338,7 +1338,7 @@ namespace Mangos.World.Quests
             foreach (int questItemID in gameobject.IncludesQuestItems)
             {
                 // DONE: Check quests needing that item
-                for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+                for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
                 {
                     if (objCharacter.TalkQuests[i] is object && objCharacter.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM)
                     {
@@ -1386,7 +1386,7 @@ namespace Mangos.World.Quests
                 count = 1;
 
             // DONE: Check quests needing that item
-            for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+            for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
             {
                 if (objCharacter.TalkQuests[i] is object && objCharacter.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM)
                 {
@@ -1422,7 +1422,7 @@ namespace Mangos.World.Quests
                 count = 1;
 
             // DONE: Check quests needing that item
-            for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+            for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
             {
                 if (objCharacter.TalkQuests[i] is object && objCharacter.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM)
                 {
@@ -1454,7 +1454,7 @@ namespace Mangos.World.Quests
         // DONE: Exploration quest events
         public void OnQuestExplore(ref WS_PlayerData.CharacterObject objCharacter, int areaID)
         {
-            for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+            for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
             {
                 if (objCharacter.TalkQuests[i] is object && objCharacter.TalkQuests[i].ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE)
                 {
@@ -1496,47 +1496,47 @@ namespace Mangos.World.Quests
             {
                 case 61:
                     {
-                        return Classes.CLASS_WARLOCK;
+                        return (byte)Classes.CLASS_WARLOCK;
                     }
 
                 case 81:
                     {
-                        return Classes.CLASS_WARRIOR;
+                        return (byte)Classes.CLASS_WARRIOR;
                     }
 
                 case 82:
                     {
-                        return Classes.CLASS_SHAMAN;
+                        return (byte)Classes.CLASS_SHAMAN;
                     }
 
                 case 141:
                     {
-                        return Classes.CLASS_PALADIN;
+                        return (byte)Classes.CLASS_PALADIN;
                     }
 
                 case 161:
                     {
-                        return Classes.CLASS_MAGE;
+                        return (byte)Classes.CLASS_MAGE;
                     }
 
                 case 162:
                     {
-                        return Classes.CLASS_ROGUE;
+                        return (byte)Classes.CLASS_ROGUE;
                     }
 
                 case 261:
                     {
-                        return Classes.CLASS_HUNTER;
+                        return (byte)Classes.CLASS_HUNTER;
                     }
 
                 case 262:
                     {
-                        return Classes.CLASS_PRIEST;
+                        return (byte)Classes.CLASS_PRIEST;
                     }
 
                 case 263:
                     {
-                        return Classes.CLASS_DRUID;
+                        return (byte)Classes.CLASS_DRUID;
                     }
 
                 default:
@@ -1619,7 +1619,7 @@ namespace Mangos.World.Quests
                 }
                 // If _WorldServer.WORLD_CREATUREs(cGUID).CreatureInfo.Id
                 // IF cannot see quest, run line below
-                status = WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].CreatureInfo.TalkScript.OnQuestStatus(ref objCharacter, cGuid);
+                status = (QuestgiverStatusFlag)WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].CreatureInfo.TalkScript.OnQuestStatus(ref objCharacter, cGuid);
                 return status;
             }
             // End If
@@ -1638,7 +1638,7 @@ namespace Mangos.World.Quests
                 return status;
             }
 
-            for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+            for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
             {
                 if (objCharacter.TalkQuests[i] is object)
                 {
@@ -1685,7 +1685,7 @@ namespace Mangos.World.Quests
                 try
                 {
                     response.AddUInt64(guid);
-                    response.AddUInt32(status);
+                    response.AddUInt32((uint)status);
                     client.Send(ref response);
                 }
                 finally
@@ -1711,7 +1711,7 @@ namespace Mangos.World.Quests
                 if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].Evade)
                     return;
                 WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].StopMoving();
-                client.Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_TALK);
+                client.Character.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_TALK);
 
                 // TODO: There is something here not working all the time :/
                 if (WorldServiceLocator._WorldServer.CREATURESDatabase[WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].ID].TalkScript is null)
@@ -1792,7 +1792,7 @@ namespace Mangos.World.Quests
                         try
                         {
                             response.AddUInt64(client.Character.GUID);
-                            response.AddInt8(QuestPartyPushError.QUEST_PARTY_MSG_ACCEPT_QUEST);
+                            response.AddInt8((byte)QuestPartyPushError.QUEST_PARTY_MSG_ACCEPT_QUEST);
                             response.AddInt32(0);
                             WorldServiceLocator._WorldServer.CHARACTERs[guid].client.Send(ref response);
                         }
@@ -1808,7 +1808,7 @@ namespace Mangos.World.Quests
                         try
                         {
                             response.AddUInt64(guid);
-                            response.AddInt32(status);
+                            response.AddInt32((int)status);
                             client.Send(ref response);
                         }
                         finally
@@ -1893,7 +1893,7 @@ namespace Mangos.World.Quests
             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
             {
                 var tmpQuest = new WS_QuestInfo(questID);
-                for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+                for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
                 {
                     if (objCharacter.TalkQuests[i] is object)
                     {
@@ -1931,7 +1931,7 @@ namespace Mangos.World.Quests
             }
             else
             {
-                for (int i = 0, loopTo1 = QuestInfo.QUEST_SLOTS; i <= loopTo1; i++)
+                for (int i = 0, loopTo1 = (int)QuestInfo.QUEST_SLOTS; i <= loopTo1; i++)
                 {
                     if (objCharacter.TalkQuests[i] is object)
                     {
@@ -1991,7 +1991,7 @@ namespace Mangos.World.Quests
             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
             {
                 var tmpQuest = new WS_QuestInfo(questID);
-                for (int i = 0, loopTo = QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
+                for (int i = 0, loopTo = (int)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
                 {
                     if (client.Character.TalkQuests[i] is object && client.Character.TalkQuests[i].ID == questID && client.Character.TalkQuests[i].Complete)
                     {
@@ -2006,7 +2006,7 @@ namespace Mangos.World.Quests
             }
             else
             {
-                for (int i = 0, loopTo1 = QuestInfo.QUEST_SLOTS; i <= loopTo1; i++)
+                for (int i = 0, loopTo1 = (int)QuestInfo.QUEST_SLOTS; i <= loopTo1; i++)
                 {
                     if (client.Character.TalkQuests[i] is object && client.Character.TalkQuests[i].ID == questID && client.Character.TalkQuests[i].Complete)
                     {
@@ -2055,7 +2055,7 @@ namespace Mangos.World.Quests
                         else
                         {
                             var errorPacket = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
-                            errorPacket.AddInt32(QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_MONEY);
+                            errorPacket.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_MONEY);
                             client.Send(ref errorPacket);
                             errorPacket.Dispose();
                             return;
@@ -2063,7 +2063,7 @@ namespace Mangos.World.Quests
                     }
 
                     // DONE: Removing required items
-                    for (int i = 0, loopTo = QuestInfo.QUEST_OBJECTIVES_COUNT; i <= loopTo; i++)
+                    for (int i = 0, loopTo = (int)QuestInfo.QUEST_OBJECTIVES_COUNT; i <= loopTo; i++)
                     {
                         if (client.Character.TalkCurrentQuest.ObjectivesItem[i] != 0)
                         {
@@ -2077,7 +2077,7 @@ namespace Mangos.World.Quests
                                 }
                                 // TODO: Restore items (not needed?)
                                 var errorPacket = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
-                                errorPacket.AddInt32(QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_ITEMS);
+                                errorPacket.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_ITEMS);
                                 client.Send(ref errorPacket);
                                 errorPacket.Dispose();
                                 return;
@@ -2111,7 +2111,7 @@ namespace Mangos.World.Quests
                         client.Character.Copper = (uint)(client.Character.Copper + client.Character.TalkCurrentQuest.RewardGold);
                     }
 
-                    client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                    client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
 
                     // DONE: Add honor
                     if (client.Character.TalkCurrentQuest.RewardHonor != 0)
@@ -2134,7 +2134,7 @@ namespace Mangos.World.Quests
                     }
 
                     // DONE: Remove quest
-                    for (int i = 0, loopTo1 = QuestInfo.QUEST_SLOTS; i <= loopTo1; i++)
+                    for (int i = 0, loopTo1 = (int)QuestInfo.QUEST_SLOTS; i <= loopTo1; i++)
                     {
                         if (client.Character.TalkQuests[i] is object)
                         {
@@ -2225,7 +2225,7 @@ namespace Mangos.World.Quests
                         client.Character.Copper = (uint)(client.Character.Copper + gold);
                     }
 
-                    client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                    client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                     client.Character.SendCharacterUpdate();
                     SendQuestComplete(ref client, ref client.Character.TalkCurrentQuest, xp, gold);
 
@@ -2276,7 +2276,7 @@ namespace Mangos.World.Quests
                         else
                         {
                             var errorPacket = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
-                            errorPacket.AddInt32(QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_MONEY);
+                            errorPacket.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_MONEY);
                             client.Send(ref errorPacket);
                             errorPacket.Dispose();
                             return;
@@ -2284,7 +2284,7 @@ namespace Mangos.World.Quests
                     }
 
                     // DONE: Removing required items
-                    for (int i = 0, loopTo2 = QuestInfo.QUEST_OBJECTIVES_COUNT; i <= loopTo2; i++)
+                    for (int i = 0, loopTo2 = (int)QuestInfo.QUEST_OBJECTIVES_COUNT; i <= loopTo2; i++)
                     {
                         if (client.Character.TalkCurrentQuest.ObjectivesItem[i] != 0)
                         {
@@ -2298,7 +2298,7 @@ namespace Mangos.World.Quests
                                 }
                                 // TODO: Restore items (not needed?)
                                 var errorPacket = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
-                                errorPacket.AddInt32(QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_ITEMS);
+                                errorPacket.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_ITEMS);
                                 client.Send(ref errorPacket);
                                 errorPacket.Dispose();
                                 return;
@@ -2332,7 +2332,7 @@ namespace Mangos.World.Quests
                         client.Character.Copper = (uint)(client.Character.Copper + client.Character.TalkCurrentQuest.RewardGold);
                     }
 
-                    client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                    client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
 
                     // DONE: Add honor
                     if (client.Character.TalkCurrentQuest.RewardHonor != 0)
@@ -2355,7 +2355,7 @@ namespace Mangos.World.Quests
                     }
 
                     // DONE: Remove quest
-                    for (int i = 0, loopTo3 = QuestInfo.QUEST_SLOTS; i <= loopTo3; i++)
+                    for (int i = 0, loopTo3 = (int)QuestInfo.QUEST_SLOTS; i <= loopTo3; i++)
                     {
                         if (client.Character.TalkQuests[i] is object)
                         {
@@ -2446,7 +2446,7 @@ namespace Mangos.World.Quests
                         client.Character.Copper = (uint)(client.Character.Copper + gold);
                     }
 
-                    client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
+                    client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper);
                     client.Character.SendCharacterUpdate();
                     SendQuestComplete(ref client, ref client.Character.TalkCurrentQuest, xp, gold);
 
@@ -2493,7 +2493,7 @@ namespace Mangos.World.Quests
                             var withBlock = WorldServiceLocator._WorldServer.CHARACTERs[guid];
                             var response = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
                             response.AddUInt64(guid);
-                            response.AddInt32(QuestPartyPushError.QUEST_PARTY_MSG_SHARRING_QUEST);
+                            response.AddInt32((int)QuestPartyPushError.QUEST_PARTY_MSG_SHARRING_QUEST);
                             response.AddInt8(0);
                             client.Send(ref response);
                             response.Dispose();
@@ -2531,7 +2531,7 @@ namespace Mangos.World.Quests
                             {
                                 var errorPacket = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
                                 errorPacket.AddUInt64(withBlock.GUID);
-                                errorPacket.AddInt32(message);
+                                errorPacket.AddInt32((int)message);
                                 errorPacket.AddInt8(0);
                                 client.Send(ref errorPacket);
                                 errorPacket.Dispose();
@@ -2549,7 +2549,7 @@ namespace Mangos.World.Quests
                             var withBlock1 = WorldServiceLocator._WorldServer.CHARACTERs[guid];
                             var response = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
                             response.AddUInt64(guid);
-                            response.AddInt32(QuestPartyPushError.QUEST_PARTY_MSG_SHARRING_QUEST);
+                            response.AddInt32((int)QuestPartyPushError.QUEST_PARTY_MSG_SHARRING_QUEST);
                             response.AddInt8(0);
                             client.Send(ref response);
                             response.Dispose();
@@ -2587,7 +2587,7 @@ namespace Mangos.World.Quests
                             {
                                 var errorPacket = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
                                 errorPacket.AddUInt64(withBlock1.GUID);
-                                errorPacket.AddInt32(message);
+                                errorPacket.AddInt32((int)message);
                                 errorPacket.AddInt8(0);
                                 client.Send(ref errorPacket);
                                 errorPacket.Dispose();
@@ -2604,11 +2604,11 @@ namespace Mangos.World.Quests
                 return;
             packet.GetInt16();
             ulong guid = packet.GetUInt64();
-            QuestPartyPushError message = packet.GetInt8();
+            QuestPartyPushError message = (QuestPartyPushError)packet.GetInt8();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_QUEST_PUSH_RESULT [{2:X} {3}]", client.IP, client.Port, guid, message);
             var response = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
             response.AddUInt64(guid);
-            response.AddInt8(QuestPartyPushError.QUEST_PARTY_MSG_ACCEPT_QUEST);
+            response.AddInt8((byte)QuestPartyPushError.QUEST_PARTY_MSG_ACCEPT_QUEST);
             response.AddInt32(0);
             client.Send(ref response);
             response.Dispose();
