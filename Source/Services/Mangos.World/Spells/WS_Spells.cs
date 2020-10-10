@@ -2290,25 +2290,25 @@ namespace Mangos.World.Spells
             public void SetTarget_SELF(ref WS_Base.BaseUnit objCharacter)
             {
                 unitTarget = objCharacter;
-                (void)(targetMask += SpellCastTargetFlags.TARGET_FLAG_SELF);
+                targetMask = (int)SpellCastTargetFlags.TARGET_FLAG_SELF;
             }
 
             public void SetTarget_UNIT(ref WS_Base.BaseUnit objCharacter)
             {
                 unitTarget = objCharacter;
-                (void)(targetMask += SpellCastTargetFlags.TARGET_FLAG_UNIT);
+                targetMask = (int)SpellCastTargetFlags.TARGET_FLAG_UNIT;
             }
 
             public void SetTarget_OBJECT(ref WS_Base.BaseObject o)
             {
                 goTarget = o;
-                (void)(targetMask += SpellCastTargetFlags.TARGET_FLAG_OBJECT);
+                targetMask = (int)SpellCastTargetFlags.TARGET_FLAG_OBJECT;
             }
 
             public void SetTarget_ITEM(ref ItemObject i)
             {
                 itemTarget = i;
-                (void)(targetMask += SpellCastTargetFlags.TARGET_FLAG_ITEM);
+                targetMask = (int)SpellCastTargetFlags.TARGET_FLAG_ITEM;
             }
 
             public void SetTarget_SOURCELOCATION(float x, float y, float z)
@@ -2316,7 +2316,7 @@ namespace Mangos.World.Spells
                 srcX = x;
                 srcY = y;
                 srcZ = z;
-                (void)(targetMask += SpellCastTargetFlags.TARGET_FLAG_SOURCE_LOCATION);
+                targetMask = (int)SpellCastTargetFlags.TARGET_FLAG_SOURCE_LOCATION;
             }
 
             public void SetTarget_DESTINATIONLOCATION(float x, float y, float z)
@@ -2324,13 +2324,13 @@ namespace Mangos.World.Spells
                 dstX = x;
                 dstY = y;
                 dstZ = z;
-                (void)(targetMask += SpellCastTargetFlags.TARGET_FLAG_DEST_LOCATION);
+                targetMask = (int)SpellCastTargetFlags.TARGET_FLAG_DEST_LOCATION;
             }
 
             public void SetTarget_STRING(string str)
             {
                 stringTarget = str;
-                (void)(targetMask += SpellCastTargetFlags.TARGET_FLAG_STRING);
+                targetMask = (int)SpellCastTargetFlags.TARGET_FLAG_STRING;
             }
         }
 

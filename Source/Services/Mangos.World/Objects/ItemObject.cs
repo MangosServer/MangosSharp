@@ -158,7 +158,7 @@ namespace Mangos.World.Objects
             {
                 var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
                 item.Value.FillAllUpdateFlags(ref tmpUpdate);
-                tmpUpdate.AddToPacket(packet, updatetype, item.Value);
+                tmpUpdate.AddToPacket(ref packet, updatetype, item.Value);
                 tmpUpdate.Dispose();
             }
 

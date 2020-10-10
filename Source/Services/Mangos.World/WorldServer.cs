@@ -92,7 +92,8 @@ namespace Mangos.World
         // Public CharacterCreation As ScriptedObject
 
         public WS_Network.WorldServerClass ClsWorldServer;
-        public const int SERVERSEED = (int)0xDE133700;
+        private const uint V = 0xDE133700;
+        public const uint SERVERSEED = V;
 
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
         public XMLConfigFile Config;
@@ -143,7 +144,7 @@ namespace Mangos.World
             [XmlElement(ElementName = "LogType")]
             public string LogType = "FILE";
             [XmlElement(ElementName = "LogLevel")]
-            public LogType LogLevel = Global.LogType.NETWORK;
+            public LogType LogLevel = Common.Enums.Global.LogType.NETWORK;
             [XmlElement(ElementName = "LogConfig")]
             public string LogConfig = "";
 

@@ -84,7 +84,7 @@ namespace Mangos.World.Handlers
                 {
                     float angle = (float)(client.Character.orientation - PId2);
                     if (angle < 0f)
-                        (void)(angle += PIx2);
+                        angle = (float)PIx2;
                     client.Character.Pet.SetToRealPosition();
                     float tmpX = (float)(client.Character.positionX + Math.Cos(angle) * 2.0d);
                     float tmpY = (float)(client.Character.positionY + Math.Sin(angle) * 2.0d);
@@ -93,8 +93,8 @@ namespace Mangos.World.Handlers
             }
 
             /* TODO ERROR: Skipped IfDirectiveTrivia *//* TODO ERROR: Skipped DisabledTextTrivia *//* TODO ERROR: Skipped EndIfDirectiveTrivia */
-            if (client.Character.charMovementFlags & MovementFlags.MOVEMENTFLAG_ONTRANSPORT)
-            {
+            if (client.Character.charMovementFlags && MovementFlags.MOVEMENTFLAG_ONTRANSPORT)
+                {
                 ulong transportGUID = packet.GetUInt64();
                 float transportX = packet.GetFloat();
                 float transportY = packet.GetFloat();
