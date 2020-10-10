@@ -366,8 +366,8 @@ namespace Mangos.World.Objects
 
                 if (Conversions.ToBoolean(DynFlags))
                     Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_DYN_FLAGS, DynFlags);
-                Update.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_STATE, 0, State);
-                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_TYPE_ID, Type);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_STATE, 0, (byte)State);
+                Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_TYPE_ID, (int)Type);
                 if (Level > 0)
                     Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_LEVEL, Level);
                 Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_FACTION, Faction);
@@ -776,7 +776,7 @@ namespace Mangos.World.Objects
                 if (Owner > 0m && WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(Owner) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Owner))
                 {
                     var fishEscaped = new Packets.PacketClass(OPCODES.SMSG_FISH_ESCAPED);
-                    WorldServiceLocator._WorldServer.CHARACTERs[Owner].client.Send(ref fishEscaped);
+                    WorldServiceLocator._WorldServer.CHARACTERs[Owner].client.Send(fishEscaped);
                     fishEscaped.Dispose();
                     WorldServiceLocator._WorldServer.CHARACTERs[Owner].FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL, true);
                 }
@@ -1007,7 +1007,7 @@ namespace Mangos.World.Objects
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GAMEOBJECT_QUERY [GameObject {2} not loaded.]", client.IP, client.Port, GameObjectID);
                     response.AddUInt32((uint)(GameObjectID | 0x80000000));
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                     return;
                 }
@@ -1025,7 +1025,7 @@ namespace Mangos.World.Objects
                 response.AddInt8(0); // Name4
                 for (byte i = 0; i <= 23; i++)
                     response.AddUInt32(GameObject.Fields[i]);
-                client.Send(ref response);
+                client.Send(response);
                 response.Dispose();
             }
             // _WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_GAMEOBJECT_QUERY_RESPONSE", client.IP, client.Port)
@@ -1065,7 +1065,7 @@ namespace Mangos.World.Objects
                         {
                             StandState.AddInt8((byte)(4L + WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].get_Sound(1)));
                             client.Character.Teleport(GO.positionX, GO.positionY, GO.positionZ, GO.orientation, (int)GO.MapID);
-                            client.Send(ref StandState);
+                            client.Send(StandState);
                         }
                         finally
                         {
@@ -1076,7 +1076,7 @@ namespace Mangos.World.Objects
                         try
                         {
                             packetACK.AddInt8((byte)(4L + GO.get_Sound(1)));
-                            client.Send(ref packetACK);
+                            client.Send(packetACK);
                         }
                         finally
                         {
@@ -1097,7 +1097,7 @@ namespace Mangos.World.Objects
                     {
                         var cinematicPacket = new Packets.PacketClass(OPCODES.SMSG_TRIGGER_CINEMATIC);
                         cinematicPacket.AddUInt32(GO.get_Sound(1));
-                        client.Send(ref cinematicPacket);
+                        client.Send(cinematicPacket);
                         cinematicPacket.Dispose();
                         break;
                     }
@@ -1179,7 +1179,7 @@ namespace Mangos.World.Objects
                             {
                                 GO.State = GameObjectLootState.DOOR_OPEN;
                                 var fishNotHookedPacket = new Packets.PacketClass(OPCODES.SMSG_FISH_NOT_HOOKED);
-                                client.Send(ref fishNotHookedPacket);
+                                client.Send(fishNotHookedPacket);
                                 fishNotHookedPacket.Dispose();
                             }
                         }
@@ -1222,7 +1222,7 @@ namespace Mangos.World.Objects
                             {
                                 GO.State = GameObjectLootState.DOOR_CLOSED;
                                 var fishEscaped = new Packets.PacketClass(OPCODES.SMSG_FISH_ESCAPED);
-                                client.Send(ref fishEscaped);
+                                client.Send(fishEscaped);
                                 fishEscaped.Dispose();
                             }
                         }

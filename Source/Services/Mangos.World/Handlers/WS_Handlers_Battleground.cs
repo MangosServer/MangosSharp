@@ -67,7 +67,7 @@ namespace Mangos.World.Handlers
                     response.AddInt32(Instance);
                 // End If
 
-                client.Send(ref response);
+                client.Send(response);
             }
             finally
             {

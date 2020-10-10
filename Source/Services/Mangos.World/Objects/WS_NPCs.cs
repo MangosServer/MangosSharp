@@ -159,7 +159,7 @@ namespace Mangos.World.Objects
             {
                 response.AddUInt64(cGuid);
                 response.AddInt32(spellID);
-                client.Send(ref response);
+                client.Send(response);
             }
             finally
             {
@@ -271,7 +271,7 @@ namespace Mangos.World.Objects
             }
 
             packet.AddString("Hello! Ready for some training?"); // Trainer UI message?
-            objCharacter.client.Send(ref packet);
+            objCharacter.client.Send(packet);
             packet.Dispose();
         }
 
@@ -324,7 +324,7 @@ namespace Mangos.World.Objects
                         okPckt.AddUInt64(vendorGuid);
                         okPckt.AddUInt64(itemGuid);
                         okPckt.AddInt8((byte)SELL_ERROR.SELL_ERR_CANT_FIND_ITEM);
-                        client.Send(ref okPckt);
+                        client.Send(okPckt);
                     }
                     finally
                     {
@@ -342,7 +342,7 @@ namespace Mangos.World.Objects
                         okPckt.AddUInt64(vendorGuid);
                         okPckt.AddUInt64(itemGuid);
                         okPckt.AddInt8((byte)SELL_ERROR.SELL_ERR_CANT_FIND_ITEM);
-                        client.Send(ref okPckt);
+                        client.Send(okPckt);
                     }
                     finally
                     {
@@ -360,7 +360,7 @@ namespace Mangos.World.Objects
                         okPckt.AddUInt64(vendorGuid);
                         okPckt.AddUInt64(itemGuid);
                         okPckt.AddInt8((byte)SELL_ERROR.SELL_ERR_CANT_FIND_VENDOR);
-                        client.Send(ref okPckt);
+                        client.Send(okPckt);
                     }
                     finally
                     {
@@ -378,7 +378,7 @@ namespace Mangos.World.Objects
                         okPckt.AddUInt64(vendorGuid);
                         okPckt.AddUInt64(itemGuid);
                         okPckt.AddInt8((byte)SELL_ERROR.SELL_ERR_CANT_SELL_ITEM);
-                        client.Send(ref okPckt);
+                        client.Send(okPckt);
                     }
                     finally
                     {
@@ -396,7 +396,7 @@ namespace Mangos.World.Objects
                         okPckt.AddUInt64(vendorGuid);
                         okPckt.AddUInt64(itemGuid);
                         okPckt.AddInt8((byte)SELL_ERROR.SELL_ERR_CANT_FIND_ITEM);
-                        client.Send(ref okPckt);
+                        client.Send(okPckt);
                         okPckt.Dispose();
                         return;
                     }
@@ -443,7 +443,7 @@ namespace Mangos.World.Objects
                             okPckt.AddUInt64(vendorGuid);
                             okPckt.AddUInt64(itemGuid);
                             okPckt.AddInt8(0);
-                            client.Send(ref okPckt);
+                            client.Send(okPckt);
                             okPckt.Dispose();
                             return;
                         }
@@ -467,7 +467,7 @@ namespace Mangos.World.Objects
                                     okPckt.AddUInt64(vendorGuid);
                                     okPckt.AddUInt64(itemGuid);
                                     okPckt.AddInt8(0);
-                                    client.Send(ref okPckt);
+                                    client.Send(okPckt);
                                     okPckt.Dispose();
                                     return;
                                 }
@@ -520,7 +520,7 @@ namespace Mangos.World.Objects
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(itemID);
                     errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_SELLER_DONT_LIKE_YOU);
-                    client.Send(ref errorPckt);
+                    client.Send(errorPckt);
                 }
                 finally
                 {
@@ -544,7 +544,7 @@ namespace Mangos.World.Objects
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(itemID);
                     errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
-                    client.Send(ref errorPckt);
+                    client.Send(errorPckt);
                 }
                 finally
                 {
@@ -573,7 +573,7 @@ namespace Mangos.World.Objects
                 okPckt.AddUInt64(vendorGuid);
                 okPckt.AddInt32(itemID);
                 okPckt.AddInt32(count);
-                client.Send(ref okPckt);
+                client.Send(okPckt);
                 okPckt.Dispose();
             }
         }
@@ -611,7 +611,7 @@ namespace Mangos.World.Objects
                 errorPckt.AddUInt64(vendorGuid);
                 errorPckt.AddInt32(itemID);
                 errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_SELLER_DONT_LIKE_YOU);
-                client.Send(ref errorPckt);
+                client.Send(errorPckt);
                 errorPckt.Dispose();
                 return;
             }
@@ -625,7 +625,7 @@ namespace Mangos.World.Objects
                 errorPckt.AddUInt64(vendorGuid);
                 errorPckt.AddInt32(itemID);
                 errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
-                client.Send(ref errorPckt);
+                client.Send(errorPckt);
                 errorPckt.Dispose();
                 return;
             }
@@ -641,7 +641,7 @@ namespace Mangos.World.Objects
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(itemID);
                     errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_CANT_CARRY_MORE);
-                    client.Send(ref errorPckt);
+                    client.Send(errorPckt);
                     errorPckt.Dispose();
                     return;
                 }
@@ -666,7 +666,7 @@ namespace Mangos.World.Objects
                     okPckt.AddUInt64(vendorGuid);
                     okPckt.AddInt32(itemID);
                     okPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_CANT_FIND_ITEM);
-                    client.Send(ref okPckt);
+                    client.Send(okPckt);
                     okPckt.Dispose();
                     return;
                 }
@@ -677,7 +677,7 @@ namespace Mangos.World.Objects
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(itemID);
                     errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_CANT_CARRY_MORE);
-                    client.Send(ref errorPckt);
+                    client.Send(errorPckt);
                     errorPckt.Dispose();
                     return;
                 }
@@ -694,7 +694,7 @@ namespace Mangos.World.Objects
                     errorPckt.AddUInt64(0UL);
                     errorPckt.AddUInt64(0UL);
                     errorPckt.AddInt8(0);
-                    client.Send(ref errorPckt);
+                    client.Send(errorPckt);
                     errorPckt.Dispose();
                 }
 
@@ -717,7 +717,7 @@ namespace Mangos.World.Objects
                     okPckt.AddUInt64(vendorGuid);
                     okPckt.AddInt32(itemID);
                     okPckt.AddInt32(count);
-                    client.Send(ref okPckt);
+                    client.Send(okPckt);
                     okPckt.Dispose();
                 }
 
@@ -749,7 +749,7 @@ namespace Mangos.World.Objects
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(0);
                     errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_CANT_FIND_ITEM);
-                    client.Send(ref errorPckt);
+                    client.Send(errorPckt);
                 }
                 finally
                 {
@@ -768,7 +768,7 @@ namespace Mangos.World.Objects
                     errorPckt.AddUInt64(vendorGuid);
                     errorPckt.AddInt32(tmpItem.ItemEntry);
                     errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
-                    client.Send(ref errorPckt);
+                    client.Send(errorPckt);
                 }
                 finally
                 {
@@ -906,7 +906,7 @@ namespace Mangos.World.Objects
 
                 if (i > 0)
                     packet.AddInt8(i, dataPos);
-                objCharacter.client.Send(ref packet);
+                objCharacter.client.Send(packet);
                 packet.Dispose();
             }
             catch (Exception e)
@@ -1035,7 +1035,7 @@ namespace Mangos.World.Objects
                     errorPckt.AddUInt64(0UL);
                     errorPckt.AddInt32(0);
                     errorPckt.AddInt8((byte)BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
-                    client.Send(ref errorPckt);
+                    client.Send(errorPckt);
                 }
                 finally
                 {
@@ -1072,7 +1072,7 @@ namespace Mangos.World.Objects
             try
             {
                 packet.AddUInt64(guid);
-                objCharacter.client.Send(ref packet);
+                objCharacter.client.Send(packet);
             }
             finally
             {
@@ -1095,7 +1095,7 @@ namespace Mangos.World.Objects
             {
                 packet.AddUInt64(guid);
                 packet.AddInt32(objCharacter.ZoneID);
-                objCharacter.client.Send(ref packet);
+                objCharacter.client.Send(packet);
             }
             finally
             {
@@ -1142,7 +1142,7 @@ namespace Mangos.World.Objects
             {
                 packet.AddUInt64(objCharacter.GUID);
                 packet.AddInt32(cost);
-                objCharacter.client.Send(ref packet);
+                objCharacter.client.Send(packet);
             }
             finally
             {
@@ -1197,7 +1197,7 @@ namespace Mangos.World.Objects
                     SMSG_SPELL_START.AddInt16(0xF);
                     SMSG_SPELL_START.AddInt32(0);
                     SMSG_SPELL_START.AddInt16(0);
-                    client.Send(ref SMSG_SPELL_START);
+                    client.Send(SMSG_SPELL_START);
                 }
                 finally
                 {
@@ -1218,7 +1218,7 @@ namespace Mangos.World.Objects
                     SMSG_SPELL_GO.AddInt32(0);
                     SMSG_SPELL_GO.AddInt16(0x200);
                     SMSG_SPELL_GO.AddInt16(0);
-                    client.Send(ref SMSG_SPELL_GO);
+                    client.Send(SMSG_SPELL_GO);
                 }
                 finally
                 {
@@ -1569,7 +1569,7 @@ namespace Mangos.World.Objects
                                 try
                                 {
                                     response.AddUInt64(cGUID);
-                                    objCharacter.client.Send(ref response);
+                                    objCharacter.client.Send(response);
                                 }
                                 finally
                                 {

@@ -195,7 +195,7 @@ namespace Mangos.World.Globals
             /// <param name="updateType">Type of the update.</param>
             /// <param name="updateObject">The update object.</param>
             /// <returns></returns>
-            public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_Creatures.CreatureObject updateObject)
+            public void AddToPacket(PacketClass packet, ObjectUpdateType updateType, WS_Creatures.CreatureObject updateObject)
             {
                 packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
@@ -269,7 +269,7 @@ namespace Mangos.World.Globals
             /// <param name="updateType">Type of the update.</param>
             /// <param name="updateObject">The update object.</param>
             /// <returns></returns>
-            public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_PlayerData.CharacterObject updateObject)
+            public void AddToPacket(PacketClass packet, ObjectUpdateType updateType, WS_PlayerData.CharacterObject updateObject)
             {
                 packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
@@ -356,7 +356,7 @@ namespace Mangos.World.Globals
             /// <param name="updateType">Type of the update.</param>
             /// <param name="updateObject">The update object.</param>
             /// <returns></returns>
-            public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref ItemObject updateObject)
+            public void AddToPacket(PacketClass packet, ObjectUpdateType updateType, ItemObject updateObject)
             {
                 packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
@@ -419,7 +419,7 @@ namespace Mangos.World.Globals
             /// <param name="updateType">Type of the update.</param>
             /// <param name="updateObject">The update object.</param>
             /// <returns></returns>
-            public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_GameObjects.GameObjectObject updateObject)
+            public void AddToPacket(PacketClass packet, ObjectUpdateType updateType, WS_GameObjects.GameObjectObject updateObject)
             {
                 packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
@@ -516,7 +516,7 @@ namespace Mangos.World.Globals
             /// <param name="updateType">Type of the update.</param>
             /// <param name="updateObject">The update object.</param>
             /// <returns></returns>
-            public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_DynamicObjects.DynamicObjectObject updateObject)
+            public void AddToPacket(PacketClass packet, ObjectUpdateType updateType, WS_DynamicObjects.DynamicObjectObject updateObject)
             {
                 packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);
@@ -575,7 +575,7 @@ namespace Mangos.World.Globals
             /// <param name="updateType">Type of the update.</param>
             /// <param name="updateObject">The update object.</param>
             /// <returns></returns>
-            public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_Corpses.CorpseObject updateObject)
+            public void AddToPacket(PacketClass packet, ObjectUpdateType updateType, WS_Corpses.CorpseObject updateObject)
             {
                 packet.AddInt8((byte)updateType);
                 packet.AddPackGUID(updateObject.GUID);

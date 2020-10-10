@@ -44,7 +44,7 @@ namespace Mangos.World.Handlers
             try
             {
                 taxiFailed.AddInt32((int)reply);
-                client.Send(ref taxiFailed);
+                client.Send(taxiFailed);
             }
             finally
             {
@@ -71,7 +71,7 @@ namespace Mangos.World.Handlers
                     SMSG_TAXINODE_STATUS.AddInt8(0);
                 else
                     SMSG_TAXINODE_STATUS.AddInt8(1);
-                objCharacter.client.Send(ref SMSG_TAXINODE_STATUS);
+                objCharacter.client.Send(SMSG_TAXINODE_STATUS);
             }
             finally
             {
@@ -96,7 +96,7 @@ namespace Mangos.World.Handlers
                 var SMSG_NEW_TAXI_PATH = new Packets.PacketClass(OPCODES.SMSG_NEW_TAXI_PATH);
                 try
                 {
-                    objCharacter.client.Send(ref SMSG_NEW_TAXI_PATH);
+                    objCharacter.client.Send(SMSG_NEW_TAXI_PATH);
                 }
                 finally
                 {
@@ -108,7 +108,7 @@ namespace Mangos.World.Handlers
                 {
                     SMSG_TAXINODE_STATUS.AddUInt64(cGuid);
                     SMSG_TAXINODE_STATUS.AddInt8(1);
-                    objCharacter.client.Send(ref SMSG_TAXINODE_STATUS);
+                    objCharacter.client.Send(SMSG_TAXINODE_STATUS);
                 }
                 finally
                 {
@@ -125,7 +125,7 @@ namespace Mangos.World.Handlers
                 SMSG_SHOWTAXINODES.AddUInt64(cGuid);
                 SMSG_SHOWTAXINODES.AddInt32(currentTaxi);
                 SMSG_SHOWTAXINODES.AddBitArray(objCharacter.TaxiZones, 8 * 4);
-                objCharacter.client.Send(ref SMSG_SHOWTAXINODES);
+                objCharacter.client.Send(SMSG_SHOWTAXINODES);
             }
             finally
             {
@@ -572,7 +572,7 @@ namespace Mangos.World.Handlers
                             SMSG_MONSTER_MOVE.AddSingle(waypointNodes[j].z);         // First Point Z
                         }
 
-                        character.client.Send(ref SMSG_MONSTER_MOVE);
+                        character.client.Send(SMSG_MONSTER_MOVE);
                     }
                     finally
                     {

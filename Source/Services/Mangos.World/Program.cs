@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using global;
 using Mangos.Common.Globals;
 using Mangos.World.AI;
 using Mangos.World.Auction;

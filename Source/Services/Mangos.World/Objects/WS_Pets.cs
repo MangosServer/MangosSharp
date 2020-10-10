@@ -94,7 +94,7 @@ namespace Mangos.World.Objects
                 ((WS_PlayerData.CharacterObject)Owner).GroupUpdateFlag = ((WS_PlayerData.CharacterObject)Owner).GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_PET;
                 var packet = new Packets.PacketClass(OPCODES.SMSG_PET_SPELLS);
                 packet.AddUInt64(0UL);
-                ((WS_PlayerData.CharacterObject)Owner).client.Send(ref packet);
+                ((WS_PlayerData.CharacterObject)Owner).client.Send(packet);
                 packet.Dispose();
             }
         }
@@ -184,7 +184,7 @@ namespace Mangos.World.Objects
             response.AddInt32(PetNumber);
             response.AddString(((PetObject)WorldServiceLocator._WorldServer.WORLD_CREATUREs[PetGUID]).PetName); // Pet name
             response.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime("")); // Pet name timestamp
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
@@ -285,7 +285,7 @@ namespace Mangos.World.Objects
             packet.AddInt32(0);
             packet.AddInt32(0);
             packet.AddInt16(0);
-            Caster.client.Send(ref packet);
+            Caster.client.Send(packet);
             packet.Dispose();
         }
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia */

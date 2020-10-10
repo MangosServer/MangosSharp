@@ -149,7 +149,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void SendContainedItemsUpdate(ref WS_Network.ClientClass client, int updatetype = ObjectUpdateType.UPDATETYPE_CREATE_OBJECT)
+        public void SendContainedItemsUpdate(ref WS_Network.ClientClass client, ObjectUpdateType updatetype = ObjectUpdateType.UPDATETYPE_CREATE_OBJECT)
         {
             var packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
             packet.AddInt32(Items.Count);      // Operations.Count
@@ -158,11 +158,11 @@ namespace Mangos.World.Objects
             {
                 var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
                 item.Value.FillAllUpdateFlags(ref tmpUpdate);
-                tmpUpdate.AddToPacket(ref packet, updatetype, item.Value);
+                tmpUpdate.AddToPacket(packet, updatetype, item.Value);
                 tmpUpdate.Dispose();
             }
 
-            client.Send(ref packet);
+            client.Send(packet);
         }
 
         private void InitializeBag()
@@ -297,7 +297,7 @@ namespace Mangos.World.Objects
 
             // DONE: Loot generation
             var mySqlQuery = new DataTable();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM item_loot WHERE entry = {0};", (object)ItemEntry), mySqlQuery);
+            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM item_loot WHERE entry = {0};", (object)ItemEntry), ref mySqlQuery);
             if (mySqlQuery.Rows.Count == 0)
                 return false;
             _loot = new WS_Loot.LootObject(GUID, LootType.LOOTTYPE_CORPSE);
@@ -315,10 +315,10 @@ namespace Mangos.World.Objects
         {
             // DONE: Get from SQLDB
             var mySqlQuery = new DataTable();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_inventory WHERE item_guid = \"{0}\";", (object)guidVal), mySqlQuery);
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_inventory WHERE item_guid = \"{0}\";", (object)guidVal), ref mySqlQuery);
             if (mySqlQuery.Rows.Count == 0)
                 Information.Err().Raise(1, "ItemObject.New", string.Format("itemGuid {0} not found in SQL database!", guidVal));
-            GUID = mySqlQuery.Rows[0]["item_guid"] + WorldServiceLocator._Global_Constants.GUID_ITEM;
+            GUID = (ulong)mySqlQuery.Rows[0]["item_guid"] + WorldServiceLocator._Global_Constants.GUID_ITEM;
             CreatorGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_creator"]);
             OwnerGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_owner"]);
             GiftCreatorGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_giftCreator"]);
@@ -561,9 +561,9 @@ namespace Mangos.World.Objects
             packet.AddInt8(0);
             var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
             tmpUpdate.SetUpdateFlag((int)EItemFields.ITEM_FIELD_DURABILITY, Durability);
-            tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
+            tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
             tmpUpdate.Dispose();
-            client.Send(ref packet);
+            client.Send(packet);
         }
 
         public uint GetDurabulityCost
@@ -630,7 +630,7 @@ namespace Mangos.World.Objects
                                     {
                                         case var @case when @case == SpellEffects_Names.SPELL_EFFECT_APPLY_AURA:
                                             {
-                                                WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[j].ApplyAuraIndex].Invoke(ref (WS_Base.BaseUnit)objCharacter, ref (WS_Base.BaseObject)objCharacter, ref spellInfo.SpellEffects[j], spellInfo.ID, 1, AuraAction.AURA_ADD);
+                                                WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[j].ApplyAuraIndex].Invoke((WS_Base.BaseUnit)objCharacter, (WS_Base.BaseObject)objCharacter, spellInfo.SpellEffects[j], spellInfo.ID, 1, AuraAction.AURA_ADD);
                                                 break;
                                             }
                                     }
@@ -698,8 +698,8 @@ namespace Mangos.World.Objects
                 tmpUpdate.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + slot * 3), 0);
                 tmpUpdate.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + slot * 3 + 1), 0);
                 tmpUpdate.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + slot * 3 + 2), 0);
-                tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
-                WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID].client.Send(ref packet);
+                tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
+                WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID].client.Send(packet);
                 packet.Dispose();
                 tmpUpdate.Dispose();
             }
@@ -723,7 +723,7 @@ namespace Mangos.World.Objects
                 var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
                 tmpUpdate.SetUpdateFlag((int)EItemFields.ITEM_FIELD_FLAGS, _flags);
                 tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
-                client.Send(ref packet);
+                client.Send(packet);
                 packet.Dispose();
                 tmpUpdate.Dispose();
             }

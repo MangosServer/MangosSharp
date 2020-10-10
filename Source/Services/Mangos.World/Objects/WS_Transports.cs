@@ -504,7 +504,7 @@ namespace Mangos.World.Objects
                                 ((WS_PlayerData.CharacterObject)tmpUnit).FillAllUpdateFlags(ref myTmpUpdate);
                                 myTmpUpdate.AddToPacket(myPacket, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, (WS_PlayerData.CharacterObject)tmpUnit);
                                 myTmpUpdate.Dispose();
-                                Character.client.Send(ref myPacket);
+                                Character.client.Send(myPacket);
                             }
                             finally
                             {
@@ -535,7 +535,7 @@ namespace Mangos.World.Objects
                                 ((WS_Creatures.CreatureObject)tmpUnit).FillAllUpdateFlags(ref myTmpUpdate);
                                 myTmpUpdate.AddToPacket(myPacket, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, (WS_Creatures.CreatureObject)tmpUnit);
                                 myTmpUpdate.Dispose();
-                                Character.client.Send(ref myPacket);
+                                Character.client.Send(myPacket);
                             }
                             finally
                             {

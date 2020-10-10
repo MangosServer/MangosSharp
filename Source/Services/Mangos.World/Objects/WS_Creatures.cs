@@ -306,7 +306,7 @@ namespace Mangos.World.Objects
             {
                 Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
                 Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, Size);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, ObjectType.TYPE_OBJECT + ObjectType.TYPE_UNIT);
+                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, (long)Common.Globals.ObjectType.TYPE_OBJECT + (long)Common.Globals.ObjectType.TYPE_UNIT);
                 Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, ID);
                 if (aiScript is object && aiScript.aiTarget is object)
                 {
@@ -725,7 +725,7 @@ namespace Mangos.World.Objects
                 }
             }
 
-            public override void Heal(int Damage, [Optional, DefaultParameterValue(null)] ref WS_Base.BaseUnit Attacker)
+            public override void Heal(int Damage, [Optional, DefaultParameterValue(null)] WS_Base.BaseUnit Attacker)
             {
                 if (Life.Current == 0)
                     return;
@@ -744,7 +744,7 @@ namespace Mangos.World.Objects
                 }
             }
 
-            public override void Energize(int Damage, ManaTypes Power, [Optional, DefaultParameterValue(null)] ref WS_Base.BaseUnit Attacker)
+            public override void Energize(int Damage, ManaTypes Power, [Optional, DefaultParameterValue(null)] WS_Base.BaseUnit Attacker)
             {
                 if (ManaType != Power)
                     return;
@@ -806,7 +806,7 @@ namespace Mangos.World.Objects
                                     if (SeenBy.Contains(objCharacter))
                                     {
                                         WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = objCharacter;
-                                        WorldServiceLocator._WorldServer.CHARACTERs[objCharacter].client.Send(ref packet);
+                                        WorldServiceLocator._WorldServer.CHARACTERs[objCharacter].client.Send(packet);
                                     }
                                 }
 
@@ -818,12 +818,12 @@ namespace Mangos.World.Objects
                                 if (Character.Group.LocalLootMaster is null)
                                 {
                                     WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = Character.GUID;
-                                    Character.client.Send(ref packet);
+                                    Character.client.Send(packet);
                                 }
                                 else
                                 {
                                     WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = Character.Group.LocalLootMaster.GUID;
-                                    Character.Group.LocalLootMaster.client.Send(ref packet);
+                                    Character.Group.LocalLootMaster.client.Send(packet);
                                 }
 
                                 break;
@@ -837,7 +837,7 @@ namespace Mangos.World.Objects
                                 while (!SeenBy.Contains(cLooter.GUID) && !ReferenceEquals(cLooter, Character))
                                     cLooter = Character.Group.GetNextLooter();
                                 WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = cLooter.GUID;
-                                cLooter.client.Send(ref packet);
+                                cLooter.client.Send(packet);
                                 break;
                             }
                     }
@@ -845,7 +845,7 @@ namespace Mangos.World.Objects
                 else
                 {
                     WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = Character.GUID;
-                    Character.client.Send(ref packet);
+                    Character.client.Send(packet);
                 }
 
                 // DONE: Dispose packet
@@ -1335,7 +1335,7 @@ namespace Mangos.World.Objects
                 if (Info is null)
                 {
                     var MySQLQuery = new DataTable();
-                    WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM creature LEFT OUTER JOIN game_event_creature ON creature.guid = game_event_creature.guid WHERE creature.guid = {0};", (object)GUID_), MySQLQuery);
+                    WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM creature LEFT OUTER JOIN game_event_creature ON creature.guid = game_event_creature.guid WHERE creature.guid = {0};", (object)GUID_), ref MySQLQuery);
                     if (MySQLQuery.Rows.Count > 0)
                     {
                         Info = MySQLQuery.Rows[0];
@@ -1349,7 +1349,7 @@ namespace Mangos.World.Objects
 
                 DataRow AddonInfo = null;
                 var AddonInfoQuery = new DataTable();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM spawns_creatures_addon WHERE spawn_id = {0};", (object)GUID_), AddonInfoQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM spawns_creatures_addon WHERE spawn_id = {0};", (object)GUID_), ref AddonInfoQuery);
                 if (AddonInfoQuery.Rows.Count > 0)
                 {
                     AddonInfo = AddonInfoQuery.Rows[0];
@@ -1757,7 +1757,7 @@ namespace Mangos.World.Objects
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CREATURE_QUERY [Creature {2} not loaded.]", client.IP, client.Port, CreatureID);
                     response.AddUInt32((uint)(CreatureID | 0x80000000));
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                     return;
                 }
@@ -1786,7 +1786,7 @@ namespace Mangos.World.Objects
                 response.AddSingle(1.0f);                    // Unk
                 response.AddSingle(1.0f);                    // Unk
                 response.AddInt8(Creature.Leader);           // RacialLeader
-                client.Send(ref response);
+                client.Send(response);
                 response.Dispose();
             }
             // _WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CREATURE_QUERY_RESPONSE", client.IP, client.Port)
@@ -1831,7 +1831,7 @@ namespace Mangos.World.Objects
                     var test = new Packets.PacketClass(OPCODES.SMSG_NPC_WONT_TALK);
                     test.AddUInt64(GUID);
                     test.AddInt8(1);
-                    client.Send(ref test);
+                    client.Send(test);
                     test.Dispose();
                     if (NPCTexts.ContainsKey(34) == false)
                     {

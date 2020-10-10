@@ -359,7 +359,7 @@ namespace Mangos.World.DataStores
             long dbXp;
             try
             {
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM player_xp_for_level order by lvl;"), result);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM player_xp_for_level order by lvl;"), ref result);
                 if (result.Rows.Count > 0)
                 {
                     foreach (DataRow row in result.Rows)
@@ -384,7 +384,7 @@ namespace Mangos.World.DataStores
         public void InitializeBattlemasters()
         {
             var MySQLQuery = new DataTable();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM battlemaster_entry"), MySQLQuery);
+            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM battlemaster_entry"), ref MySQLQuery);
             foreach (DataRow row in MySQLQuery.Rows)
                 Battlemasters.Add(Conversions.ToInteger(row["entry"]), Conversions.ToByte(row["bg_template"]));
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: {0} Battlemasters Loaded.", MySQLQuery.Rows.Count);
@@ -398,7 +398,7 @@ namespace Mangos.World.DataStores
         {
             byte entry;
             var mySqlQuery = new DataTable();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM battleground_template"), mySqlQuery);
+            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM battleground_template"), ref mySqlQuery);
             foreach (DataRow row in mySqlQuery.Rows)
             {
                 entry = Conversions.ToByte(row["id"]);
@@ -439,7 +439,7 @@ namespace Mangos.World.DataStores
         {
             int SpellID;
             var MySQLQuery = new DataTable();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM spells_teleport_coords"), MySQLQuery);
+            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM spells_teleport_coords"), ref MySQLQuery);
             foreach (DataRow row in MySQLQuery.Rows)
             {
                 SpellID = Conversions.ToInteger(row["id"]);
@@ -629,10 +629,10 @@ namespace Mangos.World.DataStores
                 var MySQLQuery = new DataTable();
                 try
                 {
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT MAX(item_guid) FROM characters_inventory;"), MySQLQuery);
+                    WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT MAX(item_guid) FROM characters_inventory;"), ref MySQLQuery);
                     if (!ReferenceEquals(MySQLQuery.Rows[0][0], DBNull.Value))
                     {
-                        WorldServiceLocator._WorldServer.itemGuidCounter = MySQLQuery.Rows[0][0] + WorldServiceLocator._Global_Constants.GUID_ITEM;
+                        WorldServiceLocator._WorldServer.itemGuidCounter = (ulong)MySQLQuery.Rows[0][0] + WorldServiceLocator._Global_Constants.GUID_ITEM;
                     }
                     else
                     {
@@ -647,10 +647,10 @@ namespace Mangos.World.DataStores
                 MySQLQuery = new DataTable();
                 try
                 {
-                    WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT MAX(guid) FROM creature;"), MySQLQuery);
+                    WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT MAX(guid) FROM creature;"), ref MySQLQuery);
                     if (!ReferenceEquals(MySQLQuery.Rows[0][0], DBNull.Value))
                     {
-                        WorldServiceLocator._WorldServer.CreatureGUIDCounter = MySQLQuery.Rows[0][0] + WorldServiceLocator._Global_Constants.GUID_UNIT;
+                        WorldServiceLocator._WorldServer.CreatureGUIDCounter = (ulong)MySQLQuery.Rows[0][0] + WorldServiceLocator._Global_Constants.GUID_UNIT;
                     }
                     else
                     {
@@ -665,10 +665,10 @@ namespace Mangos.World.DataStores
                 MySQLQuery = new DataTable();
                 try
                 {
-                    WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT MAX(guid) FROM gameobject;"), MySQLQuery);
+                    WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT MAX(guid) FROM gameobject;"), ref MySQLQuery);
                     if (!ReferenceEquals(MySQLQuery.Rows[0][0], DBNull.Value))
                     {
-                        WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = MySQLQuery.Rows[0][0] + WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT;
+                        WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = (ulong)MySQLQuery.Rows[0][0] + WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT;
                     }
                     else
                     {
@@ -683,10 +683,10 @@ namespace Mangos.World.DataStores
                 MySQLQuery = new DataTable();
                 try
                 {
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT MAX(guid) FROM corpse"), MySQLQuery);
+                    WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT MAX(guid) FROM corpse"), ref MySQLQuery);
                     if (!ReferenceEquals(MySQLQuery.Rows[0][0], DBNull.Value))
                     {
-                        WorldServiceLocator._WorldServer.CorpseGUIDCounter = MySQLQuery.Rows[0][0] + WorldServiceLocator._Global_Constants.GUID_CORPSE;
+                        WorldServiceLocator._WorldServer.CorpseGUIDCounter = (ulong)MySQLQuery.Rows[0][0] + WorldServiceLocator._Global_Constants.GUID_CORPSE;
                     }
                     else
                     {

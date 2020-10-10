@@ -133,7 +133,7 @@ namespace Mangos.World.Handlers
                         }
                     }
 
-                    Trader.client.Send(ref packet);
+                    Trader.client.Send(packet);
                 }
                 finally
                 {
@@ -195,7 +195,7 @@ namespace Mangos.World.Handlers
                         }
                     }
 
-                    Target.client.Send(ref packet);
+                    Target.client.Send(packet);
                 }
                 finally
                 {
@@ -267,7 +267,7 @@ namespace Mangos.World.Handlers
                             responseNoSlot.AddUInt64(0UL);
                             responseNoSlot.AddUInt64(0UL);
                             responseNoSlot.AddInt8(0);
-                            Target.client.Send(ref responseNoSlot);
+                            Target.client.Send(responseNoSlot);
                         }
                         finally
                         {
@@ -300,7 +300,7 @@ namespace Mangos.World.Handlers
                             responseNoSlot.AddUInt64(0UL);
                             responseNoSlot.AddUInt64(0UL);
                             responseNoSlot.AddInt8(0);
-                            Trader.client.Send(ref responseNoSlot);
+                            Trader.client.Send(responseNoSlot);
                         }
                         finally
                         {
@@ -488,7 +488,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_DEAD);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -503,7 +503,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_LOGOUT);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -518,7 +518,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_STUNNED);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -534,7 +534,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_TARGET_MISSING);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -549,7 +549,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_TARGET_DEAD);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -564,7 +564,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_TARGET_LOGOUT);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -579,7 +579,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_STUNNED);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -595,7 +595,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_TARGET_UNAVIABLE);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -611,7 +611,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_TARGET_UNAVIABLE2);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -627,7 +627,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_TARGET_DIFF_FACTION);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -643,7 +643,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_TARGET_TOO_FAR);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -659,7 +659,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_TRIAL_ACCOUNT);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -675,7 +675,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     response.AddInt32((int)TradeStatus.TRADE_TRIAL_ACCOUNT);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -695,7 +695,7 @@ namespace Mangos.World.Handlers
             {
                 response_ok.AddInt32((int)TradeStatus.TRADE_STATUS_OK);
                 response_ok.AddUInt64(client.Character.GUID);
-                client.Character.tradeInfo.Target.client.Send(ref response_ok);
+                client.Character.tradeInfo.Target.client.Send(response_ok);
             }
             finally
             {

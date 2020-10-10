@@ -39,7 +39,7 @@ namespace Mangos.World.Handlers
     {
 
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        public void DoEmote(int AnimationID, ref WS_Base.BaseObject Unit)
+        public void DoEmote(int AnimationID, WS_Base.BaseObject Unit)
         {
             // EMOTE_ONESHOT_WOUNDCRITICAL
             // EMOTE_ONESHOT_PARRYSHIELD
@@ -99,7 +99,7 @@ namespace Mangos.World.Handlers
             return Dmg;
         }
 
-        public float GetAPMultiplier(ref WS_Base.BaseUnit objCharacter, WeaponAttackType AttackType, bool Normalized)
+        public float GetAPMultiplier(WS_Base.BaseUnit objCharacter, WeaponAttackType AttackType, bool Normalized)
         {
             if (Normalized == false || !(objCharacter is WS_PlayerData.CharacterObject))
             {
@@ -187,7 +187,7 @@ namespace Mangos.World.Handlers
 
         public void CalculateMinMaxDamage(ref WS_PlayerData.CharacterObject objCharacter, WeaponAttackType AttackType)
         {
-            float AttSpeed = GetAPMultiplier(ref (WS_Base.BaseUnit)objCharacter, AttackType, true);
+            float AttSpeed = GetAPMultiplier((WS_Base.BaseUnit)objCharacter, AttackType, true);
             float BasePercent = 1f;
             float BaseValue;
             switch (AttackType)
@@ -774,9 +774,9 @@ namespace Mangos.World.Handlers
             return angle2 >= lowAngle & angle2 <= hiAngle;
         }
 
-        public bool IsInBackOf(ref WS_Base.BaseObject Object1, ref WS_Base.BaseObject Object2)
+        public bool IsInBackOf(WS_Base.BaseObject Object1, WS_Base.BaseObject Object2)
         {
-            return IsInBackOf(ref Object1, Object2.positionX, Object2.positionY);
+            return IsInBackOf(Object1, Object2.positionX, Object2.positionY);
         }
 
         public bool IsInBackOf(ref WS_Base.BaseObject Object1, float x2, float y2)
@@ -1103,7 +1103,7 @@ namespace Mangos.World.Handlers
                 if (Victim is null)
                 {
                     var SMSG_ATTACKSWING_CANT_ATTACK = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_CANT_ATTACK);
-                    Character.client.Send(ref SMSG_ATTACKSWING_CANT_ATTACK);
+                    Character.client.Send(SMSG_ATTACKSWING_CANT_ATTACK);
                     SMSG_ATTACKSWING_CANT_ATTACK.Dispose();
                     Character.AutoShotSpell = 0;
                     AttackStop();
@@ -1125,7 +1125,7 @@ namespace Mangos.World.Handlers
                     if (Victim.IsDead)
                     {
                         var SMSG_ATTACKSWING_DEADTARGET = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_DEADTARGET);
-                        Character.client.Send(ref SMSG_ATTACKSWING_DEADTARGET);
+                        Character.client.Send(SMSG_ATTACKSWING_DEADTARGET);
                         SMSG_ATTACKSWING_DEADTARGET.Dispose();
                         Character.AutoShotSpell = 0;
                         AttackStop();
@@ -1135,7 +1135,7 @@ namespace Mangos.World.Handlers
                     if (Character.IsDead)
                     {
                         var SMSG_ATTACKSWING_DEADTARGET = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_DEADTARGET);
-                        Character.client.Send(ref SMSG_ATTACKSWING_DEADTARGET);
+                        Character.client.Send(SMSG_ATTACKSWING_DEADTARGET);
                         SMSG_ATTACKSWING_DEADTARGET.Dispose();
                         Character.AutoShotSpell = 0;
                         AttackStop();
@@ -1145,7 +1145,7 @@ namespace Mangos.World.Handlers
                     if (Character.StandState > 0)
                     {
                         var SMSG_ATTACKSWING_NOTSTANDING = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_NOTSTANDING);
-                        Character.client.Send(ref SMSG_ATTACKSWING_NOTSTANDING);
+                        Character.client.Send(SMSG_ATTACKSWING_NOTSTANDING);
                         SMSG_ATTACKSWING_NOTSTANDING.Dispose();
                         Character.AutoShotSpell = 0;
                         AttackStop();
@@ -1172,7 +1172,7 @@ namespace Mangos.World.Handlers
                         {
                             NextAttackTimer.Change(2000, Timeout.Infinite);
                             var SMSG_ATTACKSWING_NOTINRANGE = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_NOTINRANGE);
-                            Character.client.Send(ref SMSG_ATTACKSWING_NOTINRANGE);
+                            Character.client.Send(SMSG_ATTACKSWING_NOTINRANGE);
                             SMSG_ATTACKSWING_NOTINRANGE.Dispose();
                             return;
                         }
@@ -1181,7 +1181,7 @@ namespace Mangos.World.Handlers
                     {
                         NextAttackTimer.Change(2000, Timeout.Infinite);
                         var SMSG_ATTACKSWING_NOTINRANGE = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_NOTINRANGE);
-                        Character.client.Send(ref SMSG_ATTACKSWING_NOTINRANGE);
+                        Character.client.Send(SMSG_ATTACKSWING_NOTINRANGE);
                         SMSG_ATTACKSWING_NOTINRANGE.Dispose();
                         return;
                     }
@@ -1191,7 +1191,7 @@ namespace Mangos.World.Handlers
                     {
                         NextAttackTimer.Change(2000, Timeout.Infinite);
                         var SMSG_ATTACKSWING_BADFACING = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_BADFACING);
-                        Character.client.Send(ref SMSG_ATTACKSWING_BADFACING);
+                        Character.client.Send(SMSG_ATTACKSWING_BADFACING);
                         SMSG_ATTACKSWING_BADFACING.Dispose();
                         return;
                     }
@@ -1261,7 +1261,7 @@ namespace Mangos.World.Handlers
                     if (Character is object && Character.client is object)
                     {
                         var SMSG_ATTACKSWING_CANT_ATTACK = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_CANT_ATTACK);
-                        Character.client.Send(ref SMSG_ATTACKSWING_CANT_ATTACK);
+                        Character.client.Send(SMSG_ATTACKSWING_CANT_ATTACK);
                         SMSG_ATTACKSWING_CANT_ATTACK.Dispose();
                     }
 
@@ -1289,7 +1289,7 @@ namespace Mangos.World.Handlers
                 if (Victim.Life.Current == 0)
                 {
                     var SMSG_ATTACKSWING_DEADTARGET = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_DEADTARGET);
-                    Character.client.Send(ref SMSG_ATTACKSWING_DEADTARGET);
+                    Character.client.Send(SMSG_ATTACKSWING_DEADTARGET);
                     SMSG_ATTACKSWING_DEADTARGET.Dispose();
                     Character.AutoShotSpell = 0;
                     AttackStop();
@@ -1299,7 +1299,7 @@ namespace Mangos.World.Handlers
                 if (Character.DEAD)
                 {
                     var SMSG_ATTACKSWING_DEADTARGET = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_DEADTARGET);
-                    Character.client.Send(ref SMSG_ATTACKSWING_DEADTARGET);
+                    Character.client.Send(SMSG_ATTACKSWING_DEADTARGET);
                     SMSG_ATTACKSWING_DEADTARGET.Dispose();
                     Character.AutoShotSpell = 0;
                     AttackStop();
@@ -1309,7 +1309,7 @@ namespace Mangos.World.Handlers
                 if (Character.StandState > 0)
                 {
                     var SMSG_ATTACKSWING_NOTSTANDING = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_NOTSTANDING);
-                    Character.client.Send(ref SMSG_ATTACKSWING_NOTSTANDING);
+                    Character.client.Send(SMSG_ATTACKSWING_NOTSTANDING);
                     SMSG_ATTACKSWING_NOTSTANDING.Dispose();
                     Character.AutoShotSpell = 0;
                     AttackStop();
@@ -1328,7 +1328,7 @@ namespace Mangos.World.Handlers
                 {
                     NextAttackTimer.Change(2000, Timeout.Infinite);
                     var SMSG_ATTACKSWING_NOTINRANGE = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_NOTINRANGE);
-                    Character.client.Send(ref SMSG_ATTACKSWING_NOTINRANGE);
+                    Character.client.Send(SMSG_ATTACKSWING_NOTINRANGE);
                     SMSG_ATTACKSWING_NOTINRANGE.Dispose();
                     return;
                 }
@@ -1338,7 +1338,7 @@ namespace Mangos.World.Handlers
                 {
                     NextAttackTimer.Change(2000, Timeout.Infinite);
                     var SMSG_ATTACKSWING_BADFACING = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_BADFACING);
-                    Character.client.Send(ref SMSG_ATTACKSWING_BADFACING);
+                    Character.client.Send(SMSG_ATTACKSWING_BADFACING);
                     SMSG_ATTACKSWING_BADFACING.Dispose();
                     return;
                 }
@@ -1503,7 +1503,7 @@ namespace Mangos.World.Handlers
             if (client.Character.Spell_Pacifyed)
             {
                 var SMSG_ATTACKSWING_CANT_ATTACK = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_CANT_ATTACK);
-                client.Send(ref SMSG_ATTACKSWING_CANT_ATTACK);
+                client.Send(SMSG_ATTACKSWING_CANT_ATTACK);
                 SMSG_ATTACKSWING_CANT_ATTACK.Dispose();
                 SendAttackStop(client.Character.GUID, GUID, ref client);
                 return;
@@ -1520,7 +1520,7 @@ namespace Mangos.World.Handlers
             else
             {
                 var SMSG_ATTACKSWING_CANT_ATTACK = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_CANT_ATTACK);
-                client.Send(ref SMSG_ATTACKSWING_CANT_ATTACK);
+                client.Send(SMSG_ATTACKSWING_CANT_ATTACK);
                 SMSG_ATTACKSWING_CANT_ATTACK.Dispose();
                 SendAttackStop(client.Character.GUID, GUID, ref client);
             }

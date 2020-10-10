@@ -267,11 +267,11 @@ namespace Mangos.World.Globals
         {
             var account = new DataTable();
             var bannedAccount = new DataTable();
-            WorldServiceLocator._WorldServer.AccountDatabase.Query(string.Format("SELECT id, username FROM account WHERE username = {0};", Name), account);
+            WorldServiceLocator._WorldServer.AccountDatabase.Query(string.Format("SELECT id, username FROM account WHERE username = {0};", Name), ref account);
             if (account.Rows.Count > 0)
             {
                 int accID = Conversions.ToInteger(account.Rows[0]["id"]);
-                WorldServiceLocator._WorldServer.AccountDatabase.Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", (object)accID), bannedAccount);
+                WorldServiceLocator._WorldServer.AccountDatabase.Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", (object)accID), ref bannedAccount);
                 if (bannedAccount.Rows.Count > 0)
                 {
                     WorldServiceLocator._WorldServer.AccountDatabase.Update("UPDATE account_banned SET active = 1 WHERE id = '" + accID + "';");
@@ -295,7 +295,7 @@ namespace Mangos.World.Globals
         public string GetClassName(ref int Classe)
         {
             string GetClassNameRet;
-            switch (Classe)
+            switch ((Classes)Classe)
             {
                 case var @case when @case == Classes.CLASS_DRUID:
                     {
@@ -364,7 +364,7 @@ namespace Mangos.World.Globals
         public string GetRaceName(ref int Race)
         {
             string GetRaceNameRet;
-            switch (Race)
+            switch ((Races)Race)
             {
                 case var @case when @case == Races.RACE_DWARF:
                     {
@@ -477,7 +477,7 @@ namespace Mangos.World.Globals
 
         public bool GetCharacterSide(byte Race)
         {
-            switch (Race)
+            switch ((Races)Race)
             {
                 case var @case when @case == Races.RACE_DWARF:
                 case var case1 when case1 == Races.RACE_GNOME:
@@ -560,7 +560,7 @@ namespace Mangos.World.Globals
         public void SendMessageMOTD(ref WS_Network.ClientClass client, string Message)
         {
             var packet = BuildChatMessage(0, Message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL);
-            client.Send(ref packet);
+            client.Send(packet);
         }
 
         public void SendMessageNotification(ref WS_Network.ClientClass client, string Message)
@@ -569,7 +569,7 @@ namespace Mangos.World.Globals
             try
             {
                 packet.AddString(Message);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -582,7 +582,7 @@ namespace Mangos.World.Globals
             var packet = BuildChatMessage(0, Message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL, 0, "");
             try
             {
-                objCharacter.Send(ref packet);
+                objCharacter.Send(packet);
             }
             finally
             {
@@ -646,7 +646,7 @@ namespace Mangos.World.Globals
                 // md5hash.Clear()
                 // md5hash = Nothing
 
-                client.Send(ref SMSG_ACCOUNT_DATA_TIMES);
+                client.Send(SMSG_ACCOUNT_DATA_TIMES);
             }
             finally
             {
@@ -663,7 +663,7 @@ namespace Mangos.World.Globals
             {
                 if (WorldServiceLocator._WS_DBCDatabase.CharRaces.ContainsKey((int)Character.Race))
                 {
-                    packet.AddInt32(WorldServiceLocator._WS_DBCDatabase.CharRaces(Character.Race).CinematicID);
+                    packet.AddInt32(WorldServiceLocator._WS_DBCDatabase.CharRaces[(int)Character.Race].CinematicID);
                 }
                 else
                 {
@@ -671,7 +671,7 @@ namespace Mangos.World.Globals
                     return;
                 }
 
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -704,7 +704,7 @@ namespace Mangos.World.Globals
                 // SMSG_LOGIN_SETTIMESPEED.AddInt32(CType((((((Minute + (Hour << 6)) + (DayOfWeek << 11)) + (Day << 14)) + (Year << 18)) + (Month << 20)), Integer))
                 SMSG_LOGIN_SETTIMESPEED.AddInt32(Minute + (Hour << 6) + (DayOfWeek << 11) + (Day << 14) + (Month << 20) + (Year << 24));
                 SMSG_LOGIN_SETTIMESPEED.AddSingle(0.01666667f);
-                client.Send(ref SMSG_LOGIN_SETTIMESPEED);
+                client.Send(SMSG_LOGIN_SETTIMESPEED);
             }
             finally
             {
@@ -721,7 +721,7 @@ namespace Mangos.World.Globals
             {
                 packet.AddInt8(ProficiencyType);
                 packet.AddInt32(ProficiencyFlags);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -737,7 +737,7 @@ namespace Mangos.World.Globals
             try
             {
                 packet.AddInt32(Seconds * 1000);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {

@@ -178,7 +178,7 @@ namespace Mangos.World.Handlers
                         var SMSG_EXPLORATION_EXPERIENCE = new Packets.PacketClass(OPCODES.SMSG_EXPLORATION_EXPERIENCE);
                         SMSG_EXPLORATION_EXPERIENCE.AddInt32(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].ID);
                         SMSG_EXPLORATION_EXPERIENCE.AddInt32(GainedXP);
-                        client.Send(ref SMSG_EXPLORATION_EXPERIENCE);
+                        client.Send(SMSG_EXPLORATION_EXPERIENCE);
                         SMSG_EXPLORATION_EXPERIENCE.Dispose();
                         client.Character.SetUpdateFlag((int)(EPlayerFields.PLAYER_EXPLORED_ZONES_1 + areaFlagOffset), client.Character.ZonesExplored[(int)areaFlagOffset]);
                         client.Character.AddXP(GainedXP, 0, 0UL, true);
@@ -403,7 +403,7 @@ namespace Mangos.World.Handlers
             var p = new Packets.PacketClass(OPCODES.SMSG_AREA_TRIGGER_MESSAGE);
             p.AddInt32(Text.Length);
             p.AddString(Text);
-            client.Send(ref p);
+            client.Send(p);
             p.Dispose();
         }
 
@@ -604,8 +604,8 @@ namespace Mangos.World.Handlers
                         UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
 
                         // DONE: Send packet
-                        UpdateData.AddToPacket(ref SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
-                        client.Send(ref SMSG_UPDATE_OBJECT);
+                        UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
+                        client.Send(SMSG_UPDATE_OBJECT);
                     }
                     finally
                     {
@@ -616,7 +616,7 @@ namespace Mangos.World.Handlers
                     try
                     {
                         packetACK.AddInt8((byte)StandStates.STANDSTATE_SIT);
-                        client.Send(ref packetACK);
+                        client.Send(packetACK);
                     }
                     finally
                     {
@@ -669,7 +669,7 @@ namespace Mangos.World.Handlers
             client.Character.ZoneCheck();
 
             // DONE: Check for out of continent - coordinates from WorldMapContinent.dbc
-            if (WorldServiceLocator._WS_Maps.IsOutsideOfMap(ref (WS_Base.BaseObject)client.Character))
+            if (WorldServiceLocator._WS_Maps.IsOutsideOfMap(client.Character))
             {
                 if (client.Character.outsideMapID_ == false)
                 {
@@ -1137,9 +1137,9 @@ namespace Mangos.World.Handlers
                         packet.AddInt8(0);
                         var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                         WorldServiceLocator._WorldServer.CHARACTERs[GUID].FillAllUpdateFlags(ref tmpUpdate);
-                        tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
+                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
                         tmpUpdate.Dispose();
-                        Character.client.Send(ref packet);
+                        Character.client.Send(packet);
                         packet.Dispose();
                         WorldServiceLocator._WorldServer.CHARACTERs[GUID].SeenBy.Add(Character.GUID);
                         Character.playersNear.Add(GUID);
@@ -1158,9 +1158,9 @@ namespace Mangos.World.Handlers
                         myPacket.AddInt8(0);
                         var myTmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                         Character.FillAllUpdateFlags(ref myTmpUpdate);
-                        myTmpUpdate.AddToPacket(ref myPacket, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref Character);
+                        myTmpUpdate.AddToPacket(myPacket, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref Character);
                         myTmpUpdate.Dispose();
-                        WorldServiceLocator._WorldServer.CHARACTERs[GUID].client.Send(ref myPacket);
+                        WorldServiceLocator._WorldServer.CHARACTERs[GUID].client.Send(myPacket);
                         myPacket.Dispose();
                         Character.SeenBy.Add(GUID);
                         WorldServiceLocator._WorldServer.CHARACTERs[GUID].playersNear.Add(Character.GUID);
@@ -1184,7 +1184,7 @@ namespace Mangos.World.Handlers
                     {
                         var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].FillAllUpdateFlags(ref tmpUpdate);
-                        tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
+                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
                         tmpUpdate.Dispose();
                         Character.creaturesNear.Add(GUID);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SeenBy.Add(Character.GUID);
@@ -1260,7 +1260,7 @@ namespace Mangos.World.Handlers
             {
                 packet.CompressUpdatePacket();
                 Packets.PacketClass argpacket = packet;
-                Character.client.Send(ref argpacket);
+                Character.client.Send(argpacket);
             }
 
             packet.Dispose();
@@ -1283,9 +1283,9 @@ namespace Mangos.World.Handlers
                         packet.AddInt8(0);
                         var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].FillAllUpdateFlags(ref tmpUpdate);
-                        tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
+                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
                         tmpUpdate.Dispose();
-                        Character.client.Send(ref packet);
+                        Character.client.Send(packet);
                         packet.Dispose();
                         Character.creaturesNear.Add(GUID);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SeenBy.Add(Character.GUID);
@@ -1313,9 +1313,9 @@ namespace Mangos.World.Handlers
                         packet.AddInt8(0);
                         var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].FillAllUpdateFlags(ref tmpUpdate, ref Character);
-                        tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID]);
+                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID]);
                         tmpUpdate.Dispose();
-                        Character.client.Send(ref packet);
+                        Character.client.Send(packet);
                         packet.Dispose();
                         Character.gameObjectsNear.Add(GUID);
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].SeenBy.Add(Character.GUID);
@@ -1341,9 +1341,9 @@ namespace Mangos.World.Handlers
                         packet.AddInt8(0);
                         var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
                         WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID].FillAllUpdateFlags(ref tmpUpdate);
-                        tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID]);
+                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID]);
                         tmpUpdate.Dispose();
-                        Character.client.Send(ref packet);
+                        Character.client.Send(packet);
                         packet.Dispose();
                         Character.corpseObjectsNear.Add(GUID);
                         WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID].SeenBy.Add(Character.GUID);

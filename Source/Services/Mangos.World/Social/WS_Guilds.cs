@@ -57,7 +57,7 @@ namespace Mangos.World.Social
                 packet.AddInt32(9); // Required signatures
             }
 
-            objCharacter.client.Send(ref packet);
+            objCharacter.client.Send(packet);
             packet.Dispose();
         }
 
@@ -117,7 +117,7 @@ namespace Mangos.World.Social
                 response.AddUInt64(GUID);
                 response.AddInt32(CharterID);
                 response.AddInt8((byte)BUY_ERROR.BUY_ERR_CANT_FIND_ITEM);
-                client.Send(ref response);
+                client.Send(response);
                 response.Dispose();
                 return;
             }
@@ -128,7 +128,7 @@ namespace Mangos.World.Social
                 response.AddUInt64(GUID);
                 response.AddInt32(CharterID);
                 response.AddInt8((byte)BUY_ERROR.BUY_ERR_NOT_ENOUGHT_MONEY);
-                client.Send(ref response);
+                client.Send(response);
                 response.Dispose();
                 return;
             }
@@ -169,7 +169,7 @@ namespace Mangos.World.Social
                 response.AddInt32(0);                                                         // Unk
             }
 
-            objCharacter.client.Send(ref response);
+            objCharacter.client.Send(response);
             response.Dispose();
         }
 
@@ -231,7 +231,7 @@ namespace Mangos.World.Social
                 response.AddInt32(1);
             }
 
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
@@ -250,7 +250,7 @@ namespace Mangos.World.Social
             response.AddUInt64(itemGuid);
             response.AddString(NewName);
             response.AddInt32(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
@@ -339,7 +339,7 @@ namespace Mangos.World.Social
         {
             var packet = new Packets.PacketClass(OPCODES.MSG_TABARDVENDOR_ACTIVATE);
             packet.AddUInt64(cGUID);
-            objCharacter.client.Send(ref packet);
+            objCharacter.client.Send(packet);
             packet.Dispose();
         }
 
@@ -400,7 +400,7 @@ namespace Mangos.World.Social
             response.AddInt32((int)Command);
             response.AddString(Text);
             response.AddInt32((int)Result);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 

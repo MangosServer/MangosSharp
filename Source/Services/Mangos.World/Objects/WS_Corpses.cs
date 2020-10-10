@@ -47,7 +47,7 @@ namespace Mangos.World.Objects
             public void FillAllUpdateFlags(ref Packets.UpdateClass Update)
             {
                 Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, ObjectType.TYPE_CORPSE + ObjectType.TYPE_OBJECT);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_TYPE, (long)Common.Globals.ObjectType.TYPE_CORPSE + (long)Common.Globals.ObjectType.TYPE_OBJECT);
                 Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, 0);
                 Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, (float)1.0f);
                 Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_OWNER, Owner);
@@ -206,11 +206,11 @@ namespace Mangos.World.Objects
                 // TODO: The Corpse Type May Need to be Set Differently (Perhaps using Player Extra Flags)?
                 if (Character.isPvP)
                 {
-                    Character.corpseCorpseType = this.CorpseType.CORPSE_RESURRECTABLE_PVP;
+                    Character.corpseCorpseType = CorpseType.CORPSE_RESURRECTABLE_PVP;
                 }
                 else
                 {
-                    Character.corpseCorpseType = this.CorpseType.CORPSE_RESURRECTABLE_PVE;
+                    Character.corpseCorpseType = CorpseType.CORPSE_RESURRECTABLE_PVE;
                 }
 
                 Character.corpseCorpseType = CorpseType;
@@ -236,7 +236,7 @@ namespace Mangos.World.Objects
                 if (Info is null)
                 {
                     var MySQLQuery = new DataTable();
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM corpse WHERE guid = {0};", (object)cGUID), MySQLQuery);
+                    WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM corpse WHERE guid = {0};", cGUID), ref MySQLQuery);
                     if (MySQLQuery.Rows.Count > 0)
                     {
                         Info = MySQLQuery.Rows[0];

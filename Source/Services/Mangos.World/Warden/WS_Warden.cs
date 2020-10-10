@@ -1002,7 +1002,7 @@ namespace Mangos.World.Warden
             Buffer.BlockCopy(b, 0, Packet.Data, 4, b.Length);
             // END
 
-            objCharacter.client.Send(ref Packet);
+            objCharacter.client.Send(Packet);
         }
     }
 }

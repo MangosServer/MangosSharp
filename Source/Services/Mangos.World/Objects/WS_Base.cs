@@ -105,7 +105,7 @@ namespace Mangos.World.Objects
                     packet.AddUInt64(GUID);
                     if (OnlyToSelf && this is WS_PlayerData.CharacterObject)
                     {
-                        ((WS_PlayerData.CharacterObject)this).client.Send(ref packet);
+                        ((WS_PlayerData.CharacterObject)this).client.Send(packet);
                     }
                     else
                     {
@@ -302,7 +302,7 @@ namespace Mangos.World.Objects
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "No healing done.");
             }
 
-            public virtual void Energize(int Damage, ManaTypes Power, [Optional, DefaultParameterValue(null)] ref BaseUnit Attacker)
+            public virtual void Energize(int Damage, ManaTypes Power, [Optional, DefaultParameterValue(null)] BaseUnit Attacker)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "No mana increase done.");
             }
@@ -420,7 +420,7 @@ namespace Mangos.World.Objects
                         {
                             SMSG_UPDATE_AURA_DURATION.AddInt8((byte)Slot);
                             SMSG_UPDATE_AURA_DURATION.AddInt32(Duration);
-                            ((WS_PlayerData.CharacterObject)this).client.Send(ref SMSG_UPDATE_AURA_DURATION);
+                            ((WS_PlayerData.CharacterObject)this).client.Send(SMSG_UPDATE_AURA_DURATION);
                         }
                         finally
                         {
@@ -765,7 +765,7 @@ namespace Mangos.World.Objects
                     {
                         SMSG_UPDATE_AURA_DURATION.AddInt8((byte)Slot);
                         SMSG_UPDATE_AURA_DURATION.AddInt32(ActiveSpells[Slot].SpellDuration);
-                        ((WS_PlayerData.CharacterObject)this).client.Send(ref SMSG_UPDATE_AURA_DURATION);
+                        ((WS_PlayerData.CharacterObject)this).client.Send(SMSG_UPDATE_AURA_DURATION);
                     }
                     finally
                     {
@@ -806,7 +806,7 @@ namespace Mangos.World.Objects
                 }
             }
 
-            public void DealSpellDamage(ref BaseUnit Caster, ref WS_Spells.SpellEffect EffectInfo, int SpellID, int Damage, DamageTypes DamageType, SpellType SpellType)
+            public void DealSpellDamage(BaseUnit Caster, WS_Spells.SpellEffect EffectInfo, int SpellID, int Damage, DamageTypes DamageType, SpellType SpellType)
             {
                 bool IsHeal = false;
                 bool IsDot = false;
@@ -1152,7 +1152,7 @@ namespace Mangos.World.Objects
                             return Level * 5;
 
                         // weapon skill or (unarmed for base attack)
-                        int skill = item is null ? SKILL_IDs.SKILL_UNARMED : item.GetSkill;
+                        int skill = item is null ? (int)SKILL_IDs.SKILL_UNARMED : item.GetSkill;
 
                         // in PvP use full skill instead current skill value
                         if (Victim.IsPlayer)

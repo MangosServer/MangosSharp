@@ -85,7 +85,7 @@ namespace Mangos.World.Handlers
                         SMSG_NAME_QUERY_RESPONSE.AddInt32(1);
                         SMSG_NAME_QUERY_RESPONSE.AddInt32(1);
                         SMSG_NAME_QUERY_RESPONSE.AddInt32(1);
-                        client.Send(ref SMSG_NAME_QUERY_RESPONSE);
+                        client.Send(SMSG_NAME_QUERY_RESPONSE);
                     }
                     finally
                     {
@@ -107,7 +107,7 @@ namespace Mangos.World.Handlers
                             SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Race);
                             SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Gender);
                             SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Classe);
-                            client.Send(ref SMSG_NAME_QUERY_RESPONSE);
+                            client.Send(SMSG_NAME_QUERY_RESPONSE);
                         }
                         finally
                         {
@@ -129,7 +129,7 @@ namespace Mangos.World.Handlers
                                 SMSG_NAME_QUERY_RESPONSE.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[0]["char_race"]));
                                 SMSG_NAME_QUERY_RESPONSE.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[0]["char_gender"]));
                                 SMSG_NAME_QUERY_RESPONSE.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[0]["char_class"]));
-                                client.Send(ref SMSG_NAME_QUERY_RESPONSE);
+                                client.Send(SMSG_NAME_QUERY_RESPONSE);
                             }
                             finally
                             {
@@ -158,7 +158,7 @@ namespace Mangos.World.Handlers
                             SMSG_NAME_QUERY_RESPONSE.AddInt32(0);
                             SMSG_NAME_QUERY_RESPONSE.AddInt32(0);
                             SMSG_NAME_QUERY_RESPONSE.AddInt32(0);
-                            client.Send(ref SMSG_NAME_QUERY_RESPONSE);
+                            client.Send(SMSG_NAME_QUERY_RESPONSE);
                         }
                         finally
                         {
@@ -375,7 +375,7 @@ namespace Mangos.World.Handlers
                 // 'End If
                 MSG_CORPSE_QUERY.AddInt32(client.Character.corpseMapID); // This change from the above lines, gets rid of the "You must enter the instance to recover your corpse."
                 // message when you did not die in an instance, although I did not see it when I did die in the instance either, but I did rez upon reentrance into the instance.
-                client.Send(ref MSG_CORPSE_QUERY);
+                client.Send(MSG_CORPSE_QUERY);
             }
             finally
             {
@@ -389,7 +389,7 @@ namespace Mangos.World.Handlers
                 MSG_MINIMAP_PING.AddUInt64(client.Character.corpseGUID);
                 MSG_MINIMAP_PING.AddSingle(client.Character.corpsePositionX);
                 MSG_MINIMAP_PING.AddSingle(client.Character.corpsePositionY);
-                client.Send(ref MSG_MINIMAP_PING);
+                client.Send(MSG_MINIMAP_PING);
             }
             finally
             {
@@ -590,7 +590,7 @@ namespace Mangos.World.Handlers
                 response.AddInt32(WorldServiceLocator._WorldServer.CHARACTERs[GUID].StandingLastWeek);                                                    // PLAYER_FIELD_LAST_WEEK_RANK               - Last Week Standing
                 response.AddInt8((byte)WorldServiceLocator._WorldServer.CHARACTERs[GUID].HonorHighestRank);                                                     // ?!
                 WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
-                client.Send(ref response);
+                client.Send(response);
             }
             finally
             {
@@ -645,7 +645,7 @@ namespace Mangos.World.Handlers
                 response.AddInt32(client.Character.Reputation[faction].Flags);
                 response.AddInt32(faction);
                 response.AddInt32(client.Character.Reputation[faction].Value);
-                client.Send(ref response);
+                client.Send(response);
             }
             finally
             {

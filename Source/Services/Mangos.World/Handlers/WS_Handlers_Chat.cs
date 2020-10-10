@@ -78,7 +78,7 @@ namespace Mangos.World.Handlers
                             var toCommand = WorldServiceLocator._Functions.BuildChatMessage(WS_Commands.SystemGUID, Message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL);
                             try
                             {
-                                client.Send(ref toCommand);
+                                client.Send(toCommand);
                             }
                             finally
                             {

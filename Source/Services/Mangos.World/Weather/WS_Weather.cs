@@ -300,7 +300,7 @@ namespace Mangos.World.Weather
             SMSG_WEATHER.AddInt32((int)Weather.CurrentWeather);
             SMSG_WEATHER.AddSingle(Weather.Intensity);
             SMSG_WEATHER.AddInt32(Weather.GetSound());
-            client.Send(ref SMSG_WEATHER);
+            client.Send(SMSG_WEATHER);
             SMSG_WEATHER.Dispose();
         }
     }

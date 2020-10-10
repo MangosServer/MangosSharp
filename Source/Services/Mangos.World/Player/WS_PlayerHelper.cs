@@ -384,7 +384,7 @@ namespace Mangos.World.Player
                 SMSG_BINDPOINTUPDATE.AddSingle(Character.bindpoint_positionZ);
                 SMSG_BINDPOINTUPDATE.AddInt32(Character.bindpoint_map_id);
                 SMSG_BINDPOINTUPDATE.AddInt32(Character.bindpoint_zone_id);
-                client.Send(ref SMSG_BINDPOINTUPDATE);
+                client.Send(SMSG_BINDPOINTUPDATE);
             }
             finally
             {
@@ -398,7 +398,7 @@ namespace Mangos.World.Player
             try
             {
                 SMSG_SET_REST_START.AddInt32(WorldServiceLocator._WS_Network.MsTime());
-                client.Send(ref SMSG_SET_REST_START);
+                client.Send(SMSG_SET_REST_START);
             }
             finally
             {
@@ -415,7 +415,7 @@ namespace Mangos.World.Player
                 // SMSG_TUTORIAL_FLAGS.AddInt8(0)
                 // SMSG_TUTORIAL_FLAGS.AddInt8(Character.TutorialFlags.Length)
                 SMSG_TUTORIAL_FLAGS.AddByteArray(Character.TutorialFlags);
-                client.Send(ref SMSG_TUTORIAL_FLAGS);
+                client.Send(SMSG_TUTORIAL_FLAGS);
             }
             finally
             {
@@ -435,7 +435,7 @@ namespace Mangos.World.Player
                     packet.AddInt32(Character.Reputation[i].Value);                              // Standing
                 }
 
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -462,7 +462,7 @@ namespace Mangos.World.Player
                     }
                 }
 
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -635,7 +635,7 @@ namespace Mangos.World.Player
                         }
                 }
 
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -699,7 +699,7 @@ namespace Mangos.World.Player
                 }
 
                 packet.AddInt16((short)spellCount, countPos);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {

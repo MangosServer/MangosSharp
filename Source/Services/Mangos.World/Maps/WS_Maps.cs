@@ -518,7 +518,7 @@ namespace Mangos.World.Maps
             return Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaFlag[MapTile_LocalX, MapTile_LocalY];
         }
 
-        public bool IsOutsideOfMap(ref WS_Base.BaseObject objCharacter)
+        public bool IsOutsideOfMap(WS_Base.BaseObject objCharacter)
         {
             // NOTE: Disabled these checks because DBC data contains too big X/Y coords to be usefull
             return false;
@@ -772,7 +772,7 @@ namespace Mangos.World.Maps
                 {
                     try
                     {
-                        var tmpGo = new WS_GameObjects.GameObjectObject(Conversions.ToULong(InfoRow["guid"]) + InstanceGuidAdd, ref InfoRow);
+                        var tmpGo = new WS_GameObjects.GameObjectObject(Conversions.ToULong(InfoRow["guid"]) + InstanceGuidAdd, InfoRow);
                         if (tmpGo.GameEvent == 0)
                         {
                             tmpGo.instance = TileInstance;
@@ -907,7 +907,7 @@ namespace Mangos.World.Maps
             {
                 p.AddInt32(Map);
                 p.AddInt16((short)Reason);
-                client.Send(ref p);
+                client.Send(p);
             }
             finally
             {

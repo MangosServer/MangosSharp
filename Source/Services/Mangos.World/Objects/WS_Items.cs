@@ -838,7 +838,7 @@ namespace Mangos.World.Objects
             // response.AddInt32(Item.ArmorDamageModifier)
             // response.AddInt32(Item.ExistingDuration)
 
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
@@ -871,7 +871,7 @@ namespace Mangos.World.Objects
             response.AddInt32(itemID);
             response.AddString(item.Name);
             response.AddInt32((int)item.InventoryType);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
@@ -971,7 +971,7 @@ namespace Mangos.World.Objects
                     response.AddUInt64(client.Character.ItemGetGUID(srcBag, srcSlot));
                     response.AddUInt64(0UL);
                     response.AddInt8(0);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                 }
             }
@@ -1080,7 +1080,7 @@ namespace Mangos.World.Objects
             {
                 var response = new Packets.PacketClass((OPCODES)opcode);
                 response.AddUInt64(guid);
-                client.Send(ref response);
+                client.Send(response);
                 response.Dispose();
             }
         }
@@ -1105,7 +1105,7 @@ namespace Mangos.World.Objects
                 response.AddInt32(Conversions.ToInteger(mySqlQuery.Rows[0]["next_page"]));
             else
                 response.AddInt32(0);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
@@ -1407,7 +1407,7 @@ namespace Mangos.World.Objects
             packet.AddUInt64(guid1);
             packet.AddUInt64(guid2);
             packet.AddInt8(0);
-            objCharacter.client.Send(ref packet);
+            objCharacter.client.Send(packet);
             packet.Dispose();
         }
 

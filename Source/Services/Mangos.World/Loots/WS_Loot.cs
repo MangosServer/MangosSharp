@@ -252,7 +252,7 @@ namespace Mangos.World.Loots
                     notMy.AddUInt64(0UL);
                     notMy.AddUInt64(0UL);
                     notMy.AddInt8(0);
-                    client.Send(ref notMy);
+                    client.Send(notMy);
                     notMy.Dispose();
                     return;
                 }
@@ -291,7 +291,7 @@ namespace Mangos.World.Loots
                     }
                 }
 
-                client.Send(ref response);
+                client.Send(response);
                 response.Dispose();
                 client.Character.lootGUID = GUID;
                 if (client.Character.IsInGroup)
@@ -330,7 +330,7 @@ namespace Mangos.World.Loots
                         response.AddUInt64(0UL);
                         response.AddUInt64(0UL);
                         response.AddInt8(0);
-                        client.Send(ref response);
+                        client.Send(response);
                         response.Dispose();
                         return;
                     }
@@ -342,7 +342,7 @@ namespace Mangos.World.Loots
                         response.AddUInt64(0UL);
                         response.AddUInt64(0UL);
                         response.AddInt8(0);
-                        client.Send(ref response);
+                        client.Send(response);
                         response.Dispose();
                         return;
                     }
@@ -361,7 +361,7 @@ namespace Mangos.World.Loots
 
                         var response = new Packets.PacketClass(OPCODES.SMSG_LOOT_REMOVED);
                         response.AddInt8(Slot);
-                        client.Send(ref response);
+                        client.Send(response);
                         response.Dispose();
                         client.Character.LogLootItem(tmpItem, Items[Slot].ItemCount, false, false);
                         Items[Slot].Dispose();
@@ -380,7 +380,7 @@ namespace Mangos.World.Loots
                         response.AddUInt64(0UL);
                         response.AddUInt64(0UL);
                         response.AddInt8(0);
-                        client.Send(ref response);
+                        client.Send(response);
                         response.Dispose();
                     }
                 }
@@ -395,7 +395,7 @@ namespace Mangos.World.Loots
                 var responseRelease = new Packets.PacketClass(OPCODES.SMSG_LOOT_RELEASE_RESPONSE);
                 responseRelease.AddUInt64(GUID);
                 responseRelease.AddInt8(1);
-                client.Send(ref responseRelease);
+                client.Send(responseRelease);
                 responseRelease.Dispose();
             }
 
@@ -701,7 +701,7 @@ namespace Mangos.World.Loots
                     response.AddUInt64(0UL);
                     response.AddUInt64(0UL);
                     response.AddInt8(0);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                 }
             }
@@ -744,7 +744,7 @@ namespace Mangos.World.Loots
                 LootTable[client.Character.lootGUID].Money = 0;
                 var lootPacket = new Packets.PacketClass(OPCODES.SMSG_LOOT_MONEY_NOTIFY);
                 lootPacket.AddInt32(copper);
-                client.Send(ref lootPacket);
+                client.Send(lootPacket);
                 lootPacket.Dispose();
             }
 
@@ -919,7 +919,7 @@ namespace Mangos.World.Loots
                 var responseRelease = new Packets.PacketClass(OPCODES.SMSG_LOOT_RELEASE_RESPONSE);
                 responseRelease.AddUInt64(GUID);
                 responseRelease.AddInt8(1);
-                client.Send(ref responseRelease);
+                client.Send(responseRelease);
                 responseRelease.Dispose();
                 if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
                 {
@@ -953,7 +953,7 @@ namespace Mangos.World.Loots
             response.AddInt8((byte)LootType);
             response.AddInt32(0);
             response.AddInt8(0);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
             /* TODO ERROR: Skipped IfDirectiveTrivia */
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Empty loot for GUID [{2:X}].", client.IP, client.Port, GUID);

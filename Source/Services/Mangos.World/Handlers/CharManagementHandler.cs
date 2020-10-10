@@ -80,7 +80,7 @@ namespace Mangos.World.Handlers
                 {
                     LOGOUT_RESPONSE_DENIED.AddInt32(0);
                     LOGOUT_RESPONSE_DENIED.AddInt8((byte)LogoutResponseCode.LOGOUT_RESPONSE_DENIED);
-                    client.Send(ref LOGOUT_RESPONSE_DENIED);
+                    client.Send(LOGOUT_RESPONSE_DENIED);
                 }
                 finally
                 {
@@ -109,7 +109,7 @@ namespace Mangos.World.Handlers
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
 
                     // DONE: Send packet
-                    UpdateData.AddToPacket(ref SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
+                    UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
                     client.Character.SendToNearPlayers(ref SMSG_UPDATE_OBJECT);
                 }
                 finally
@@ -121,7 +121,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     packetACK.AddInt8((byte)StandStates.STANDSTATE_SIT);
-                    client.Send(ref packetACK);
+                    client.Send(packetACK);
                 }
                 finally
                 {
@@ -135,7 +135,7 @@ namespace Mangos.World.Handlers
             {
                 SMSG_LOGOUT_RESPONSE.AddInt32(0);
                 SMSG_LOGOUT_RESPONSE.AddInt8((byte)LogoutResponseCode.LOGOUT_RESPONSE_ACCEPTED);     // Logout Accepted
-                client.Send(ref SMSG_LOGOUT_RESPONSE);
+                client.Send(SMSG_LOGOUT_RESPONSE);
             }
             finally
             {
@@ -196,8 +196,8 @@ namespace Mangos.World.Handlers
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
 
                     // DONE: Send packet
-                    UpdateData.AddToPacket(ref SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
-                    client.Send(ref SMSG_UPDATE_OBJECT);
+                    UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
+                    client.Send(SMSG_UPDATE_OBJECT);
                 }
                 finally
                 {
@@ -208,7 +208,7 @@ namespace Mangos.World.Handlers
                 try
                 {
                     packetACK.AddInt8((byte)StandStates.STANDSTATE_STAND);
-                    client.Send(ref packetACK);
+                    client.Send(packetACK);
                 }
                 finally
                 {
@@ -219,7 +219,7 @@ namespace Mangos.World.Handlers
                 var SMSG_LOGOUT_CANCEL_ACK = new Packets.PacketClass(OPCODES.SMSG_LOGOUT_CANCEL_ACK);
                 try
                 {
-                    client.Send(ref SMSG_LOGOUT_CANCEL_ACK);
+                    client.Send(SMSG_LOGOUT_CANCEL_ACK);
                 }
                 finally
                 {
@@ -255,7 +255,7 @@ namespace Mangos.World.Handlers
             try
             {
                 packetACK.AddInt8(StandState);
-                client.Send(ref packetACK);
+                client.Send(packetACK);
             }
             finally
             {

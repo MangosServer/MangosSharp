@@ -210,7 +210,7 @@ namespace Mangos.World.Quests
                     var response = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_FAILED);
                     response.AddInt32(ID);
                     response.AddInt32((int)QuestFailedReason.FAILED_INVENTORY_FULL);
-                    objCharacter.client.Send(ref response);
+                    objCharacter.client.Send(response);
                     response.Dispose();
                     return;
                 }

@@ -564,7 +564,7 @@ namespace Mangos.World.Server
                 }
             }
 
-            public void Send(ref Packets.PacketClass packet)
+            public void Send(Packets.PacketClass packet)
             {
                 if (packet is null)
                     throw new ApplicationException("Packet doesn't contain data!");

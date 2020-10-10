@@ -225,14 +225,14 @@ namespace Mangos.World.Handlers
                     var packet1 = new Packets.PacketClass(OPCODES.SMSG_DEATH_NOTIFY_OBSOLETE);
                     packet1.AddPackGUID(objCharacter.MindControl.GUID);
                     packet1.AddInt8(1);
-                    ((WS_PlayerData.CharacterObject)objCharacter.MindControl).client.Send(ref packet1);
+                    ((WS_PlayerData.CharacterObject)objCharacter.MindControl).client.Send(packet1);
                     packet1.Dispose();
                 }
 
                 var packet3 = new Packets.PacketClass(OPCODES.SMSG_DEATH_NOTIFY_OBSOLETE);
                 packet3.AddPackGUID(objCharacter.MindControl.GUID);
                 packet3.AddInt8(0);
-                objCharacter.client.Send(ref packet3);
+                objCharacter.client.Send(packet3);
                 packet3.Dispose();
                 objCharacter.cUnitFlags = objCharacter.cUnitFlags & !UnitFlags.UNIT_FLAG_UNK21;
                 objCharacter.SetUpdateFlag((int)EPlayerFields.PLAYER_FARSIGHT, 0);
@@ -248,7 +248,7 @@ namespace Mangos.World.Handlers
                 var packet1 = new Packets.PacketClass(OPCODES.SMSG_DEATH_NOTIFY_OBSOLETE);
                 packet1.AddPackGUID(objCharacter.TargetGUID);
                 packet1.AddInt8(0);
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].client.Send(ref packet1);
+                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].client.Send(packet1);
                 packet1.Dispose();
                 objCharacter.MindControl = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID];
             }
@@ -265,7 +265,7 @@ namespace Mangos.World.Handlers
             var packet2 = new Packets.PacketClass(OPCODES.SMSG_DEATH_NOTIFY_OBSOLETE);
             packet2.AddPackGUID(objCharacter.TargetGUID);
             packet2.AddInt8(1);
-            objCharacter.client.Send(ref packet2);
+            objCharacter.client.Send(packet2);
             packet2.Dispose();
             objCharacter.cUnitFlags = objCharacter.cUnitFlags | UnitFlags.UNIT_FLAG_UNK21;
             objCharacter.SetUpdateFlag((int)EPlayerFields.PLAYER_FARSIGHT, objCharacter.TargetGUID);
@@ -737,7 +737,7 @@ namespace Mangos.World.Handlers
                     var packet = new Packets.PacketClass(OPCODES.SMSG_CLEAR_COOLDOWN);
                     packet.AddInt32(SpellID);
                     packet.AddUInt64(targetUnit.GUID);
-                    ((WS_PlayerData.CharacterObject)targetUnit).client.Send(ref packet);
+                    ((WS_PlayerData.CharacterObject)targetUnit).client.Send(packet);
                     packet.Dispose();
                 }
             }
@@ -2143,7 +2143,7 @@ namespace Mangos.World.Handlers
                     }
                 }
 
-                client.Send(ref packet);
+                client.Send(packet);
                 packet.Dispose();
                 UpdateData.Dispose();
             }

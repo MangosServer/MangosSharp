@@ -59,7 +59,7 @@ namespace Mangos.World.Social
             response.AddInt32(MailID);
             response.AddInt32((int)MailResult.MAIL_RETURNED);
             response.AddInt32(0);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
@@ -76,7 +76,7 @@ namespace Mangos.World.Social
             response.AddInt32(MailID);
             response.AddInt32((int)MailResult.MAIL_DELETED);
             response.AddInt32(0);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
@@ -101,7 +101,7 @@ namespace Mangos.World.Social
             {
                 var response = new Packets.PacketClass(OPCODES.MSG_QUERY_NEXT_MAIL_TIME);
                 response.AddInt32(0);
-                client.Send(ref response);
+                client.Send(response);
                 response.Dispose();
             }
             else
@@ -111,7 +111,7 @@ namespace Mangos.World.Social
                 response.AddInt8(0xC0);
                 response.AddInt8(0xA8);
                 response.AddInt8(0xC7);
-                client.Send(ref response);
+                client.Send(response);
                 response.Dispose();
             }
         }
@@ -211,7 +211,7 @@ namespace Mangos.World.Social
                     }
                 }
 
-                client.Send(ref response);
+                client.Send(response);
                 response.Dispose();
             }
             catch (Exception e)
@@ -239,7 +239,7 @@ namespace Mangos.World.Social
                     response.AddInt32(MailID);
                     response.AddInt32((int)MailResult.MAIL_ITEM_REMOVED);
                     response.AddInt32((int)MailSentError.INTERNAL_ERROR);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                     return;
                 }
@@ -253,7 +253,7 @@ namespace Mangos.World.Social
                         noMoney.AddInt32(MailID);
                         noMoney.AddInt32((int)MailResult.MAIL_SENT);
                         noMoney.AddInt32((int)MailSentError.NOT_ENOUGHT_MONEY);
-                        client.Send(ref noMoney);
+                        client.Send(noMoney);
                         noMoney.Dispose();
                         return;
                     }
@@ -278,7 +278,7 @@ namespace Mangos.World.Social
                     response.AddInt32(MailID);
                     response.AddInt32((int)MailResult.MAIL_ITEM_REMOVED);
                     response.AddInt32((int)MailSentError.INTERNAL_ERROR);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                     return;
                 }
@@ -296,7 +296,7 @@ namespace Mangos.World.Social
                     response.AddInt32(MailID);
                     response.AddInt32((int)MailResult.MAIL_ITEM_REMOVED);
                     response.AddInt32((int)MailSentError.NO_ERROR);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                 }
                 else
@@ -306,7 +306,7 @@ namespace Mangos.World.Social
                     response.AddInt32(MailID);
                     response.AddInt32((int)MailResult.MAIL_ITEM_REMOVED);
                     response.AddInt32((int)MailSentError.BAG_FULL);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                 }
 
@@ -342,7 +342,7 @@ namespace Mangos.World.Social
             response.AddInt32(MailID);
             response.AddInt32((int)MailResult.MAIL_MONEY_REMOVED);
             response.AddInt32(0);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
             client.Character.SaveCharacter();
         }
@@ -363,7 +363,7 @@ namespace Mangos.World.Social
             var response = new Packets.PacketClass(OPCODES.SMSG_ITEM_TEXT_QUERY_RESPONSE);
             response.AddInt32(MailID);
             response.AddString(Conversions.ToString(MySQLQuery.Rows[0]["mail_body"]));
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
@@ -384,7 +384,7 @@ namespace Mangos.World.Social
                 response.AddInt32(MailID);
                 response.AddInt32(0);
                 response.AddInt32(1);
-                client.Send(ref response);
+                client.Send(response);
                 response.Dispose();
                 tmpItem.Delete();
             }
@@ -425,7 +425,7 @@ namespace Mangos.World.Social
                     response.AddInt32(0);
                     response.AddInt32((int)MailResult.MAIL_SENT);
                     response.AddInt32((int)MailSentError.CHARACTER_NOT_FOUND);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                     return;
                 }
@@ -438,7 +438,7 @@ namespace Mangos.World.Social
                     response.AddInt32(0);
                     response.AddInt32((int)MailResult.MAIL_SENT);
                     response.AddInt32((int)MailSentError.CANNOT_SEND_TO_SELF);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                     return;
                 }
@@ -449,7 +449,7 @@ namespace Mangos.World.Social
                     response.AddInt32(0);
                     response.AddInt32((int)MailResult.MAIL_SENT);
                     response.AddInt32((int)MailSentError.NOT_ENOUGHT_MONEY);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                     return;
                 }
@@ -462,7 +462,7 @@ namespace Mangos.World.Social
                     response.AddInt32(0);
                     response.AddInt32((int)MailResult.MAIL_SENT);
                     response.AddInt32((int)MailSentError.INTERNAL_ERROR);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                     return;
                 }
@@ -474,7 +474,7 @@ namespace Mangos.World.Social
                     response.AddInt32(0);
                     response.AddInt32((int)MailResult.MAIL_SENT);
                     response.AddInt32((int)MailSentError.NOT_YOUR_ALLIANCE);
-                    client.Send(ref response);
+                    client.Send(response);
                     response.Dispose();
                     return;
                 }
@@ -495,14 +495,14 @@ namespace Mangos.World.Social
                 sendOK.AddInt32(0);
                 sendOK.AddInt32((int)MailResult.MAIL_SENT);
                 sendOK.AddInt32((int)MailSentError.NO_ERROR);
-                client.Send(ref sendOK);
+                client.Send(sendOK);
                 sendOK.Dispose();
                 WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                 if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(ReceiverGUID))
                 {
                     var response = new Packets.PacketClass(OPCODES.SMSG_RECEIVED_MAIL);
                     response.AddInt32(0);
-                    WorldServiceLocator._WorldServer.CHARACTERs[ReceiverGUID].client.Send(ref response);
+                    WorldServiceLocator._WorldServer.CHARACTERs[ReceiverGUID].client.Send(response);
                     response.Dispose();
                 }
 

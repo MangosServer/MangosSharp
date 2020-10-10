@@ -331,7 +331,7 @@ namespace Mangos.World.Player
 
                 // DONE: Load corpse if present
                 MySQLQuery.Clear();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM corpse WHERE player = {0};", (object)GUID), MySQLQuery);
+                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM corpse WHERE player = {0};", (object)GUID), ref MySQLQuery);
                 if (MySQLQuery.Rows.Count > 0)
                 {
                     corpseGUID = MySQLQuery.Rows[0]["guid"] + WorldServiceLocator._Global_Constants.GUID_CORPSE;
@@ -385,8 +385,9 @@ namespace Mangos.World.Player
 
             public CharacterObject() : base()
             {
+                attackState = new Mangos.World.Handlers.WS_Combat.TAttackTimer(this);
                 attackState = new WS_Combat.TAttackTimer(ref phe797c28db562431bb1d7cda496ac4706);
-                corpseCorpseType = this.CorpseType.CORPSE_BONES;
+                corpseCorpseType = CorpseType.CORPSE_BONES;
                 Level = 1;
                 UpdateMask.SetAll(false);
                 for (byte i = (byte)DamageTypes.DMG_PHYSICAL, loopTo = (byte)DamageTypes.DMG_ARCANE; i <= loopTo; i++)
@@ -576,8 +577,7 @@ namespace Mangos.World.Player
             public WS_PlayerHelper.TStat Spirit = new WS_PlayerHelper.TStat();
             public short Faction = (short)FactionTemplates.None;
 
-            public Mangos.World.Handlers.WS_Combat.TAttackTimer attackState =
-                new Mangos.World.Handlers.WS_Combat.TAttackTimer(this);
+            public Mangos.World.Handlers.WS_Combat.TAttackTimer attackState;
 
             public WS_Base.BaseObject attackSelection = null;
             public SHEATHE_SLOT attackSheathState = SHEATHE_SLOT.SHEATHE_NONE;
@@ -746,15 +746,15 @@ namespace Mangos.World.Player
 
                         case var case8 when case8 == Classes.CLASS_DRUID:
                             {
-                                if (ShapeshiftForm == this.ShapeshiftForm.FORM_CAT)
+                                if (ShapeshiftForm == ShapeshiftForm.FORM_CAT)
                                 {
                                     return Level * 2 + Strength.Base * 2 + Agility.Base - 20;
                                 }
-                                else if (ShapeshiftForm == this.ShapeshiftForm.FORM_BEAR | ShapeshiftForm == this.ShapeshiftForm.FORM_DIREBEAR)
+                                else if (ShapeshiftForm == ShapeshiftForm.FORM_BEAR | ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR)
                                 {
                                     return Level * 3 + Strength.Base * 2 - 20;
                                 }
-                                else if (ShapeshiftForm == this.ShapeshiftForm.FORM_MOONKIN)
+                                else if (ShapeshiftForm == ShapeshiftForm.FORM_MOONKIN)
                                 {
                                     return (int)(Level * 1.5d + Agility.Base + Strength.Base * 2 - 20d);
                                 }
@@ -994,7 +994,7 @@ namespace Mangos.World.Player
                     packet.AddInt32(honorPoints);
                     packet.AddUInt64(victimGUID);
                     packet.AddInt32(victimRank);
-                    client.Send(ref packet);
+                    client.Send(packet);
                 }
                 finally
                 {
@@ -1417,7 +1417,7 @@ namespace Mangos.World.Player
                         packet.AddInt32(GUIDs.Length);
                         foreach (ulong g in GUIDs)
                             packet.AddPackGUID(g);
-                        client.Send(ref packet);
+                        client.Send(packet);
                     }
                     finally
                     {
@@ -1465,7 +1465,7 @@ namespace Mangos.World.Player
                     }
 
                     packet.CompressUpdatePacket();
-                    client.Send(ref packet);
+                    client.Send(packet);
                 }
                 finally
                 {
@@ -1490,7 +1490,7 @@ namespace Mangos.World.Player
                     Item.FillAllUpdateFlags(ref tmpUpdate);
                     tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, Item);
                     tmpUpdate.Dispose();
-                    client.Send(ref packet);
+                    client.Send(packet);
                 }
                 finally
                 {
@@ -1535,7 +1535,7 @@ namespace Mangos.World.Player
                     }
 
                     PrepareUpdate(ref packet, (int)ObjectUpdateType.UPDATETYPE_VALUES);
-                    client.Send(ref packet);
+                    client.Send(packet);
                 }
                 finally
                 {
@@ -1543,7 +1543,7 @@ namespace Mangos.World.Player
                 }
             }
 
-            public void SendItemAndCharacterUpdate(ItemObject Item, int UPDATETYPE = ObjectUpdateType.UPDATETYPE_VALUES)
+            public void SendItemAndCharacterUpdate(ItemObject Item, int UPDATETYPE = (int)ObjectUpdateType.UPDATETYPE_VALUES)
             {
                 var packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
                 var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
@@ -1577,7 +1577,7 @@ namespace Mangos.World.Player
                     }
 
                     PrepareUpdate(ref packet, (int)ObjectUpdateType.UPDATETYPE_VALUES);
-                    client.Send(ref packet);
+                    client.Send(packet);
                 }
                 finally
                 {
@@ -1641,7 +1641,7 @@ namespace Mangos.World.Player
                     packet.AddInt32(1);       // Operations.Count
                     packet.AddInt8(0);
                     PrepareUpdate(ref packet, (int)ObjectUpdateType.UPDATETYPE_VALUES);
-                    client.Send(ref packet);
+                    client.Send(packet);
                 }
                 finally
                 {
@@ -2014,16 +2014,16 @@ namespace Mangos.World.Player
                 }
             }                                       // Used for other players' update packets
 
-            public void PrepareUpdate(ref Packets.PacketClass packet, int UPDATETYPE = ObjectUpdateType.UPDATETYPE_CREATE_OBJECT)
+            public void PrepareUpdate(ref Packets.PacketClass packet, int UPDATETYPE = (int)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT)
             {
                 packet.AddInt8((byte)UPDATETYPE);
                 packet.AddPackGUID(GUID);
-                if (UPDATETYPE == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT | UPDATETYPE == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
+                if (UPDATETYPE == (int)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT | UPDATETYPE == (int)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
                 {
                     packet.AddInt8((byte)ObjectTypeID.TYPEID_PLAYER);
                 }
 
-                if (UPDATETYPE == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT | UPDATETYPE == ObjectUpdateType.UPDATETYPE_MOVEMENT | UPDATETYPE == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
+                if (UPDATETYPE == (int)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT | UPDATETYPE == (int)ObjectUpdateType.UPDATETYPE_MOVEMENT | UPDATETYPE == (int)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
                 {
                     int flags2 = 0x2000;
                     if (OnTransport is object)
@@ -2182,7 +2182,7 @@ namespace Mangos.World.Player
                 foreach (string Msg in Messages)
                 {
                     var packet = WorldServiceLocator._Functions.BuildChatMessage(WS_Commands.SystemGUID, Msg, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL);
-                    client.Send(ref packet);
+                    client.Send(packet);
                     packet.Dispose();
                 }
 
@@ -2253,7 +2253,7 @@ namespace Mangos.World.Player
                         }
                     }
 
-                    client.Send(ref packet);
+                    client.Send(packet);
                 }
                 finally
                 {
@@ -2344,7 +2344,7 @@ namespace Mangos.World.Player
                 try
                 {
                     SMSG_LEARNED_SPELL.AddInt32(SpellID);
-                    client.Send(ref SMSG_LEARNED_SPELL);
+                    client.Send(SMSG_LEARNED_SPELL);
                 }
                 finally
                 {
@@ -2381,7 +2381,7 @@ namespace Mangos.World.Player
                             {
                                 packet.AddInt32(WorldServiceLocator._WS_Spells.SpellChains[SpellID]);
                                 packet.AddInt32(SpellID);
-                                client.Send(ref packet);
+                                client.Send(packet);
                             }
                             finally
                             {
@@ -2717,7 +2717,7 @@ namespace Mangos.World.Player
                 try
                 {
                     SMSG_REMOVED_SPELL.AddInt32(SpellID);
-                    client.Send(ref SMSG_REMOVED_SPELL);
+                    client.Send(SMSG_REMOVED_SPELL);
                 }
                 finally
                 {
@@ -2874,7 +2874,7 @@ namespace Mangos.World.Player
                             SMSG_LEVELUP_INFO.AddInt32(Intellect.Base - oldIntellect);
                             SMSG_LEVELUP_INFO.AddInt32(Spirit.Base - oldSpirit);
                             if (client is object)
-                                client.Send(ref SMSG_LEVELUP_INFO);
+                                client.Send(SMSG_LEVELUP_INFO);
                         }
                         finally
                         {
@@ -3953,7 +3953,7 @@ namespace Mangos.World.Player
                             EQUIP_ERR_ITEM_NOT_FOUND.AddUInt64(0UL);
                             EQUIP_ERR_ITEM_NOT_FOUND.AddUInt64(0UL);
                             EQUIP_ERR_ITEM_NOT_FOUND.AddInt8(0);
-                            client.Send(ref EQUIP_ERR_ITEM_NOT_FOUND);
+                            client.Send(EQUIP_ERR_ITEM_NOT_FOUND);
                         }
                         finally
                         {
@@ -3976,7 +3976,7 @@ namespace Mangos.World.Player
                             EQUIP_ERR_ITEM_NOT_FOUND.AddUInt64(0UL);
                             EQUIP_ERR_ITEM_NOT_FOUND.AddUInt64(0UL);
                             EQUIP_ERR_ITEM_NOT_FOUND.AddInt8(0);
-                            client.Send(ref EQUIP_ERR_ITEM_NOT_FOUND);
+                            client.Send(EQUIP_ERR_ITEM_NOT_FOUND);
                         }
                         finally
                         {
@@ -4006,7 +4006,7 @@ namespace Mangos.World.Player
                         notHandledYet.AddUInt64(srcItem.GUID);
                         notHandledYet.AddUInt64(dstItem.GUID);
                         notHandledYet.AddInt8(0);
-                        client.Send(ref notHandledYet);
+                        client.Send(notHandledYet);
                     }
                     finally
                     {
@@ -4031,7 +4031,7 @@ namespace Mangos.World.Player
                         EQUIP_ERR_TRIED_TO_SPLIT_MORE_THAN_COUNT.AddUInt64(srcItem.GUID);
                         EQUIP_ERR_TRIED_TO_SPLIT_MORE_THAN_COUNT.AddUInt64(0UL);
                         EQUIP_ERR_TRIED_TO_SPLIT_MORE_THAN_COUNT.AddInt8(0);
-                        client.Send(ref EQUIP_ERR_TRIED_TO_SPLIT_MORE_THAN_COUNT);
+                        client.Send(EQUIP_ERR_TRIED_TO_SPLIT_MORE_THAN_COUNT);
                     }
                     finally
                     {
@@ -4055,7 +4055,7 @@ namespace Mangos.World.Player
                     {
                         tmpItem.FillAllUpdateFlags(ref tmpUpdate);
                         tmpUpdate.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, tmpItem);
-                        client.Send(ref (Packets.PacketClass)SMSG_UPDATE_OBJECT);
+                        client.Send((Packets.PacketClass)SMSG_UPDATE_OBJECT);
                     }
                     finally
                     {
@@ -4112,7 +4112,7 @@ namespace Mangos.World.Player
                             EQUIP_ERR_OK.AddUInt64(srcItem.GUID);
                             EQUIP_ERR_OK.AddUInt64(dstItem.GUID);
                             EQUIP_ERR_OK.AddInt8(0);
-                            client.Send(ref EQUIP_ERR_OK);
+                            client.Send(EQUIP_ERR_OK);
                         }
                         finally
                         {
@@ -4130,7 +4130,7 @@ namespace Mangos.World.Player
                     response.AddUInt64(srcItem.GUID);
                     response.AddUInt64(dstItem.GUID);
                     response.AddInt8(0);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 catch
                 {
@@ -4664,7 +4664,7 @@ namespace Mangos.World.Player
                                 {
                                     cooldown.AddUInt64(Item.GUID);
                                     cooldown.AddInt32(Item.ItemInfo.Spells[i].SpellID);
-                                    client.Send(ref cooldown);
+                                    client.Send(cooldown);
                                 }
                                 finally
                                 {
@@ -4855,7 +4855,7 @@ namespace Mangos.World.Player
                         }
                     }
 
-                    client.Send(ref SMSG_GOSSIP_MESSAGE);
+                    client.Send(SMSG_GOSSIP_MESSAGE);
                 }
                 finally
                 {
@@ -4868,7 +4868,7 @@ namespace Mangos.World.Player
                 var SMSG_GOSSIP_COMPLETE = new Packets.PacketClass(OPCODES.SMSG_GOSSIP_COMPLETE);
                 try
                 {
-                    client.Send(ref SMSG_GOSSIP_COMPLETE);
+                    client.Send(SMSG_GOSSIP_COMPLETE);
                 }
                 finally
                 {
@@ -4887,7 +4887,7 @@ namespace Mangos.World.Player
                     SMSG_GOSSIP_POI.AddInt32(icon);
                     SMSG_GOSSIP_POI.AddInt32(data);
                     SMSG_GOSSIP_POI.AddString(name);
-                    client.Send(ref SMSG_GOSSIP_POI);
+                    client.Send(SMSG_GOSSIP_POI);
                 }
                 finally
                 {
@@ -4939,7 +4939,7 @@ namespace Mangos.World.Player
                         }
                     }
 
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -4963,7 +4963,7 @@ namespace Mangos.World.Player
                     SMSG_BINDPOINTUPDATE.AddSingle(bindpoint_positionZ);
                     SMSG_BINDPOINTUPDATE.AddInt32(bindpoint_map_id);
                     SMSG_BINDPOINTUPDATE.AddInt32(bindpoint_zone_id);
-                    client.Send(ref SMSG_BINDPOINTUPDATE);
+                    client.Send(SMSG_BINDPOINTUPDATE);
                 }
                 finally
                 {
@@ -4975,7 +4975,7 @@ namespace Mangos.World.Player
                 {
                     SMSG_PLAYERBOUND.AddUInt64(cGUID);
                     SMSG_PLAYERBOUND.AddInt32(bindpoint_zone_id);
-                    client.Send(ref SMSG_PLAYERBOUND);
+                    client.Send(SMSG_PLAYERBOUND);
                 }
                 finally
                 {
@@ -5006,7 +5006,7 @@ namespace Mangos.World.Player
                     packet.AddSingle(posZ);
                     packet.AddSingle(ori);
                     packet.AddInt32(0);
-                    client.Send(ref packet);
+                    client.Send(packet);
                 }
                 finally
                 {
@@ -5037,7 +5037,7 @@ namespace Mangos.World.Player
                         p.AddInt32((int)OnTransport.MapID);   // Only if on transport
                     }
 
-                    client.Send(ref p);
+                    client.Send(p);
                 }
                 finally
                 {
@@ -5391,7 +5391,7 @@ namespace Mangos.World.Player
                 {
                     SMSG_FORCE_MOVE_ROOT.AddPackGUID(GUID);
                     SMSG_FORCE_MOVE_ROOT.AddInt32(0);
-                    client.Send(ref SMSG_FORCE_MOVE_ROOT);
+                    client.Send(SMSG_FORCE_MOVE_ROOT);
                 }
                 finally
                 {
@@ -5429,7 +5429,7 @@ namespace Mangos.World.Player
                     SMSG_START_MIRROR_TIMER.AddInt32(-1);
                     SMSG_START_MIRROR_TIMER.AddInt32(0);
                     SMSG_START_MIRROR_TIMER.AddInt8(0);
-                    client.Send(ref SMSG_START_MIRROR_TIMER);
+                    client.Send(SMSG_START_MIRROR_TIMER);
                 }
                 finally
                 {
@@ -5449,7 +5449,7 @@ namespace Mangos.World.Player
                     SMSG_START_MIRROR_TIMER.AddInt32(Regen);
                     SMSG_START_MIRROR_TIMER.AddInt32(0);
                     SMSG_START_MIRROR_TIMER.AddInt8(0);
-                    client.Send(ref SMSG_START_MIRROR_TIMER);
+                    client.Send(SMSG_START_MIRROR_TIMER);
                 }
                 finally
                 {
@@ -5463,7 +5463,7 @@ namespace Mangos.World.Player
                 try
                 {
                     SMSG_STOP_MIRROR_TIMER.AddInt32((int)Type);
-                    client.Send(ref SMSG_STOP_MIRROR_TIMER);
+                    client.Send(SMSG_STOP_MIRROR_TIMER);
                 }
                 finally
                 {
@@ -5721,7 +5721,7 @@ namespace Mangos.World.Player
                         packet.AddInt32(Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Flags);
                         packet.AddInt32(WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID);
                         packet.AddInt32(Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Value);
-                        client.Send(ref packet);
+                        client.Send(packet);
                     }
                     finally
                     {
@@ -5806,7 +5806,7 @@ namespace Mangos.World.Player
                     var SMSG_DURABILITY_DAMAGE_DEATH = new Packets.PacketClass(OPCODES.SMSG_DURABILITY_DAMAGE_DEATH);
                     try
                     {
-                        client.Send(ref SMSG_DURABILITY_DAMAGE_DEATH);
+                        client.Send(SMSG_DURABILITY_DAMAGE_DEATH);
                     }
                     finally
                     {
@@ -5828,7 +5828,7 @@ namespace Mangos.World.Player
                     p.AddSingle(x);
                     p.AddSingle(y);
                     p.AddSingle(z);
-                    client.Send(ref p);
+                    client.Send(p);
                 }
                 finally
                 {
@@ -6043,7 +6043,7 @@ namespace Mangos.World.Player
                 var SMSG_LOGOUT_COMPLETE = new Packets.PacketClass(OPCODES.SMSG_LOGOUT_COMPLETE);
                 try
                 {
-                    client.Send(ref SMSG_LOGOUT_COMPLETE);
+                    client.Send(SMSG_LOGOUT_COMPLETE);
                     SMSG_LOGOUT_COMPLETE.Dispose();
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGOUT_COMPLETE", client.IP, client.Port);
                     client.Character = null;
@@ -6145,7 +6145,7 @@ namespace Mangos.World.Player
                         {
                             SMSG_UPDATE_AURA_DURATION.AddInt8((byte)i);
                             SMSG_UPDATE_AURA_DURATION.AddInt32(ActiveSpells[i].SpellDuration);
-                            client.Send(ref SMSG_UPDATE_AURA_DURATION);
+                            client.Send(SMSG_UPDATE_AURA_DURATION);
                         }
                         finally
                         {
@@ -6904,7 +6904,7 @@ namespace Mangos.World.Player
                         try
                         {
                             packet.AddInt32((int)QuestInvalidError.INVALIDREASON_COMPLETED_QUEST);
-                            client.Send(ref packet);
+                            client.Send(packet);
                         }
                         finally
                         {
@@ -6917,7 +6917,7 @@ namespace Mangos.World.Player
                         try
                         {
                             packet.AddInt32((int)QuestInvalidError.INVALIDREASON_HAVE_QUEST);
-                            client.Send(ref packet);
+                            client.Send(packet);
                         }
                         finally
                         {
@@ -6934,7 +6934,7 @@ namespace Mangos.World.Player
                     try
                     {
                         packet.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_RACE);
-                        client.Send(ref packet);
+                        client.Send(packet);
                     }
                     finally
                     {
@@ -6951,7 +6951,7 @@ namespace Mangos.World.Player
                     try
                     {
                         packet.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ);
-                        client.Send(ref packet);
+                        client.Send(packet);
                     }
                     finally
                     {
@@ -6968,7 +6968,7 @@ namespace Mangos.World.Player
                     try
                     {
                         packet.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ);
-                        client.Send(ref packet);
+                        client.Send(packet);
                     }
                     finally
                     {
@@ -7031,7 +7031,7 @@ namespace Mangos.World.Player
 
                     // Group bonus percent, 100% for none (1.0F)
                     SMSG_LOG_XPGAIN.AddSingle(Group);
-                    client.Send(ref SMSG_LOG_XPGAIN);
+                    client.Send(SMSG_LOG_XPGAIN);
                 }
                 finally
                 {
@@ -7047,7 +7047,7 @@ namespace Mangos.World.Player
                     SMSG_PVP_CREDIT.AddInt32(Ammount);
                     SMSG_PVP_CREDIT.AddUInt64(VictimGUID);
                     SMSG_PVP_CREDIT.AddInt32(VictimRANK);
-                    client.Send(ref SMSG_PVP_CREDIT);
+                    client.Send(SMSG_PVP_CREDIT);
                 }
                 finally
                 {

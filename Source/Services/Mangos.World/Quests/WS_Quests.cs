@@ -354,7 +354,7 @@ namespace Mangos.World.Quests
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenu Failed: ", ex.ToString());
                 }
 
-                objCharacter.client.Send(ref packet);
+                objCharacter.client.Send(packet);
             }
             finally
             {
@@ -515,7 +515,7 @@ namespace Mangos.World.Quests
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_QUESTGIVER_QUEST_DETAILS [GUID={2:X} Quest={3}]", client.IP, client.Port, guid, quest.ID);
 
                 // Finishing
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -627,7 +627,7 @@ namespace Mangos.World.Quests
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_QUEST_QUERY_RESPONSE [Quest={2}]", client.IP, client.Port, quest.ID);
 
                 // Finishing
-                client.Send(ref packet);
+                client.Send(packet);
             }
             catch (Exception ex)
             {
@@ -652,7 +652,7 @@ namespace Mangos.World.Quests
             {
                 packet.AddInt32(itemID);
                 packet.AddInt32(itemCount);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -682,7 +682,7 @@ namespace Mangos.World.Quests
                 packet.AddInt32(killCurrentCount);
                 packet.AddInt32(killCount);
                 packet.AddUInt64(killGuid);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -703,7 +703,7 @@ namespace Mangos.World.Quests
             {
                 packet.AddInt32(questID);
                 // TODO: Need to add failed reason to packet here
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -723,7 +723,7 @@ namespace Mangos.World.Quests
             try
             {
                 packet.AddInt32(questID);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -743,7 +743,7 @@ namespace Mangos.World.Quests
             try
             {
                 packet.AddInt32(questID);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -785,7 +785,7 @@ namespace Mangos.World.Quests
                     }
                 }
 
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -904,7 +904,7 @@ namespace Mangos.World.Quests
                     packet.AddInt32(0);
                 }
 
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -1001,7 +1001,7 @@ namespace Mangos.World.Quests
                 packet.AddInt32(0x4);
                 packet.AddInt32(0x8);
                 packet.AddInt32(0x10);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -1686,7 +1686,7 @@ namespace Mangos.World.Quests
                 {
                     response.AddUInt64(guid);
                     response.AddUInt32((uint)status);
-                    client.Send(ref response);
+                    client.Send(response);
                 }
                 finally
                 {
@@ -1794,7 +1794,7 @@ namespace Mangos.World.Quests
                             response.AddUInt64(client.Character.GUID);
                             response.AddInt8((byte)QuestPartyPushError.QUEST_PARTY_MSG_ACCEPT_QUEST);
                             response.AddInt32(0);
-                            WorldServiceLocator._WorldServer.CHARACTERs[guid].client.Send(ref response);
+                            WorldServiceLocator._WorldServer.CHARACTERs[guid].client.Send(response);
                         }
                         finally
                         {
@@ -1809,7 +1809,7 @@ namespace Mangos.World.Quests
                         {
                             response.AddUInt64(guid);
                             response.AddInt32((int)status);
-                            client.Send(ref response);
+                            client.Send(response);
                         }
                         finally
                         {
@@ -1822,7 +1822,7 @@ namespace Mangos.World.Quests
                     var response = new Packets.PacketClass(OPCODES.SMSG_QUESTLOG_FULL);
                     try
                     {
-                        client.Send(ref response);
+                        client.Send(response);
                     }
                     finally
                     {
@@ -2056,7 +2056,7 @@ namespace Mangos.World.Quests
                         {
                             var errorPacket = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
                             errorPacket.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_MONEY);
-                            client.Send(ref errorPacket);
+                            client.Send(errorPacket);
                             errorPacket.Dispose();
                             return;
                         }
@@ -2078,7 +2078,7 @@ namespace Mangos.World.Quests
                                 // TODO: Restore items (not needed?)
                                 var errorPacket = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
                                 errorPacket.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_ITEMS);
-                                client.Send(ref errorPacket);
+                                client.Send(errorPacket);
                                 errorPacket.Dispose();
                                 return;
                             }
@@ -2277,7 +2277,7 @@ namespace Mangos.World.Quests
                         {
                             var errorPacket = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
                             errorPacket.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_MONEY);
-                            client.Send(ref errorPacket);
+                            client.Send(errorPacket);
                             errorPacket.Dispose();
                             return;
                         }
@@ -2299,7 +2299,7 @@ namespace Mangos.World.Quests
                                 // TODO: Restore items (not needed?)
                                 var errorPacket = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
                                 errorPacket.AddInt32((int)QuestInvalidError.INVALIDREASON_DONT_HAVE_REQ_ITEMS);
-                                client.Send(ref errorPacket);
+                                client.Send(errorPacket);
                                 errorPacket.Dispose();
                                 return;
                             }
@@ -2495,7 +2495,7 @@ namespace Mangos.World.Quests
                             response.AddUInt64(guid);
                             response.AddInt32((int)QuestPartyPushError.QUEST_PARTY_MSG_SHARRING_QUEST);
                             response.AddInt8(0);
-                            client.Send(ref response);
+                            client.Send(response);
                             response.Dispose();
                             QuestPartyPushError message = QuestPartyPushError.QUEST_PARTY_MSG_SHARRING_QUEST;
 
@@ -2533,7 +2533,7 @@ namespace Mangos.World.Quests
                                 errorPacket.AddUInt64(withBlock.GUID);
                                 errorPacket.AddInt32((int)message);
                                 errorPacket.AddInt8(0);
-                                client.Send(ref errorPacket);
+                                client.Send(errorPacket);
                                 errorPacket.Dispose();
                             }
                         }
@@ -2551,7 +2551,7 @@ namespace Mangos.World.Quests
                             response.AddUInt64(guid);
                             response.AddInt32((int)QuestPartyPushError.QUEST_PARTY_MSG_SHARRING_QUEST);
                             response.AddInt8(0);
-                            client.Send(ref response);
+                            client.Send(response);
                             response.Dispose();
                             QuestPartyPushError message = QuestPartyPushError.QUEST_PARTY_MSG_SHARRING_QUEST;
 
@@ -2589,7 +2589,7 @@ namespace Mangos.World.Quests
                                 errorPacket.AddUInt64(withBlock1.GUID);
                                 errorPacket.AddInt32((int)message);
                                 errorPacket.AddInt8(0);
-                                client.Send(ref errorPacket);
+                                client.Send(errorPacket);
                                 errorPacket.Dispose();
                             }
                         }
@@ -2610,7 +2610,7 @@ namespace Mangos.World.Quests
             response.AddUInt64(guid);
             response.AddInt8((byte)QuestPartyPushError.QUEST_PARTY_MSG_ACCEPT_QUEST);
             response.AddInt32(0);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
