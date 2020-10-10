@@ -187,7 +187,7 @@ namespace Mangos.World.Loots
             {
                 if (ExplicitlyChanced.Count > 0)
                 {
-                    float rollChance = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 100.0Fd);
+                    float rollChance = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 100.0d);
                     for (int i = 0, loopTo = ExplicitlyChanced.Count - 1; i <= loopTo; i++)
                     {
                         if (ExplicitlyChanced[i].Chance >= 100.0f)

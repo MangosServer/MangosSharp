@@ -663,55 +663,55 @@ namespace Mangos.World.Handlers
                 {
                     case var @case when @case == Classes.CLASS_ROGUE:
                         {
-                            baseCrit = (float)(0.0Fd + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 29d);
+                            baseCrit = (float)(0.0d + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 29d);
                             break;
                         }
 
                     case var case1 when case1 == Classes.CLASS_DRUID:
                         {
-                            baseCrit = (float)(0.92Fd + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20d);
+                            baseCrit = (float)(0.92d + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20d);
                             break;
                         }
 
                     case var case2 when case2 == Classes.CLASS_HUNTER:
                         {
-                            baseCrit = (float)(0.0Fd + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 33d);
+                            baseCrit = (float)(0.0d + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 33d);
                             break;
                         }
 
                     case var case3 when case3 == Classes.CLASS_MAGE:
                         {
-                            baseCrit = (float)(3.2Fd + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.44d);
+                            baseCrit = (float)(3.2d + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.44d);
                             break;
                         }
 
                     case var case4 when case4 == Classes.CLASS_PALADIN:
                         {
-                            baseCrit = (float)(0.7Fd + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.77d);
+                            baseCrit = (float)(0.7d + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.77d);
                             break;
                         }
 
                     case var case5 when case5 == Classes.CLASS_PRIEST:
                         {
-                            baseCrit = (float)(3.0Fd + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20d);
+                            baseCrit = (float)(3.0d + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20d);
                             break;
                         }
 
                     case var case6 when case6 == Classes.CLASS_SHAMAN:
                         {
-                            baseCrit = (float)(1.7Fd + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.7d);
+                            baseCrit = (float)(1.7d + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.7d);
                             break;
                         }
 
                     case var case7 when case7 == Classes.CLASS_WARLOCK:
                         {
-                            baseCrit = (float)(2.0Fd + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20d);
+                            baseCrit = (float)(2.0d + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20d);
                             break;
                         }
 
                     case var case8 when case8 == Classes.CLASS_WARRIOR:
                         {
-                            baseCrit = (float)(0.0Fd + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20d);
+                            baseCrit = (float)(0.0d + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20d);
                             break;
                         }
                 }

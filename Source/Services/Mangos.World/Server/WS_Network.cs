@@ -56,7 +56,7 @@ namespace Mangos.World.Server
             private readonly Timer m_Connection;
             private readonly Timer m_TimerCPU;
             private DateTime LastInfo;
-            private double LastCPUTime = 0.0Fd;
+            private double LastCPUTime = 0.0d;
             private float UsageCPU = 0.0f;
             public ICluster Cluster = default;
 

@@ -40,8 +40,8 @@ namespace Mangos.World.Handlers
     {
 
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        private const float PId2 = Math.PI / 2d;
-        private const float PIx2 = 2d * Math.PI;
+        private const double PId2 = Math.PI / 2d;
+        private const double PIx2 = 2d * Math.PI;
 
         public void OnMovementPacket(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
@@ -86,8 +86,8 @@ namespace Mangos.World.Handlers
                     if (angle < 0f)
                         angle += PIx2;
                     client.Character.Pet.SetToRealPosition();
-                    float tmpX = (float)(client.Character.positionX + Math.Cos(angle) * 2.0Fd);
-                    float tmpY = (float)(client.Character.positionY + Math.Sin(angle) * 2.0Fd);
+                    float tmpX = (float)(client.Character.positionX + Math.Cos(angle) * 2.0d);
+                    float tmpY = (float)(client.Character.positionY + Math.Sin(angle) * 2.0d);
                     client.Character.Pet.MoveTo(tmpX, tmpY, client.Character.positionZ, client.Character.orientation, true);
                 }
             }

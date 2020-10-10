@@ -96,7 +96,7 @@ namespace Mangos.World.Auction
             string valuesString = ") VALUES (";
             int MailID = packet.GetInt32();
             queryString += "mail_sender,";
-            valuesString += Microsoft.VisualBasic.CompilerServices.Conversions.ToInteger(AuctionLocation).ToString;
+            valuesString += Microsoft.VisualBasic.CompilerServices.Conversions.ToInteger(AuctionLocation).ToString();
             queryString += "mail_receiver,";
             valuesString += ReceiverGUID.ToString();
             queryString += "mail_type,";
@@ -104,20 +104,7 @@ namespace Mangos.World.Auction
             queryString += "mail_stationary,";
             valuesString += "62";
             queryString += "mail_subject,";
-            ;
-#error Cannot convert AssignmentStatementSyntax - see comment for details
-            /* Cannot convert BinaryExpressionSyntax, System.NullReferenceException: Object reference not set to an instance of an object.
-               at ICSharpCode.CodeConverter.Util.FromRoslyn.ITypeSymbolExtensions.IsEnumType(ITypeSymbol type)
-               at ICSharpCode.CodeConverter.CSharp.ExpressionNodeVisitor.<VisitBinaryExpression>d__74.MoveNext()
-            --- End of stack trace from previous location where exception was thrown ---
-               at ICSharpCode.CodeConverter.CSharp.CommentConvertingVisitorWrapper.<ConvertHandledAsync>d__5`1.MoveNext()
-
-            Input: ItemID.ToString & ":0:" & CType(MailAction, Integer).ToString
-
-            Context:
-                        valuesString += ItemID.ToString & ":0:" & CType(MailAction, Integer).ToString
-
-             */
+            valuesString += ItemID + ":0:" + MailAction;
             queryString += "mail_body,";
             valuesString += "";
             queryString += "mail_money,";

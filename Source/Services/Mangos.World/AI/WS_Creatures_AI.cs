@@ -175,7 +175,7 @@ namespace Mangos.World.AI
             protected const int AI_INTERVAL_MOVE = 3000;
             protected const int AI_INTERVAL_SLEEP = 6000;
             protected const int AI_INTERVAL_DEAD = 60000;
-            protected const float PIx2 = 2d * Math.PI;
+            protected const double PIx2 = 2d * Math.PI;
 
             public DefaultAI(ref WS_Creatures.CreatureObject Creature)
             {
@@ -498,7 +498,7 @@ namespace Mangos.World.AI
                                 return;
                             }
 
-                            if (IsWaypoint || WorldServiceLocator._WorldServer.Rnd.NextDouble() > 0.2Fd)
+                            if (IsWaypoint || WorldServiceLocator._WorldServer.Rnd.NextDouble() > 0.2d)
                             {
                                 DoMove();
                             }
@@ -843,7 +843,7 @@ namespace Mangos.World.AI
             protected int CombatTimer = 0;
             protected bool WasAlive = true;
             protected const int AI_INTERVAL_MOVE = 3000;
-            protected const float PIx2 = 2d * Math.PI;
+            protected const double PIx2 = 2d * Math.PI;
 
             public CritterAI(ref WS_Creatures.CreatureObject Creature)
             {
@@ -984,7 +984,7 @@ namespace Mangos.World.AI
 
                     case var case3 when case3 == AIState.AI_WANDERING:
                         {
-                            if (WorldServiceLocator._WorldServer.Rnd.NextDouble() > 0.2Fd)
+                            if (WorldServiceLocator._WorldServer.Rnd.NextDouble() > 0.2d)
                             {
                                 DoMove();
                             }

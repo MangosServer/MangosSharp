@@ -877,7 +877,7 @@ namespace Mangos.World.Objects
                                 CastTime = 1500;
                             if (CastTime > 3500)
                                 CastTime = 3500;
-                            SpellDamageBenefit = (int)Conversion.Fix(SpellDamage * (CastTime / 1000.0f) * ((100 - PenaltyFactor) / 100d) / 3.5Fd);
+                            SpellDamageBenefit = (int)Conversion.Fix(SpellDamage * (CastTime / 1000.0f) * ((100 - PenaltyFactor) / 100d) / 3.5d);
                         }
 
                         if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].IsAOE)
@@ -1184,7 +1184,7 @@ namespace Mangos.World.Objects
                 else
                 {
                     int effectiveResistanceRating = t.Resistances[School].Base + Math.Max((t.Level - Level) * 5, 0);
-                    DamageReduction = (float)(effectiveResistanceRating / (double)(Level * 5) * 0.75Fd);
+                    DamageReduction = (float)(effectiveResistanceRating / (double)(Level * 5) * 0.75d);
                 }
 
                 if (DamageReduction > 0.75f)

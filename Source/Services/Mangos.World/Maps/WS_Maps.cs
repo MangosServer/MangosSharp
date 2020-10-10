@@ -737,7 +737,7 @@ namespace Mangos.World.Maps
             ulong InstanceGuidAdd = 0UL;
             if (TileInstance > 0L)
             {
-                InstanceGuidAdd = (ulong)(1000000ULm + (TileInstance - 1L) * 100000ULm);
+                InstanceGuidAdd = (ulong)(1000000UL + (TileInstance - 1UL) * 100000UL);
             }
 
             // DONE: Creatures

@@ -7404,7 +7404,7 @@ namespace Mangos.World.Spells
                     }
                     else
                     {
-                        send_val = (ushort)(0xFFFFUS + tmpval + 2 & 0xFFFFUS);
+                        send_val = (ushort)(0xFFFF + tmpval + 2 & 0xFFFF);
                         send_mark = 0xFFFF;
                     }
                 }

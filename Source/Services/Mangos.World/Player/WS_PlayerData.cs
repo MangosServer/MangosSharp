@@ -402,7 +402,7 @@ namespace Mangos.World.Player
             public Timer LogoutTimer;
             public bool FullyLoggedIn = false;
             public uint LoginMap = 0U;
-            public ulong LoginTransport = 0LUL;
+            public ulong LoginTransport = 0LU;
 
             // Character Information
             public ulong TargetGUID = 0UL;
@@ -576,27 +576,9 @@ namespace Mangos.World.Player
             public WS_PlayerHelper.TStat Spirit = new WS_PlayerHelper.TStat();
             public short Faction = FactionTemplates.None;
 
-            class _failedMemberConversionMarker1
-            {
-            }
-#error Cannot convert FieldDeclarationSyntax - see comment for details
-            /* Cannot convert FieldDeclarationSyntax, CONVERSION ERROR: Object reference not set to an instance of an object. in 'Public attackState As Globa...' at character 8428
-               at ICSharpCode.CodeConverter.CSharp.DeclarationNodeVisitor.<CreateAdditionalLocalMembers>d__61.MoveNext()
-               at ICSharpCode.CodeConverter.CSharp.DeclarationNodeVisitor.<CreateMemberDeclarations>d__59.MoveNext()
-               at System.Collections.Generic.List`1.InsertRange(Int32 index, IEnumerable`1 collection)
-               at System.Collections.Generic.List`1.AddRange(IEnumerable`1 collection)
-               at ICSharpCode.CodeConverter.CSharp.DeclarationNodeVisitor.<GetMemberDeclarationsAsync>d__58.MoveNext()
-            --- End of stack trace from previous location where exception was thrown ---
-               at ICSharpCode.CodeConverter.CSharp.DeclarationNodeVisitor.<VisitFieldDeclaration>d__57.MoveNext()
-            --- End of stack trace from previous location where exception was thrown ---
-               at ICSharpCode.CodeConverter.CSharp.CommentConvertingVisitorWrapper.<ConvertHandledAsync>d__5`1.MoveNext()
+            public Mangos.World.Handlers.WS_Combat.TAttackTimer attackState =
+                new Mangos.World.Handlers.WS_Combat.TAttackTimer(this);
 
-            Input:
-
-                        'Combat related
-                        Public attackState As Global.Mangos.World.Handlers.WS_Combat.TAttackTimer = New Global.Mangos.World.Handlers.WS_Combat.TAttackTimer(Me)
-
-             */
             public WS_Base.BaseObject attackSelection = null;
             public SHEATHE_SLOT attackSheathState = SHEATHE_SLOT.SHEATHE_NONE;
             public bool Disarmed;
@@ -656,37 +638,37 @@ namespace Mangos.World.Player
                     {
                         case var @case when @case == Classes.CLASS_DRUID:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 1.85Fd);
+                                return (float)Conversion.Fix(Intellect.Base / 80d + 1.85d);
                             }
 
                         case var case1 when case1 == Classes.CLASS_MAGE:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 0.91Fd);
+                                return (float)Conversion.Fix(Intellect.Base / 80d + 0.91d);
                             }
 
                         case var case2 when case2 == Classes.CLASS_PRIEST:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 1.24Fd);
+                                return (float)Conversion.Fix(Intellect.Base / 80d + 1.24d);
                             }
 
                         case var case3 when case3 == Classes.CLASS_WARLOCK:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 82d + 1.701Fd);
+                                return (float)Conversion.Fix(Intellect.Base / 82d + 1.701d);
                             }
 
                         case var case4 when case4 == Classes.CLASS_PALADIN:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 3.336Fd);
+                                return (float)Conversion.Fix(Intellect.Base / 80d + 3.336d);
                             }
 
                         case var case5 when case5 == Classes.CLASS_SHAMAN:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 2.2Fd);
+                                return (float)Conversion.Fix(Intellect.Base / 80d + 2.2d);
                             }
 
                         case var case6 when case6 == Classes.CLASS_HUNTER:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 3.6Fd);
+                                return (float)Conversion.Fix(Intellect.Base / 80d + 3.6d);
                             }
 
                         default:

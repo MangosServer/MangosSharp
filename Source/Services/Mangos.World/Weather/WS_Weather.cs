@@ -165,7 +165,7 @@ namespace Mangos.World.Weather
                 }
                 else if (u < 90)
                 {
-                    Intensity = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.3333Fd);
+                    Intensity = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.3333);
                 }
                 else
                 {
