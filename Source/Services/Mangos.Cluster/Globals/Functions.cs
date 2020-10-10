@@ -205,7 +205,7 @@ namespace Mangos.Cluster.Globals
             return s.Replace("\"", "").Replace("'", "");
         }
 
-        public string CapitalizeName(ref string name)
+        public string CapitalizeName(string name)
         {
             return name.Length > 1 ? Strings.UCase(Strings.Left(name, 1)) + Strings.LCase(Strings.Right(name, name.Length - 1)) : Strings.UCase(name);
         }
@@ -278,7 +278,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        public string GetClassName(ref int classe)
+        public string GetClassName(int classe)
         {
             string GetClassNameRet = default;
             switch ((Classes)classe)
@@ -347,7 +347,7 @@ namespace Mangos.Cluster.Globals
             return GetClassNameRet;
         }
 
-        public string GetRaceName(ref int race)
+        public string GetRaceName(int race)
         {
             string GetRaceNameRet = default;
             switch ((Races)race)
@@ -518,19 +518,19 @@ namespace Mangos.Cluster.Globals
             return false;
         }
 
-        public void SendMessageMOTD(ref WC_Network.ClientClass client, string message)
+        public void SendMessageMOTD(WC_Network.ClientClass client, string message)
         {
             var packet = BuildChatMessage(0, message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL);
-            client.Send(ref packet);
+            client.Send(packet);
         }
 
-        public void SendMessageNotification(ref WC_Network.ClientClass client, string message)
+        public void SendMessageNotification(WC_Network.ClientClass client, string message)
         {
             var packet = new Packets.PacketClass(OPCODES.SMSG_NOTIFICATION);
             try
             {
                 packet.AddString(message);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -543,7 +543,7 @@ namespace Mangos.Cluster.Globals
             var packet = BuildChatMessage(0, message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL, 0, "");
             try
             {
-                objCharacter.Send(ref packet);
+                objCharacter.Send(packet);
             }
             finally
             {
@@ -563,7 +563,7 @@ namespace Mangos.Cluster.Globals
             ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
         }
 
-        public void SendAccountMD5(ref WC_Network.ClientClass client, ref WcHandlerCharacter.CharacterObject character)
+        public void SendAccountMD5(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
             bool FoundData = false;
 
@@ -607,7 +607,7 @@ namespace Mangos.Cluster.Globals
                 // md5hash.Clear()
                 // md5hash = Nothing
 
-                client.Send(ref smsgAccountDataTimes);
+                client.Send(smsgAccountDataTimes);
             }
             finally
             {
@@ -617,7 +617,7 @@ namespace Mangos.Cluster.Globals
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_ACCOUNT_DATA_MD5", client.IP, client.Port);
         }
 
-        public void SendTriggerCinematic(ref WC_Network.ClientClass client, ref WcHandlerCharacter.CharacterObject character)
+        public void SendTriggerCinematic(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
             var packet = new Packets.PacketClass(OPCODES.SMSG_TRIGGER_CINEMATIC);
             try
@@ -633,7 +633,7 @@ namespace Mangos.Cluster.Globals
                     return;
                 }
 
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -643,14 +643,14 @@ namespace Mangos.Cluster.Globals
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC", client.IP, client.Port);
         }
 
-        public void SendTimeSyncReq(ref WC_Network.ClientClass client)
+        public void SendTimeSyncReq(WC_Network.ClientClass client)
         {
             // Dim packet As New PacketClass(OPCODES.SMSG_TIME_SYNC_REQ)
             // packet.AddInt32(0)
             // Client.Send(packet)
         }
 
-        public void SendGameTime(ref WC_Network.ClientClass client, ref WcHandlerCharacter.CharacterObject character)
+        public void SendGameTime(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
             var smsgLoginSettimespeed = new Packets.PacketClass(OPCODES.SMSG_LOGIN_SETTIMESPEED);
             try
@@ -666,7 +666,7 @@ namespace Mangos.Cluster.Globals
                 // SMSG_LOGIN_SETTIMESPEED.AddInt32(CType((((((Minute + (Hour << 6)) + (DayOfWeek << 11)) + (Day << 14)) + (Year << 18)) + (Month << 20)), Integer))
                 smsgLoginSettimespeed.AddInt32(minute + (hour << 6) + (dayOfWeek << 11) + (day << 14) + (month << 20) + (year << 24));
                 smsgLoginSettimespeed.AddSingle(0.01666667f);
-                client.Send(ref smsgLoginSettimespeed);
+                client.Send(smsgLoginSettimespeed);
             }
             finally
             {
@@ -676,14 +676,14 @@ namespace Mangos.Cluster.Globals
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGIN_SETTIMESPEED", client.IP, client.Port);
         }
 
-        public void SendProficiency(ref WC_Network.ClientClass client, byte proficiencyType, int proficiencyFlags)
+        public void SendProficiency(WC_Network.ClientClass client, byte proficiencyType, int proficiencyFlags)
         {
             var packet = new Packets.PacketClass(OPCODES.SMSG_SET_PROFICIENCY);
             try
             {
                 packet.AddInt8(proficiencyType);
                 packet.AddInt32(proficiencyFlags);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {
@@ -693,13 +693,13 @@ namespace Mangos.Cluster.Globals
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_SET_PROFICIENCY", client.IP, client.Port);
         }
 
-        public void SendCorpseReclaimDelay(ref WC_Network.ClientClass client, ref WcHandlerCharacter.CharacterObject character, int seconds = 30)
+        public void SendCorpseReclaimDelay(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character, int seconds = 30)
         {
             var packet = new Packets.PacketClass(OPCODES.SMSG_CORPSE_RECLAIM_DELAY);
             try
             {
                 packet.AddInt32(seconds * 1000);
-                client.Send(ref packet);
+                client.Send(packet);
             }
             finally
             {

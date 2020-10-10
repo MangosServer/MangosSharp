@@ -28,7 +28,7 @@ namespace Mangos.Cluster.Handlers
 {
     public class WC_Handlers_Battleground
     {
-        public void On_CMSG_BATTLEFIELD_PORT(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_BATTLEFIELD_PORT(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
 
@@ -51,7 +51,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_LEAVE_BATTLEFIELD(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_LEAVE_BATTLEFIELD(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             byte Unk1 = packet.GetInt8();
@@ -62,7 +62,7 @@ namespace Mangos.Cluster.Handlers
             BATTLEFIELDs[(int)ID].Leave(client.Character);
         }
 
-        public void On_CMSG_BATTLEMASTER_JOIN(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_BATTLEMASTER_JOIN(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             if (packet.Data.Length - 1 < 16)
                 return;
@@ -72,7 +72,7 @@ namespace Mangos.Cluster.Handlers
             uint instance = (uint)packet.GetInt32();
             byte asGroup = packet.GetInt8();
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEMASTER_JOIN [MapType: {2}, Instance: {3}, Group: {4}, GUID: {5}]", client.IP, client.Port, mapType, instance, asGroup, guid);
-            GetBattlefield(mapType, client.Character.Level).Enqueue(client.Character);
+            GetBattlefield((BattlefieldMapType) mapType, (byte)client.Character.Level).Enqueue(client.Character);
         }
 
         public Dictionary<int, Battlefield> BATTLEFIELDs = new Dictionary<int, Battlefield>();
@@ -104,8 +104,8 @@ namespace Mangos.Cluster.Handlers
                 LevelMax = 60;
                 MapType = rMapType;
                 _map = rMap;
-                _maxPlayersPerTeam = (int)ClusterServiceLocator._WS_DBCDatabase.Battlegrounds(rMapType).MaxPlayersPerTeam;
-                _minPlayersPerTeam = (int)ClusterServiceLocator._WS_DBCDatabase.Battlegrounds(rMapType).MinPlayersPerTeam;
+                _maxPlayersPerTeam = (int)ClusterServiceLocator._WS_DBCDatabase.Battlegrounds[(byte)rMapType].MaxPlayersPerTeam;
+                _minPlayersPerTeam = (int)ClusterServiceLocator._WS_DBCDatabase.Battlegrounds[(byte)rMapType].MinPlayersPerTeam;
                 ClusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs_Lock.AcquireWriterLock(ClusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                 ClusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs.Add(ID, this);
                 ClusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs_Lock.ReleaseWriterLock();
@@ -174,7 +174,7 @@ namespace Mangos.Cluster.Handlers
             /// <returns></returns>
             public void Enqueue(WcHandlerCharacter.CharacterObject objCharacter)
             {
-                if (ClusterServiceLocator._Functions.GetCharacterSide(objCharacter.Race))
+                if (ClusterServiceLocator._Functions.GetCharacterSide((byte)objCharacter.Race))
                 {
                     _queueTeam1.Add(objCharacter);
                 }
@@ -209,7 +209,7 @@ namespace Mangos.Cluster.Handlers
 
                     SendBattlegroundStatus(objCharacter, 0);
                     {
-                        var withBlock = ClusterServiceLocator._WS_DBCDatabase.WorldSafeLocs(ClusterServiceLocator._WS_DBCDatabase.Battlegrounds(MapType).AllianceStartLoc);
+                        var withBlock = ClusterServiceLocator._WS_DBCDatabase.WorldSafeLocs[ClusterServiceLocator._WS_DBCDatabase.Battlegrounds[(byte)MapType].AllianceStartLoc];
                         // TODO: WTF? characters_locations table? when?
                         // Dim q As New DataTable
                         // _WorldCluster.CharacterDatabase.Query(String.Format("SELECT char_guid FROM characters_locations WHERE char_guid = {0};", objCharacter.GUID), q)
@@ -218,7 +218,7 @@ namespace Mangos.Cluster.Handlers
                         // _WorldCluster.CharacterDatabase.Update(String.Format("INSERT INTO characters_locations(char_guid, char_positionX, char_positionY, char_positionZ, char_zone_id, char_map_id, char_orientation) VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6});", _
                         // objCharacter.GUID, Trim(Str(objCharacter.PositionX)), Trim(Str(objCharacter.PositionY)), Trim(Str(objCharacter.PositionZ)), objCharacter.Zone, objCharacter.Map, 0))
                         // End If
-                        objCharacter.Transfer(withBlock.x, withBlock.y, withBlock.z, ClusterServiceLocator._WS_DBCDatabase.Battlegrounds(MapType).AllianceStartO, withBlock.map);
+                        objCharacter.Transfer(withBlock.x, withBlock.y, withBlock.z, ClusterServiceLocator._WS_DBCDatabase.Battlegrounds[(byte)MapType].AllianceStartO, (int)withBlock.map);
                     }
                 }
             }
@@ -285,7 +285,7 @@ namespace Mangos.Cluster.Handlers
                     p.AddUInt32(slot);               // Slot (0, 1 or 2)
 
                     // p.AddInt8(0)                    'ArenaType
-                    p.AddUInt32(MapType);              // MapType
+                    p.AddUInt32((uint)MapType);              // MapType
                     // p.AddInt8(&HD)                  'Unk1 (0xD?)
                     // p.AddInt8(0)                    'Unk2
                     // p.AddInt16()                   'Unk3 (String?)
@@ -293,7 +293,7 @@ namespace Mangos.Cluster.Handlers
 
                     // p.AddInt32(0)                   'Unk5
                     p.AddInt8(0);                    // alliance/horde for BG and skirmish/rated for Arenas
-                    p.AddUInt32(status);
+                    p.AddUInt32((uint)status);
                     switch (status)
                     {
                         case var @case when @case == BattlegroundStatus.STATUS_WAIT_QUEUE:
@@ -326,7 +326,7 @@ namespace Mangos.Cluster.Handlers
                             // Do nothing
                     }
 
-                    objCharacter.Client.Send(ref p);
+                    objCharacter.Client.Send(p);
                 }
                 finally
                 {
@@ -358,7 +358,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Create new if not found any
             if (battlefield is null)
             {
-                uint map = (uint)GetBattleGrounMapIdByTypeId(mapType);
+                uint map = (uint)GetBattleGrounMapIdByTypeId((BattleGroundTypeId)mapType);
                 if (ClusterServiceLocator._WC_Network.WorldServer.BattlefieldCheck(map))
                 {
                     battlefield = new Battlefield(mapType, level, map);
@@ -438,7 +438,7 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 p.AddUInt32(0xFFFFFFFEU);
-                objCharacter.Client.Send(ref p);
+                objCharacter.Client.Send(p);
             }
             finally
             {
@@ -446,7 +446,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             var p = new Packets.PacketClass(OPCODES.MSG_BATTLEGROUND_PLAYER_POSITIONS);
             try

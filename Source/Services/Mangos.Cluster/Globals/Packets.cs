@@ -30,7 +30,7 @@ namespace Mangos.Cluster.Globals
 {
     public class Packets
     {
-        public void DumpPacket(byte[] data, [Optional, DefaultParameterValue(null)] ref WC_Network.ClientClass client)
+        public void DumpPacket(byte[] data, [Optional, DefaultParameterValue(null)] WC_Network.ClientClass client)
         {
             // #If DEBUG Then
             int j;
@@ -72,7 +72,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        public void LogPacket(byte[] data, bool Server, [Optional, DefaultParameterValue(null)] ref WC_Network.ClientClass client)
+        public void LogPacket(byte[] data, bool Server, [Optional, DefaultParameterValue(null)] WC_Network.ClientClass client)
         {
             int j;
             string buffer = "";
@@ -196,7 +196,7 @@ namespace Mangos.Cluster.Globals
                 Data[3] = (byte)(Conversions.ToShort(opcode) / 256);
             }
 
-            public PacketClass(ref byte[] rawdata)
+            public PacketClass(byte[] rawdata)
             {
                 Data = rawdata;
             }

@@ -47,7 +47,7 @@ namespace Mangos.Cluster.Handlers
                 ChatFlag = ChatFlag.FLAGS_NONE;
             }
 
-            public CharacterObject(ulong g, ref WC_Network.ClientClass objCharacter)
+            public CharacterObject(ulong g, WC_Network.ClientClass objCharacter)
             {
                 ChatFlag = ChatFlag.FLAGS_NONE;
                 Guid = g;
@@ -55,7 +55,7 @@ namespace Mangos.Cluster.Handlers
                 ReLoad();
                 Access = Client.Access;
                 var argobjCharacter = this;
-                ClusterServiceLocator._WC_Handlers_Social.LoadIgnoreList(ref argobjCharacter);
+                ClusterServiceLocator._WC_Handlers_Social.LoadIgnoreList(argobjCharacter);
                 ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireWriterLock(ClusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                 ClusterServiceLocator._WorldCluster.CHARACTERs.Add(Guid, this);
                 ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseWriterLock();
@@ -133,9 +133,9 @@ namespace Mangos.Cluster.Handlers
                 }
             }
 
-            public bool get_IsGuildRightSet(uint Rights)
+            public bool IsGuildRightSet(GuildRankRights rights)
             {
-                return Guild is object && (Guild.RankRights[GuildRank] & Rights) == Rights;
+                return Guild is object && (Guild.RankRights[GuildRank] & (uint)rights) == (uint)rights;
             }
 
             public bool Side
@@ -230,7 +230,7 @@ namespace Mangos.Cluster.Handlers
                     {
                         // DONE: Tell the group the member is offline
                         var response = ClusterServiceLocator._Functions.BuildPartyMemberStatsOffline(Guid);
-                        Group.Broadcast(ref response);
+                        Group.Broadcast(response);
                         response.Dispose();
 
                         // DONE: Set new leader and loot master
@@ -240,13 +240,13 @@ namespace Mangos.Cluster.Handlers
 
                     // DONE: Notify friends for logout
                     var argobjCharacter = this;
-                    ClusterServiceLocator._WC_Handlers_Social.NotifyFriendStatus(ref argobjCharacter, (FriendStatus)FriendResult.FRIEND_OFFLINE);
+                    ClusterServiceLocator._WC_Handlers_Social.NotifyFriendStatus(argobjCharacter, (FriendStatus)FriendResult.FRIEND_OFFLINE);
 
                     // DONE: Notify guild for logout
                     if (IsInGuild)
                     {
                         var argobjCharacter1 = this;
-                        ClusterServiceLocator._WC_Guild.NotifyGuildStatus(ref argobjCharacter1, GuildEvent.SIGNED_OFF);
+                        ClusterServiceLocator._WC_Guild.NotifyGuildStatus(argobjCharacter1, GuildEvent.SIGNED_OFF);
                     }
 
                     // DONE: Leave chat
@@ -255,7 +255,7 @@ namespace Mangos.Cluster.Handlers
                         if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(JoinedChannels[0]))
                         {
                             var argCharacter = this;
-                            ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[JoinedChannels[0]].Part(ref argCharacter);
+                            ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[JoinedChannels[0]].Part(argCharacter);
                         }
                         else
                         {
@@ -283,7 +283,7 @@ namespace Mangos.Cluster.Handlers
             {
                 var p = new Packets.PacketClass(OPCODES.SMSG_TRANSFER_PENDING);
                 p.AddInt32(thisMap);
-                Client.Send(ref p);
+                Client.Send(p);
                 p.Dispose();
 
                 // Actions Here
@@ -299,7 +299,7 @@ namespace Mangos.Cluster.Handlers
             {
                 var p = new Packets.PacketClass(OPCODES.SMSG_TRANSFER_PENDING);
                 p.AddInt32((int)Map);
-                Client.Send(ref p);
+                Client.Send(p);
                 p.Dispose();
 
                 // Actions Here
@@ -318,7 +318,7 @@ namespace Mangos.Cluster.Handlers
 
                 // DONE: SMSG_ACCOUNT_DATA_MD5
                 var argcharacter = this;
-                ClusterServiceLocator._Functions.SendAccountMD5(ref Client, ref argcharacter);
+                ClusterServiceLocator._Functions.SendAccountMD5(Client, argcharacter);
 
                 // DONE: SMSG_TRIGGER_CINEMATIC
                 var q = new DataTable();
@@ -327,34 +327,34 @@ namespace Mangos.Cluster.Handlers
                 {
                     ClusterServiceLocator._WorldCluster.CharacterDatabase.Update("UPDATE characters SET char_moviePlayed = 1 WHERE char_guid = " + Guid + ";");
                     var argcharacter1 = this;
-                    ClusterServiceLocator._Functions.SendTriggerCinematic(ref Client, ref argcharacter1);
+                    ClusterServiceLocator._Functions.SendTriggerCinematic(Client, argcharacter1);
                 }
 
                 // DONE: SMSG_LOGIN_SETTIMESPEED
                 var argcharacter2 = this;
-                ClusterServiceLocator._Functions.SendGameTime(ref Client, ref argcharacter2);
+                ClusterServiceLocator._Functions.SendGameTime(Client, argcharacter2);
 
                 // DONE: Server Message Of The Day
-                ClusterServiceLocator._Functions.SendMessageMOTD(ref Client, "Welcome to World of Warcraft.");
-                ClusterServiceLocator._Functions.SendMessageMOTD(ref Client, string.Format("This server is using {0} v.{1}", ClusterServiceLocator._Functions.SetColor("[mangosVB]", 255, 0, 0), Assembly.GetExecutingAssembly().GetName().Version));
+                ClusterServiceLocator._Functions.SendMessageMOTD(Client, "Welcome to World of Warcraft.");
+                ClusterServiceLocator._Functions.SendMessageMOTD(Client, string.Format("This server is using {0} v.{1}", ClusterServiceLocator._Functions.SetColor("[mangosVB]", 255, 0, 0), Assembly.GetExecutingAssembly().GetName().Version));
 
                 // DONE: Guild Message Of The Day
                 var argobjCharacter = this;
-                ClusterServiceLocator._WC_Guild.SendGuildMOTD(ref argobjCharacter);
+                ClusterServiceLocator._WC_Guild.SendGuildMOTD(argobjCharacter);
 
                 // DONE: Social lists
                 var argcharacter3 = this;
-                ClusterServiceLocator._WC_Handlers_Social.SendFriendList(ref Client, ref argcharacter3);
+                ClusterServiceLocator._WC_Handlers_Social.SendFriendList(Client, argcharacter3);
                 var argcharacter4 = this;
-                ClusterServiceLocator._WC_Handlers_Social.SendIgnoreList(ref Client, ref argcharacter4);
+                ClusterServiceLocator._WC_Handlers_Social.SendIgnoreList(Client, argcharacter4);
 
                 // DONE: Send "Friend online"
                 var argobjCharacter1 = this;
-                ClusterServiceLocator._WC_Handlers_Social.NotifyFriendStatus(ref argobjCharacter1, (FriendStatus)FriendResult.FRIEND_ONLINE);
+                ClusterServiceLocator._WC_Handlers_Social.NotifyFriendStatus(argobjCharacter1, (FriendStatus)FriendResult.FRIEND_ONLINE);
 
                 // DONE: Send online notify for guild
                 var argobjCharacter2 = this;
-                ClusterServiceLocator._WC_Guild.NotifyGuildStatus(ref argobjCharacter2, GuildEvent.SIGNED_ON);
+                ClusterServiceLocator._WC_Guild.NotifyGuildStatus(argobjCharacter2, GuildEvent.SIGNED_ON);
 
                 // DONE: Put back character in group if disconnected
                 foreach (KeyValuePair<long, WC_Handlers_Group.Group> tmpGroup in ClusterServiceLocator._WC_Handlers_Group.GROUPs)
@@ -367,7 +367,7 @@ namespace Mangos.Cluster.Handlers
                             tmpGroup.Value.SendGroupList();
                             var response = new Packets.PacketClass(0) { Data = GetWorld.GroupMemberStats(Guid, 0) };
                             var argobjCharacter3 = this;
-                            tmpGroup.Value.BroadcastToOther(ref response, ref argobjCharacter3);
+                            tmpGroup.Value.BroadcastToOther(response, argobjCharacter3);
                             response.Dispose();
                             return;
                         }
@@ -381,7 +381,7 @@ namespace Mangos.Cluster.Handlers
                 if (IsInGroup)
                 {
                     var argobjCharacter = this;
-                    Group.Leave(ref argobjCharacter);
+                    Group.Leave(argobjCharacter);
                 }
 
                 // DONE: Leave chat
@@ -390,7 +390,7 @@ namespace Mangos.Cluster.Handlers
                     if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(JoinedChannels[0]))
                     {
                         var argCharacter = this;
-                        ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[JoinedChannels[0]].Part(ref argCharacter);
+                        ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[JoinedChannels[0]].Part(argCharacter);
                     }
                     else
                     {
@@ -419,7 +419,7 @@ namespace Mangos.Cluster.Handlers
                 if (msgType == ChatMsg.CHAT_MSG_WHISPER_INFORM || msgType == ChatMsg.CHAT_MSG_WHISPER)
                     msgChatFlag = ClusterServiceLocator._WorldCluster.CHARACTERs[thisguid].ChatFlag;
                 var packet = ClusterServiceLocator._Functions.BuildChatMessage(thisguid, message, msgType, (LANGUAGES)msgLanguage, (byte)msgChatFlag, channelName);
-                Client.Send(ref packet);
+                Client.Send(packet);
                 packet.Dispose();
             }
         }

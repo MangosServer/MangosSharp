@@ -61,7 +61,7 @@ namespace Mangos.Cluster
             {
                 ID = guildId;
                 var mySqlQuery = new DataTable();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT * FROM guilds WHERE guild_id = " + ID + ";", mySqlQuery);
+                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT * FROM guilds WHERE guild_id = " + ID + ";", ref mySqlQuery);
                 if (mySqlQuery.Rows.Count == 0)
                     throw new ApplicationException("GuildID " + ID + " not found in database.");
                 var guildInfo = mySqlQuery.Rows[0];
@@ -83,7 +83,7 @@ namespace Mangos.Cluster
                 }
 
                 mySqlQuery.Clear();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_guid FROM characters WHERE char_guildId = " + ID + ";", mySqlQuery);
+                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_guid FROM characters WHERE char_guildId = " + ID + ";", ref mySqlQuery);
                 foreach (DataRow memberInfo in mySqlQuery.Rows)
                     Members.Add(Conversions.ToULong(memberInfo["char_guid"]));
                 ClusterServiceLocator._WC_Guild.GUILDs.Add(ID, this);
@@ -117,7 +117,7 @@ namespace Mangos.Cluster
 
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
         // Basic Guild Framework
-        public void AddCharacterToGuild(ref WcHandlerCharacter.CharacterObject objCharacter, int guildId, int guildRank = 4)
+        public void AddCharacterToGuild(WcHandlerCharacter.CharacterObject objCharacter, int guildId, int guildRank = 4)
         {
             ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = {2}, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", guildId, objCharacter.Guid, guildRank));
             if (GUILDs.ContainsKey((uint)guildId) == false)
@@ -137,7 +137,7 @@ namespace Mangos.Cluster
             ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = {2}, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", guildId, guid, guildRank));
         }
 
-        public void RemoveCharacterFromGuild(ref WcHandlerCharacter.CharacterObject objCharacter)
+        public void RemoveCharacterFromGuild(WcHandlerCharacter.CharacterObject objCharacter)
         {
             ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = 0, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", 0, objCharacter.Guid));
             objCharacter.Guild.Members.Remove(objCharacter.Guid);
@@ -151,24 +151,24 @@ namespace Mangos.Cluster
             ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = 0, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", 0, guid));
         }
 
-        public void BroadcastChatMessageGuild(ref WcHandlerCharacter.CharacterObject sender, string message, LANGUAGES language, int guildId)
+        public void BroadcastChatMessageGuild(WcHandlerCharacter.CharacterObject sender, string message, LANGUAGES language, int guildId)
         {
             // DONE: Check for guild member
             if (!sender.IsInGuild)
             {
-                SendGuildResult(ref sender.Client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                SendGuildResult(sender.Client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             // DONE: Check for rights to speak
             if (!sender.IsGuildRightSet(GuildRankRights.GR_RIGHT_GCHATSPEAK))
             {
-                SendGuildResult(ref sender.Client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                SendGuildResult(sender.Client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
             // DONE: Build packet
-            var packet = ClusterServiceLocator._Functions.BuildChatMessage(sender.Guid, message, ChatMsg.CHAT_MSG_GUILD, language, sender.ChatFlag);
+            var packet = ClusterServiceLocator._Functions.BuildChatMessage(sender.Guid, message, ChatMsg.CHAT_MSG_GUILD, language, (byte)sender.ChatFlag);
 
             // DONE: Send message to everyone
             var tmpArray = sender.Guild.Members.ToArray();
@@ -178,7 +178,7 @@ namespace Mangos.Cluster
                 {
                     if (ClusterServiceLocator._WorldCluster.CHARACTERs[member].IsGuildRightSet(GuildRankRights.GR_RIGHT_GCHATLISTEN))
                     {
-                        ClusterServiceLocator._WorldCluster.CHARACTERs[member].Client.SendMultiplyPackets(ref packet);
+                        ClusterServiceLocator._WorldCluster.CHARACTERs[member].Client.SendMultiplyPackets(packet);
                     }
                 }
             }
@@ -186,24 +186,24 @@ namespace Mangos.Cluster
             packet.Dispose();
         }
 
-        public void BroadcastChatMessageOfficer(ref WcHandlerCharacter.CharacterObject sender, string message, LANGUAGES language, int guildId)
+        public void BroadcastChatMessageOfficer(WcHandlerCharacter.CharacterObject sender, string message, LANGUAGES language, int guildId)
         {
             // DONE: Check for guild member
             if (!sender.IsInGuild)
             {
-                SendGuildResult(ref sender.Client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                SendGuildResult(sender.Client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             // DONE: Check for rights to speak
             if (!sender.IsGuildRightSet(GuildRankRights.GR_RIGHT_OFFCHATSPEAK))
             {
-                SendGuildResult(ref sender.Client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                SendGuildResult(sender.Client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
             // DONE: Build packet
-            var packet = ClusterServiceLocator._Functions.BuildChatMessage(sender.Guid, message, ChatMsg.CHAT_MSG_OFFICER, language, sender.ChatFlag);
+            var packet = ClusterServiceLocator._Functions.BuildChatMessage(sender.Guid, message, ChatMsg.CHAT_MSG_OFFICER, language, (byte)sender.ChatFlag);
 
             // DONE: Send message to everyone
             var tmpArray = sender.Guild.Members.ToArray();
@@ -213,7 +213,7 @@ namespace Mangos.Cluster
                 {
                     if (ClusterServiceLocator._WorldCluster.CHARACTERs[member].IsGuildRightSet(GuildRankRights.GR_RIGHT_OFFCHATLISTEN))
                     {
-                        ClusterServiceLocator._WorldCluster.CHARACTERs[member].Client.SendMultiplyPackets(ref packet);
+                        ClusterServiceLocator._WorldCluster.CHARACTERs[member].Client.SendMultiplyPackets(packet);
                     }
                 }
             }
@@ -221,7 +221,7 @@ namespace Mangos.Cluster
             packet.Dispose();
         }
 
-        public void SendGuildQuery(ref WC_Network.ClientClass client, uint guildId)
+        public void SendGuildQuery(WC_Network.ClientClass client, uint guildId)
         {
             if (guildId == 0L)
                 return;
@@ -245,11 +245,11 @@ namespace Mangos.Cluster
             response.AddInt32(GUILDs[guildId].BorderColor);
             response.AddInt32(GUILDs[guildId].BackgroundColor);
             response.AddInt32(0);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
-        public void SendGuildRoster(ref WcHandlerCharacter.CharacterObject objCharacter)
+        public void SendGuildRoster(WcHandlerCharacter.CharacterObject objCharacter)
         {
             if (!objCharacter.IsInGuild)
                 return;
@@ -264,7 +264,7 @@ namespace Mangos.Cluster
 
             // DONE: Count the members
             var Members = new DataTable();
-            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_online, char_guid, char_name, char_class, char_level, char_zone_id, char_logouttime, char_guildRank, char_guildPNote, char_guildOffNote FROM characters WHERE char_guildId = " + objCharacter.Guild.ID + ";", Members);
+            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_online, char_guid, char_name, char_class, char_level, char_zone_id, char_logouttime, char_guildRank, char_guildPNote, char_guildOffNote FROM characters WHERE char_guildId = " + objCharacter.Guild.ID + ";", ref Members);
             var response = new Packets.PacketClass(OPCODES.SMSG_GUILD_ROSTER);
             response.AddInt32(Members.Rows.Count);
             response.AddString(objCharacter.Guild.Motd);
@@ -325,36 +325,36 @@ namespace Mangos.Cluster
                 }
             }
 
-            objCharacter.Client.Send(ref response);
+            objCharacter.Client.Send(response);
             response.Dispose();
         }
 
-        public void SendGuildResult(ref WC_Network.ClientClass client, GuildCommand command, GuildError result, string text = "")
+        public void SendGuildResult(WC_Network.ClientClass client, GuildCommand command, GuildError result, string text = "")
         {
             var response = new Packets.PacketClass(OPCODES.SMSG_GUILD_COMMAND_RESULT);
-            response.AddInt32(command);
+            response.AddInt32((int)command);
             response.AddString(text);
-            response.AddInt32(result);
-            client.Send(ref response);
+            response.AddInt32((int)result);
+            client.Send(response);
             response.Dispose();
         }
 
-        public void NotifyGuildStatus(ref WcHandlerCharacter.CharacterObject objCharacter, GuildEvent status)
+        public void NotifyGuildStatus(WcHandlerCharacter.CharacterObject objCharacter, GuildEvent status)
         {
             if (objCharacter.Guild is null)
                 return;
             var statuspacket = new Packets.PacketClass(OPCODES.SMSG_GUILD_EVENT);
-            statuspacket.AddInt8(status);
+            statuspacket.AddInt8((byte)status);
             statuspacket.AddInt8(1);
             statuspacket.AddString(objCharacter.Name);
             statuspacket.AddInt8(0);
             statuspacket.AddInt8(0);
             statuspacket.AddInt8(0);
-            BroadcastToGuild(ref statuspacket, ref objCharacter.Guild, ref objCharacter.Guid);
+            BroadcastToGuild(statuspacket, objCharacter.Guild, objCharacter.Guid);
             statuspacket.Dispose();
         }
 
-        public void BroadcastToGuild(ref Packets.PacketClass packet, ref Guild guild, [Optional, DefaultParameterValue(0UL)] ref ulong notTo)
+        public void BroadcastToGuild(Packets.PacketClass packet, Guild guild, [Optional, DefaultParameterValue(0UL)] ulong notTo)
         {
             var tmpArray = guild.Members.ToArray();
             foreach (ulong member in tmpArray)
@@ -363,23 +363,23 @@ namespace Mangos.Cluster
                     continue;
                 if (ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(member))
                 {
-                    ClusterServiceLocator._WorldCluster.CHARACTERs[member].Client.SendMultiplyPackets(ref packet);
+                    ClusterServiceLocator._WorldCluster.CHARACTERs[member].Client.SendMultiplyPackets(packet);
                 }
             }
         }
 
         // Members Options
-        public void SendGuildMOTD(ref WcHandlerCharacter.CharacterObject objCharacter)
+        public void SendGuildMOTD(WcHandlerCharacter.CharacterObject objCharacter)
         {
             if (objCharacter.IsInGuild)
             {
                 if (!string.IsNullOrEmpty(objCharacter.Guild.Motd))
                 {
                     var response = new Packets.PacketClass(OPCODES.SMSG_GUILD_EVENT);
-                    response.AddInt8(GuildEvent.MOTD);
+                    response.AddInt8((byte)GuildEvent.MOTD);
                     response.AddInt8(1);
                     response.AddString(objCharacter.Guild.Motd);
-                    objCharacter.Client.Send(ref response);
+                    objCharacter.Client.Send(response);
                     response.Dispose();
                 }
             }

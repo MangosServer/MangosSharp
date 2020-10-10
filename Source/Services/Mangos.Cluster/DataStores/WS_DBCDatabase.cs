@@ -41,11 +41,11 @@ namespace Mangos.Cluster.DataStores
                 {
                     var m = new MapInfo()
                     {
-                        ID = (int)data.get_Item(i, 0, DBCValueType.DBC_INTEGER),
-                        Type = (MapTypes)data.get_Item(i, 2, DBCValueType.DBC_INTEGER),
-                        Name = (string)data.get_Item(i, 4, DBCValueType.DBC_STRING),
-                        ParentMap = (int)data.get_Item(i, 3, DBCValueType.DBC_INTEGER),
-                        ResetTime = (int)data.get_Item(i, 38, DBCValueType.DBC_INTEGER)
+                        ID = (int)data.Item(i, 0, DBCValueType.DBC_INTEGER),
+                        Type = (MapTypes)data.Item(i, 2, DBCValueType.DBC_INTEGER),
+                        Name = (string)data.Item(i, 4, DBCValueType.DBC_STRING),
+                        ParentMap = (int)data.Item(i, 3, DBCValueType.DBC_INTEGER),
+                        ResetTime = (int)data.Item(i, 38, DBCValueType.DBC_INTEGER)
                     };
                     Maps.Add(m.ID, m);
                 }
@@ -114,11 +114,11 @@ namespace Mangos.Cluster.DataStores
                 {
                     var WorldSafeLoc = new TWorldSafeLoc()
                     {
-                        ID = data.Item(i, 0, DBCValueType.DBC_INTEGER),
-                        map = data.Item(i, 1),
-                        x = data.Item(i, 2, DBCValueType.DBC_FLOAT),
-                        y = data.Item(i, 3, DBCValueType.DBC_FLOAT),
-                        z = data.Item(i, 4, DBCValueType.DBC_FLOAT)
+                        ID = (int)data.Item(i, 0, DBCValueType.DBC_INTEGER),
+                        map = (uint)(int)data.Item(i, 1),
+                        x = (float)data.Item(i, 2, DBCValueType.DBC_FLOAT),
+                        y = (float)data.Item(i, 3, DBCValueType.DBC_FLOAT),
+                        z = (float)data.Item(i, 4, DBCValueType.DBC_FLOAT)
                     };
                     WorldSafeLocs.Add(WorldSafeLoc.ID, WorldSafeLoc);
                 }
@@ -149,7 +149,7 @@ namespace Mangos.Cluster.DataStores
         {
             byte Entry;
             var MySQLQuery = new DataTable();
-            ClusterServiceLocator._WorldCluster.WorldDatabase.Query(string.Format("SELECT * FROM battleground_template"), MySQLQuery);
+            ClusterServiceLocator._WorldCluster.WorldDatabase.Query(string.Format("SELECT * FROM battleground_template"), ref MySQLQuery);
             foreach (DataRow row in MySQLQuery.Rows)
             {
                 Entry = Conversions.ToByte(row["id"]);
@@ -196,9 +196,9 @@ namespace Mangos.Cluster.DataStores
                 {
                     var ChatChannels = new ChatChannelInfo()
                     {
-                        Index = data.Item(i, 0, DBCValueType.DBC_INTEGER),
-                        Flags = data.Item(i, 1, DBCValueType.DBC_INTEGER),
-                        Name = data.Item(i, 3, DBCValueType.DBC_STRING)
+                        Index = (int)data.Item(i, 0, DBCValueType.DBC_INTEGER),
+                        Flags = (int)data.Item(i, 1, DBCValueType.DBC_INTEGER),
+                        Name = (string)data.Item(i, 3, DBCValueType.DBC_STRING)
                     };
                     ChatChannelsInfo.Add(ChatChannels.Index, ChatChannels);
                 }
@@ -237,12 +237,12 @@ namespace Mangos.Cluster.DataStores
                 var data = new BufferedDbc(ChrRacesDBC);
                 for (int i = 0, loopTo = new BufferedDbc(ChrRacesDBC).Rows - 1; i <= loopTo; i++)
                 {
-                    raceID = data.Item(i, 0);
-                    factionID = data.Item(i, 2);
-                    modelM = data.Item(i, 4);
-                    modelF = data.Item(i, 5);
-                    teamID = data.Item(i, 8);
-                    cinematicID = data.Item(i, 16);
+                    raceID = (int)data.Item(i, 0);
+                    factionID = (int)data.Item(i, 2);
+                    modelM = (int)data.Item(i, 4);
+                    modelF = (int)data.Item(i, 5);
+                    teamID = (int)data.Item(i, 8);
+                    cinematicID = (int)data.Item(i, 16);
                     CharRaces[(byte)raceID] = new TCharRace((short)factionID, modelM, modelF, (byte)teamID, cinematicID);
                 }
 
@@ -269,8 +269,8 @@ namespace Mangos.Cluster.DataStores
                 for (int i = 0, loopTo = new BufferedDbc(ChrClassesDBC).Rows - 1; i <= loopTo; i++)
                 {
                     var data = new BufferedDbc(ChrClassesDBC);
-                    classID = data.Item(i, 0);
-                    cinematicID = data.Item(i, 5); // or 14 or 15?
+                    classID = (int)data.Item(i, 0);
+                    cinematicID = (int)data.Item(i, 5); // or 14 or 15?
                     CharClasses[(byte)classID] = new TCharClass(cinematicID);
                 }
 

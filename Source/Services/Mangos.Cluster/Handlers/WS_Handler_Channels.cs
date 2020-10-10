@@ -24,6 +24,7 @@ using Mangos.Cluster.Globals;
 using Mangos.Common.Enums.Channel;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
+using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -88,7 +89,7 @@ namespace Mangos.Cluster.Handlers
                 ID = ClusterServiceLocator._WS_Handler_Channels.GetNexyChatChannelID();
                 ChannelIndex = 0;
                 ChannelName = name;
-                ChannelFlags = CHANNEL_FLAG.CHANNEL_FLAG_NONE;
+                ChannelFlags = (byte)CHANNEL_FLAG.CHANNEL_FLAG_NONE;
                 ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.Add(ChannelName, this);
                 string sZone = name.Substring(name.IndexOf(" - ", StringComparison.Ordinal) + 3);
                 foreach (KeyValuePair<int, WS_DBCDatabase.ChatChannelInfo> chatChannel in ClusterServiceLocator._WS_DBCDatabase.ChatChannelsInfo)
@@ -103,64 +104,64 @@ namespace Mangos.Cluster.Handlers
                 if (ClusterServiceLocator._WS_DBCDatabase.ChatChannelsInfo.ContainsKey(ChannelIndex))
                 {
                     // Default channel
-                    ChannelFlags = ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_GENERAL;
+                    ChannelFlags = (byte) (ChannelFlags | (byte)CHANNEL_FLAG.CHANNEL_FLAG_GENERAL);
                     Announce = false;
                     Moderate = false;
                     {
                         var withBlock = ClusterServiceLocator._WS_DBCDatabase.ChatChannelsInfo[ChannelIndex];
-                        if (withBlock.Flags & ChatChannelsFlags.FLAG_TRADE)
+                        if (((ChatChannelsFlags)withBlock.Flags & ChatChannelsFlags.FLAG_TRADE) == ChatChannelsFlags.FLAG_TRADE)
                         {
-                            ChannelFlags = ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_TRADE;
+                            ChannelFlags = (byte)(ChannelFlags | (byte)CHANNEL_FLAG.CHANNEL_FLAG_TRADE);
                         }
 
-                        if (withBlock.Flags & ChatChannelsFlags.FLAG_CITY_ONLY2)
+                        if (((ChatChannelsFlags)withBlock.Flags & ChatChannelsFlags.FLAG_CITY_ONLY2) == ChatChannelsFlags.FLAG_CITY_ONLY2)
                         {
-                            ChannelFlags = ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_CITY;
+                            ChannelFlags = (byte)(ChannelFlags | (byte)CHANNEL_FLAG.CHANNEL_FLAG_CITY);
                         }
 
-                        if (withBlock.Flags & ChatChannelsFlags.FLAG_LFG)
+                        if (((ChatChannelsFlags)withBlock.Flags & ChatChannelsFlags.FLAG_LFG) == ChatChannelsFlags.FLAG_LFG)
                         {
-                            ChannelFlags = ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_LFG;
+                            ChannelFlags = (byte)(ChannelFlags | (byte)CHANNEL_FLAG.CHANNEL_FLAG_LFG);
                         }
                         else
                         {
-                            ChannelFlags = ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_NOT_LFG;
+                            ChannelFlags = (byte)((CHANNEL_FLAG)ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_NOT_LFG);
                         }
                     }
                 }
                 else
                 {
                     // Custom channel
-                    ChannelFlags = ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM;
+                    ChannelFlags = (byte)((CHANNEL_FLAG)ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM);
                 }
             }
 
-            public void Say(string message, int msgLang, ref WcHandlerCharacter.CharacterObject character)
+            public void Say(string message, int msgLang, WcHandlerCharacter.CharacterObject character)
             {
                 if (Muted.Contains(character.Guid))
                 {
                     var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_YOUCANTSPEAK, character.Guid, default, default);
-                    character.Client.Send(ref p);
+                    character.Client.Send(p);
                     p.Dispose();
                     return;
                 }
                 else if (!Joined.Contains(character.Guid))
                 {
                     var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, character.Guid, default, default);
-                    character.Client.Send(ref p);
+                    character.Client.Send(p);
                     p.Dispose();
                     return;
                 }
                 else
                 {
-                    var packet = ClusterServiceLocator._Functions.BuildChatMessage(character.Guid, message, ChatMsg.CHAT_MSG_CHANNEL, msgLang, character.ChatFlag, ChannelName);
-                    Broadcast(ref packet);
+                    var packet = ClusterServiceLocator._Functions.BuildChatMessage(character.Guid, message, ChatMsg.CHAT_MSG_CHANNEL, (LANGUAGES)msgLang, (byte)character.ChatFlag, ChannelName);
+                    Broadcast(packet);
                     packet.Dispose();
                     ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.USER, "[{0}:{1}] SMSG_MESSAGECHAT [{2}: <{3}> {4}]", character.Client.IP, character.Client.Port, ChannelName, character.Name, message);
                 }
             }
 
-            public virtual void Join(ref WcHandlerCharacter.CharacterObject character, string clientPassword)
+            public virtual void Join(WcHandlerCharacter.CharacterObject character, string clientPassword)
             {
                 // DONE: Check if Already joined
                 if (Joined.Contains(character.Guid))
@@ -168,7 +169,7 @@ namespace Mangos.Cluster.Handlers
                     if (character.JoinedChannels.Contains(0.ToString()))
                     {
                         var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_ALREADY_ON, character.Guid, default, default);
-                        character.Client.Send(ref p);
+                        character.Client.Send(p);
                         p.Dispose();
                         return;
                     }
@@ -178,7 +179,7 @@ namespace Mangos.Cluster.Handlers
                 if (Banned.Contains(character.Guid))
                 {
                     var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_YOU_ARE_BANNED, character.Guid, default, default);
-                    character.Client.Send(ref p);
+                    character.Client.Send(p);
                     p.Dispose();
                     return;
                 }
@@ -189,7 +190,7 @@ namespace Mangos.Cluster.Handlers
                     if ((Password ?? "") != (clientPassword ?? ""))
                     {
                         var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_WRONG_PASS, character.Guid, default, default);
-                        character.Client.Send(ref p);
+                        character.Client.Send(p);
                         p.Dispose();
                         return;
                     }
@@ -199,13 +200,13 @@ namespace Mangos.Cluster.Handlers
                 if (Announce)
                 {
                     var response = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_JOINED, character.Guid, default, default);
-                    Broadcast(ref response);
+                    Broadcast(response);
                     response.Dispose();
                 }
 
                 // DONE: You Joined channel
                 var response2 = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_YOU_JOINED, character.Guid, default, default);
-                character.Client.Send(ref response2);
+                character.Client.Send(response2);
                 response2.Dispose();
                 if (Joined.Contains(character.Guid) == false)
                 {
@@ -214,7 +215,7 @@ namespace Mangos.Cluster.Handlers
 
                 if (Joined_Mode.ContainsKey(character.Guid) == false)
                 {
-                    Joined_Mode.Add(character.Guid, CHANNEL_USER_FLAG.CHANNEL_FLAG_NONE);
+                    Joined_Mode.Add(character.Guid, (byte)CHANNEL_USER_FLAG.CHANNEL_FLAG_NONE);
                 }
 
                 if (character.JoinedChannels.Contains(ChannelName) == false)
@@ -223,13 +224,13 @@ namespace Mangos.Cluster.Handlers
                 }
 
                 // DONE: If new channel, set owner
-                if (ClusterServiceLocator._Functions.HaveFlags(ChannelFlags, CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Owner == 0m)
+                if (ClusterServiceLocator._Functions.HaveFlags(ChannelFlags, (byte)CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Owner == 0m)
                 {
-                    SetOwner(ref character);
+                    SetOwner(character);
                 }
 
                 // DONE: Update flags
-                byte modes = CHANNEL_USER_FLAG.CHANNEL_FLAG_NONE;
+                var modes = CHANNEL_USER_FLAG.CHANNEL_FLAG_NONE;
                 if (Muted.Contains(character.Guid))
                 {
                     modes = modes | CHANNEL_USER_FLAG.CHANNEL_FLAG_MUTED;
@@ -245,10 +246,10 @@ namespace Mangos.Cluster.Handlers
                     modes = modes | CHANNEL_USER_FLAG.CHANNEL_FLAG_OWNER;
                 }
 
-                Joined_Mode[character.Guid] = modes;
+                Joined_Mode[character.Guid] = (byte)modes;
             }
 
-            public virtual void Part(ref WcHandlerCharacter.CharacterObject Character)
+            public virtual void Part(WcHandlerCharacter.CharacterObject Character)
             {
                 // DONE: Check if not on this channel
                 if (!Joined.Contains(Character.Guid))
@@ -256,7 +257,7 @@ namespace Mangos.Cluster.Handlers
                     if (Character.Client is object)
                     {
                         var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                        Character.Client.Send(ref p);
+                        Character.Client.Send(p);
                         p.Dispose();
                     }
 
@@ -267,7 +268,7 @@ namespace Mangos.Cluster.Handlers
                 if (Character.Client is object)
                 {
                     var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_YOU_LEFT, Character.Guid, default, default);
-                    Character.Client.Send(ref p);
+                    Character.Client.Send(p);
                     p.Dispose();
                 }
 
@@ -279,61 +280,61 @@ namespace Mangos.Cluster.Handlers
                 if (Announce)
                 {
                     var response = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_LEFT, Character.Guid, default, default);
-                    Broadcast(ref response);
+                    Broadcast(response);
                     response.Dispose();
                 }
 
                 // DONE: Set new owner
-                if (ClusterServiceLocator._Functions.HaveFlags(ChannelFlags, CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Owner == Character.Guid && Joined.Count > 0)
+                if (ClusterServiceLocator._Functions.HaveFlags(ChannelFlags, (byte)CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Owner == Character.Guid && Joined.Count > 0)
                 {
                     IEnumerator tmp = Joined.GetEnumerator();
                     tmp.MoveNext();
                     var tmp1 = ClusterServiceLocator._WorldCluster.CHARACTERs;
                     var argCharacter = tmp1[Conversions.ToULong(tmp.Current)];
-                    SetOwner(ref argCharacter);
+                    SetOwner(argCharacter);
                     tmp1[Conversions.ToULong(tmp.Current)] = argCharacter;
                 }
 
                 // DONE: If free and not global - clear channel
-                if (ClusterServiceLocator._Functions.HaveFlags(ChannelFlags, CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Joined.Count == 0)
+                if (ClusterServiceLocator._Functions.HaveFlags(ChannelFlags, (byte)CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Joined.Count == 0)
                 {
                     ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.Remove(ChannelName);
                     Dispose();
                 }
             }
 
-            public virtual void Kick(ref WcHandlerCharacter.CharacterObject Character, string Name)
+            public virtual void Kick(WcHandlerCharacter.CharacterObject Character, string Name)
             {
                 ulong VictimGUID = ClusterServiceLocator._WcHandlerCharacter.GetCharacterGUIDByName(Name);
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Moderators.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_MODERATOR, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(VictimGUID))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Joined.Contains(VictimGUID))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
                 {
                     // DONE: You Left channel
                     var packet1 = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_YOU_LEFT, Character.Guid, default, default);
-                    ClusterServiceLocator._WorldCluster.CHARACTERs[VictimGUID].Client.Send(ref packet1);
+                    ClusterServiceLocator._WorldCluster.CHARACTERs[VictimGUID].Client.Send(packet1);
                     packet1.Dispose();
                     Joined.Remove(VictimGUID);
                     Joined_Mode.Remove(VictimGUID);
@@ -341,42 +342,42 @@ namespace Mangos.Cluster.Handlers
 
                     // DONE: [%s] Player %s kicked by %s.
                     var packet2 = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_KICKED, VictimGUID, Character.Guid, default);
-                    Broadcast(ref packet2);
+                    Broadcast(packet2);
                     packet2.Dispose();
                 }
             }
 
-            public virtual void Ban(ref WcHandlerCharacter.CharacterObject Character, string Name)
+            public virtual void Ban(WcHandlerCharacter.CharacterObject Character, string Name)
             {
                 ulong VictimGUID = ClusterServiceLocator._WcHandlerCharacter.GetCharacterGUIDByName(Name);
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Moderators.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_MODERATOR, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(VictimGUID))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Joined.Contains(VictimGUID))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (Banned.Contains(VictimGUID))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_PLAYER_INVITE_BANNED, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
@@ -385,7 +386,7 @@ namespace Mangos.Cluster.Handlers
 
                     // DONE: [%s] Player %s banned by %s.
                     var packet2 = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_BANNED, VictimGUID, Character.Guid, default);
-                    Broadcast(ref packet2);
+                    Broadcast(packet2);
                     packet2.Dispose();
                     Joined.Remove(VictimGUID);
                     Joined_Mode.Remove(VictimGUID);
@@ -393,36 +394,36 @@ namespace Mangos.Cluster.Handlers
 
                     // DONE: You Left channel
                     var packet1 = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_YOU_LEFT, Character.Guid, default, default);
-                    ClusterServiceLocator._WorldCluster.CHARACTERs[VictimGUID].Client.Send(ref packet1);
+                    ClusterServiceLocator._WorldCluster.CHARACTERs[VictimGUID].Client.Send(packet1);
                     packet1.Dispose();
                 }
             }
 
-            public virtual void UnBan(ref WcHandlerCharacter.CharacterObject Character, string Name)
+            public virtual void UnBan(WcHandlerCharacter.CharacterObject Character, string Name)
             {
                 ulong VictimGUID = ClusterServiceLocator._WcHandlerCharacter.GetCharacterGUIDByName(Name);
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Moderators.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_MODERATOR, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(VictimGUID))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Banned.Contains(VictimGUID))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_BANNED, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
@@ -431,17 +432,17 @@ namespace Mangos.Cluster.Handlers
 
                     // DONE: [%s] Player %s unbanned by %s.
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_UNBANNED, VictimGUID, Character.Guid, default);
-                    Broadcast(ref packet);
+                    Broadcast(packet);
                     packet.Dispose();
                 }
             }
 
-            public void List(ref WcHandlerCharacter.CharacterObject Character)
+            public void List(WcHandlerCharacter.CharacterObject Character)
             {
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
@@ -457,17 +458,17 @@ namespace Mangos.Cluster.Handlers
                         packet.AddInt8(Joined_Mode[GUID]);
                     }
 
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
             }
 
-            public void Invite(ref WcHandlerCharacter.CharacterObject Character, string Name)
+            public void Invite(WcHandlerCharacter.CharacterObject Character, string Name)
             {
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
@@ -476,25 +477,25 @@ namespace Mangos.Cluster.Handlers
                     if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(GUID))
                     {
                         var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, Name);
-                        Character.Client.Send(ref packet);
+                        Character.Client.Send(packet);
                         packet.Dispose();
                     }
-                    else if (ClusterServiceLocator._Functions.GetCharacterSide(ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Race) != ClusterServiceLocator._Functions.GetCharacterSide(Character.Race))
+                    else if (ClusterServiceLocator._Functions.GetCharacterSide((byte)ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Race) != ClusterServiceLocator._Functions.GetCharacterSide((byte)Character.Race))
                     {
                         var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_INVITED_WRONG_FACTION, Character.Guid, default, default);
-                        Character.Client.Send(ref packet);
+                        Character.Client.Send(packet);
                         packet.Dispose();
                     }
                     else if (Joined.Contains(GUID))
                     {
                         var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_ALREADY_ON, GUID, default, default);
-                        Character.Client.Send(ref packet);
+                        Character.Client.Send(packet);
                         packet.Dispose();
                     }
                     else if (Banned.Contains(GUID))
                     {
                         var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_PLAYER_INVITE_BANNED, GUID, default, Name);
-                        Character.Client.Send(ref packet);
+                        Character.Client.Send(packet);
                         packet.Dispose();
                     }
                     else if (ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].IgnoreList.Contains(Character.Guid))
@@ -504,21 +505,21 @@ namespace Mangos.Cluster.Handlers
                     else
                     {
                         var packet1 = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_PLAYER_INVITED, Character.Guid, default, ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Name);
-                        Character.Client.Send(ref packet1);
+                        Character.Client.Send(packet1);
                         packet1.Dispose();
                         var packet2 = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_INVITED, Character.Guid, default, default);
-                        ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Client.Send(ref packet2);
+                        ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Client.Send(packet2);
                         packet2.Dispose();
                     }
                 }
             }
 
-            public bool CanSetOwner(ref WcHandlerCharacter.CharacterObject Character, string Name)
+            public bool CanSetOwner(WcHandlerCharacter.CharacterObject Character, string Name)
             {
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                     return false;
                 }
@@ -526,7 +527,7 @@ namespace Mangos.Cluster.Handlers
                 if (Owner != Character.Guid)
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_OWNER, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                     return false;
                 }
@@ -540,12 +541,12 @@ namespace Mangos.Cluster.Handlers
                 }
 
                 var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, default);
-                Character.Client.Send(ref p);
+                Character.Client.Send(p);
                 p.Dispose();
                 return false;
             }
 
-            public void GetOwner(ref WcHandlerCharacter.CharacterObject Character)
+            public void GetOwner(WcHandlerCharacter.CharacterObject Character)
             {
                 Packets.PacketClass p;
                 if (!Joined.Contains(Character.Guid))
@@ -561,39 +562,39 @@ namespace Mangos.Cluster.Handlers
                     p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_WHO_OWNER, Character.Guid, default, "Nobody");
                 }
 
-                Character.Client.Send(ref p);
+                Character.Client.Send(p);
                 p.Dispose();
             }
 
-            public void SetOwner(ref WcHandlerCharacter.CharacterObject Character)
+            public void SetOwner(WcHandlerCharacter.CharacterObject Character)
             {
                 if (Joined_Mode.ContainsKey(Owner))
                 {
-                    Joined_Mode[Owner] = Joined_Mode[Owner] & !CHANNEL_USER_FLAG.CHANNEL_FLAG_OWNER;
+                    Joined_Mode[Owner] = (byte)((CHANNEL_USER_FLAG)Joined_Mode[Owner] ^ CHANNEL_USER_FLAG.CHANNEL_FLAG_OWNER);
                 }
 
-                Joined_Mode[Character.Guid] = Joined_Mode[Character.Guid] | CHANNEL_USER_FLAG.CHANNEL_FLAG_OWNER;
+                Joined_Mode[Character.Guid] = (byte)(Joined_Mode[Character.Guid] | (byte)CHANNEL_USER_FLAG.CHANNEL_FLAG_OWNER);
                 Owner = Character.Guid;
                 if (!Moderators.Contains(Owner))
                     Moderators.Add(Owner);
                 Packets.PacketClass p;
                 p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_CHANGE_OWNER, Character.Guid, default, default);
-                Broadcast(ref p);
+                Broadcast(p);
                 p.Dispose();
             }
 
-            public void SetAnnouncements(ref WcHandlerCharacter.CharacterObject Character)
+            public void SetAnnouncements(WcHandlerCharacter.CharacterObject Character)
             {
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Moderators.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_MODERATOR, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
@@ -609,23 +610,23 @@ namespace Mangos.Cluster.Handlers
                         packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_DISABLE_ANNOUNCE, Character.Guid, default, default);
                     }
 
-                    Broadcast(ref packet);
+                    Broadcast(packet);
                     packet.Dispose();
                 }
             }
 
-            public void SetModeration(ref WcHandlerCharacter.CharacterObject Character)
+            public void SetModeration(WcHandlerCharacter.CharacterObject Character)
             {
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!(Character.Guid != Owner))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_OWNER, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
@@ -641,46 +642,46 @@ namespace Mangos.Cluster.Handlers
                         packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_UNMODERATED, Character.Guid, default, default);
                     }
 
-                    Broadcast(ref packet);
+                    Broadcast(packet);
                     packet.Dispose();
                 }
             }
 
-            public void SetPassword(ref WcHandlerCharacter.CharacterObject Character, string NewPassword)
+            public void SetPassword(WcHandlerCharacter.CharacterObject Character, string NewPassword)
             {
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Moderators.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_MODERATOR, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
                 {
                     Password = NewPassword;
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_SET_PASSWORD, Character.Guid, default, default);
-                    Broadcast(ref packet);
+                    Broadcast(packet);
                     packet.Dispose();
                 }
             }
 
-            public void SetModerator(ref WcHandlerCharacter.CharacterObject Character, string Name)
+            public void SetModerator(WcHandlerCharacter.CharacterObject Character, string Name)
             {
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Moderators.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_MODERATOR, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
@@ -690,34 +691,34 @@ namespace Mangos.Cluster.Handlers
                         if ((ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Name.ToUpper() ?? "") == (Name.ToUpper() ?? ""))
                         {
                             byte flags = Joined_Mode[GUID];
-                            Joined_Mode[GUID] = Joined_Mode[GUID] | CHANNEL_USER_FLAG.CHANNEL_FLAG_MODERATOR;
+                            Joined_Mode[GUID] = (byte)((CHANNEL_USER_FLAG)Joined_Mode[GUID] | CHANNEL_USER_FLAG.CHANNEL_FLAG_MODERATOR);
                             if (!Moderators.Contains(GUID))
                                 Moderators.Add(GUID);
                             var response = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_MODE_CHANGE, GUID, flags, default);
-                            Broadcast(ref response);
+                            Broadcast(response);
                             response.Dispose();
                             return;
                         }
                     }
 
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
             }
 
-            public void SetUnModerator(ref WcHandlerCharacter.CharacterObject Character, string Name)
+            public void SetUnModerator(WcHandlerCharacter.CharacterObject Character, string Name)
             {
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Moderators.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_MODERATOR, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
@@ -727,33 +728,33 @@ namespace Mangos.Cluster.Handlers
                         if ((ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Name.ToUpper() ?? "") == (Name.ToUpper() ?? ""))
                         {
                             byte flags = Joined_Mode[GUID];
-                            Joined_Mode[GUID] = Joined_Mode[GUID] & !CHANNEL_USER_FLAG.CHANNEL_FLAG_MODERATOR;
+                            Joined_Mode[GUID] = (byte)((CHANNEL_USER_FLAG)Joined_Mode[GUID] ^ CHANNEL_USER_FLAG.CHANNEL_FLAG_MODERATOR);
                             Moderators.Remove(GUID);
                             var response = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_MODE_CHANGE, GUID, flags, default);
-                            Broadcast(ref response);
+                            Broadcast(response);
                             response.Dispose();
                             return;
                         }
                     }
 
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
             }
 
-            public void SetMute(ref WcHandlerCharacter.CharacterObject Character, string Name)
+            public void SetMute(WcHandlerCharacter.CharacterObject Character, string Name)
             {
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Moderators.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_MODERATOR, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
@@ -763,34 +764,34 @@ namespace Mangos.Cluster.Handlers
                         if ((ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Name.ToUpper() ?? "") == (Name.ToUpper() ?? ""))
                         {
                             byte flags = Joined_Mode[GUID];
-                            Joined_Mode[GUID] = Joined_Mode[GUID] | CHANNEL_USER_FLAG.CHANNEL_FLAG_MUTED;
+                            Joined_Mode[GUID] = (byte)((CHANNEL_USER_FLAG)Joined_Mode[GUID] | CHANNEL_USER_FLAG.CHANNEL_FLAG_MUTED);
                             if (!Muted.Contains(GUID))
                                 Muted.Add(GUID);
                             var response = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_MODE_CHANGE, GUID, flags, default);
-                            Broadcast(ref response);
+                            Broadcast(response);
                             response.Dispose();
                             return;
                         }
                     }
 
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
             }
 
-            public void SetUnMute(ref WcHandlerCharacter.CharacterObject Character, string Name)
+            public void SetUnMute(WcHandlerCharacter.CharacterObject Character, string Name)
             {
                 if (!Joined.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else if (!Moderators.Contains(Character.Guid))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_MODERATOR, Character.Guid, default, default);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
                 else
@@ -800,25 +801,25 @@ namespace Mangos.Cluster.Handlers
                         if ((ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Name.ToUpper() ?? "") == (Name.ToUpper() ?? ""))
                         {
                             byte flags = Joined_Mode[GUID];
-                            Joined_Mode[GUID] = Joined_Mode[GUID] & !CHANNEL_USER_FLAG.CHANNEL_FLAG_MUTED;
+                            Joined_Mode[GUID] = (byte)((CHANNEL_USER_FLAG)Joined_Mode[GUID] ^ CHANNEL_USER_FLAG.CHANNEL_FLAG_MUTED);
                             Muted.Remove(GUID);
                             var response = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_MODE_CHANGE, GUID, flags, default);
-                            Broadcast(ref response);
+                            Broadcast(response);
                             response.Dispose();
                             return;
                         }
                     }
 
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON_FOR_NAME, Character.Guid, default, Name);
-                    Character.Client.Send(ref packet);
+                    Character.Client.Send(packet);
                     packet.Dispose();
                 }
             }
 
-            public void Broadcast(ref Packets.PacketClass p)
+            public void Broadcast(Packets.PacketClass p)
             {
                 foreach (ulong GUID in Joined.ToArray())
-                    ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Client.SendMultiplyPackets(ref p);
+                    ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Client.SendMultiplyPackets(p);
             }
 
             public void Save()
@@ -834,7 +835,7 @@ namespace Mangos.Cluster.Handlers
             protected Packets.PacketClass BuildChannelNotify(CHANNEL_NOTIFY_FLAGS Notify, ulong GUID1, ulong GUID2, string Name)
             {
                 var response = new Packets.PacketClass(OPCODES.SMSG_CHANNEL_NOTIFY);
-                response.AddInt8(Notify);
+                response.AddInt8((byte)Notify);
                 response.AddString(ChannelName);
                 switch (Notify)
                 {

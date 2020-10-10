@@ -7,15 +7,12 @@
     <ApplicationIcon>mvb0___vanilla_256x256.ico</ApplicationIcon>
     <OutputPath>..\..\..\Bin\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <DefaultItemExcludes>$(DefaultItemExcludes);$(ProjectDir)**\*.vb</DefaultItemExcludes>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic" />
     <PackageReference Include="Autofac" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.vbproj" />
-    <ProjectReference Include="..\..\Common\Mangos.SignalR\Mangos.SignalR.vbproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.SignalR\Mangos.SignalR.csproj" />
   </ItemGroup>
 </Project>

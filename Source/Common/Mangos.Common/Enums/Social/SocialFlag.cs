@@ -1,6 +1,9 @@
 ﻿
+using System;
+
 namespace Mangos.Common.Enums.Social
 {
+    [Flags]
     public enum SocialFlag : byte
     {
         SOCIAL_FLAG_FRIEND = 0x1,

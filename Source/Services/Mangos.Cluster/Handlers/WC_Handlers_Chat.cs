@@ -28,7 +28,7 @@ namespace Mangos.Cluster.Handlers
 {
     public class WC_Handlers_Chat
     {
-        public void On_CMSG_CHAT_IGNORED(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHAT_IGNORED(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong guid = packet.GetUInt64();
@@ -36,18 +36,18 @@ namespace Mangos.Cluster.Handlers
             if (ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(guid))
             {
                 var response = ClusterServiceLocator._Functions.BuildChatMessage(client.Character.Guid, "", ChatMsg.CHAT_MSG_IGNORED, LANGUAGES.LANG_UNIVERSAL, 0, "");
-                ClusterServiceLocator._WorldCluster.CHARACTERs[guid].Client.Send(ref response);
+                ClusterServiceLocator._WorldCluster.CHARACTERs[guid].Client.Send(response);
                 response.Dispose();
             }
         }
 
-        public void On_CMSG_MESSAGECHAT(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_MESSAGECHAT(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             if (packet.Data.Length - 1 < 14)
                 return;
             packet.GetInt16();
-            ChatMsg msgType = packet.GetInt32();
-            LANGUAGES msgLanguage = packet.GetInt32();
+            ChatMsg msgType = (ChatMsg)packet.GetInt32();
+            LANGUAGES msgLanguage = (LANGUAGES)packet.GetInt32();
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MESSAGECHAT [{2}:{3}]", client.IP, client.Port, msgType, msgLanguage);
             switch (msgType)
             {
@@ -61,7 +61,7 @@ namespace Mangos.Cluster.Handlers
                         // DONE: Broadcast to all
                         if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(channel))
                         {
-                            ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[channel].Say(message, msgLanguage, ref client.Character);
+                            ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[channel].Say(message, (int)msgLanguage, client.Character);
                         }
 
                         return;
@@ -70,7 +70,7 @@ namespace Mangos.Cluster.Handlers
                 case var case1 when case1 == ChatMsg.CHAT_MSG_WHISPER:
                     {
                         string argname = packet.GetString();
-                        string toUser = ClusterServiceLocator._Functions.CapitalizeName(ref argname);
+                        string toUser = ClusterServiceLocator._Functions.CapitalizeName(argname);
                         if (packet.Data.Length - 1 < 14 + toUser.Length)
                             return;
                         string message = packet.GetString();
@@ -100,33 +100,33 @@ namespace Mangos.Cluster.Handlers
                             if (ClusterServiceLocator._WorldCluster.CHARACTERs[guid].IgnoreList.Contains(client.Character.Guid) && client.Character.Access < AccessLevel.GameMaster)
                             {
                                 // Client.Character.SystemMessage(String.Format("{0} is ignoring you.", ToUser))
-                                client.Character.SendChatMessage(guid, "", ChatMsg.CHAT_MSG_IGNORED, LANGUAGES.LANG_UNIVERSAL, "");
+                                client.Character.SendChatMessage(guid, "", ChatMsg.CHAT_MSG_IGNORED, (int)LANGUAGES.LANG_UNIVERSAL, "");
                             }
                             else
                             {
                                 // To message
-                                client.Character.SendChatMessage(guid, message, ChatMsg.CHAT_MSG_WHISPER_INFORM, msgLanguage, "");
+                                client.Character.SendChatMessage(guid, message, ChatMsg.CHAT_MSG_WHISPER_INFORM, (int)msgLanguage, "");
                                 if (ClusterServiceLocator._WorldCluster.CHARACTERs[guid].DND == false || client.Character.Access >= AccessLevel.GameMaster)
                                 {
                                     // From message
-                                    ClusterServiceLocator._WorldCluster.CHARACTERs[guid].SendChatMessage(client.Character.Guid, message, ChatMsg.CHAT_MSG_WHISPER, msgLanguage, "");
+                                    ClusterServiceLocator._WorldCluster.CHARACTERs[guid].SendChatMessage(client.Character.Guid, message, ChatMsg.CHAT_MSG_WHISPER, (int)msgLanguage, "");
                                 }
                                 else
                                 {
                                     // DONE: Send the DND message
-                                    client.Character.SendChatMessage(guid, ClusterServiceLocator._WorldCluster.CHARACTERs[guid].AfkMessage, ChatMsg.CHAT_MSG_DND, msgLanguage, "");
+                                    client.Character.SendChatMessage(guid, ClusterServiceLocator._WorldCluster.CHARACTERs[guid].AfkMessage, ChatMsg.CHAT_MSG_DND, (int)msgLanguage, "");
                                 }
 
                                 // DONE: Send the AFK message
                                 if (ClusterServiceLocator._WorldCluster.CHARACTERs[guid].AFK)
-                                    client.Character.SendChatMessage(guid, ClusterServiceLocator._WorldCluster.CHARACTERs[guid].AfkMessage, ChatMsg.CHAT_MSG_AFK, msgLanguage, "");
+                                    client.Character.SendChatMessage(guid, ClusterServiceLocator._WorldCluster.CHARACTERs[guid].AfkMessage, ChatMsg.CHAT_MSG_AFK, (int)msgLanguage, "");
                             }
                         }
                         else
                         {
                             var smsgChatPlayerNotFound = new Packets.PacketClass(OPCODES.SMSG_CHAT_PLAYER_NOT_FOUND);
                             smsgChatPlayerNotFound.AddString(toUser);
-                            client.Send(ref smsgChatPlayerNotFound);
+                            client.Send(smsgChatPlayerNotFound);
                             smsgChatPlayerNotFound.Dispose();
                         }
 
@@ -147,7 +147,7 @@ namespace Mangos.Cluster.Handlers
                         }
 
                         // DONE: Broadcast to party
-                        client.Character.Group.SendChatMessage(ref client.Character, message, msgLanguage, msgType);
+                        client.Character.Group.SendChatMessage(client.Character, message, msgLanguage, msgType);
                         break;
                     }
 
@@ -231,7 +231,7 @@ namespace Mangos.Cluster.Handlers
                         string message = packet.GetString();
 
                         // DONE: Broadcast to guild
-                        ClusterServiceLocator._WC_Guild.BroadcastChatMessageGuild(ref client.Character, message, msgLanguage, client.Character.Guild.ID);
+                        ClusterServiceLocator._WC_Guild.BroadcastChatMessageGuild(client.Character, message, msgLanguage, (int)client.Character.Guild.ID);
                         break;
                     }
 
@@ -240,20 +240,20 @@ namespace Mangos.Cluster.Handlers
                         string message = packet.GetString();
 
                         // DONE: Broadcast to officer chat
-                        ClusterServiceLocator._WC_Guild.BroadcastChatMessageOfficer(ref client.Character, message, msgLanguage, client.Character.Guild.ID);
+                        ClusterServiceLocator._WC_Guild.BroadcastChatMessageOfficer(client.Character, message, msgLanguage, (int)client.Character.Guild.ID);
                         break;
                     }
 
                 default:
                     {
                         ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Unknown chat message [msgType={2}, msgLanguage={3}]", client.IP, client.Port, msgType, msgLanguage);
-                        ClusterServiceLocator._Packets.DumpPacket(packet.Data, ref client);
+                        ClusterServiceLocator._Packets.DumpPacket(packet.Data, client);
                         break;
                     }
             }
         }
 
-        public void On_CMSG_JOIN_CHANNEL(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_JOIN_CHANNEL(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string channelName = packet.GetString();
@@ -265,10 +265,10 @@ namespace Mangos.Cluster.Handlers
                 var newChannel = new WS_Handler_Channels.ChatChannelClass(channelName);
             }
 
-            ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[channelName].Join(ref client.Character, password);
+            ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[channelName].Join(client.Character, password);
         }
 
-        public void On_CMSG_LEAVE_CHANNEL(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_LEAVE_CHANNEL(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -276,11 +276,11 @@ namespace Mangos.Cluster.Handlers
             ChannelName = ChannelName;
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].Part(ref client.Character);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].Part(client.Character);
             }
         }
 
-        public void On_CMSG_CHANNEL_LIST(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_LIST(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -289,11 +289,11 @@ namespace Mangos.Cluster.Handlers
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].List(ref client.Character);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].List(client.Character);
             }
         }
 
-        public void On_CMSG_CHANNEL_PASSWORD(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_PASSWORD(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -303,11 +303,11 @@ namespace Mangos.Cluster.Handlers
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetPassword(ref client.Character, ChannelNewPassword);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetPassword(client.Character, ChannelNewPassword);
             }
         }
 
-        public void On_CMSG_CHANNEL_SET_OWNER(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_SET_OWNER(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -317,7 +317,7 @@ namespace Mangos.Cluster.Handlers
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].CanSetOwner(ref client.Character, ChannelNewOwner))
+                if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].CanSetOwner(client.Character, ChannelNewOwner))
                 {
                     foreach (ulong GUID in ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].Joined.ToArray())
                     {
@@ -325,7 +325,7 @@ namespace Mangos.Cluster.Handlers
                         {
                             var tmp = ClusterServiceLocator._WorldCluster.CHARACTERs;
                             var argCharacter = tmp[GUID];
-                            ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetOwner(ref argCharacter);
+                            ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetOwner(argCharacter);
                             tmp[GUID] = argCharacter;
                             break;
                         }
@@ -334,7 +334,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_OWNER(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_OWNER(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -343,11 +343,11 @@ namespace Mangos.Cluster.Handlers
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].GetOwner(ref client.Character);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].GetOwner(client.Character);
             }
         }
 
-        public void On_CMSG_CHANNEL_MODERATOR(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_MODERATOR(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -357,11 +357,11 @@ namespace Mangos.Cluster.Handlers
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetModerator(ref client.Character, ChannelUser);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetModerator(client.Character, ChannelUser);
             }
         }
 
-        public void On_CMSG_CHANNEL_UNMODERATOR(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_UNMODERATOR(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -371,11 +371,11 @@ namespace Mangos.Cluster.Handlers
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetUnModerator(ref client.Character, ChannelUser);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetUnModerator(client.Character, ChannelUser);
             }
         }
 
-        public void On_CMSG_CHANNEL_MUTE(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_MUTE(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -385,11 +385,11 @@ namespace Mangos.Cluster.Handlers
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetMute(ref client.Character, ChannelUser);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetMute(client.Character, ChannelUser);
             }
         }
 
-        public void On_CMSG_CHANNEL_UNMUTE(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_UNMUTE(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -399,11 +399,11 @@ namespace Mangos.Cluster.Handlers
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetUnMute(ref client.Character, ChannelUser);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetUnMute(client.Character, ChannelUser);
             }
         }
 
-        public void On_CMSG_CHANNEL_INVITE(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_INVITE(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
                 return;
@@ -411,17 +411,17 @@ namespace Mangos.Cluster.Handlers
             string ChannelName = packet.GetString();
             if (packet.Data.Length - 1 < 6 + ChannelName.Length + 1)
                 return;
-            string PlayerName = ClusterServiceLocator._Functions.CapitalizeName(ref packet.GetString());
+            string PlayerName = ClusterServiceLocator._Functions.CapitalizeName(packet.GetString());
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_INVITE [{2}, {3}]", client.IP, client.Port, ChannelName, PlayerName);
 
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].Invite(ref client.Character, PlayerName);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].Invite(client.Character, PlayerName);
             }
         }
 
-        public void On_CMSG_CHANNEL_KICK(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_KICK(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
                 return;
@@ -429,17 +429,17 @@ namespace Mangos.Cluster.Handlers
             string ChannelName = packet.GetString();
             if (packet.Data.Length - 1 < 6 + ChannelName.Length + 1)
                 return;
-            string PlayerName = ClusterServiceLocator._Functions.CapitalizeName(ref packet.GetString());
+            string PlayerName = ClusterServiceLocator._Functions.CapitalizeName(packet.GetString());
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_KICK [{2}, {3}]", client.IP, client.Port, ChannelName, PlayerName);
 
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].Kick(ref client.Character, PlayerName);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].Kick(client.Character, PlayerName);
             }
         }
 
-        public void On_CMSG_CHANNEL_ANNOUNCEMENTS(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_ANNOUNCEMENTS(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -448,11 +448,11 @@ namespace Mangos.Cluster.Handlers
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetAnnouncements(ref client.Character);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetAnnouncements(client.Character);
             }
         }
 
-        public void On_CMSG_CHANNEL_BAN(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_BAN(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
                 return;
@@ -460,17 +460,17 @@ namespace Mangos.Cluster.Handlers
             string ChannelName = packet.GetString();
             if (packet.Data.Length - 1 < 6 + ChannelName.Length + 1)
                 return;
-            string PlayerName = ClusterServiceLocator._Functions.CapitalizeName(ref packet.GetString());
+            string PlayerName = ClusterServiceLocator._Functions.CapitalizeName(packet.GetString());
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_BAN [{2}, {3}]", client.IP, client.Port, ChannelName, PlayerName);
 
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].Ban(ref client.Character, PlayerName);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].Ban(client.Character, PlayerName);
             }
         }
 
-        public void On_CMSG_CHANNEL_UNBAN(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_UNBAN(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
                 return;
@@ -478,17 +478,17 @@ namespace Mangos.Cluster.Handlers
             string ChannelName = packet.GetString();
             if (packet.Data.Length - 1 < 6 + ChannelName.Length + 1)
                 return;
-            string PlayerName = ClusterServiceLocator._Functions.CapitalizeName(ref packet.GetString());
+            string PlayerName = ClusterServiceLocator._Functions.CapitalizeName(packet.GetString());
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_UNBAN [{2}, {3}]", client.IP, client.Port, ChannelName, PlayerName);
 
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].UnBan(ref client.Character, PlayerName);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].UnBan(client.Character, PlayerName);
             }
         }
 
-        public void On_CMSG_CHANNEL_MODERATE(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_MODERATE(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -497,7 +497,7 @@ namespace Mangos.Cluster.Handlers
             // ChannelName = ChannelName.ToUpper
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
-                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetModeration(ref client.Character);
+                ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].SetModeration(client.Character);
             }
         }
     }

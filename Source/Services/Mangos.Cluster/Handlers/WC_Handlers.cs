@@ -153,18 +153,18 @@ namespace Mangos.Cluster.Handlers
 
         }
 
-        public void OnUnhandledPacket(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void OnUnhandledPacket(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] {2} [Unhandled Packet]", client.IP, client.Port, packet.OpCode);
         }
 
-        public void OnClusterPacket(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void OnClusterPacket(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] {2} [Redirected Packet]", client.IP, client.Port, packet.OpCode);
             if (client.Character is null || client.Character.IsInWorld == false)
             {
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Unknown Opcode 0x{2:X} [{2}], DataLen={4}", client.IP, client.Port, packet.OpCode, Constants.vbCrLf, packet.Length);
-                ClusterServiceLocator._Packets.DumpPacket(packet.Data, ref client);
+                ClusterServiceLocator._Packets.DumpPacket(packet.Data, client);
             }
             else
             {

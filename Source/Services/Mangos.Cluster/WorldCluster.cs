@@ -51,7 +51,7 @@ namespace Mangos.Cluster
         public BaseWriter Log = new BaseWriter();
         public Random Rnd = new Random();
 
-        public delegate void HandlePacket(ref Packets.PacketClass packet, ref WC_Network.ClientClass client);
+        public delegate void HandlePacket(Packets.PacketClass packet, WC_Network.ClientClass client);
 
         [XmlRoot(ElementName = "WorldCluster")]
         public class XMLConfigFile
@@ -90,7 +90,7 @@ namespace Mangos.Cluster
             [XmlElement(ElementName = "LogType")]
             private string _logType = "FILE";
             [XmlElement(ElementName = "LogLevel")]
-            private LogType _logLevel = Global.LogType.NETWORK;
+            private LogType _logLevel = Common.Enums.Global.LogType.NETWORK;
             [XmlElement(ElementName = "LogConfig")]
             private string _logConfig = "";
             [XmlElement(ElementName = "PacketLogging")]
@@ -380,7 +380,7 @@ namespace Mangos.Cluster
                     AccountDatabase.SQLPort = AccountDBSettings[3];
                     AccountDatabase.SQLUser = AccountDBSettings[0];
                     AccountDatabase.SQLPass = AccountDBSettings[1];
-                    AccountDatabase.SQLTypeServer = Enum.Parse(typeof(SQL.DB_Type), AccountDBSettings[5]);
+                    AccountDatabase.SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), AccountDBSettings[5]);
                 }
 
                 var CharacterDBSettings = Strings.Split(Config.CharacterDatabase, ";");
@@ -395,7 +395,7 @@ namespace Mangos.Cluster
                     CharacterDatabase.SQLPort = CharacterDBSettings[3];
                     CharacterDatabase.SQLUser = CharacterDBSettings[0];
                     CharacterDatabase.SQLPass = CharacterDBSettings[1];
-                    CharacterDatabase.SQLTypeServer = Enum.Parse(typeof(SQL.DB_Type), CharacterDBSettings[5]);
+                    CharacterDatabase.SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), CharacterDBSettings[5]);
                 }
 
                 var WorldDBSettings = Strings.Split(Config.WorldDatabase, ";");
@@ -410,11 +410,11 @@ namespace Mangos.Cluster
                     WorldDatabase.SQLPort = WorldDBSettings[3];
                     WorldDatabase.SQLUser = WorldDBSettings[0];
                     WorldDatabase.SQLPass = WorldDBSettings[1];
-                    WorldDatabase.SQLTypeServer = Enum.Parse(typeof(SQL.DB_Type), WorldDBSettings[5]);
+                    WorldDatabase.SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), WorldDBSettings[5]);
                 }
 
                 // DONE: Creating logger
-                Log = CreateLog(Config.LogType, Config.LogConfig);
+                Log = BaseWriter.CreateLog(Config.LogType, Config.LogConfig);
                 Log.LogLevel = Config.LogLevel;
 
                 // DONE: Cleaning up the packet log
@@ -542,7 +542,7 @@ namespace Mangos.Cluster
             WorldDatabase.SQLMessage += WorldSQLEventHandler;
             int ReturnValues;
             ReturnValues = AccountDatabase.Connect();
-            if (ReturnValues > SQL.ReturnState.Success)   // Ok, An error occurred
+            if (ReturnValues > (int)SQL.ReturnState.Success)   // Ok, An error occurred
             {
                 Console.WriteLine("[{0}] An SQL Error has occurred", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
                 Console.WriteLine("*************************");
@@ -554,7 +554,7 @@ namespace Mangos.Cluster
 
             AccountDatabase.Update("SET NAMES 'utf8';");
             ReturnValues = CharacterDatabase.Connect();
-            if (ReturnValues > SQL.ReturnState.Success)   // Ok, An error occurred
+            if (ReturnValues > (int)SQL.ReturnState.Success)   // Ok, An error occurred
             {
                 Console.WriteLine("[{0}] An SQL Error has occurred", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
                 Console.WriteLine("*************************");
@@ -566,7 +566,7 @@ namespace Mangos.Cluster
 
             CharacterDatabase.Update("SET NAMES 'utf8';");
             ReturnValues = WorldDatabase.Connect();
-            if (ReturnValues > SQL.ReturnState.Success)   // Ok, An error occurred
+            if (ReturnValues > (int)SQL.ReturnState.Success)   // Ok, An error occurred
             {
                 Console.WriteLine("[{0}] An SQL Error has occurred", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
                 Console.WriteLine("*************************");

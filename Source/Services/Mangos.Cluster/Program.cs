@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using global;
 using Mangos.Cluster.DataStores;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;

@@ -27,6 +27,7 @@ using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Common;
 using Mangos.Common.Enums.Authentication;
+using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.SignalR;
@@ -271,7 +272,7 @@ namespace Mangos.Cluster.Server
                 p.AddSingle(posY);
                 p.AddSingle(posZ);
                 p.AddSingle(ori);
-                ClusterServiceLocator._WorldCluster.CLIENTs[ID].Send(ref p);
+                ClusterServiceLocator._WorldCluster.CLIENTs[ID].Send(p);
                 ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Map = map;
             }
 
@@ -289,7 +290,7 @@ namespace Mangos.Cluster.Server
                 if (ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character is null)
                     return;
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0:000000}] Client chat flag update [0x{1:X}]", ID, flag);
-                ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.ChatFlag = flag;
+                ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.ChatFlag = (ChatFlag)flag;
             }
 
             public byte[] ClientGetCryptKey(uint ID)
@@ -371,17 +372,17 @@ namespace Mangos.Cluster.Server
                     WorldInfo ParentMapInfo = null;
 
                     // Check if we got parent map
-                    if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey((uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[(uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap].InstanceCanCreate(ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
+                    if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey((uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[(uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap].InstanceCanCreate((int)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
                     {
                         ParentMap = ClusterServiceLocator._WC_Network.WorldServer.Worlds[(uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap];
                         ParentMapInfo = ClusterServiceLocator._WC_Network.WorldServer.WorldsInfo[(uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap];
                     }
-                    else if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(0U) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[0U].InstanceCanCreate(ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
+                    else if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(0U) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[0U].InstanceCanCreate((int)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
                     {
                         ParentMap = ClusterServiceLocator._WC_Network.WorldServer.Worlds[0U];
                         ParentMapInfo = ClusterServiceLocator._WC_Network.WorldServer.WorldsInfo[0U];
                     }
-                    else if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(1U) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[1U].InstanceCanCreate(ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
+                    else if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(1U) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[1U].InstanceCanCreate((int)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
                     {
                         ParentMap = ClusterServiceLocator._WC_Network.WorldServer.Worlds[1U];
                         ParentMapInfo = ClusterServiceLocator._WC_Network.WorldServer.WorldsInfo[1U];
@@ -417,17 +418,17 @@ namespace Mangos.Cluster.Server
                     WorldInfo ParentMapInfo = null;
 
                     // Check if we got parent map
-                    if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey((uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[(uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap].InstanceCanCreate(ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
+                    if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey((uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[(uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap].InstanceCanCreate((int)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
                     {
                         ParentMap = ClusterServiceLocator._WC_Network.WorldServer.Worlds[(uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap];
                         ParentMapInfo = ClusterServiceLocator._WC_Network.WorldServer.WorldsInfo[(uint)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].ParentMap];
                     }
-                    else if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(0U) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[0U].InstanceCanCreate(ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
+                    else if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(0U) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[0U].InstanceCanCreate((int)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
                     {
                         ParentMap = ClusterServiceLocator._WC_Network.WorldServer.Worlds[0U];
                         ParentMapInfo = ClusterServiceLocator._WC_Network.WorldServer.WorldsInfo[0U];
                     }
-                    else if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(1U) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[1U].InstanceCanCreate(ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
+                    else if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(1U) && ClusterServiceLocator._WC_Network.WorldServer.Worlds[1U].InstanceCanCreate((int)ClusterServiceLocator._WS_DBCDatabase.Maps[(int)MapID].Type))
                     {
                         ParentMap = ClusterServiceLocator._WC_Network.WorldServer.Worlds[1U];
                         ParentMapInfo = ClusterServiceLocator._WC_Network.WorldServer.WorldsInfo[1U];
@@ -456,7 +457,7 @@ namespace Mangos.Cluster.Server
                 ClusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs_Lock.AcquireReaderLock(ClusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                 foreach (KeyValuePair<int, WC_Handlers_Battleground.Battlefield> BG in ClusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs)
                 {
-                    if (BG.Value.MapType == MapType)
+                    if ((byte)BG.Value.MapType == MapType)
                     {
                         BattlefieldMap.Add(BG.Value.ID);
                     }
@@ -478,8 +479,8 @@ namespace Mangos.Cluster.Server
                     ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.NETWORK, "[G{0:00000}] Group update request", ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.Id);
                     try
                     {
-                        ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.GetWorld.GroupUpdate(ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.Id, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.Type, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.GetLeader().Guid, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.GetMembers());
-                        ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.GetWorld.GroupUpdateLoot(ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.Id, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.DungeonDifficulty, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.LootMethod, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.LootThreshold, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.GetLootMaster().Guid);
+                        ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.GetWorld.GroupUpdate(ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.Id, (byte)ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.Type, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.GetLeader().Guid, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.GetMembers());
+                        ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.GetWorld.GroupUpdateLoot(ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.Id, (byte)ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.DungeonDifficulty, (byte)ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.LootMethod, (byte)ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.LootThreshold, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Group.GetLootMaster().Guid);
                     }
                     catch
                     {
@@ -497,7 +498,7 @@ namespace Mangos.Cluster.Server
                     {
                         try
                         {
-                            w.Value.GroupUpdate(GroupID, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].Type, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].GetLeader().Guid, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].GetMembers());
+                            w.Value.GroupUpdate(GroupID, (byte)ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].Type, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].GetLeader().Guid, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].GetMembers());
                         }
                         catch (Exception ex)
                         {
@@ -516,7 +517,7 @@ namespace Mangos.Cluster.Server
                     {
                         try
                         {
-                            w.Value.GroupUpdateLoot(GroupID, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].DungeonDifficulty, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].LootMethod, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].LootThreshold, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].GetLootMaster().Guid);
+                            w.Value.GroupUpdateLoot(GroupID, (byte)ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].DungeonDifficulty, (byte)ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].LootMethod, (byte)ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].LootThreshold, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].GetLootMaster().Guid);
                         }
                         catch (Exception ex)
                         {
@@ -572,14 +573,14 @@ namespace Mangos.Cluster.Server
                     throw new ApplicationException("Clients doesn't exist!");
                 IPEndPoint remoteEndPoint = (IPEndPoint)Socket.RemoteEndPoint;
                 IP = remoteEndPoint.Address.ToString();
-                Port = remoteEndPoint.Port;
+                Port = (uint)remoteEndPoint.Port;
 
                 // DONE: Connection spam protection
-                if (ClusterServiceLocator._WC_Network.LastConnections.ContainsKey(ClusterServiceLocator._WC_Network.Ip2Int(IP.ToString)))
+                if (ClusterServiceLocator._WC_Network.LastConnections.ContainsKey(ClusterServiceLocator._WC_Network.Ip2Int(IP)))
                 {
-                    if (DateAndTime.Now > ClusterServiceLocator._WC_Network.LastConnections(ClusterServiceLocator._WC_Network.Ip2Int(IP.ToString)))
+                    if (DateAndTime.Now > ClusterServiceLocator._WC_Network.LastConnections[ClusterServiceLocator._WC_Network.Ip2Int(IP)])
                     {
-                        ClusterServiceLocator._WC_Network.LastConnections(ClusterServiceLocator._WC_Network.Ip2Int(IP.ToString)) = DateAndTime.Now.AddSeconds(5d);
+                        ClusterServiceLocator._WC_Network.LastConnections[ClusterServiceLocator._WC_Network.Ip2Int(IP)] = DateAndTime.Now.AddSeconds(5d);
                     }
                     else
                     {
@@ -590,7 +591,7 @@ namespace Mangos.Cluster.Server
                 }
                 else
                 {
-                    ClusterServiceLocator._WC_Network.LastConnections.Add(ClusterServiceLocator._WC_Network.Ip2Int(IP.ToString), DateAndTime.Now.AddSeconds(5d));
+                    ClusterServiceLocator._WC_Network.LastConnections.Add(ClusterServiceLocator._WC_Network.Ip2Int(IP), DateAndTime.Now.AddSeconds(5d));
                 }
 
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "Incoming connection from [{0}:{1}]", IP, Port);
@@ -598,9 +599,9 @@ namespace Mangos.Cluster.Server
 
                 // Send Auth Challenge
                 var p = new Packets.PacketClass(OPCODES.SMSG_AUTH_CHALLENGE);
-                p.AddInt32(Index);
-                Send(ref p);
-                Index = Interlocked.Increment(ref ClusterServiceLocator._WorldCluster.CLIETNIDs);
+                p.AddInt32((int)Index);
+                Send(p);
+                Index = (uint)Interlocked.Increment(ref ClusterServiceLocator._WorldCluster.CLIETNIDs);
                 lock (((ICollection)ClusterServiceLocator._WorldCluster.CLIENTs).SyncRoot)
                     ClusterServiceLocator._WorldCluster.CLIENTs.Add(Index, this);
                 ClusterServiceLocator._WC_Stats.ConnectionsIncrement();
@@ -639,7 +640,7 @@ namespace Mangos.Cluster.Server
                             if (SavedBytes.Length == 0)
                             {
                                 if (Encryption)
-                                    Decode(ref SocketBuffer);
+                                    Decode(SocketBuffer);
                             }
                             else
                             {
@@ -672,7 +673,7 @@ namespace Mangos.Cluster.Server
                             Array.Copy(SocketBuffer, data, PacketLen);
 
                             // Create packet and add it to queue
-                            var p = new Packets.PacketClass(ref data);
+                            var p = new Packets.PacketClass(data);
                             lock (Queue.SyncRoot)
                                 Queue.Enqueue(p);
                             try
@@ -744,7 +745,7 @@ namespace Mangos.Cluster.Server
                     if (ClusterServiceLocator._WorldCluster.Config.PacketLogging)
                     {
                         var argclient = this;
-                        ClusterServiceLocator._Packets.LogPacket(p.Data, false, ref argclient);
+                        ClusterServiceLocator._Packets.LogPacket(p.Data, false, argclient);
                     }
 
                     if (ClusterServiceLocator._WorldCluster.PacketHandlers.ContainsKey(p.OpCode) != true)
@@ -755,7 +756,7 @@ namespace Mangos.Cluster.Server
                             Socket.Close();
                             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Unknown Opcode 0x{2:X} [{2}], DataLen={4}", IP, Port, p.OpCode, Constants.vbCrLf, p.Length);
                             var argclient1 = this;
-                            ClusterServiceLocator._Packets.DumpPacket(p.Data, ref argclient1);
+                            ClusterServiceLocator._Packets.DumpPacket(p.Data, argclient1);
                         }
                         else
                         {
@@ -774,7 +775,7 @@ namespace Mangos.Cluster.Server
                         try
                         {
                             var argclient2 = this;
-                            ClusterServiceLocator._WorldCluster.PacketHandlers(p.OpCode).Invoke(ref p, ref argclient2);
+                            ClusterServiceLocator._WorldCluster.PacketHandlers[p.OpCode].Invoke(p, argclient2);
                         }
                         catch (Exception e)
                         {
@@ -791,7 +792,7 @@ namespace Mangos.Cluster.Server
                             p.Dispose();
                         ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Unable to dispose of packet: {0}", p.OpCode);
                         var argclient = this;
-                        ClusterServiceLocator._Packets.DumpPacket(p.Data, ref argclient);
+                        ClusterServiceLocator._Packets.DumpPacket(p.Data, argclient);
                     }
                 }
 
@@ -807,11 +808,11 @@ namespace Mangos.Cluster.Server
                     if (ClusterServiceLocator._WorldCluster.Config.PacketLogging)
                     {
                         var argclient = this;
-                        ClusterServiceLocator._Packets.LogPacket(data, true, ref argclient);
+                        ClusterServiceLocator._Packets.LogPacket(data, true, argclient);
                     }
 
                     if (Encryption)
-                        Encode(ref data);
+                        Encode(data);
                     Socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
                 }
                 catch (Exception Err)
@@ -822,7 +823,7 @@ namespace Mangos.Cluster.Server
                 }
             }
 
-            public void Send(ref Packets.PacketClass packet)
+            public void Send(Packets.PacketClass packet)
             {
                 if (Information.IsNothing(packet))
                     throw new ApplicationException("Packet doesn't contain data!");
@@ -834,11 +835,11 @@ namespace Mangos.Cluster.Server
                     if (ClusterServiceLocator._WorldCluster.Config.PacketLogging)
                     {
                         var argclient = this;
-                        ClusterServiceLocator._Packets.LogPacket(data, true, ref argclient);
+                        ClusterServiceLocator._Packets.LogPacket(data, true, argclient);
                     }
 
                     if (Encryption)
-                        Encode(ref data);
+                        Encode(data);
                     Socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
                 }
                 catch (Exception err)
@@ -853,7 +854,7 @@ namespace Mangos.Cluster.Server
                     packet.Dispose();
             }
 
-            public void SendMultiplyPackets(ref Packets.PacketClass packet)
+            public void SendMultiplyPackets(Packets.PacketClass packet)
             {
                 if (packet is null)
                     throw new ApplicationException("Packet doesn't contain data!");
@@ -865,11 +866,11 @@ namespace Mangos.Cluster.Server
                     if (ClusterServiceLocator._WorldCluster.Config.PacketLogging)
                     {
                         var argclient = this;
-                        ClusterServiceLocator._Packets.LogPacket(data, true, ref argclient);
+                        ClusterServiceLocator._Packets.LogPacket(data, true, argclient);
                     }
 
                     if (Encryption)
-                        Encode(ref data);
+                        Encode(data);
                     Socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
                 }
                 catch (Exception Err)
@@ -942,7 +943,7 @@ namespace Mangos.Cluster.Server
                 Dispose();
             }
 
-            public void Decode(ref byte[] data)
+            public void Decode(byte[] data)
             {
                 int tmp;
                 for (int i = 0; i <= 6 - 1; i++)
@@ -954,7 +955,7 @@ namespace Mangos.Cluster.Server
                 }
             }
 
-            public void Encode(ref byte[] data)
+            public void Encode(byte[] data)
             {
                 for (int i = 0; i <= 4 - 1; i++)
                 {
@@ -970,7 +971,7 @@ namespace Mangos.Cluster.Server
                 {
                     if (!Socket.Connected)
                         return;
-                    new Packets.PacketClass(OPCODES.SMSG_AUTH_RESPONSE).AddInt8(LoginResponse.LOGIN_WAIT_QUEUE);
+                    new Packets.PacketClass(OPCODES.SMSG_AUTH_RESPONSE).AddInt8((byte)LoginResponse.LOGIN_WAIT_QUEUE);
                     new Packets.PacketClass(OPCODES.SMSG_AUTH_RESPONSE).AddInt32(ClusterServiceLocator._WorldCluster.CLIENTs.Count - ClusterServiceLocator._WorldCluster.CHARACTERs.Count);            // amount of players in queue
                     Send(new Packets.PacketClass(OPCODES.SMSG_AUTH_RESPONSE));
                     ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "[{1}:{2}] AUTH_WAIT_QUEUE: Server player limit reached!", IP, Port);
@@ -978,7 +979,7 @@ namespace Mangos.Cluster.Server
                 }
 
                 var argclient = this;
-                ClusterServiceLocator._WC_Handlers_Auth.SendLoginOk(ref argclient);
+                ClusterServiceLocator._WC_Handlers_Auth.SendLoginOk(argclient);
             }
         }
 

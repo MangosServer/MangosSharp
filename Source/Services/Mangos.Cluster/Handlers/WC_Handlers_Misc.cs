@@ -26,37 +26,37 @@ namespace Mangos.Cluster.Handlers
 {
     public class WC_Handlers_Misc
     {
-        public void On_CMSG_QUERY_TIME(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_QUERY_TIME(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUERY_TIME", client.IP, client.Port);
             var response = new Packets.PacketClass(OPCODES.SMSG_QUERY_TIME_RESPONSE);
             response.AddInt32(ClusterServiceLocator._NativeMethods.timeGetTime("")); // GetTimestamp(Now))
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_QUERY_TIME_RESPONSE", client.IP, client.Port);
         }
 
-        public void On_CMSG_NEXT_CINEMATIC_CAMERA(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_NEXT_CINEMATIC_CAMERA(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NEXT_CINEMATIC_CAMERA", client.IP, client.Port);
         }
 
-        public void On_CMSG_COMPLETE_CINEMATIC(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_COMPLETE_CINEMATIC(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_COMPLETE_CINEMATIC", client.IP, client.Port);
         }
 
-        public void On_CMSG_PLAYED_TIME(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_PLAYED_TIME(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY", client.IP, client.Port);
             var response = new Packets.PacketClass(OPCODES.SMSG_PLAYED_TIME);
             response.AddInt32(1);
             response.AddInt32(1);
-            client.Send(ref response);
+            client.Send(response);
             response.Dispose();
         }
 
-        public void On_CMSG_NAME_QUERY(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_NAME_QUERY(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             if (packet.Data.Length - 1 < 13)
                 return;
@@ -68,11 +68,11 @@ namespace Mangos.Cluster.Handlers
                 var SMSG_NAME_QUERY_RESPONSE = new Packets.PacketClass(OPCODES.SMSG_NAME_QUERY_RESPONSE);
                 SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
                 SMSG_NAME_QUERY_RESPONSE.AddString(ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Name);
-                SMSG_NAME_QUERY_RESPONSE.AddInt32(ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Race);
+                SMSG_NAME_QUERY_RESPONSE.AddInt32((byte)ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Race);
                 SMSG_NAME_QUERY_RESPONSE.AddInt32(ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Gender);
-                SMSG_NAME_QUERY_RESPONSE.AddInt32(ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Classe);
+                SMSG_NAME_QUERY_RESPONSE.AddInt32((byte)ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Classe);
                 SMSG_NAME_QUERY_RESPONSE.AddInt8(0);
-                client.Send(ref SMSG_NAME_QUERY_RESPONSE);
+                client.Send(SMSG_NAME_QUERY_RESPONSE);
                 SMSG_NAME_QUERY_RESPONSE.Dispose();
                 return;
             }
@@ -90,14 +90,14 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_INSPECT(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_INSPECT(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong GUID = packet.GetUInt64();
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_INSPECT [GUID={2:X}]", client.IP, client.Port, GUID);
         }
 
-        public void On_CMSG_CANCEL_TRADE(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_CANCEL_TRADE(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             if (client.Character is object && client.Character.IsInWorld)
             {
@@ -116,12 +116,12 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_LOGOUT_CANCEL(ref Packets.PacketClass packet, ref WC_Network.ClientClass client)
+        public void On_CMSG_LOGOUT_CANCEL(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOGOUT_CANCEL", client.IP, client.Port);
         }
 
-        // Public Sub On_CMSG_MOVE_TIME_SKIPPED(ByRef packet As PacketClass, ByRef client As ClientClass)
+        // Public Sub On_CMSG_MOVE_TIME_SKIPPED(Bypacket As PacketClass, Byclient As ClientClass)
         // packet.GetUInt64()
         // packet.GetUInt32()
         // Dim WC_MsTime As Integer = msTime()
