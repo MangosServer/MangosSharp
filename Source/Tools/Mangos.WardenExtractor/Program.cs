@@ -196,25 +196,25 @@ namespace Mangos.WardenExtractor
                 for (int i = 1; i <= 64; i++)
                 {
                     val = val + key[i * 4 - 4] + @base[position % @base.Length];
-                    val = val & 0xFF;
+                    val &= 0xFF;
                     position += 1;
                     temp = key[i * 4 - 4];
                     key[i * 4 - 4] = key[val & 0xFF];
                     key[val & 0xFF] = temp;
                     val = val + key[i * 4 - 3] + @base[position % @base.Length];
-                    val = val & 0xFF;
+                    val &= 0xFF;
                     position += 1;
                     temp = key[i * 4 - 3];
                     key[i * 4 - 3] = key[val & 0xFF];
                     key[val & 0xFF] = temp;
                     val = val + key[i * 4 - 2] + @base[position % @base.Length];
-                    val = val & 0xFF;
+                    val &= 0xFF;
                     position += 1;
                     temp = key[i * 4 - 2];
                     key[i * 4 - 2] = key[val & 0xFF];
                     key[val & 0xFF] = temp;
                     val = val + key[i * 4 - 1] + @base[position % @base.Length];
-                    val = val & 0xFF;
+                    val &= 0xFF;
                     position += 1;
                     temp = key[i * 4 - 1];
                     key[i * 4 - 1] = key[val & 0xFF];

@@ -101,7 +101,7 @@ namespace Mangos.World.Handlers
                     SMSG_UPDATE_OBJECT.AddInt8(0);
 
                     // DONE: Disable Turn
-                    client.Character.cUnitFlags = client.Character.cUnitFlags | UnitFlags.UNIT_FLAG_STUNTED;
+                    client.Character.cUnitFlags |= UnitFlags.UNIT_FLAG_STUNTED;
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
 
                     // DONE: StandState -> Sit
@@ -188,7 +188,7 @@ namespace Mangos.World.Handlers
                     SMSG_UPDATE_OBJECT.AddInt8(0);
 
                     // DONE: Enable turn
-                    client.Character.cUnitFlags = client.Character.cUnitFlags & !UnitFlags.UNIT_FLAG_STUNTED;
+                    client.Character.cUnitFlags &= !UnitFlags.UNIT_FLAG_STUNTED;
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
 
                     // DONE: StandState -> Stand

@@ -279,7 +279,7 @@ namespace Mangos.World.Warden
                                         dwCurrent = Marshal.ReadInt32(new IntPtr(dwImports));
                                         if (dwCurrent <= 0)
                                         {
-                                            dwCurrent = dwCurrent & 0x7FFFFFFF;
+                                            dwCurrent &= 0x7FFFFFFF;
                                             procAddr = (int)NativeMethods.GetProcAddress((IntPtr)hModule, Convert.ToString(new IntPtr(dwCurrent)), "");
                                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "        Ordinary: 0x{0:X8}", dwCurrent);
                                         }

@@ -233,17 +233,17 @@ namespace Mangos.Cluster.Handlers
                 var modes = CHANNEL_USER_FLAG.CHANNEL_FLAG_NONE;
                 if (Muted.Contains(character.Guid))
                 {
-                    modes = modes | CHANNEL_USER_FLAG.CHANNEL_FLAG_MUTED;
+                    modes |= CHANNEL_USER_FLAG.CHANNEL_FLAG_MUTED;
                 }
 
                 if (Moderators.Contains(character.Guid))
                 {
-                    modes = modes | CHANNEL_USER_FLAG.CHANNEL_FLAG_MODERATOR;
+                    modes |= CHANNEL_USER_FLAG.CHANNEL_FLAG_MODERATOR;
                 }
 
                 if (Owner == character.Guid)
                 {
-                    modes = modes | CHANNEL_USER_FLAG.CHANNEL_FLAG_OWNER;
+                    modes |= CHANNEL_USER_FLAG.CHANNEL_FLAG_OWNER;
                 }
 
                 Joined_Mode[character.Guid] = (byte)modes;

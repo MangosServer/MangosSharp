@@ -663,7 +663,7 @@ namespace Mangos.World.Spells
                 }
 
                 if (auraSpell)
-                    CustomAttributs = CustomAttributs | (uint)SpellAttributesCustom.SPELL_ATTR_CU_AURA_SPELL;
+                    CustomAttributs |= (uint)SpellAttributesCustom.SPELL_ATTR_CU_AURA_SPELL;
                 if (SpellFamilyName == (int)SpellFamilyNames.SPELLFAMILY_PALADIN && (SpellFamilyFlags & 0xC0000000) != 0)
                 {
                     if (SpellEffects[0] is object)
@@ -680,14 +680,14 @@ namespace Mangos.World.Spells
                             case var case1 when case1 == AuraEffects_Names.SPELL_AURA_PERIODIC_DAMAGE_PERCENT:
                             case var case2 when case2 == AuraEffects_Names.SPELL_AURA_PERIODIC_LEECH:
                                 {
-                                    CustomAttributs = CustomAttributs | (uint)SpellAttributesCustom.SPELL_ATTR_CU_AURA_DOT;
+                                    CustomAttributs |= (uint)SpellAttributesCustom.SPELL_ATTR_CU_AURA_DOT;
                                     break;
                                 }
 
                             case var case3 when case3 == AuraEffects_Names.SPELL_AURA_PERIODIC_HEAL:
                             case var case4 when case4 == AuraEffects_Names.SPELL_AURA_OBS_MOD_HEALTH:
                                 {
-                                    CustomAttributs = CustomAttributs | (uint)SpellAttributesCustom.SPELL_ATTR_CU_AURA_HOT;
+                                    CustomAttributs |= (uint)SpellAttributesCustom.SPELL_ATTR_CU_AURA_HOT;
                                     break;
                                 }
 
@@ -699,7 +699,7 @@ namespace Mangos.World.Spells
 
                             case var case6 when case6 == AuraEffects_Names.SPELL_AURA_MOD_DECREASE_SPEED:
                                 {
-                                    CustomAttributs = CustomAttributs | (uint)SpellAttributesCustom.SPELL_ATTR_CU_MOVEMENT_IMPAIR;
+                                    CustomAttributs |= (uint)SpellAttributesCustom.SPELL_ATTR_CU_MOVEMENT_IMPAIR;
                                     break;
                                 }
                         }
@@ -712,7 +712,7 @@ namespace Mangos.World.Spells
                             case var case10 when case10 == SpellEffects_Names.SPELL_EFFECT_WEAPON_PERCENT_DAMAGE:
                             case var case11 when case11 == SpellEffects_Names.SPELL_EFFECT_HEAL:
                                 {
-                                    CustomAttributs = CustomAttributs | (uint)SpellAttributesCustom.SPELL_ATTR_CU_DIRECT_DAMAGE;
+                                    CustomAttributs |= (uint)SpellAttributesCustom.SPELL_ATTR_CU_DIRECT_DAMAGE;
                                     break;
                                 }
 
@@ -723,7 +723,7 @@ namespace Mangos.World.Spells
                                         Speed = 42.0f; // Charge default speed
                                     }
 
-                                    CustomAttributs = CustomAttributs | (uint)SpellAttributesCustom.SPELL_ATTR_CU_CHARGE;
+                                    CustomAttributs |= (uint)SpellAttributesCustom.SPELL_ATTR_CU_CHARGE;
                                     break;
                                 }
                         }
@@ -752,14 +752,14 @@ namespace Mangos.World.Spells
 
                 if (SpellVisual == 3879)
                 {
-                    CustomAttributs = CustomAttributs | (uint)SpellAttributesCustom.SPELL_ATTR_CU_CONE_BACK;
+                    CustomAttributs |= (uint)SpellAttributesCustom.SPELL_ATTR_CU_CONE_BACK;
                 }
 
                 switch (ID)
                 {
                     case 26029: // Dark Glare
                         {
-                            CustomAttributs = CustomAttributs | (uint)SpellAttributesCustom.SPELL_ATTR_CU_CONE_LINE;
+                            CustomAttributs |= (uint)SpellAttributesCustom.SPELL_ATTR_CU_CONE_LINE;
                             break;
                         }
 
@@ -768,7 +768,7 @@ namespace Mangos.World.Spells
                     case 28884:
                     case 26789: // Meteor
                         {
-                            CustomAttributs = CustomAttributs | (uint)SpellAttributesCustom.SPELL_ATTR_CU_SHARE_DAMAGE;
+                            CustomAttributs |= (uint)SpellAttributesCustom.SPELL_ATTR_CU_SHARE_DAMAGE;
                             break;
                         }
 
@@ -778,7 +778,7 @@ namespace Mangos.World.Spells
                     case 10890:
                     case 12494: // Psychic Scream, Frostbite
                         {
-                            Attributes = Attributes | (int)SpellAttributes.SPELL_ATTR_BREAKABLE_BY_DAMAGE;
+                            Attributes |= (int)SpellAttributes.SPELL_ATTR_BREAKABLE_BY_DAMAGE;
                             break;
                         }
                 }
@@ -981,7 +981,7 @@ namespace Mangos.World.Spells
                                         {
                                             withBlock.spellCastManaRegeneration = 5;
                                             withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_POWER1, withBlock.Mana.Current);
-                                            withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
+                                            withBlock.GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
                                             withBlock.SendCharacterUpdate();
                                         }
 
@@ -1001,7 +1001,7 @@ namespace Mangos.World.Spells
                                         }
 
                                         withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_POWER2, withBlock.Rage.Current);
-                                        withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
+                                        withBlock.GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
                                         withBlock.SendCharacterUpdate();
                                         break;
                                     }
@@ -1020,7 +1020,7 @@ namespace Mangos.World.Spells
                                         }
 
                                         withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, withBlock.Life.Current);
-                                        withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_HP;
+                                        withBlock.GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_HP;
                                         withBlock.SendCharacterUpdate();
                                         break;
                                     }
@@ -1038,7 +1038,7 @@ namespace Mangos.World.Spells
                                         }
 
                                         withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_POWER4, withBlock.Energy.Current);
-                                        withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
+                                        withBlock.GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
                                         withBlock.SendCharacterUpdate();
                                         break;
                                     }
@@ -1700,9 +1700,9 @@ namespace Mangos.World.Spells
             {
                 short castFlags = 256;
                 if (IsRanged)
-                    castFlags = castFlags | SpellCastFlags.CAST_FLAG_RANGED;
+                    castFlags |= SpellCastFlags.CAST_FLAG_RANGED;
                 if (Item is object)
-                    castFlags = castFlags | SpellCastFlags.CAST_FLAG_ITEM_CASTER;
+                    castFlags |= SpellCastFlags.CAST_FLAG_ITEM_CASTER;
                 // TODO: If missed anyone SpellGoFlags.CAST_FLAG_EXTRA_MSG
 
                 int hits = 0;
@@ -3575,7 +3575,7 @@ namespace Mangos.World.Spells
                     var withBlock = (WS_Creatures.CreatureObject)Target.unitTarget;
                     if (withBlock.IsDead && WorldServiceLocator._Functions.HaveFlags(withBlock.cUnitFlags, (int)UnitFlags.UNIT_FLAG_SKINNABLE))
                     {
-                        withBlock.cUnitFlags = withBlock.cUnitFlags & !UnitFlags.UNIT_FLAG_SKINNABLE;
+                        withBlock.cUnitFlags &= !UnitFlags.UNIT_FLAG_SKINNABLE;
                         // TODO: Is skinning skill requirement met?
                         // TODO: Update skinning skill!
 
@@ -4120,7 +4120,7 @@ namespace Mangos.World.Spells
                 {
                     // DONE: Ressurect pets
                     Target.unitTarget.Life.Current = ((WS_Creatures.CreatureObject)Unit).Life.Maximum * SpellInfo.valueBase / 100;
-                    Target.unitTarget.cUnitFlags = Target.unitTarget.cUnitFlags & !UnitFlags.UNIT_FLAG_DEAD;
+                    Target.unitTarget.cUnitFlags &= !UnitFlags.UNIT_FLAG_DEAD;
                     var packetForNear = new Packets.UpdatePacketClass();
                     var UpdateData = new Packets.UpdateClass((int)EUnitFields.UNIT_END);
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, ((WS_Creatures.CreatureObject)Unit).Life.Current);
@@ -6469,9 +6469,9 @@ namespace Mangos.World.Spells
                     withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINDAMAGE, withBlock.Damage.Minimum);
                     withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXDAMAGE, withBlock.Damage.Maximum);
                     withBlock.SendCharacterUpdate(true);
-                    withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POWER_TYPE;
-                    withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
-                    withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_MAX_POWER;
+                    withBlock.GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POWER_TYPE;
+                    withBlock.GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
+                    withBlock.GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_MAX_POWER;
                     WorldServiceLocator._WS_PlayerHelper.InitializeTalentSpells((WS_PlayerData.CharacterObject)Target);
                 }
             }
@@ -7073,7 +7073,7 @@ namespace Mangos.World.Spells
             {
                 case var @case when @case == AuraAction.AURA_ADD:
                     {
-                        Target.cUnitFlags = Target.cUnitFlags | UnitFlags.UNIT_FLAG_STUNTED;
+                        Target.cUnitFlags |= UnitFlags.UNIT_FLAG_STUNTED;
                         if (Target is WS_PlayerData.CharacterObject)
                         {
                             ((WS_PlayerData.CharacterObject)Target).SetMoveRoot();
@@ -7095,7 +7095,7 @@ namespace Mangos.World.Spells
                 case var case1 when case1 == AuraAction.AURA_REMOVE:
                 case var case2 when case2 == AuraAction.AURA_REMOVEBYDURATION:
                     {
-                        Target.cUnitFlags = Target.cUnitFlags & !UnitFlags.UNIT_FLAG_STUNTED;
+                        Target.cUnitFlags &= !UnitFlags.UNIT_FLAG_STUNTED;
                         if (Target is WS_PlayerData.CharacterObject)
                         {
                             ((WS_PlayerData.CharacterObject)Target).SetMoveUnroot();
@@ -7137,7 +7137,7 @@ namespace Mangos.World.Spells
             {
                 case var @case when @case == AuraAction.AURA_ADD:
                     {
-                        Target.cUnitFlags = Target.cUnitFlags | UnitFlags.UNIT_FLAG_FLEEING;
+                        Target.cUnitFlags |= UnitFlags.UNIT_FLAG_FLEEING;
                         response.AddInt8(0);
                         break;
                     }
@@ -7145,7 +7145,7 @@ namespace Mangos.World.Spells
                 case var case1 when case1 == AuraAction.AURA_REMOVE:
                 case var case2 when case2 == AuraAction.AURA_REMOVEBYDURATION:
                     {
-                        Target.cUnitFlags = Target.cUnitFlags & !UnitFlags.UNIT_FLAG_FLEEING;
+                        Target.cUnitFlags &= !UnitFlags.UNIT_FLAG_FLEEING;
                         response.AddInt8(1);
                         break;
                     }
@@ -7369,7 +7369,7 @@ namespace Mangos.World.Spells
                         packet.Dispose();
                     }
 
-                    shiftdata = shiftdata << 1;
+                    shiftdata <<= 1;
                 }
             }
             else if (Action == AuraAction.AURA_REMOVE || Action == AuraAction.AURA_REMOVEBYDURATION)
@@ -7422,7 +7422,7 @@ namespace Mangos.World.Spells
                         packet.Dispose();
                     }
 
-                    shiftdata = shiftdata << 1;
+                    shiftdata <<= 1;
                 }
             }
             else if (Action == AuraAction.AURA_REMOVE || Action == AuraAction.AURA_REMOVEBYDURATION)

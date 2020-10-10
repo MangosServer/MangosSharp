@@ -452,8 +452,8 @@ namespace Mangos.World.Handlers
         {
             character.TaxiNodes.Clear();
             character.Mount = 0;
-            character.cUnitFlags = character.cUnitFlags & !UnitFlags.UNIT_FLAG_DISABLE_MOVE;
-            character.cUnitFlags = character.cUnitFlags & !UnitFlags.UNIT_FLAG_TAXI_FLIGHT;
+            character.cUnitFlags &= !UnitFlags.UNIT_FLAG_DISABLE_MOVE;
+            character.cUnitFlags &= !UnitFlags.UNIT_FLAG_TAXI_FLIGHT;
             character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, character.Mount);
             character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, character.cUnitFlags);
             character.SendCharacterUpdate();
@@ -468,8 +468,8 @@ namespace Mangos.World.Handlers
         private void TaxiTake(WS_PlayerData.CharacterObject character, int mount)
         {
             character.Mount = mount;
-            character.cUnitFlags = character.cUnitFlags | UnitFlags.UNIT_FLAG_DISABLE_MOVE;
-            character.cUnitFlags = character.cUnitFlags | UnitFlags.UNIT_FLAG_TAXI_FLIGHT;
+            character.cUnitFlags |= UnitFlags.UNIT_FLAG_DISABLE_MOVE;
+            character.cUnitFlags |= UnitFlags.UNIT_FLAG_TAXI_FLIGHT;
             character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, character.Mount);
             character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, character.cUnitFlags);
             character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, character.Copper);

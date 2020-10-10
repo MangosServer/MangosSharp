@@ -711,7 +711,7 @@ namespace Mangos.World.Objects
                 return;
 
             // DONE: Setting the flag
-            _flags = _flags | ITEM_FLAGS.ITEM_FLAGS_BINDED;
+            _flags |= ITEM_FLAGS.ITEM_FLAGS_BINDED;
             Save();
 
             // DONE: Sending update to character

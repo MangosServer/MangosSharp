@@ -283,7 +283,7 @@ namespace Mangos.World.Globals
                     int flags2 = updateObject.charMovementFlags & 0xFF;
                     if (updateObject.OnTransport is object)
                     {
-                        flags2 = flags2 | MovementFlags.MOVEMENTFLAG_ONTRANSPORT;
+                        flags2 |= MovementFlags.MOVEMENTFLAG_ONTRANSPORT;
                     }
 
                     packet.AddInt8(0x70);        // flags

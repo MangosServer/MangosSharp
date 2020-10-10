@@ -137,7 +137,7 @@ namespace Mangos.World.Social
             {
                 opCode = OPCODES.SMSG_PARTY_MEMBER_STATS_FULL;
                 if (objCharacter.ManaType != ManaTypes.TYPE_MANA)
-                    flag = flag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POWER_TYPE;
+                    flag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POWER_TYPE;
             }
 
             var packet = new Packets.PacketClass(opCode);
@@ -210,7 +210,7 @@ namespace Mangos.World.Social
                 {
                     if (objCharacter.ActiveSpells[i] is object)
                     {
-                        auraMask = auraMask | 1 << (int)(ulong)i;
+                        auraMask |= 1 << (int)(ulong)i;
                         packet.AddUInt16((ushort)objCharacter.ActiveSpells[i].SpellID);
                         packet.AddInt8(1); // Stack Count?
                     }
@@ -326,7 +326,7 @@ namespace Mangos.World.Social
                     {
                         if (objCharacter.Pet.ActiveSpells[i] is object)
                         {
-                            auraMask = auraMask | 1 << (int)(ulong)i;
+                            auraMask |= 1 << (int)(ulong)i;
                             packet.AddUInt16((ushort)objCharacter.Pet.ActiveSpells[i].SpellID);
                             packet.AddInt8(1); // Stack Count?
                         }

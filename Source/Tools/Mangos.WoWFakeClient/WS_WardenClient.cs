@@ -474,7 +474,7 @@ namespace Mangos.WoWFakeClient
                         }
                         else
                         {
-                            proc = proc & 0x7FFFFFFF;
+                            proc &= 0x7FFFFFFF;
                             // Console.WriteLine("Proc: ord(0x{0:X})", proc)
                         }
 

@@ -82,7 +82,7 @@ namespace Mangos.World.Quests
             {
                 if (Quest.ObjectivesCastSpell[bytLoop] > 0)
                 {
-                    ObjectiveFlags = ObjectiveFlags | QuestObjectiveFlag.QUEST_OBJECTIVE_CAST;
+                    ObjectiveFlags |= QuestObjectiveFlag.QUEST_OBJECTIVE_CAST;
                     ObjectivesType[bytLoop] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_CAST;
                     ObjectivesSpell[bytLoop] = Quest.ObjectivesCastSpell[bytLoop];
                     ObjectivesObject[0] = Quest.ObjectivesKill[bytLoop];
@@ -99,7 +99,7 @@ namespace Mangos.World.Quests
                     {
                         if (ObjectivesType[bytLoop2] == 0)
                         {
-                            ObjectiveFlags = ObjectiveFlags | QuestObjectiveFlag.QUEST_OBJECTIVE_KILL;
+                            ObjectiveFlags |= QuestObjectiveFlag.QUEST_OBJECTIVE_KILL;
                             ObjectivesType[bytLoop2] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_KILL;
                             ObjectivesObject[bytLoop2] = Quest.ObjectivesKill[bytLoop];
                             ObjectivesCount[bytLoop2] = (byte)Quest.ObjectivesKill_Count[bytLoop];
@@ -114,7 +114,7 @@ namespace Mangos.World.Quests
             {
                 if (Quest.ObjectivesItem[bytLoop] > 0)
                 {
-                    ObjectiveFlags = ObjectiveFlags | QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM;
+                    ObjectiveFlags |= QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM;
                     ObjectivesType[bytLoop] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM;
                     ObjectivesItem[bytLoop] = Quest.ObjectivesItem[bytLoop];
                     ObjectivesItemCount[bytLoop] = (byte)Quest.ObjectivesItem_Count[bytLoop];
@@ -124,7 +124,7 @@ namespace Mangos.World.Quests
             // Load Exploration loctions
             if (Quest.SpecialFlags & QuestSpecialFlag.QUEST_SPECIALFLAGS_EXPLORE)
             {
-                ObjectiveFlags = ObjectiveFlags | QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE;
+                ObjectiveFlags |= QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE;
                 for (byte bytLoop = 0; bytLoop <= 3; bytLoop++)
                 {
                     ObjectivesType[bytLoop] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE;
@@ -134,7 +134,7 @@ namespace Mangos.World.Quests
             // 'TODO: Fix this below
             if (Quest.SpecialFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_EVENT)
             {
-                ObjectiveFlags = ObjectiveFlags | QuestObjectiveFlag.QUEST_OBJECTIVE_EVENT;
+                ObjectiveFlags |= QuestObjectiveFlag.QUEST_OBJECTIVE_EVENT;
                 for (int i = 0; i <= 3; i++)
                 {
                     if (ObjectivesType[i] == 0)

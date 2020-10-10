@@ -273,7 +273,7 @@ namespace Mangos.World.Handlers
             result.Turn = 0;
             result.HitInfo = 0;
             if (DualWield)
-                result.HitInfo = result.HitInfo | AttackHitState.HITINFO_LEFTSWING;
+                result.HitInfo |= AttackHitState.HITINFO_LEFTSWING;
             if (Ability is object)
             {
                 result.DamageType = (DamageTypes)Ability.School;
@@ -312,7 +312,7 @@ namespace Mangos.World.Handlers
             {
                 if (((WS_Creatures.CreatureObject)Victim).aiScript.State == AIState.AI_MOVING_TO_SPAWN)
                 {
-                    result.HitInfo = result.HitInfo | AttackHitState.HIT_MISS;
+                    result.HitInfo |= AttackHitState.HIT_MISS;
                     return result;
                 }
             }
@@ -396,7 +396,7 @@ namespace Mangos.World.Handlers
                     {
                         // DONE: Miss attack
                         result.Damage = 0;
-                        result.HitInfo = result.HitInfo | AttackHitState.HITINFO_MISS;
+                        result.HitInfo |= AttackHitState.HITINFO_MISS;
                         break;
                     }
 
@@ -407,7 +407,7 @@ namespace Mangos.World.Handlers
                         result.victimState = AttackVictimState.VICTIMSTATE_DODGE;
                         DoEmote((int)Emotes.ONESHOT_PARRYUNARMED, ref (WS_Base.BaseObject)Victim);
                         // TODO: Remove after 5 secs?
-                        Victim.AuraState = Victim.AuraState | SpellAuraStates.AURASTATE_FLAG_DODGE_BLOCK;
+                        Victim.AuraState |= SpellAuraStates.AURASTATE_FLAG_DODGE_BLOCK;
                         if (Victim is WS_PlayerData.CharacterObject)
                         {
                             ((WS_PlayerData.CharacterObject)Victim).SetUpdateFlag((int)EUnitFields.UNIT_FIELD_AURASTATE, Victim.AuraState);
@@ -424,7 +424,7 @@ namespace Mangos.World.Handlers
                         result.victimState = AttackVictimState.VICTIMSTATE_PARRY;
                         DoEmote((int)Emotes.ONESHOT_PARRYUNARMED, ref (WS_Base.BaseObject)Victim);
                         // TODO: Remove after 5 secs?
-                        Victim.AuraState = Victim.AuraState | SpellAuraStates.AURASTATE_FLAG_PARRY;
+                        Victim.AuraState |= SpellAuraStates.AURASTATE_FLAG_PARRY;
                         if (Victim is WS_PlayerData.CharacterObject)
                         {
                             ((WS_PlayerData.CharacterObject)Victim).SetUpdateFlag((int)EUnitFields.UNIT_FIELD_AURASTATE, Victim.AuraState);
@@ -438,8 +438,8 @@ namespace Mangos.World.Handlers
                     {
                         // DONE: Glancing Blow
                         result.Damage = (int)(result.Damage - Conversion.Fix(skillDiference * 0.03f * result.Damage));
-                        result.HitInfo = result.HitInfo | AttackHitState.HITINFO_HITANIMATION;
-                        result.HitInfo = result.HitInfo | AttackHitState.HIT_GLANCING_BLOW;
+                        result.HitInfo |= AttackHitState.HITINFO_HITANIMATION;
+                        result.HitInfo |= AttackHitState.HIT_GLANCING_BLOW;
                         break;
                     }
 
@@ -461,9 +461,9 @@ namespace Mangos.World.Handlers
                             result.victimState = AttackVictimState.VICTIMSTATE_BLOCKS;
                         }
 
-                        result.HitInfo = result.HitInfo | AttackHitState.HITINFO_HITANIMATION;
+                        result.HitInfo |= AttackHitState.HITINFO_HITANIMATION;
                         if (result.GetDamage <= 0)
-                            result.HitInfo = result.HitInfo | AttackHitState.HITINFO_BLOCK;
+                            result.HitInfo |= AttackHitState.HITINFO_BLOCK;
                         break;
                     }
 
@@ -471,8 +471,8 @@ namespace Mangos.World.Handlers
                     {
                         // DONE: Critical hit attack
                         result.Damage *= 2;
-                        result.HitInfo = result.HitInfo | AttackHitState.HITINFO_HITANIMATION;
-                        result.HitInfo = result.HitInfo | AttackHitState.HITINFO_CRITICALHIT;
+                        result.HitInfo |= AttackHitState.HITINFO_HITANIMATION;
+                        result.HitInfo |= AttackHitState.HITINFO_CRITICALHIT;
                         DoEmote((int)Emotes.ONESHOT_WOUNDCRITICAL, ref (WS_Base.BaseObject)Victim);
                         break;
                     }
@@ -481,15 +481,15 @@ namespace Mangos.World.Handlers
                     {
                         // DONE: Crushing Blow
                         result.Damage = result.Damage * 3 >> 1;
-                        result.HitInfo = result.HitInfo | AttackHitState.HITINFO_HITANIMATION;
-                        result.HitInfo = result.HitInfo | AttackHitState.HIT_CRUSHING_BLOW;
+                        result.HitInfo |= AttackHitState.HITINFO_HITANIMATION;
+                        result.HitInfo |= AttackHitState.HIT_CRUSHING_BLOW;
                         break;
                     }
 
                 default:
                     {
                         // DONE: Normal hit
-                        result.HitInfo = result.HitInfo | AttackHitState.HITINFO_HITANIMATION;
+                        result.HitInfo |= AttackHitState.HITINFO_HITANIMATION;
                         break;
                     }
             }
@@ -499,7 +499,7 @@ namespace Mangos.World.Handlers
             {
                 result.Resist = (int)Victim.GetResist(ref Attacker, result.DamageType, result.Damage);
                 if (result.GetDamage <= 0)
-                    result.HitInfo = result.HitInfo | AttackHitState.HIT_RESIST;
+                    result.HitInfo |= AttackHitState.HIT_RESIST;
             }
 
             // DONE: Absorb
@@ -507,7 +507,7 @@ namespace Mangos.World.Handlers
             {
                 result.Absorbed = Victim.GetAbsorb(result.DamageType, result.Damage);
                 if (result.GetDamage <= 0)
-                    result.HitInfo = result.HitInfo | AttackHitState.HITINFO_ABSORB;
+                    result.HitInfo |= AttackHitState.HITINFO_ABSORB;
             }
 
             // TODO: Procs
@@ -1468,7 +1468,7 @@ namespace Mangos.World.Handlers
 
         public void SetPlayerInCombat(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            objCharacter.cUnitFlags = objCharacter.cUnitFlags | UnitFlags.UNIT_FLAG_IN_COMBAT;
+            objCharacter.cUnitFlags |= UnitFlags.UNIT_FLAG_IN_COMBAT;
             objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
             objCharacter.SendCharacterUpdate(false);
             objCharacter.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_ENTER_COMBAT);
@@ -1476,7 +1476,7 @@ namespace Mangos.World.Handlers
 
         public void SetPlayerOutOfCombat(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            objCharacter.cUnitFlags = objCharacter.cUnitFlags & !UnitFlags.UNIT_FLAG_IN_COMBAT;
+            objCharacter.cUnitFlags &= !UnitFlags.UNIT_FLAG_IN_COMBAT;
             objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
             objCharacter.SendCharacterUpdate(false);
         }

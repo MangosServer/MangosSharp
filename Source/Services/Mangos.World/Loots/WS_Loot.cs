@@ -768,7 +768,7 @@ namespace Mangos.World.Loots
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT [GUID={2:X}]", client.IP, client.Port, GUID);
 
             // DONE: Make sure other players sees that you're looting
-            client.Character.cUnitFlags = client.Character.cUnitFlags | UnitFlags.UNIT_FLAG_LOOTING;
+            client.Character.cUnitFlags |= UnitFlags.UNIT_FLAG_LOOTING;
             client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
             client.Character.SendCharacterUpdate();
             if (LootTable.ContainsKey(GUID))
@@ -794,7 +794,7 @@ namespace Mangos.World.Loots
             }
 
             // DONE: Remove looting for other players
-            client.Character.cUnitFlags = client.Character.cUnitFlags & !UnitFlags.UNIT_FLAG_LOOTING;
+            client.Character.cUnitFlags &= !UnitFlags.UNIT_FLAG_LOOTING;
             client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
             client.Character.SendCharacterUpdate();
             if (LootTable.ContainsKey(GUID))

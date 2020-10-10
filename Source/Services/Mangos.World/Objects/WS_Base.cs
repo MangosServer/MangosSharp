@@ -38,7 +38,7 @@ namespace Mangos.World.Objects
         {
             public BaseObject()
             {
-                CorpseType = this.CorpseType.CORPSE_BONES;
+                CorpseType = CorpseType.CORPSE_BONES;
             }
 
             public ulong GUID = 0UL;
@@ -470,7 +470,7 @@ namespace Mangos.World.Objects
 
             public bool HaveAura(int SpellID)
             {
-                for (byte i = 0, loopTo = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1; i <= loopTo; i++)
+                for (byte i = 0, loopTo = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1); i <= loopTo; i++)
                 {
                     if (ActiveSpells[i] is object && ActiveSpells[i].SpellID == SpellID)
                         return true;
@@ -500,7 +500,7 @@ namespace Mangos.World.Objects
 
             public bool HaveVisibleAura(int SpellID)
             {
-                for (byte i = 0, loopTo = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1; i <= loopTo; i++)
+                for (byte i = 0, loopTo = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1); i <= loopTo; i++)
                 {
                     if (ActiveSpells[i] is object && ActiveSpells[i].SpellID == SpellID)
                         return true;
@@ -511,7 +511,7 @@ namespace Mangos.World.Objects
 
             public bool HavePassiveAura(int SpellID)
             {
-                for (byte i = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE, loopTo = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1; i <= loopTo; i++)
+                for (byte i = (byte)WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE, loopTo = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1); i <= loopTo; i++)
                 {
                     if (ActiveSpells[i] is object && ActiveSpells[i].SpellID == SpellID)
                         return true;
@@ -567,7 +567,7 @@ namespace Mangos.World.Objects
             public void RemoveAurasOfType(AuraEffects_Names AuraIndex, [Optional, DefaultParameterValue(0)] ref int NotSpellID)
             {
                 // DONE: Removing SpellAuras of a certain type
-                for (int i = 0, loopTo = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1; i <= loopTo; i++)
+                for (int i = 0, loopTo = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1); i <= loopTo; i++)
                 {
                     if (ActiveSpells[i] is object && ActiveSpells[i].SpellID != NotSpellID)
                     {
@@ -945,7 +945,7 @@ namespace Mangos.World.Objects
                     case var case4 when case4 == SpellType.SPELL_TYPE_DOT:
                         {
                             var argTarget1 = this;
-                            WorldServiceLocator._WS_Spells.SendPeriodicAuraLog(ref Caster, ref argTarget1, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
+                            WorldServiceLocator._WS_Spells.SendPeriodicAuraLog(Caster, argTarget1, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
                             break;
                         }
 
@@ -959,7 +959,7 @@ namespace Mangos.World.Objects
                     case var case6 when case6 == SpellType.SPELL_TYPE_HEALDOT:
                         {
                             var argTarget3 = this;
-                            WorldServiceLocator._WS_Spells.SendPeriodicAuraLog(ref Caster, ref argTarget3, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
+                            WorldServiceLocator._WS_Spells.SendPeriodicAuraLog(Caster, argTarget3, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
                             break;
                         }
                 }
@@ -1262,7 +1262,7 @@ namespace Mangos.World.Objects
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Damage: {0} [{1}]", Damage, School);
                 foreach (KeyValuePair<int, uint> tmpSpell in AbsorbSpellLeft)
                 {
-                    int Schools = (int)(tmpSpell.Value >> 23U);
+                    int Schools = (int)(tmpSpell.Value >> 0x17U);
                     int AbsorbDamage = (int)(tmpSpell.Value & 0x7FFFFFL);
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Spell: {0} [{1}]", AbsorbDamage, Schools);
                     if (WorldServiceLocator._Functions.HaveFlag((uint)Schools, (byte)School))
@@ -1287,7 +1287,7 @@ namespace Mangos.World.Objects
                             break;
                         }
                     }
-                    else if (Schools & 1 << School)
+                    else if (Schools & (1 << School))
                     {
                         throw new Exception("AHA?!");
                     }

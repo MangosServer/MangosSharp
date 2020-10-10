@@ -116,7 +116,7 @@ namespace Mangos.Cluster.Globals
 
         public bool HaveFlag(uint value, byte flagPos)
         {
-            value = value >> (int)(uint)flagPos;
+            value >>= (int)(uint)flagPos;
             value = (uint)(value % 2L);
             if (value == 1L)
             {
@@ -137,7 +137,7 @@ namespace Mangos.Cluster.Globals
         {
             if (flagValue)
             {
-                value = value | 0x1U << (int)(uint)flagPos;
+                value |= 0x1U << (int)(uint)flagPos;
             }
             else
             {

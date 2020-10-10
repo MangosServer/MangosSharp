@@ -207,21 +207,21 @@ namespace Mangos.World.Server
                                 if (BaseMana != withBlock.Mana.Current)
                                 {
                                     _updateFlag = true;
-                                    withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
+                                    withBlock.GroupUpdateFlag |= (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
                                     withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_POWER1, withBlock.Mana.Current);
                                 }
 
                                 if (BaseRage != withBlock.Rage.Current | (withBlock.cUnitFlags & UnitFlags.UNIT_FLAG_IN_COMBAT) == UnitFlags.UNIT_FLAG_IN_COMBAT)
                                 {
                                     _updateFlag = true;
-                                    withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
+                                    withBlock.GroupUpdateFlag |= (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
                                     withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_POWER2, withBlock.Rage.Current);
                                 }
 
                                 if (BaseEnergy != withBlock.Energy.Current)
                                 {
                                     _updateFlag = true;
-                                    withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
+                                    withBlock.GroupUpdateFlag |= (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
                                     withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_POWER4, withBlock.Energy.Current);
                                 }
 
@@ -229,7 +229,7 @@ namespace Mangos.World.Server
                                 {
                                     _updateFlag = true;
                                     withBlock.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, withBlock.Life.Current);
-                                    withBlock.GroupUpdateFlag = withBlock.GroupUpdateFlag | (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_HP;
+                                    withBlock.GroupUpdateFlag |= (uint)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_HP;
                                 }
 
                                 if (_updateFlag)

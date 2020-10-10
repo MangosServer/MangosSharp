@@ -339,7 +339,7 @@ namespace Mangos.World.Objects
                 long Rotation = 0L;
                 float f_rot1 = (float)Math.Sin(orientation / 2f);
                 long i_rot1 = (long)(f_rot1 / Math.Atan(Math.Pow(2d, -20)));
-                Rotation = Rotation | i_rot1 << 43 >> 43 & 0x1FFFFFL;
+                Rotation |= i_rot1 << 43 >> 43 & 0x1FFFFFL;
                 Update.SetUpdateFlag((int)EGameObjectFields.GAMEOBJECT_ROTATION, Rotation);
 
                 // If a game object has bit 4 set in the flag it needs to be activated (used for quests)
@@ -351,7 +351,7 @@ namespace Mangos.World.Objects
                     byte UsedForQuest = WorldServiceLocator._WorldServer.ALLQUESTS.IsGameObjectUsedForQuest(ref arggameobject, ref Character);
                     if (UsedForQuest > 0)
                     {
-                        Flags = Flags | 4;
+                        Flags |= 4;
                         if (UsedForQuest == 2)
                         {
                             DynFlags = 9;
@@ -637,7 +637,7 @@ namespace Mangos.World.Objects
 
             public void OpenDoor()
             {
-                Flags = Flags | GameObjectFlags.GO_FLAG_IN_USE;
+                Flags |= GameObjectFlags.GO_FLAG_IN_USE;
                 State = GameObjectLootState.DOOR_OPEN;
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "AutoCloseTime: {0}", AutoCloseTime);
                 if (AutoCloseTime > 0)
@@ -656,7 +656,7 @@ namespace Mangos.World.Objects
 
             public void CloseDoor(object state, bool timedOut)
             {
-                Flags = Flags & !GameObjectFlags.GO_FLAG_IN_USE;
+                Flags &= !GameObjectFlags.GO_FLAG_IN_USE;
                 state = GameObjectLootState.DOOR_CLOSED;
                 var packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(1);

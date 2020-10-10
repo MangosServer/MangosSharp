@@ -435,7 +435,7 @@ namespace Mangos.World.Handlers
                 WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM areatrigger_tavern WHERE id = {0};", (object)triggerID), ref q);
                 if (q.Rows.Count > 0)
                 {
-                    client.Character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_RESTING;
+                    client.Character.cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_RESTING;
                     client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)client.Character.cPlayerFlags);
                     client.Character.SendCharacterUpdate(true);
                     return;
@@ -597,7 +597,7 @@ namespace Mangos.World.Handlers
                         SMSG_UPDATE_OBJECT.AddInt8(0);
 
                         // DONE: Disable Turn
-                        client.Character.cUnitFlags = client.Character.cUnitFlags | UnitFlags.UNIT_FLAG_STUNTED;
+                        client.Character.cUnitFlags |= UnitFlags.UNIT_FLAG_STUNTED;
                         UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
                         // DONE: StandState -> Sit
                         client.Character.StandState = (byte)StandStates.STANDSTATE_SIT;
@@ -665,7 +665,7 @@ namespace Mangos.World.Handlers
             }
 
             UpdateCell(ref client.Character);
-            client.Character.GroupUpdateFlag = client.Character.GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION;
+            client.Character.GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION;
             client.Character.ZoneCheck();
 
             // DONE: Check for out of continent - coordinates from WorldMapContinent.dbc

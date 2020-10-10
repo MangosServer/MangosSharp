@@ -234,7 +234,7 @@ namespace Mangos.World.Handlers
                 packet3.AddInt8(0);
                 objCharacter.client.Send(packet3);
                 packet3.Dispose();
-                objCharacter.cUnitFlags = objCharacter.cUnitFlags & !UnitFlags.UNIT_FLAG_UNK21;
+                objCharacter.cUnitFlags &= !UnitFlags.UNIT_FLAG_UNK21;
                 objCharacter.SetUpdateFlag((int)EPlayerFields.PLAYER_FARSIGHT, 0);
                 objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
                 objCharacter.SendCharacterUpdate(false);
@@ -267,7 +267,7 @@ namespace Mangos.World.Handlers
             packet2.AddInt8(1);
             objCharacter.client.Send(packet2);
             packet2.Dispose();
-            objCharacter.cUnitFlags = objCharacter.cUnitFlags | UnitFlags.UNIT_FLAG_UNK21;
+            objCharacter.cUnitFlags |= UnitFlags.UNIT_FLAG_UNK21;
             objCharacter.SetUpdateFlag((int)EPlayerFields.PLAYER_FARSIGHT, objCharacter.TargetGUID);
             objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
             objCharacter.SendCharacterUpdate(false);

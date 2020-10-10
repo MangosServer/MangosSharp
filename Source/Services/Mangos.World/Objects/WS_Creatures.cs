@@ -306,7 +306,7 @@ namespace Mangos.World.Objects
             {
                 Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
                 Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, Size);
-                Update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, (long)Common.Globals.ObjectType.TYPE_OBJECT + (long)Common.Globals.ObjectType.TYPE_UNIT);
+                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_TYPE, (long)Common.Globals.ObjectType.TYPE_OBJECT + (long)Common.Globals.ObjectType.TYPE_UNIT);
                 Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, ID);
                 if (aiScript is object && aiScript.aiTarget is object)
                 {
@@ -561,7 +561,7 @@ namespace Mangos.World.Objects
             public bool CanMoveTo(float x, float y, float z)
             {
                 WS_Base.BaseObject argobjCharacter = this;
-                if (WorldServiceLocator._WS_Maps.IsOutsideOfMap(ref argobjCharacter))
+                if (WorldServiceLocator._WS_Maps.IsOutsideOfMap(argobjCharacter))
                     return false;
                 if (z < WorldServiceLocator._WS_Maps.GetWaterLevel(x, y, (int)MapID))
                 {
@@ -656,7 +656,7 @@ namespace Mangos.World.Objects
                 }
 
                 UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
-                UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + base.ManaType, Mana.Current);
+                UpdateData.SetUpdateFlag((int)((int)EUnitFields.UNIT_FIELD_POWER1 + base.ManaType), Mana.Current);
                 UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                 UpdateData.AddToPacket(packetForNear, ObjectUpdateType.UPDATETYPE_VALUES, this);
                 Packets.PacketClass argpacket = packetForNear;
@@ -717,7 +717,7 @@ namespace Mangos.World.Objects
                     var packetForNear = new Packets.UpdatePacketClass();
                     var UpdateData = new Packets.UpdateClass((int)EUnitFields.UNIT_END);
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + base.ManaType, Mana.Current);
+                    UpdateData.SetUpdateFlag((int)((int)EUnitFields.UNIT_FIELD_POWER1 + base.ManaType), Mana.Current);
                     UpdateData.AddToPacket(packetForNear, ObjectUpdateType.UPDATETYPE_VALUES, this);
                     SendToNearPlayers(ref (Packets.PacketClass)packetForNear);
                     packetForNear.Dispose();
@@ -725,7 +725,7 @@ namespace Mangos.World.Objects
                 }
             }
 
-            public override void Heal(int Damage, [Optional, DefaultParameterValue(null)] WS_Base.BaseUnit Attacker)
+            public void Heal(int Damage, [Optional, DefaultParameterValue(null)] WS_Base.BaseUnit Attacker)
             {
                 if (Life.Current == 0)
                     return;
@@ -755,7 +755,7 @@ namespace Mangos.World.Objects
                 {
                     var packetForNear = new Packets.UpdatePacketClass();
                     var UpdateData = new Packets.UpdateClass((int)EUnitFields.UNIT_END);
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + base.ManaType, Mana.Current);
+                    UpdateData.SetUpdateFlag((int)((int)EUnitFields.UNIT_FIELD_POWER1 + base.ManaType), Mana.Current);
                     UpdateData.AddToPacket(packetForNear, ObjectUpdateType.UPDATETYPE_VALUES, this);
                     SendToNearPlayers(ref (Packets.PacketClass)packetForNear);
                     packetForNear.Dispose();
@@ -771,7 +771,7 @@ namespace Mangos.World.Objects
                 }
                 else if (CreatureInfo.SkinLootID > 0)
                 {
-                    cUnitFlags = cUnitFlags | UnitFlags.UNIT_FLAG_SKINNABLE;
+                    cUnitFlags |= UnitFlags.UNIT_FLAG_SKINNABLE;
                 }
                 else
                 {
@@ -1587,7 +1587,7 @@ namespace Mangos.World.Objects
             {
                 Life.Current = Life.Maximum;
                 Mana.Current = Mana.Maximum;
-                cUnitFlags = cUnitFlags & !UnitFlags.UNIT_FLAG_DEAD;
+                cUnitFlags &= !UnitFlags.UNIT_FLAG_DEAD;
                 cDynamicFlags = 0;
                 positionX = SpawnX;
                 positionY = SpawnY;
@@ -1604,7 +1604,7 @@ namespace Mangos.World.Objects
                     var packetForNear = new Packets.UpdatePacketClass();
                     var UpdateData = new Packets.UpdateClass((int)EUnitFields.UNIT_END);
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Life.Current);
-                    UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + base.ManaType, Mana.Current);
+                    UpdateData.SetUpdateFlag((int)((int)EUnitFields.UNIT_FIELD_POWER1 + base.ManaType), Mana.Current);
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags);
                     UpdateData.AddToPacket(packetForNear, ObjectUpdateType.UPDATETYPE_VALUES, this);
@@ -1930,7 +1930,7 @@ namespace Mangos.World.Objects
             {
                 TextID = _TextID;
                 var MySQLQuery = new DataTable();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM npc_text WHERE ID = {0};", (object)TextID), MySQLQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM npc_text WHERE ID = {0};", (object)TextID), ref MySQLQuery);
                 if (MySQLQuery.Rows.Count > 0)
                 {
                     for (int i = 0; i <= 7; i++)

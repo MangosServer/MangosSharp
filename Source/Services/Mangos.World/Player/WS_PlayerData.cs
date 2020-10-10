@@ -53,8 +53,8 @@ namespace Mangos.World.Player
             {
 
                 // Combat related
-                attackState = new WS_Combat.TAttackTimer(ref phe797c28db562431bb1d7cda496ac4706);
-                corpseCorpseType = this.CorpseType.CORPSE_BONES;
+                attackState = new WS_Combat.TAttackTimer(/*ref phe797c28db562431bb1d7cda496ac4706*/); //Trying to reference something but what?
+                corpseCorpseType = CorpseType.CORPSE_BONES;
                 // DONE: Add space for passive auras
                 ActiveSpells = new WS_Base.BaseActiveSpell[WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs];
 
@@ -246,9 +246,9 @@ namespace Mangos.World.Player
                         {
                             for (byte j = 0; j <= 7; j++)
                             {
-                                if (Conversions.ToBoolean(Conversions.ToLong(tmp[i]) & 1 << j))
+                                if (Conversions.ToBoolean(Conversions.ToLong(tmp[i]) & (1 << j)))
                                 {
-                                    TaxiZones.Set(i * 8 + j, true);
+                                    TaxiZones.Set((i * 8) + j, true);
                                 }
                             }
                         }
@@ -297,18 +297,18 @@ namespace Mangos.World.Player
                 // DONE: Get playerflags from force restrictions
                 uint ForceRestrictions = Conversions.ToUInteger(MySQLQuery.Rows[0]["force_restrictions"]);
                 if (ForceRestrictions & ForceRestrictionFlags.RESTRICT_HIDECLOAK)
-                    cPlayerFlags = cPlayerFlags | PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK;
+                    cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK;
                 if (ForceRestrictions & ForceRestrictionFlags.RESTRICT_HIDEHELM)
-                    cPlayerFlags = cPlayerFlags | PlayerFlags.PLAYER_FLAGS_HIDE_HELM;
+                    cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_HIDE_HELM;
 
                 // DONE: Get Items
                 MySQLQuery.Clear();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_inventory WHERE item_bag = {0};", (object)GUID), MySQLQuery);
+                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_inventory WHERE item_bag = {0};", (object)GUID),ref MySQLQuery);
                 foreach (DataRow row in MySQLQuery.Rows)
                 {
                     if (!Operators.ConditionalCompareObjectEqual(row["item_slot"], WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, false))
                     {
-                        var tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(Conversions.ToLong(row["item_guid"]), this, Conversions.ToByte(row["item_slot"]) < EquipmentSlots.EQUIPMENT_SLOT_END);
+                        var tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID((ulong)Conversions.ToLong(row["item_guid"]), this, Conversions.ToByte(row["item_slot"]) < (byte)EquipmentSlots.EQUIPMENT_SLOT_END);
                         Items[Conversions.ToByte(row["item_slot"])] = tmpItem;
                         if (Conversions.ToByte(row["item_slot"]) < InventorySlots.INVENTORY_SLOT_BAG_END)
                             UpdateAddItemStats(ref tmpItem, Conversions.ToByte(row["item_slot"]));
@@ -331,10 +331,10 @@ namespace Mangos.World.Player
 
                 // DONE: Load corpse if present
                 MySQLQuery.Clear();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM corpse WHERE player = {0};", (object)GUID), ref MySQLQuery);
+                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM corpse WHERE player = {0};", GUID), ref MySQLQuery);
                 if (MySQLQuery.Rows.Count > 0)
                 {
-                    corpseGUID = MySQLQuery.Rows[0]["guid"] + WorldServiceLocator._Global_Constants.GUID_CORPSE;
+                    corpseGUID = (ulong)MySQLQuery.Rows[0]["guid"] + WorldServiceLocator._Global_Constants.GUID_CORPSE;
                     corpseMapID = Conversions.ToInteger(MySQLQuery.Rows[0]["map"]);
                     corpsePositionX = Conversions.ToSingle(MySQLQuery.Rows[0]["position_x"]);
                     corpsePositionY = Conversions.ToSingle(MySQLQuery.Rows[0]["position_y"]);
@@ -349,7 +349,7 @@ namespace Mangos.World.Player
 
                     // DONE: Make Dead
                     DEAD = true;
-                    cPlayerFlags = cPlayerFlags | PlayerFlags.PLAYER_FLAGS_DEAD;
+                    cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_DEAD;
 
                     // DONE: Update to see only dead
                     Invisibility = InvisibilityLevel.DEAD;
@@ -385,8 +385,8 @@ namespace Mangos.World.Player
 
             public CharacterObject() : base()
             {
-                attackState = new Mangos.World.Handlers.WS_Combat.TAttackTimer(this);
-                attackState = new WS_Combat.TAttackTimer(ref phe797c28db562431bb1d7cda496ac4706);
+                attackState = new WS_Combat.TAttackTimer(this);
+                attackState = new WS_Combat.TAttackTimer(/*ref phe797c28db562431bb1d7cda496ac4706*/); //Trying to reference something, but what?
                 corpseCorpseType = CorpseType.CORPSE_BONES;
                 Level = 1;
                 UpdateMask.SetAll(false);
@@ -427,7 +427,7 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cPlayerBytes = cPlayerBytes & 0xFFFFFF | value << 24;
+                    cPlayerBytes = (cPlayerBytes & 0xFFFFFF) | (value << 24);
                 }
             }
 
@@ -440,7 +440,7 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cPlayerBytes = (int)(cPlayerBytes & 0xFF00FFFF | value << 16);
+                    cPlayerBytes = (int)((cPlayerBytes & 0xFF00FFFF) | (value << 16));
                 }
             }
 
@@ -453,7 +453,7 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cPlayerBytes = (int)(cPlayerBytes & 0xFFFF00FF | value << 8);
+                    cPlayerBytes = (int)((cPlayerBytes & 0xFFFF00FF) | (value << 8));
                 }
             }
 
@@ -466,7 +466,7 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cPlayerBytes = (int)(cPlayerBytes & 0xFFFFFF00 | value << 0);
+                    cPlayerBytes = (int)((cPlayerBytes & 0xFFFFFF00) | (value << 0));
                 }
             }
 
@@ -481,7 +481,7 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cPlayerBytes2 = cPlayerBytes2 & 0xFFFFFF | value << 24;
+                    cPlayerBytes2 = (cPlayerBytes2 & 0xFFFFFF) | (value << 24);
                 }
             }
 
@@ -494,7 +494,7 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cPlayerBytes2 = (int)(cPlayerBytes2 & 0xFF00FFFF | value << 16);
+                    cPlayerBytes2 = (int)((cPlayerBytes2 & 0xFF00FFFF) | (value << 16));
                 }
             }
 
@@ -507,7 +507,7 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cPlayerBytes2 = (int)(cPlayerBytes2 & 0xFFFFFF00 | value << 0);
+                    cPlayerBytes2 = (int)((cPlayerBytes2 & 0xFFFFFF00) | (value << 0));
                 }
             }
 
@@ -522,8 +522,8 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cBytes0 = cBytes0 & 0xFF00FFFF | value << 16;
-                    cPlayerBytes3 = cPlayerBytes3 & 0xFFFFFF00 | value << 0;
+                    cBytes0 = (cBytes0 & 0xFF00FFFF) | (value << 16);
+                    cPlayerBytes3 = (cPlayerBytes3 & 0xFFFFFF00) | (value << 0);
                 }
             }
 
@@ -536,7 +536,7 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cPlayerBytes3 = cPlayerBytes3 & 0xFFFFFF | value << 24;
+                    cPlayerBytes3 = (cPlayerBytes3 & 0xFFFFFF) | (value << 24);
                 }
             }
 
@@ -550,7 +550,7 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cPlayerFieldBytes = cPlayerFieldBytes & 0xFFFFFF | value << 24;
+                    cPlayerFieldBytes = (cPlayerFieldBytes & 0xFFFFFF) | (value << 24);
                 }
             }
 
@@ -564,7 +564,7 @@ namespace Mangos.World.Player
 
                 set
                 {
-                    cPlayerFieldBytes2 = (int)(cPlayerFieldBytes2 & 0xFFFFFF00 | value << 0);
+                    cPlayerFieldBytes2 = (int)((cPlayerFieldBytes2 & 0xFFFFFF00) | (value << 0));
                 }
             }
 
@@ -613,7 +613,7 @@ namespace Mangos.World.Player
                 // From http://www.wowwiki.com/Formulas:Rage_generation
                 get
                 {
-                    return (float)(0.0091107836d * Level * Level + 3.225598133d * Level + 4.2652911d);
+                    return (float)((0.0091107836d * Level * Level) + (3.225598133d * Level) + 4.2652911d);
                 }
             }
 
@@ -638,37 +638,37 @@ namespace Mangos.World.Player
                     {
                         case var @case when @case == Classes.CLASS_DRUID:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 1.85d);
+                                return (float)Conversion.Fix((Intellect.Base / 80d) + 1.85d);
                             }
 
                         case var case1 when case1 == Classes.CLASS_MAGE:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 0.91d);
+                                return (float)Conversion.Fix((Intellect.Base / 80d) + 0.91d);
                             }
 
                         case var case2 when case2 == Classes.CLASS_PRIEST:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 1.24d);
+                                return (float)Conversion.Fix((Intellect.Base / 80d) + 1.24d);
                             }
 
                         case var case3 when case3 == Classes.CLASS_WARLOCK:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 82d + 1.701d);
+                                return (float)Conversion.Fix((Intellect.Base / 82d) + 1.701d);
                             }
 
                         case var case4 when case4 == Classes.CLASS_PALADIN:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 3.336d);
+                                return (float)Conversion.Fix((Intellect.Base / 80d) + 3.336d);
                             }
 
                         case var case5 when case5 == Classes.CLASS_SHAMAN:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 2.2d);
+                                return (float)Conversion.Fix((Intellect.Base / 80d) + 2.2d);
                             }
 
                         case var case6 when case6 == Classes.CLASS_HUNTER:
                             {
-                                return (float)Conversion.Fix(Intellect.Base / 80d + 3.6d);
+                                return (float)Conversion.Fix((Intellect.Base / 80d) + 3.6d);
                             }
 
                         default:
@@ -723,12 +723,12 @@ namespace Mangos.World.Player
                         case var @case when @case == Classes.CLASS_WARRIOR:
                         case var case1 when case1 == Classes.CLASS_PALADIN:
                             {
-                                return Level * 3 + Strength.Base * 3 - 20;
+                                return (Level * 3) + (Strength.Base * 3) - 20;
                             }
 
                         case var case2 when case2 == Classes.CLASS_SHAMAN:
                             {
-                                return Level * 2 + Strength.Base * 2 - 20;
+                                return (Level * 2) + (Strength.Base * 2) - 20;
                             }
 
                         case var case3 when case3 == Classes.CLASS_MAGE:
@@ -741,26 +741,26 @@ namespace Mangos.World.Player
                         case var case6 when case6 == Classes.CLASS_ROGUE:
                         case var case7 when case7 == Classes.CLASS_HUNTER:
                             {
-                                return Level * 2 + Strength.Base + Agility.Base - 20;
+                                return (Level * 2) + Strength.Base + Agility.Base - 20;
                             }
 
                         case var case8 when case8 == Classes.CLASS_DRUID:
                             {
                                 if (ShapeshiftForm == ShapeshiftForm.FORM_CAT)
                                 {
-                                    return Level * 2 + Strength.Base * 2 + Agility.Base - 20;
+                                    return (Level * 2) + (Strength.Base * 2) + Agility.Base - 20;
                                 }
                                 else if (ShapeshiftForm == ShapeshiftForm.FORM_BEAR | ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR)
                                 {
-                                    return Level * 3 + Strength.Base * 2 - 20;
+                                    return (Level * 3) + (Strength.Base * 2) - 20;
                                 }
                                 else if (ShapeshiftForm == ShapeshiftForm.FORM_MOONKIN)
                                 {
-                                    return (int)(Level * 1.5d + Agility.Base + Strength.Base * 2 - 20d);
+                                    return (int)((Level * 1.5d) + Agility.Base + (Strength.Base * 2) - 20d);
                                 }
                                 else
                                 {
-                                    return Strength.Base * 2 - 20;
+                                    return (Strength.Base * 2) - 20;
                                 }
 
                                 break;
@@ -786,7 +786,7 @@ namespace Mangos.World.Player
 
                         case var case2 when case2 == Classes.CLASS_HUNTER:
                             {
-                                return Level * 2 + Agility.Base - 10;
+                                return (Level * 2) + Agility.Base - 10;
                             }
 
                         case var case3 when case3 == Classes.CLASS_PALADIN:
@@ -819,7 +819,7 @@ namespace Mangos.World.Player
 
             public short get_AttackTime(WeaponAttackType index)
             {
-                return Fix(AttackTimeBase[index] * AttackTimeMods[index]);
+                return AttackTimeBase[index] * AttackTimeMods[index];
             }
 
             public short[] AttackTimeBase = new short[] { 2000, 0, 0 };
@@ -895,7 +895,7 @@ namespace Mangos.World.Player
                                 }
                                 else if (ActiveSpells[i].SpellID == 34074 && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == AuraEffects_Names.SPELL_AURA_PERIODIC_DUMMY)
                                 {
-                                    PowerRegenMP5 = (float)(PowerRegenMP5 + (ActiveSpells[i].Aura_Info[j].get_GetValue(Level, 0) * Intellect.Base / 500.0f + Level * 35 / 100d));
+                                    PowerRegenMP5 = (float)(PowerRegenMP5 + ((ActiveSpells[i].Aura_Info[j].get_GetValue(Level, 0) * Intellect.Base / 500.0f) + (Level * 35 / 100d)));
                                 }
                                 else if (ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == AuraEffects_Names.SPELL_AURA_MOD_MANA_REGEN_INTERRUPT)
                                 {
@@ -908,7 +908,7 @@ namespace Mangos.World.Player
 
                 if (PowerRegenInterrupt > 100)
                     PowerRegenInterrupt = 100;
-                PowerRegenInterrupt = (int)(PowerRegenMP5 + PowerRegen * PowerRegenInterrupt / 100.0f);
+                PowerRegenInterrupt = (int)(PowerRegenMP5 + (PowerRegen * PowerRegenInterrupt / 100.0f));
                 PowerRegen = (int)(PowerRegenMP5 + PowerRegen);
                 ManaRegen = (int)PowerRegen;
                 ManaRegenInterrupt = PowerRegenInterrupt;
@@ -1028,7 +1028,7 @@ namespace Mangos.World.Player
             {
                 get
                 {
-                    return 1 << Classe - 1;
+                    return 1 << (Classe - 1);
                 }
             }
 
@@ -1036,7 +1036,7 @@ namespace Mangos.World.Player
             {
                 get
                 {
-                    return 1 << Race - 1;
+                    return 1 << (Race - 1);
                 }
             }
 
@@ -1083,11 +1083,11 @@ namespace Mangos.World.Player
                 {
                     if (value)
                     {
-                        cUnitFlags = cUnitFlags | UnitFlags.UNIT_FLAG_PVP;
+                        cUnitFlags |= UnitFlags.UNIT_FLAG_PVP;
                     }
                     else
                     {
-                        cUnitFlags = cUnitFlags & !UnitFlags.UNIT_FLAG_PVP;
+                        cUnitFlags &= !UnitFlags.UNIT_FLAG_PVP;
                     }
                 }
             }
@@ -1382,7 +1382,7 @@ namespace Mangos.World.Player
                 UpdateMask.Set(pos, true);
                 UpdateMask.Set(pos + 1, true);
                 UpdateData[pos] = Conversions.ToInteger(value & uint.MaxValue);
-                UpdateData[pos + 1] = Conversions.ToInteger(value >> 32 & uint.MaxValue);
+                UpdateData[pos + 1] = Conversions.ToInteger((value >> 32) & uint.MaxValue);
             }
 
             public void SetUpdateFlag(int pos, ulong value)
@@ -1390,7 +1390,7 @@ namespace Mangos.World.Player
                 UpdateMask.Set(pos, true);
                 UpdateMask.Set(pos + 1, true);
                 UpdateData[pos] = Conversions.ToUInteger(value & uint.MaxValue);
-                UpdateData[pos + 1] = Conversions.ToUInteger(value >> 32 & uint.MaxValue);
+                UpdateData[pos + 1] = Conversions.ToUInteger((value >> 32) & uint.MaxValue);
             }
 
             public void SetUpdateFlag(int pos, float value)
@@ -1460,7 +1460,7 @@ namespace Mangos.World.Player
                         // DONE: Update Items In bag
                         if (tmpItem.Value.ItemInfo.IsContainer)
                         {
-                            tmpItem.Value.SendContainedItemsUpdate(ref client, (int)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+                            tmpItem.Value.SendContainedItemsUpdate(ref client, (ObjectUpdateType)(int)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
                         }
                     }
 
@@ -1509,10 +1509,10 @@ namespace Mangos.World.Player
                     {
                         if (Items.ContainsKey(i))
                         {
-                            SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)i * 2), Items[i].GUID);
-                            if (i < EquipmentSlots.EQUIPMENT_SLOT_END)
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (i * 2)), Items[i].GUID);
+                            if (i < (byte)EquipmentSlots.EQUIPMENT_SLOT_END)
                             {
-                                SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].ItemEntry);
+                                SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Items[i].ItemEntry);
 
                                 // SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_1 + (i * _Global_Constants.PLAYER_VISIBLE_ITEM_SIZE), 0)           'ITEM_FIELD_ENCHANTMENT
                                 // SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_2 + (i * _Global_Constants.PLAYER_VISIBLE_ITEM_SIZE), 0)           'ITEM_FIELD_ENCHANTMENT + 3
@@ -1521,15 +1521,15 @@ namespace Mangos.World.Player
                                 // SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_5 + (i * _Global_Constants.PLAYER_VISIBLE_ITEM_SIZE), 0)           'ITEM_FIELD_ENCHANTMENT + 12
                                 // SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_6 + (i * _Global_Constants.PLAYER_VISIBLE_ITEM_SIZE), 0)           'ITEM_FIELD_ENCHANTMENT + 15
                                 // SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_7 + (i * _Global_Constants.PLAYER_VISIBLE_ITEM_SIZE), 0)           'ITEM_FIELD_ENCHANTMENT + 18
-                                SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);   // ITEM_FIELD_RANDOM_PROPERTIES_ID
+                                SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), 0);   // ITEM_FIELD_RANDOM_PROPERTIES_ID
                             }
                         }
                         else
                         {
-                            SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)i * 2), Conversions.ToLong(0));
-                            if (i < EquipmentSlots.EQUIPMENT_SLOT_END)
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (i * 2)), Conversions.ToLong(0));
+                            if (i < (byte)EquipmentSlots.EQUIPMENT_SLOT_END)
                             {
-                                SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), 0);
                             }
                         }
                     }
@@ -1554,24 +1554,24 @@ namespace Mangos.World.Player
 
                     // DONE: Send to self
                     Item.FillAllUpdateFlags(ref tmpUpdate);
-                    tmpUpdate.AddToPacket(packet, UPDATETYPE, Item);
+                    tmpUpdate.AddToPacket(packet, (ObjectUpdateType)UPDATETYPE, Item);
                     for (byte i = (byte)EquipmentSlots.EQUIPMENT_SLOT_START, loopTo = (byte)(KeyRingSlots.KEYRING_SLOT_END - 1); i <= loopTo; i++)
                     {
                         if (Items.ContainsKey(i))
                         {
-                            SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)i * 2), Items[i].GUID);
-                            if (i < EquipmentSlots.EQUIPMENT_SLOT_END)
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (i * 2)), Items[i].GUID);
+                            if (i < (byte)EquipmentSlots.EQUIPMENT_SLOT_END)
                             {
-                                SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].ItemEntry);
-                                SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].RandomProperties);   // ITEM_FIELD_RANDOM_PROPERTIES_ID
+                                SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Items[i].ItemEntry);
+                                SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Items[i].RandomProperties);   // ITEM_FIELD_RANDOM_PROPERTIES_ID
                             }
                         }
                         else
                         {
-                            SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)i * 2), Conversions.ToULong(0));
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (i * 2)), Conversions.ToULong(0));
                             if (i < EquipmentSlots.EQUIPMENT_SLOT_END)
                             {
-                                SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), 0);
                             }
                         }
                     }
@@ -1590,12 +1590,12 @@ namespace Mangos.World.Player
                 {
                     if (Items.ContainsKey(i))
                     {
-                        SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].ItemEntry);
-                        SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].RandomProperties);   // ITEM_FIELD_RANDOM_PROPERTIES_ID
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Items[i].ItemEntry);
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Items[i].RandomProperties);   // ITEM_FIELD_RANDOM_PROPERTIES_ID
                     }
                     else
                     {
-                        SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), 0);
                     }
                 }
 
@@ -1658,11 +1658,11 @@ namespace Mangos.World.Player
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXPOWER5, 0);
                 SetUpdateFlag((int)EPlayerFields.PLAYER_BLOCK_PERCENTAGE, combatBlock);
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINDAMAGE, Damage.Minimum);
-                SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXDAMAGE, (float)(Damage.Maximum + (float)BaseUnarmedDamage));
+                SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXDAMAGE, (float)(Damage.Maximum + BaseUnarmedDamage));
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINOFFHANDDAMAGE, OffHandDamage.Minimum);
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXOFFHANDDAMAGE, OffHandDamage.Maximum);
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINRANGEDDAMAGE, RangedDamage.Minimum);
-                SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXRANGEDDAMAGE, (float)(RangedDamage.Maximum + (float)BaseRangedDamage));
+                SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXRANGEDDAMAGE, (float)(RangedDamage.Maximum + BaseRangedDamage));
                 SetUpdateFlag(EUnitFields.UNIT_FIELD_BASEATTACKTIME, AttackTime(0));
                 SetUpdateFlag(EUnitFields.UNIT_FIELD_RANGEDATTACKTIME, AttackTime(1));
                 SetUpdateFlag(EUnitFields.UNIT_FIELD_RANGEDATTACKTIME, AttackTime(2));
@@ -1766,9 +1766,9 @@ namespace Mangos.World.Player
                 SetUpdateFlag((int)EPlayerFields.PLAYER_BYTES_3, cPlayerBytes3);
                 SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, WatchedFactionIndex);
                 SetUpdateFlag((int)EPlayerFields.PLAYER_XP, XP);
-                SetUpdateFlag((int)EPlayerFields.PLAYER_NEXT_LEVEL_XP, WorldServiceLocator._WS_Player_Initializator.XPTable[(int)Level]);
+                SetUpdateFlag((int)EPlayerFields.PLAYER_NEXT_LEVEL_XP, WorldServiceLocator._WS_Player_Initializator.XPTable[Level]);
                 SetUpdateFlag((int)EPlayerFields.PLAYER_REST_STATE_EXPERIENCE, RestBonus);
-                SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, cPlayerFlags);
+                SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)cPlayerFlags);
                 SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_BYTES, cPlayerFieldBytes);
                 SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_BYTES2, cPlayerFieldBytes2);
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BOUNDINGRADIUS, BoundingRadius);
@@ -1779,7 +1779,7 @@ namespace Mangos.World.Player
                 SetUpdateFlag((int)EPlayerFields.PLAYER_GUILDID, GuildID);
                 SetUpdateFlag((int)EPlayerFields.PLAYER_GUILDRANK, GuildRank);
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINDAMAGE, Damage.Minimum);
-                SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXDAMAGE, (float)(Damage.Maximum + (float)BaseUnarmedDamage));
+                SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXDAMAGE, (float)(Damage.Maximum + BaseUnarmedDamage));
                 SetUpdateFlag(EUnitFields.UNIT_FIELD_BASEATTACKTIME, AttackTime(WeaponAttackType.BASE_ATTACK));
                 SetUpdateFlag(EUnitFields.UNIT_FIELD_BASEATTACKTIME + 1, AttackTime(WeaponAttackType.OFF_ATTACK));
                 SetUpdateFlag((int)EUnitFields.UNIT_MOD_CAST_SPEED, (float)1.0f);
@@ -1794,9 +1794,9 @@ namespace Mangos.World.Player
                 for (byte i = 0; i <= 6; i++)
                 {
                     // SetUpdateFlag(EPlayerFields.PLAYER_SPELL_CRIT_PERCENTAGE1 + i, CType(0, Single))
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_MOD_DAMAGE_DONE_POS + i), spellDamage[(int)i].PositiveBonus);
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_MOD_DAMAGE_DONE_NEG + i), spellDamage[(int)i].NegativeBonus);
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_MOD_DAMAGE_DONE_PCT + i), spellDamage[(int)i].Modifier);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_MOD_DAMAGE_DONE_POS + i), spellDamage[i].PositiveBonus);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_MOD_DAMAGE_DONE_NEG + i), spellDamage[i].NegativeBonus);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_MOD_DAMAGE_DONE_PCT + i), spellDamage[i].Modifier);
                 }
 
                 SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_PHYSICAL, Resistances[DamageTypes.DMG_PHYSICAL].Base);
@@ -1826,9 +1826,9 @@ namespace Mangos.World.Player
                 SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, Copper);
                 foreach (KeyValuePair<int, WS_PlayerHelper.TSkill> Skill in Skills)
                 {
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (int)SkillsPositions[Skill.Key] * 3), Skill.Key);                                    // skill1.Id
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (int)SkillsPositions[Skill.Key] * 3 + 1), Skill.Value.GetSkill);      // CType((skill1.CurrentVal(Me) + (skill1.Cap(Me) << 16)), Integer)
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (int)SkillsPositions[Skill.Key] * 3 + 2), Skill.Value.Bonus);         // skill1.Bonus
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (SkillsPositions[Skill.Key] * 3)), Skill.Key);                                    // skill1.Id
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (SkillsPositions[Skill.Key] * 3) + 1), Skill.Value.GetSkill);      // CType((skill1.CurrentVal(Me) + (skill1.Cap(Me) << 16)), Integer)
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (SkillsPositions[Skill.Key] * 3) + 2), Skill.Value.Bonus);         // skill1.Bonus
                 }
 
                 SetUpdateFlag(EUnitFields.UNIT_FIELD_RANGEDATTACKTIME, AttackTime(WeaponAttackType.RANGED_ATTACK));
@@ -1842,22 +1842,22 @@ namespace Mangos.World.Player
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_ATTACK_POWER_MODS, AttackPowerMods);
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_RANGED_ATTACK_POWER_MODS, AttackPowerModsRanged);
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINRANGEDDAMAGE, RangedDamage.Minimum);
-                SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXRANGEDDAMAGE, (float)(RangedDamage.Maximum + (float)BaseRangedDamage));
+                SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXRANGEDDAMAGE, (float)(RangedDamage.Maximum + BaseRangedDamage));
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_ATTACK_POWER_MULTIPLIER, (float)0.0f);
                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER, (float)0.0f);
                 for (byte i = 0, loopTo = (byte)QuestInfo.QUEST_SLOTS; i <= loopTo; i++)
                 {
                     if (TalkQuests[i] is null)
                     {
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_1 + (int)i * 3), 0); // ID
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (int)i * 3), 0); // State
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (int)i * 3 + 1), 0); // Timer
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_1 + (i * 3)), 0); // ID
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (i * 3)), 0); // State
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (i * 3) + 1), 0); // Timer
                     }
                     else
                     {
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_1 + (int)i * 3), TalkQuests[(int)i].ID);
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (int)i * 3), TalkQuests[(int)i].GetProgress());
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (int)i * 3 + 1), 0);
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_1 + (i * 3)), TalkQuests[i].ID);
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (i * 3)), TalkQuests[i].GetProgress());
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (i * 3) + 1), 0);
                     } // Timer
                 }
 
@@ -1867,13 +1867,13 @@ namespace Mangos.World.Player
                 SetUpdateFlag((int)EPlayerFields.PLAYER_DODGE_PERCENTAGE, (float)WorldServiceLocator._WS_Combat.GetBasePercentDodge(ref argobjCharacter3, 0));
                 WS_Base.BaseUnit argobjCharacter4 = this;
                 SetUpdateFlag((int)EPlayerFields.PLAYER_PARRY_PERCENTAGE, (float)WorldServiceLocator._WS_Combat.GetBasePercentParry(ref argobjCharacter4, 0));
-                for (byte i = 0, loopTo1 = WorldServiceLocator._Global_Constants.PLAYER_EXPLORED_ZONES_SIZE; i <= loopTo1; i++)
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_EXPLORED_ZONES_1 + i), ZonesExplored[(int)i]);
+                for (byte i = 0, loopTo1 = (byte)WorldServiceLocator._Global_Constants.PLAYER_EXPLORED_ZONES_SIZE; i <= loopTo1; i++)
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_EXPLORED_ZONES_1 + i), ZonesExplored[i]);
 
                 // SetUpdateFlag(EPlayerFields.PLAYER_FIELD_PVP_MEDALS, 0)
                 SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_LIFETIME_HONORBALE_KILLS, HonorKillsLifeTime);
                 SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_LIFETIME_DISHONORBALE_KILLS, DishonorKillsLifeTime);
-                SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_SESSION_KILLS, (int)HonorKillsToday + ((int)DishonorKillsToday << 16));
+                SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_SESSION_KILLS, HonorKillsToday + (DishonorKillsToday << 16));
                 SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_THIS_WEEK_KILLS, HonorKillsThisWeek);
                 SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_LAST_WEEK_KILLS, HonorKillsLastWeek);
                 SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_YESTERDAY_KILLS, HonorKillsYesterday);
@@ -1885,50 +1885,50 @@ namespace Mangos.World.Player
                 {
                     if (Items.ContainsKey(i))
                     {
-                        if (i < EquipmentSlots.EQUIPMENT_SLOT_END)
+                        if (i < (byte)EquipmentSlots.EQUIPMENT_SLOT_END)
                         {
-                            SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].ItemEntry);
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Items[i].ItemEntry);
 
                             // DONE: Include enchantment info
                             foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> Enchant in Items[i].Enchantments)
                             {
-                                SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + 1 + (int)Enchant.Key * 3 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.ID);
-                                SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + 2 + (int)Enchant.Key * 3 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.Charges); // Correct?
-                                SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + 3 + (int)Enchant.Key * 3 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.Duration); // Correct?
+                                SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + 1 + (Enchant.Key * 3) + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Enchant.Value.ID);
+                                SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + 2 + (Enchant.Key * 3) + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Enchant.Value.Charges); // Correct?
+                                SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + 3 + (Enchant.Key * 3) + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Enchant.Value.Duration); // Correct?
                             }
 
-                            SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].RandomProperties);
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Items[i].RandomProperties);
                         }
 
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)i * 2), Items[i].GUID);
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (i * 2)), Items[i].GUID);
                     }
                     else
                     {
-                        if (i < EquipmentSlots.EQUIPMENT_SLOT_END)
+                        if (i < (byte)EquipmentSlots.EQUIPMENT_SLOT_END)
                         {
-                            SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
-                            SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), 0);
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), 0);
                         }
 
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)i * 2), 0);
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (i * 2)), 0);
                     }
                 }
 
                 SetUpdateFlag((int)EPlayerFields.PLAYER_AMMO_ID, AmmoID);
-                for (byte i = 0, loopTo3 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1; i <= loopTo3; i++)
+                for (byte i = 0, loopTo3 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1); i <= loopTo3; i++)
                 {
                     if (ActiveSpells[i] is object)
                     {
-                        SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURA + i), ActiveSpells[(int)i].SpellID);
+                        SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURA + i), ActiveSpells[i].SpellID);
                     }
                 }
 
-                for (byte i = 0, loopTo4 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_FLAGs - 1; i <= loopTo4; i++)
-                    SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAFLAGS + i), ActiveSpells_Flags[(int)i]);
-                for (byte i = 0, loopTo5 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_LEVELSs - 1; i <= loopTo5; i++)
+                for (byte i = 0, loopTo4 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_FLAGs - 1); i <= loopTo4; i++)
+                    SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAFLAGS + i), ActiveSpells_Flags[i]);
+                for (byte i = 0, loopTo5 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_LEVELSs - 1); i <= loopTo5; i++)
                 {
-                    SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + i), ActiveSpells_Count[(int)i]);
-                    SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURALEVELS + i), ActiveSpells_Level[(int)i]);
+                    SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + i), ActiveSpells_Count[i]);
+                    SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURALEVELS + i), ActiveSpells_Level[i]);
                 }
             }                                       // Used for this player's update packets
 
@@ -1962,7 +1962,7 @@ namespace Mangos.World.Player
                 Update.SetUpdateFlag((int)EPlayerFields.PLAYER_BYTES, cPlayerBytes);
                 Update.SetUpdateFlag((int)EPlayerFields.PLAYER_BYTES_2, cPlayerBytes2);
                 Update.SetUpdateFlag((int)EPlayerFields.PLAYER_BYTES_3, cPlayerBytes3);
-                Update.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, cPlayerFlags);
+                Update.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)cPlayerFlags);
                 Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BOUNDINGRADIUS, BoundingRadius);
                 Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_COMBATREACH, CombatReach);
                 Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_TARGET, TargetGUID);
@@ -1972,45 +1972,45 @@ namespace Mangos.World.Player
                 {
                     if (Items.ContainsKey(i))
                     {
-                        if (i < EquipmentSlots.EQUIPMENT_SLOT_END)
+                        if (i < (byte)EquipmentSlots.EQUIPMENT_SLOT_END)
                         {
-                            Update.SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].ItemEntry);
+                            Update.SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Items[i].ItemEntry);
 
                             // DONE: Include enchantment info
                             // For Each Enchant As KeyValuePair(Of Byte, TEnchantmentInfo) In Items(i).Enchantments
                             // Update.SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0_1 + Enchant.Key + i * _Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.ID)
                             // Next
-                            Update.SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].RandomProperties);
+                            Update.SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Items[i].RandomProperties);
                         }
 
-                        Update.SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)i * 2), Items[i].GUID);
+                        Update.SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (i * 2)), Items[i].GUID);
                     }
                     else
                     {
                         if (i < EquipmentSlots.EQUIPMENT_SLOT_END)
                         {
-                            Update.SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
-                            Update.SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                            Update.SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), 0);
+                            Update.SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + (i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), 0);
                         }
 
-                        Update.SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)i * 2), 0);
+                        Update.SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (i * 2)), 0);
                     }
                 }
 
-                for (byte i = 0, loopTo1 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1; i <= loopTo1; i++)
+                for (byte i = 0, loopTo1 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1); i <= loopTo1; i++)
                 {
                     if (ActiveSpells[i] is object)
                     {
-                        Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURA + i), ActiveSpells[(int)i].SpellID);
+                        Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURA + i), ActiveSpells[i].SpellID);
                     }
                 }
 
-                for (byte i = 0, loopTo2 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_FLAGs - 1; i <= loopTo2; i++)
-                    Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAFLAGS + i), ActiveSpells_Flags[(int)i]);
-                for (byte i = 0, loopTo3 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_LEVELSs - 1; i <= loopTo3; i++)
+                for (byte i = 0, loopTo2 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_FLAGs - 1); i <= loopTo2; i++)
+                    Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAFLAGS + i), ActiveSpells_Flags[i]);
+                for (byte i = 0, loopTo3 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_LEVELSs - 1); i <= loopTo3; i++)
                 {
-                    Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + i), ActiveSpells_Count[(int)i]);
-                    Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURALEVELS + i), ActiveSpells_Level[(int)i]);
+                    Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURAAPPLICATIONS + i), ActiveSpells_Count[i]);
+                    Update.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_AURALEVELS + i), ActiveSpells_Level[i]);
                 }
             }                                       // Used for other players' update packets
 
@@ -2028,7 +2028,7 @@ namespace Mangos.World.Player
                     int flags2 = 0x2000;
                     if (OnTransport is object)
                     {
-                        flags2 = flags2 | MovementFlags.MOVEMENTFLAG_ONTRANSPORT;
+                        flags2 |= MovementFlags.MOVEMENTFLAG_ONTRANSPORT;
                     }
 
                     packet.AddInt8(0x71); // flags
@@ -2107,12 +2107,12 @@ namespace Mangos.World.Player
                 {
                     if (value)
                     {
-                        cPlayerFlags = cPlayerFlags | PlayerFlags.PLAYER_FLAGS_AFK;
+                        cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_AFK;
                         WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSetChatFlag(client.Index, (byte)ChatFlag.FLAGS_AFK);
                     }
                     else
                     {
-                        cPlayerFlags = cPlayerFlags & !PlayerFlags.PLAYER_FLAGS_AFK;
+                        cPlayerFlags &= !PlayerFlags.PLAYER_FLAGS_AFK;
                         WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSetChatFlag(client.Index, 0);
                     }
                 }
@@ -2129,12 +2129,12 @@ namespace Mangos.World.Player
                 {
                     if (value)
                     {
-                        cPlayerFlags = cPlayerFlags | PlayerFlags.PLAYER_FLAGS_DND;
+                        cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_DND;
                         WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSetChatFlag(client.Index, (byte)ChatFlag.FLAGS_DND);
                     }
                     else
                     {
-                        cPlayerFlags = cPlayerFlags & !PlayerFlags.PLAYER_FLAGS_DND;
+                        cPlayerFlags &= !PlayerFlags.PLAYER_FLAGS_DND;
                         WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSetChatFlag(client.Index, 0);
                     }
                 }
@@ -2151,12 +2151,12 @@ namespace Mangos.World.Player
                 {
                     if (value)
                     {
-                        cPlayerFlags = cPlayerFlags | PlayerFlags.PLAYER_FLAGS_GM;
+                        cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_GM;
                         WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSetChatFlag(client.Index, (byte)ChatFlag.FLAGS_GM);
                     }
                     else
                     {
-                        cPlayerFlags = cPlayerFlags & !PlayerFlags.PLAYER_FLAGS_GM;
+                        cPlayerFlags &= !PlayerFlags.PLAYER_FLAGS_GM;
                         WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSetChatFlag(client.Index, 0);
                     }
                 }
@@ -2768,8 +2768,8 @@ namespace Mangos.World.Player
                     return;
 
                 // DONE: Set update parameters
-                SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (int)SkillsPositions[SkillID] * 3), SkillID);                            // skill1.Id
-                SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (int)SkillsPositions[SkillID] * 3 + 1), Skills[SkillID].GetSkill);       // CType((skill1.CurrentVal(Me) + (skill1.Cap(Me) << 16)), Integer)
+                SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (SkillsPositions[SkillID] * 3)), SkillID);                            // skill1.Id
+                SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (SkillsPositions[SkillID] * 3) + 1), Skills[SkillID].GetSkill);       // CType((skill1.CurrentVal(Me) + (skill1.Cap(Me) << 16)), Integer)
                 SendCharacterUpdate();
             }
 
@@ -2791,10 +2791,10 @@ namespace Mangos.World.Player
                     return;
                 if (Skills[SkillID].Current >= Skills[SkillID].Maximum)
                     return;
-                if (Skills[SkillID].Current / (double)Skills[SkillID].Maximum - SpeedMod < WorldServiceLocator._WorldServer.Rnd.NextDouble())
+                if ((Skills[SkillID].Current / (double)Skills[SkillID].Maximum) - SpeedMod < WorldServiceLocator._WorldServer.Rnd.NextDouble())
                 {
                     Skills[SkillID].Increment();
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (int)SkillsPositions[SkillID] * 3 + 1), Skills[SkillID].GetSkill);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (SkillsPositions[SkillID] * 3) + 1), Skills[SkillID].GetSkill);
                     SendCharacterUpdate();
                 }
             }
@@ -2843,7 +2843,7 @@ namespace Mangos.World.Player
                     {
                         XP -= WorldServiceLocator._WS_Player_Initializator.XPTable[Level];
                         Level = (byte)(Level + 1);
-                        GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_LEVEL;
+                        GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_LEVEL;
 
                         // DONE: Send update to cluster
                         WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientUpdate(client.Index, (uint)ZoneID, Level);
@@ -2885,7 +2885,7 @@ namespace Mangos.World.Player
                         Mana.Current = Mana.Maximum;
                         Resistances[DamageTypes.DMG_PHYSICAL].Base += (Agility.Base - oldAgility) * 2;
                         SetUpdateFlag((int)EPlayerFields.PLAYER_XP, XP);
-                        SetUpdateFlag((int)EPlayerFields.PLAYER_NEXT_LEVEL_XP, WorldServiceLocator._WS_Player_Initializator.XPTable[(int)Level]);
+                        SetUpdateFlag((int)EPlayerFields.PLAYER_NEXT_LEVEL_XP, WorldServiceLocator._WS_Player_Initializator.XPTable[Level]);
                         SetUpdateFlag((int)EPlayerFields.PLAYER_CHARACTER_POINTS1, TalentPoints);
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_LEVEL, Level);
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_STRENGTH, Strength.Base);
@@ -2905,13 +2905,13 @@ namespace Mangos.World.Player
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_RANGED_ATTACK_POWER_MODS, AttackPowerModsRanged);
                         SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_PHYSICAL, Resistances[DamageTypes.DMG_PHYSICAL].Base);
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINDAMAGE, Damage.Minimum);
-                        SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXDAMAGE, (float)Conversions.ToSingle((double)Damage.Maximum + (double)(AttackPower + AttackPowerMods) * 0.071428571428571425d));
+                        SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXDAMAGE, (float)Conversions.ToSingle(Damage.Maximum + ((AttackPower + AttackPowerMods) * 0.071428571428571425d)));
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINOFFHANDDAMAGE, OffHandDamage.Minimum);
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXOFFHANDDAMAGE, OffHandDamage.Maximum);
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MINRANGEDDAMAGE, RangedDamage.Minimum);
-                        SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXRANGEDDAMAGE, (float)(RangedDamage.Maximum + (float)BaseRangedDamage));
+                        SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MAXRANGEDDAMAGE, (float)(RangedDamage.Maximum + BaseRangedDamage));
                         foreach (KeyValuePair<int, WS_PlayerHelper.TSkill> Skill in Skills)
-                            SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (int)SkillsPositions[Skill.Key] * 3 + 1), Skill.Value.GetSkill);       // CType((skill1.CurrentVal(Me) + (skill1.Cap(Me) << 16)), Integer)
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_SKILL_INFO_1_1 + (SkillsPositions[Skill.Key] * 3) + 1), Skill.Value.GetSkill);       // CType((skill1.CurrentVal(Me) + (skill1.Cap(Me) << 16)), Integer)
                         if (client is object)
                             UpdateManaRegen();
                     }
@@ -2956,7 +2956,7 @@ namespace Mangos.World.Player
                     ItemSETSLOT(ref tmpItem, dstBag, dstSlot);
                 }
 
-                if (dstBag == 0 & dstSlot < InventorySlots.INVENTORY_SLOT_BAG_END && client is object)
+                if (dstBag == 0 & dstSlot < (byte)InventorySlots.INVENTORY_SLOT_BAG_END && client is object)
                     UpdateAddItemStats(ref tmpItem, dstSlot);
             }
 
@@ -2964,17 +2964,17 @@ namespace Mangos.World.Player
             {
                 if (srcBag == 0)
                 {
-                    if (srcSlot < InventorySlots.INVENTORY_SLOT_BAG_END)
+                    if (srcSlot < (byte)InventorySlots.INVENTORY_SLOT_BAG_END)
                     {
-                        if (srcSlot < EquipmentSlots.EQUIPMENT_SLOT_END)
-                            SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + srcSlot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                        if (srcSlot < (byte)EquipmentSlots.EQUIPMENT_SLOT_END)
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (srcSlot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), 0);
                         var tmp = Items;
                         var argItem = tmp[srcSlot];
                         UpdateRemoveItemStats(ref argItem, srcSlot);
                         tmp[srcSlot] = argItem;
                     }
 
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)srcSlot * 2), 0);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (srcSlot * 2)), 0);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_inventory SET item_slot = {0}, item_bag = {1} WHERE item_guid = {2};", WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, WorldServiceLocator._Global_Constants.ITEM_BAG_NULL, Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM));
                     if (Destroy)
                         Items[srcSlot].Delete();
@@ -3003,17 +3003,17 @@ namespace Mangos.World.Player
                         if (Items[slot].GUID == itemGuid)
                         {
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_inventory SET item_slot = {0}, item_bag = {1} WHERE item_guid = {2};", WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, WorldServiceLocator._Global_Constants.ITEM_BAG_NULL, Items[slot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM));
-                            if (slot < InventorySlots.INVENTORY_SLOT_BAG_END)
+                            if (slot < (byte)InventorySlots.INVENTORY_SLOT_BAG_END)
                             {
-                                if (slot < EquipmentSlots.EQUIPMENT_SLOT_END)
-                                    SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + slot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                if (slot < (byte)EquipmentSlots.EQUIPMENT_SLOT_END)
+                                    SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (slot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), 0);
                                 var tmp = Items;
                                 var argItem = tmp[slot];
                                 UpdateRemoveItemStats(ref argItem, slot);
                                 tmp[slot] = argItem;
                             }
 
-                            SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)slot * 2), 0);
+                            SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (slot * 2)), 0);
                             if (Destroy)
                                 Items[slot].Delete();
                             Items.Remove(slot);
@@ -3094,14 +3094,14 @@ namespace Mangos.World.Player
                 var loopTo = BuyBackSlots.BUYBACK_SLOT_END - 1;
                 for (i = (byte)BuyBackSlots.BUYBACK_SLOT_START; i <= loopTo; i++)
                 {
-                    if (Items.ContainsKey(i) == false || BuyBackTimeStamp[i - BuyBackSlots.BUYBACK_SLOT_START] == 0) // Woho we found a empty slot to use!
+                    if (Items.ContainsKey(i) == false || BuyBackTimeStamp[i - (int)BuyBackSlots.BUYBACK_SLOT_START] == 0) // Woho we found a empty slot to use!
                     {
                         if (Slot == WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL)
                             Slot = i;
                     }
-                    else if (BuyBackTimeStamp[i - BuyBackSlots.BUYBACK_SLOT_START] < OldestTime) // If not let's find out the oldest item in the buyback
+                    else if (BuyBackTimeStamp[i - (int)BuyBackSlots.BUYBACK_SLOT_START] < OldestTime) // If not let's find out the oldest item in the buyback
                     {
-                        OldestTime = BuyBackTimeStamp[i - BuyBackSlots.BUYBACK_SLOT_START];
+                        OldestTime = BuyBackTimeStamp[i - (int)BuyBackSlots.BUYBACK_SLOT_START];
                         OldestSlot = i;
                     }
                 }
@@ -3116,7 +3116,7 @@ namespace Mangos.World.Player
                 // Now we have a empty slow so let's just put our item there
                 eSlot = (byte)(Slot - BuyBackSlots.BUYBACK_SLOT_START);
                 BuyBackTimeStamp[eSlot] = (int)WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
-                SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_BUYBACK_TIMESTAMP_1 + eSlot), BuyBackTimeStamp[(int)eSlot]);
+                SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_BUYBACK_TIMESTAMP_1 + eSlot), BuyBackTimeStamp[eSlot]);
                 SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_BUYBACK_PRICE_1 + eSlot), Item.ItemInfo.SellPrice * Item.StackCount);
                 ItemSETSLOT(ref Item, 0, Slot);
             }
@@ -3450,14 +3450,14 @@ namespace Mangos.World.Player
                     // DONE: Put in inventory
                     Items[dstSlot] = Item;
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_inventory SET item_slot = {0}, item_bag = {1}, item_stackCount = {2} WHERE item_guid = {3};", dstSlot, GUID, Item.StackCount, Item.GUID - WorldServiceLocator._Global_Constants.GUID_ITEM));
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (int)dstSlot * 2), Item.GUID);
-                    if (dstSlot < EquipmentSlots.EQUIPMENT_SLOT_END)
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + (dstSlot * 2)), Item.GUID);
+                    if (dstSlot < (byte)EquipmentSlots.EQUIPMENT_SLOT_END)
                     {
-                        SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + dstSlot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Item.ItemEntry);
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (dstSlot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Item.ItemEntry);
                         // For Each Enchant As KeyValuePair(Of Byte, TEnchantmentInfo) In Item.Enchantments
                         // SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_0 + Enchant.Key + dstSlot * _Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.ID)
                         // Next
-                        SetUpdateFlag(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + dstSlot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Item.RandomProperties);
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + (dstSlot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE)), Item.RandomProperties);
                         // DONE: Bind a nonbinded BIND WHEN EQUIPPED item
                         if (Item.ItemInfo.Bonding == ITEM_BONDING_TYPE.BIND_WHEN_EQUIPED && Item.IsSoulBound == false)
                         {
@@ -4055,7 +4055,7 @@ namespace Mangos.World.Player
                     {
                         tmpItem.FillAllUpdateFlags(ref tmpUpdate);
                         tmpUpdate.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, tmpItem);
-                        client.Send((Packets.PacketClass)SMSG_UPDATE_OBJECT);
+                        client.Send(SMSG_UPDATE_OBJECT);
                     }
                     finally
                     {
@@ -5083,22 +5083,22 @@ namespace Mangos.World.Player
                     ZoneID = WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].Zone;
                 }
 
-                GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE;
+                GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE;
 
                 // DONE: Set rested in citys
                 if (WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].IsCity())
                 {
                     if ((cPlayerFlags & PlayerFlags.PLAYER_FLAGS_RESTING) == 0 && Level < WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL)
                     {
-                        cPlayerFlags = cPlayerFlags | PlayerFlags.PLAYER_FLAGS_RESTING;
+                        cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_RESTING;
                         SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, cPlayerFlags);
                         SendCharacterUpdate();
                     }
                 }
                 else if (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_RESTING)
                 {
-                    cPlayerFlags = cPlayerFlags & !PlayerFlags.PLAYER_FLAGS_RESTING;
-                    SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, cPlayerFlags);
+                    cPlayerFlags &= !PlayerFlags.PLAYER_FLAGS_RESTING;
+                    SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)cPlayerFlags);
                     SendCharacterUpdate();
                 }
                 // DONE: Sanctuary turns players into blue and not attackable
@@ -5106,7 +5106,7 @@ namespace Mangos.World.Player
                 {
                     if ((cUnitFlags & UnitFlags.UNIT_FLAG_NON_PVP_PLAYER) < UnitFlags.UNIT_FLAG_NON_PVP_PLAYER)
                     {
-                        cUnitFlags = cUnitFlags | UnitFlags.UNIT_FLAG_NON_PVP_PLAYER;
+                        cUnitFlags |= UnitFlags.UNIT_FLAG_NON_PVP_PLAYER;
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                         SendCharacterUpdate();
                     }
@@ -5115,8 +5115,8 @@ namespace Mangos.World.Player
                 {
                     if ((cUnitFlags & UnitFlags.UNIT_FLAG_NON_PVP_PLAYER) == UnitFlags.UNIT_FLAG_NON_PVP_PLAYER)
                     {
-                        cUnitFlags = cUnitFlags & !UnitFlags.UNIT_FLAG_NON_PVP_PLAYER;
-                        cUnitFlags = cUnitFlags | UnitFlags.UNIT_FLAG_ATTACKABLE; // To still be able to attack neutral
+                        cUnitFlags &= !UnitFlags.UNIT_FLAG_NON_PVP_PLAYER;
+                        cUnitFlags |= UnitFlags.UNIT_FLAG_ATTACKABLE; // To still be able to attack neutral
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                         SendCharacterUpdate();
                     }
@@ -5126,10 +5126,10 @@ namespace Mangos.World.Player
                     {
                         if ((cPlayerFlags & PlayerFlags.PLAYER_FLAGS_PVP_TIMER) == 0)
                         {
-                            cPlayerFlags = cPlayerFlags | PlayerFlags.PLAYER_FLAGS_PVP_TIMER;
-                            SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, cPlayerFlags);
+                            cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_PVP_TIMER;
+                            SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)cPlayerFlags);
                             SendCharacterUpdate();
-                            GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
+                            GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
                         }
                     }
                     else
@@ -5141,19 +5141,19 @@ namespace Mangos.World.Player
                         {
                             if ((cUnitFlags & UnitFlags.UNIT_FLAG_PVP) == 0)
                             {
-                                cUnitFlags = cUnitFlags | UnitFlags.UNIT_FLAG_PVP;
+                                cUnitFlags |= UnitFlags.UNIT_FLAG_PVP;
                                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                                 SendCharacterUpdate();
-                                GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
+                                GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
                             }
                         }
                         // TODO: It takes 5 minutes before the PVP flag wears off
                         else if (cUnitFlags & UnitFlags.UNIT_FLAG_PVP)
                         {
-                            cUnitFlags = cUnitFlags & !UnitFlags.UNIT_FLAG_PVP;
+                            cUnitFlags &= !UnitFlags.UNIT_FLAG_PVP;
                             SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                             SendCharacterUpdate();
-                            GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
+                            GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
                         }
                     }
                 }
@@ -5181,22 +5181,22 @@ namespace Mangos.World.Player
                     }
                 }
 
-                GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE;
+                GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE;
 
                 // DONE: Set rested in citys
                 if (WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].IsCity())
                 {
                     if ((cPlayerFlags & PlayerFlags.PLAYER_FLAGS_RESTING) == 0 && Level < WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL)
                     {
-                        cPlayerFlags = cPlayerFlags | PlayerFlags.PLAYER_FLAGS_RESTING;
-                        SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, cPlayerFlags);
+                        cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_RESTING;
+                        SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)cPlayerFlags);
                         SendCharacterUpdate();
                     }
                 }
                 else if (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_RESTING)
                 {
-                    cPlayerFlags = cPlayerFlags & !PlayerFlags.PLAYER_FLAGS_RESTING;
-                    SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, cPlayerFlags);
+                    cPlayerFlags &= !PlayerFlags.PLAYER_FLAGS_RESTING;
+                    SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)cPlayerFlags);
                     SendCharacterUpdate();
                 }
                 // DONE: Sanctuary turns players into blue and not attackable
@@ -5204,7 +5204,7 @@ namespace Mangos.World.Player
                 {
                     if ((cUnitFlags & UnitFlags.UNIT_FLAG_NON_PVP_PLAYER) < UnitFlags.UNIT_FLAG_NON_PVP_PLAYER)
                     {
-                        cUnitFlags = cUnitFlags | UnitFlags.UNIT_FLAG_NON_PVP_PLAYER;
+                        cUnitFlags |= UnitFlags.UNIT_FLAG_NON_PVP_PLAYER;
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                         SendCharacterUpdate();
                     }
@@ -5213,8 +5213,8 @@ namespace Mangos.World.Player
                 {
                     if ((cUnitFlags & UnitFlags.UNIT_FLAG_NON_PVP_PLAYER) == UnitFlags.UNIT_FLAG_NON_PVP_PLAYER)
                     {
-                        cUnitFlags = cUnitFlags & !UnitFlags.UNIT_FLAG_NON_PVP_PLAYER;
-                        cUnitFlags = cUnitFlags | UnitFlags.UNIT_FLAG_ATTACKABLE; // To still be able to attack neutral
+                        cUnitFlags &= !UnitFlags.UNIT_FLAG_NON_PVP_PLAYER;
+                        cUnitFlags |= UnitFlags.UNIT_FLAG_ATTACKABLE; // To still be able to attack neutral
                         SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                         SendCharacterUpdate();
                     }
@@ -5224,10 +5224,10 @@ namespace Mangos.World.Player
                     {
                         if ((cPlayerFlags & PlayerFlags.PLAYER_FLAGS_PVP_TIMER) == 0)
                         {
-                            cPlayerFlags = cPlayerFlags | PlayerFlags.PLAYER_FLAGS_PVP_TIMER;
-                            SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, cPlayerFlags);
+                            cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_PVP_TIMER;
+                            SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)cPlayerFlags);
                             SendCharacterUpdate();
-                            GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
+                            GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
                         }
                     }
                     else
@@ -5239,19 +5239,19 @@ namespace Mangos.World.Player
                         {
                             if ((cUnitFlags & UnitFlags.UNIT_FLAG_PVP) == 0)
                             {
-                                cUnitFlags = cUnitFlags | UnitFlags.UNIT_FLAG_PVP;
+                                cUnitFlags |= UnitFlags.UNIT_FLAG_PVP;
                                 SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                                 SendCharacterUpdate();
-                                GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
+                                GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
                             }
                         }
                         // TODO: It takes 5 minutes before the PVP flag wears off
                         else if (cUnitFlags & UnitFlags.UNIT_FLAG_PVP)
                         {
-                            cUnitFlags = cUnitFlags & !UnitFlags.UNIT_FLAG_PVP;
+                            cUnitFlags &= !UnitFlags.UNIT_FLAG_PVP;
                             SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                             SendCharacterUpdate();
-                            GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
+                            GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
                         }
                     }
                 }
@@ -5492,7 +5492,7 @@ namespace Mangos.World.Player
                         if (underWaterTimer.DrowningValue < 0)
                         {
                             underWaterTimer.DrowningValue = 0;
-                            LogEnvironmentalDamage((DamageTypes)EnvironmentalDamage.DAMAGE_DROWNING, (int)Conversion.Fix(0.1f * (float)Life.Maximum * (float)underWaterTimer.DrowningDamage));
+                            LogEnvironmentalDamage((DamageTypes)EnvironmentalDamage.DAMAGE_DROWNING, (int)Conversion.Fix(0.1f * Life.Maximum * underWaterTimer.DrowningDamage));
                             WS_Base.BaseUnit argAttacker = null;
                             DealDamage((int)Conversion.Fix(0.1f * Life.Maximum * underWaterTimer.DrowningDamage), Attacker: ref argAttacker);
                             underWaterTimer.DrowningDamage = (byte)(underWaterTimer.DrowningDamage * 2);
@@ -5753,7 +5753,7 @@ namespace Mangos.World.Player
                     }
                 }
 
-                GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
+                GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS;
                 foreach (ulong uGuid in inCombatWith)
                 {
                     if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(uGuid) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(uGuid))
@@ -5903,7 +5903,7 @@ namespace Mangos.World.Player
                     }
                 }
 
-                GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_HP;
+                GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_HP;
                 if (!Invulnerable)
                     Life.Current -= Damage;
                 if (Life.Current == 0)
@@ -5931,7 +5931,7 @@ namespace Mangos.World.Player
             {
                 if (DEAD)
                     return;
-                GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_HP;
+                GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_HP;
 
                 // TODO: Healing generates thread on the NPCs that has this character in their combat array
 
@@ -5940,11 +5940,11 @@ namespace Mangos.World.Player
                 SendCharacterUpdate();
             }
 
-            public override void Energize(int Damage, ManaTypes Power, [Optional, DefaultParameterValue(null)] ref WS_Base.BaseUnit Attacker)
+            public void Energize(int Damage, ManaTypes Power, [Optional, DefaultParameterValue(null)] ref WS_Base.BaseUnit Attacker)
             {
                 if (DEAD)
                     return;
-                GroupUpdateFlag = GroupUpdateFlag | (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
+                GroupUpdateFlag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER;
                 switch (Power)
                 {
                     case var @case when @case == ManaTypes.TYPE_MANA:
@@ -6192,7 +6192,7 @@ namespace Mangos.World.Player
                         else
                         {
                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Spawning new transport!");
-                            var newGameobject = new WS_GameObjects.GameObjectObject(TransportGUID - WorldServiceLocator._Global_Constants.GUID_TRANSPORT);
+                            var newGameobject = new WS_GameObjects.GameObjectObject((int)(TransportGUID - WorldServiceLocator._Global_Constants.GUID_TRANSPORT));
                             newGameobject.AddToWorld();
                             OnTransport = newGameobject;
                             transportX = positionX;
@@ -6221,68 +6221,68 @@ namespace Mangos.World.Player
             {
                 int ProficiencyFlags = 0;
                 if (HaveSpell(9125))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_MISC; // Here using spell "Generic"
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_MISC; // Here using spell "Generic"
                 if (HaveSpell(9078))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_CLOTH;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_CLOTH;
                 if (HaveSpell(9077))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_LEATHER;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_LEATHER;
                 if (HaveSpell(8737))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_MAIL;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_MAIL;
                 if (HaveSpell(750))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_PLATE;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_PLATE;
                 if (HaveSpell(9124))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_BUCKLER;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_BUCKLER;
                 if (HaveSpell(9116))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_SHIELD;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_SHIELD;
                 if (HaveSpell(27762))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_LIBRAM;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_LIBRAM;
                 if (HaveSpell(27763))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_TOTEM;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_TOTEM;
                 if (HaveSpell(27764))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_IDOL;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_IDOL;
                 WorldServiceLocator._Functions.SendProficiency(ref client, (byte)ITEM_CLASS.ITEM_CLASS_ARMOR, ProficiencyFlags);
                 ProficiencyFlags = 0;
                 if (HaveSpell(196))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_AXE;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_AXE;
                 if (HaveSpell(197))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_AXE;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_AXE;
                 if (HaveSpell(264))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_BOW;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_BOW;
                 if (HaveSpell(266))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_GUN;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_GUN;
                 if (HaveSpell(198))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_MACE;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_MACE;
                 if (HaveSpell(199))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_MACE;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_MACE;
                 if (HaveSpell(200))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_POLEARM;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_POLEARM;
                 if (HaveSpell(201))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_SWORD;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_SWORD;
                 if (HaveSpell(202))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_SWORD;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_SWORD;
                 // If Spells.Contains() Then ProficiencyFlags += (1 << ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_obsolete)
                 if (HaveSpell(227))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_STAFF;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_STAFF;
                 if (HaveSpell(262))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_EXOTIC;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_EXOTIC;
                 if (HaveSpell(263))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_EXOTIC2;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_EXOTIC2;
                 if (HaveSpell(15590))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_FIST_WEAPON;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_FIST_WEAPON;
                 if (HaveSpell(2382))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_MISC_WEAPON; // Here using spell "Generic"
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_MISC_WEAPON; // Here using spell "Generic"
                 if (HaveSpell(1180))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_DAGGER;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_DAGGER;
                 if (HaveSpell(2567))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_THROWN;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_THROWN;
                 if (HaveSpell(3386))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_SPEAR;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_SPEAR;
                 if (HaveSpell(5011))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_CROSSBOW;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_CROSSBOW;
                 if (HaveSpell(5009))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_WAND;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_WAND;
                 if (HaveSpell(7738))
-                    ProficiencyFlags += 1 << ITEM_SUBCLASS.ITEM_SUBCLASS_FISHING_POLE;
+                    ProficiencyFlags += 1 << (int)ITEM_SUBCLASS.ITEM_SUBCLASS_FISHING_POLE;
                 WorldServiceLocator._Functions.SendProficiency(ref client, (byte)ITEM_CLASS.ITEM_CLASS_WEAPON, ProficiencyFlags);
             }
 
@@ -6534,15 +6534,15 @@ namespace Mangos.World.Player
                 tmpValues = tmpValues + ", " + Spirit.RealBase;
                 uint ForceRestrictions = 0U;
                 if (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK)
-                    ForceRestrictions = ForceRestrictions | ForceRestrictionFlags.RESTRICT_HIDECLOAK;
+                    ForceRestrictions |= ForceRestrictionFlags.RESTRICT_HIDECLOAK;
                 if (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_HIDE_HELM)
-                    ForceRestrictions = ForceRestrictions | ForceRestrictionFlags.RESTRICT_HIDEHELM;
+                    ForceRestrictions |= ForceRestrictionFlags.RESTRICT_HIDEHELM;
                 tmpCMD += ", force_restrictions";
                 tmpValues = tmpValues + ", " + ForceRestrictions;
                 tmpCMD = tmpCMD + ") " + tmpValues + ");";
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmpCMD);
                 var MySQLQuery = new DataTable();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT char_guid FROM characters WHERE char_name = '{0}';", Name), MySQLQuery);
+                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT char_guid FROM characters WHERE char_name = '{0}';", Name), ref MySQLQuery);
                 GUID = (ulong)Conversions.ToLong(MySQLQuery.Rows[0]["char_guid"]);
                 HonorSaveAsNew();
             }
@@ -6622,7 +6622,7 @@ namespace Mangos.World.Player
                     {
                         long expire = 0L;
                         if (ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
-                            expire = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + ActiveSpells[i].SpellDuration / 1000;
+                            expire = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + (ActiveSpells[i].SpellDuration / 1000);
                         // TODO: If Not_Tick_While_Offline Then expire = -ActiveSpells(i).SpellDuration
                         temp.Add(string.Format("{0}:{1}:{2}", i, ActiveSpells[i].SpellID, expire));
                     }
@@ -6664,9 +6664,9 @@ namespace Mangos.World.Player
                 tmp = tmp + ", char_talentpoints=" + TalentPoints;
                 uint ForceRestrictions = 0U;
                 if (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK)
-                    ForceRestrictions = ForceRestrictions | ForceRestrictionFlags.RESTRICT_HIDECLOAK;
+                    ForceRestrictions |= ForceRestrictionFlags.RESTRICT_HIDECLOAK;
                 if (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_HIDE_HELM)
-                    ForceRestrictions = ForceRestrictions | ForceRestrictionFlags.RESTRICT_HIDEHELM;
+                    ForceRestrictions |= ForceRestrictionFlags.RESTRICT_HIDEHELM;
                 tmp = tmp + ", force_restrictions=" + ForceRestrictions;
                 tmp += string.Format(" WHERE char_guid = \"{0}\";", GUID);
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmp);
@@ -6806,9 +6806,9 @@ namespace Mangos.World.Player
                         TalkQuests[i].Slot = (byte)i;
                         int updateDataCount = UpdateData.Count;
                         int questState = TalkQuests[i].GetProgress();
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_1 + i * 3), TalkQuests[i].ID);
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + i * 3), questState);
-                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + i * 3 + 1), 0); // Timer
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_1 + (i * 3)), TalkQuests[i].ID);
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (i * 3)), questState);
+                        SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (i * 3) + 1), 0); // Timer
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO characters_quests (char_guid, quest_id, quest_status) VALUES ({0}, {1}, {2});", GUID, TalkQuests[i].ID, questState));
                         SendCharacterUpdate(updateDataCount != 0);
                         return true;
@@ -6833,9 +6833,9 @@ namespace Mangos.World.Player
                     }
 
                     int updateDataCount = UpdateData.Count;
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_1 + (int)QuestSlot * 3), 0);
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (int)QuestSlot * 3), 0);
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (int)QuestSlot * 3 + 1), 0);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_1 + (QuestSlot * 3)), 0);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (QuestSlot * 3)), 0);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (QuestSlot * 3) + 1), 0);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("DELETE  FROM characters_quests WHERE char_guid = {0} AND quest_id = {1};", GUID, TalkQuests[QuestSlot].ID));
                     TalkQuests[QuestSlot] = null;
                     SendCharacterUpdate(updateDataCount != 0);
@@ -6858,9 +6858,9 @@ namespace Mangos.World.Player
                     }
 
                     int updateDataCount = UpdateData.Count;
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_1 + (int)QuestSlot * 3), 0);
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (int)QuestSlot * 3), 0);
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (int)QuestSlot * 3 + 1), 0);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_1 + (QuestSlot * 3)), 0);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (QuestSlot * 3)), 0);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (QuestSlot * 3) + 1), 0);
                     QuestsCompleted.Add(TalkQuests[QuestSlot].ID);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_quests SET quest_status = -1 WHERE char_guid = {0} AND quest_id = {1};", GUID, TalkQuests[QuestSlot].ID));
                     TalkQuests[QuestSlot] = null;
@@ -6884,8 +6884,8 @@ namespace Mangos.World.Player
                     if (TalkQuests[QuestSlot].TimeEnd > 0)
                         int tmpTimer = (int)(TalkQuests[QuestSlot].TimeEnd - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now));
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_quests SET quest_status = {2} WHERE char_guid = {0} AND quest_id = {1};", GUID, TalkQuests[QuestSlot].ID, tmpProgress));
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (int)QuestSlot * 3), tmpProgress);
-                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (int)QuestSlot * 3 + 1), 0); // Timer
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (QuestSlot * 3)), tmpProgress);
+                    SetUpdateFlag((int)(EPlayerFields.PLAYER_QUEST_LOG_1_2 + (QuestSlot * 3) + 1), 0); // Timer
                     SendCharacterUpdate(updateDataCount != 0);
                     return true;
                 }
@@ -6928,7 +6928,7 @@ namespace Mangos.World.Player
                     return false;
                 }
 
-                if (Quest.RequiredRace != 0 && (Quest.RequiredRace & 1 << Race - 1) == 0)
+                if (Quest.RequiredRace != 0 && (Quest.RequiredRace & (1 << (Race - 1))) == 0)
                 {
                     var packet = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
                     try
@@ -6944,7 +6944,7 @@ namespace Mangos.World.Player
                     return false;
                 }
 
-                if (Quest.RequiredClass != 0 && (Quest.RequiredClass & 1 << Classe - 1) == 0)
+                if (Quest.RequiredClass != 0 && (Quest.RequiredClass & (1 << (Classe - 1))) == 0)
                 {
                     // TODO: Find constant for INVALIDREASON_DONT_HAVE_CLASS if exists
                     var packet = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
@@ -7153,9 +7153,9 @@ namespace Mangos.World.Player
 
             public float GetStealthDistance(ref WS_Base.BaseUnit objCharacter)
             {
-                float VisibleDistance = (float)(10.5d - Invisibility_Value / 100d);
+                float VisibleDistance = (float)(10.5d - (Invisibility_Value / 100d));
                 VisibleDistance += objCharacter.Level - Level;
-                VisibleDistance = (float)(VisibleDistance + (objCharacter.CanSeeInvisibility_Stealth - Invisibility_Bonus) / 5d);
+                VisibleDistance = (float)(VisibleDistance + ((objCharacter.CanSeeInvisibility_Stealth - Invisibility_Bonus) / 5d));
                 return VisibleDistance;
             }
 
