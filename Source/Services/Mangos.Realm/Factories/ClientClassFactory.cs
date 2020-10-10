@@ -1,4 +1,6 @@
 ﻿
+using global;
+
 namespace Mangos.Realm.Factories
 {
     public class ClientClassFactory

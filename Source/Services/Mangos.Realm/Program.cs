@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System.Threading.Tasks;
+using Autofac;
+using global;
 using Mangos.Common.Globals;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
@@ -9,11 +11,11 @@ namespace Mangos.Realm
 {
     public static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
             var container = CreateContainer();
             var realmServer = container.Resolve<RealmServer>();
-            realmServer.StartAsync().Wait();
+            await realmServer.StartAsync();
         }
 
         public static IContainer CreateContainer()

@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using global;
 using Mangos.Configuration;
 using Mangos.Realm.Factories;
 using Microsoft.VisualBasic;

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using global;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Misc;
 using Microsoft.VisualBasic;
@@ -31,7 +32,7 @@ namespace Mangos.Realm
 
         private void OnData(byte[] data)
         {
-            switch (data[0])
+            switch ((AuthCMD)data[0])
             {
                 case var @case when @case == AuthCMD.CMD_AUTH_LOGON_CHALLENGE:
                 case var case1 when case1 == AuthCMD.CMD_AUTH_RECONNECT_CHALLENGE:
@@ -130,7 +131,7 @@ namespace Mangos.Realm
             Console.ForegroundColor = ConsoleColor.Gray;
             if (!_RealmServer.AccountDatabase.QuerySQL("SELECT ip FROM ip_banned WHERE ip = '" + Ip.ToString() + "';"))
             {
-                while (!_RealmServer.RealmServer.FlagStopListen)
+                while (!_RealmServer.RealmServerClass.FlagStopListen)
                 {
                     Thread.Sleep(_Global_Constants.ConnectionSleepTime);
                     if (Socket.Available > 0)

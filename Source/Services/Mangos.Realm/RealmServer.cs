@@ -24,9 +24,11 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using global;
 using Mangos.Common;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Global;
+using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
 using Mangos.Common.Logging;
 using Mangos.Configuration;
@@ -39,14 +41,14 @@ namespace Mangos.Realm
     public class RealmServer
     {
         private readonly IConfigurationProvider<RealmServerConfiguration> _configurationProvider;
-        private readonly Global.System.Data.Common.Globals.Functions _CommonGlobalFunctions;
+        private readonly Common.Globals.Functions _CommonGlobalFunctions;
         private readonly Converter _Converter;
         private readonly Global_Constants _Global_Constants;
         private readonly RealmServerClassFactory _RealmServerClassFactory;
         private const string RealmPath = "configs/RealmServer.ini";
         public BaseWriter Log = new BaseWriter();
 
-        public RealmServer(Global.System.Data.Common.Globals.Functions commonGlobalFunctions, Converter converter, Global_Constants globalConstants, RealmServerClassFactory realmServerClassFactory, IConfigurationProvider<RealmServerConfiguration> configurationProvider)
+        public RealmServer(Common.Globals.Functions commonGlobalFunctions, Converter converter, Global_Constants globalConstants, RealmServerClassFactory realmServerClassFactory, IConfigurationProvider<RealmServerConfiguration> configurationProvider)
         {
             _CommonGlobalFunctions = commonGlobalFunctions;
             _Converter = converter;
@@ -87,7 +89,7 @@ namespace Mangos.Realm
                     AccountDatabase.SQLPort = accountDbSettings[3];
                     AccountDatabase.SQLUser = accountDbSettings[0];
                     AccountDatabase.SQLPass = accountDbSettings[1];
-                    AccountDatabase.SQLTypeServer = Enum.Parse(typeof(SQL.DB_Type), accountDbSettings[5]);
+                    AccountDatabase.SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), accountDbSettings[5]);
                 }
             }
             catch (Exception e)
@@ -96,7 +98,7 @@ namespace Mangos.Realm
             }
         }
 
-        public RealmServerClass RealmServer { get; set; }
+        public RealmServerClass RealmServerClass { get; set; }
         public Dictionary<uint, DateTime> LastSocketConnection { get; private set; } = new Dictionary<uint, DateTime>();
         public SQL AccountDatabase { get; set; } = new SQL();
 
@@ -168,8 +170,8 @@ namespace Mangos.Realm
                 Console.WriteLine("[{0}] [{1}:{2}] Invalid Client", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
                 Console.ForegroundColor = ConsoleColor.White;
                 var dataResponse = new byte[2];
-                dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_PROOF;
-                dataResponse[1] = AccountState.LOGIN_BADVERSION;
+                dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                dataResponse[1] = (byte)AccountState.LOGIN_BADVERSION;
                 client.Send(dataResponse, "RS_LOGON_CHALLENGE-FAIL-BADVERSION");
             }
             else if (clientBuild == _Global_Constants.Required_Build_1_12_1 | clientBuild == _Global_Constants.Required_Build_1_12_2 | clientBuild == _Global_Constants.Required_Build_1_12_3)
@@ -179,12 +181,16 @@ namespace Mangos.Realm
                 try
                 {
                     // Get Account info
-                    AccountDatabase.Query($"SELECT id, sha_pass_hash, gmlevel, expansion FROM account WHERE username = \"{packetAccount}\";", result);
+                    AccountDatabase.Query($"SELECT id, sha_pass_hash, gmlevel, expansion FROM account WHERE username = \"{packetAccount}\";", ref result);
 
                     // Check Account state
                     if (result.Rows.Count > 0)
                     {
-                        accState = AccountDatabase.QuerySQL(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT id FROM account_banned WHERE id = '", result.Rows[0]["id"]), "';")) ? AccountState.LOGIN_BANNED : AccountState.LOGIN_OK;
+                        accState = AccountDatabase.QuerySQL(
+                            (string)Operators.ConcatenateObject(
+                                Operators.ConcatenateObject("SELECT id FROM account_banned WHERE id = '", result.Rows[0]["id"]), "';")) 
+                                    ? AccountState.LOGIN_BANNED 
+                                    : AccountState.LOGIN_OK;
                     }
                     else
                     {
@@ -204,22 +210,22 @@ namespace Mangos.Realm
                             Console.WriteLine("[{0}] [{1}:{2}] Account found [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
                             var account = new byte[(data[33])];
                             Array.Copy(data, 34, account, 0, data[33]);
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(result.Rows[0]["sha_pass_hash"].Length, 40, false))) // Invalid password type, should always be 40 characters
+                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(result.Rows[0]["sha_pass_hash"].ToString().Length, 40, false))) // Invalid password type, should always be 40 characters
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("[{0}] [{1}:{2}] Not a valid SHA1 password for account: '{3}' SHA1 Hash: '{4}'", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount, result.Rows[0]["sha_pass_hash"]);
                                 Console.ForegroundColor = ConsoleColor.White;
                                 var dataResponse = new byte[2];
-                                dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_PROOF;
-                                dataResponse[1] = AccountState.LOGIN_BAD_PASS;
+                                dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                                dataResponse[1] = (byte)AccountState.LOGIN_BAD_PASS;
                                 client.Send(dataResponse, "RS_LOGON_CHALLENGE-FAIL-BADPWFORMAT");
                             }
                             else // Bail out with something meaningful
                             {
-                                client.Access = result.Rows[0]["gmlevel"];
+                                client.Access = (AccessLevel)result.Rows[0]["gmlevel"];
                                 var hash = new byte[20];
                                 for (int i = 0; i <= 39; i += 2)
-                                    hash[i / 2] = (byte)Conversions.ToInteger(Operators.ConcatenateObject("&H", result.Rows[0]["sha_pass_hash"].Substring(i, (object)2)));
+                                    hash[i / 2] = (byte)Conversions.ToInteger(Operators.ConcatenateObject("&H", result.Rows[0]["sha_pass_hash"].ToString().Substring(i, 2)));
 
                                 // client.Language = clientLanguage
                                 // If Not IsDBNull(result.Rows(0).Item("expansion")) Then
@@ -233,8 +239,8 @@ namespace Mangos.Realm
                                     client.AuthEngine = new AuthEngineClass();
                                     client.AuthEngine.CalculateX(account, hash);
                                     var dataResponse = new byte[119];
-                                    dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_CHALLENGE;
-                                    dataResponse[1] = AccountState.LOGIN_OK;
+                                    dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_CHALLENGE;
+                                    dataResponse[1] = (byte)AccountState.LOGIN_OK;
                                     dataResponse[2] = (byte)Conversion.Val("&H00");
                                     Array.Copy(client.AuthEngine.PublicB, 0, dataResponse, 3, 32);
                                     dataResponse[35] = (byte)client.AuthEngine.g.Length;
@@ -261,8 +267,8 @@ namespace Mangos.Realm
                         {
                             Console.WriteLine("[{0}] [{1}:{2}] Account not found [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
                             var dataResponse = new byte[2];
-                            dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_PROOF;
-                            dataResponse[1] = AccountState.LOGIN_UNKNOWN_ACCOUNT;
+                            dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                            dataResponse[1] = (byte)AccountState.LOGIN_UNKNOWN_ACCOUNT;
                             client.Send(dataResponse, "RS_LOGON_CHALLENGE-UNKNOWN_ACCOUNT");
                             return;
                         }
@@ -271,8 +277,8 @@ namespace Mangos.Realm
                         {
                             Console.WriteLine("[{0}] [{1}:{2}] Account banned [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
                             var dataResponse = new byte[2];
-                            dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_PROOF;
-                            dataResponse[1] = AccountState.LOGIN_BANNED;
+                            dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                            dataResponse[1] = (byte)AccountState.LOGIN_BANNED;
                             client.Send(dataResponse, "RS_LOGON_CHALLENGE-BANNED");
                             return;
                         }
@@ -281,8 +287,8 @@ namespace Mangos.Realm
                         {
                             Console.WriteLine("[{0}] [{1}:{2}] Account prepaid time used [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
                             var dataResponse = new byte[2];
-                            dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_PROOF;
-                            dataResponse[1] = AccountState.LOGIN_NOTIME;
+                            dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                            dataResponse[1] = (byte)AccountState.LOGIN_NOTIME;
                             client.Send(dataResponse, "RS_LOGON_CHALLENGE-NOTIME");
                             return;
                         }
@@ -291,8 +297,8 @@ namespace Mangos.Realm
                         {
                             Console.WriteLine("[{0}] [{1}:{2}] Account already logged in the game [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
                             var dataResponse = new byte[2];
-                            dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_PROOF;
-                            dataResponse[1] = AccountState.LOGIN_ALREADYONLINE;
+                            dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                            dataResponse[1] = (byte)AccountState.LOGIN_ALREADYONLINE;
                             client.Send(dataResponse, "RS_LOGON_CHALLENGE-ALREADYONLINE");
                             return;
                         }
@@ -336,8 +342,8 @@ namespace Mangos.Realm
                         {
                             Console.WriteLine("[{0}] [{1}:{2}] Account error [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
                             var dataResponse = new byte[2];
-                            dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_PROOF;
-                            dataResponse[1] = AccountState.LOGIN_FAILED;
+                            dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                            dataResponse[1] = (byte)AccountState.LOGIN_FAILED;
                             client.Send(dataResponse, "RS_LOGON_CHALLENGE-FAILED");
                             return;
                         }
@@ -349,16 +355,16 @@ namespace Mangos.Realm
                 Console.WriteLine("[{0}] [{1}:{2}] CMD_XFER_INITIATE [" + (char)data[6] + (char)data[5] + (char)data[4] + " " + data[8] + "." + data[9] + "." + data[10] + "." + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + " " + (char)data[15] + (char)data[14] + (char)data[13] + " " + (char)data[19] + (char)data[18] + (char)data[17] + " " + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + "]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
                 client.UpdateFile = "Updates/wow-patch-" + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + "-" + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + ".mpq";
                 var dataResponse = new byte[31];
-                dataResponse[0] = AuthCMD.CMD_XFER_INITIATE;
+                dataResponse[0] = (byte)AuthCMD.CMD_XFER_INITIATE;
                 // Name Len 0x05 -> sizeof(Patch)
                 int i = 1;
-                _Converter.ToBytes(Conversions.ToByte(5), dataResponse, i);
+                _Converter.ToBytes(Conversions.ToByte(5), dataResponse, ref i);
                 // Name 'Patch'
-                _Converter.ToBytes("Patch", dataResponse, i);
+                _Converter.ToBytes("Patch", dataResponse, ref i);
                 // Size 0x34 C4 0D 00 = 902,196 byte (180->181 enGB)
-                _Converter.ToBytes(Conversions.ToInteger(FileSystem.FileLen(client.UpdateFile)), dataResponse, i);
+                _Converter.ToBytes(Conversions.ToInteger(FileSystem.FileLen(client.UpdateFile)), dataResponse, ref i);
                 // Unknown 0x0 always
-                _Converter.ToBytes(0, dataResponse, i);
+                _Converter.ToBytes(0, dataResponse, ref i);
                 // MD5 CheckSum
                 var md5 = new MD5CryptoServiceProvider();
                 byte[] buffer;
@@ -376,8 +382,8 @@ namespace Mangos.Realm
                 // Send BAD_VERSION
                 Console.WriteLine("[{0}] [{1}:{2}] WRONG_VERSION [" + (char)data[6] + (char)data[5] + (char)data[4] + " " + data[8] + "." + data[9] + "." + data[10] + "." + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + " " + (char)data[15] + (char)data[14] + (char)data[13] + " " + (char)data[19] + (char)data[18] + (char)data[17] + " " + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + "]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
                 var dataResponse = new byte[2];
-                dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_PROOF;
-                dataResponse[1] = AccountState.LOGIN_BADVERSION;
+                dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                dataResponse[1] = (byte)AccountState.LOGIN_BADVERSION;
                 client.Send(dataResponse, "RS_LOGON_CHALLENGE-WRONG-VERSION");
             }
         }
@@ -415,16 +421,16 @@ namespace Mangos.Realm
                 // Wrong pass
                 Console.WriteLine("[{0}] [{1}:{2}] Wrong password for user {3}.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, client.Account);
                 var dataResponse = new byte[2];
-                dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_PROOF;
-                dataResponse[1] = AccountState.LOGIN_BAD_PASS;
+                dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                dataResponse[1] = (byte)AccountState.LOGIN_BAD_PASS;
                 client.Send(dataResponse, "RS_LOGON_PROOF WRONGPASS");
             }
             else
             {
                 client.AuthEngine.CalculateM2(m1);
                 var dataResponse = new byte[26];
-                dataResponse[0] = AuthCMD.CMD_AUTH_LOGON_PROOF;
-                dataResponse[1] = AccountState.LOGIN_OK;
+                dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                dataResponse[1] = (byte)AccountState.LOGIN_OK;
                 Array.Copy(client.AuthEngine.M2, 0, dataResponse, 2, 20);
                 dataResponse[22] = 0;
                 dataResponse[23] = 0;
@@ -452,16 +458,16 @@ namespace Mangos.Realm
             DataTable countresult = null;
 
             // Retrieve the Account ID
-            AccountDatabase.Query($"SELECT id FROM account WHERE username = \"{client.Account}\";", result);
+            AccountDatabase.Query($"SELECT id FROM account WHERE username = \"{client.Account}\";", ref result);
 
             // Fetch RealmList Data
-            AccountDatabase.Query(string.Format("SELECT * FROM realmlist;"), result);
+            AccountDatabase.Query(string.Format("SELECT * FROM realmlist;"), ref result);
             foreach (DataRow row in result.Rows)
                 packetLen = packetLen + Strings.Len(row["address"]) + Strings.Len(row["name"]) + 1 + Strings.Len(Strings.Format(row["port"], "0")) + 14;
             var dataResponse = new byte[packetLen + 9 + 1];
 
             // (byte) Opcode
-            dataResponse[0] = AuthCMD.CMD_AUTH_REALMLIST;
+            dataResponse[0] = (byte)AuthCMD.CMD_AUTH_REALMLIST;
 
             // (uint16) Packet Length
             dataResponse[2] = (byte)((packetLen + 7) / 256);
@@ -481,7 +487,7 @@ namespace Mangos.Realm
             {
 
                 // Get Number of Characters for the Realm
-                AccountDatabase.Query($"SELECT * FROM realmcharacters WHERE realmid = \"{Conversions.ToInteger(host["id"])}\" AND acctid = \"{Conversions.ToInteger(result.Rows[0]["id"])}\";", countresult);
+                AccountDatabase.Query($"SELECT * FROM realmcharacters WHERE realmid = \"{Conversions.ToInteger(host["id"])}\" AND acctid = \"{Conversions.ToInteger(result.Rows[0]["id"])}\";", ref countresult);
                 if (countresult.Rows.Count > 0)
                 {
                     characterCount = Conversions.ToInteger(countresult.Rows[0]["numchars"]);
@@ -489,32 +495,32 @@ namespace Mangos.Realm
 
                 // (uint8) Realm Icon
                 // 0 -> Normal; 1 -> PvP; 6 -> RP; 8 -> RPPvP;
-                _Converter.ToBytes(Conversions.ToByte(host["icon"]), dataResponse, tmp);
+                _Converter.ToBytes(Conversions.ToByte(host["icon"]), dataResponse, ref tmp);
                 // (uint8) IsLocked
                 // 0 -> none; 1 -> locked
-                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, tmp);
+                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
                 // (uint8) unk
-                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, tmp);
+                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
                 // (uint8) unk
-                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, tmp);
+                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
                 // (uint8) Realm Color
                 // 0 -> Green; 1 -> Red; 2 -> Offline;
-                _Converter.ToBytes(Conversions.ToByte(host["realmflags"]), dataResponse, tmp);
+                _Converter.ToBytes(Conversions.ToByte(host["realmflags"]), dataResponse, ref tmp);
                 // (string) Realm Name (zero terminated)
-                _Converter.ToBytes(Conversions.ToString(host["name"]), dataResponse, tmp);
-                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, tmp); // \0
+                _Converter.ToBytes(Conversions.ToString(host["name"]), dataResponse, ref tmp);
+                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp); // \0
                                                                               // (string) Realm Address ("ip:port", zero terminated)
-                _Converter.ToBytes(Operators.ConcatenateObject(Operators.ConcatenateObject(host["address"], ":"), host["port"]), dataResponse, tmp);
-                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, tmp); // \0
+                _Converter.ToBytes(Operators.ConcatenateObject(Operators.ConcatenateObject(host["address"], ":"), host["port"]).ToString(), dataResponse, ref tmp);
+                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp); // \0
                                                                               // (float) Population
                                                                               // 400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High
                                                                               // 00 00 48 43 -> Recommended
                                                                               // 00 00 C8 43 -> Full
                                                                               // 9C C4 C0 3F -> Low
                                                                               // BC 74 B3 3F -> Low
-                _Converter.ToBytes(Conversions.ToSingle(host["population"]), dataResponse, tmp);
+                _Converter.ToBytes(Conversions.ToSingle(host["population"]), dataResponse, ref tmp);
                 // (byte) Number of character at this realm for this account
-                _Converter.ToBytes(Conversions.ToByte(characterCount), dataResponse, tmp);
+                _Converter.ToBytes(Conversions.ToByte(characterCount), dataResponse, ref tmp);
                 // (byte) Timezone
                 // 0x01 - Development
                 // 0x02 - USA
@@ -546,9 +552,9 @@ namespace Mangos.Realm
                 // 0x1C - QA Server
                 // 0x1D - CN9
                 // 0x1E - Test Server 2
-                _Converter.ToBytes(Conversions.ToByte(host["timezone"]), dataResponse, tmp);
+                _Converter.ToBytes(Conversions.ToByte(host["timezone"]), dataResponse, ref tmp);
                 // (byte) Unknown (may be 2 -> TestRealm, / 6 -> ?)
-                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, tmp);
+                _Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
             }
 
             dataResponse[tmp] = 2; // 2=list of realms 0=wizard
@@ -582,8 +588,8 @@ namespace Mangos.Realm
             {
                 tmp = 1;
                 var dataResponse = new byte[filelen + 2 + 1];
-                dataResponse[0] = AuthCMD.CMD_XFER_DATA;
-                _Converter.ToBytes(Conversions.ToShort(filelen), dataResponse, tmp);
+                dataResponse[0] = (byte)AuthCMD.CMD_XFER_DATA;
+                _Converter.ToBytes(Conversions.ToShort(filelen), dataResponse, ref tmp);
                 Array.Copy(buffer, 0, dataResponse, 3, filelen);
                 client.Send(dataResponse, "CMD-XFER-ACCEPT-3");
             }
@@ -594,8 +600,8 @@ namespace Mangos.Realm
                 {
                     tmp = 1;
                     dataResponse = new byte[1503];
-                    dataResponse[0] = AuthCMD.CMD_XFER_DATA;
-                    _Converter.ToBytes(Conversions.ToShort(1500), dataResponse, tmp);
+                    dataResponse[0] = (byte)AuthCMD.CMD_XFER_DATA;
+                    _Converter.ToBytes(Conversions.ToShort(1500), dataResponse, ref tmp);
                     Array.Copy(buffer, fileOffset, dataResponse, 3, 1500);
                     filelen -= 1500;
                     fileOffset += 1500;
@@ -604,8 +610,8 @@ namespace Mangos.Realm
 
                 tmp = 1;
                 dataResponse = new byte[filelen + 2 + 1];
-                dataResponse[0] = AuthCMD.CMD_XFER_DATA;
-                _Converter.ToBytes(Conversions.ToShort(filelen), dataResponse, tmp);
+                dataResponse[0] = (byte)AuthCMD.CMD_XFER_DATA;
+                _Converter.ToBytes(Conversions.ToShort(filelen), dataResponse, ref tmp);
                 Array.Copy(buffer, fileOffset, dataResponse, 3, filelen);
                 client.Send(dataResponse, "CMD-XFER-ACCEPT-2");
             }
@@ -620,7 +626,7 @@ namespace Mangos.Realm
             int filelen;
             filelen = (int)FileSystem.FileLen(client.UpdateFile);
             int fileOffset;
-            fileOffset = _Converter.ToInt32(data, tmp);
+            fileOffset = _Converter.ToInt32(data, ref tmp);
             filelen -= fileOffset;
             var fs = new FileStream(client.UpdateFile, FileMode.Open, FileAccess.Read);
             var r = new BinaryReader(fs);
@@ -633,8 +639,8 @@ namespace Mangos.Realm
             {
                 tmp = 1;
                 var dataResponse = new byte[filelen + 2 + 1];
-                dataResponse[0] = AuthCMD.CMD_XFER_DATA;
-                _Converter.ToBytes(Conversions.ToShort(filelen), dataResponse, tmp);
+                dataResponse[0] = (byte)AuthCMD.CMD_XFER_DATA;
+                _Converter.ToBytes(Conversions.ToShort(filelen), dataResponse, ref tmp);
                 Array.Copy(buffer, 0, dataResponse, 3, filelen);
                 client.Send(dataResponse, "XFER-RESUME-XFER-DATA");
             }
@@ -645,8 +651,8 @@ namespace Mangos.Realm
                 {
                     tmp = 1;
                     dataResponse = new byte[1503];
-                    dataResponse[0] = AuthCMD.CMD_XFER_DATA;
-                    _Converter.ToBytes(Conversions.ToShort(1500), dataResponse, tmp);
+                    dataResponse[0] = (byte)AuthCMD.CMD_XFER_DATA;
+                    _Converter.ToBytes(Conversions.ToShort(1500), dataResponse, ref tmp);
                     Array.Copy(buffer, fileOffset, dataResponse, 3, 1500);
                     filelen -= 1500;
                     fileOffset += 1500;
@@ -655,8 +661,8 @@ namespace Mangos.Realm
 
                 tmp = 1;
                 dataResponse = new byte[filelen + 2 + 1];
-                dataResponse[0] = AuthCMD.CMD_XFER_DATA;
-                _Converter.ToBytes(Conversions.ToShort(filelen), dataResponse, tmp);
+                dataResponse[0] = (byte)AuthCMD.CMD_XFER_DATA;
+                _Converter.ToBytes(Conversions.ToShort(filelen), dataResponse, ref tmp);
                 Array.Copy(buffer, fileOffset, dataResponse, 3, filelen);
                 client.Send(dataResponse, "XFER-RESUME-XFER-DATALARGER");
             }
@@ -710,8 +716,8 @@ namespace Mangos.Realm
         {
             var result1 = new DataTable();
             int returnValues;
-            returnValues = AccountDatabase.Query(string.Format("SELECT * FROM realmlist WHERE allowedSecurityLevel < '1';"), result1);
-            if (returnValues > SQL.ReturnState.Success) // Ok, An error occurred
+            returnValues = AccountDatabase.Query(string.Format("SELECT * FROM realmlist WHERE allowedSecurityLevel < '1';"), ref result1);
+            if (returnValues > (byte)SQL.ReturnState.Success) // Ok, An error occurred
             {
                 Console.WriteLine("[{0}] An SQL Error has occurred", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
                 Console.WriteLine("*************************");
@@ -725,7 +731,10 @@ namespace Mangos.Realm
             Console.WriteLine("[{0}] Loading known game servers...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             foreach (DataRow row in result1.Rows)
-                Console.WriteLine("     [{1}] at {0}:{2} - {3}", row["address"].PadRight((object)6), row["name"].PadRight((object)6), Strings.Format(row["port"]).PadRight(6), _Global_Constants.WorldServerStatus(Conversion.Int(row["realmflags"])).PadRight(6));
+                Console.WriteLine("     [{1}] at {0}:{2} - {3}", row["address"].ToString().PadRight(6),
+                    row["name"].ToString().PadRight(6), 
+                    Strings.Format(row["port"]).PadRight(6), 
+                    _Global_Constants.WorldServerStatus[(byte)(Conversion.Int(row["realmflags"]))].PadRight(6));
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
@@ -751,7 +760,7 @@ namespace Mangos.Realm
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.ForegroundColor = ConsoleColor.White;
             var attributeType = typeof(AssemblyTitleAttribute);
-            Console.Write(Assembly.GetExecutingAssembly().GetCustomAttributes(attributeType, false)[0].Title);
+            Console.Write(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title);
             Console.WriteLine(" version {0}", Assembly.GetExecutingAssembly().GetName().Version);
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -763,7 +772,7 @@ namespace Mangos.Realm
             AccountDatabase.SQLMessage += SqlEventHandler;
             int ReturnValues;
             ReturnValues = AccountDatabase.Connect();
-            if (ReturnValues > SQL.ReturnState.Success)   // Ok, An error occurred
+            if (ReturnValues > (int)SQL.ReturnState.Success)   // Ok, An error occurred
             {
                 Console.WriteLine("[{0}] An SQL Error has occurred", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
                 Console.WriteLine("*************************");
@@ -785,8 +794,8 @@ namespace Mangos.Realm
                 }
             }
 
-            RealmServer = _RealmServerClassFactory.Create(this);
-            await RealmServer.StartAsync();
+            RealmServerClass = _RealmServerClassFactory.Create(this);
+            await RealmServerClass.StartAsync();
             GC.Collect();
             WorldServer_Status_Report();
         }

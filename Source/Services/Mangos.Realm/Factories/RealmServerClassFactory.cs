@@ -1,4 +1,5 @@
-﻿using Mangos.Configuration;
+﻿using global;
+using Mangos.Configuration;
 
 namespace Mangos.Realm.Factories
 {

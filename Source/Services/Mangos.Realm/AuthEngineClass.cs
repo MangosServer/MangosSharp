@@ -20,13 +20,14 @@ using System;
 using System.Collections;
 using System.Numerics;
 using System.Security.Cryptography;
+using Mangos.Common.Logging;
 
 namespace Mangos.Realm
 {
     public sealed class AuthEngineClass : IDisposable
     {
         private static readonly Random _random = new Random();
-        private readonly Logging.BaseWriter _log = new Logging.BaseWriter();
+        private readonly BaseWriter _log = new BaseWriter();
 
         static AuthEngineClass()
         {
@@ -165,7 +166,7 @@ namespace Mangos.Realm
             gHash = algorithm1.ComputeHash(g);
             userHash = algorithm1.ComputeHash(_username);
             for (int i = 0; i <= 19; i++)
-                ngHash[i] = nHash[i] ^ gHash[i];
+                ngHash[i] = (byte)(nHash[i] ^ gHash[i]);
             var temp = Concat(ngHash, userHash);
             temp = Concat(temp, Salt);
             temp = Concat(temp, _a);

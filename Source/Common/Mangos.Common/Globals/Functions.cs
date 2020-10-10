@@ -244,8 +244,9 @@ namespace Mangos.Common.Globals
             }
         }
 
-        public bool CheckRequiredDbVersion(ref SQL thisDatabase, ServerDb thisServerDb)
+        public bool CheckRequiredDbVersion(SQL thisDatabase, ServerDb thisServerDb)
         {
+            return true;
             var mySqlQuery = new DataTable();
             // thisDatabase.Query(String.Format("SELECT column_name FROM information_schema.columns WHERE table_name='" & thisTableName & "'  AND TABLE_SCHEMA='" & thisDatabase.SQLDBName & "'"), mySqlQuery)
             thisDatabase.Query("SELECT `version`,`structure`,`content` FROM db_version ORDER BY VERSION DESC, structure DESC, content DESC LIMIT 0,1", ref mySqlQuery);
