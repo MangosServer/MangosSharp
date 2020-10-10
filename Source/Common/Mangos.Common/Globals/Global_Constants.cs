@@ -17,6 +17,7 @@
 // 
 
 using System;
+using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 
 namespace global
@@ -153,9 +154,9 @@ namespace global
         public readonly int RESOLUTION_WATER = 128 - 1;
         public readonly int RESOLUTION_FLAGS = 16 - 1;
         public readonly int RESOLUTION_TERRAIN = 16 - 1;
-        public readonly int groundFlagsMask = 0xFFFFFFFF & (int)~(Global.MovementFlags.MOVEMENTFLAG_LEFT | Global.MovementFlags.MOVEMENTFLAG_RIGHT | Global.MovementFlags.MOVEMENTFLAG_BACKWARD | Global.MovementFlags.MOVEMENTFLAG_FORWARD | Global.MovementFlags.MOVEMENTFLAG_WALK);
-        public readonly int movementFlagsMask = (int)(Global.MovementFlags.MOVEMENTFLAG_FORWARD | Global.MovementFlags.MOVEMENTFLAG_BACKWARD | Global.MovementFlags.MOVEMENTFLAG_STRAFE_LEFT | Global.MovementFlags.MOVEMENTFLAG_STRAFE_RIGHT | Global.MovementFlags.MOVEMENTFLAG_PITCH_UP | Global.MovementFlags.MOVEMENTFLAG_PITCH_DOWN | Global.MovementFlags.MOVEMENTFLAG_JUMPING | Global.MovementFlags.MOVEMENTFLAG_FALLING | Global.MovementFlags.MOVEMENTFLAG_SWIMMING | Global.MovementFlags.MOVEMENTFLAG_SPLINE);
-        public readonly int TurningFlagsMask = (int)(Global.MovementFlags.MOVEMENTFLAG_LEFT | Global.MovementFlags.MOVEMENTFLAG_RIGHT);
+        public readonly int groundFlagsMask = unchecked((int)(0xFFFFFFFF & (int)~(MovementFlags.MOVEMENTFLAG_LEFT | MovementFlags.MOVEMENTFLAG_RIGHT | MovementFlags.MOVEMENTFLAG_BACKWARD | MovementFlags.MOVEMENTFLAG_FORWARD | MovementFlags.MOVEMENTFLAG_WALK)));
+        public readonly int movementFlagsMask = (int)(MovementFlags.MOVEMENTFLAG_FORWARD | MovementFlags.MOVEMENTFLAG_BACKWARD | MovementFlags.MOVEMENTFLAG_STRAFE_LEFT | MovementFlags.MOVEMENTFLAG_STRAFE_RIGHT | MovementFlags.MOVEMENTFLAG_PITCH_UP | MovementFlags.MOVEMENTFLAG_PITCH_DOWN | MovementFlags.MOVEMENTFLAG_JUMPING | MovementFlags.MOVEMENTFLAG_FALLING | MovementFlags.MOVEMENTFLAG_SWIMMING | MovementFlags.MOVEMENTFLAG_SPLINE);
+        public readonly int TurningFlagsMask = (int)(MovementFlags.MOVEMENTFLAG_LEFT | MovementFlags.MOVEMENTFLAG_RIGHT);
         public readonly int movementOrTurningFlagsMask;
         public readonly byte ITEM_SLOT_NULL = 255;
         public readonly long ITEM_BAG_NULL = -1;
@@ -172,7 +173,7 @@ namespace global
         public readonly int MAX_AURA_EFFECT_LEVELSs;
         public readonly int MAX_POSITIVE_AURA_EFFECTs = 32;
         public readonly int MAX_NEGATIVE_AURA_EFFECTs;
-        public readonly int UINT32_MAX = 0xFFFFFFFF;
+        public readonly uint UINT32_MAX = 0xFFFFFFFF;
         public readonly int UINT32_MIN = 0;
         public readonly long MpqId = 441536589L;
         public readonly long MpqHeaderSize = 32L;

@@ -23,8 +23,8 @@ namespace Mangos.Common.Logging
 {
     public class BaseWriter : IDisposable
     {
-        public char[] L = new char[] { 'N', 'D', 'I', 'U', 'S', 'W', 'F', 'C', "DB" };
-        public LogType LogLevel = Global.LogType.NETWORK;
+        public string[] L = { "N", "D", "I", "U", "S", "W", "F", "C", "DB" };
+        public LogType LogLevel = LogType.NETWORK;
 
         public BaseWriter()
         {
@@ -90,15 +90,15 @@ namespace Mangos.Common.Logging
         /// <returns></returns>
         public void PrintDiagnosticTest()
         {
-            this.WriteLine(Global.LogType.NETWORK, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(Global.LogType.DEBUG, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(Global.LogType.INFORMATION, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(Global.LogType.USER, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(Global.LogType.SUCCESS, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(Global.LogType.WARNING, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(Global.LogType.FAILED, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(Global.LogType.CRITICAL, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(Global.LogType.DATABASE, "{0}:************************* TEST *************************", (object)1);
+            this.WriteLine(LogType.NETWORK, "{0}:************************* TEST *************************", (object)1);
+            this.WriteLine(LogType.DEBUG, "{0}:************************* TEST *************************", (object)1);
+            this.WriteLine(LogType.INFORMATION, "{0}:************************* TEST *************************", (object)1);
+            this.WriteLine(LogType.USER, "{0}:************************* TEST *************************", (object)1);
+            this.WriteLine(LogType.SUCCESS, "{0}:************************* TEST *************************", (object)1);
+            this.WriteLine(LogType.WARNING, "{0}:************************* TEST *************************", (object)1);
+            this.WriteLine(LogType.FAILED, "{0}:************************* TEST *************************", (object)1);
+            this.WriteLine(LogType.CRITICAL, "{0}:************************* TEST *************************", (object)1);
+            this.WriteLine(LogType.DATABASE, "{0}:************************* TEST *************************", (object)1);
         }
 
         /// <summary>

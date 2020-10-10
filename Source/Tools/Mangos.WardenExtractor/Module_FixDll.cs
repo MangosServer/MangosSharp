@@ -61,7 +61,7 @@ namespace Mangos.WardenExtractor
                 else if (type == 4)
                 {
                     name = ".data";
-                    characteristics = 0xC0000040;
+                    characteristics = unchecked((int)0xC0000040);
                 }
                 // 80000000 + 40000000 + 40 (Can be written to, can be read, initialized data)
                 else if (type == 32)

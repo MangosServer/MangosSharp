@@ -4,14 +4,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Exe</OutputType>
     <AssemblyName>DBCExtractor</AssemblyName>
-    <DefaultItemExcludes>$(DefaultItemExcludes);$(ProjectDir)**\*.vb</DefaultItemExcludes>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic" />
     <PackageReference Include="MpqTool.netstandard" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.vbproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.csproj" />
   </ItemGroup>
 </Project>

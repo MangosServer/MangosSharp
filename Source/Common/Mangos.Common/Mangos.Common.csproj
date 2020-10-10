@@ -2,11 +2,8 @@
   <Import Project="../../Mangos.props" />
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <DefaultItemExcludes>$(DefaultItemExcludes);$(ProjectDir)**\*.vb</DefaultItemExcludes>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic" />
     <PackageReference Include="MySql.Data" Version="8.0.21" />
     <PackageReference Include="SharpZipLib" Version="1.3.0" />
   </ItemGroup>

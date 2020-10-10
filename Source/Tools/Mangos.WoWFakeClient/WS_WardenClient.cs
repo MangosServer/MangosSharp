@@ -456,7 +456,7 @@ namespace Mangos.WoWFakeClient
                     library = getNTString(ref br2, br2.ReadInt32());
                     // Console.WriteLine("  Library: {0}", library)
 
-                    int hModule = WardenMaiev.LoadLibrary(ref library);
+                    int hModule = WardenMaiev.LoadLibrary(library);
                     br2.BaseStream.Position = proc_start + 4;
                     int proc_offset = br2.ReadInt32();
                     br2.BaseStream.Position = proc_offset;
@@ -466,7 +466,7 @@ namespace Mangos.WoWFakeClient
                         if (proc > 0)
                         {
                             string strProc = getNTString(ref br2, proc);
-                            int addr = WardenMaiev.GetProcAddress(hModule, ref strProc);
+                            int addr = WardenMaiev.GetProcAddress(hModule, strProc);
 
                             // Console.WriteLine("    Function: {0} (0x{1:X})", strProc, addr)
                             bw.BaseStream.Position = proc_offset;

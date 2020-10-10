@@ -1,7 +1,7 @@
 ﻿
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellAttributes : int
+    public enum SpellAttributes : uint
     {
         SPELL_ATTR_NONE = 0x0,
         SPELL_ATTR_RANGED = 0x2,

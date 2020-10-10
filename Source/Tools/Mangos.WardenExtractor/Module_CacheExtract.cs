@@ -40,14 +40,14 @@ namespace Mangos.WardenExtractor
             var br = new BinaryReader(fs);
             string Header = Conversions.ToString(br.ReadChars(4));
             uint Version = br.ReadUInt32();
-            string Lang = Main.Reverse(Conversions.ToString(br.ReadChars(4)));
+            string Lang = Program.Reverse(Conversions.ToString(br.ReadChars(4)));
             var Unk = br.ReadBytes(8);
             Console.ForegroundColor = ConsoleColor.White;
             Directory.CreateDirectory("Modules");
             while (fs.Position + 20L <= fs.Length)
             {
                 var argbBytes = br.ReadBytes(16);
-                string ModName = Main.ToHex(ref argbBytes);
+                string ModName = Program.ToHex(ref argbBytes);
                 int DataLen = br.ReadInt32();
                 if (DataLen == 0)
                     continue;
@@ -82,7 +82,7 @@ namespace Mangos.WardenExtractor
             var bw = new BinaryWriter(ms);
             string Header = Conversions.ToString(br.ReadChars(4));
             uint Version = br.ReadUInt32();
-            string Lang = Main.Reverse(Conversions.ToString(br.ReadChars(4)));
+            string Lang = Program.Reverse(Conversions.ToString(br.ReadChars(4)));
             int Unk1 = br.ReadInt32();
             int Unk2 = br.ReadInt32();
             bw.Write((byte)Strings.Asc(Header[0]));
@@ -102,7 +102,7 @@ namespace Mangos.WardenExtractor
             while (fs.Position + 20L <= fs.Length)
             {
                 var byteName = br.ReadBytes(16);
-                string ModName = Main.ToHex(ref byteName);
+                string ModName = Program.ToHex(ref byteName);
                 int DataLen = br.ReadInt32();
                 bw.Write(byteName, 0, byteName.Length);
                 bw.Write(DataLen);

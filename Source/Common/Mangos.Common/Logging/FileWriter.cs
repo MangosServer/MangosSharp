@@ -36,7 +36,7 @@ namespace Mangos.Common.Logging
         {
             LastDate = DateAndTime.Now.Date;
             Output = new StreamWriter(string.Format("{0}-{1}.log", Filename, Strings.Format(LastDate, "yyyy-MM-dd")), true) { AutoFlush = true };
-            this.WriteLine(Global.LogType.INFORMATION, "Log started successfully.");
+            this.WriteLine(LogType.INFORMATION, "Log started successfully.");
         }
 
         public FileWriter(string createfilename)

@@ -1,7 +1,7 @@
 ﻿
 namespace Mangos.Common.Enums.Global
 {
-    public enum ProcFlags
+    public enum ProcFlags : uint
     {
         PROC_FLAG_NONE = 0x0,                            // None
         PROC_FLAG_HIT_MELEE = 0x1,                       // On melee hit

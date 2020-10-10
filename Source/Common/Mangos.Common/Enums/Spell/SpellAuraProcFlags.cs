@@ -35,6 +35,6 @@ namespace Mangos.Common.Enums.Spell
         AURA_PROC_MISC = 0x10000000,                          // our custom flag to decide if AURA_PROC dmg or shield
         AURA_PROC_ON_BLOCK_VICTIM = 0x20000000,
         AURA_PROC_ON_SPELL_CRIT_HIT = 0x40000000,
-        AURA_PROC_TARGET_SELF = 0x80000000                   // our custom flag to decide if AURA_PROC target is self or victim
+        AURA_PROC_TARGET_SELF = unchecked((int)0x80000000)                // our custom flag to decide if AURA_PROC target is self or victim
     }
 }

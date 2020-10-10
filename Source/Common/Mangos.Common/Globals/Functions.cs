@@ -19,6 +19,7 @@
 // Note: Temp place holder
 using System;
 using System.Data;
+using global;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
 using Microsoft.VisualBasic;
@@ -27,9 +28,9 @@ namespace Mangos.Common.Globals
 {
     public class Functions
     {
-        private readonly global::Global_Constants _Global_Constants;
+        private readonly Global_Constants _Global_Constants;
 
-        public Functions(global::Global_Constants globalConstants)
+        public Functions(Global_Constants globalConstants)
         {
             _Global_Constants = globalConstants;
         }
@@ -104,7 +105,7 @@ namespace Mangos.Common.Globals
 
         public uint GuidHigh(ulong guid)
         {
-            return (uint)((guid & _Global_Constants.GUID_MASK_HIGH) >> 32UL);
+            return (uint)((guid & _Global_Constants.GUID_MASK_HIGH) >> 32);
         }
 
         public uint GuidLow(ulong guid)
@@ -116,7 +117,7 @@ namespace Mangos.Common.Globals
         {
             switch (form)
             {
-                case Global.ShapeshiftForm.FORM_CAT:
+                case ShapeshiftForm.FORM_CAT:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
                             return 892;
@@ -125,8 +126,8 @@ namespace Mangos.Common.Globals
                         break;
                     }
 
-                case Global.ShapeshiftForm.FORM_BEAR:
-                case Global.ShapeshiftForm.FORM_DIREBEAR:
+                case ShapeshiftForm.FORM_BEAR:
+                case ShapeshiftForm.FORM_DIREBEAR:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
                             return 2281;
@@ -135,7 +136,7 @@ namespace Mangos.Common.Globals
                         break;
                     }
 
-                case Global.ShapeshiftForm.FORM_MOONKIN:
+                case ShapeshiftForm.FORM_MOONKIN:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
                             return 15374;
@@ -144,17 +145,17 @@ namespace Mangos.Common.Globals
                         break;
                     }
 
-                case Global.ShapeshiftForm.FORM_TRAVEL:
+                case ShapeshiftForm.FORM_TRAVEL:
                     {
                         return 632;
                     }
 
-                case Global.ShapeshiftForm.FORM_AQUA:
+                case ShapeshiftForm.FORM_AQUA:
                     {
                         return 2428;
                     }
 
-                case Global.ShapeshiftForm.FORM_FLIGHT:
+                case ShapeshiftForm.FORM_FLIGHT:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
                             return 20857;
@@ -163,7 +164,7 @@ namespace Mangos.Common.Globals
                         break;
                     }
 
-                case Global.ShapeshiftForm.FORM_SWIFT:
+                case ShapeshiftForm.FORM_SWIFT:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
                             return 21243;
@@ -172,7 +173,7 @@ namespace Mangos.Common.Globals
                         break;
                     }
 
-                case Global.ShapeshiftForm.FORM_GHOUL:
+                case ShapeshiftForm.FORM_GHOUL:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
                             return 10045;
@@ -181,17 +182,17 @@ namespace Mangos.Common.Globals
                         break;
                     }
 
-                case Global.ShapeshiftForm.FORM_CREATUREBEAR:
+                case ShapeshiftForm.FORM_CREATUREBEAR:
                     {
                         return 902;
                     }
 
-                case Global.ShapeshiftForm.FORM_GHOSTWOLF:
+                case ShapeshiftForm.FORM_GHOSTWOLF:
                     {
                         return 4613;
                     }
 
-                case Global.ShapeshiftForm.FORM_SPIRITOFREDEMPTION:
+                case ShapeshiftForm.FORM_SPIRITOFREDEMPTION:
                     {
                         return 12824;
                     }
@@ -212,28 +213,28 @@ namespace Mangos.Common.Globals
         {
             switch (form)
             {
-                case Global.ShapeshiftForm.FORM_CAT:
-                case Global.ShapeshiftForm.FORM_STEALTH:
+                case ShapeshiftForm.FORM_CAT:
+                case ShapeshiftForm.FORM_STEALTH:
                     {
-                        return Global.ManaTypes.TYPE_ENERGY;
+                        return ManaTypes.TYPE_ENERGY;
                     }
 
-                case Global.ShapeshiftForm.FORM_AQUA:
-                case Global.ShapeshiftForm.FORM_TRAVEL:
-                case Global.ShapeshiftForm.FORM_MOONKIN:
-                case var @case when @case == Global.ShapeshiftForm.FORM_MOONKIN:
-                case var case1 when case1 == Global.ShapeshiftForm.FORM_MOONKIN:
-                case Global.ShapeshiftForm.FORM_SPIRITOFREDEMPTION:
-                case Global.ShapeshiftForm.FORM_FLIGHT:
-                case Global.ShapeshiftForm.FORM_SWIFT:
+                case ShapeshiftForm.FORM_AQUA:
+                case ShapeshiftForm.FORM_TRAVEL:
+                case ShapeshiftForm.FORM_MOONKIN:
+                case var @case when @case == ShapeshiftForm.FORM_MOONKIN:
+                case var case1 when case1 == ShapeshiftForm.FORM_MOONKIN:
+                case ShapeshiftForm.FORM_SPIRITOFREDEMPTION:
+                case ShapeshiftForm.FORM_FLIGHT:
+                case ShapeshiftForm.FORM_SWIFT:
                     {
-                        return Global.ManaTypes.TYPE_MANA;
+                        return ManaTypes.TYPE_MANA;
                     }
 
-                case Global.ShapeshiftForm.FORM_BEAR:
-                case Global.ShapeshiftForm.FORM_DIREBEAR:
+                case ShapeshiftForm.FORM_BEAR:
+                case ShapeshiftForm.FORM_DIREBEAR:
                     {
-                        return Global.ManaTypes.TYPE_RAGE;
+                        return ManaTypes.TYPE_RAGE;
                     }
 
                 default:
@@ -255,7 +256,7 @@ namespace Mangos.Common.Globals
             int coreDbContent = 0;
             switch (thisServerDb)
             {
-                case Global.ServerDb.Realm:
+                case ServerDb.Realm:
                     {
                         coreDbVersion = _Global_Constants.RevisionDbRealmVersion;
                         coreDbStructure = _Global_Constants.RevisionDbRealmStructure;
@@ -263,7 +264,7 @@ namespace Mangos.Common.Globals
                         break;
                     }
 
-                case Global.ServerDb.Character:
+                case ServerDb.Character:
                     {
                         coreDbVersion = _Global_Constants.RevisionDbCharactersVersion;
                         coreDbStructure = _Global_Constants.RevisionDbCharactersStructure;
@@ -271,7 +272,7 @@ namespace Mangos.Common.Globals
                         break;
                     }
 
-                case Global.ServerDb.World:
+                case ServerDb.World:
                     {
                         coreDbVersion = _Global_Constants.RevisionDbMangosVersion;
                         coreDbStructure = _Global_Constants.RevisionDbMangosStructure;

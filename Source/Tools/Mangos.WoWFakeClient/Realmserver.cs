@@ -425,7 +425,7 @@ namespace Mangos.WoWFakeClient
             var G_Hash = algorithm1.ComputeHash(G);
             var NG_Hash = new byte[20];
             for (int i = 0; i <= 19; i++)
-                NG_Hash[i] = N_Hash[i] ^ G_Hash[i];
+                NG_Hash[i] = (byte)(N_Hash[i] ^ G_Hash[i]);
             temp = Concat(NG_Hash, User_Hash);
             temp = Concat(temp, Salt);
             temp = Concat(temp, PublicA);

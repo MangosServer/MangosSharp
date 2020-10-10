@@ -61,7 +61,7 @@ namespace Mangos.Common.DataStores
             _disposedValue = true;
         }
 
-        public override object get_Item(int row, int column, DBCValueType valueType)
+        public override object Item(int row, int column, DBCValueType valueType = DBCValueType.DBC_INTEGER)
         {
             if (row >= Rows)
                 throw new ApplicationException("DBC: Row index outside file definition.");
@@ -73,17 +73,15 @@ namespace Mangos.Common.DataStores
             bs.Read(Buffer, 0, 4);
             switch (valueType)
             {
-                case Global.DBCValueType.DBC_FLOAT:
+                case DBCValueType.DBC_FLOAT:
                     {
                         return BitConverter.ToSingle(Buffer, 0);
                     }
-
-                case Global.DBCValueType.DBC_INTEGER:
+                case DBCValueType.DBC_INTEGER:
                     {
                         return BitConverter.ToInt32(Buffer, 0);
                     }
-
-                case Global.DBCValueType.DBC_STRING:
+                case DBCValueType.DBC_STRING:
                     {
                         int offset = BitConverter.ToInt32(Buffer, 0);
                         bs.Seek(20 + Rows * RowLength + offset, SeekOrigin.Begin);

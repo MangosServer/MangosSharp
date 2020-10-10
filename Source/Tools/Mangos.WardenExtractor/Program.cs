@@ -24,7 +24,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.WardenExtractor
 {
-    static class Main
+    static class Program
     {
         public static void Main()
         {
@@ -234,7 +234,7 @@ namespace Mangos.WardenExtractor
                     temp = key[key[257] & 0xFF];
                     key[key[257] & 0xFF] = key[key[256] & 0xFF];
                     key[key[256] & 0xFF] = temp;
-                    data[i] = data[i] ^ key[Conversions.ToInteger(key[key[257]]) + Conversions.ToInteger(key[key[256]]) & 0xFF];
+                    data[i] = (byte)(data[i] ^ key[Conversions.ToInteger(key[key[257]]) + Conversions.ToInteger(key[key[256]]) & 0xFF]);
                 }
             }
         }

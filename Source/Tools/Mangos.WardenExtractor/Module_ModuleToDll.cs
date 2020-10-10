@@ -128,9 +128,9 @@ namespace Mangos.WardenExtractor
             // Console.WriteLine("Insert RC4 Key for {0}:", ModName)
             // Dim RC4Key As String = Console.ReadLine()
 
-            var Key = Main.ParseKey("ECA9A9D1EAAEFD38CC115062FB92996E"); // ParseKey(RC4Key)
-            Key = Main.RC4.Init(Key);
-            Main.RC4.Crypt(ref ModData, Key);
+            var Key = Program.ParseKey("ECA9A9D1EAAEFD38CC115062FB92996E"); // ParseKey(RC4Key)
+            Key = Program.RC4.Init(Key);
+            Program.RC4.Crypt(ref ModData, Key);
             int UncompressedLen = BitConverter.ToInt32(ModData, 0);
             if (UncompressedLen < 0)
             {
@@ -159,7 +159,7 @@ namespace Mangos.WardenExtractor
                 return;
             }
 
-            var DecompressedData = Main.DeCompress(CompressedData);
+            var DecompressedData = Program.DeCompress(CompressedData);
             var fs3 = new FileStream(@"dlls\" + ModName.Replace(Path.GetExtension(ModName), "") + ".before.dll", FileMode.Create, FileAccess.Write, FileShare.None);
             fs3.Write(DecompressedData, 0, DecompressedData.Length);
             fs3.Close();
@@ -175,9 +175,9 @@ namespace Mangos.WardenExtractor
         {
             Console.WriteLine("Insert RC4 Key for {0}:", DllName);
             string RC4Key = Console.ReadLine();
-            var Key = Main.ParseKey(RC4Key);
-            Key = Main.RC4.Init(Key);
-            var CompressedData = Main.Compress(DllData, 0, DllData.Length);
+            var Key = Program.ParseKey(RC4Key);
+            Key = Program.RC4.Init(Key);
+            var CompressedData = Program.Compress(DllData, 0, DllData.Length);
             var mw = new MemoryStream();
             var bw = new BinaryWriter(mw);
             bw.Write(DllData.Length); // Uncompressed buffer
@@ -192,7 +192,7 @@ namespace Mangos.WardenExtractor
             tmpData = mw.ToArray();
             mw.Close();
             mw.Dispose();
-            Main.RC4.Crypt(ref tmpData, Key);
+            Program.RC4.Crypt(ref tmpData, Key);
             var fs2 = new FileStream(@"Modules\" + DllName.Replace(Path.GetExtension(DllName), "") + ".mod", FileMode.Create, FileAccess.Write, FileShare.None);
             fs2.Write(tmpData, 0, tmpData.Length);
             fs2.Close();

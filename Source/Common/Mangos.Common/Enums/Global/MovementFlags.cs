@@ -1,7 +1,7 @@
 ﻿
 namespace Mangos.Common.Enums.Global
 {
-    public enum MovementFlags : int
+    public enum MovementFlags
     {
         MOVEMENTFLAG_NONE = 0x0,
         MOVEMENTFLAG_FORWARD = 0x1,

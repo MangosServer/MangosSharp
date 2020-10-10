@@ -35,55 +35,55 @@ namespace Mangos.Common.Logging
                 return;
             switch (type)
             {
-                case Global.LogType.NETWORK:
+                case LogType.NETWORK:
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         break;
                     }
 
-                case Global.LogType.DEBUG:
+                case LogType.DEBUG:
                     {
                         Console.ForegroundColor = ConsoleColor.Gray;
                         break;
                     }
 
-                case Global.LogType.INFORMATION:
+                case LogType.INFORMATION:
                     {
                         Console.ForegroundColor = ConsoleColor.White;
                         break;
                     }
 
-                case Global.LogType.USER:
+                case LogType.USER:
                     {
                         Console.ForegroundColor = ConsoleColor.Blue;
                         break;
                     }
 
-                case Global.LogType.SUCCESS:
+                case LogType.SUCCESS:
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
                         break;
                     }
 
-                case Global.LogType.WARNING:
+                case LogType.WARNING:
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         break;
                     }
 
-                case Global.LogType.FAILED:
+                case LogType.FAILED:
                     {
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         break;
                     }
 
-                case Global.LogType.CRITICAL:
+                case LogType.CRITICAL:
                     {
                         Console.ForegroundColor = ConsoleColor.Red; // Red
                         break;
                     }
 
-                case Global.LogType.DATABASE:
+                case LogType.DATABASE:
                     {
                         Console.ForegroundColor = ConsoleColor.DarkMagenta;
                         break;
@@ -109,55 +109,55 @@ namespace Mangos.Common.Logging
                 return;
             switch (type)
             {
-                case Global.LogType.NETWORK:
+                case LogType.NETWORK:
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         break;
                     }
 
-                case Global.LogType.DEBUG:
+                case LogType.DEBUG:
                     {
                         Console.ForegroundColor = ConsoleColor.Gray;
                         break;
                     }
 
-                case Global.LogType.INFORMATION:
+                case LogType.INFORMATION:
                     {
                         Console.ForegroundColor = ConsoleColor.White;
                         break;
                     }
 
-                case Global.LogType.USER:
+                case LogType.USER:
                     {
                         Console.ForegroundColor = ConsoleColor.Blue;
                         break;
                     }
 
-                case Global.LogType.SUCCESS:
+                case LogType.SUCCESS:
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
                         break;
                     }
 
-                case Global.LogType.WARNING:
+                case LogType.WARNING:
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         break;
                     }
 
-                case Global.LogType.FAILED:
+                case LogType.FAILED:
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         break;
                     }
 
-                case Global.LogType.CRITICAL:
+                case LogType.CRITICAL:
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         break;
                     }
 
-                case Global.LogType.DATABASE:
+                case LogType.DATABASE:
                     {
                         Console.ForegroundColor = ConsoleColor.DarkMagenta;
                         break;

@@ -214,8 +214,8 @@ namespace Mangos.DBCExtractor
             int maxID = -1;
             for (int i = 0, loopTo = areaDBC.Rows - 1; i <= loopTo; i++)
             {
-                int areaID = areaDBC.Item(i, 0);
-                int areaFlag = areaDBC.Item(i, 3);
+                int areaID = (int)areaDBC.Item(i, 0);
+                int areaFlag = (int)areaDBC.Item(i, 3);
                 MapAreas.Add(areaID, areaFlag);
                 if (areaID > maxID)
                     maxID = areaID;
@@ -232,7 +232,7 @@ namespace Mangos.DBCExtractor
             Console.Write("Reading LiquidType.dbc... ");
             var liquidDBC = new BufferedDbc(@"dbc\LiquidType.dbc");
             for (int i = 0, loopTo = liquidDBC.Rows - 1; i <= loopTo; i++)
-                MapLiqTypes.Add(liquidDBC.Item(i, 0), liquidDBC.Item(i, 3));
+                MapLiqTypes.Add((int)liquidDBC.Item(i, 0), (int)liquidDBC.Item(i, 3));
             Console.WriteLine("Done! ({0} LiqTypes loaded)", liquidDBC.Rows);
         }
     }
