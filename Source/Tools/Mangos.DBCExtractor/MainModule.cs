@@ -74,7 +74,7 @@ namespace Mangos.DBCExtractor
                 Directory.CreateDirectory("maps");
                 Console.WriteLine("Created extract folders.");
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Unable to create extract folders, you don't seem to have admin rights.");

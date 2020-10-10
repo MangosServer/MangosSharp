@@ -142,7 +142,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpellOnSelf(BERSERK_SPELL);
                 }
-                catch (Exception Ex)
+                catch (Exception)
                 {
                     // Log.WriteLine(LogType.WARNING, "BERSERK FAILED TO CAST ON PATCHWERK!")
                     this.aiCreature.SendChatMessage("BERSERK FAILED TO CAST ON PATCHWERK! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);

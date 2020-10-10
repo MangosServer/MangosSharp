@@ -103,7 +103,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(SPELL_POLYMORPH, this.aiCreature.GetRandomTarget()); // Might not properly work.
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I was unable to cast polymorph. Please report this to a developer!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
@@ -121,7 +121,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(SPELL_SILENCE, this.aiCreature.GetRandomTarget());
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I was unable to silence my target. Please report this to a developer!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
@@ -143,7 +143,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(SPELL_DETONATION, this.aiTarget);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I was unable to cast Arcane Bubble upon myself. Please report this to a developer!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }

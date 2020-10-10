@@ -585,7 +585,7 @@ namespace Mangos.World.Server
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
                     }
                 }
-                catch (ApplicationException ex)
+                catch (ApplicationException)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: AI Manager timed out");
                 }

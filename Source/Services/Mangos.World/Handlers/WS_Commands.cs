@@ -611,7 +611,7 @@ namespace Mangos.World.Handlers
         [ChatCommand("playsound", "playsound - Plays a specific sound for every player around you.", AccessLevel.Developer)]
         public bool cmdPlaySound(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            int soundID = 0;
+            int soundID;
             if (int.TryParse(Message, out soundID) == false)
                 return false;
             objCharacter.SendPlaySound(soundID);
@@ -1022,7 +1022,7 @@ namespace Mangos.World.Handlers
         [ChatCommand("changemodel", "changemodel #id - Will morph you into specified model ID.", AccessLevel.GameMaster)]
         public bool cmdModel(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            int value = 0;
+            int value;
             if (int.TryParse(Message, out value) == false || value < 0)
                 return false;
             if (WorldServiceLocator._WS_DBCDatabase.CreatureModel.ContainsKey(value))
@@ -1042,7 +1042,7 @@ namespace Mangos.World.Handlers
         [ChatCommand("mount", "mount #id - Will mount you to specified model ID.", AccessLevel.GameMaster)]
         public bool cmdMount(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            int value = 0;
+            int value;
             if (int.TryParse(Message, out value) == false || value < 0)
                 return false;
             objCharacter.SetUpdateFlag(EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, value);
@@ -1457,7 +1457,7 @@ namespace Mangos.World.Handlers
         [ChatCommand("SetInstance", "SETINSTANCE <ID> - Sets you into another instance.", AccessLevel.Admin)]
         public bool cmdSetInstance(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            int instanceID = 0;
+            int instanceID;
             if (int.TryParse(Message, out instanceID) == false)
                 return false;
             if (instanceID < 0 || instanceID > 400000)
@@ -2147,7 +2147,7 @@ namespace Mangos.World.Handlers
                 packet.Dispose();
                 UpdateData.Dispose();
             }
-            catch (DataException ex)
+            catch (DataException)
             {
                 noErrors = false;
             }

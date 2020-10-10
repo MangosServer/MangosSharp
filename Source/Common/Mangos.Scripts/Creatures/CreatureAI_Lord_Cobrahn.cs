@@ -123,7 +123,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpellOnSelf(Cobrahn_Serpent_Form_Spell);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I have failed to cast Serpent Form on myself. This is a problem. Please report this issue to the developers of MaNGOS VB.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
@@ -139,7 +139,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpellOnSelf(Healing_Spell);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I was unable to cast healing touch on myself. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }

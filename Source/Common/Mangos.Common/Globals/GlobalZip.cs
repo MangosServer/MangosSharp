@@ -38,7 +38,7 @@ namespace Mangos.Common.Globals
                 compressordStream.Close();
                 buffer2 = outputStream.ToArray();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Logger.Log.WriteLine(LogType.FAILED, "ZIP: {0}", e.Message)
                 buffer2 = null;
@@ -65,7 +65,7 @@ namespace Mangos.Common.Globals
                 decopressorStream.Flush();
                 decopressorStream.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Log.WriteLine(LogType.FAILED, "ZIP: {0}", e.Message)
                 buffer2 = null;

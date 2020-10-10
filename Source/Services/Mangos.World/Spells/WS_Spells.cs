@@ -2405,7 +2405,7 @@ namespace Mangos.World.Spells
                     var argcastParams = this;
                     WorldServiceLocator._WS_Spells.SPELLs[SpellID].Cast(ref argcastParams);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Cast Exception {0} : Interrupted {1}", SpellID, Stopped);
                 }
@@ -2417,7 +2417,7 @@ namespace Mangos.World.Spells
                 {
                     Stopped = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "StopCast Exception {0} : Interrupted {1}", SpellID, Stopped);
                 }

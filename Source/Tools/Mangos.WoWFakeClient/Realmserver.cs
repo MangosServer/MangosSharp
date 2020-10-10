@@ -113,7 +113,7 @@ namespace Mangos.WoWFakeClient
                 NewThread.Name = "Realm Server, Connected";
                 NewThread.Start();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Could not connect to the server.");
@@ -149,7 +149,7 @@ namespace Mangos.WoWFakeClient
                         break;
                 }
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException)
             {
             }
             // Nothing

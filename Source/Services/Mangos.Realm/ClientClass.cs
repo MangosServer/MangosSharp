@@ -180,7 +180,7 @@ namespace Mangos.Realm
                 Console.WriteLine("[{0}] [{1}:{2}] ({4}) Data sent, result code {3}", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port, Socket.Send(data, 0, data.Length, SocketFlags.None), packetName);
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
-            catch (Exception err)
+            catch (Exception)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[{0}] Connection from [{1}:{2}] do not exist - ERROR!!!", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port);

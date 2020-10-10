@@ -30,9 +30,8 @@ namespace Mangos.World.Objects
     {
         private ulong GetNewGUID()
         {
-            ulong GetNewGUIDRet = default;
             WorldServiceLocator._WorldServer.DynamicObjectsGUIDCounter = (ulong)(WorldServiceLocator._WorldServer.DynamicObjectsGUIDCounter + 1m);
-            GetNewGUIDRet = WorldServiceLocator._WorldServer.DynamicObjectsGUIDCounter;
+            ulong GetNewGUIDRet = WorldServiceLocator._WorldServer.DynamicObjectsGUIDCounter;
             return GetNewGUIDRet;
         }
 

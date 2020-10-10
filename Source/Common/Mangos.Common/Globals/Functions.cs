@@ -179,7 +179,6 @@ namespace Mangos.Common.Globals
                             return 10045;
                         else
                             return model;
-                        break;
                     }
 
                 case ShapeshiftForm.FORM_CREATUREBEAR:

@@ -69,9 +69,8 @@ namespace Mangos.World.Objects
         [MethodImpl(MethodImplOptions.Synchronized)]
         private ulong GetNewGUID()
         {
-            ulong GetNewGUIDRet = default;
             WorldServiceLocator._WorldServer.itemGuidCounter = (ulong)(WorldServiceLocator._WorldServer.itemGuidCounter + 1m);
-            GetNewGUIDRet = WorldServiceLocator._WorldServer.itemGuidCounter;
+            ulong GetNewGUIDRet = WorldServiceLocator._WorldServer.itemGuidCounter;
             return GetNewGUIDRet;
         }
 
@@ -405,7 +404,7 @@ namespace Mangos.World.Objects
                 SaveAsNew();
                 WorldServiceLocator._WorldServer.WORLD_ITEMs.Add(GUID, this);
             }
-            catch (Exception Ex)
+            catch (Exception)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Duplicate Key Warning ITEMID:{0} OWNERGUID:{1}", itemId, owner);
             }

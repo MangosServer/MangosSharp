@@ -153,7 +153,7 @@ namespace Mangos.World.Quests
                     return (WS_QuestInfo)_quests[questId.ToString()];
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "ReturnQuestInfoById returned error on QuestId {0}", questId);
             }
@@ -221,7 +221,7 @@ namespace Mangos.World.Quests
                                     }
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "GetQuestMenu returned error for QuestId {0}", questID);
                             }
@@ -1588,7 +1588,7 @@ namespace Mangos.World.Quests
                                     // End If
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "GetQuestGiverStatus Error");
                             }
@@ -1609,7 +1609,7 @@ namespace Mangos.World.Quests
                                         }
                                     }
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "GetQuestGiverStatus Error");
                                 }

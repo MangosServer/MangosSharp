@@ -842,7 +842,6 @@ namespace Mangos.World.Objects
                 if (Caster is WS_PlayerData.CharacterObject)
                 {
                     {
-                        var withBlock = (WS_PlayerData.CharacterObject)Caster;
                         int PenaltyFactor = 0;
                         int EffectCount = 0;
                         for (int i = 0; i <= 2; i++)
@@ -853,7 +852,7 @@ namespace Mangos.World.Objects
 
                         if (EffectCount > 1)
                             PenaltyFactor = 5;
-                        int SpellDamage = 0;
+                        int SpellDamage;
                         if (IsHeal)
                         {
                             SpellDamage = ((WS_PlayerData.CharacterObject)Caster).healing.Value;
@@ -1090,7 +1089,7 @@ namespace Mangos.World.Objects
             {
                 if (this is WS_PlayerData.CharacterObject)
                 {
-                    int value = 0;
+                    int value;
                     {
                         var withBlock = (WS_PlayerData.CharacterObject)this;
                         // in PvP use full skill instead current skill value
@@ -1116,7 +1115,7 @@ namespace Mangos.World.Objects
             {
                 if (this is WS_PlayerData.CharacterObject)
                 {
-                    int value = 0;
+                    int value;
                     {
                         var withBlock = (WS_PlayerData.CharacterObject)this;
                         ItemObject item = null;

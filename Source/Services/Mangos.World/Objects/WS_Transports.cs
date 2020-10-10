@@ -34,9 +34,8 @@ namespace Mangos.World.Objects
     {
         private ulong GetNewGUID()
         {
-            ulong GetNewGUIDRet = default;
             WorldServiceLocator._WorldServer.TransportGUIDCounter = (ulong)(WorldServiceLocator._WorldServer.TransportGUIDCounter + 1m);
-            GetNewGUIDRet = WorldServiceLocator._WorldServer.TransportGUIDCounter;
+            ulong GetNewGUIDRet = WorldServiceLocator._WorldServer.TransportGUIDCounter;
             return GetNewGUIDRet;
         }
 
@@ -57,7 +56,7 @@ namespace Mangos.World.Objects
 
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Database: {0} Transports initialized.", TransportQuery.Rows.Count);
             }
-            catch (System.IO.DirectoryNotFoundException e)
+            catch (System.IO.DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Database : TransportQuery missing.");

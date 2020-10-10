@@ -112,7 +112,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpellOnSelf(Spell_Armageddon); // I think during this time he's supposed to have a kamakazie of sorts.
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I have failed to become invincible at 2% or less HP. this is a problem.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }

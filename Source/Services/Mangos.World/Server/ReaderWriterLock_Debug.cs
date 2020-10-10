@@ -70,7 +70,7 @@ namespace Mangos.World.Server
                 foreach (StackFrame frame in sf)
                     WriteLine(Constants.vbTab + frame.GetMethod().Name);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 WriteLine("ReleaseReaderLock " + ID + " is not freed!");
             }
@@ -97,7 +97,7 @@ namespace Mangos.World.Server
                 foreach (StackFrame frame in sf)
                     WriteLine(Constants.vbTab + frame.GetMethod().Name);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 WriteLine("ReleaseWriterLock " + ID + " is not freed!");
             }

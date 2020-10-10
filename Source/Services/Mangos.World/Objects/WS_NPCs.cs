@@ -1544,7 +1544,7 @@ namespace Mangos.World.Objects
                         objCharacter.SendGossip(cGuid, textID, ref npcMenu, qMenu: ref argqMenu4);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Stop
                 }

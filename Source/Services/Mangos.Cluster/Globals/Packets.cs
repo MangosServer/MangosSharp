@@ -121,7 +121,7 @@ namespace Mangos.Cluster.Globals
                 buffer += "-------------------------------------------------------------------" + Constants.vbCrLf + Constants.vbCrLf;
                 File.AppendAllText("packets.log", buffer);
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }

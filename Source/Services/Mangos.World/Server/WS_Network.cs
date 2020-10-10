@@ -146,9 +146,9 @@ namespace Mangos.World.Server
                 }
             }
 
-            public void ClientTransfer(uint ID, float posX, float posY, float posZ, float ori, int map)
+            public void ClientTransfer(uint ID, float posX, float posY, float posZ, float ori, uint map)
             {
-                if (!WorldServiceLocator._WS_Maps.Maps.ContainsKey((uint)map))
+                if (!WorldServiceLocator._WS_Maps.Maps.ContainsKey(map))
                 {
                     WorldServiceLocator._WorldServer.CLIENTs[ID].Character.Dispose();
                     WorldServiceLocator._WorldServer.CLIENTs[ID].Delete();
@@ -279,7 +279,7 @@ namespace Mangos.World.Server
                 var serverInfo = new ServerInfo()
                 {
                     cpuUsage = UsageCPU,
-                    memoryUsage = Process.GetCurrentProcess().WorkingSet64 / (double)(1024 * 1024)
+                    memoryUsage = (ulong)(Process.GetCurrentProcess().WorkingSet64 / (double)(1024 * 1024))
                 };
                 return serverInfo;
             }
@@ -302,22 +302,22 @@ namespace Mangos.World.Server
             {
                 switch (Type)
                 {
-                    case var @case when @case == MapTypes.MAP_BATTLEGROUND:
+                    case (int)MapTypes.MAP_BATTLEGROUND:
                         {
                             return WorldServiceLocator._WorldServer.Config.CreateBattlegrounds;
                         }
 
-                    case var case1 when case1 == MapTypes.MAP_INSTANCE:
+                    case (int)MapTypes.MAP_INSTANCE:
                         {
                             return WorldServiceLocator._WorldServer.Config.CreatePartyInstances;
                         }
 
-                    case var case2 when case2 == MapTypes.MAP_RAID:
+                    case (int)MapTypes.MAP_RAID:
                         {
                             return WorldServiceLocator._WorldServer.Config.CreateRaidInstances;
                         }
 
-                    case var case3 when case3 == MapTypes.MAP_COMMON:
+                    case (int)MapTypes.MAP_COMMON:
                         {
                             return WorldServiceLocator._WorldServer.Config.CreateOther;
                         }
@@ -370,7 +370,7 @@ namespace Mangos.World.Server
                     }
                     else
                     {
-                        WorldServiceLocator._WS_Group.Groups[GroupID].Type = GroupType;
+                        WorldServiceLocator._WS_Group.Groups[GroupID].Type = (GroupType)GroupType;
                         WorldServiceLocator._WS_Group.Groups[GroupID].Leader = GroupLeader;
                         WorldServiceLocator._WS_Group.Groups[GroupID].LocalMembers = list;
                     }
@@ -382,9 +382,9 @@ namespace Mangos.World.Server
                 if (WorldServiceLocator._WS_Group.Groups.ContainsKey(GroupID))
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[G{0:00000}] Group update loot", GroupID);
-                    WorldServiceLocator._WS_Group.Groups[GroupID].DungeonDifficulty = Difficulty;
-                    WorldServiceLocator._WS_Group.Groups[GroupID].LootMethod = Method;
-                    WorldServiceLocator._WS_Group.Groups[GroupID].LootThreshold = Threshold;
+                    WorldServiceLocator._WS_Group.Groups[GroupID].DungeonDifficulty = (GroupDungeonDifficulty)Difficulty;
+                    WorldServiceLocator._WS_Group.Groups[GroupID].LootMethod = (GroupLootMethod)Method;
+                    WorldServiceLocator._WS_Group.Groups[GroupID].LootThreshold = (GroupLootThreshold)Threshold;
                     if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Master))
                     {
                         WorldServiceLocator._WS_Group.Groups[GroupID].LocalLootMaster = WorldServiceLocator._WorldServer.CHARACTERs[Master];
@@ -412,8 +412,8 @@ namespace Mangos.World.Server
             {
                 WorldServiceLocator._WorldServer.CHARACTERs[GUID].GuildID = GuildID;
                 WorldServiceLocator._WorldServer.CHARACTERs[GUID].GuildRank = GuildRank;
-                WorldServiceLocator._WorldServer.CHARACTERs[GUID].SetUpdateFlag(EPlayerFields.PLAYER_GUILDID, GuildID);
-                WorldServiceLocator._WorldServer.CHARACTERs[GUID].SetUpdateFlag(EPlayerFields.PLAYER_GUILDRANK, GuildRank);
+                WorldServiceLocator._WorldServer.CHARACTERs[GUID].SetUpdateFlag((int)EPlayerFields.PLAYER_GUILDID, GuildID);
+                WorldServiceLocator._WorldServer.CHARACTERs[GUID].SetUpdateFlag((int)EPlayerFields.PLAYER_GUILDRANK, GuildRank);
                 WorldServiceLocator._WorldServer.CHARACTERs[GUID].SendCharacterUpdate();
             }
 
@@ -512,7 +512,7 @@ namespace Mangos.World.Server
                             try
                             {
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 if (Packets.Count == 0)
                                     p.Dispose();
@@ -535,7 +535,7 @@ namespace Mangos.World.Server
                         try
                         {
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             // If Packets.Count = 0 Then p.Dispose()
                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Unable to dispose of packet");

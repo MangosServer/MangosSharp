@@ -123,7 +123,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(Lucifrons_Curse, this.aiTarget);
                 }
-                catch (Exception Ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("Failed to cast Lucifron's Curse. This is bad. Please report to developers.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
@@ -141,7 +141,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(Impending_Doom, this.aiTarget);
                 }
-                catch (Exception Ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("Failed to cast IMPENDING DOOOOOM! Please report this to a developer.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
@@ -159,7 +159,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(Shadow_Shock, theTarget.positionX, theTarget.positionY, theTarget.positionZ);
                 }
-                catch (Exception Ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("Failed to cast Shadow Shock. Please report this to a developer.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }

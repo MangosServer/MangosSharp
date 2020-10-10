@@ -1177,7 +1177,7 @@ namespace Mangos.World.AI
                         var MovementPoint = WorldServiceLocator._WS_DBCDatabase.CreatureMovement[aiCreature.WaypointID][CurrentWaypoint];
                         aiTimer = aiCreature.MoveTo(MovementPoint.x, MovementPoint.y, MovementPoint.z, Running: false) + MovementPoint.waittime;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] waypoints are damaged.", aiCreature.GUID - WorldServiceLocator._Global_Constants.GUID_UNIT);
                         aiCreature.ResetAI();

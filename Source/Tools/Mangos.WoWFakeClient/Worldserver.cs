@@ -79,7 +79,7 @@ namespace Mangos.WoWFakeClient
                 NewThread.Name = "World Server, Connected";
                 NewThread.Start();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Could not connect to the world server.");
@@ -185,7 +185,7 @@ namespace Mangos.WoWFakeClient
                 Send(Ping);
                 Ping.Dispose();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 PingTimer.Dispose();
             }

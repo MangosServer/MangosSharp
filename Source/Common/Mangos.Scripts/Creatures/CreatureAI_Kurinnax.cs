@@ -89,7 +89,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(Spell_Mortal_Wound, this.aiTarget);
                 }
-                catch (Exception Ex)
+                catch (Exception)
                 {
                     Mangos.World.WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Mortal Wound failed to cast!");
                 }

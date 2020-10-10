@@ -76,8 +76,8 @@ namespace Mangos.Common.DataStores
                     {
                         int offset = BitConverter.ToInt32(Buffer, 0);
                         Fs.Seek(20 + Rows * RowLength + offset, SeekOrigin.Begin);
-                        byte strByte = 0;
                         string strResult = "";
+                        byte strByte;
                         do
                         {
                             strByte = (byte)Fs.ReadByte();
@@ -90,7 +90,6 @@ namespace Mangos.Common.DataStores
                 default:
                     {
                         throw new ApplicationException("DBC: Undefined DBC field type.");
-                        break;
                     }
             }
         }

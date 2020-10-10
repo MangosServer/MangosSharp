@@ -97,7 +97,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(Spell_Decimate, this.aiTarget);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I have failed to cast decimate. Whoever made this script is bad. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
@@ -115,7 +115,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpellOnSelf(Spell_Frenzy);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I have failed to cast Frenzy. Whoever made this script did a poor job, please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
@@ -133,7 +133,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(Spell_Mortal_Wound, this.aiTarget);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I have failed to cast Mortal Wound. Whoever made this script did a poor job, please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
@@ -151,7 +151,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(Spell_Terrifying_Roar, this.aiTarget);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I have failed to cast terrifying roar. Whoever made this script did a poor job, please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }

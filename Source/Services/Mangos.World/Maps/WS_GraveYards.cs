@@ -187,7 +187,7 @@ namespace Mangos.World.Maps
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Graveyards initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : WorldSafeLocs missing.");

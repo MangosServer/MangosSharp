@@ -122,7 +122,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpellOnSelf(Healing_Spell);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("I was unable to cast healing touch on myself. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }

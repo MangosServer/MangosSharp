@@ -294,7 +294,7 @@ namespace Mangos.World.Globals
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public string GetClassName(ref int Classe)
         {
-            string GetClassNameRet = default;
+            string GetClassNameRet;
             switch (Classe)
             {
                 case var @case when @case == Classes.CLASS_DRUID:
@@ -363,7 +363,7 @@ namespace Mangos.World.Globals
 
         public string GetRaceName(ref int Race)
         {
-            string GetRaceNameRet = default;
+            string GetRaceNameRet;
             switch (Race)
             {
                 case var @case when @case == Races.RACE_DWARF:
@@ -513,8 +513,7 @@ namespace Mangos.World.Globals
 
         public string SetColor(string Message, byte Red, byte Green, byte Blue)
         {
-            string SetColorRet = default;
-            SetColorRet = "|cFF";
+            string SetColorRet = "|cFF";
             if (Red < 16)
             {
                 SetColorRet = SetColorRet + "0" + Conversion.Hex(Red);
@@ -812,7 +811,7 @@ namespace Mangos.World.Globals
                 packet.AddString(Message);
                 packet.AddInt8(Flag);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "failed chat message type - {0}!", msgType);
             }

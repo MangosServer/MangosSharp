@@ -87,7 +87,7 @@ namespace Mangos.World.Loots
                         {
                             WorldServiceLocator._WorldServer.ITEMDatabase.Remove(ItemID);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
 

@@ -372,7 +372,7 @@ namespace Mangos.World.DataStores
 
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: XPTable initialized.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "XPTable initialization failed.");
             }
@@ -639,7 +639,7 @@ namespace Mangos.World.DataStores
                         WorldServiceLocator._WorldServer.itemGuidCounter = 0 + WorldServiceLocator._Global_Constants.GUID_ITEM;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading characters_inventory....");
                 }
@@ -657,7 +657,7 @@ namespace Mangos.World.DataStores
                         WorldServiceLocator._WorldServer.CreatureGUIDCounter = 0 + WorldServiceLocator._Global_Constants.GUID_UNIT;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading creatures....");
                 }
@@ -675,7 +675,7 @@ namespace Mangos.World.DataStores
                         WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = 0 + WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading gameobjects....");
                 }
@@ -693,7 +693,7 @@ namespace Mangos.World.DataStores
                         WorldServiceLocator._WorldServer.CorpseGUIDCounter = 0 + WorldServiceLocator._Global_Constants.GUID_CORPSE;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading corpse....");
                 }

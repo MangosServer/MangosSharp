@@ -119,7 +119,7 @@ namespace Mangos.World.Warden
                     if (!InitModule())
                         return false;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] InitModule Failed.");
                 }
@@ -473,7 +473,7 @@ namespace Mangos.World.Warden
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.SUCCESS, "[WARDEN] Successfully Initialized Module.");
                     init = (InitializeModule)Marshal.GetDelegateForFunctionPointer(new IntPtr(InitPointer), typeof(InitializeModule));
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to Initialize Module.");
                 }

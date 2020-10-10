@@ -98,7 +98,7 @@ namespace Mangos.Common.DataStores
                 Fs.Read(Buffer, 0, 4);
                 StringPartLength = BitConverter.ToInt32(Buffer, 0);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ApplicationException("DBC: File could not be read.");
             }
@@ -150,7 +150,6 @@ namespace Mangos.Common.DataStores
                 default:
                     {
                         throw new ApplicationException("DBCReader: Undefined DBC field type.");
-                        break;
                     }
             }
         }

@@ -220,7 +220,7 @@ namespace Mangos.Cluster.Server
                                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.NETWORK, "Map {0:000} ping: {1}ms", w.Key, SentPingTo[WorldsInfo[w.Key]]);
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Map {0:000} is currently down!", w.Key);
                             DownedServers.Add(w.Key);
@@ -500,7 +500,7 @@ namespace Mangos.Cluster.Server
                         {
                             w.Value.GroupUpdate(GroupID, (byte)ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].Type, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].GetLeader().Guid, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].GetMembers());
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[G{0:00000}] Group update failed for [M{1:000}]", GroupID, w.Key);
                         }
@@ -519,7 +519,7 @@ namespace Mangos.Cluster.Server
                         {
                             w.Value.GroupUpdateLoot(GroupID, (byte)ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].DungeonDifficulty, (byte)ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].LootMethod, (byte)ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].LootThreshold, ClusterServiceLocator._WC_Handlers_Group.GROUPs[GroupID].GetLootMaster().Guid);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[G{0:00000}] Group update loot failed for [M{1:000}]", GroupID, w.Key);
                         }
@@ -657,7 +657,7 @@ namespace Mangos.Cluster.Server
                                 {
                                     Array.Copy(SocketBuffer, 0, SavedBytes, 0, SocketBytes);
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     Dispose(Conversions.ToBoolean(SocketBytes));
                                     Socket.Dispose();
@@ -682,7 +682,7 @@ namespace Mangos.Cluster.Server
                                 SocketBytes -= PacketLen;
                                 Array.Copy(SocketBuffer, PacketLen, SocketBuffer, 0, SocketBytes);
                             }
-                            catch (Exception Ex)
+                            catch (Exception)
                             {
                                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.CRITICAL, "[{0}:{1}] Could not delete packet from buffer! {2}({3}{4}) bytes, ", IP, Port, SocketBuffer, PacketLen, SocketBytes);
                             }
@@ -697,7 +697,7 @@ namespace Mangos.Cluster.Server
                                 if (HandingPackets == false)
                                     ThreadPool.QueueUserWorkItem(OnPacket);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Packet Disconnect from [{0}:{1}] caused an error {2}{3}", IP, Port, Information.Err().ToString(), Constants.vbCrLf);
                             }
@@ -731,7 +731,7 @@ namespace Mangos.Cluster.Server
                 try
                 {
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     HandingPackets = true;
                     ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Handing Packets Failed: {0}", HandingPackets);
@@ -786,7 +786,7 @@ namespace Mangos.Cluster.Server
                     try
                     {
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         if (Queue.Count == 0)
                             p.Dispose();

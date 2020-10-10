@@ -928,9 +928,8 @@ namespace Mangos.World.Objects
         [MethodImpl(MethodImplOptions.Synchronized)]
         private ulong GetNewGUID()
         {
-            ulong GetNewGUIDRet = default;
             WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = (ulong)(WorldServiceLocator._WorldServer.GameObjectsGUIDCounter + 1m);
-            GetNewGUIDRet = WorldServiceLocator._WorldServer.GameObjectsGUIDCounter;
+            ulong GetNewGUIDRet = WorldServiceLocator._WorldServer.GameObjectsGUIDCounter;
             return GetNewGUIDRet;
         }
 
@@ -1030,7 +1029,7 @@ namespace Mangos.World.Objects
                 response.Dispose();
             }
             // _WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_GAMEOBJECT_QUERY_RESPONSE", client.IP, client.Port)
-            catch (Exception e)
+            catch (Exception)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Unknown Error: Unable to find GameObjectID={0} in database.", GameObjectID);
             }

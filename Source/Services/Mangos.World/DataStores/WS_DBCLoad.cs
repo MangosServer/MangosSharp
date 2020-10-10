@@ -55,7 +55,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellRadius initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : SpellRadius missing.");
@@ -80,7 +80,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellCastTimes initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : SpellCastTimes missing.");
@@ -107,7 +107,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellRanges initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : SpellRanges missing.");
@@ -136,7 +136,7 @@ namespace Mangos.World.DataStores
                 tmpDBC.Dispose();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellShapeshiftForms initialized.", tmpDBC.Rows - 1);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : SpellShapeshiftForms missing.");
@@ -161,7 +161,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellFocusObjects initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : SpellFocusObjects missing.");
@@ -192,7 +192,7 @@ namespace Mangos.World.DataStores
                 tmpDBC.Dispose();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellDurations initialized.", tmpDBC.Rows - 1);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : SpellDurations missing.");
@@ -391,7 +391,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Spells initialized.", spellDBC.Rows - 1);
                 spellDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : Spells missing.");
@@ -409,7 +409,7 @@ namespace Mangos.World.DataStores
                     WorldServiceLocator._WS_Spells.SpellChains.Add(Conversions.ToInteger(spellChain["spell_id"]), Conversions.ToInteger(spellChain["prev_spell"]));
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Database: {0} SpellChains initialized.", spellChainQuery.Rows.Count);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Database : SpellChains missing.");
@@ -448,7 +448,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} TaxiNodes initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : TaxiNodes missing.");
@@ -477,7 +477,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} TaxiPaths initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : TaxiPath missing.");
@@ -525,7 +525,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} TaxiPathNodes initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : TaxiPathNode missing.");
@@ -562,7 +562,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SkillLines initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : SkillLines missing.");
@@ -598,7 +598,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SkillLineAbilitys initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : SkillLineAbility missing.");
@@ -639,7 +639,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Locks initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : Locks missing.");
@@ -701,7 +701,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Areas initialized.", tmpDbc.Rows - 1);
                 tmpDbc.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : AreaTable missing.");
@@ -728,7 +728,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Emotes initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : Emotes missing.");
@@ -766,7 +766,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} EmotesText initialized.", tmpDbc.Rows - 1);
                 tmpDbc.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : EmotesText missing.");
@@ -811,7 +811,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Factions initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : Factions missing.");
@@ -847,7 +847,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} FactionTemplates initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : FactionsTemplates missing.");
@@ -885,7 +885,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} CharRaces initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : CharRaces missing.");
@@ -911,7 +911,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} CharClasses initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : CharRaces missing.");
@@ -942,7 +942,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} DurabilityCosts initialized.", tmpDBC.Rows - 1);
                 tmpDBC.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : DurabilityCosts missing.");
@@ -984,7 +984,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Talents initialized.", dbc.Rows - 1);
                 dbc.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : Talents missing.");
@@ -1013,7 +1013,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Talent tabs initialized.", dbc.Rows - 1);
                 dbc.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : TalentTab missing.");
@@ -1048,7 +1048,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} AuctionHouses initialized.", dbc.Rows - 1);
                 dbc.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : AuctionHouse missing.");
@@ -1093,7 +1093,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellItemEnchantments initialized.", dbc.Rows - 1);
                 dbc.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : SpellItemEnchantments missing.");
@@ -1150,7 +1150,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ItemSets initialized.", dbc.Rows - 1);
                 dbc.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : ItemSet missing.");
@@ -1178,7 +1178,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ItemDisplayInfos initialized.", dbc.Rows - 1);
                 dbc.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : ItemDisplayInfo missing.");
@@ -1204,7 +1204,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ItemRandomProperties initialized.", dbc.Rows - 1);
                 dbc.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : ItemRandomProperties missing.");
@@ -1232,7 +1232,7 @@ namespace Mangos.World.DataStores
 
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Database: {0} creature gossips initialized.", WorldServiceLocator._WS_DBCDatabase.CreatureGossip.Count);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Database : npc_gossip missing.");
@@ -1262,7 +1262,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} CreatureFamilys initialized.", dbc.Rows - 1);
                 dbc.Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : CreatureFamily missing.");
@@ -1290,7 +1290,7 @@ namespace Mangos.World.DataStores
 
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Database: {0} creature movements for {1} creatures initialized.", movementsQuery.Rows.Count, WorldServiceLocator._WS_DBCDatabase.CreatureMovement.Count);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Database : Waypoint_Data missing.");
@@ -1316,7 +1316,7 @@ namespace Mangos.World.DataStores
                     {
                         WorldServiceLocator._WS_DBCDatabase.CreatureEquip.Add(entry, new WS_DBCDatabase.CreatureEquipInfo(Conversions.ToInteger(equipInfo["equipmodel1"]), Conversions.ToInteger(equipInfo["equipmodel2"]), Conversions.ToInteger(equipInfo["equipmodel3"]), Conversions.ToUInteger(equipInfo["equipinfo1"]), Conversions.ToUInteger(equipInfo["equipinfo2"]), Conversions.ToUInteger(equipInfo["equipinfo3"]), Conversions.ToInteger(equipInfo["equipslot1"]), Conversions.ToInteger(equipInfo["equipslot2"]), Conversions.ToInteger(equipInfo["equipslot3"])));
                     }
-                    catch (DataException e)
+                    catch (DataException)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(string.Format("Creature_Equip_Template_raw : Unable to equip items {0} for Creature ", entry));
@@ -1326,7 +1326,7 @@ namespace Mangos.World.DataStores
 
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Database: {0} creature equips initialized.", equipQuery.Rows.Count);
             }
-            catch (DataException e)
+            catch (DataException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Database : Creature_Equip_Template_raw missing.");
@@ -1351,7 +1351,7 @@ namespace Mangos.World.DataStores
 
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Database: {0} creature models initialized.", modelQuery.Rows.Count);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Database : Creature_Model_Info missing.");
@@ -1453,7 +1453,7 @@ namespace Mangos.World.DataStores
 
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Database: {0} Weather zones initialized.", weatherQuery.Rows.Count);
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Database : TransportQuery missing.");

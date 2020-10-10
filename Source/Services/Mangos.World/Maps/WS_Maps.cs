@@ -334,7 +334,7 @@ namespace Mangos.World.Maps
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: 1 Map initialized.", tmpDBC.Rows - 1);
                         tmpDBC.Dispose();
                     }
-                    catch (DirectoryNotFoundException e)
+                    catch (DirectoryNotFoundException)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("DBC File : Map missing.");
@@ -473,7 +473,7 @@ namespace Mangos.World.Maps
                     return Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY];
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return 0.0f;
             }

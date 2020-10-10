@@ -161,7 +161,7 @@ namespace Mangos.World.Globals
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Script execution error:{1}{0}", e.GetBaseException().ToString(), Environment.NewLine);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Script Method [{0}] not found in [Scripts.{1}]!", MyMethod, MyModule);
             }
@@ -175,7 +175,7 @@ namespace Mangos.World.Globals
                 var ci = ty.GetConstructors();
                 return ci[0].Invoke((object[])Parameters);
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Scripted Class [{0}] not found in [Scripts]!", MyBaseClass);
             }
@@ -195,7 +195,7 @@ namespace Mangos.World.Globals
                 var pi = ty.GetProperty(MyProperty);
                 return pi.GetValue(null, null);
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Scripted Property [{1}] not found in [Scripts.{1}]!", MyModule, MyProperty);
             }
@@ -215,7 +215,7 @@ namespace Mangos.World.Globals
                 var fi = ty.GetField(MyField, (BindingFlags)((int)BindingFlags.Public + (int)BindingFlags.Static));
                 return fi.GetValue(null);
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Scripted Field [{1}] not found in [Scripts.{0}]!", MyModule, MyField);
             }

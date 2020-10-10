@@ -130,7 +130,6 @@ namespace Mangos.Common.Logging
                 default:
                     {
                         throw new ArgumentOutOfRangeException(nameof(logType));
-                        break;
                     }
             }
         }

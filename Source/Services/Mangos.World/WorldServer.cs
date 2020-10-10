@@ -453,7 +453,7 @@ namespace Mangos.World
             try
             {
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 WorldServiceLocator._WS_TimerBasedEvents.Regenerator.Dispose();
                 AreaTriggers.Dispose();

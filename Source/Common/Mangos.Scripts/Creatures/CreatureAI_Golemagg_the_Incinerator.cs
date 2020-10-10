@@ -125,7 +125,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(EARTHQUAKE_SPELL, this.aiTarget);
                 }
-                catch (Exception Ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("Earthquake FAILED TO CAST ON MY TARGET! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
@@ -143,7 +143,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(MAGMASPLASH_SPELL, this.aiTarget);
                 }
-                catch (Exception Ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("MAGMASPLASH FAILED TO CAST ON TARGET! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
@@ -161,7 +161,7 @@ namespace Mangos.Scripts.Creatures
                 {
                     this.aiCreature.CastSpell(PYROBLAST_SPELL, this.aiTarget);
                 }
-                catch (Exception Ex)
+                catch (Exception)
                 {
                     this.aiCreature.SendChatMessage("PYROBLAST FAILED TO CAST ON TARGET! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }

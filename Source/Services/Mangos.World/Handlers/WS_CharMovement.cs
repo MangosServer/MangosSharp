@@ -795,7 +795,7 @@ namespace Mangos.World.Handlers
                     WorldServiceLocator._WS_Maps.GetMapTile(Character.positionX, Character.positionY, ref Character.CellX, ref Character.CellY);
                     WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[Character.CellX, Character.CellY].PlayersHere.Remove(Character.GUID);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error removing character {0} from map", Character.Name);
                 }

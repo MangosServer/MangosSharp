@@ -356,9 +356,8 @@ namespace Mangos.World.Objects
         [MethodImpl(MethodImplOptions.Synchronized)]
         private ulong GetNewGUID()
         {
-            ulong GetNewGUIDRet = default;
             WorldServiceLocator._WorldServer.CorpseGUIDCounter = (ulong)(WorldServiceLocator._WorldServer.CorpseGUIDCounter + 1m);
-            GetNewGUIDRet = WorldServiceLocator._WorldServer.CorpseGUIDCounter;
+            ulong GetNewGUIDRet = WorldServiceLocator._WorldServer.CorpseGUIDCounter;
             return GetNewGUIDRet;
         }
     }

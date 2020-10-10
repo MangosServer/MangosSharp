@@ -765,7 +765,7 @@ namespace Mangos.Realm
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("[{0}] Realm Server Starting...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-            LoadConfig();
+            await LoadConfig();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Log.WriteLine(LogType.INFORMATION, "Running from: {0}", AppDomain.CurrentDomain.BaseDirectory);
             Console.ForegroundColor = ConsoleColor.Gray;

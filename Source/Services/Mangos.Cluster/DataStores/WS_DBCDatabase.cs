@@ -53,7 +53,7 @@ namespace Mangos.Cluster.DataStores
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Maps Initialized.", new BufferedDbc(MapDBC).Rows - 1);
                 new BufferedDbc(MapDBC).Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : Maps.dbc missing.");
@@ -126,7 +126,7 @@ namespace Mangos.Cluster.DataStores
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} WorldSafeLocs Initialized.", new BufferedDbc(WorldSafeLocsDBC).Rows - 1);
                 new BufferedDbc(WorldSafeLocsDBC).Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : WorldSafeLocs.dbc missing.");
@@ -206,7 +206,7 @@ namespace Mangos.Cluster.DataStores
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChatChannels Initialized.", new BufferedDbc(ChatChannelsDBC).Rows - 1);
                 new BufferedDbc(ChatChannelsDBC).Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : ChatChannels.dbc missing.");
@@ -249,7 +249,7 @@ namespace Mangos.Cluster.DataStores
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrRace Loaded.", new BufferedDbc(ChrRacesDBC).Rows - 1);
                 new BufferedDbc(ChrRacesDBC).Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : ChrRaces.dbc missing.");
@@ -277,7 +277,7 @@ namespace Mangos.Cluster.DataStores
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrClasses Loaded.", new BufferedDbc(ChrClassesDBC).Rows - 1);
                 new BufferedDbc(ChrClassesDBC).Dispose();
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("DBC File : ChrClasses.dbc missing.");

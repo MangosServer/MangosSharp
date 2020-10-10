@@ -273,7 +273,6 @@ namespace Mangos.Cluster.Handlers
             packet.GetInt16();
             string ChannelName = packet.GetString();
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LEAVE_CHANNEL [{2}]", client.IP, client.Port, ChannelName);
-            ChannelName = ChannelName;
             if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(ChannelName))
             {
                 ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[ChannelName].Part(client.Character);

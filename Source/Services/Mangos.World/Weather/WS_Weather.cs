@@ -278,7 +278,7 @@ namespace Mangos.World.Weather
                         WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                     }
                 }
-                catch (ApplicationException ex)
+                catch (ApplicationException)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Weather Manager timed out");
                 }

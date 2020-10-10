@@ -280,7 +280,7 @@ namespace Mangos.Cluster.Globals
 
         public string GetClassName(int classe)
         {
-            string GetClassNameRet = default;
+            string GetClassNameRet;
             switch ((Classes)classe)
             {
                 case var @case when @case == Classes.CLASS_DRUID:
@@ -349,7 +349,7 @@ namespace Mangos.Cluster.Globals
 
         public string GetRaceName(int race)
         {
-            string GetRaceNameRet = default;
+            string GetRaceNameRet;
             switch ((Races)race)
             {
                 case var @case when @case == Races.RACE_DWARF:
@@ -499,8 +499,7 @@ namespace Mangos.Cluster.Globals
 
         public string SetColor(string message, byte red, byte green, byte blue)
         {
-            string SetColorRet = default;
-            SetColorRet = "|cFF";
+            string SetColorRet = "|cFF";
             SetColorRet = red < 16 ? SetColorRet + "0" + Conversion.Hex(red) : SetColorRet + Conversion.Hex(red);
             SetColorRet = green < 16 ? SetColorRet + "0" + Conversion.Hex(green) : SetColorRet + Conversion.Hex(green);
             SetColorRet = blue < 16 ? SetColorRet + "0" + Conversion.Hex(blue) : SetColorRet + Conversion.Hex(blue);
@@ -773,7 +772,7 @@ namespace Mangos.Cluster.Globals
                 packet.AddString(message);
                 packet.AddInt8(flag);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "failed chat message type - {0}!", msgType);
             }

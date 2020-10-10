@@ -227,7 +227,6 @@ namespace Mangos.World.Objects
                 else if (Unit is CreatureObject)
                 {
                     {
-                        var withBlock1 = (CreatureObject)Unit;
                         // TODO!!
                     }
                 }
@@ -256,7 +255,6 @@ namespace Mangos.World.Objects
                 else if (Unit is CreatureObject)
                 {
                     {
-                        var withBlock1 = (CreatureObject)Unit;
                         // TODO!!
                     }
                 }
@@ -363,7 +361,7 @@ namespace Mangos.World.Objects
                             Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 4 + 1, EquipmentInfo.EquipSlot[2]);
                         }
                     }
-                    catch (DataException ex)
+                    catch (DataException)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(string.Format("FillAllUpdateFlags : Unable to equip items {0} for Creature", EquipmentID));
@@ -888,7 +886,7 @@ namespace Mangos.World.Objects
                 }
                 else if (lvlDifference < 0) // Lower level mobs
                 {
-                    byte GrayLevel = 0;
+                    byte GrayLevel;
                     switch (Character.Level)
                     {
                         case var @case when @case <= 5:
@@ -918,7 +916,7 @@ namespace Mangos.World.Objects
 
                     if (Level > GrayLevel)
                     {
-                        int ZD = 0;
+                        int ZD;
                         switch (Character.Level)
                         {
                             case var case3 when case3 <= 7:

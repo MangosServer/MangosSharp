@@ -36,7 +36,7 @@ namespace Mangos.WoWFakeClient
                 compressordStream.Close();
                 buffer2 = outputStream.ToArray();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 buffer2 = null;
             }
@@ -61,7 +61,7 @@ namespace Mangos.WoWFakeClient
                 decopressorStream.Flush();
                 decopressorStream.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 buffer2 = null;
             }

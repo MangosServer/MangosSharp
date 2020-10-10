@@ -77,8 +77,7 @@ namespace Mangos.Common
         {
             get
             {
-                DB_Type SQLTypeServerRet = default;
-                SQLTypeServerRet = v_SQLType;
+                DB_Type SQLTypeServerRet = v_SQLType;
                 return SQLTypeServerRet;
             }
 
@@ -93,8 +92,7 @@ namespace Mangos.Common
         {
             get
             {
-                string SQLHostRet = default;
-                SQLHostRet = v_SQLHost;
+                string SQLHostRet = v_SQLHost;
                 return SQLHostRet;
             }
 
@@ -109,8 +107,7 @@ namespace Mangos.Common
         {
             get
             {
-                string SQLPortRet = default;
-                SQLPortRet = v_SQLPort;
+                string SQLPortRet = v_SQLPort;
                 return SQLPortRet;
             }
 
@@ -125,8 +122,7 @@ namespace Mangos.Common
         {
             get
             {
-                string SQLUserRet = default;
-                SQLUserRet = v_SQLUser;
+                string SQLUserRet = v_SQLUser;
                 return SQLUserRet;
             }
 
@@ -141,8 +137,7 @@ namespace Mangos.Common
         {
             get
             {
-                string SQLPassRet = default;
-                SQLPassRet = v_SQLPass;
+                string SQLPassRet = v_SQLPass;
                 return SQLPassRet;
             }
 
@@ -157,8 +152,7 @@ namespace Mangos.Common
         {
             get
             {
-                string SQLDBNameRet = default;
-                SQLDBNameRet = v_SQLDBName;
+                string SQLDBNameRet = v_SQLDBName;
                 return SQLDBNameRet;
             }
 
@@ -468,7 +462,7 @@ namespace Mangos.Common
                 cmd.Connection.Close();
                 return 0;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 cmd.Connection.Close();
                 return -1;
@@ -492,7 +486,7 @@ namespace Mangos.Common
                 cmd.Connection.Close();
                 return myDataset;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 cmd.Connection.Close();
                 return null;
