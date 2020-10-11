@@ -36,7 +36,7 @@ namespace Mangos.World.Handlers
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEMASTER_HELLO [{2:X}]", client.IP, client.Port, GUID);
             if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID) == false)
                 return;
-            if ((WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_BATTLEFIELDPERSON) == 0)
+            if ((WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.cNpcFlags & (int)NPCFlags.UNIT_NPC_FLAG_BATTLEFIELDPERSON) == 0)
                 return;
             if (WorldServiceLocator._WS_DBCDatabase.Battlemasters.ContainsKey(WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].ID) == false)
                 return;

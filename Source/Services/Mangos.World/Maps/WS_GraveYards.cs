@@ -209,7 +209,7 @@ namespace Mangos.World.Maps
             {
                 Character.ZoneCheckInstance();
                 Ghostzone = WorldServiceLocator._WS_Maps.AreaTable[WorldServiceLocator._WS_Maps.GetAreaIDByMapandParent((int)Character.MapID, WorldServiceLocator._WS_Maps.AreaTable[WorldServiceLocator._WS_Maps.GetAreaFlag(Character.resurrectPositionX, Character.resurrectPositionY, (int)Character.MapID)].Zone)].ID;
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT id, faction FROM game_graveyard_zone WHERE ghost_zone = {0} and (faction = 0 or faction = {1}) ", (object)Ghostzone, (object)Character.Team), GraveQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT id, faction FROM game_graveyard_zone WHERE ghost_zone = {0} and (faction = 0 or faction = {1}) ", (object)Ghostzone, (object)Character.Team), ref GraveQuery);
 
                 // AreaTable(GetAreaFlag(Character.resurrectPositionX, Character.resurrectPositionY, Character.MapID)).Zone()
                 if (GraveQuery.Rows.Count == 0)

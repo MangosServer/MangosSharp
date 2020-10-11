@@ -771,7 +771,7 @@ namespace Mangos.World.Warden
                 byte i = 0;
                 foreach (CheatCheck Check in Checks)
                 {
-                    byte xorCheck = (byte)(WorldServiceLocator._WS_Warden.Maiev.CheckIDs[Check.Type] ^ Character.WardenData.xorByte);
+                    byte xorCheck = (byte)(WorldServiceLocator._WS_Warden.Maiev.CheckIDs[(byte)Check.Type] ^ Character.WardenData.xorByte);
                     var checkData = Check.ToData(xorCheck, ref i);
                     packet.AddByteArray(checkData);
                 }

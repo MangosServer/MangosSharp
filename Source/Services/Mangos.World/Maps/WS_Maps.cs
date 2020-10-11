@@ -79,22 +79,7 @@ namespace Mangos.World.Maps
             {
                 return ZoneType == 312;
             }
-            // TODO: REMOVE
-            public bool NeedFlyingMount()
-            {
-                return ZoneType & AreaFlag.AREA_FLAG_NEED_FLY;
-            }
-            // TODO: REMOVE
-            public bool IsSanctuary()
-            {
-                return ZoneType & AreaFlag.AREA_FLAG_SANCTUARY;
-            }
-            // TODO: REMOVE
-            public bool IsArena()
-            {
-                return ZoneType & AreaFlag.AREA_FLAG_ARENA;
-            }
-        }
+
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
         public int RESOLUTION_ZMAP = 0;
 

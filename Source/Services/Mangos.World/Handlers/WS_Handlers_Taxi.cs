@@ -168,7 +168,7 @@ namespace Mangos.World.Handlers
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TAXIQUERYAVAILABLENODES [taxiGUID={2:X}]", client.IP, client.Port, guid);
             if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(guid) == false)
                 return;
-            if ((WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].CreatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_TAXIVENDOR) == 0)
+            if ((WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].CreatureInfo.cNpcFlags & (int)NPCFlags.UNIT_NPC_FLAG_TAXIVENDOR) == 0)
                 return; // NPC is not a taxi vendor
             SendTaxiMenu(ref client.Character, guid);
         }
@@ -189,7 +189,7 @@ namespace Mangos.World.Handlers
             int srcNode = packet.GetInt32();
             int dstNode = packet.GetInt32();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ACTIVATETAXI [taxiGUID={2:X} srcNode={3} dstNode={4}]", client.IP, client.Port, guid, srcNode, dstNode);
-            if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(guid) == false || (WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].CreatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_TAXIVENDOR) == 0)
+            if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(guid) == false || (WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].CreatureInfo.cNpcFlags & (int)NPCFlags.UNIT_NPC_FLAG_TAXIVENDOR) == 0)
             {
                 SendActivateTaxiReply(ref client, ActivateTaxiReplies.ERR_TAXINOVENDORNEARBY);
                 return;
@@ -309,7 +309,7 @@ namespace Mangos.World.Handlers
                 if (packet.Data.Length - 1 < 21 + 4 * nodeCount)
                     return;
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ACTIVATETAXI_FAR [taxiGUID={2:X} TotalCost={3} NodeCount={4}]", client.IP, client.Port, guid, totalCost, nodeCount);
-                if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(guid) == false || (WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].CreatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_TAXIVENDOR) == 0)
+                if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(guid) == false || (WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].CreatureInfo.cNpcFlags & (int)NPCFlags.UNIT_NPC_FLAG_TAXIVENDOR) == 0)
                 {
                     SendActivateTaxiReply(ref client, ActivateTaxiReplies.ERR_TAXINOVENDORNEARBY);
                     return;
@@ -468,8 +468,8 @@ namespace Mangos.World.Handlers
         private void TaxiTake(WS_PlayerData.CharacterObject character, int mount)
         {
             character.Mount = mount;
-            character.cUnitFlags |= UnitFlags.UNIT_FLAG_DISABLE_MOVE;
-            character.cUnitFlags |= UnitFlags.UNIT_FLAG_TAXI_FLIGHT;
+            character.cUnitFlags |= (int)UnitFlags.UNIT_FLAG_DISABLE_MOVE;
+            character.cUnitFlags |= (int)UnitFlags.UNIT_FLAG_TAXI_FLIGHT;
             character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, character.Mount);
             character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, character.cUnitFlags);
             character.SetUpdateFlag((int)EPlayerFields.PLAYER_FIELD_COINAGE, character.Copper);
@@ -563,7 +563,7 @@ namespace Mangos.World.Handlers
                         SMSG_MONSTER_MOVE.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
                         SMSG_MONSTER_MOVE.AddInt8(0);
                         SMSG_MONSTER_MOVE.AddInt32(0x300);                           // Flags [0x0 - Walk, 0x100 - Run, 0x200 - Waypoint, 0x300 - Fly]
-                        SMSG_MONSTER_MOVE.AddInt32(Fix(totalDistance / WorldServiceLocator._Global_Constants.UNIT_NORMAL_TAXI_SPEED * 1000));   // Time
+                        SMSG_MONSTER_MOVE.AddInt32((int)(totalDistance / WorldServiceLocator._Global_Constants.UNIT_NORMAL_TAXI_SPEED * 1000));   // Time
                         SMSG_MONSTER_MOVE.AddInt32(waypointNodes.Count);             // Points Count
                         for (int j = 0, loopTo = waypointNodes.Count - 1; j <= loopTo; j++)
                         {
@@ -597,7 +597,7 @@ namespace Mangos.World.Handlers
                             p.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
                             p.AddInt8(0);
                             p.AddInt32(0x300);                           // Flags [0x0 - Walk, 0x100 - Run, 0x200 - Waypoint, 0x300 - Fly]
-                            p.AddInt32(Fix(totalDistance / WorldServiceLocator._Global_Constants.UNIT_NORMAL_TAXI_SPEED * 1000));   // Time
+                            p.AddInt32((int)(totalDistance / WorldServiceLocator._Global_Constants.UNIT_NORMAL_TAXI_SPEED * 1000));   // Time
                             p.AddInt32(waypointNodes.Count);             // Points Count
                             for (int j = i, loopTo2 = waypointNodes.Count - 1; j <= loopTo2; j++)
                             {
@@ -614,7 +614,7 @@ namespace Mangos.World.Handlers
                         }
 
                         // Wait move to complete
-                        Thread.Sleep(Fix(moveDistance / WorldServiceLocator._Global_Constants.UNIT_NORMAL_TAXI_SPEED * 1000));
+                        Thread.Sleep((int)(moveDistance / WorldServiceLocator._Global_Constants.UNIT_NORMAL_TAXI_SPEED * 1000));
 
                         // Update character postion
                         totalDistance -= moveDistance;

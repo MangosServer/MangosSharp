@@ -386,7 +386,7 @@ namespace Mangos.World.Auction
             if (client.Character.Copper < Bid)
                 return;
             var MySQLQuery = new DataTable();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM auctionhouse WHERE auction_id = " + AuctionID + ";", MySQLQuery);
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM auctionhouse WHERE auction_id = " + AuctionID + ";", ref MySQLQuery);
             if (MySQLQuery.Rows.Count == 0)
                 return;
             if (Conversions.ToBoolean(Operators.ConditionalCompareObjectLess(Bid, MySQLQuery.Rows[0]["auction_bid"], false)))
@@ -421,7 +421,7 @@ namespace Mangos.World.Auction
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format(@"INSERT INTO characters_mail (mail_sender, mail_receiver, mail_type, mail_stationary, mail_subject, mail_body, mail_money, mail_COD, mail_time, mail_read, item_guid) VALUES 
                 ({0},{1},{2},{3},'{4}','{5}',{6},{7},{8},{9},{10});", AuctionID, client.Character.GUID, 2, 62, Operators.ConcatenateObject(MySQLQuery.Rows[0]["auction_itemId"], ":0:1"), bodyText, 0, 0, MailTime, 0, MySQLQuery.Rows[0]["auction_itemGuid"]));
                 var MailQuery = new DataTable();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT mail_id FROM characters_mail WHERE mail_receiver = " + client.Character.GUID + ";", MailQuery);
+                WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT mail_id FROM characters_mail WHERE mail_receiver = " + client.Character.GUID + ";", ref MailQuery);
                 int MailID = Conversions.ToInteger(MailQuery.Rows[0]["mail_id"]);
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO mail_items (mail_id, item_guid) VALUES ({0},{1});", MailID, MySQLQuery.Rows[0]["auction_itemGuid"]));
 
@@ -484,7 +484,7 @@ namespace Mangos.World.Auction
             if (itemQuality != -1)
                 QueryString += " AND item_template.quality = " + itemQuality;
             var MySQLQuery = new DataTable();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query(QueryString + ";", MySQLQuery);
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query(QueryString + ";", ref MySQLQuery);
             if (MySQLQuery.Rows.Count > 32)
             {
                 response.AddInt32(32);                               // Count
@@ -497,7 +497,7 @@ namespace Mangos.World.Auction
             int count = 0;
             foreach (DataRow Row in MySQLQuery.Rows)
             {
-                AuctionListAddItem(ref response, ref Row);
+                AuctionListAddItem(ref response, Row);
                 count += 1;
                 if (count == 32)
                     break;

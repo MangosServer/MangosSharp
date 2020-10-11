@@ -101,7 +101,7 @@ namespace Mangos.World.Handlers
                     SMSG_UPDATE_OBJECT.AddInt8(0);
 
                     // DONE: Disable Turn
-                    client.Character.cUnitFlags |= UnitFlags.UNIT_FLAG_STUNTED;
+                    client.Character.cUnitFlags |= (int)UnitFlags.UNIT_FLAG_STUNTED;
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
 
                     // DONE: StandState -> Sit
@@ -109,7 +109,7 @@ namespace Mangos.World.Handlers
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
 
                     // DONE: Send packet
-                    UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
+                    UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, client.Character);
                     client.Character.SendToNearPlayers(ref SMSG_UPDATE_OBJECT);
                 }
                 finally
@@ -196,7 +196,7 @@ namespace Mangos.World.Handlers
                     UpdateData.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, client.Character.cBytes1);
 
                     // DONE: Send packet
-                    UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref client.Character);
+                    UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, client.Character);
                     client.Send(SMSG_UPDATE_OBJECT);
                 }
                 finally
@@ -243,7 +243,7 @@ namespace Mangos.World.Handlers
                 return;
             packet.GetInt16();
             byte StandState = packet.GetInt8();
-            if (StandState == StandStates.STANDSTATE_STAND)
+            if (StandState == (byte)StandStates.STANDSTATE_STAND)
             {
                 client.Character.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_NOT_SEATED);
             }

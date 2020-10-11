@@ -119,7 +119,7 @@ namespace Mangos.World.Handlers
                     else
                     {
                         var MySQLQuery = new DataTable();
-                        WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT char_name, char_race, char_class, char_gender FROM characters WHERE char_guid = \"{0}\";", (object)GUID), MySQLQuery);
+                        WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT char_name, char_race, char_class, char_gender FROM characters WHERE char_guid = \"{0}\";", (object)GUID), ref MySQLQuery);
                         if (MySQLQuery.Rows.Count > 0)
                         {
                             try
@@ -216,7 +216,7 @@ namespace Mangos.World.Handlers
                 client.Character.cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_HIDE_HELM;
             }
 
-            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)client.Character.cPlayerFlags);
             client.Character.SendCharacterUpdate(true);
         }
 
@@ -232,7 +232,7 @@ namespace Mangos.World.Handlers
                 client.Character.cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK;
             }
 
-            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)client.Character.cPlayerFlags);
             client.Character.SendCharacterUpdate(true);
         }
 
@@ -477,8 +477,8 @@ namespace Mangos.World.Handlers
                 }
 
                 client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, 1);
-                client.Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + client.Character.ManaType, 0);
-                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+                client.Character.SetUpdateFlag((int)((int)EUnitFields.UNIT_FIELD_POWER1 + client.Character.ManaType), 0);
+                client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)client.Character.cPlayerFlags);
                 client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
                 client.Character.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, client.Character.cDynamicFlags);
                 client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_1, 0x1000000);       // Set standing so always be standing
@@ -525,7 +525,7 @@ namespace Mangos.World.Handlers
             }
 
             Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_HEALTH, Character.Life.Current);
-            Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, Character.cPlayerFlags);
+            Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)Character.cPlayerFlags);
             Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, Character.cUnitFlags);
             Character.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, Character.cDynamicFlags);
             Character.SendCharacterUpdate();

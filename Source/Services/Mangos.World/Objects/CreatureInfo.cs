@@ -39,7 +39,7 @@ namespace Mangos.World.Objects
 
             // DONE: Load Item Data from MySQL
             var MySQLQuery = new DataTable();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM creature_template LEFT JOIN creature_template_spells ON creature_template.entry = creature_template_spells.`entry` WHERE creature_template.entry = {0};", (object)CreatureID), MySQLQuery);
+            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM creature_template LEFT JOIN creature_template_spells ON creature_template.entry = creature_template_spells.`entry` WHERE creature_template.entry = {0};", (object)CreatureID), ref MySQLQuery);
             if (MySQLQuery.Rows.Count == 0)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "CreatureID {0} not found in SQL database.", CreatureID);

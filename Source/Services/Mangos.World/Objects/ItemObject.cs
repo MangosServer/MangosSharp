@@ -360,7 +360,7 @@ namespace Mangos.World.Objects
 
             // DONE: Get Items
             mySqlQuery.Clear();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_inventory WHERE item_bag = {0};", (object)GUID), mySqlQuery);
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_inventory WHERE item_bag = {0};", (object)GUID), ref mySqlQuery);
             foreach (DataRow row in mySqlQuery.Rows)
             {
                 if (!Operators.ConditionalCompareObjectEqual(row["item_slot"], WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, false))
@@ -666,7 +666,7 @@ namespace Mangos.World.Objects
                                                 var argTarget = tmp[OwnerGUID];
                                                 var tmp1 = WorldServiceLocator._WorldServer.CHARACTERs;
                                                 var argCaster = tmp1[OwnerGUID];
-                                                WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[j].ApplyAuraIndex].Invoke(ref (WS_Base.BaseUnit)argTarget, ref (WS_Base.BaseObject)argCaster, ref spellInfo.SpellEffects[j], spellInfo.ID, 1, AuraAction.AURA_REMOVE);
+                                                WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[j].ApplyAuraIndex].Invoke((WS_Base.BaseUnit)argTarget, (WS_Base.BaseObject)argCaster, spellInfo.SpellEffects[j], spellInfo.ID, 1, AuraAction.AURA_REMOVE);
                                                 tmp[OwnerGUID] = argTarget;
                                                 tmp1[OwnerGUID] = argCaster;
                                                 break;
@@ -707,11 +707,11 @@ namespace Mangos.World.Objects
 
         public void SoulbindItem([Optional, DefaultParameterValue(null)] ref WS_Network.ClientClass client)
         {
-            if ((_flags & ITEM_FLAGS.ITEM_FLAGS_BINDED) == ITEM_FLAGS.ITEM_FLAGS_BINDED)
+            if ((_flags & (int)ITEM_FLAGS.ITEM_FLAGS_BINDED) == (int)ITEM_FLAGS.ITEM_FLAGS_BINDED)
                 return;
 
             // DONE: Setting the flag
-            _flags |= ITEM_FLAGS.ITEM_FLAGS_BINDED;
+            _flags |= (int)ITEM_FLAGS.ITEM_FLAGS_BINDED;
             Save();
 
             // DONE: Sending update to character
@@ -733,7 +733,7 @@ namespace Mangos.World.Objects
         {
             get
             {
-                return (_flags & ITEM_FLAGS.ITEM_FLAGS_BINDED) == ITEM_FLAGS.ITEM_FLAGS_BINDED;
+                return (_flags & (int)ITEM_FLAGS.ITEM_FLAGS_BINDED) == (int)ITEM_FLAGS.ITEM_FLAGS_BINDED;
             }
         }
     }

@@ -148,7 +148,7 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    return CreatureInfo.CreatureType == UNIT_TYPE.CRITTER;
+                    return CreatureInfo.CreatureType == (int)UNIT_TYPE.CRITTER;
                 }
             }
 
@@ -156,7 +156,7 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    return (CreatureInfo.cNpcFlags & NPCFlags.UNIT_NPC_FLAG_GUARD) == NPCFlags.UNIT_NPC_FLAG_GUARD;
+                    return (CreatureInfo.cNpcFlags & (int)NPCFlags.UNIT_NPC_FLAG_GUARD) == (int)NPCFlags.UNIT_NPC_FLAG_GUARD;
                     // Select Case ID
                     // Case 68, 197, 240, 466, 727, 853, 1423, 1496, 1642, 1652, 1736, 1738, 1741, 1743, 1744, 1745, 1746, 1756, 1965, 2041, 2714, 2721, 3083, 3084, 3210, 3211, 3212, 3213, 3214, 3215, 3220, 3221, 3222, 3223, 3224, 3296, 3297, 3469, 3502, 3571, 4262, 4624, 5595, 5624, 5952, 5953, 5597, 7980, 8017, 9460, 10676, 10682, 10881, 11190, 11822, 12160, 12996, 13839, 14304, 14375, 14377, 15184, 15371, 15442, 15616, 15940, 16096, 16221, 16222, 16733, 16864, 16921, 18038, 18103, 18948, 18949, 18971, 18986, 19541, 20484, 20485, 20672, 20674, 21976, 22494, 23636, 23721, 25992
                     // Return True
@@ -336,13 +336,13 @@ namespace Mangos.World.Objects
                 Update.SetUpdateFlag((int)EUnitFields.UNIT_NPC_FLAGS, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].cNpcFlags);
                 Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags);
                 Update.SetUpdateFlag((int)EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_PHYSICAL, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_PHYSICAL]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_HOLY, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_HOLY]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_FIRE, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_FIRE]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_NATURE, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_NATURE]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_FROST, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_FROST]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_SHADOW, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_SHADOW]);
-                Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RESISTANCES + DamageTypes.DMG_ARCANE, (int)WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[DamageTypes.DMG_ARCANE]);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_RESISTANCES + (int)DamageTypes.DMG_PHYSICAL, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[(int)DamageTypes.DMG_PHYSICAL]);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_RESISTANCES + (int)DamageTypes.DMG_HOLY, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[(int)DamageTypes.DMG_HOLY]);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_RESISTANCES + (int)DamageTypes.DMG_FIRE, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[(int)DamageTypes.DMG_FIRE]);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_RESISTANCES + (int)DamageTypes.DMG_NATURE, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[(int)DamageTypes.DMG_NATURE]);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_RESISTANCES + (int)DamageTypes.DMG_FROST, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[(int)DamageTypes.DMG_FROST]);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_RESISTANCES + (int)DamageTypes.DMG_SHADOW, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[(int)DamageTypes.DMG_SHADOW]);
+                Update.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_RESISTANCES + (int)DamageTypes.DMG_ARCANE, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[(int)DamageTypes.DMG_ARCANE]);
                 if (EquipmentID > 0)
                 {
                     try

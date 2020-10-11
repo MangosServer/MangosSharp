@@ -218,12 +218,12 @@ namespace Mangos.World.Loots
         {
             public LootObject()
             {
-                LootType = this.LootType.LOOTTYPE_CORPSE;
+                LootType = LootType.LOOTTYPE_CORPSE;
             }
 
             public LootObject(ulong GUID_, LootType LootType_)
             {
-                LootType = this.LootType.LOOTTYPE_CORPSE;
+                LootType = LootType.LOOTTYPE_CORPSE;
                 WorldServiceLocator._WS_Loot.LootTable[GUID_] = this;
                 LootType = LootType_;
                 GUID = GUID_;
@@ -304,7 +304,7 @@ namespace Mangos.World.Loots
                         {
                             if (Items[i] is object)
                             {
-                                if (WorldServiceLocator._WorldServer.ITEMDatabase[Items[i].ItemID].Quality >= client.Character.Group.LootThreshold)
+                                if (WorldServiceLocator._WorldServer.ITEMDatabase[Items[i].ItemID].Quality >= (int)client.Character.Group.LootThreshold)
                                 {
                                     GroupLootInfo[i] = new GroupLootInfo();
                                     GroupLootInfo[i].LootObject = this;
@@ -351,7 +351,7 @@ namespace Mangos.World.Loots
                     if (client.Character.ItemADD(ref tmpItem))
                     {
                         // DONE: Bind item to player
-                        if (tmpItem.ItemInfo.Bonding == ITEM_BONDING_TYPE.BIND_WHEN_PICKED_UP)
+                        if (tmpItem.ItemInfo.Bonding == (int)ITEM_BONDING_TYPE.BIND_WHEN_PICKED_UP)
                         {
                             WS_Network.ClientClass argclient = null;
                             tmpItem.SoulbindItem(client: ref argclient);
@@ -366,7 +366,7 @@ namespace Mangos.World.Loots
                         client.Character.LogLootItem(tmpItem, Items[Slot].ItemCount, false, false);
                         Items[Slot].Dispose();
                         Items[Slot] = null;
-                        if (LootType == this.LootType.LOOTTYPE_FISHING && IsEmpty)
+                        if (LootType == LootType.LOOTTYPE_FISHING && IsEmpty)
                         {
                             SendRelease(ref client);
                             Dispose();
@@ -531,7 +531,7 @@ namespace Mangos.World.Loots
                 var newTemplate = new LootTemplate();
                 Templates.Add(Entry, newTemplate);
                 var MysqlQuery = new DataTable();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM {0} WHERE entry = {1};", Name, (object)Entry), MysqlQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM {0} WHERE entry = {1};", Name, (object)Entry), ref MysqlQuery);
                 if (MysqlQuery.Rows.Count == 0)
                 {
                     Templates[Entry] = null;
@@ -768,7 +768,7 @@ namespace Mangos.World.Loots
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT [GUID={2:X}]", client.IP, client.Port, GUID);
 
             // DONE: Make sure other players sees that you're looting
-            client.Character.cUnitFlags |= UnitFlags.UNIT_FLAG_LOOTING;
+            client.Character.cUnitFlags |= (int)UnitFlags.UNIT_FLAG_LOOTING;
             client.Character.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, client.Character.cUnitFlags);
             client.Character.SendCharacterUpdate();
             if (LootTable.ContainsKey(GUID))
@@ -788,9 +788,9 @@ namespace Mangos.World.Loots
             packet.GetInt16();
             ulong GUID = packet.GetUInt64();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT_RELEASE [lootGUID={2:X}]", client.IP, client.Port, GUID);
-            if (client.Character.spellCasted[CurrentSpellTypes.CURRENT_GENERIC_SPELL] is object)
+            if (client.Character.spellCasted[(int)CurrentSpellTypes.CURRENT_GENERIC_SPELL] is object)
             {
-                client.Character.spellCasted[CurrentSpellTypes.CURRENT_GENERIC_SPELL].State = SpellCastState.SPELL_STATE_IDLE;
+                client.Character.spellCasted[(int)CurrentSpellTypes.CURRENT_GENERIC_SPELL].State = SpellCastState.SPELL_STATE_IDLE;
             }
 
             // DONE: Remove looting for other players
@@ -817,7 +817,7 @@ namespace Mangos.World.Loots
                             // DONE: Set skinnable
                             if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.SkinLootID > 0)
                             {
-                                WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags = WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags | UnitFlags.UNIT_FLAG_SKINNABLE;
+                                WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags = WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags | (int)UnitFlags.UNIT_FLAG_SKINNABLE;
                             }
 
                             WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 0;
@@ -896,7 +896,7 @@ namespace Mangos.World.Loots
                         response.AddInt32(1);
                         response.AddInt8(0);
                         var UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                        UpdateData.SetUpdateFlag(EGameObjectFields.GAMEOBJECT_STATE, 0, WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].State);
+                        UpdateData.SetUpdateFlag((EObjectFields)EGameObjectFields.GAMEOBJECT_STATE, 0, (int)WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].State);
                         UpdateData.AddToPacket(response, ObjectUpdateType.UPDATETYPE_VALUES, WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID]);
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].SendToNearPlayers(ref response);
                         response.Dispose();
@@ -926,7 +926,7 @@ namespace Mangos.World.Loots
                     // DONE: Set skinnable
                     if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.SkinLootID > 0)
                     {
-                        WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags = WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags | UnitFlags.UNIT_FLAG_SKINNABLE;
+                        WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags = WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags | (int)UnitFlags.UNIT_FLAG_SKINNABLE;
                     }
 
                     WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 0;

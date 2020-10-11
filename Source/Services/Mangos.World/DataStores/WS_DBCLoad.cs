@@ -283,7 +283,7 @@ namespace Mangos.World.DataStores
                         WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemInventoryType = (int)spellDBC.Item((int)i, 60); // Mask
                         for (int j = 0; j <= 2; j++)
                         {
-                            if (spellDBC.Item((int)i, 61 + j) != 0)
+                            if (spellDBC.Item((int)i, 61 + j) != null)
                             {
                                 var tmp = WorldServiceLocator._WS_Spells.SPELLs;
                                 var argSpell = tmp[id];

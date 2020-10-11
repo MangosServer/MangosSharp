@@ -336,7 +336,7 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    return cUnitFlags & UnitFlags.UNIT_FLAG_ROOTED;
+                    return cUnitFlags & (UnitFlags.UNIT_FLAG_ROOTED;
                 }
             }
 
@@ -487,7 +487,7 @@ namespace Mangos.World.Objects
                     {
                         for (byte j = 0; j <= 2; j++)
                         {
-                            if (ActiveSpells[i].Aura_Info[j] is object && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == AuraIndex)
+                            if (ActiveSpells[i].Aura_Info[j] is object && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == (int)AuraIndex)
                             {
                                 return true;
                             }
@@ -533,7 +533,7 @@ namespace Mangos.World.Objects
                         if (ActiveSpells[Slot].Aura[j] is object)
                         {
                             var argTarget = this;
-                            ActiveSpells[Slot].Aura[(int)j].Invoke(ref argTarget, ref (BaseObject)Caster, ref ActiveSpells[Slot].Aura_Info[(int)j], ActiveSpells[Slot].SpellID, ActiveSpells[Slot].StackCount + 1, RemoveAction);
+                            ActiveSpells[Slot].Aura[j].Invoke(argTarget, Caster, ActiveSpells[Slot].Aura_Info[j], ActiveSpells[Slot].SpellID, ActiveSpells[Slot].StackCount + 1, RemoveAction);
                         }
                     }
                 }
@@ -573,7 +573,7 @@ namespace Mangos.World.Objects
                     {
                         for (byte j = 0; j <= 2; j++)
                         {
-                            if (ActiveSpells[i].Aura_Info[j] is object && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == AuraIndex)
+                            if (ActiveSpells[i].Aura_Info[j] is object && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == (int)AuraIndex)
                             {
                                 RemoveAura(i, ref ActiveSpells[i].SpellCaster);
                                 break;
@@ -619,7 +619,7 @@ namespace Mangos.World.Objects
                     {
                         if (WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(ActiveSpells[i].SpellID) && Conversions.ToBoolean(WorldServiceLocator._WS_Spells.SPELLs[ActiveSpells[i].SpellID].auraInterruptFlags & AuraInterruptFlag))
                         {
-                            if ((WorldServiceLocator._WS_Spells.SPELLs[ActiveSpells[i].SpellID].procFlags & SpellAuraProcFlags.AURA_PROC_REMOVEONUSE) == 0)
+                            if ((WorldServiceLocator._WS_Spells.SPELLs[ActiveSpells[i].SpellID].procFlags & (int)SpellAuraProcFlags.AURA_PROC_REMOVEONUSE) == 0)
                             {
                                 RemoveAura(i, ref ActiveSpells[i].SpellCaster);
                             }
@@ -632,7 +632,7 @@ namespace Mangos.World.Objects
                 {
                     {
                         var withBlock = (WS_PlayerData.CharacterObject)this;
-                        if (withBlock.spellCasted[CurrentSpellTypes.CURRENT_CHANNELED_SPELL] is object && withBlock.spellCasted[CurrentSpellTypes.CURRENT_CHANNELED_SPELL].Finished == false && (withBlock.spellCasted[CurrentSpellTypes.CURRENT_CHANNELED_SPELL].SpellInfo.channelInterruptFlags & AuraInterruptFlag) != 0)
+                        if (withBlock.spellCasted[(int)CurrentSpellTypes.CURRENT_CHANNELED_SPELL] is object && withBlock.spellCasted[(int)CurrentSpellTypes.CURRENT_CHANNELED_SPELL].Finished == false && (withBlock.spellCasted[(int)CurrentSpellTypes.CURRENT_CHANNELED_SPELL].SpellInfo.channelInterruptFlags & AuraInterruptFlag) != 0)
                         {
                             withBlock.FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL);
                         }
@@ -659,7 +659,7 @@ namespace Mangos.World.Objects
                     {
                         for (byte j = 0; j <= 2; j++)
                         {
-                            if (ActiveSpells[i].Aura_Info[j] is object && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == AuraIndex)
+                            if (ActiveSpells[i].Aura_Info[j] is object && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == (int)AuraIndex)
                             {
                                 Modifier += ActiveSpells[i].Aura_Info[j].get_GetValue(Level, 0);
                             }
@@ -679,7 +679,7 @@ namespace Mangos.World.Objects
                     {
                         for (byte j = 0; j <= 2; j++)
                         {
-                            if (ActiveSpells[i].Aura_Info[j] is object && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == AuraIndex && (ActiveSpells[i].Aura_Info[j].MiscValue & Mask) == Mask)
+                            if (ActiveSpells[i].Aura_Info[j] is object && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == (int)AuraIndex && (ActiveSpells[i].Aura_Info[j].MiscValue & Mask) == Mask)
                             {
                                 Modifier += ActiveSpells[i].Aura_Info[j].get_GetValue(Level, 0);
                             }
@@ -859,7 +859,7 @@ namespace Mangos.World.Objects
                         }
                         else
                         {
-                            SpellDamage = ((WS_PlayerData.CharacterObject)Caster).spellDamage[DamageType].Value;
+                            SpellDamage = ((WS_PlayerData.CharacterObject)Caster).spellDamage[(int)DamageType].Value;
                         }
 
                         if (IsDot)
@@ -1039,7 +1039,7 @@ namespace Mangos.World.Objects
             public SpellMissInfo GetMeleeSpellHitResult(ref BaseUnit Caster, WS_Spells.SpellInfo Spell)
             {
                 WeaponAttackType attType = WeaponAttackType.BASE_ATTACK;
-                if (Spell.DamageType == SpellDamageType.SPELL_DMG_TYPE_RANGED)
+                if (Spell.DamageType == (int)SpellDamageType.SPELL_DMG_TYPE_RANGED)
                     attType = WeaponAttackType.RANGED_ATTACK;
 
                 // bonus from skills is 0.04% per skill Diff
@@ -1182,7 +1182,7 @@ namespace Mangos.World.Objects
                 }
                 else
                 {
-                    int effectiveResistanceRating = t.Resistances[School].Base + Math.Max((t.Level - Level) * 5, 0);
+                    int effectiveResistanceRating = t.Resistances[(int)School].Base + Math.Max((t.Level - Level) * 5, 0);
                     DamageReduction = (float)(effectiveResistanceRating / (double)(Level * 5) * 0.75d);
                 }
 

@@ -1233,7 +1233,7 @@ namespace Mangos.World.Handlers
                         }
                 }
 
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM playercreateinfo WHERE race = {0};", Conversions.ToInteger(Race)), Info);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM playercreateinfo WHERE race = {0};", Conversions.ToInteger(Race)), ref Info);
                 Character.Teleport(Conversions.ToSingle(Info.Rows[0]["position_x"]), Conversions.ToSingle(Info.Rows[0]["position_y"]), Conversions.ToSingle(Info.Rows[0]["position_z"]), Conversions.ToSingle(Info.Rows[0]["orientation"]), Conversions.ToInteger(Info.Rows[0]["map"]));
                 return true;
             }
@@ -1500,7 +1500,7 @@ namespace Mangos.World.Handlers
             {
                 string cmdList = "Listing of available locations:" + Environment.NewLine;
                 var listSqlQuery = new DataTable();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM game_tele order by name", listSqlQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM game_tele order by name", ref listSqlQuery);
                 foreach (DataRow locationRow in listSqlQuery.Rows)
                     cmdList = Conversions.ToString(cmdList + Operators.ConcatenateObject(locationRow["name"], ", "));
                 objCharacter.CommandResponse(cmdList);
@@ -1513,11 +1513,11 @@ namespace Mangos.World.Handlers
             if (location.Contains("*"))
             {
                 location = location.Replace("*", "");
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM game_tele WHERE name like '{0}%' order by name;", location), mySqlQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM game_tele WHERE name like '{0}%' order by name;", location), ref mySqlQuery);
             }
             else
             {
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM game_tele WHERE name = '{0}' order by name LIMIT 1;", location), mySqlQuery);
+                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM game_tele WHERE name = '{0}' order by name LIMIT 1;", location), ref mySqlQuery);
             }
 
             if (mySqlQuery.Rows.Count > 0)
@@ -1649,11 +1649,11 @@ namespace Mangos.World.Handlers
             if (string.IsNullOrEmpty(Name))
                 return false;
             var account = new DataTable();
-            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, last_ip FROM account WHERE username = \"" + Name + "\";", account);
+            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, last_ip FROM account WHERE username = \"" + Name + "\";", ref account);
             ulong accountID = Conversions.ToULong(account.Rows[0]["id"]);
             int IP = Conversions.ToInteger(account.Rows[0]["last_ip"]);
             var result = new DataTable();
-            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT active FROM account_banned WHERE id = " + accountID + ";", result);
+            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT active FROM account_banned WHERE id = " + accountID + ";", ref result);
             if (result.Rows.Count > 0)
             {
                 if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(result.Rows[0]["active"], 1, false)))
@@ -1684,11 +1684,11 @@ namespace Mangos.World.Handlers
             if (string.IsNullOrEmpty(Name))
                 return false;
             var account = new DataTable();
-            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, last_ip FROM account WHERE username = \"" + Name + "\";", account);
+            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, last_ip FROM account WHERE username = \"" + Name + "\";", ref  account);
             ulong accountID = Conversions.ToULong(account.Rows[0]["id"]);
             int IP = Conversions.ToInteger(account.Rows[0]["last_ip"]);
             var result = new DataTable();
-            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT active FROM account_banned WHERE id = '" + accountID + "';", result);
+            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT active FROM account_banned WHERE id = '" + accountID + "';", ref result);
             if (result.Rows.Count > 0)
             {
                 if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(result.Rows[0]["active"], 0, false)))
@@ -1748,7 +1748,7 @@ namespace Mangos.World.Handlers
                 objCharacter.CommandResponse("GameMaster Invisibility turned on.");
             }
 
-            objCharacter.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, objCharacter.cPlayerFlags);
+            objCharacter.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)objCharacter.cPlayerFlags);
             objCharacter.SendCharacterUpdate();
             WorldServiceLocator._WS_CharMovement.UpdateCell(ref objCharacter);
             return true;
@@ -1989,7 +1989,7 @@ namespace Mangos.World.Handlers
             string aName = acct[0];
             string aPassword = acct[1];
             string aEmail = acct[2];
-            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT username FROM account WHERE username = \"" + aName + "\";", result);
+            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT username FROM account WHERE username = \"" + aName + "\";", ref result);
             if (result.Rows.Count > 0)
             {
                 objCharacter.CommandResponse(string.Format("Account [{0}] already exists.", aName));
@@ -2019,7 +2019,7 @@ namespace Mangos.World.Handlers
                 return false;
             string aName = acct[0];
             string aPassword = acct[1];
-            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, gmlevel FROM account WHERE username = \"" + aName + "\";", result);
+            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, gmlevel FROM account WHERE username = \"" + aName + "\";", ref result);
             if (result.Rows.Count == 0)
             {
                 objCharacter.CommandResponse(string.Format("Account [{0}] does not exist.", aName));
@@ -2072,7 +2072,7 @@ namespace Mangos.World.Handlers
                 return true;
             }
 
-            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, gmlevel FROM account WHERE username = \"" + aName + "\";", result);
+            WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, gmlevel FROM account WHERE username = \"" + aName + "\";", ref result);
             if (result.Rows.Count == 0)
             {
                 objCharacter.CommandResponse(string.Format("Account [{0}] does not exist.", aName));
@@ -2098,7 +2098,7 @@ namespace Mangos.World.Handlers
         public ulong GetGUID(string Name)
         {
             var MySQLQuery = new DataTable();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", Name), MySQLQuery);
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", Name), ref MySQLQuery);
             if (MySQLQuery.Rows.Count > 0)
             {
                 return Conversions.ToULong(MySQLQuery.Rows[0]["char_guid"]);

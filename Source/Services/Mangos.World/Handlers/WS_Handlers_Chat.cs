@@ -61,7 +61,7 @@ namespace Mangos.World.Handlers
             // TODO: Check if we really are able to speak this language!
 
             // DONE: Changing language
-            if (client.Character.Spell_Language != -1)
+            if ((int)client.Character.Spell_Language != -1)
                 msgLanguage = client.Character.Spell_Language;
             switch (msgType)
             {
@@ -107,7 +107,7 @@ namespace Mangos.World.Handlers
                                 client.Character.DND = false;
                             }
 
-                            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+                            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)client.Character.cPlayerFlags);
                             client.Character.SendCharacterUpdate();
                         }
 
@@ -125,7 +125,7 @@ namespace Mangos.World.Handlers
                                 client.Character.AFK = false;
                             }
 
-                            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, client.Character.cPlayerFlags);
+                            client.Character.SetUpdateFlag((int)EPlayerFields.PLAYER_FLAGS, (int)client.Character.cPlayerFlags);
                             client.Character.SendCharacterUpdate();
                         }
 

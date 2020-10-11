@@ -776,7 +776,7 @@ namespace Mangos.World.Handlers
 
         public bool IsInBackOf(WS_Base.BaseObject Object1, WS_Base.BaseObject Object2)
         {
-            return IsInBackOf(Object1, Object2.positionX, Object2.positionY);
+            return IsInBackOf(ref Object1, Object2.positionX, Object2.positionY);
         }
 
         public bool IsInBackOf(ref WS_Base.BaseObject Object1, float x2, float y2)
@@ -1362,7 +1362,7 @@ namespace Mangos.World.Handlers
                 var Target = new WS_Spells.SpellTargets();
                 WS_Base.BaseUnit argobjCharacter = Character;
                 Target.SetTarget_UNIT(ref argobjCharacter);
-                for (byte i = 0, loopTo = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1; i <= loopTo; i++)
+                for (byte i = 0, loopTo = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1); i <= loopTo; i++)
                 {
                     if (Victim.ActiveSpells[i] is object && Victim.ActiveSpells[i].GetSpellInfo.procFlags & ProcFlags.PROC_FLAG_HIT_MELEE)
                     {
@@ -1385,8 +1385,8 @@ namespace Mangos.World.Handlers
                 // http://www.wowwiki.com/Formulas:Rage_generation
                 if (Character.Classe == Classes.CLASS_WARRIOR || Character.Classe == Classes.CLASS_DRUID && (Character.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || Character.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR))
                 {
-                    Character.Rage.Increment(Fix((7.5d * (double)damageInfo.Damage / (double)Character.GetRageConversion + (double)(Character.GetHitFactor((damageInfo.HitInfo & AttackHitState.HITINFO_LEFTSWING) == 0, damageInfo.HitInfo & AttackHitState.HITINFO_CRITICALHIT) * (float)WorldServiceLocator._WS_Combat.GetAttackTime(ref Character, ref combatDualWield))) / 2d));
-                    Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + ManaTypes.TYPE_RAGE, Character.Rage.Current);
+                    Character.Rage.Increment((7.5d * (double)damageInfo.Damage / (double)Character.GetRageConversion + (double)(Character.get_GetHitFactor((damageInfo.HitInfo & (int)AttackHitState.HITINFO_LEFTSWING) == 0, damageInfo.HitInfo & AttackHitState.HITINFO_CRITICALHIT) * (float)WorldServiceLocator._WS_Combat.GetAttackTime(ref Character, ref combatDualWield))) / 2d));
+                    Character.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_POWER1 + (int)ManaTypes.TYPE_RAGE), Character.Rage.Current);
                     Character.SendCharacterUpdate(true);
                 }
 
@@ -1424,13 +1424,13 @@ namespace Mangos.World.Handlers
                 bool IsCrit = false;
                 if (damageInfo.Damage > 0)
                     damageInfo.Damage += BonusDamage;
-                if (damageInfo.HitInfo == AttackHitState.HIT_CRIT)
+                if (damageInfo.HitInfo == (int)AttackHitState.HIT_CRIT)
                 {
                     damageInfo.Damage += BonusDamage;
                     IsCrit = true;
                 }
 
-                WorldServiceLocator._WS_Spells.SendNonMeleeDamageLog(ref (WS_Base.BaseUnit)Character, ref (WS_Base.BaseUnit)Victim2, SpellID, (int)damageInfo.DamageType, damageInfo.Damage, 0, damageInfo.Absorbed, IsCrit);
+                WorldServiceLocator._WS_Spells.SendNonMeleeDamageLog((WS_Base.BaseUnit)Character, ref (WS_Base.BaseUnit)Victim2, SpellID, (int)damageInfo.DamageType, damageInfo.Damage, 0, damageInfo.Absorbed, IsCrit);
                 if (Victim2 is WS_Creatures.CreatureObject)
                 {
                     WS_Base.BaseUnit argAttacker1 = Character;
@@ -1447,7 +1447,7 @@ namespace Mangos.World.Handlers
                     if (((WS_PlayerData.CharacterObject)Victim2).Classe == Classes.CLASS_WARRIOR)
                     {
                         ((WS_PlayerData.CharacterObject)Victim2).Rage.Increment((int)Conversion.Fix(damageInfo.Damage / (double)(((WS_PlayerData.CharacterObject)Victim2).Level * 4) * 25d + 10d));
-                        ((WS_PlayerData.CharacterObject)Victim2).SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + ManaTypes.TYPE_RAGE, ((WS_PlayerData.CharacterObject)Victim2).Rage.Current);
+                        ((WS_PlayerData.CharacterObject)Victim2).SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_POWER1 + (int)ManaTypes.TYPE_RAGE), ((WS_PlayerData.CharacterObject)Victim2).Rage.Current);
                         Character.SendCharacterUpdate(true);
                     }
                 }
@@ -1457,7 +1457,7 @@ namespace Mangos.World.Handlers
                 if (Character.Classe == Classes.CLASS_WARRIOR || Character.Classe == Classes.CLASS_DRUID && (Character.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || Character.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR))
                 {
                     Character.Rage.Increment((int)Conversion.Fix(damageInfo.Damage / (double)(Character.Level * 4) * 75d + 10d));
-                    Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + ManaTypes.TYPE_RAGE, Character.Rage.Current);
+                    Character.SetUpdateFlag((int)(EUnitFields.UNIT_FIELD_POWER1 + (int)ManaTypes.TYPE_RAGE), Character.Rage.Current);
                     Character.SendCharacterUpdate(true);
                 }
             }
@@ -1468,7 +1468,7 @@ namespace Mangos.World.Handlers
 
         public void SetPlayerInCombat(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            objCharacter.cUnitFlags |= UnitFlags.UNIT_FLAG_IN_COMBAT;
+            objCharacter.cUnitFlags |= (int)UnitFlags.UNIT_FLAG_IN_COMBAT;
             objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_FLAGS, objCharacter.cUnitFlags);
             objCharacter.SendCharacterUpdate(false);
             objCharacter.RemoveAurasByInterruptFlag((int)SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_ENTER_COMBAT);
@@ -1610,7 +1610,7 @@ namespace Mangos.World.Handlers
         {
             objCharacter.attackSheathState = State;
             objCharacter.combatCanDualWield = false;
-            objCharacter.cBytes2 = objCharacter.cBytes2 & ~0xFF | State;
+            objCharacter.cBytes2 = (objCharacter.cBytes2 & ~0xFF) | (int)State;
             objCharacter.SetUpdateFlag((int)EUnitFields.UNIT_FIELD_BYTES_2, objCharacter.cBytes2);
             switch (State)
             {

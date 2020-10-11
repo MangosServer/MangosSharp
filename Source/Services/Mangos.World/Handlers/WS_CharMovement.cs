@@ -201,10 +201,10 @@ namespace Mangos.World.Handlers
                 }
 
                 // DONE: Stop casting
-                if (client.Character.spellCasted[CurrentSpellTypes.CURRENT_GENERIC_SPELL] is object)
+                if (client.Character.spellCasted[(int)CurrentSpellTypes.CURRENT_GENERIC_SPELL] is object)
                 {
                     {
-                        var withBlock = client.Character.spellCasted[CurrentSpellTypes.CURRENT_GENERIC_SPELL];
+                        var withBlock = client.Character.spellCasted[(int)CurrentSpellTypes.CURRENT_GENERIC_SPELL];
                         if (withBlock.Finished == false & (WorldServiceLocator._WS_Spells.SPELLs[withBlock.SpellID].interruptFlags & SpellInterruptFlags.SPELL_INTERRUPT_FLAG_MOVEMENT))
                         {
                             client.Character.FinishSpell(CurrentSpellTypes.CURRENT_GENERIC_SPELL);

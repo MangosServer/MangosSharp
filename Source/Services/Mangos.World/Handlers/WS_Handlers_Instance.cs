@@ -34,7 +34,7 @@ namespace Mangos.World.Handlers
         {
             var q = new DataTable();
             uint t = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_instances WHERE expire < {0};", (object)t), q);
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_instances WHERE expire < {0};", (object)t), ref q);
             foreach (DataRow r in q.Rows)
             {
                 if (WorldServiceLocator._WS_Maps.Maps.ContainsKey(Conversions.ToUInteger(r["map"])))
@@ -47,7 +47,7 @@ namespace Mangos.World.Handlers
             var q = new DataTable();
 
             // TODO: Save instance IDs in MAP class, using current way it may happen 2 groups to be in same instance
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT MAX(instance) FROM characters_instances WHERE map = {0};", (object)Map), q);
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT MAX(instance) FROM characters_instances WHERE map = {0};", (object)Map), ref q);
             if (!ReferenceEquals(q.Rows[0][0], DBNull.Value))
             {
                 return (uint)(Conversions.ToInteger(q.Rows[0][0]) + 1);
@@ -203,7 +203,7 @@ namespace Mangos.World.Handlers
                 var q = new DataTable();
 
                 // DONE: Check if player is already saved to instance
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_instances WHERE char_guid = {0} AND map = {1};", (object)objCharacter.GUID, (object)objCharacter.MapID), q);
+                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_instances WHERE char_guid = {0} AND map = {1};", (object)objCharacter.GUID, (object)objCharacter.MapID), ref q);
                 if (q.Rows.Count > 0)
                 {
                     // Character is saved to instance
@@ -218,7 +218,7 @@ namespace Mangos.World.Handlers
                 // DONE: Check if group is already in instance
                 if (objCharacter.IsInGroup)
                 {
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_instances_group WHERE group_id = {0} AND map = {1};", (object)objCharacter.Group.ID, (object)objCharacter.MapID), q);
+                    WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_instances_group WHERE group_id = {0} AND map = {1};", (object)objCharacter.Group.ID, (object)objCharacter.MapID), ref q);
                     if (q.Rows.Count > 0)
                     {
                         // Group is saved to instance
@@ -313,7 +313,7 @@ namespace Mangos.World.Handlers
         public void SendInstanceSaved(WS_PlayerData.CharacterObject Character)
         {
             var q = new DataTable();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_instances WHERE char_guid = {0};", (object)Character.GUID), q);
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_instances WHERE char_guid = {0};", (object)Character.GUID), ref q);
             SendUpdateInstanceOwnership(ref Character.client, Conversions.ToUInteger(q.Rows.Count > 0));
             foreach (DataRow r in q.Rows)
                 SendUpdateLastInstance(ref Character.client, Conversions.ToUInteger(r["map"]));
