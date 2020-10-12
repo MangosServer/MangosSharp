@@ -41,11 +41,11 @@ namespace Mangos.Cluster.DataStores
                 {
                     var m = new MapInfo()
                     {
-                        ID = (int)data.Item(i, 0, DBCValueType.DBC_INTEGER),
-                        Type = (MapTypes)data.Item(i, 2, DBCValueType.DBC_INTEGER),
-                        Name = (string)data.Item(i, 4, DBCValueType.DBC_STRING),
-                        ParentMap = (int)data.Item(i, 3, DBCValueType.DBC_INTEGER),
-                        ResetTime = (int)data.Item(i, 38, DBCValueType.DBC_INTEGER)
+                        ID = (int)data[i, 0, DBCValueType.DBC_INTEGER],
+                        Type = (MapTypes)data[i, 2, DBCValueType.DBC_INTEGER],
+                        Name = (string)data[i, 4, DBCValueType.DBC_STRING],
+                        ParentMap = (int)data[i, 3, DBCValueType.DBC_INTEGER],
+                        ResetTime = (int)data[i, 38, DBCValueType.DBC_INTEGER]
                     };
                     Maps.Add(m.ID, m);
                 }
@@ -114,11 +114,11 @@ namespace Mangos.Cluster.DataStores
                 {
                     var WorldSafeLoc = new TWorldSafeLoc()
                     {
-                        ID = (int)data.Item(i, 0, DBCValueType.DBC_INTEGER),
-                        map = (uint)(int)data.Item(i, 1),
-                        x = (float)data.Item(i, 2, DBCValueType.DBC_FLOAT),
-                        y = (float)data.Item(i, 3, DBCValueType.DBC_FLOAT),
-                        z = (float)data.Item(i, 4, DBCValueType.DBC_FLOAT)
+                        ID = (int)data[i, 0, DBCValueType.DBC_INTEGER],
+                        map = (uint)(int)data[i, 1],
+                        x = (float)data[i, 2, DBCValueType.DBC_FLOAT],
+                        y = (float)data[i, 3, DBCValueType.DBC_FLOAT],
+                        z = (float)data[i, 4, DBCValueType.DBC_FLOAT]
                     };
                     WorldSafeLocs.Add(WorldSafeLoc.ID, WorldSafeLoc);
                 }
@@ -196,9 +196,9 @@ namespace Mangos.Cluster.DataStores
                 {
                     var ChatChannels = new ChatChannelInfo()
                     {
-                        Index = (int)data.Item(i, 0, DBCValueType.DBC_INTEGER),
-                        Flags = (int)data.Item(i, 1, DBCValueType.DBC_INTEGER),
-                        Name = (string)data.Item(i, 3, DBCValueType.DBC_STRING)
+                        Index = (int)data[i, 0, DBCValueType.DBC_INTEGER],
+                        Flags = (int)data[i, 1, DBCValueType.DBC_INTEGER],
+                        Name = (string)data[i, 3, DBCValueType.DBC_STRING]
                     };
                     ChatChannelsInfo.Add(ChatChannels.Index, ChatChannels);
                 }
@@ -237,12 +237,12 @@ namespace Mangos.Cluster.DataStores
                 var data = new BufferedDbc(ChrRacesDBC);
                 for (int i = 0, loopTo = new BufferedDbc(ChrRacesDBC).Rows - 1; i <= loopTo; i++)
                 {
-                    raceID = (int)data.Item(i, 0);
-                    factionID = (int)data.Item(i, 2);
-                    modelM = (int)data.Item(i, 4);
-                    modelF = (int)data.Item(i, 5);
-                    teamID = (int)data.Item(i, 8);
-                    cinematicID = (int)data.Item(i, 16);
+                    raceID = (int)data[i, 0];
+                    factionID = (int)data[i, 2];
+                    modelM = (int)data[i, 4];
+                    modelF = (int)data[i, 5];
+                    teamID = (int)data[i, 8];
+                    cinematicID = (int)data[i, 16];
                     CharRaces[(byte)raceID] = new TCharRace((short)factionID, modelM, modelF, (byte)teamID, cinematicID);
                 }
 
@@ -269,8 +269,8 @@ namespace Mangos.Cluster.DataStores
                 for (int i = 0, loopTo = new BufferedDbc(ChrClassesDBC).Rows - 1; i <= loopTo; i++)
                 {
                     var data = new BufferedDbc(ChrClassesDBC);
-                    classID = (int)data.Item(i, 0);
-                    cinematicID = (int)data.Item(i, 5); // or 14 or 15?
+                    classID = (int)data[i, 0];
+                    cinematicID = (int)data[i, 5]; // or 14 or 15?
                     CharClasses[(byte)classID] = new TCharClass(cinematicID);
                 }
 

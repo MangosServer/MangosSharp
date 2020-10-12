@@ -4,6 +4,6 @@ namespace Mangos.Configuration
 {
     public interface IConfigurationProvider<T>
     {
-        Task<T> GetConfigurationAsync();
+        T GetConfiguration();
     }
 }

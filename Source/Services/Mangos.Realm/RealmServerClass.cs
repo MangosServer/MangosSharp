@@ -25,9 +25,9 @@ namespace Mangos.Realm
             _configurationProvider = configurationProvider;
         }
 
-        public async Task StartAsync()
+        public void Start()
         {
-            var configuration = await _configurationProvider.GetConfigurationAsync();
+            var configuration = _configurationProvider.GetConfiguration();
             LstHost = IPAddress.Parse(configuration.RealmServerAddress);
             try
             {

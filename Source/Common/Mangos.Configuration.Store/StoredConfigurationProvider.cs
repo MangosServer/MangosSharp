@@ -12,13 +12,12 @@ namespace Mangos.Configuration.Store
             _configurationProvider = configurationProvider;
         }
 
-        public async Task<T> GetConfigurationAsync()
+        public T GetConfiguration()
         {
             if (_configuration is null)
             {
-                _configuration = await _configurationProvider.GetConfigurationAsync();
+                _configuration = _configurationProvider.GetConfiguration();
             }
-
             return _configuration;
         }
     }

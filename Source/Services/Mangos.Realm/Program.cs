@@ -15,7 +15,7 @@ namespace Mangos.Realm
         {
             var container = CreateContainer();
             var realmServer = container.Resolve<RealmServer>();
-            await realmServer.StartAsync();
+            realmServer.Start();
         }
 
         public static IContainer CreateContainer()
