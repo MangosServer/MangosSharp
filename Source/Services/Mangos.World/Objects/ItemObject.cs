@@ -1,31 +1,10 @@
-﻿// 
-// Copyright (C) 2013-2020 getMaNGOS <https://getmangos.eu>
-// 
-// This program is free software. You can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation. either version 2 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY. Without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-// 
-
-// WARNING: Use only with ITEMs()
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Item;
-using Mangos.Common.Enums.Player;
 using Mangos.Common.Enums.Spell;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
@@ -35,706 +14,771 @@ using Mangos.World.Server;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using ObjectType = Mangos.Common.Globals.ObjectType;
 
 namespace Mangos.World.Objects
 {
-    public sealed class ItemObject : IDisposable
-    {
-        public WS_Items.ItemInfo ItemInfo
-        {
-            get
-            {
-                return WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry];
-            }
-        }
+	public sealed class ItemObject : IDisposable
+	{
+		public readonly int ItemEntry;
 
-        public readonly int ItemEntry;
-        public ulong GUID;
-        public ulong OwnerGUID;
-        public readonly ulong GiftCreatorGUID = 0UL;
-        public readonly ulong CreatorGUID;
-        public int StackCount = 1;
-        public int Durability = 1;
-        public int ChargesLeft = 0;
-        private int _flags = 0;
-        public Dictionary<byte, ItemObject> Items = null;
-        public readonly int RandomProperties = 0;
-        public int SuffixFactor = 0;
-        public readonly Dictionary<byte, WS_Items.TEnchantmentInfo> Enchantments = new Dictionary<byte, WS_Items.TEnchantmentInfo>();
-        private WS_Loot.LootObject _loot = null;
+		public ulong GUID;
 
-        // WARNING: Containers cannot hold itemText value
-        public int ItemText = 0;
+		public ulong OwnerGUID;
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        private ulong GetNewGUID()
-        {
-            WorldServiceLocator._WorldServer.itemGuidCounter = (ulong)(WorldServiceLocator._WorldServer.itemGuidCounter + 1m);
-            ulong GetNewGUIDRet = WorldServiceLocator._WorldServer.itemGuidCounter;
-            return GetNewGUIDRet;
-        }
+		public readonly ulong GiftCreatorGUID;
 
-        public void FillAllUpdateFlags(ref Packets.UpdateClass update)
-        {
-            if (ItemInfo.ContainerSlots > 0)
-            {
-                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
-                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_TYPE, (int)ObjectType.TYPE_CONTAINER, (int)ObjectType.TYPE_OBJECT);
-                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, ItemEntry);
-                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, 1.0f);
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_OWNER, OwnerGUID);
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_CONTAINED, OwnerGUID);
-                if (CreatorGUID > 0m)
-                    update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_CREATOR, CreatorGUID);
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_GIFTCREATOR, GiftCreatorGUID);
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_STACK_COUNT, StackCount);
-                // Update.SetUpdateFlag(EItemFields.ITEM_FIELD_DURATION, 0)
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_FLAGS, _flags);
-                // Update.SetUpdateFlag(EItemFields.ITEM_FIELD_ITEM_TEXT_ID, ItemText)
+		public readonly ulong CreatorGUID;
 
-                update.SetUpdateFlag((int)EContainerFields.CONTAINER_FIELD_NUM_SLOTS, ItemInfo.ContainerSlots);
-                // DONE: Here list in bag items
-                for (byte i = 0; i <= 35; i++)
-                {
-                    if (Items.ContainsKey(i))
-                    {
-                        update.SetUpdateFlag((int)(EContainerFields.CONTAINER_FIELD_SLOT_1 + (i * 2)), Conversions.ToLong(Items[i].GUID));
-                    }
-                    else
-                    {
-                        update.SetUpdateFlag((int)(EContainerFields.CONTAINER_FIELD_SLOT_1 + (i * 2)), 0);
-                    }
-                }
-            }
-            else
-            {
-                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
-                update.SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, (int)ObjectType.TYPE_ITEM, (int)ObjectType.TYPE_OBJECT);
-                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, ItemEntry);
-                update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, (float)1.0f);
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_OWNER, OwnerGUID);
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_CONTAINED, OwnerGUID);
-                if (CreatorGUID > 0m)
-                    update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_CREATOR, CreatorGUID);
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_GIFTCREATOR, GiftCreatorGUID);
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_STACK_COUNT, StackCount);
-                // Update.SetUpdateFlag(EItemFields.ITEM_FIELD_DURATION, 0)
-                for (int i = 0; i <= 4; i++)
-                {
-                    if (ItemInfo.Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.USE || ItemInfo.Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.NO_DELAY_USE)
-                    {
-                        update.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_SPELL_CHARGES + i), ChargesLeft);
-                    }
-                    else
-                    {
-                        update.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_SPELL_CHARGES + i), -1);
-                    }
-                }
+		public int StackCount;
 
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_FLAGS, _flags);
+		public int Durability;
 
-                // Update.SetUpdateFlag(EItemFields.ITEM_FIELD_PROPERTY_SEED, 0)
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_RANDOM_PROPERTIES_ID, RandomProperties);
-                foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> enchant in Enchantments)
-                {
-                    update.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + enchant.Key * 3), enchant.Value.ID);
-                    update.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + enchant.Key * 3 + 1), enchant.Value.Duration);
-                    update.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + enchant.Key * 3 + 2), enchant.Value.Charges);
-                }
+		public int ChargesLeft;
 
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_ITEM_TEXT_ID, ItemText);
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_DURABILITY, Durability);
-                update.SetUpdateFlag((int)EItemFields.ITEM_FIELD_MAXDURABILITY, WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability);
-            }
-        }
+		private int _flags;
 
-        public void SendContainedItemsUpdate(ref WS_Network.ClientClass client, ObjectUpdateType updatetype = ObjectUpdateType.UPDATETYPE_CREATE_OBJECT)
-        {
-            var packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
-            packet.AddInt32(Items.Count);      // Operations.Count
-            packet.AddInt8(0);
-            foreach (KeyValuePair<byte, ItemObject> item in Items)
-            {
-                var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
-                item.Value.FillAllUpdateFlags(ref tmpUpdate);
-                tmpUpdate.AddToPacket(packet, updatetype, item.Value);
-                tmpUpdate.Dispose();
-            }
+		public Dictionary<byte, ItemObject> Items;
 
-            client.Send(packet);
-        }
+		public readonly int RandomProperties;
 
-        private void InitializeBag()
-        {
-            if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].IsContainer)
-            {
-                Items = new Dictionary<byte, ItemObject>();
-            }
-            else
-            {
-                Items = null;
-            }
-        }
+		public int SuffixFactor;
 
-        public bool IsFree
-        {
-            get
-            {
-                if (Items.Count > 0)
-                    return false;
-                else
-                    return true;
-            }
-        }
-        // Public ReadOnly Property IsFull() As Boolean
-        // Get
-        // If Items.Count = _WorldServer.ITEMDatabase(ItemEntry).ContainerSlots Then Return True Else Return False
-        // End Get
-        // End Property
-        // Public ReadOnly Property IsEquipped() As Boolean
-        // Get
-        // Dim srcBag As Byte = GetBagSlot
-        // Dim srcSlot As Integer = GetSlot
-        // If srcBag = 255 AndAlso srcSlot < EQUIPMENT_SLOT_END AndAlso srcSlot >= 0 Then Return True
-        // Return False
-        // End Get
-        // End Property
-        public bool IsRanged
-        {
-            get
-            {
-                return ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON && (ItemInfo.SubClass == ITEM_SUBCLASS.ITEM_SUBCLASS_BOW || ItemInfo.SubClass == ITEM_SUBCLASS.ITEM_SUBCLASS_CROSSBOW || ItemInfo.SubClass == ITEM_SUBCLASS.ITEM_SUBCLASS_GUN);
-            }
-        }
+		public readonly Dictionary<byte, WS_Items.TEnchantmentInfo> Enchantments;
 
-        public byte GetBagSlot
-        {
-            get
-            {
-                if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID) == false)
-                    return 255;
-                {
-                    var withBlock = WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID];
-                    for (byte i = (byte)InventorySlots.INVENTORY_SLOT_BAG_1, loopTo = (byte)(InventorySlots.INVENTORY_SLOT_BAG_END - 1); i <= loopTo; i++)
-                    {
-                        if (withBlock.Items.ContainsKey(i))
-                        {
-                            for (byte j = 0, loopTo1 = (byte)(withBlock.Items[i].ItemInfo.ContainerSlots - 1); j <= loopTo1; j++)
-                            {
-                                if (withBlock.Items[i].Items.ContainsKey(j))
-                                {
-                                    if (ReferenceEquals(withBlock.Items[i].Items[j], this))
-                                        return i;
-                                }
-                            }
-                        }
-                    }
-                }
+		private WS_Loot.LootObject _loot;
 
-                return 255;
-            }
-        }
+		public int ItemText;
 
-        public int GetSlot
-        {
-            get
-            {
-                if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID) == false)
-                    return -1;
-                {
-                    var withBlock = WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID];
-                    for (byte i = (byte)EquipmentSlots.EQUIPMENT_SLOT_START, loopTo = (byte)(InventoryPackSlots.INVENTORY_SLOT_ITEM_END - 1); i <= loopTo; i++)
-                    {
-                        if (withBlock.Items.ContainsKey(i))
-                        {
-                            if (ReferenceEquals(withBlock.Items[i], this))
-                                return i;
-                        }
-                    }
+		private bool _disposedValue;
 
-                    for (byte i = (byte)KeyRingSlots.KEYRING_SLOT_START, loopTo1 = (byte)(KeyRingSlots.KEYRING_SLOT_END - 1); i <= loopTo1; i++)
-                    {
-                        if (withBlock.Items.ContainsKey(i))
-                        {
-                            if (ReferenceEquals(withBlock.Items[i], this))
-                                return i;
-                        }
-                    }
+		public WS_Items.ItemInfo ItemInfo => WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry];
 
-                    for (byte i = (byte)InventorySlots.INVENTORY_SLOT_BAG_1, loopTo2 = (byte)(InventorySlots.INVENTORY_SLOT_BAG_END - 1); i <= loopTo2; i++)
-                    {
-                        if (withBlock.Items.ContainsKey(i))
-                        {
-                            for (byte j = 0, loopTo3 = (byte)(withBlock.Items[i].ItemInfo.ContainerSlots - 1); j <= loopTo3; j++)
-                            {
-                                if (withBlock.Items[i].Items.ContainsKey(j))
-                                {
-                                    if (ReferenceEquals(withBlock.Items[i].Items[j], this))
-                                        return j;
-                                }
-                            }
-                        }
-                    }
-                }
+		public bool IsFree
+		{
+			get
+			{
+				if (Items.Count > 0)
+				{
+					return false;
+				}
+				return true;
+			}
+		}
 
-                return -1;
-            }
-        }
+		public bool IsRanged => ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON && (ItemInfo.SubClass == ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID || ItemInfo.SubClass == ITEM_SUBCLASS.ITEM_SUBCLASS_CROSSBOW || ItemInfo.SubClass == ITEM_SUBCLASS.ITEM_SUBCLASS_POTION);
 
-        public int GetSkill
-        {
-            get
-            {
-                return ItemInfo.GetReqSkill;
-            }
-        }
+		public byte GetBagSlot
+		{
+			get
+			{
+				if (!WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID))
+				{
+					return byte.MaxValue;
+				}
+				WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID];
+				byte i = 19;
+				do
+				{
+					checked
+					{
+						if (characterObject.Items.ContainsKey(i))
+						{
+							byte b = (byte)(characterObject.Items[i].ItemInfo.ContainerSlots - 1);
+							byte j = 0;
+							while (unchecked((uint)j <= (uint)b))
+							{
+								if (characterObject.Items[i].Items.ContainsKey(j) && characterObject.Items[i].Items[j] == this)
+								{
+									return i;
+								}
+								j = (byte)unchecked((uint)(j + 1));
+							}
+						}
+						i = (byte)unchecked((uint)(i + 1));
+					}
+				}
+				while ((uint)i <= 22u);
+				characterObject = null;
+				return byte.MaxValue;
+			}
+		}
 
-        public bool GenerateLoot()
-        {
-            if (_loot is object)
-                return true;
+		public int GetSlot
+		{
+			get
+			{
+				if (!WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID))
+				{
+					return -1;
+				}
+				WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID];
+				byte i = 0;
+				do
+				{
+					if (characterObject.Items.ContainsKey(i) && characterObject.Items[i] == this)
+					{
+						return i;
+					}
+					checked
+					{
+						i = (byte)unchecked((uint)(i + 1));
+					}
+				}
+				while ((uint)i <= 38u);
+				byte k = 81;
+				do
+				{
+					if (characterObject.Items.ContainsKey(k) && characterObject.Items[k] == this)
+					{
+						return k;
+					}
+					checked
+					{
+						k = (byte)unchecked((uint)(k + 1));
+					}
+				}
+				while ((uint)k <= 112u);
+				byte j = 19;
+				do
+				{
+					checked
+					{
+						if (characterObject.Items.ContainsKey(j))
+						{
+							byte b = (byte)(characterObject.Items[j].ItemInfo.ContainerSlots - 1);
+							byte l = 0;
+							while (unchecked((uint)l <= (uint)b))
+							{
+								if (characterObject.Items[j].Items.ContainsKey(l) && characterObject.Items[j].Items[l] == this)
+								{
+									return l;
+								}
+								l = (byte)unchecked((uint)(l + 1));
+							}
+						}
+						j = (byte)unchecked((uint)(j + 1));
+					}
+				}
+				while ((uint)j <= 22u);
+				characterObject = null;
+				return -1;
+			}
+		}
 
-            // DONE: Loot generation
-            var mySqlQuery = new DataTable();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT * FROM item_loot WHERE entry = {0};", (object)ItemEntry), ref mySqlQuery);
-            if (mySqlQuery.Rows.Count == 0)
-                return false;
-            _loot = new WS_Loot.LootObject(GUID, LootType.LOOTTYPE_CORPSE);
-            var template = WorldServiceLocator._WS_Loot.LootTemplates_Item.GetLoot(ItemEntry);
-            if (template is object)
-            {
-                template.Process(ref _loot, 0);
-            }
+		public int GetSkill => ItemInfo.GetReqSkill;
 
-            _loot.LootOwner = 0UL;
-            return true;
-        }
+		public uint GetDurabulityCost
+		{
+			get
+			{
+				checked
+				{
+					try
+					{
+						int lostDurability = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability - Durability;
+						if (lostDurability > 300)
+						{
+							lostDurability = 300;
+						}
+						int subClass = 0;
+						subClass = ((ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_WEAPON) ? (unchecked((int)ItemInfo.SubClass) + 21) : unchecked((int)ItemInfo.SubClass));
+						uint durabilityCost = (uint)Math.Round((double)lostDurability * ((double)WorldServiceLocator._WS_DBCDatabase.DurabilityCosts[ItemInfo.Level, subClass] / 40.0 * 100.0));
+						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Durability cost: {0}", durabilityCost);
+						return durabilityCost;
+					}
+					catch (Exception projectError)
+					{
+						ProjectData.SetProjectError(projectError);
+						uint GetDurabulityCost = 0u;
+						ProjectData.ClearProjectError();
+						return GetDurabulityCost;
+					}
+				}
+			}
+		}
 
-        public ItemObject(ulong guidVal, WS_PlayerData.CharacterObject owner = null, bool equipped = false)
-        {
-            // DONE: Get from SQLDB
-            var mySqlQuery = new DataTable();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_inventory WHERE item_guid = \"{0}\";", (object)guidVal), ref mySqlQuery);
-            if (mySqlQuery.Rows.Count == 0)
-                Information.Err().Raise(1, "ItemObject.New", string.Format("itemGuid {0} not found in SQL database!", guidVal));
-            GUID = (ulong)mySqlQuery.Rows[0]["item_guid"] + WorldServiceLocator._Global_Constants.GUID_ITEM;
-            CreatorGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_creator"]);
-            OwnerGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_owner"]);
-            GiftCreatorGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_giftCreator"]);
-            StackCount = Conversions.ToInteger(mySqlQuery.Rows[0]["item_stackCount"]);
-            Durability = Conversions.ToInteger(mySqlQuery.Rows[0]["item_durability"]);
-            ChargesLeft = Conversions.ToInteger(mySqlQuery.Rows[0]["item_chargesLeft"]);
-            RandomProperties = Conversions.ToInteger(mySqlQuery.Rows[0]["item_random_properties"]);
-            ItemEntry = Conversions.ToInteger(mySqlQuery.Rows[0]["item_id"]);
-            _flags = Conversions.ToInteger(mySqlQuery.Rows[0]["item_flags"]);
-            ItemText = Conversions.ToInteger(mySqlQuery.Rows[0]["item_textId"]);
+		public bool IsSoulBound => (_flags & 1) == 1;
 
-            // DONE: Intitialize enchantments - Saved as STRING like "Slot1:ID1:Duration:Charges Slot2:ID2:Duration:Charges Slot3:ID3:Duration:Charges"
-            var tmp = Strings.Split(Conversions.ToString(mySqlQuery.Rows[0]["item_enchantment"]), " ");
-            if (tmp.Length > 0)
-            {
-                for (int i = 0, loopTo = tmp.Length - 1; i <= loopTo; i++)
-                {
-                    if (!string.IsNullOrEmpty(Strings.Trim(tmp[i])))
-                    {
-                        string[] tmp2;
-                        tmp2 = Strings.Split(tmp[i], ":");
-                        // DONE: Add the enchantment
-                        Enchantments.Add(Conversions.ToByte(tmp2[0]), new WS_Items.TEnchantmentInfo(Conversions.ToInteger(tmp2[1]), Conversions.ToInteger(tmp2[2]), Conversions.ToInteger(tmp2[3])));
-                        // DONE: Add the bonuses to the character
-                        if (equipped)
-                            AddEnchantBonus(Conversions.ToByte(tmp2[0]), ref owner);
-                    }
-                }
-            }
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		private ulong GetNewGUID()
+		{
+			ref ulong itemGuidCounter = ref WorldServiceLocator._WorldServer.itemGuidCounter;
+			itemGuidCounter = Convert.ToUInt64(decimal.Add(new decimal(itemGuidCounter), 1m));
+			return WorldServiceLocator._WorldServer.itemGuidCounter;
+		}
 
-            // DONE: Load ItemID in cashe if not loaded
-            if (WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(ItemEntry) == false)
-            {
-                // TODO: This needs to actually do something
-                var tmpItem = new WS_Items.ItemInfo(ItemEntry);
-            }
+		public void FillAllUpdateFlags(ref Packets.UpdateClass update)
+		{
+			checked
+			{
+				if (ItemInfo.ContainerSlots > 0)
+				{
+					update.SetUpdateFlag(0, GUID);
+					update.SetUpdateFlag(2, 7);
+					update.SetUpdateFlag(3, ItemEntry);
+					update.SetUpdateFlag(4, 1f);
+					update.SetUpdateFlag(6, OwnerGUID);
+					update.SetUpdateFlag(8, OwnerGUID);
+					if (decimal.Compare(new decimal(CreatorGUID), 0m) > 0)
+					{
+						update.SetUpdateFlag(10, CreatorGUID);
+					}
+					update.SetUpdateFlag(12, GiftCreatorGUID);
+					update.SetUpdateFlag(14, StackCount);
+					update.SetUpdateFlag(21, _flags);
+					update.SetUpdateFlag(48, ItemInfo.ContainerSlots);
+					byte i = 0;
+					do
+					{
+						if (Items.ContainsKey(i))
+						{
+							update.SetUpdateFlag(50 + unchecked((int)i) * 2, (long)Items[i].GUID);
+						}
+						else
+						{
+							update.SetUpdateFlag(50 + unchecked((int)i) * 2, 0);
+						}
+						i = (byte)unchecked((uint)(i + 1));
+					}
+					while (unchecked((uint)i) <= 35u);
+					return;
+				}
+				update.SetUpdateFlag(0, GUID);
+				update.SetUpdateFlag(2, 3);
+				update.SetUpdateFlag(3, ItemEntry);
+				update.SetUpdateFlag(4, 1f);
+				update.SetUpdateFlag(6, OwnerGUID);
+				update.SetUpdateFlag(8, OwnerGUID);
+				if (decimal.Compare(new decimal(CreatorGUID), 0m) > 0)
+				{
+					update.SetUpdateFlag(10, CreatorGUID);
+				}
+				update.SetUpdateFlag(12, GiftCreatorGUID);
+				update.SetUpdateFlag(14, StackCount);
+				int j = 0;
+				do
+				{
+					if (ItemInfo.Spells[j].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.USE || ItemInfo.Spells[j].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.NO_DELAY_USE)
+					{
+						update.SetUpdateFlag(16 + j, ChargesLeft);
+					}
+					else
+					{
+						update.SetUpdateFlag(16 + j, -1);
+					}
+					j++;
+				}
+				while (j <= 4);
+				update.SetUpdateFlag(21, _flags);
+				update.SetUpdateFlag(44, RandomProperties);
+				foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> enchant in Enchantments)
+				{
+					update.SetUpdateFlag(22 + unchecked((int)enchant.Key) * 3, enchant.Value.ID);
+					update.SetUpdateFlag(22 + unchecked((int)enchant.Key) * 3 + 1, enchant.Value.Duration);
+					update.SetUpdateFlag(22 + unchecked((int)enchant.Key) * 3 + 2, enchant.Value.Charges);
+				}
+				update.SetUpdateFlag(45, ItemText);
+				update.SetUpdateFlag(46, Durability);
+				update.SetUpdateFlag(47, WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability);
+			}
+		}
 
-            InitializeBag();
+		public void SendContainedItemsUpdate(ref WS_Network.ClientClass client, int updatetype = 2)
+		{
+			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+			packet.AddInt32(Items.Count);
+			packet.AddInt8(0);
+			foreach (KeyValuePair<byte, ItemObject> item in Items)
+			{
+				Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
+				item.Value.FillAllUpdateFlags(ref tmpUpdate);
+				Packets.UpdateClass updateClass = tmpUpdate;
+				ItemObject updateObject = item.Value;
+				updateClass.AddToPacket(ref packet, (ObjectUpdateType)updatetype, ref updateObject);
+				tmpUpdate.Dispose();
+			}
+			client.Send(ref packet);
+		}
 
-            // DONE: Get Items
-            mySqlQuery.Clear();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM characters_inventory WHERE item_bag = {0};", (object)GUID), ref mySqlQuery);
-            foreach (DataRow row in mySqlQuery.Rows)
-            {
-                if (!Operators.ConditionalCompareObjectEqual(row["item_slot"], WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, false))
-                {
-                    var tmpItem = new ItemObject((ulong)Conversions.ToLong(row["item_guid"]));
-                    Items[Conversions.ToByte(row["item_slot"])] = tmpItem;
-                }
-            }
+		private void InitializeBag()
+		{
+			if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].IsContainer)
+			{
+				Items = new Dictionary<byte, ItemObject>();
+			}
+			else
+			{
+				Items = null;
+			}
+		}
 
-            WorldServiceLocator._WorldServer.WORLD_ITEMs.Add(GUID, this);
-        }
+		public bool GenerateLoot()
+		{
+			if (_loot != null)
+			{
+				return true;
+			}
+			DataTable mySqlQuery = new DataTable();
+			WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM item_loot WHERE entry = {ItemEntry};", ref mySqlQuery);
+			if (mySqlQuery.Rows.Count == 0)
+			{
+				return false;
+			}
+			_loot = new WS_Loot.LootObject(GUID, LootType.LOOTTYPE_CORPSE);
+			WorldServiceLocator._WS_Loot.LootTemplates_Item.GetLoot(ItemEntry)?.Process(ref _loot, 0);
+			_loot.LootOwner = 0uL;
+			return true;
+		}
 
-        public ItemObject(int itemId, ulong owner)
-        {
-            // DONE: Load ItemID in cashe if not loaded
-            try
-            {
-                if (WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(itemId) == false)
-                {
-                    // TODO: This needs to actually do something
-                    var tmpItem = new WS_Items.ItemInfo(itemId);
-                }
+		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+		public ItemObject(ulong guidVal, WS_PlayerData.CharacterObject owner = null, bool equipped = false)
+		{
+			GiftCreatorGUID = 0uL;
+			StackCount = 1;
+			Durability = 1;
+			ChargesLeft = 0;
+			_flags = 0;
+			Items = null;
+			RandomProperties = 0;
+			SuffixFactor = 0;
+			Enchantments = new Dictionary<byte, WS_Items.TEnchantmentInfo>();
+			_loot = null;
+			ItemText = 0;
+			DataTable mySqlQuery = new DataTable();
+			WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_inventory WHERE item_guid = \"{guidVal}\";", ref mySqlQuery);
+			if (mySqlQuery.Rows.Count == 0)
+			{
+				Information.Err().Raise(1, "ItemObject.New", $"itemGuid {guidVal} not found in SQL database!");
+			}
+			GUID = Conversions.ToULong(Operators.AddObject(mySqlQuery.Rows[0]["item_guid"], WorldServiceLocator._Global_Constants.GUID_ITEM));
+			CreatorGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_creator"]);
+			OwnerGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_owner"]);
+			GiftCreatorGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_giftCreator"]);
+			StackCount = Conversions.ToInteger(mySqlQuery.Rows[0]["item_stackCount"]);
+			Durability = Conversions.ToInteger(mySqlQuery.Rows[0]["item_durability"]);
+			ChargesLeft = Conversions.ToInteger(mySqlQuery.Rows[0]["item_chargesLeft"]);
+			RandomProperties = Conversions.ToInteger(mySqlQuery.Rows[0]["item_random_properties"]);
+			ItemEntry = Conversions.ToInteger(mySqlQuery.Rows[0]["item_id"]);
+			_flags = Conversions.ToInteger(mySqlQuery.Rows[0]["item_flags"]);
+			ItemText = Conversions.ToInteger(mySqlQuery.Rows[0]["item_textId"]);
+			string[] tmp = Strings.Split(Conversions.ToString(mySqlQuery.Rows[0]["item_enchantment"]));
+			checked
+			{
+				if (tmp.Length > 0)
+				{
+					int num = tmp.Length - 1;
+					for (int i = 0; i <= num; i++)
+					{
+						if (Operators.CompareString(Strings.Trim(tmp[i]), "", TextCompare: false) != 0)
+						{
+							string[] tmp2 = Strings.Split(tmp[i], ":");
+							Enchantments.Add(Conversions.ToByte(tmp2[0]), new WS_Items.TEnchantmentInfo(Conversions.ToInteger(tmp2[1]), Conversions.ToInteger(tmp2[2]), Conversions.ToInteger(tmp2[3])));
+							if (equipped)
+							{
+								AddEnchantBonus(Conversions.ToByte(tmp2[0]), owner);
+							}
+						}
+					}
+				}
+				if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(ItemEntry))
+				{
+					WS_Items.ItemInfo tmpItem2 = new WS_Items.ItemInfo(ItemEntry);
+				}
+				InitializeBag();
+				mySqlQuery.Clear();
+				WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_inventory WHERE item_bag = {GUID};", ref mySqlQuery);
+				IEnumerator enumerator = default(IEnumerator);
+				try
+				{
+					enumerator = mySqlQuery.Rows.GetEnumerator();
+					while (enumerator.MoveNext())
+					{
+						DataRow row = (DataRow)enumerator.Current;
+						if (Operators.ConditionalCompareObjectNotEqual(row["item_slot"], WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, TextCompare: false))
+						{
+							ItemObject tmpItem = new ItemObject((ulong)Conversions.ToLong(row["item_guid"]));
+							Items[Conversions.ToByte(row["item_slot"])] = tmpItem;
+						}
+					}
+				}
+				finally
+				{
+					if (enumerator is IDisposable)
+					{
+						(enumerator as IDisposable).Dispose();
+					}
+				}
+				WorldServiceLocator._WorldServer.WORLD_ITEMs.Add(GUID, this);
+			}
+		}
 
-                ItemEntry = itemId;
-                OwnerGUID = owner;
-                Durability = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability;
-                for (int i = 0; i <= 4; i++)
-                {
-                    if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.USE || WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.NO_DELAY_USE)
-                    {
-                        if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Spells[i].SpellCharges != 0)
-                        {
-                            ChargesLeft = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Spells[i].SpellCharges;
-                            break;
-                        }
-                    }
-                }
+		public ItemObject(int itemId, ulong owner)
+		{
+			GiftCreatorGUID = 0uL;
+			StackCount = 1;
+			Durability = 1;
+			ChargesLeft = 0;
+			_flags = 0;
+			Items = null;
+			RandomProperties = 0;
+			SuffixFactor = 0;
+			Enchantments = new Dictionary<byte, WS_Items.TEnchantmentInfo>();
+			_loot = null;
+			ItemText = 0;
+			try
+			{
+				if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(itemId))
+				{
+					WS_Items.ItemInfo tmpItem = new WS_Items.ItemInfo(itemId);
+				}
+				ItemEntry = itemId;
+				OwnerGUID = owner;
+				Durability = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability;
+				int i = 0;
+				do
+				{
+					if ((WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.USE || WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.NO_DELAY_USE) && WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Spells[i].SpellCharges != 0)
+					{
+						ChargesLeft = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Spells[i].SpellCharges;
+						break;
+					}
+					i = checked(i + 1);
+				}
+				while (i <= 4);
+				GUID = GetNewGUID();
+				InitializeBag();
+				SaveAsNew();
+				WorldServiceLocator._WorldServer.WORLD_ITEMs.Add(GUID, this);
+			}
+			catch (Exception ex)
+			{
+				ProjectData.SetProjectError(ex);
+				Exception Ex = ex;
+				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Duplicate Key Warning ITEMID:{0} OWNERGUID:{1}", itemId, owner);
+				ProjectData.ClearProjectError();
+			}
+		}
 
-                // DONE: Create new GUID
-                GUID = GetNewGUID();
-                InitializeBag();
-                SaveAsNew();
-                WorldServiceLocator._WorldServer.WORLD_ITEMs.Add(GUID, this);
-            }
-            catch (Exception)
-            {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Duplicate Key Warning ITEMID:{0} OWNERGUID:{1}", itemId, owner);
-            }
-        }
+		private void SaveAsNew()
+		{
+			string tmpCmd = "INSERT INTO characters_inventory (item_guid";
+			string tmpValues = " VALUES (" + Conversions.ToString(checked(GUID - WorldServiceLocator._Global_Constants.GUID_ITEM));
+			tmpCmd += ", item_owner";
+			tmpValues = tmpValues + ", \"" + Conversions.ToString(OwnerGUID) + "\"";
+			tmpCmd += ", item_creator";
+			tmpValues = tmpValues + ", " + Conversions.ToString(CreatorGUID);
+			tmpCmd += ", item_giftCreator";
+			tmpValues = tmpValues + ", " + Conversions.ToString(GiftCreatorGUID);
+			tmpCmd += ", item_stackCount";
+			tmpValues = tmpValues + ", " + Conversions.ToString(StackCount);
+			tmpCmd += ", item_durability";
+			tmpValues = tmpValues + ", " + Conversions.ToString(Durability);
+			tmpCmd += ", item_chargesLeft";
+			tmpValues = tmpValues + ", " + Conversions.ToString(ChargesLeft);
+			tmpCmd += ", item_random_properties";
+			tmpValues = tmpValues + ", " + Conversions.ToString(RandomProperties);
+			tmpCmd += ", item_id";
+			tmpValues = tmpValues + ", " + Conversions.ToString(ItemEntry);
+			tmpCmd += ", item_flags";
+			tmpValues = tmpValues + ", " + Conversions.ToString(_flags);
+			ArrayList temp = new ArrayList();
+			foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> enchantment in Enchantments)
+			{
+				temp.Add($"{enchantment.Key}:{enchantment.Value.ID}:{enchantment.Value.Duration}:{enchantment.Value.Charges}");
+			}
+			tmpCmd += ", item_enchantment";
+			tmpValues = tmpValues + ", '" + Strings.Join(temp.ToArray()) + "'";
+			tmpCmd += ", item_textId";
+			tmpValues = tmpValues + ", " + Conversions.ToString(ItemText);
+			tmpCmd = tmpCmd + ") " + tmpValues + ");";
+			WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmpCmd);
+		}
 
-        private void SaveAsNew()
-        {
-            // DONE: Save to SQL
-            string tmpCmd = "INSERT INTO characters_inventory (item_guid";
-            string tmpValues = " VALUES (" + (GUID - WorldServiceLocator._Global_Constants.GUID_ITEM);
-            tmpCmd += ", item_owner";
-            tmpValues = tmpValues + ", \"" + OwnerGUID + "\"";
-            tmpCmd += ", item_creator";
-            tmpValues = tmpValues + ", " + CreatorGUID;
-            tmpCmd += ", item_giftCreator";
-            tmpValues = tmpValues + ", " + GiftCreatorGUID;
-            tmpCmd += ", item_stackCount";
-            tmpValues = tmpValues + ", " + StackCount;
-            tmpCmd += ", item_durability";
-            tmpValues = tmpValues + ", " + Durability;
-            tmpCmd += ", item_chargesLeft";
-            tmpValues = tmpValues + ", " + ChargesLeft;
-            tmpCmd += ", item_random_properties";
-            tmpValues = tmpValues + ", " + RandomProperties;
-            tmpCmd += ", item_id";
-            tmpValues = tmpValues + ", " + ItemEntry;
-            tmpCmd += ", item_flags";
-            tmpValues = tmpValues + ", " + _flags;
+		public void Save(bool saveAll = true)
+		{
+			string tmp = "UPDATE characters_inventory SET";
+			tmp = tmp + " item_owner=\"" + Conversions.ToString(OwnerGUID) + "\"";
+			tmp = tmp + ", item_creator=" + Conversions.ToString(CreatorGUID);
+			tmp = tmp + ", item_giftCreator=" + Conversions.ToString(GiftCreatorGUID);
+			tmp = tmp + ", item_stackCount=" + Conversions.ToString(StackCount);
+			tmp = tmp + ", item_durability=" + Conversions.ToString(Durability);
+			tmp = tmp + ", item_chargesLeft=" + Conversions.ToString(ChargesLeft);
+			tmp = tmp + ", item_random_properties=" + Conversions.ToString(RandomProperties);
+			tmp = tmp + ", item_flags=" + Conversions.ToString(_flags);
+			ArrayList temp = new ArrayList();
+			foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> enchantment in Enchantments)
+			{
+				temp.Add($"{enchantment.Key}:{enchantment.Value.ID}:{enchantment.Value.Duration}:{enchantment.Value.Charges}");
+			}
+			tmp = tmp + ", item_enchantment=\"" + Strings.Join(temp.ToArray()) + "\"";
+			tmp = tmp + ", item_textId=" + Conversions.ToString(ItemText);
+			tmp = tmp + " WHERE item_guid = \"" + Conversions.ToString(checked(GUID - WorldServiceLocator._Global_Constants.GUID_ITEM)) + "\";";
+			WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmp);
+			if (!WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].IsContainer || !saveAll)
+			{
+				return;
+			}
+			foreach (KeyValuePair<byte, ItemObject> item in Items)
+			{
+				item.Value.Save();
+			}
+		}
 
-            // DONE: Saving enchanments
-            var temp = new ArrayList();
-            foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> enchantment in Enchantments)
-                temp.Add(string.Format("{0}:{1}:{2}:{3}", enchantment.Key, enchantment.Value.ID, enchantment.Value.Duration, enchantment.Value.Charges));
-            tmpCmd += ", item_enchantment";
-            tmpValues = tmpValues + ", '" + Strings.Join(temp.ToArray(), " ") + "'";
-            tmpCmd += ", item_textId";
-            tmpValues = tmpValues + ", " + ItemText;
-            tmpCmd = tmpCmd + ") " + tmpValues + ");";
-            WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmpCmd);
-        }
+		public void Delete()
+		{
+			checked
+			{
+				if (ItemEntry == WorldServiceLocator._Global_Constants.PETITION_GUILD)
+				{
+					WorldServiceLocator._WorldServer.CharacterDatabase.Update("DELETE FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(GUID - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";");
+				}
+				WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM characters_inventory WHERE item_guid = {GUID - WorldServiceLocator._Global_Constants.GUID_ITEM}");
+				if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].IsContainer)
+				{
+					foreach (KeyValuePair<byte, ItemObject> item in Items)
+					{
+						item.Value.Delete();
+					}
+				}
+				Dispose();
+			}
+		}
 
-        public void Save(bool saveAll = true)
-        {
-            string tmp = "UPDATE characters_inventory SET";
-            tmp = tmp + " item_owner=\"" + OwnerGUID + "\"";
-            tmp = tmp + ", item_creator=" + CreatorGUID;
-            tmp = tmp + ", item_giftCreator=" + GiftCreatorGUID;
-            tmp = tmp + ", item_stackCount=" + StackCount;
-            tmp = tmp + ", item_durability=" + Durability;
-            tmp = tmp + ", item_chargesLeft=" + ChargesLeft;
-            tmp = tmp + ", item_random_properties=" + RandomProperties;
-            tmp = tmp + ", item_flags=" + _flags;
+		private void Dispose(bool disposing)
+		{
+			if (!_disposedValue)
+			{
+				WorldServiceLocator._WorldServer.WORLD_ITEMs.Remove(GUID);
+				if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].IsContainer)
+				{
+					foreach (KeyValuePair<byte, ItemObject> item in Items)
+					{
+						item.Value.Dispose();
+					}
+				}
+				if (!Information.IsNothing(_loot))
+				{
+					_loot.Dispose();
+				}
+			}
+			_disposedValue = true;
+		}
 
-            // DONE: Saving enchanments
-            var temp = new ArrayList();
-            foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> enchantment in Enchantments)
-                temp.Add(string.Format("{0}:{1}:{2}:{3}", enchantment.Key, enchantment.Value.ID, enchantment.Value.Duration, enchantment.Value.Charges));
-            tmp = tmp + ", item_enchantment=\"" + Strings.Join(temp.ToArray(), " ") + "\"";
-            tmp = tmp + ", item_textId=" + ItemText;
-            tmp = tmp + " WHERE item_guid = \"" + (GUID - WorldServiceLocator._Global_Constants.GUID_ITEM) + "\";";
-            WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmp);
-            if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].IsContainer && saveAll)
-            {
-                foreach (KeyValuePair<byte, ItemObject> item in Items)
-                    item.Value.Save();
-            }
-        }
+		public void Dispose()
+		{
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
+		}
 
-        public void Delete()
-        {
-            // DONE: Check if item is petition
-            if (ItemEntry == WorldServiceLocator._Global_Constants.PETITION_GUILD)
+		void IDisposable.Dispose()
+		{
+			//ILSpy generated this explicit interface implementation from .override directive in Dispose
+			this.Dispose();
+		}
 
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update("DELETE FROM petitions WHERE petition_itemGuid = " + (GUID - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";");
-            WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("DELETE FROM characters_inventory WHERE item_guid = {0}", GUID - WorldServiceLocator._Global_Constants.GUID_ITEM));
-            if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].IsContainer)
-            {
-                foreach (KeyValuePair<byte, ItemObject> item in Items)
-                    item.Value.Delete();
-            }
+		public bool IsBroken()
+		{
+			return Durability == 0 && ItemInfo.Durability > 0;
+		}
 
-            Dispose();
-        }
+		public void ModifyDurability(float percent, ref WS_Network.ClientClass client)
+		{
+			if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability > 0)
+			{
+				ref int durability = ref Durability;
+				durability = checked((int)Math.Round((float)durability - Conversion.Fix((float)WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability * percent)));
+				if (Durability < 0)
+				{
+					Durability = 0;
+				}
+				if (Durability > WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability)
+				{
+					Durability = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability;
+				}
+				UpdateDurability(ref client);
+			}
+		}
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        private bool _disposedValue; // To detect redundant calls
+		public void ModifyToDurability(float percent, ref WS_Network.ClientClass client)
+		{
+			if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability > 0)
+			{
+				Durability = checked((int)((float)WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability * percent));
+				if (Durability < 0)
+				{
+					Durability = 0;
+				}
+				if (Durability > WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability)
+				{
+					Durability = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability;
+				}
+				UpdateDurability(ref client);
+			}
+		}
 
-        // IDisposable
-        private void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                // TODO: set large fields to null.
-                WorldServiceLocator._WorldServer.WORLD_ITEMs.Remove(GUID);
-                if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].IsContainer)
-                {
-                    foreach (KeyValuePair<byte, ItemObject> item in Items)
-                        item.Value.Dispose();
-                }
+		private void UpdateDurability(ref WS_Network.ClientClass client)
+		{
+			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+			packet.AddInt32(1);
+			packet.AddInt8(0);
+			Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
+			tmpUpdate.SetUpdateFlag(46, Durability);
+			ItemObject updateObject = this;
+			tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
+			tmpUpdate.Dispose();
+			client.Send(ref packet);
+		}
 
-                if (!Information.IsNothing(_loot))
-                    _loot.Dispose();
-            }
+		public void AddEnchantment(int id, byte slot, int duration = 0, int charges = 0)
+		{
+			if (Enchantments.ContainsKey(slot))
+			{
+				RemoveEnchantment(slot);
+			}
+			Enchantments.Add(slot, new WS_Items.TEnchantmentInfo(id, duration, charges));
+			WS_PlayerData.CharacterObject objCharacter = null;
+			AddEnchantBonus(slot, objCharacter);
+		}
 
-            _disposedValue = true;
-        }
+		public void AddEnchantBonus(byte slot, WS_PlayerData.CharacterObject objCharacter = null)
+		{
+			if (objCharacter == null)
+			{
+				if (!WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID))
+				{
+					return;
+				}
+				objCharacter = WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID];
+			}
+			if (objCharacter == null || !WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments.ContainsKey(Enchantments[slot].ID))
+			{
+				return;
+			}
+			byte i = 0;
+			do
+			{
+				checked
+				{
+					if (WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i] != 0 && WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i]))
+					{
+						WS_Spells.SpellInfo spellInfo = WorldServiceLocator._WS_Spells.SPELLs[WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i]];
+						byte j = 0;
+						do
+						{
+							if (spellInfo.SpellEffects[j] != null)
+							{
+								SpellEffects_Names iD = spellInfo.SpellEffects[j].ID;
+								if (iD == SpellEffects_Names.SPELL_EFFECT_APPLY_AURA)
+								{
+									WS_Spells.ApplyAuraHandler obj = WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[j].ApplyAuraIndex];
+									WS_Base.BaseUnit Target = objCharacter;
+									WS_Base.BaseObject Caster = objCharacter;
+									obj(ref Target, ref Caster, ref spellInfo.SpellEffects[j], spellInfo.ID, 1, AuraAction.AURA_ADD);
+									objCharacter = (WS_PlayerData.CharacterObject)Caster;
+									objCharacter = (WS_PlayerData.CharacterObject)Target;
+								}
+							}
+							j = (byte)unchecked((uint)(j + 1));
+						}
+						while (unchecked((uint)j) <= 2u);
+					}
+					i = (byte)unchecked((uint)(i + 1));
+				}
+			}
+			while ((uint)i <= 2u);
+		}
 
-        // This code added by Visual Basic to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+		public void RemoveEnchantBonus(byte slot)
+		{
+			if (!WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID) || !WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments.ContainsKey(Enchantments[slot].ID))
+			{
+				return;
+			}
+			byte i = 0;
+			do
+			{
+				checked
+				{
+					if (WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i] != 0 && WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i]))
+					{
+						WS_Spells.SpellInfo spellInfo = WorldServiceLocator._WS_Spells.SPELLs[WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i]];
+						byte j = 0;
+						do
+						{
+							if (spellInfo.SpellEffects[j] != null)
+							{
+								SpellEffects_Names iD = spellInfo.SpellEffects[j].ID;
+								if (iD == SpellEffects_Names.SPELL_EFFECT_APPLY_AURA)
+								{
+									WS_Spells.ApplyAuraHandler obj = WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[j].ApplyAuraIndex];
+									Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
+									ulong ownerGUID;
+									WS_Base.BaseUnit Target = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[ownerGUID = OwnerGUID];
+									Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs2;
+									ulong ownerGUID2;
+									WS_Base.BaseObject Caster = (cHARACTERs2 = WorldServiceLocator._WorldServer.CHARACTERs)[ownerGUID2 = OwnerGUID];
+									obj(ref Target, ref Caster, ref spellInfo.SpellEffects[j], spellInfo.ID, 1, AuraAction.AURA_REMOVE);
+									cHARACTERs2[ownerGUID2] = (WS_PlayerData.CharacterObject)Caster;
+									cHARACTERs[ownerGUID] = (WS_PlayerData.CharacterObject)Target;
+								}
+							}
+							j = (byte)unchecked((uint)(j + 1));
+						}
+						while (unchecked((uint)j) <= 2u);
+					}
+					i = (byte)unchecked((uint)(i + 1));
+				}
+			}
+			while ((uint)i <= 2u);
+		}
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        public bool IsBroken()
-        {
-            return Durability == 0 && ItemInfo.Durability > 0;
-        }
+		private void RemoveEnchantment(byte slot)
+		{
+			checked
+			{
+				if (Enchantments.ContainsKey(slot))
+				{
+					RemoveEnchantBonus(slot);
+					Enchantments.Remove(slot);
+					if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID))
+					{
+						Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+						packet.AddInt32(1);
+						packet.AddInt8(0);
+						Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
+						tmpUpdate.SetUpdateFlag(22 + unchecked((int)slot) * 3, 0);
+						tmpUpdate.SetUpdateFlag(22 + unchecked((int)slot) * 3 + 1, 0);
+						tmpUpdate.SetUpdateFlag(22 + unchecked((int)slot) * 3 + 2, 0);
+						ItemObject updateObject = this;
+						tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
+						WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID].client.Send(ref packet);
+						packet.Dispose();
+						tmpUpdate.Dispose();
+					}
+				}
+			}
+		}
 
-        public void ModifyDurability(float percent, ref WS_Network.ClientClass client)
-        {
-            if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability > 0)
-            {
-                Durability = (int)(Durability - Conversion.Fix(WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability * percent));
-                if (Durability < 0)
-                    Durability = 0;
-                if (Durability > WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability)
-                    Durability = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability;
-                UpdateDurability(ref client);
-            }
-        }
-
-        public void ModifyToDurability(float percent, ref WS_Network.ClientClass client)
-        {
-            if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability > 0)
-            {
-                Durability = (int)Conversion.Fix(WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability * percent);
-                if (Durability < 0)
-                    Durability = 0;
-                if (Durability > WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability)
-                    Durability = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability;
-                UpdateDurability(ref client);
-            }
-        }
-
-        private void UpdateDurability(ref WS_Network.ClientClass client)
-        {
-            var packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
-            packet.AddInt32(1);      // Operations.Count
-            packet.AddInt8(0);
-            var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
-            tmpUpdate.SetUpdateFlag((int)EItemFields.ITEM_FIELD_DURABILITY, Durability);
-            tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
-            tmpUpdate.Dispose();
-            client.Send(packet);
-        }
-
-        public uint GetDurabulityCost
-        {
-            get
-            {
-                try
-                {
-                    int lostDurability = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].Durability - Durability;
-                    if (lostDurability > DataStores.WS_DBCDatabase.DurabilityCosts_MAX)
-                        lostDurability = DataStores.WS_DBCDatabase.DurabilityCosts_MAX;
-                    int subClass = 0;
-                    if (ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON)
-                        subClass = (int)ItemInfo.SubClass;
-                    else
-                        subClass = (int)(ItemInfo.SubClass + 21);
-                    uint durabilityCost = (uint)(lostDurability * (WorldServiceLocator._WS_DBCDatabase.DurabilityCosts[ItemInfo.Level, subClass] / 40d * 100d));
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Durability cost: {0}", durabilityCost);
-                    return durabilityCost;
-                }
-                catch
-                {
-                    return 0U;
-                }
-            }
-        }
-
-        public void AddEnchantment(int id, byte slot, int duration = 0, int charges = 0)
-        {
-            // DONE: Replace if an enchant already is placed in this slot
-            if (Enchantments.ContainsKey(slot))
-                RemoveEnchantment(slot);
-            // DONE: Add the enchantment
-            Enchantments.Add(slot, new WS_Items.TEnchantmentInfo(id, duration, charges));
-            WS_PlayerData.CharacterObject argobjCharacter = null;
-            // DONE: Add the bonuses to the character if it's equipped
-            AddEnchantBonus(slot, objCharacter: ref argobjCharacter);
-        }
-
-        public void AddEnchantBonus(byte slot, [Optional, DefaultParameterValue(null)] ref WS_PlayerData.CharacterObject objCharacter)
-        {
-            if (objCharacter is null)
-            {
-                if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID) == false)
-                    return;
-                objCharacter = WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID];
-            }
-
-            if (objCharacter is object && WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments.ContainsKey(Enchantments[slot].ID))
-            {
-                for (byte i = 0; i <= 2; i++)
-                {
-                    if (WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i] != 0)
-                    {
-                        if (WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i]))
-                        {
-                            WS_Spells.SpellInfo spellInfo;
-                            spellInfo = WorldServiceLocator._WS_Spells.SPELLs[WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i]];
-                            for (byte j = 0; j <= 2; j++)
-                            {
-                                if (spellInfo.SpellEffects[j] is object)
-                                {
-                                    switch (spellInfo.SpellEffects[j].ID)
-                                    {
-                                        case var @case when @case == SpellEffects_Names.SPELL_EFFECT_APPLY_AURA:
-                                            {
-                                                WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[j].ApplyAuraIndex].Invoke((WS_Base.BaseUnit)objCharacter, (WS_Base.BaseObject)objCharacter, spellInfo.SpellEffects[j], spellInfo.ID, 1, AuraAction.AURA_ADD);
-                                                break;
-                                            }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public void RemoveEnchantBonus(byte slot)
-        {
-            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID) && WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments.ContainsKey(Enchantments[slot].ID))
-            {
-                for (byte i = 0; i <= 2; i++)
-                {
-                    if (WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i] != 0)
-                    {
-                        if (WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i]))
-                        {
-                            WS_Spells.SpellInfo spellInfo;
-                            spellInfo = WorldServiceLocator._WS_Spells.SPELLs[WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments[Enchantments[slot].ID].SpellID[i]];
-                            for (byte j = 0; j <= 2; j++)
-                            {
-                                if (spellInfo.SpellEffects[j] is object)
-                                {
-                                    switch (spellInfo.SpellEffects[j].ID)
-                                    {
-                                        case var @case when @case == SpellEffects_Names.SPELL_EFFECT_APPLY_AURA:
-                                            {
-                                                var tmp = WorldServiceLocator._WorldServer.CHARACTERs;
-                                                var argTarget = tmp[OwnerGUID];
-                                                var tmp1 = WorldServiceLocator._WorldServer.CHARACTERs;
-                                                var argCaster = tmp1[OwnerGUID];
-                                                WorldServiceLocator._WS_Spells.AURAs[spellInfo.SpellEffects[j].ApplyAuraIndex].Invoke((WS_Base.BaseUnit)argTarget, (WS_Base.BaseObject)argCaster, spellInfo.SpellEffects[j], spellInfo.ID, 1, AuraAction.AURA_REMOVE);
-                                                tmp[OwnerGUID] = argTarget;
-                                                tmp1[OwnerGUID] = argCaster;
-                                                break;
-                                            }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void RemoveEnchantment(byte slot)
-        {
-            if (Enchantments.ContainsKey(slot) == false)
-                return;
-            // DONE: Remove the bonuses from the character
-            RemoveEnchantBonus(slot);
-            // DONE: Remove the enchant
-            Enchantments.Remove(slot);
-            // DONE: Send the update to the client about it
-            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID))
-            {
-                var packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
-                packet.AddInt32(1);      // Operations.Count
-                packet.AddInt8(0);
-                var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
-                tmpUpdate.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + slot * 3), 0);
-                tmpUpdate.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + slot * 3 + 1), 0);
-                tmpUpdate.SetUpdateFlag((int)(EItemFields.ITEM_FIELD_ENCHANTMENT + slot * 3 + 2), 0);
-                tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
-                WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID].client.Send(packet);
-                packet.Dispose();
-                tmpUpdate.Dispose();
-            }
-        }
-
-        public void SoulbindItem([Optional, DefaultParameterValue(null)] ref WS_Network.ClientClass client)
-        {
-            if ((_flags & (int)ITEM_FLAGS.ITEM_FLAGS_BINDED) == (int)ITEM_FLAGS.ITEM_FLAGS_BINDED)
-                return;
-
-            // DONE: Setting the flag
-            _flags |= (int)ITEM_FLAGS.ITEM_FLAGS_BINDED;
-            Save();
-
-            // DONE: Sending update to character
-            if (client is object)
-            {
-                var packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
-                packet.AddInt32(1);      // Operations.Count
-                packet.AddInt8(0);
-                var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
-                tmpUpdate.SetUpdateFlag((int)EItemFields.ITEM_FIELD_FLAGS, _flags);
-                tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
-                client.Send(packet);
-                packet.Dispose();
-                tmpUpdate.Dispose();
-            }
-        }
-
-        public bool IsSoulBound
-        {
-            get
-            {
-                return (_flags & (int)ITEM_FLAGS.ITEM_FLAGS_BINDED) == (int)ITEM_FLAGS.ITEM_FLAGS_BINDED;
-            }
-        }
-    }
+		public void SoulbindItem(WS_Network.ClientClass client = null)
+		{
+			if ((_flags & 1) != 1)
+			{
+				_flags |= 1;
+				Save();
+				if (client != null)
+				{
+					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+					packet.AddInt32(1);
+					packet.AddInt8(0);
+					Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
+					tmpUpdate.SetUpdateFlag(21, _flags);
+					ItemObject updateObject = this;
+					tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
+					client.Send(ref packet);
+					packet.Dispose();
+					tmpUpdate.Dispose();
+				}
+			}
+		}
+	}
 }

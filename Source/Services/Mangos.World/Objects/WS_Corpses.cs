@@ -1,364 +1,371 @@
-﻿// 
-// Copyright (C) 2013-2020 getMaNGOS <https://getmangos.eu>
-// 
-// This program is free software. You can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation. either version 2 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY. Without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-// 
-
 using System;
 using System.Data;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Mangos.Common.Enums.Global;
-using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
+using Mangos.World.Maps;
 using Mangos.World.Player;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Objects
 {
-    public class WS_Corpses
-    {
-        // WARNING: Use only with _WorldServer.WORLD_GAMEOBJECTs()
-        public class CorpseObject : WS_Base.BaseObject, IDisposable
-        {
-            public int DynFlags = 0;
-            public int Flags = 0;
-            public ulong Owner = 0UL;
-            public int Bytes1 = 0;
-            public int Bytes2 = 0;
-            public int Model = 0;
-            public int Guild = 0;
-            public int[] Items = new int[(int)EquipmentSlots.EQUIPMENT_SLOT_END];
+	public class WS_Corpses
+	{
+		public class CorpseObject : WS_Base.BaseObject, IDisposable
+		{
+			public int DynFlags;
 
-            public void FillAllUpdateFlags(ref Packets.UpdateClass Update)
-            {
-                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_GUID, GUID);
-                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_TYPE, (long)Common.Globals.ObjectType.TYPE_CORPSE + (long)Common.Globals.ObjectType.TYPE_OBJECT);
-                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_ENTRY, 0);
-                Update.SetUpdateFlag((int)EObjectFields.OBJECT_FIELD_SCALE_X, (float)1.0f);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_OWNER, Owner);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_FACING, orientation);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_POS_X, positionX);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_POS_Y, positionY);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_POS_Z, positionZ);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_DISPLAY_ID, Model);
-                for (int i = 0, loopTo = (int)(EquipmentSlots.EQUIPMENT_SLOT_END - 1); i <= loopTo; i++)
-                    Update.SetUpdateFlag((int)(ECorpseFields.CORPSE_FIELD_ITEM + i), Items[i]);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_BYTES_1, Bytes1);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_BYTES_2, Bytes2);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_GUILD, Guild);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_FLAGS, Flags);
-                Update.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_DYNAMIC_FLAGS, DynFlags);
-            }
+			public int Flags;
 
-            public void ConvertToBones()
-            {
-                // DONE: Delete from database
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("DELETE FROM corpse WHERE player = \"{0}\";", Owner));
-                Flags = 5;
-                Owner = 0UL;
-                for (int i = 0, loopTo = (int)(EquipmentSlots.EQUIPMENT_SLOT_END - 1); i <= loopTo; i++)
-                    Items[i] = 0;
-                var packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
-                try
-                {
-                    packet.AddInt32(1);
-                    packet.AddInt8(0);
-                    var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
-                    try
-                    {
-                        tmpUpdate.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_OWNER, 0);
-                        tmpUpdate.SetUpdateFlag((int)ECorpseFields.CORPSE_FIELD_FLAGS, 5);
-                        for (int i = 0, loopTo1 = (int)(EquipmentSlots.EQUIPMENT_SLOT_END - 1); i <= loopTo1; i++)
-                            tmpUpdate.SetUpdateFlag((int)(ECorpseFields.CORPSE_FIELD_ITEM + i), 0);
-                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, this);
-                        SendToNearPlayers(ref packet);
-                    }
-                    finally
-                    {
-                        tmpUpdate.Dispose();
-                    }
-                }
-                finally
-                {
-                    packet.Dispose();
-                }
-            }
+			public ulong Owner;
 
-            public void Save()
-            {
-                // Only for creating New Character
-                string tmpCmd = "INSERT INTO corpse (guid";
-                string tmpValues = " VALUES (" + (GUID - WorldServiceLocator._Global_Constants.GUID_CORPSE);
-                tmpCmd += ", player";
-                tmpValues = tmpValues + ", " + Owner;
-                tmpCmd += ", position_x";
-                tmpValues = tmpValues + ", " + Strings.Trim(Conversion.Str(positionX));
-                tmpCmd += ", position_y";
-                tmpValues = tmpValues + ", " + Strings.Trim(Conversion.Str(positionY));
-                tmpCmd += ", position_z";
-                tmpValues = tmpValues + ", " + Strings.Trim(Conversion.Str(positionZ));
-                tmpCmd += ", map";
-                tmpValues = tmpValues + ", " + MapID;
-                tmpCmd += ", instance";
-                tmpValues = tmpValues + ", " + instance;
-                tmpCmd += ", orientation";
-                tmpValues = tmpValues + ", " + Strings.Trim(Conversion.Str(orientation));
-                tmpCmd += ", time";
-                tmpValues += ", UNIX_TIMESTAMP()";
-                tmpCmd += ", corpse_type";
-                tmpValues = tmpValues + ", " + CorpseType;
+			public int Bytes1;
 
-                // tmpCmd = tmpCmd & ", corpse_bytes1"
-                // tmpValues = tmpValues & ", " & Bytes1
-                // tmpCmd = tmpCmd & ", corpse_bytes2"
-                // tmpValues = tmpValues & ", " & Bytes2
-                // tmpCmd = tmpCmd & ", corpse_model"
-                // tmpValues = tmpValues & ", " & Model
-                // tmpCmd = tmpCmd & ", corpse_guild"
-                // tmpValues = tmpValues & ", " & Guild
+			public int Bytes2;
 
-                // Dim temp(EquipmentSlots.EQUIPMENT_SLOT_END - 1) As String
-                // For i As Byte = 0 To EquipmentSlots.EQUIPMENT_SLOT_END - 1
-                // temp(i) = Items(i)
-                // Next
-                // tmpCmd = tmpCmd & ", corpse_items"
-                // tmpValues = tmpValues & ", """ & Join(temp, " ") & """"
+			public int Model;
 
-                tmpCmd = tmpCmd + ") " + tmpValues + ");";
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmpCmd);
-            }
+			public int Guild;
 
-            public void Destroy()
-            {
-                var packet = new Packets.PacketClass(OPCODES.SMSG_DESTROY_OBJECT);
-                try
-                {
-                    packet.AddUInt64(GUID);
-                    SendToNearPlayers(ref packet);
-                }
-                finally
-                {
-                    packet.Dispose();
-                }
+			public int[] Items;
 
-                Dispose();
-            }
+			private bool _disposedValue;
 
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
-            private bool _disposedValue; // To detect redundant calls
+			public void FillAllUpdateFlags(ref Packets.UpdateClass Update)
+			{
+				Update.SetUpdateFlag(0, GUID);
+				Update.SetUpdateFlag(2, 129);
+				Update.SetUpdateFlag(3, 0);
+				Update.SetUpdateFlag(4, 1f);
+				Update.SetUpdateFlag(6, Owner);
+				Update.SetUpdateFlag(8, orientation);
+				Update.SetUpdateFlag(9, positionX);
+				Update.SetUpdateFlag(10, positionY);
+				Update.SetUpdateFlag(11, positionZ);
+				Update.SetUpdateFlag(12, Model);
+				int i = 0;
+				checked
+				{
+					do
+					{
+						Update.SetUpdateFlag(13 + i, Items[i]);
+						i++;
+					}
+					while (i <= 18);
+					Update.SetUpdateFlag(32, Bytes1);
+					Update.SetUpdateFlag(33, Bytes2);
+					Update.SetUpdateFlag(34, Guild);
+					Update.SetUpdateFlag(35, Flags);
+					Update.SetUpdateFlag(36, DynFlags);
+				}
+			}
 
-            // IDisposable
-            protected virtual void Dispose(bool disposing)
-            {
-                if (!_disposedValue)
-                {
-                    // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                    // TODO: set large fields to null.
-                    RemoveFromWorld();
-                    WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Remove(GUID);
-                }
+			public void ConvertToBones()
+			{
+				WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM corpse WHERE player = \"{Owner}\";");
+				Flags = 5;
+				Owner = 0uL;
+				int j = 0;
+				checked
+				{
+					do
+					{
+						Items[j] = 0;
+						j++;
+					}
+					while (j <= 18);
+					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+					try
+					{
+						packet.AddInt32(1);
+						packet.AddInt8(0);
+						Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
+						try
+						{
+							tmpUpdate.SetUpdateFlag(6, 0);
+							tmpUpdate.SetUpdateFlag(35, 5);
+							int i = 0;
+							do
+							{
+								tmpUpdate.SetUpdateFlag(13 + i, 0);
+								i++;
+							}
+							while (i <= 18);
+							CorpseObject updateObject = this;
+							tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
+							SendToNearPlayers(ref packet, 0uL);
+						}
+						finally
+						{
+							tmpUpdate.Dispose();
+						}
+					}
+					finally
+					{
+						packet.Dispose();
+					}
+				}
+			}
 
-                _disposedValue = true;
-            }
+			public void Save()
+			{
+				string tmpCmd = "INSERT INTO corpse (guid";
+				string tmpValues = " VALUES (" + Conversions.ToString(checked(GUID - WorldServiceLocator._Global_Constants.GUID_CORPSE));
+				tmpCmd += ", player";
+				tmpValues = tmpValues + ", " + Conversions.ToString(Owner);
+				tmpCmd += ", position_x";
+				tmpValues = tmpValues + ", " + Strings.Trim(Conversion.Str(positionX));
+				tmpCmd += ", position_y";
+				tmpValues = tmpValues + ", " + Strings.Trim(Conversion.Str(positionY));
+				tmpCmd += ", position_z";
+				tmpValues = tmpValues + ", " + Strings.Trim(Conversion.Str(positionZ));
+				tmpCmd += ", map";
+				tmpValues = tmpValues + ", " + Conversions.ToString(MapID);
+				tmpCmd += ", instance";
+				tmpValues = tmpValues + ", " + Conversions.ToString(instance);
+				tmpCmd += ", orientation";
+				tmpValues = tmpValues + ", " + Strings.Trim(Conversion.Str(orientation));
+				tmpCmd += ", time";
+				tmpValues += ", UNIX_TIMESTAMP()";
+				tmpCmd += ", corpse_type";
+				tmpValues = tmpValues + ", " + Conversions.ToString((int)CorpseType);
+				tmpCmd = tmpCmd + ") " + tmpValues + ");";
+				WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmpCmd);
+			}
 
-            // This code added by Visual Basic to correctly implement the disposable pattern.
-            public void Dispose()
-            {
-                // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-            public CorpseObject(ref WS_PlayerData.CharacterObject Character)
-            {
-                // WARNING: Use only for spawning new object
-                GUID = WorldServiceLocator._WS_Corpses.GetNewGUID();
-                Bytes1 = (Conversions.ToInteger(Character.Race) << 8) + (Conversions.ToInteger(Character.Gender) << 16) + (Conversions.ToInteger(Character.Skin) << 24);
-                Bytes2 = Character.Face + (Conversions.ToInteger(Character.HairStyle) << 8) + (Conversions.ToInteger(Character.HairColor) << 16) + (Conversions.ToInteger(Character.FacialHair) << 24);
-                Model = Character.Model;
-                positionX = Character.positionX;
-                positionY = Character.positionY;
-                positionZ = Character.positionZ;
-                orientation = Character.orientation;
-                MapID = Character.MapID;
-                Owner = Character.GUID;
-                Character.corpseGUID = GUID;
-                Character.corpsePositionX = positionX;
-                Character.corpsePositionY = positionY;
-                Character.corpsePositionZ = positionZ;
-                Character.corpseMapID = (int)MapID;
+			public void Destroy()
+			{
+				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_DESTROY_OBJECT);
+				try
+				{
+					packet.AddUInt64(GUID);
+					SendToNearPlayers(ref packet, 0uL);
+				}
+				finally
+				{
+					packet.Dispose();
+				}
+				Dispose();
+			}
 
-                // TODO: The Corpse Type May Need to be Set Differently (Perhaps using Player Extra Flags)?
-                if (Character.isPvP)
-                {
-                    Character.corpseCorpseType = CorpseType.CORPSE_RESURRECTABLE_PVP;
-                }
-                else
-                {
-                    Character.corpseCorpseType = CorpseType.CORPSE_RESURRECTABLE_PVE;
-                }
+			protected virtual void Dispose(bool disposing)
+			{
+				if (!_disposedValue)
+				{
+					RemoveFromWorld();
+					WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Remove(GUID);
+				}
+				_disposedValue = true;
+			}
 
-                Character.corpseCorpseType = CorpseType;
-                for (byte i = 0, loopTo = (byte)(EquipmentSlots.EQUIPMENT_SLOT_END - 1); i <= loopTo; i++)
-                {
-                    if (Character.Items.ContainsKey(i))
-                    {
-                        Items[i] = Character.Items[i].ItemInfo.Model + (Conversions.ToInteger(Character.Items[i].ItemInfo.InventoryType) << 24);
-                    }
-                    else
-                    {
-                        Items[i] = 0;
-                    }
-                }
+			public void Dispose()
+			{
+				Dispose(disposing: true);
+				GC.SuppressFinalize(this);
+			}
 
-                Flags = 4;
-                WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Add(GUID, this);
-            }
+			void IDisposable.Dispose()
+			{
+				//ILSpy generated this explicit interface implementation from .override directive in Dispose
+				this.Dispose();
+			}
 
-            public CorpseObject(ulong cGUID, [Optional, DefaultParameterValue(null)] ref DataRow Info)
-            {
-                // WARNING: Use only for loading from DB
-                if (Info is null)
-                {
-                    var MySQLQuery = new DataTable();
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM corpse WHERE guid = {0};", cGUID), ref MySQLQuery);
-                    if (MySQLQuery.Rows.Count > 0)
-                    {
-                        Info = MySQLQuery.Rows[0];
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Corpse not found in database. [corpseGUID={0:X}]", cGUID);
-                        return;
-                    }
-                }
+			public CorpseObject(ref WS_PlayerData.CharacterObject Character)
+			{
+				DynFlags = 0;
+				Flags = 0;
+				Owner = 0uL;
+				Bytes1 = 0;
+				Bytes2 = 0;
+				Model = 0;
+				Guild = 0;
+				Items = new int[19];
+				GUID = WorldServiceLocator._WS_Corpses.GetNewGUID();
+				checked
+				{
+					Bytes1 = unchecked((int)((uint)Character.Race << 8)) + unchecked((int)((uint)Character.Gender << 16)) + (Character.Skin << 24);
+					Bytes2 = unchecked((int)Character.Face) + (Character.HairStyle << 8) + (Character.HairColor << 16) + (Character.FacialHair << 24);
+					Model = Character.Model;
+					positionX = Character.positionX;
+					positionY = Character.positionY;
+					positionZ = Character.positionZ;
+					orientation = Character.orientation;
+					MapID = Character.MapID;
+					Owner = Character.GUID;
+					Character.corpseGUID = GUID;
+					Character.corpsePositionX = positionX;
+					Character.corpsePositionY = positionY;
+					Character.corpsePositionZ = positionZ;
+					Character.corpseMapID = (int)MapID;
+					if (Character.isPvP)
+					{
+						Character.corpseCorpseType = CorpseType.CORPSE_RESURRECTABLE_PVP;
+					}
+					else
+					{
+						Character.corpseCorpseType = CorpseType.CORPSE_RESURRECTABLE_PVE;
+					}
+					Character.corpseCorpseType = CorpseType;
+					byte i = 0;
+					do
+					{
+						if (Character.Items.ContainsKey(i))
+						{
+							Items[i] = Character.Items[i].ItemInfo.Model + unchecked((int)((uint)Character.Items[i].ItemInfo.InventoryType << 24));
+						}
+						else
+						{
+							Items[i] = 0;
+						}
+						i = (byte)unchecked((uint)(i + 1));
+					}
+					while (unchecked((uint)i) <= 18u);
+					Flags = 4;
+					WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Add(GUID, this);
+				}
+			}
 
-                positionX = Conversions.ToSingle(Info["position_x"]);
-                positionY = Conversions.ToSingle(Info["position_y"]);
-                positionZ = Conversions.ToSingle(Info["position_z"]);
-                orientation = Conversions.ToSingle(Info["orientation"]);
-                MapID = Conversions.ToUInteger(Info["map"]);
-                instance = Conversions.ToUInteger(Info["instance"]);
-                Owner = Conversions.ToULong(Info["player"]);
-                CorpseType = (CorpseType)Info["corpse_type"];
-                // Bytes1 = Info.Item("corpse_bytes1")
-                // Bytes2 = Info.Item("corpse_bytes2")
-                // Model = Info.Item("corpse_model")
-                // Guild = Info.Item("corpse_guild")
+			public CorpseObject(ulong cGUID, DataRow Info = null)
+			{
+				DynFlags = 0;
+				Flags = 0;
+				Owner = 0uL;
+				Bytes1 = 0;
+				Bytes2 = 0;
+				Model = 0;
+				Guild = 0;
+				Items = new int[19];
+				if (Info == null)
+				{
+					DataTable MySQLQuery = new DataTable();
+					WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM corpse WHERE guid = {cGUID};", ref MySQLQuery);
+					if (MySQLQuery.Rows.Count <= 0)
+					{
+						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Corpse not found in database. [corpseGUID={0:X}]", cGUID);
+						return;
+					}
+					Info = MySQLQuery.Rows[0];
+				}
+				positionX = Conversions.ToSingle(Info["position_x"]);
+				positionY = Conversions.ToSingle(Info["position_y"]);
+				positionZ = Conversions.ToSingle(Info["position_z"]);
+				orientation = Conversions.ToSingle(Info["orientation"]);
+				MapID = Conversions.ToUInteger(Info["map"]);
+				instance = Conversions.ToUInteger(Info["instance"]);
+				Owner = Conversions.ToULong(Info["player"]);
+				CorpseType = (CorpseType)Conversions.ToInteger(Info["corpse_type"]);
+				Flags = 4;
+				GUID = checked(cGUID + WorldServiceLocator._Global_Constants.GUID_CORPSE);
+				WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Add(GUID, this);
+			}
 
-                // Dim tmp() As String
-                // tmp = Split(CType(Info.Item("corpse_items"), String), " ")
-                // For i As Integer = 0 To tmp.Length - 1
-                // Items(i) = tmp(i)
-                // Next i
+			public void AddToWorld()
+			{
+				WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+				if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
+				{
+					WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+				}
+				WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Add(GUID);
+				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+				checked
+				{
+					try
+					{
+						Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
+						try
+						{
+							packet.AddInt32(1);
+							packet.AddInt8(0);
+							FillAllUpdateFlags(ref tmpUpdate);
+							Packets.UpdateClass updateClass = tmpUpdate;
+							CorpseObject updateObject = this;
+							updateClass.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject);
+						}
+						finally
+						{
+							tmpUpdate.Dispose();
+						}
+						short i = -1;
+						do
+						{
+							short j = -1;
+							do
+							{
+								if ((short)unchecked(CellX + i) >= 0 && (short)unchecked(CellX + i) <= 63 && (short)unchecked(CellY + j) >= 0 && (short)unchecked(CellY + j) <= 63 && WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)] != null && WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)].PlayersHere.Count > 0)
+								{
+									WS_Maps.TMapTile tMapTile = WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)];
+									ulong[] list = tMapTile.PlayersHere.ToArray();
+									ulong[] array = list;
+									foreach (ulong plGUID in array)
+									{
+										int num;
+										if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID))
+										{
+											WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[plGUID];
+											WS_Base.BaseObject objCharacter = this;
+											num = (characterObject.CanSee(ref objCharacter) ? 1 : 0);
+										}
+										else
+										{
+											num = 0;
+										}
+										if (num != 0)
+										{
+											WorldServiceLocator._WorldServer.CHARACTERs[plGUID].client.SendMultiplyPackets(ref packet);
+											WorldServiceLocator._WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Add(GUID);
+											SeenBy.Add(plGUID);
+										}
+									}
+									tMapTile = null;
+								}
+								j = (short)unchecked(j + 1);
+							}
+							while (j <= 1);
+							i = (short)unchecked(i + 1);
+						}
+						while (i <= 1);
+					}
+					finally
+					{
+						packet.Dispose();
+					}
+				}
+			}
 
-                Flags = 4;
-                GUID = cGUID + WorldServiceLocator._Global_Constants.GUID_CORPSE;
-                WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Add(GUID, this);
-            }
+			public void RemoveFromWorld()
+			{
+				WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+				WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Remove(GUID);
+				if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].PlayersHere.Count <= 0)
+				{
+					return;
+				}
+				WS_Maps.TMapTile tMapTile = WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY];
+				ulong[] list = tMapTile.PlayersHere.ToArray();
+				ulong[] array = list;
+				foreach (ulong plGUID in array)
+				{
+					if (WorldServiceLocator._WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Contains(GUID))
+					{
+						WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+						WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
+						WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+						WorldServiceLocator._WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Remove(GUID);
+					}
+				}
+				tMapTile = null;
+			}
+		}
 
-            public void AddToWorld()
-            {
-                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
-                if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] is null)
-                    WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
-                WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Add(GUID);
-                ulong[] list;
-                // DONE: Sending to players in nearby cells
-                var packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
-                try
-                {
-                    var tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
-                    try
-                    {
-                        packet.AddInt32(1);
-                        packet.AddInt8(0);
-                        FillAllUpdateFlags(ref tmpUpdate);
-                        tmpUpdate.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, this);
-                    }
-                    finally
-                    {
-                        tmpUpdate.Dispose();
-                    }
-
-                    for (short i = -1; i <= 1; i++)
-                    {
-                        for (short j = -1; j <= 1; j++)
-                        {
-                            if (CellX + i >= 0 && CellX + i <= 63 && CellY + j >= 0 && CellY + j <= 63 && WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX + i, CellY + j] is object && WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX + i, CellY + j].PlayersHere.Count > 0)
-                            {
-                                {
-                                    var withBlock = WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX + i, CellY + j];
-                                    list = withBlock.PlayersHere.ToArray();
-                                    foreach (ulong plGUID in list)
-                                    {
-                                        WS_Base.BaseObject argobjCharacter = this;
-                                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID) && WorldServiceLocator._WorldServer.CHARACTERs[plGUID].CanSee(ref argobjCharacter))
-                                        {
-                                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].client.SendMultiplyPackets(ref packet);
-                                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Add(GUID);
-                                            SeenBy.Add(plGUID);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                finally
-                {
-                    packet.Dispose();
-                }
-            }
-
-            public void RemoveFromWorld()
-            {
-                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
-                WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Remove(GUID);
-                ulong[] list;
-
-                // DONE: Removing from players in <CENTER> Cell wich can see it
-                if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].PlayersHere.Count > 0)
-                {
-                    {
-                        var withBlock = WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY];
-                        list = withBlock.PlayersHere.ToArray();
-                        foreach (ulong plGUID in list)
-                        {
-                            if (WorldServiceLocator._WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Contains(GUID))
-                            {
-                                WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                                WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                                WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
-                                WorldServiceLocator._WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Remove(GUID);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        private ulong GetNewGUID()
-        {
-            WorldServiceLocator._WorldServer.CorpseGUIDCounter = (ulong)(WorldServiceLocator._WorldServer.CorpseGUIDCounter + 1m);
-            ulong GetNewGUIDRet = WorldServiceLocator._WorldServer.CorpseGUIDCounter;
-            return GetNewGUIDRet;
-        }
-    }
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		private ulong GetNewGUID()
+		{
+			ref ulong corpseGUIDCounter = ref WorldServiceLocator._WorldServer.CorpseGUIDCounter;
+			corpseGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(corpseGUIDCounter), 1m));
+			return WorldServiceLocator._WorldServer.CorpseGUIDCounter;
+		}
+	}
 }

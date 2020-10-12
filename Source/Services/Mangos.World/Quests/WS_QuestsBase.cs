@@ -1,421 +1,427 @@
-﻿// 
-// Copyright (C) 2013-2020 getMaNGOS <https://getmangos.eu>
-// 
-// This program is free software. You can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation. either version 2 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY. Without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-// 
-
 using System;
 using Mangos.Common.Enums.Global;
-using Mangos.Common.Enums.Quest;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Quests
 {
-    public class WS_QuestsBase : IDisposable
-    {
+	public class WS_QuestsBase : IDisposable
+	{
+		public int ID;
 
-        // WARNING: These are used only for CharManagment
-        public int ID; // = 0
-        public string Title; // = ""
-        public int SpecialFlags; // = 0
-        public int ObjectiveFlags; // = 0
-        public byte Slot; // = 0
-        public byte[] ObjectivesType; // = {0, 0, 0, 0}
-        public int ObjectivesDeliver;
-        public int[] ObjectivesExplore;
-        public int[] ObjectivesSpell;
-        public int[] ObjectivesItem;
-        public byte[] ObjectivesItemCount; // = {0, 0, 0, 0}
-        public int[] ObjectivesObject;
-        public byte[] ObjectivesCount; // = {0, 0, 0, 0}
-        public bool Explored; // = True
-        public byte[] Progress; // = {0, 0, 0, 0}
-        public byte[] ProgressItem; // = {0, 0, 0, 0}
-        public bool Complete; // = False
-        public bool Failed; // = False
-        public int TimeEnd; // = 0
+		public string Title;
 
-        public WS_QuestsBase()
-        {
-        }
+		public int SpecialFlags;
 
-        public WS_QuestsBase(WS_QuestInfo Quest)
-        {
-            ID = 0;
-            Title = "";
-            SpecialFlags = 0;
-            ObjectiveFlags = 0;
-            Slot = 0;
-            ObjectivesType = new[] { 0, 0, 0, 0 };
-            ObjectivesItemCount = new[] { 0, 0, 0, 0 };
-            ObjectivesCount = new[] { 0, 0, 0, 0 };
-            ObjectivesObject = new[] { 0, 0, 0, 0 };
-            ObjectivesExplore = new[] { 0, 0, 0, 0 };
-            ObjectivesSpell = new[] { 0, 0, 0, 0 };
-            ObjectivesItem = new[] { 0, 0, 0, 0 };
-            Explored = true;
-            Progress = new[] { 0, 0, 0, 0 };
-            ProgressItem = new[] { 0, 0, 0, 0 };
-            Complete = false;
-            Failed = false;
-            TimeEnd = 0;
+		public int ObjectiveFlags;
 
-            // Load Spell Casts
-            for (byte bytLoop = 0; bytLoop <= 3; bytLoop++)
-            {
-                if (Quest.ObjectivesCastSpell[bytLoop] > 0)
-                {
-                    ObjectiveFlags |= QuestObjectiveFlag.QUEST_OBJECTIVE_CAST;
-                    ObjectivesType[bytLoop] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_CAST;
-                    ObjectivesSpell[bytLoop] = Quest.ObjectivesCastSpell[bytLoop];
-                    ObjectivesObject[0] = Quest.ObjectivesKill[bytLoop];
-                    ObjectivesCount[0] = (byte)Quest.ObjectivesKill_Count[bytLoop];
-                }
-            }
+		public byte Slot;
 
-            // Load Kills
-            for (byte bytLoop = 0; bytLoop <= 3; bytLoop++)
-            {
-                if (Quest.ObjectivesKill[bytLoop] > 0)
-                {
-                    for (byte bytLoop2 = 0; bytLoop2 <= 3; bytLoop2++)
-                    {
-                        if (ObjectivesType[bytLoop2] == 0)
-                        {
-                            ObjectiveFlags |= QuestObjectiveFlag.QUEST_OBJECTIVE_KILL;
-                            ObjectivesType[bytLoop2] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_KILL;
-                            ObjectivesObject[bytLoop2] = Quest.ObjectivesKill[bytLoop];
-                            ObjectivesCount[bytLoop2] = (byte)Quest.ObjectivesKill_Count[bytLoop];
-                            break;
-                        }
-                    }
-                }
-            }
+		public byte[] ObjectivesType;
 
-            // Load Items
-            for (byte bytLoop = 0; bytLoop <= 3; bytLoop++)
-            {
-                if (Quest.ObjectivesItem[bytLoop] > 0)
-                {
-                    ObjectiveFlags |= QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM;
-                    ObjectivesType[bytLoop] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM;
-                    ObjectivesItem[bytLoop] = Quest.ObjectivesItem[bytLoop];
-                    ObjectivesItemCount[bytLoop] = (byte)Quest.ObjectivesItem_Count[bytLoop];
-                }
-            }
+		public int ObjectivesDeliver;
 
-            // Load Exploration loctions
-            if (Quest.SpecialFlags & QuestSpecialFlag.QUEST_SPECIALFLAGS_EXPLORE)
-            {
-                ObjectiveFlags |= QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE;
-                for (byte bytLoop = 0; bytLoop <= 3; bytLoop++)
-                {
-                    ObjectivesType[bytLoop] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE;
-                    ObjectivesExplore[bytLoop] = Quest.ObjectivesTrigger[bytLoop];
-                }
-            }
-            // 'TODO: Fix this below
-            if (Quest.SpecialFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_EVENT)
-            {
-                ObjectiveFlags |= QuestObjectiveFlag.QUEST_OBJECTIVE_EVENT;
-                for (int i = 0; i <= 3; i++)
-                {
-                    if (ObjectivesType[i] == 0)
-                    {
-                        ObjectivesType[i] = (byte)QuestObjectiveFlag.QUEST_OBJECTIVE_EVENT;
-                        ObjectivesCount[i] = 1;
-                    }
-                }
-            }
+		public int[] ObjectivesExplore;
 
-            // No objective flags are set, complete it directly
-            if (ObjectiveFlags == 0)
-            {
-                for (byte bytLoop = 0; bytLoop <= 3; bytLoop++)
-                {
-                    // Make sure these are zero
-                    ObjectivesObject[bytLoop] = 0;
-                    ObjectivesCount[bytLoop] = 0;
-                    ObjectivesExplore[bytLoop] = 0;
-                    ObjectivesSpell[bytLoop] = 0;
-                    ObjectivesType[bytLoop] = 0;
-                }
+		public int[] ObjectivesSpell;
 
-                IsCompleted();
-            }
+		public int[] ObjectivesItem;
 
-            Title = Quest.Title;
-            ID = Quest.ID;
-            SpecialFlags = Quest.SpecialFlags;
-            ObjectivesDeliver = Quest.ObjectivesDeliver;
-            // TODO: Fix a timer or something so that the quest really expires when it does
-            if (Quest.TimeLimit > 0)
-                TimeEnd = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + Quest.TimeLimit); // The time the quest expires
-        }
+		public byte[] ObjectivesItemCount;
 
-        /// <summary>
-        /// Updates the item count.
-        /// </summary>
-        /// <param name="objCharacter">The Character.</param>
-        public void UpdateItemCount(ref WS_PlayerData.CharacterObject objCharacter)
-        {
-            // DONE: Update item count at login
-            for (byte i = 0; i <= 3; i++)
-            {
-                if (ObjectivesItem[i] != 0)
-                {
-                    ProgressItem[i] = (byte)objCharacter.ItemCOUNT(ObjectivesItem[i]);
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "ITEM COUNT UPDATED TO: {0}", ProgressItem[i]);
-                }
-            }
+		public int[] ObjectivesObject;
 
-            // DONE: If the quest doesn't require any explore than set this as completed
-            if ((ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE) == 0)
-                Explored = true;
+		public byte[] ObjectivesCount;
 
-            // DONE: Check if the quest is completed
-            IsCompleted();
-        }
+		public bool Explored;
 
-        /// <summary>
-        /// Initializes the specified objCharacter.
-        /// </summary>
-        /// <param name="objCharacter">The Character.</param>
-        public void Initialize(ref WS_PlayerData.CharacterObject objCharacter)
-        {
-            if (ObjectivesDeliver > 0)
-            {
-                var tmpItem = new ItemObject(ObjectivesDeliver, objCharacter.GUID);
-                if (!objCharacter.ItemADD(ref tmpItem))
-                {
-                    // DONE: Some error, unable to add item, quest is uncompletable
-                    tmpItem.Delete();
-                    var response = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_FAILED);
-                    response.AddInt32(ID);
-                    response.AddInt32((int)QuestFailedReason.FAILED_INVENTORY_FULL);
-                    objCharacter.client.Send(response);
-                    response.Dispose();
-                    return;
-                }
-                else
-                {
-                    objCharacter.LogLootItem(tmpItem, 1, true, false);
-                }
-            }
+		public byte[] Progress;
 
-            for (byte i = 0; i <= 3; i++)
-            {
-                if (ObjectivesItem[i] != 0)
-                    ProgressItem[i] = (byte)objCharacter.ItemCOUNT(ObjectivesItem[i]);
-            }
+		public byte[] ProgressItem;
 
-            if (ObjectiveFlags & QuestObjectiveFlag.QUEST_OBJECTIVE_EXPLORE)
-                Explored = false;
-            IsCompleted();
-        }
+		public bool Complete;
 
-        /// <summary>
-        /// Determines whether this instance is completed.
-        /// </summary>
-        /// <returns>Boolean</returns>
-        public virtual bool IsCompleted()
-        {
-            Complete = ObjectivesCount[0] <= Progress[0] && ObjectivesCount[1] <= Progress[1] && ObjectivesCount[2] <= Progress[2] && ObjectivesCount[3] <= Progress[3] && ObjectivesItemCount[0] <= ProgressItem[0] && ObjectivesItemCount[1] <= ProgressItem[1] && ObjectivesItemCount[2] <= ProgressItem[2] && ObjectivesItemCount[3] <= ProgressItem[3] && Explored && Failed == false;
-            return Complete;
-        }
+		public bool Failed;
 
-        /// <summary>
-        /// Gets the state.
-        /// </summary>
-        /// <param name="ForSave">if set to <c>true</c> [for save].</param>
-        /// <returns>Integer <c>1 = Complere</c><c>2 = Failed</c></returns>
-        public virtual int GetState(bool ForSave = false)
-        {
-            var tmpState = default(int);
-            if (Complete)
-                tmpState = 1;
-            if (Failed)
-                tmpState = 2;
-            return tmpState;
-        }
+		public int TimeEnd;
 
-        /// <summary>
-        /// Gets the progress.
-        /// </summary>
-        /// <param name="ForSave">if set to <c>true</c> [for save].</param>
-        /// <returns></returns>
-        public virtual int GetProgress(bool ForSave = false)
-        {
-            int tmpProgress = 0;
-            if (ForSave)
-            {
-                tmpProgress += Progress[0];
-                tmpProgress += Conversions.ToInteger(Progress[1]) << 6;
-                tmpProgress += Conversions.ToInteger(Progress[2]) << 12;
-                tmpProgress += Conversions.ToInteger(Progress[3]) << 18;
-                if (Explored)
-                    tmpProgress += 1 << 24;
-                if (Complete)
-                    tmpProgress += 1 << 25;
-                if (Failed)
-                    tmpProgress += 1 << 26;
-            }
-            else
-            {
-                tmpProgress += Progress[0];
-                tmpProgress += Conversions.ToInteger(Progress[1]) << 6;
-                tmpProgress += Conversions.ToInteger(Progress[2]) << 12;
-                tmpProgress += Conversions.ToInteger(Progress[3]) << 18;
-                if (Complete)
-                    tmpProgress += 1 << 24;
-                if (Failed)
-                    tmpProgress += 1 << 25;
-            }
+		private bool _disposedValue;
 
-            return tmpProgress;
-        }
+		public WS_QuestsBase()
+		{
+		}
 
-        /// <summary>
-        /// Loads the state.
-        /// </summary>
-        /// <param name="state">The state.</param>
-        public virtual void LoadState(int state)
-        {
-            Progress[0] = (byte)(state & 0x3F);
-            Progress[1] = (byte)(state >> 6 & 0x3F);
-            Progress[2] = (byte)(state >> 12 & 0x3F);
-            Progress[3] = (byte)(state >> 18 & 0x3F);
-            Explored = (state >> 24 & 0x1) == 1;
-            Complete = (state >> 25 & 0x1) == 1;
-            Failed = (state >> 26 & 0x1) == 1;
-        }
+		public WS_QuestsBase(WS_QuestInfo Quest)
+		{
+			ID = 0;
+			Title = "";
+			SpecialFlags = 0;
+			ObjectiveFlags = 0;
+			Slot = 0;
+			ObjectivesType = new byte[4];
+			ObjectivesItemCount = new byte[4];
+			ObjectivesCount = new byte[4];
+			ObjectivesObject = new int[4];
+			ObjectivesExplore = new int[4];
+			ObjectivesSpell = new int[4];
+			ObjectivesItem = new int[4];
+			Explored = true;
+			Progress = new byte[4];
+			ProgressItem = new byte[4];
+			Complete = false;
+			Failed = false;
+			TimeEnd = 0;
+			byte bytLoop5 = 0;
+			do
+			{
+				checked
+				{
+					if (Quest.ObjectivesCastSpell[bytLoop5] > 0)
+					{
+						ObjectiveFlags |= 16;
+						ObjectivesType[bytLoop5] = 16;
+						ObjectivesSpell[bytLoop5] = Quest.ObjectivesCastSpell[bytLoop5];
+						ObjectivesObject[0] = Quest.ObjectivesKill[bytLoop5];
+						ObjectivesCount[0] = (byte)Quest.ObjectivesKill_Count[bytLoop5];
+					}
+					bytLoop5 = (byte)unchecked((uint)(bytLoop5 + 1));
+				}
+			}
+			while ((uint)bytLoop5 <= 3u);
+			byte bytLoop4 = 0;
+			do
+			{
+				checked
+				{
+					if (Quest.ObjectivesKill[bytLoop4] > 0)
+					{
+						byte bytLoop6 = 0;
+						do
+						{
+							if (ObjectivesType[bytLoop6] == 0)
+							{
+								ObjectiveFlags |= 1;
+								ObjectivesType[bytLoop6] = 1;
+								ObjectivesObject[bytLoop6] = Quest.ObjectivesKill[bytLoop4];
+								ObjectivesCount[bytLoop6] = (byte)Quest.ObjectivesKill_Count[bytLoop4];
+								break;
+							}
+							bytLoop6 = (byte)unchecked((uint)(bytLoop6 + 1));
+						}
+						while (unchecked((uint)bytLoop6) <= 3u);
+					}
+					bytLoop4 = (byte)unchecked((uint)(bytLoop4 + 1));
+				}
+			}
+			while ((uint)bytLoop4 <= 3u);
+			byte bytLoop3 = 0;
+			do
+			{
+				checked
+				{
+					if (Quest.ObjectivesItem[bytLoop3] > 0)
+					{
+						ObjectiveFlags |= 32;
+						ObjectivesType[bytLoop3] = 32;
+						ObjectivesItem[bytLoop3] = Quest.ObjectivesItem[bytLoop3];
+						ObjectivesItemCount[bytLoop3] = (byte)Quest.ObjectivesItem_Count[bytLoop3];
+					}
+					bytLoop3 = (byte)unchecked((uint)(bytLoop3 + 1));
+				}
+			}
+			while ((uint)bytLoop3 <= 3u);
+			if (((uint)Quest.SpecialFlags & 2u) != 0)
+			{
+				ObjectiveFlags |= 2;
+				byte bytLoop2 = 0;
+				do
+				{
+					ObjectivesType[bytLoop2] = 2;
+					ObjectivesExplore[bytLoop2] = Quest.ObjectivesTrigger[bytLoop2];
+					checked
+					{
+						bytLoop2 = (byte)unchecked((uint)(bytLoop2 + 1));
+					}
+				}
+				while ((uint)bytLoop2 <= 3u);
+			}
+			if (((uint)Quest.SpecialFlags & 8u) != 0)
+			{
+				ObjectiveFlags |= 8;
+				int i = 0;
+				do
+				{
+					if (ObjectivesType[i] == 0)
+					{
+						ObjectivesType[i] = 8;
+						ObjectivesCount[i] = 1;
+					}
+					i = checked(i + 1);
+				}
+				while (i <= 3);
+			}
+			checked
+			{
+				if (ObjectiveFlags == 0)
+				{
+					byte bytLoop = 0;
+					do
+					{
+						ObjectivesObject[bytLoop] = 0;
+						ObjectivesCount[bytLoop] = 0;
+						ObjectivesExplore[bytLoop] = 0;
+						ObjectivesSpell[bytLoop] = 0;
+						ObjectivesType[bytLoop] = 0;
+						bytLoop = (byte)unchecked((uint)(bytLoop + 1));
+					}
+					while (unchecked((uint)bytLoop) <= 3u);
+					IsCompleted();
+				}
+				Title = Quest.Title;
+				ID = Quest.ID;
+				SpecialFlags = Quest.SpecialFlags;
+				ObjectivesDeliver = Quest.ObjectivesDeliver;
+				if (Quest.TimeLimit > 0)
+				{
+					TimeEnd = (int)(unchecked((long)WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked((long)Quest.TimeLimit));
+				}
+			}
+		}
 
-        /// <summary>
-        /// Adds the kill.
-        /// </summary>
-        /// <param name="objCharacter">The Character.</param>
-        /// <param name="index">The index.</param>
-        /// <param name="oGUID">The o unique identifier.</param>
-        public void AddKill(WS_PlayerData.CharacterObject objCharacter, byte index, ulong oGUID)
-        {
-            Progress[index] = (byte)(Progress[index] + 1);
-            IsCompleted();
-            objCharacter.TalkUpdateQuest(Slot);
-            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
-        }
+		public void UpdateItemCount(ref WS_PlayerData.CharacterObject objCharacter)
+		{
+			byte i = 0;
+			do
+			{
+				checked
+				{
+					if (ObjectivesItem[i] != 0)
+					{
+						ProgressItem[i] = (byte)objCharacter.ItemCOUNT(ObjectivesItem[i]);
+						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "ITEM COUNT UPDATED TO: {0}", ProgressItem[i]);
+					}
+					i = (byte)unchecked((uint)(i + 1));
+				}
+			}
+			while ((uint)i <= 3u);
+			if ((ObjectiveFlags & 2) == 0)
+			{
+				Explored = true;
+			}
+			IsCompleted();
+		}
 
-        /// <summary>
-        /// Adds the cast.
-        /// </summary>
-        /// <param name="objCharacter">The Character.</param>
-        /// <param name="index">The index.</param>
-        /// <param name="oGUID">The o unique identifier.</param>
-        public void AddCast(WS_PlayerData.CharacterObject objCharacter, byte index, ulong oGUID)
-        {
-            Progress[index] = (byte)(Progress[index] + 1);
-            IsCompleted();
-            objCharacter.TalkUpdateQuest(Slot);
-            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
-        }
+		public void Initialize(ref WS_PlayerData.CharacterObject objCharacter)
+		{
+			if (ObjectivesDeliver > 0)
+			{
+				ItemObject tmpItem = new ItemObject(ObjectivesDeliver, objCharacter.GUID);
+				if (!objCharacter.ItemADD(ref tmpItem))
+				{
+					tmpItem.Delete();
+					Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_FAILED);
+					response.AddInt32(ID);
+					response.AddInt32(4);
+					objCharacter.client.Send(ref response);
+					response.Dispose();
+					return;
+				}
+				objCharacter.LogLootItem(tmpItem, 1, Recieved: true, Created: false);
+			}
+			byte i = 0;
+			do
+			{
+				checked
+				{
+					if (ObjectivesItem[i] != 0)
+					{
+						ProgressItem[i] = (byte)objCharacter.ItemCOUNT(ObjectivesItem[i]);
+					}
+					i = (byte)unchecked((uint)(i + 1));
+				}
+			}
+			while ((uint)i <= 3u);
+			if (((uint)ObjectiveFlags & 2u) != 0)
+			{
+				Explored = false;
+			}
+			IsCompleted();
+		}
 
-        /// <summary>
-        /// Adds the explore.
-        /// </summary>
-        /// <param name="objCharacter">The Character.</param>
-        public void AddExplore(WS_PlayerData.CharacterObject objCharacter)
-        {
-            Explored = true;
-            IsCompleted();
-            objCharacter.TalkUpdateQuest(Slot);
-            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageComplete(ref objCharacter.client, ID);
-        }
+		public virtual bool IsCompleted()
+		{
+			Complete = (uint)ObjectivesCount[0] <= (uint)Progress[0] && (uint)ObjectivesCount[1] <= (uint)Progress[1] && (uint)ObjectivesCount[2] <= (uint)Progress[2] && (uint)ObjectivesCount[3] <= (uint)Progress[3] && (uint)ObjectivesItemCount[0] <= (uint)ProgressItem[0] && (uint)ObjectivesItemCount[1] <= (uint)ProgressItem[1] && (uint)ObjectivesItemCount[2] <= (uint)ProgressItem[2] && (uint)ObjectivesItemCount[3] <= (uint)ProgressItem[3] && Explored && !Failed;
+			return Complete;
+		}
 
-        /// <summary>
-        /// Adds the emote.
-        /// </summary>
-        /// <param name="objCharacter">The Character.</param>
-        /// <param name="index">The index.</param>
-        public void AddEmote(WS_PlayerData.CharacterObject objCharacter, byte index)
-        {
-            Progress[index] = (byte)(Progress[index] + 1);
-            IsCompleted();
-            objCharacter.TalkUpdateQuest(Slot);
-            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageComplete(ref objCharacter.client, ID);
-        }
+		public virtual int GetState(bool ForSave = false)
+		{
+			int tmpState = default(int);
+			if (Complete)
+			{
+				tmpState = 1;
+			}
+			if (Failed)
+			{
+				tmpState = 2;
+			}
+			return tmpState;
+		}
 
-        /// <summary>
-        /// Adds the item.
-        /// </summary>
-        /// <param name="objCharacter">The Character.</param>
-        /// <param name="index">The index.</param>
-        /// <param name="Count">The count.</param>
-        public void AddItem(WS_PlayerData.CharacterObject objCharacter, byte index, byte Count)
-        {
-            if ((byte)(ProgressItem[index] + Count) > ObjectivesItemCount[index])
-                Count = (byte)(ObjectivesItemCount[index] - ProgressItem[index]);
-            ProgressItem[index] += Count;
-            IsCompleted();
-            objCharacter.TalkUpdateQuest(Slot);
+		public virtual int GetProgress(bool ForSave = false)
+		{
+			int tmpProgress = 0;
+			checked
+			{
+				if (ForSave)
+				{
+					tmpProgress += unchecked((int)Progress[0]);
+					tmpProgress += Progress[1] << 6;
+					tmpProgress += Progress[2] << 12;
+					tmpProgress += Progress[3] << 18;
+					if (Explored)
+					{
+						tmpProgress += 16777216;
+					}
+					if (Complete)
+					{
+						tmpProgress += 33554432;
+					}
+					if (Failed)
+					{
+						tmpProgress += 67108864;
+					}
+				}
+				else
+				{
+					tmpProgress += unchecked((int)Progress[0]);
+					tmpProgress += Progress[1] << 6;
+					tmpProgress += Progress[2] << 12;
+					tmpProgress += Progress[3] << 18;
+					if (Complete)
+					{
+						tmpProgress += 16777216;
+					}
+					if (Failed)
+					{
+						tmpProgress += 33554432;
+					}
+				}
+				return tmpProgress;
+			}
+		}
 
-            // TODO: When item quest event is fired as it should, remove -1 here.
-            int ItemCount = Count - 1;
-            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddItem(ref objCharacter.client, ObjectivesItem[index], ItemCount);
-        }
+		public virtual void LoadState(int state)
+		{
+			checked
+			{
+				Progress[0] = (byte)(state & 0x3F);
+				Progress[1] = (byte)((state >> 6) & 0x3F);
+				Progress[2] = (byte)((state >> 12) & 0x3F);
+				Progress[3] = (byte)((state >> 18) & 0x3F);
+				Explored = ((state >> 24) & 1) == 1;
+				Complete = ((state >> 25) & 1) == 1;
+				Failed = ((state >> 26) & 1) == 1;
+			}
+		}
 
-        /// <summary>
-        /// Removes the item.
-        /// </summary>
-        /// <param name="objCharacter">The Character.</param>
-        /// <param name="index">The index.</param>
-        /// <param name="Count">The count.</param>
-        public void RemoveItem(WS_PlayerData.CharacterObject objCharacter, byte index, byte Count)
-        {
-            if (ProgressItem[index] - Count < 0)
-                Count = ProgressItem[index];
-            ProgressItem[index] -= Count;
-            IsCompleted();
-            objCharacter.TalkUpdateQuest(Slot);
-        }
+		public void AddKill(WS_PlayerData.CharacterObject objCharacter, byte index, ulong oGUID)
+		{
+			checked
+			{
+				Progress[index]++;
+				IsCompleted();
+				objCharacter.TalkUpdateQuest(Slot);
+				WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
+			}
+		}
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        private bool _disposedValue; // To detect redundant calls
+		public void AddCast(WS_PlayerData.CharacterObject objCharacter, byte index, ulong oGUID)
+		{
+			checked
+			{
+				Progress[index]++;
+				IsCompleted();
+				objCharacter.TalkUpdateQuest(Slot);
+				WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
+			}
+		}
 
-        // IDisposable
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                // TODO: set large fields to null.
-            }
+		public void AddExplore(WS_PlayerData.CharacterObject objCharacter)
+		{
+			Explored = true;
+			IsCompleted();
+			objCharacter.TalkUpdateQuest(Slot);
+			WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageComplete(ref objCharacter.client, ID);
+		}
 
-            _disposedValue = true;
-        }
+		public void AddEmote(WS_PlayerData.CharacterObject objCharacter, byte index)
+		{
+			checked
+			{
+				Progress[index]++;
+				IsCompleted();
+				objCharacter.TalkUpdateQuest(Slot);
+				WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageComplete(ref objCharacter.client, ID);
+			}
+		}
 
-        // This code added by Visual Basic to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-    }
+		public void AddItem(WS_PlayerData.CharacterObject objCharacter, byte index, byte Count)
+		{
+			if ((uint)checked((byte)unchecked((uint)(ProgressItem[index] + Count))) > (uint)ObjectivesItemCount[index])
+			{
+				checked
+				{
+					Count = (byte)unchecked((uint)(ObjectivesItemCount[index] - ProgressItem[index]));
+				}
+			}
+			ref byte reference = ref ProgressItem[index];
+			checked
+			{
+				reference = (byte)unchecked((uint)(reference + Count));
+				IsCompleted();
+				objCharacter.TalkUpdateQuest(Slot);
+				int ItemCount = unchecked((int)Count) - 1;
+				WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddItem(ref objCharacter.client, ObjectivesItem[index], ItemCount);
+			}
+		}
+
+		public void RemoveItem(WS_PlayerData.CharacterObject objCharacter, byte index, byte Count)
+		{
+			checked
+			{
+				if (unchecked((int)ProgressItem[index]) - unchecked((int)Count) < 0)
+				{
+					Count = ProgressItem[index];
+				}
+				ref byte reference = ref ProgressItem[index];
+				reference = (byte)unchecked((uint)(reference - Count));
+				IsCompleted();
+				objCharacter.TalkUpdateQuest(Slot);
+			}
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!_disposedValue)
+			{
+			}
+			_disposedValue = true;
+		}
+
+		public void Dispose()
+		{
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
+		}
+
+		void IDisposable.Dispose()
+		{
+			//ILSpy generated this explicit interface implementation from .override directive in Dispose
+			this.Dispose();
+		}
+	}
 }
