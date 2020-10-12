@@ -6,6 +6,7 @@ using Mangos.Common;
 using Mangos.Common.Globals;
 using Mangos.Configuration;
 using Mangos.World.AI;
+using Mangos.World.AntiCheat;
 using Mangos.World.Auction;
 using Mangos.World.Battlegrounds;
 using Mangos.World.DataStores;
@@ -25,7 +26,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World
 {
-	[StandardModule]
+    [StandardModule]
 	public sealed class WorldServiceLocator
 	{
 		[CompilerGenerated]

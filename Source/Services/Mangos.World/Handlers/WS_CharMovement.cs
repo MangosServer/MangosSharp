@@ -8,6 +8,7 @@ using Mangos.Common.Enums.Player;
 using Mangos.Common.Enums.Spell;
 using Mangos.Common.Globals;
 using Mangos.World.AI;
+using Mangos.World.AntiCheat;
 using Mangos.World.Globals;
 using Mangos.World.Maps;
 using Mangos.World.Objects;
@@ -19,7 +20,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Handlers
 {
-	public class WS_CharMovement
+    public class WS_CharMovement
 	{
 		private const float PId2 = (float)Math.PI / 2f;
 

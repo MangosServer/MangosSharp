@@ -9,6 +9,7 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
 using Mangos.Common.Globals;
 using Mangos.SignalR;
+using Mangos.World.AntiCheat;
 using Mangos.World.Globals;
 using Mangos.World.Maps;
 using Mangos.World.Player;
@@ -19,7 +20,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Server
 {
-	public class WS_Network
+    public class WS_Network
 	{
 		public class WorldServerClass : Hub, IWorld, IDisposable
 		{
