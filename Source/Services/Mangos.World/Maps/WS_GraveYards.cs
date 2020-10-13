@@ -131,11 +131,11 @@ namespace Mangos.World.Maps
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int locationIndex = Conversions.ToInteger(tmpDBC[i, 0, DBCValueType.DBC_INTEGER]);
-						int locationMapID = Conversions.ToInteger(tmpDBC[i, 1, DBCValueType.DBC_INTEGER]);
-						float locationPosX = Conversions.ToSingle(tmpDBC[i, 2, DBCValueType.DBC_FLOAT]);
-						float locationPosY = Conversions.ToSingle(tmpDBC[i, 3, DBCValueType.DBC_FLOAT]);
-						float locationPosZ = Conversions.ToSingle(tmpDBC[i, 4, DBCValueType.DBC_FLOAT]);
+						int locationIndex = tmpDBC.Read<int>(i, 0);
+						int locationMapID = tmpDBC.Read<int>(i, 1);
+						float locationPosX = tmpDBC.Read<float>(i, 2);
+						float locationPosY = tmpDBC.Read<float>(i, 3);
+						float locationPosZ = tmpDBC.Read<float>(i, 4);
 						if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Contains(locationMapID.ToString()))
 						{
 							Graveyards.Add(locationIndex, new TGraveyard(locationPosX, locationPosY, locationPosZ, locationMapID));

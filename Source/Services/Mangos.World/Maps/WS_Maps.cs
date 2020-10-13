@@ -295,12 +295,12 @@ namespace Mangos.World.Maps
 						int num = tmpDBC.Rows - 1;
 						for (int i = 0; i <= num; i++)
 						{
-							int tmpMap = Conversions.ToInteger(tmpDBC[i, 0, DBCValueType.DBC_INTEGER]);
+							int tmpMap = tmpDBC.Read<int>(i, 0);
 							if (tmpMap == Map)
 							{
 								ID = Map;
-								Type = unchecked((MapTypes)Conversions.ToInteger(tmpDBC[i, 2, DBCValueType.DBC_INTEGER]));
-								Name = Conversions.ToString(tmpDBC[i, 4, DBCValueType.DBC_STRING]);
+								Type = unchecked((MapTypes)tmpDBC.Read<int>(i, 2));
+								Name = tmpDBC.Read<string>(i, 4);
 								break;
 							}
 						}

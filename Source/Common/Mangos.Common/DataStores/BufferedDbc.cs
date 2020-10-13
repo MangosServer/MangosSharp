@@ -19,92 +19,74 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-using Mangos.Common.Enums.Global;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Common.DataStores
 {
-    [Description("DBC wrapper class using buffered stream for file access.")]
-    public class BufferedDbc : BaseDbc, IDisposable
-    {
-        protected BufferedStream bs;
+	[Description("DBC wrapper class using buffered stream for file access.")]
+	public class BufferedDbc : BaseDbc
+	{
+		protected BufferedStream BStream;
 
-        [Description("Open filename for reading and initialize internals.")]
-        public BufferedDbc(string fileName) : base(fileName)
-        {
-            bs = new BufferedStream(Fs);
-        }
+		[Description("Open filename for reading and initialize internals.")]
+		public BufferedDbc(string fileName) : base(fileName)
+		{
+			BStream = new BufferedStream(FileStream);
+		}
 
-        [Description("Open filename for reading and initialize internals.")]
-        public BufferedDbc(Stream stream) : base(stream)
-        {
-            bs = new BufferedStream(Fs);
-        }
+		[Description("Open filename for reading and initialize internals.")]
+		public BufferedDbc(Stream stream) : base(stream)
+		{
+			BStream = new BufferedStream(FileStream);
+		}
 
-        [Description("Close file and dispose the dbc reader.")]
-        private bool _disposedValue; // To detect redundant calls
+		public override T Read<T>(long row, int column)
+		{
+			if (row >= Rows)
+				throw new ApplicationException("DBC: Row index outside file definition.");
+			if (column >= Columns)
+				throw new ApplicationException("DBC: Column index outside file definition.");
 
-        // IDisposable
-        protected override void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                // TODO: set large fields to null.
-                Fs.Close();
-                bs.Close();
-                bs.Dispose();
+			TmpOffset = 20 + row * RowLength + column * 4;
+			if (BStream.Position != TmpOffset)
+				BStream.Seek(TmpOffset, SeekOrigin.Begin);
 
-                // MyBase.Dispose()
-            }
+			BStream.Read(Buffer, 0, 4);
 
-            _disposedValue = true;
-        }
+			switch (Type.GetTypeCode(typeof(T)))
+			{
+				case TypeCode.Byte:
+					return (T)Convert.ChangeType(BitConverter.ToInt32(Buffer, 0), typeof(T));
+				case TypeCode.UInt32:
+					return (T)Convert.ChangeType(BitConverter.ToUInt32(Buffer, 0), typeof(T));
+				case TypeCode.Single:
+				case TypeCode.Double:
+				case TypeCode.Decimal:
+					return (T)Convert.ChangeType(BitConverter.ToSingle(Buffer, 0), typeof(T));
+				case TypeCode.String:
+					int offset = BitConverter.ToInt32(Buffer, 0);
+					BStream.Seek(20 + Rows * RowLength + offset, SeekOrigin.Begin);
+					byte strByte = 0;
+					string strResult = "";
+					do
+					{
+						strByte = (byte)BStream.ReadByte();
+						if (strByte != 0)
+							strResult += Convert.ToString((char)strByte);
+					}
+					while (strByte != 0);
+					return (T)Convert.ChangeType(strResult, typeof(T));
+				default:
+					return (T)Convert.ChangeType(BitConverter.ToInt32(Buffer, 0), typeof(T));
+			}
+		}
 
-        public override object this[int row, int column, DBCValueType valueType = DBCValueType.DBC_INTEGER]
-        {
-            get
-            {
-                if (row >= Rows)
-                    throw new ApplicationException("DBC: Row index outside file definition.");
-                if (column >= Columns)
-                    throw new ApplicationException("DBC: Column index outside file definition.");
-                TmpOffset = 20 + row * RowLength + column * 4;
-                if (bs.Position != TmpOffset)
-                    bs.Seek(TmpOffset, SeekOrigin.Begin);
-                bs.Read(Buffer, 0, 4);
-                switch (valueType)
-                {
-                    case DBCValueType.DBC_FLOAT:
-                        {
-                            return BitConverter.ToSingle(Buffer, 0);
-                        }
-                    case DBCValueType.DBC_INTEGER:
-                        {
-                            return BitConverter.ToInt32(Buffer, 0);
-                        }
-                    case DBCValueType.DBC_STRING:
-                        {
-                            int offset = BitConverter.ToInt32(Buffer, 0);
-                            bs.Seek(20 + Rows * RowLength + offset, SeekOrigin.Begin);
-                            string strResult = "";
-                            byte strByte;
-                            do
-                            {
-                                strByte = (byte)bs.ReadByte();
-                                if (strByte != 0)
-                                    strResult += Conversions.ToString((char)strByte);
-                            }
-                            while (strByte != 0);
-                            return strResult;
-                        }
-
-                    default:
-                        {
-                            throw new ApplicationException("DBCReader: Undefined DBC field type.");
-                        }
-                }
-            }
-        }
-    }
+		[Description("Close file and dispose the dbc reader.")]
+		public override void Dispose()
+		{
+			FileStream?.Close();
+			BStream?.Close();
+			BStream?.Dispose();
+			base.Dispose();
+		}
+	}
 }
