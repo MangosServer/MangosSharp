@@ -18,5 +18,6 @@
     <ProjectReference Include="..\..\Common\Mangos.Configuration\Mangos.Configuration.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.Loggers.Console\Mangos.Loggers.Console.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.Loggers\Mangos.Loggers.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Network.Tcp\Mangos.Network.Tcp.csproj" />
   </ItemGroup>
 </Project>

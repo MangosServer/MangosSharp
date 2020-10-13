@@ -49,8 +49,10 @@ namespace Mangos.Realm
 
 		public static void RegisterConfiguration(ContainerBuilder builder)
 		{
-			builder.Register(x => new XmlFileConfigurationProvider<RealmServerConfiguration>("configs/RealmServer.ini")).As<IConfigurationProvider<RealmServerConfiguration>>();
-			builder.RegisterDecorator<StoredConfigurationProvider<RealmServerConfiguration>, IConfigurationProvider<RealmServerConfiguration>>();
+			builder.Register(x => new XmlFileConfigurationProvider<RealmServerConfiguration>("configs/RealmServer.ini"))
+				.As<IConfigurationProvider<RealmServerConfiguration>>();
+			builder.RegisterDecorator<StoredConfigurationProvider<RealmServerConfiguration>, 
+				IConfigurationProvider<RealmServerConfiguration>>();
 		}
 
 		public static void RegisterLoggers(ContainerBuilder builder)
