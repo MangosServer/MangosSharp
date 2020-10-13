@@ -19,82 +19,79 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-using Mangos.Common.Enums.Global;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Common.DataStores
 {
-    [Description("DBC wrapper class using optimizations for reading row by row.")]
-    public class OptimizedDbc : BaseDbc
-    {
-        protected byte[] TmpRow;
-        protected int TmpRowRead = -1;
+	[Description("DBC wrapper class using optimizations for reading row by row.")]
+	public class OptimizedDbc : BaseDbc
+	{
+		protected byte[] TmpRow;
+		protected int TmpRowRead = -1;
 
-        [Description("Open filename for reading and initialize internals.")]
-        public OptimizedDbc(string fileName) : base(fileName)
-        {
-            TmpRow = new byte[RowLength + 1];
-        }
+		[Description("Open filename for reading and initialize internals.")]
+		public OptimizedDbc(string fileName) : base(fileName)
+		{
+			TmpRow = new byte[RowLength + 1];
+		}
 
-        [Description("Open filename for reading and initialize internals.")]
-        public OptimizedDbc(Stream stream) : base(stream)
-        {
-            TmpRow = new byte[RowLength + 1];
-        }
+		[Description("Open filename for reading and initialize internals.")]
+		public OptimizedDbc(Stream stream) : base(stream)
+		{
+			TmpRow = new byte[RowLength + 1];
+		}
 
-        protected void ReadRow(int row)
-        {
-            TmpOffset = 20 + row * RowLength;
-            if (Fs.Position != TmpOffset)
-                Fs.Seek(TmpOffset, SeekOrigin.Begin);
-            Fs.Read(TmpRow, 0, RowLength);
-            TmpRowRead = row;
-        }
+		protected void ReadRow(int row)
+		{
+			TmpOffset = 20 + row * RowLength;
+			if (FileStream.Position != TmpOffset)
+				FileStream.Seek(TmpOffset, SeekOrigin.Begin);
+			FileStream.Read(TmpRow, 0, RowLength);
+			TmpRowRead = row;
+		}
 
-        public override object this[int row, int column, DBCValueType valueType = DBCValueType.DBC_INTEGER]
-        { 
-            get
-            {
-                if (row >= Rows)
-                    throw new ApplicationException("DBC: Row index outside file definition.");
-                if (column >= Columns)
-                    throw new ApplicationException("DBC: Column index outside file definition.");
-                if (TmpRowRead != row)
-                    ReadRow(row);
-                Array.Copy(TmpRow, column * 4, Buffer, 0, 4);
-                switch (valueType)
-                {
-                    case DBCValueType.DBC_INTEGER:
-                        {
-                            return BitConverter.ToInt32(Buffer, 0);
-                        }
+		public override T Read<T>(long row, int column)
+		{
+			if (row >= Rows)
+				throw new ApplicationException("DBC: Row index outside file definition.");
+			if (column >= Columns)
+				throw new ApplicationException("DBC: Column index outside file definition.");
 
-                    case DBCValueType.DBC_FLOAT:
-                        {
-                            return BitConverter.ToSingle(Buffer, 0);
-                        }
+			Array.Copy(TmpRow, column * 4, Buffer, 0, 4);
 
-                    case DBCValueType.DBC_STRING:
-                        {
-                            int offset = BitConverter.ToInt32(Buffer, 0);
-                            Fs.Seek(20 + Rows * RowLength + offset, SeekOrigin.Begin);
-                            string strResult = "";
-                            byte strByte;
-                            do
-                            {
-                                strByte = (byte)Fs.ReadByte();
-                                strResult += Conversions.ToString((char)strByte);
-                            }
-                            while (strByte != 0);
-                            return strResult;
-                        }
+			switch (Type.GetTypeCode(typeof(T)))
+			{
+				case TypeCode.Byte:
+					return (T)Convert.ChangeType(BitConverter.ToInt32(Buffer, 0), typeof(T));
+				case TypeCode.UInt32:
+					return (T)Convert.ChangeType(BitConverter.ToUInt32(Buffer, 0), typeof(T));
+				case TypeCode.Single:
+				case TypeCode.Double:
+				case TypeCode.Decimal:
+					return (T)Convert.ChangeType(BitConverter.ToSingle(Buffer, 0), typeof(T));
+				case TypeCode.String:
+					int offset = BitConverter.ToInt32(Buffer, 0);
+					FileStream.Seek(20 + Rows * RowLength + offset, SeekOrigin.Begin);
+					byte strByte;
+					string strResult;
+					strByte = 0;
+					strResult = "";
+					do
+					{
+						strByte = (byte)FileStream.ReadByte();
+						strResult += Convert.ToString((char)strByte);
+					}
+					while (strByte != 0);
+					return (T)Convert.ChangeType(strResult, typeof(T));
+				default:
+					return (T)Convert.ChangeType(BitConverter.ToInt32(Buffer, 0), typeof(T));
+			}
+		}
 
-                    default:
-                        {
-                            throw new ApplicationException("DBC: Undefined DBC field type.");
-                        }
-                }
-            } 
-        }
-    }
+		[Description("Close file and dispose the dbc reader.")]
+		public override void Dispose()
+		{
+			TmpRow = null;
+			base.Dispose();
+		}
+	}
 }
