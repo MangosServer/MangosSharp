@@ -56,6 +56,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Storage", "Common\Ma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Storage.MySql", "Common\Mangos.Storage.MySql\Mangos.Storage.MySql.csproj", "{54D40A46-35D2-4299-8F3A-FDC650B389F2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Network", "Network", "{9EF781C4-F7AE-4720-A231-8F4C58737310}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangos.Network.Tcp", "Common\Mangos.Network.Tcp\Mangos.Network.Tcp.csproj", "{C4D428E9-9272-4F1D-9A23-973D160082F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -134,6 +138,10 @@ Global
 		{54D40A46-35D2-4299-8F3A-FDC650B389F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54D40A46-35D2-4299-8F3A-FDC650B389F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54D40A46-35D2-4299-8F3A-FDC650B389F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4D428E9-9272-4F1D-9A23-973D160082F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4D428E9-9272-4F1D-9A23-973D160082F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4D428E9-9272-4F1D-9A23-973D160082F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4D428E9-9272-4F1D-9A23-973D160082F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -160,6 +168,8 @@ Global
 		{A53CD0FF-C516-4D61-AF74-F6FE1661FEAC} = {E4030417-3F95-48BA-8A9A-6E1B4A5B5873}
 		{F6B1FF74-C704-4A95-88D9-BFEB2C0138DF} = {A53CD0FF-C516-4D61-AF74-F6FE1661FEAC}
 		{54D40A46-35D2-4299-8F3A-FDC650B389F2} = {A53CD0FF-C516-4D61-AF74-F6FE1661FEAC}
+		{9EF781C4-F7AE-4720-A231-8F4C58737310} = {E4030417-3F95-48BA-8A9A-6E1B4A5B5873}
+		{C4D428E9-9272-4F1D-9A23-973D160082F8} = {9EF781C4-F7AE-4720-A231-8F4C58737310}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADB1D01A-F2D8-411D-8C5E-9B125F8FE64E}
