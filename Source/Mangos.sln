@@ -44,6 +44,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".development", ".developmen
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Loggers", "Loggers", "{E0A07FF5-16B1-444C-8D29-7EFEF8776E3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangos.Loggers", "Common\Mangos.Loggers\Mangos.Loggers.csproj", "{BF4757A9-ACFF-465C-80DD-22217B4258A4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Loggers.Console", "Common\Mangos.Loggers.Console\Mangos.Loggers.Console.csproj", "{0EB75BE3-253C-4AB8-AFCC-9CD78F7CFB91}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +112,14 @@ Global
 		{FA2E6544-22BF-0E5C-116E-2842CDA11B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA2E6544-22BF-0E5C-116E-2842CDA11B11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA2E6544-22BF-0E5C-116E-2842CDA11B11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF4757A9-ACFF-465C-80DD-22217B4258A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF4757A9-ACFF-465C-80DD-22217B4258A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF4757A9-ACFF-465C-80DD-22217B4258A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF4757A9-ACFF-465C-80DD-22217B4258A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EB75BE3-253C-4AB8-AFCC-9CD78F7CFB91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EB75BE3-253C-4AB8-AFCC-9CD78F7CFB91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EB75BE3-253C-4AB8-AFCC-9CD78F7CFB91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EB75BE3-253C-4AB8-AFCC-9CD78F7CFB91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +140,9 @@ Global
 		{E27D5071-163D-0D73-30C7-056D3063F13B} = {7B6C0310-8E34-42CE-A29F-22F24BBC8381}
 		{EB435360-64EE-0849-15BF-759DA3CB6753} = {7B6C0310-8E34-42CE-A29F-22F24BBC8381}
 		{FA2E6544-22BF-0E5C-116E-2842CDA11B11} = {7B6C0310-8E34-42CE-A29F-22F24BBC8381}
+		{E0A07FF5-16B1-444C-8D29-7EFEF8776E3A} = {E4030417-3F95-48BA-8A9A-6E1B4A5B5873}
+		{BF4757A9-ACFF-465C-80DD-22217B4258A4} = {E0A07FF5-16B1-444C-8D29-7EFEF8776E3A}
+		{0EB75BE3-253C-4AB8-AFCC-9CD78F7CFB91} = {E0A07FF5-16B1-444C-8D29-7EFEF8776E3A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADB1D01A-F2D8-411D-8C5E-9B125F8FE64E}
