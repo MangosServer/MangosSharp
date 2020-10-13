@@ -40,5 +40,15 @@ namespace Mangos.Configuration.Xml
                 return configuration;
             }
         }
+
+        public ValueTask<T> GetConfigurationAsync()
+        {
+            using (var streamReader = new StreamReader(_filePath))
+            {
+                var xmlSerializer = new XmlSerializer(typeof(T));
+                T configuration = (T)xmlSerializer.Deserialize(streamReader);
+                return new ValueTask<T>(configuration);
+            }
+        }
     }
 }

@@ -38,5 +38,14 @@ namespace Mangos.Configuration.Store
             }
             return _configuration;
         }
+
+        public async ValueTask<T> GetConfigurationAsync()
+        {
+            if (_configuration is null)
+            {
+                _configuration = await _configurationProvider.GetConfigurationAsync();
+            }
+            return _configuration;
+        }
     }
 }

@@ -37,15 +37,20 @@ namespace Mangos.Storage.MySql
         {
             return Assembly.GetExecutingAssembly().GetManifestResourceNames()
                 .Where(x => x.StartsWith("Mangos.Storage.MySql.Account"))
-                .ToDictionary(x => Regex.Split(x, "Mangos.Storage.MySql.Account.(.*).sql")[1], GetEmbeddedResourceTest);
+                .ToDictionary(GetEmbeddedSqlResourceName, GetEmbeddedSqlResourcebody);
         }
 
-        private string GetEmbeddedResourceTest(string resourceName)
+        private string GetEmbeddedSqlResourcebody(string resource)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            using var stream = assembly.GetManifestResourceStream(resourceName);
+            using var stream = assembly.GetManifestResourceStream(resource);
             using var reader = new StreamReader(stream);
             return reader.ReadToEnd();
+        }
+
+        private string GetEmbeddedSqlResourceName(string resource)
+        {
+            return Regex.Split(resource, "Mangos.Storage.MySql.Account.(.*).sql")[1];
         }
 
         private async Task<T> QuerySingleAsync<T>(
