@@ -23,28 +23,22 @@ using System.Threading;
 using global;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Misc;
-using Mangos.Loggers;
 using Microsoft.VisualBasic;
 
 namespace Mangos.Realm
 {
     public sealed class ClientClass : IDisposable
     {
-		private readonly ILogger logger;
-
         private readonly Global_Constants _Global_Constants;
         private readonly RealmServer _RealmServer;
 
-		public ClientClass(Global_Constants globalConstants,
-			RealmServer realmServer, 
-			ILogger logger)
-		{
-			_Global_Constants = globalConstants;
-			_RealmServer = realmServer;
-			this.logger = logger;
-		}
+        public ClientClass(Global_Constants globalConstants, RealmServer realmServer)
+        {
+            _Global_Constants = globalConstants;
+            _RealmServer = realmServer;
+        }
 
-		public Socket Socket;
+        public Socket Socket;
         public IPAddress Ip = IPAddress.Parse("127.0.0.1");
         public int Port = 0;
         public AuthEngineClass AuthEngine;
@@ -61,7 +55,7 @@ namespace Mangos.Realm
                 case var @case when @case == AuthCMD.CMD_AUTH_LOGON_CHALLENGE:
                 case var case1 when case1 == AuthCMD.CMD_AUTH_RECONNECT_CHALLENGE:
                     {
-						logger.Debug("[{0}:{1}] RS_LOGON_CHALLENGE", Ip, Port);
+                        Console.WriteLine("[{0}] [{1}:{2}] RS_LOGON_CHALLENGE", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port);
                         var argclient = this;
                         _RealmServer.On_RS_LOGON_CHALLENGE(ref data, ref argclient);
                         break;
@@ -70,7 +64,7 @@ namespace Mangos.Realm
                 case var case2 when case2 == AuthCMD.CMD_AUTH_LOGON_PROOF:
                 case var case3 when case3 == AuthCMD.CMD_AUTH_RECONNECT_PROOF:
                     {
-						logger.Debug("[{0}:{1}] RS_LOGON_PROOF", Ip, Port);
+                        Console.WriteLine("[{0}] [{1}:{2}] RS_LOGON_PROOF", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port);
                         var argclient1 = this;
                         _RealmServer.On_RS_LOGON_PROOF(ref data, ref argclient1);
                         break;
@@ -78,7 +72,7 @@ namespace Mangos.Realm
 
                 case var case4 when case4 == AuthCMD.CMD_AUTH_REALMLIST:
                     {
-						logger.Debug("[{0}:{1}] RS_REALMLIST", Ip, Port);
+                        Console.WriteLine("[{0}] [{1}:{2}] RS_REALMLIST", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port);
                         var argclient2 = this;
                         _RealmServer.On_RS_REALMLIST(ref data, ref argclient2);
                         break;
@@ -115,7 +109,9 @@ namespace Mangos.Realm
 
                 default:
                     {
-						logger.Error("[{0}:{1}] Unknown Opcode 0x{3}", Ip, Port, data[0]);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("[{0}] [{1}:{2}] Unknown Opcode 0x{3}", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port, data[0]);
+                        Console.ForegroundColor = ConsoleColor.Gray;
                         var argclient6 = this;
                         _RealmServer.DumpPacket(ref data, ref argclient6);
                         break;
@@ -147,8 +143,10 @@ namespace Mangos.Realm
                 return;
             }
 
-            logger.Debug("Incoming connection from [{0}:{1}]", Ip, Port);
-			logger.Debug("[{0}:{1}] Checking for banned IP.", Ip, Port);
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("[{0}] Incoming connection from [{1}:{2}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port);
+            Console.WriteLine("[{0}] [{1}:{2}] Checking for banned IP.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port);
+            Console.ForegroundColor = ConsoleColor.Gray;
             if (!_RealmServer.AccountDatabase.QuerySQL("SELECT ip FROM ip_banned WHERE ip = '" + Ip.ToString() + "';"))
             {
                 while (!_RealmServer.RealmServerClass.FlagStopListen)
@@ -158,15 +156,17 @@ namespace Mangos.Realm
                     {
                         if (Socket.Available > 100) // DONE: Data flood protection
                         {
-							logger.Error("Incoming Connection dropped for flooding");
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("[{0}] Incoming Connection dropped for flooding", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                            Console.ForegroundColor = ConsoleColor.Gray;
                             break;
                         }
 
                         byte[] buffer;
                         buffer = new byte[Socket.Available];
                         int dummyBytes = Socket.Receive(buffer, buffer.Length, 0);
-						logger.Error("Incoming connection from [{0}:{1}]", Ip, Port);
-						logger.Error("Data Packet: [{0}] ", dummyBytes);
+                        Console.WriteLine("[{0}] Incoming connection from [{1}:{2}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port);
+                        Console.WriteLine("Data Packet: [{0}] ", dummyBytes);
                         OnData(buffer);
                     }
 
@@ -178,11 +178,15 @@ namespace Mangos.Realm
             }
             else
             {
-				logger.Error("[{0}:{1}] This ip is banned.", Ip, Port);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[{0}] [{1}:{2}] This ip is banned.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port);
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
 
             Socket.Close();
-			logger.Debug("Connection from [{0}:{1}] closed", Ip, Port);
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("[{0}] Connection from [{1}:{2}] closed", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port);
+            Console.ForegroundColor = ConsoleColor.Gray;
             Dispose();
         }
 
@@ -190,11 +194,15 @@ namespace Mangos.Realm
         {
             try
             {
-				logger.Debug("[{0}:{1}] ({2}) Data sent, result code {3}", Ip, Port, Socket.Send(data, 0, data.Length, SocketFlags.None), packetName);
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("[{0}] [{1}:{2}] ({4}) Data sent, result code {3}", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port, Socket.Send(data, 0, data.Length, SocketFlags.None), packetName);
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
             catch (Exception)
             {
-				logger.Error("Connection from [{0}:{1}] do not exist - ERROR!!!", Ip, Port);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[{0}] Connection from [{1}:{2}] do not exist - ERROR!!!", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), Ip, Port);
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Socket.Close();
             }
         }

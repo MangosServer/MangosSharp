@@ -23,10 +23,12 @@ using System.Runtime.InteropServices;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Server;
+using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Guild;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -65,27 +67,27 @@ namespace Mangos.Cluster
                 if (mySqlQuery.Rows.Count == 0)
                     throw new ApplicationException("GuildID " + ID + " not found in database.");
                 var guildInfo = mySqlQuery.Rows[0];
-                Name = Conversions.ToString(guildInfo["guild_name"]);
-                Leader = Conversions.ToULong(guildInfo["guild_leader"]);
-                Motd = Conversions.ToString(guildInfo["guild_MOTD"]);
-                EmblemStyle = Conversions.ToByte(guildInfo["guild_tEmblemStyle"]);
-                EmblemColor = Conversions.ToByte(guildInfo["guild_tEmblemColor"]);
-                BorderStyle = Conversions.ToByte(guildInfo["guild_tBorderStyle"]);
-                BorderColor = Conversions.ToByte(guildInfo["guild_tBorderColor"]);
-                BackgroundColor = Conversions.ToByte(guildInfo["guild_tBackgroundColor"]);
+                Name = guildInfo.As<string>("guild_name");
+                Leader = guildInfo.As<ulong>("guild_leader");
+                Motd = guildInfo.As<string>("guild_MOTD");
+                EmblemStyle = guildInfo.As<byte>("guild_tEmblemStyle");
+                EmblemColor = guildInfo.As<byte>("guild_tEmblemColor");
+                BorderStyle = guildInfo.As<byte>("guild_tBorderStyle");
+                BorderColor = guildInfo.As<byte>("guild_tBorderColor");
+                BackgroundColor = guildInfo.As<byte>("guild_tBackgroundColor");
                 cYear = Conversions.ToShort(guildInfo["guild_cYear"]);
-                cMonth = Conversions.ToByte(guildInfo["guild_cMonth"]);
-                cDay = Conversions.ToByte(guildInfo["guild_cDay"]);
+                cMonth = guildInfo.As<byte>("guild_cMonth");
+                cDay = guildInfo.As<byte>("guild_cDay");
                 for (int i = 0; i <= 9; i++)
                 {
-                    Ranks[i] = Conversions.ToString(guildInfo["guild_rank" + i]);
-                    RankRights[i] = Conversions.ToUInteger(guildInfo["guild_rank" + i + "_Rights"]);
+                    Ranks[i] = guildInfo.As<string>("guild_rank" + i);
+                    RankRights[i] = guildInfo.As<uint>("guild_rank" + i + "_Rights");
                 }
 
                 mySqlQuery.Clear();
                 ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_guid FROM characters WHERE char_guildId = " + ID + ";", ref mySqlQuery);
-                foreach (DataRow memberInfo in mySqlQuery.Rows)
-                    Members.Add(Conversions.ToULong(memberInfo["char_guid"]));
+                foreach (DataRow row in mySqlQuery.Rows)
+                    Members.Add(row.As<ulong>("char_guid"));
                 ClusterServiceLocator._WC_Guild.GUILDs.Add(ID, this);
             }
 

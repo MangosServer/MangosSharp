@@ -264,10 +264,10 @@ namespace Mangos.Cluster.Server
                     f.WriteValue(objCharacter.Value.Name);
                     f.WriteEndElement();
                     f.WriteStartElement("race");
-                    f.WriteValue(objCharacter.Value.Race);
+                    f.WriteValue((byte)objCharacter.Value.Race);
                     f.WriteEndElement();
                     f.WriteStartElement("class");
-                    f.WriteValue(objCharacter.Value.Classe);
+                    f.WriteValue((byte)objCharacter.Value.Classe);
                     f.WriteEndElement();
                     f.WriteStartElement("level");
                     f.WriteValue(objCharacter.Value.Level);

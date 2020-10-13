@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Runtime.CompilerServices;
+using Mangos.Common;
 using Mangos.Common.Enums.AuctionHouse;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
@@ -119,10 +120,10 @@ namespace Mangos.World.Auction
 			packet.Dispose();
 		}
 
-		public void AuctionListAddItem(ref Packets.PacketClass packet, ref DataRow Row)
+		public void AuctionListAddItem(ref Packets.PacketClass packet, ref DataRow row)
 		{
-			packet.AddUInt32(Conversions.ToUInteger(Row["auction_id"]));
-			uint itemId = Conversions.ToUInteger(Row["auction_itemId"]);
+			packet.AddUInt32(row.As<uint>("auction_id"));
+			uint itemId = row.As<uint>("auction_itemId");
 			packet.AddUInt32(itemId);
 			checked
 			{
@@ -130,15 +131,15 @@ namespace Mangos.World.Auction
 				packet.AddUInt32(0u);
 				packet.AddUInt32((uint)item.RandomProp);
 				packet.AddUInt32((uint)item.RandomSuffix);
-				packet.AddUInt32(Conversions.ToUInteger(Row["auction_itemCount"]));
+				packet.AddUInt32(row.As<uint>("auction_itemCount"));
 				packet.AddInt32(item.Spells[0].SpellCharges);
-				packet.AddUInt64(Conversions.ToULong(Row["auction_owner"]));
-				packet.AddUInt32(Conversions.ToUInteger(Row["auction_bid"]));
-				packet.AddUInt32(Conversions.ToUInteger(Operators.AddObject(Conversion.Fix(Operators.MultiplyObject(Row["auction_bid"], 0.1f)), 1)));
-				packet.AddUInt32(Conversions.ToUInteger(Row["auction_buyout"]));
-				packet.AddUInt32(Conversions.ToUInteger(Operators.MultiplyObject(Row["auction_timeleft"], 1000)));
-				packet.AddUInt64(Conversions.ToULong(Row["auction_bidder"]));
-				packet.AddUInt32(Conversions.ToUInteger(Row["auction_bid"]));
+				packet.AddUInt64(row.As<ulong>("auction_owner"));
+				packet.AddUInt32(row.As<uint>("auction_bid"));
+				packet.AddUInt32(Conversions.ToUInteger(Operators.AddObject(Conversion.Fix(Operators.MultiplyObject(row["auction_bid"], 0.1f)), 1)));
+				packet.AddUInt32(row.As<uint>("auction_buyout"));
+				packet.AddUInt32(Conversions.ToUInteger(Operators.MultiplyObject(row["auction_timeleft"], 1000)));
+				packet.AddUInt64(row.As<ulong>("auction_bidder"));
+				packet.AddUInt32(row.As<uint>("auction_bid"));
 			}
 		}
 
@@ -211,8 +212,8 @@ namespace Mangos.World.Auction
 				enumerator = MySQLQuery.Rows.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					DataRow Row = (DataRow)enumerator.Current;
-					AuctionListAddItem(ref response, ref Row);
+					DataRow row = (DataRow)enumerator.Current;
+					AuctionListAddItem(ref response, ref row);
 					count = checked(count + 1);
 					if (count == 50)
 					{
@@ -253,8 +254,8 @@ namespace Mangos.World.Auction
 				enumerator = MySQLQuery.Rows.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					DataRow Row = (DataRow)enumerator.Current;
-					AuctionListAddItem(ref response, ref Row);
+					DataRow row = (DataRow)enumerator.Current;
+					AuctionListAddItem(ref response, ref row);
 					count = checked(count + 1);
 					if (count == 50)
 					{
@@ -476,8 +477,8 @@ namespace Mangos.World.Auction
 					enumerator = MySQLQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow Row = (DataRow)enumerator.Current;
-						AuctionListAddItem(ref response, ref Row);
+						DataRow row = (DataRow)enumerator.Current;
+						AuctionListAddItem(ref response, ref row);
 						count++;
 						if (count == 32)
 						{

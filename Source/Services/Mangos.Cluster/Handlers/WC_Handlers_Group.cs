@@ -22,6 +22,7 @@ using System.Data;
 using System.Threading;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Server;
+using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
@@ -434,11 +435,11 @@ namespace Mangos.Cluster.Handlers
             var response = new Packets.PacketClass(OPCODES.SMSG_RAID_INSTANCE_INFO);
             response.AddInt32(q.Rows.Count);                                 // Instances Counts
             int i = 0;
-            foreach (DataRow r in q.Rows)
+            foreach (DataRow row in q.Rows)
             {
-                response.AddUInt32(Conversions.ToUInteger(r["map"]));                               // MapID
-                response.AddUInt32((uint)(Conversions.ToInteger(r["expire"]) - ClusterServiceLocator._Functions.GetTimestamp(DateAndTime.Now)));  // TimeLeft
-                response.AddUInt32(Conversions.ToUInteger(r["instance"]));                          // InstanceID
+                response.AddUInt32(row.As<uint>("map"));                               // MapID
+                response.AddUInt32(row.As<int, uint>("expire") - ClusterServiceLocator._Functions.GetTimestamp(DateAndTime.Now));  // TimeLeft
+                response.AddUInt32(row.As<uint>("instance"));                          // InstanceID
                 response.AddUInt32((uint)i);                                           // Counter
                 i += 1;
             }

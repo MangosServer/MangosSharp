@@ -16,14 +16,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
+using System.Runtime.CompilerServices;
 using Autofac;
 using global;
+using Mangos.Common;
 using Mangos.Common.Globals;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
-using Mangos.Loggers;
-using Mangos.Loggers.Console;
 using Mangos.World.AI;
 using Mangos.World.AntiCheat;
 using Mangos.World.Auction;
@@ -45,9 +46,29 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World
 {
-	[StandardModule]
+    [StandardModule]
 	public sealed class Program
 	{
+		[Serializable]
+		[CompilerGenerated]
+		internal sealed class _Closure_0024__
+		{
+			public static readonly _Closure_0024__ _0024I;
+
+			public static Func<IComponentContext, XmlFileConfigurationProvider<WorldServerConfiguration>> _0024I2_002D0;
+
+			static _Closure_0024__()
+			{
+				_0024I = new _Closure_0024__();
+			}
+
+			internal XmlFileConfigurationProvider<WorldServerConfiguration> _Lambda_0024__2_002D0(IComponentContext x)
+			{
+				return new XmlFileConfigurationProvider<WorldServerConfiguration>("configs/WorldServer.ini");
+			}
+		}
+
+		[STAThread]
 		public static void Main()
 		{
 			IContainer container = WorldServiceLocator._Container;
@@ -58,20 +79,14 @@ namespace Mangos.World
 		public static IContainer CreateContainer()
 		{
 			ContainerBuilder builder = new ContainerBuilder();
-			RegisterLoggers(builder);
 			RegisterConfiguration(builder);
 			RegisterServices(builder);
 			return builder.Build();
 		}
 
-		public static void RegisterLoggers(ContainerBuilder builder)
-		{
-			builder.RegisterType<ConsoleLogger>().As<ILogger>();
-		}
-
 		public static void RegisterConfiguration(ContainerBuilder builder)
 		{
-			builder.Register((x) => new XmlFileConfigurationProvider<WorldServerConfiguration>("configs/WorldServer.ini")).As<IConfigurationProvider<WorldServerConfiguration>>().SingleInstance();
+			builder.Register((_Closure_0024__._0024I2_002D0 != null) ? _Closure_0024__._0024I2_002D0 : (_Closure_0024__._0024I2_002D0 = (IComponentContext x) => new XmlFileConfigurationProvider<WorldServerConfiguration>("configs/WorldServer.ini"))).As<IConfigurationProvider<WorldServerConfiguration>>().SingleInstance();
 			builder.RegisterDecorator<StoredConfigurationProvider<WorldServerConfiguration>, IConfigurationProvider<WorldServerConfiguration>>();
 		}
 

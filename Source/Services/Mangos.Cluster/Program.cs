@@ -24,8 +24,6 @@ using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Server;
 using Mangos.Common;
 using Mangos.Common.Globals;
-using Mangos.Loggers;
-using Mangos.Loggers.Console;
 
 namespace Mangos.Cluster
 {
@@ -39,8 +37,7 @@ namespace Mangos.Cluster
         public static IContainer CreateContainer()
         {
             var builder = new ContainerBuilder();
-			RegisterLoggers(builder);
-			builder.RegisterType<Global_Constants>().As<Global_Constants>();
+            builder.RegisterType<Global_Constants>().As<Global_Constants>();
             builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>();
             builder.RegisterType<Common.Functions>().As<Common.Functions>();
             builder.RegisterType<GlobalZip>().As<GlobalZip>();
@@ -66,11 +63,6 @@ namespace Mangos.Cluster
             builder.RegisterType<WS_Handler_Channels>().As<WS_Handler_Channels>();
             builder.RegisterType<WcHandlerCharacter>().As<WcHandlerCharacter>();
             return builder.Build();
-		}
-
-		public static void RegisterLoggers(ContainerBuilder builder)
-		{
-			builder.RegisterType<ConsoleLogger>().As<ILogger>();
-		}
-	}
+        }
+    }
 }

@@ -1297,8 +1297,8 @@ namespace Mangos.World.Handlers
 					enumerator = listSqlQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow locationRow2 = (DataRow)enumerator.Current;
-						cmdList = Conversions.ToString(Operators.AddObject(cmdList, Operators.ConcatenateObject(locationRow2["name"], ", ")));
+						DataRow row = (DataRow)enumerator.Current;
+						cmdList = Conversions.ToString(Operators.AddObject(cmdList, Operators.ConcatenateObject(row["name"], ", ")));
 					}
 				}
 				finally
@@ -1334,8 +1334,8 @@ namespace Mangos.World.Handlers
 						enumerator2 = mySqlQuery.Rows.GetEnumerator();
 						while (enumerator2.MoveNext())
 						{
-							DataRow locationRow = (DataRow)enumerator2.Current;
-							cmdList2 = Conversions.ToString(Operators.AddObject(cmdList2, Operators.ConcatenateObject(locationRow["name"], ", ")));
+							DataRow row = (DataRow)enumerator2.Current;
+							cmdList2 = Conversions.ToString(Operators.AddObject(cmdList2, Operators.ConcatenateObject(row["name"], ", ")));
 						}
 					}
 					finally

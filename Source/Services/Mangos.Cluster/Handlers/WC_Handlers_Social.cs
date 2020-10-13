@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Data;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Server;
+using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Social;
@@ -40,8 +41,8 @@ namespace Mangos.Cluster.Handlers
             ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND flags = {1};", objCharacter.Guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
 
             // DONE: Add to list
-            foreach (DataRow r in q.Rows)
-                objCharacter.IgnoreList.Add(Conversions.ToULong(r["friend"]));
+            foreach (DataRow row in q.Rows)
+                objCharacter.IgnoreList.Add(row.As<ulong>("friend"));
         }
 
         public void SendFriendList(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
@@ -55,9 +56,9 @@ namespace Mangos.Cluster.Handlers
             if (q.Rows.Count > 0)
             {
                 smsgFriendList.AddInt8((byte)q.Rows.Count);
-                foreach (DataRow r in q.Rows)
+                foreach (DataRow row in q.Rows)
                 {
-                    ulong guid = Conversions.ToULong(r["friend"]);
+                    ulong guid = row.As<ulong>("friend");
                     smsgFriendList.AddUInt64(guid);                    // Player GUID
                     if (ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(guid) && ClusterServiceLocator._WorldCluster.CHARACTERs[guid].IsInWorld)
                     {
@@ -105,8 +106,8 @@ namespace Mangos.Cluster.Handlers
             if (q.Rows.Count > 0)
             {
                 smsgIgnoreList.AddInt8((byte)q.Rows.Count);
-                foreach (DataRow r in q.Rows)
-                    smsgIgnoreList.AddUInt64(Conversions.ToULong(r["friend"]));                    // Player GUID
+                foreach (DataRow row in q.Rows)
+                    smsgIgnoreList.AddUInt64(row.As<ulong>("friend"));                    // Player GUID
             }
             else
             {
@@ -127,9 +128,9 @@ namespace Mangos.Cluster.Handlers
             var friendpacket = new Packets.PacketClass(OPCODES.SMSG_FRIEND_STATUS);
             friendpacket.AddInt8((byte)s);
             friendpacket.AddUInt64(objCharacter.Guid);
-            foreach (DataRow r in q.Rows)
+            foreach (DataRow row in q.Rows)
             {
-                ulong guid = Conversions.ToULong(r["guid"]);
+                ulong guid = row.As<ulong>("guid");
                 if (ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(guid) && ClusterServiceLocator._WorldCluster.CHARACTERs[guid].Client is object)
                 {
                     ClusterServiceLocator._WorldCluster.CHARACTERs[guid].Client.SendMultiplyPackets(friendpacket);

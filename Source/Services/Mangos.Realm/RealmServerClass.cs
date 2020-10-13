@@ -20,40 +20,32 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using global;
 using Mangos.Configuration;
-using Mangos.Loggers;
 using Mangos.Realm.Factories;
 using Microsoft.VisualBasic;
 
 namespace Mangos.Realm
 {
-	public class RealmServerClass : IDisposable
+    public class RealmServerClass : IDisposable
     {
-        private readonly IConfigurationProvider<RealmServerConfiguration> configurationProvider;
-		private readonly ILogger logger;
-
+        private readonly IConfigurationProvider<RealmServerConfiguration> _configurationProvider;
         private readonly Global_Constants _Global_Constants;
         private readonly ClientClassFactory _ClientClassFactory;
         private readonly RealmServer _RealmServer;
 
-		public RealmServerClass(
-			Global_Constants globalConstants,
-			ClientClassFactory clientClassFactory,
-			RealmServer realmServer,
-			IConfigurationProvider<RealmServerConfiguration> configurationProvider, 
-			ILogger logger)
-		{
-			_Global_Constants = globalConstants;
-			_ClientClassFactory = clientClassFactory;
-			_RealmServer = realmServer;
-			this.configurationProvider = configurationProvider;
-			this.logger = logger;
-		}
-
-		public void Start()
+        public RealmServerClass(Global_Constants globalConstants, ClientClassFactory clientClassFactory, RealmServer realmServer, IConfigurationProvider<RealmServerConfiguration> configurationProvider)
         {
-            var configuration = configurationProvider.GetConfiguration();
+            _Global_Constants = globalConstants;
+            _ClientClassFactory = clientClassFactory;
+            _RealmServer = realmServer;
+            _configurationProvider = configurationProvider;
+        }
+
+        public void Start()
+        {
+            var configuration = _configurationProvider.GetConfiguration();
             LstHost = IPAddress.Parse(configuration.RealmServerAddress);
             try
             {
@@ -64,11 +56,14 @@ namespace Mangos.Realm
                 var thread = new Thread(AcceptConnection) { Name = "Realm Server, Listening" };
                 rsListenThread = thread;
                 rsListenThread.Start();
-				logger.Debug("Listening on {0} on port {1}", LstHost, configuration.RealmServerPort);
+                Console.WriteLine("[{0}] Listening on {1} on port {2}", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), LstHost, configuration.RealmServerPort);
             }
             catch (Exception e)
             {
-				logger.Error("Error in {0}: {1}.", e.Message, e.Source);
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[{0}] Error in {2}: {1}.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), e.Message, e.Source);
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
 

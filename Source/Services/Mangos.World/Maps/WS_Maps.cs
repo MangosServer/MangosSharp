@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Text;
+using Mangos.Common;
 using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
@@ -239,24 +240,24 @@ namespace Mangos.World.Maps
 					{
 						switch (Type)
 						{
-						case MapTypes.MAP_BATTLEGROUND:
-							return WorldServiceLocator._Global_Constants.DEFAULT_BATTLEFIELD_EXPIRE_TIME;
-						case MapTypes.MAP_INSTANCE:
-						case MapTypes.MAP_RAID:
-							switch (ID)
-							{
-							case 249:
-								return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(5, 3).Subtract(DateAndTime.Now).TotalSeconds);
-							case 309:
-							case 509:
-								return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(3, 3).Subtract(DateAndTime.Now).TotalSeconds);
-							case 409:
-							case 469:
-							case 531:
-							case 533:
-								return (int)Math.Round(WorldServiceLocator._Functions.GetNextDay(DayOfWeek.Tuesday, 3).Subtract(DateAndTime.Now).TotalSeconds);
-							}
-							break;
+							case MapTypes.MAP_BATTLEGROUND:
+								return WorldServiceLocator._Global_Constants.DEFAULT_BATTLEFIELD_EXPIRE_TIME;
+							case MapTypes.MAP_INSTANCE:
+							case MapTypes.MAP_RAID:
+								switch (ID)
+								{
+									case 249:
+										return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(5, 3).Subtract(DateAndTime.Now).TotalSeconds);
+									case 309:
+									case 509:
+										return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(3, 3).Subtract(DateAndTime.Now).TotalSeconds);
+									case 409:
+									case 469:
+									case 531:
+									case 533:
+										return (int)Math.Round(WorldServiceLocator._Functions.GetNextDay(DayOfWeek.Tuesday, 3).Subtract(DateAndTime.Now).TotalSeconds);
+								}
+								break;
 						}
 						return WorldServiceLocator._Global_Constants.DEFAULT_INSTANCE_EXPIRE_TIME;
 					}
@@ -745,14 +746,14 @@ namespace Mangos.World.Maps
 					enumerator = MysqlQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow InfoRow3 = (DataRow)enumerator.Current;
-						if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(Convert.ToUInt64(decimal.Add(decimal.Add(new decimal(Conversions.ToLong(InfoRow3["guid"])), new decimal(InstanceGuidAdd)), new decimal(WorldServiceLocator._Global_Constants.GUID_UNIT)))))
+						DataRow row = (DataRow)enumerator.Current;
+						if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(Convert.ToUInt64(decimal.Add(decimal.Add(new decimal(row.As<long>("guid")), new decimal(InstanceGuidAdd)), new decimal(WorldServiceLocator._Global_Constants.GUID_UNIT)))))
 						{
 							continue;
 						}
 						try
 						{
-							WS_Creatures.CreatureObject tmpCr = new WS_Creatures.CreatureObject(Convert.ToUInt64(decimal.Add(new decimal(Conversions.ToLong(InfoRow3["guid"])), new decimal(InstanceGuidAdd))), InfoRow3);
+							WS_Creatures.CreatureObject tmpCr = new WS_Creatures.CreatureObject(Convert.ToUInt64(decimal.Add(new decimal(row.As<long>("guid")), new decimal(InstanceGuidAdd))), row);
 							if (tmpCr.GameEvent == 0)
 							{
 								tmpCr.instance = TileInstance;
@@ -763,7 +764,7 @@ namespace Mangos.World.Maps
 						{
 							ProjectData.SetProjectError(ex5);
 							Exception ex4 = ex5;
-							WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating creature [{0}].{1}{2}", InfoRow3["id"], Environment.NewLine, ex4.ToString());
+							WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating creature [{0}].{1}{2}", row["id"], Environment.NewLine, ex4.ToString());
 							ProjectData.ClearProjectError();
 						}
 					}
@@ -783,14 +784,14 @@ namespace Mangos.World.Maps
 					enumerator2 = MysqlQuery.Rows.GetEnumerator();
 					while (enumerator2.MoveNext())
 					{
-						DataRow InfoRow2 = (DataRow)enumerator2.Current;
-						if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(Conversions.ToULong(InfoRow2["guid"]) + InstanceGuidAdd + WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT) || WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(Conversions.ToULong(InfoRow2["guid"]) + InstanceGuidAdd + WorldServiceLocator._Global_Constants.GUID_TRANSPORT))
+						DataRow row = (DataRow)enumerator2.Current;
+						if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(row.As<ulong>("guid") + InstanceGuidAdd + WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT) || WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(row.As<ulong>("guid") + InstanceGuidAdd + WorldServiceLocator._Global_Constants.GUID_TRANSPORT))
 						{
 							continue;
 						}
 						try
 						{
-							WS_GameObjects.GameObjectObject tmpGo = new WS_GameObjects.GameObjectObject(Conversions.ToULong(InfoRow2["guid"]) + InstanceGuidAdd, InfoRow2);
+							WS_GameObjects.GameObjectObject tmpGo = new WS_GameObjects.GameObjectObject(row.As<ulong>("guid") + InstanceGuidAdd, row);
 							if (tmpGo.GameEvent == 0)
 							{
 								tmpGo.instance = TileInstance;
@@ -801,7 +802,7 @@ namespace Mangos.World.Maps
 						{
 							ProjectData.SetProjectError(ex6);
 							Exception ex3 = ex6;
-							WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating gameobject [{0}].{1}{2}", InfoRow2["id"], Environment.NewLine, ex3.ToString());
+							WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating gameobject [{0}].{1}{2}", row["id"], Environment.NewLine, ex3.ToString());
 							ProjectData.ClearProjectError();
 						}
 					}

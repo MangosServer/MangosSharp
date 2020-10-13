@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Data;
 using System.IO;
+using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
 using Mangos.World.Maps;
@@ -43,10 +44,10 @@ namespace Mangos.World.Handlers
 				enumerator = q.Rows.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					DataRow r = (DataRow)enumerator.Current;
-					if (WorldServiceLocator._WS_Maps.Maps.ContainsKey(Conversions.ToUInteger(r["map"])))
+					DataRow row = (DataRow)enumerator.Current;
+					if (WorldServiceLocator._WS_Maps.Maps.ContainsKey(row.As<uint>("map")))
 					{
-						InstanceMapExpire(Conversions.ToUInteger(r["map"]), Conversions.ToUInteger(r["instance"]));
+						InstanceMapExpire(row.As<uint>("map"), row.As<uint>("instance"));
 					}
 				}
 			}
@@ -320,8 +321,8 @@ namespace Mangos.World.Handlers
 				enumerator = q.Rows.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					DataRow r = (DataRow)enumerator.Current;
-					SendUpdateLastInstance(ref Character.client, Conversions.ToUInteger(r["map"]));
+					DataRow row = (DataRow)enumerator.Current;
+					SendUpdateLastInstance(ref Character.client, row.As<uint>("map"));
 				}
 			}
 			finally

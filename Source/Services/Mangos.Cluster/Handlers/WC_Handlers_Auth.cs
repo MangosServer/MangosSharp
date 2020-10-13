@@ -23,6 +23,7 @@ using System.Net.Sockets;
 using System.Threading;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Server;
+using Mangos.Common;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Character;
 using Mangos.Common.Enums.Global;
@@ -421,12 +422,12 @@ namespace Mangos.Cluster.Handlers
                     var e = ItemsMySQLQuery.Rows.GetEnumerator();
                     e.Reset();
                     e.MoveNext();
-                    DataRow r = (DataRow)e.Current;
+                    DataRow row = (DataRow)e.Current;
 
                     // DONE: Add model info
                     for (byte slot = 0, loopTo1 = (byte)EquipmentSlots.EQUIPMENT_SLOT_END; slot <= loopTo1; slot++) // - 1
                     {
-                        if (r is null || Conversions.ToInteger(r["item_slot"]) != slot)
+                        if (row is null || row.As<int>("item_slot") != slot)
                         {
                             // No equiped item in this slot
                             response.AddInt32(0); // Item Model
@@ -435,19 +436,19 @@ namespace Mangos.Cluster.Handlers
                         else
                         {
                             // DONE: Do not show helmet or cloak
-                            if (((ForceRestrictions & (uint)ForceRestrictionFlags.RESTRICT_HIDECLOAK) != 0) && (EquipmentSlots)Conversions.ToByte(r["item_slot"]) == EquipmentSlots.EQUIPMENT_SLOT_BACK || ((ForceRestrictions & (uint)ForceRestrictionFlags.RESTRICT_HIDEHELM) != 0) && (EquipmentSlots)Conversions.ToByte(r["item_slot"]) == EquipmentSlots.EQUIPMENT_SLOT_HEAD)
+                            if (((ForceRestrictions & (uint)ForceRestrictionFlags.RESTRICT_HIDECLOAK) != 0) && (EquipmentSlots)row.As<byte>("item_slot") == EquipmentSlots.EQUIPMENT_SLOT_BACK || ((ForceRestrictions & (uint)ForceRestrictionFlags.RESTRICT_HIDEHELM) != 0) && (EquipmentSlots)row.As<byte>("item_slot") == EquipmentSlots.EQUIPMENT_SLOT_HEAD)
                             {
                                 response.AddInt32(0); // Item Model
                                 response.AddInt8(0);  // Item Slot
                             }
                             else
                             {
-                                response.AddInt32(Conversions.ToInteger(r["displayid"]));          // Item Model
-                                response.AddInt8(Conversions.ToByte(r["inventorytype"]));
+                                response.AddInt32(row.As<int>("displayid"));          // Item Model
+                                response.AddInt8(row.As<byte>("inventorytype"));
                             }       // Item Slot
 
                             e.MoveNext();
-                            r = (DataRow)e.Current;
+                            row = (DataRow)e.Current;
                         }
                     }
                 }
@@ -496,9 +497,9 @@ namespace Mangos.Cluster.Handlers
                 foreach (DataRow row in q.Rows)
                 {
                     // DONE: Delete items
-                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM characters_inventory WHERE item_guid = \"{0}\";", row["item_guid"]));
+                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM characters_inventory WHERE item_guid = \"{0}\";", row.As<string>("item_guid")));
                     // DONE: Delete items in bags
-                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM characters_inventory WHERE item_bag = \"{0}\";", Conversions.ToULong(row["item_guid"]) + ClusterServiceLocator._Global_Constants.GUID_ITEM));
+                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM characters_inventory WHERE item_bag = \"{0}\";", row.As<ulong>("item_guid") + ClusterServiceLocator._Global_Constants.GUID_ITEM));
                 }
 
                 ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT item_guid FROM characters_inventory WHERE item_owner = {0};", guid), ref q);
@@ -508,9 +509,9 @@ namespace Mangos.Cluster.Handlers
                 {
                     // TODO: Return mails?
                     // DONE: Delete mails
-                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM characters_mail WHERE mail_id = \"{0}\";", row["mail_id"]));
+                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM characters_mail WHERE mail_id = \"{0}\";", row.As<string>("mail_id")));
                     // DONE: Delete mail items
-                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM mail_items WHERE mail_id = \"{0}\";", row["mail_id"]));
+                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM mail_items WHERE mail_id = \"{0}\";", row.As<string>("mail_id")));
                 }
 
                 ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM characters WHERE char_guid = \"{0}\";", guid));
