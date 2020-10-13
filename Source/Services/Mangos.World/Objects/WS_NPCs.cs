@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Gossip;
 using Mangos.Common.Enums.Item;
@@ -488,8 +487,8 @@ namespace Mangos.World.Objects
 					enumerator = spellSqlQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						spellsList.Add(row);
+						DataRow sellRow = (DataRow)enumerator.Current;
+						spellsList.Add(sellRow);
 					}
 				}
 				finally
@@ -505,9 +504,9 @@ namespace Mangos.World.Objects
 			packet.AddInt32(creatureInfo.TrainerType);
 			packet.AddInt32(spellsList.Count);
 			float discountMod = objCharacter.GetDiscountMod(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].Faction);
-			foreach (DataRow row in spellsList)
+			foreach (DataRow sellRow2 in spellsList)
 			{
-				int spellID = row.As<int>("spell");
+				int spellID = Conversions.ToInteger(sellRow2["spell"]);
 				if (!WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(spellID))
 				{
 					continue;
@@ -522,7 +521,7 @@ namespace Mangos.World.Objects
 				{
 					reqSpell = WorldServiceLocator._WS_Spells.SpellChains[spellInfo.ID];
 				}
-				byte spellLevel = row.As<byte>("reqlevel");
+				byte spellLevel = Conversions.ToByte(sellRow2["reqlevel"]);
 				if (spellLevel == 0)
 				{
 					spellLevel = checked((byte)spellInfo.spellLevel);
@@ -538,7 +537,7 @@ namespace Mangos.World.Objects
 					{
 						canLearnFlag = 1;
 					}
-					if (canLearnFlag == 0 && row.As<int>("reqskill") != 0 && row.As<int>("reqskillvalue") != 0 && !objCharacter.HaveSkill(row.As<int>("reqskill"), row.As<int>("reqskillvalue")))
+					if (canLearnFlag == 0 && Conversions.ToInteger(sellRow2["reqskill"]) != 0 && Conversions.ToInteger(sellRow2["reqskillvalue"]) != 0 && !objCharacter.HaveSkill(Conversions.ToInteger(sellRow2["reqskill"]), Conversions.ToInteger(sellRow2["reqskillvalue"])))
 					{
 						canLearnFlag = 1;
 					}
@@ -554,12 +553,12 @@ namespace Mangos.World.Objects
 				}
 				packet.AddInt32(spellID);
 				packet.AddInt8(canLearnFlag);
-				packet.AddInt32(checked((int)Math.Round((float)row.As<int>("spellcost") * discountMod)));
+				packet.AddInt32(checked((int)Math.Round((float)Conversions.ToInteger(sellRow2["spellcost"]) * discountMod)));
 				packet.AddInt32(0);
 				packet.AddInt32(isProf);
 				packet.AddInt8(spellLevel);
-				packet.AddInt32(row.As<int>("reqskill"));
-				packet.AddInt32(row.As<int>("reqskillvalue"));
+				packet.AddInt32(Conversions.ToInteger(sellRow2["reqskill"]));
+				packet.AddInt32(Conversions.ToInteger(sellRow2["reqskillvalue"]));
 				packet.AddInt32(reqSpell);
 				packet.AddInt32(0);
 				packet.AddInt32(0);
@@ -1123,8 +1122,8 @@ namespace Mangos.World.Objects
 					enumerator = mySqlQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						int itemID = row.As<int>("item");
+						DataRow sellRow = (DataRow)enumerator.Current;
+						int itemID = Conversions.ToInteger(sellRow["item"]);
 						if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(itemID))
 						{
 							WS_Items.ItemInfo tmpItem = new WS_Items.ItemInfo(itemID);
@@ -1137,13 +1136,13 @@ namespace Mangos.World.Objects
 								packet.AddInt32(-1);
 								packet.AddInt32(itemID);
 								packet.AddInt32(WorldServiceLocator._WorldServer.ITEMDatabase[itemID].Model);
-								if (Operators.ConditionalCompareObjectLessEqual(row["maxcount"], 0, TextCompare: false))
+								if (Operators.ConditionalCompareObjectLessEqual(sellRow["maxcount"], 0, TextCompare: false))
 								{
 									packet.AddInt32(-1);
 								}
 								else
 								{
-									packet.AddInt32(row.As<int>("maxcount"));
+									packet.AddInt32(Conversions.ToInteger(sellRow["maxcount"]));
 								}
 								float discountMod = objCharacter.GetDiscountMod(WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].Faction);
 								packet.AddInt32((int)Math.Round((float)WorldServiceLocator._WorldServer.ITEMDatabase[itemID].BuyPrice * discountMod));

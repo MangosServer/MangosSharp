@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Quest;
 using Mangos.Common.Enums.Spell;
@@ -52,8 +51,8 @@ namespace Mangos.World.Quests
 				enumerator = cQuests.Rows.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					DataRow row = (DataRow)enumerator.Current;
-					int questID = row.As<int>("entry");
+					DataRow cRow = (DataRow)enumerator.Current;
+					int questID = Conversions.ToInteger(cRow["entry"]);
 					WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
 					_quests.Add(tmpQuest, Conversions.ToString(questID));
 				}
@@ -1009,9 +1008,9 @@ namespace Mangos.World.Quests
 					enumerator = cQuests.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						int questID = row.As<int>("quest_id");
-						int questStatus = row.As<int>("quest_status");
+						DataRow cRow = (DataRow)enumerator.Current;
+						int questID = Conversions.ToInteger(cRow["quest_id"]);
+						int questStatus = Conversions.ToInteger(cRow["quest_status"]);
 						if (questStatus >= 0)
 						{
 							if (IsValidQuest(questID))

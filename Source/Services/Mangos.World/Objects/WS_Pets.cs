@@ -18,7 +18,6 @@
 
 using System.Collections;
 using System.Data;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.World.AI;
@@ -228,17 +227,17 @@ namespace Mangos.World.Objects
 			WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM character_pet WHERE owner = '{objCharacter.GUID}';", ref PetQuery);
 			if (PetQuery.Rows.Count != 0)
 			{
-				DataRow row = PetQuery.Rows[0];
-				objCharacter.Pet = new PetObject(checked(row.As<ulong>("id") + WorldServiceLocator._Global_Constants.GUID_PET), row.As<int>("entry"))
+				DataRow PetInfo = PetQuery.Rows[0];
+				objCharacter.Pet = new PetObject(checked(Conversions.ToULong(PetInfo["id"]) + WorldServiceLocator._Global_Constants.GUID_PET), Conversions.ToInteger(PetInfo["entry"]))
 				{
 					Owner = objCharacter,
 					SummonedBy = objCharacter.GUID,
 					CreatedBy = objCharacter.GUID,
-					Level = row.As<byte>("level"),
-					XP = row.As<int>("exp"),
-					PetName = row.As<string>("name")
+					Level = Conversions.ToByte(PetInfo["level"]),
+					XP = Conversions.ToInteger(PetInfo["exp"]),
+					PetName = Conversions.ToString(PetInfo["name"])
 				};
-				if (row.As<byte>("renamed") == 0)
+				if (Conversions.ToByte(PetInfo["renamed"]) == 0)
 				{
 					objCharacter.Pet.Renamed = false;
 				}

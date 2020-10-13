@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
-using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.Global;
@@ -5822,8 +5821,8 @@ namespace Mangos.World.Player
 							{
 								WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Spawning new transport!");
 								ulong cGUID = TransportGUID - WorldServiceLocator._Global_Constants.GUID_TRANSPORT;
-								DataRow row = null;
-								WS_GameObjects.GameObjectObject newGameobject = new WS_GameObjects.GameObjectObject(cGUID, row);
+								DataRow Info = null;
+								WS_GameObjects.GameObjectObject newGameobject = new WS_GameObjects.GameObjectObject(cGUID, Info);
 								newGameobject.AddToWorld();
 								OnTransport = newGameobject;
 								transportX = positionX;
@@ -6551,8 +6550,8 @@ namespace Mangos.World.Player
 					enumerator = SpellQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						Spells.Add(row.As<int>("spellid"), new WS_Spells.CharacterSpell(row.As<int>("spellid"), row.As<byte>("active"), row.As<uint>("cooldown"), row.As<int>("cooldownitem")));
+						DataRow Spell = (DataRow)enumerator.Current;
+						Spells.Add(Conversions.ToInteger(Spell["spellid"]), new WS_Spells.CharacterSpell(Conversions.ToInteger(Spell["spellid"]), Conversions.ToByte(Spell["active"]), Conversions.ToUInteger(Spell["cooldown"]), Conversions.ToInteger(Spell["cooldownitem"])));
 					}
 				}
 				finally
@@ -6721,11 +6720,11 @@ namespace Mangos.World.Player
 							DataRow row = (DataRow)enumerator2.Current;
 							if (Operators.ConditionalCompareObjectNotEqual(row["item_slot"], WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, TextCompare: false))
 							{
-								ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(row.As<long, ulong>("item_guid"), this, unchecked((uint)row.As<byte>("item_slot")) < 19u);
-								Items[row.As<byte>("item_slot")] = tmpItem;
-								if (unchecked(row.As<byte, uint>("item_slot") < 23u))
+								ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID((ulong)Conversions.ToLong(row["item_guid"]), this, unchecked((uint)Conversions.ToByte(row["item_slot"])) < 19u);
+								Items[Conversions.ToByte(row["item_slot"])] = tmpItem;
+								if (unchecked((uint)Conversions.ToByte(row["item_slot"])) < 23u)
 								{
-									UpdateAddItemStats(ref tmpItem, row.As<byte>("item_slot"));
+									UpdateAddItemStats(ref tmpItem, Conversions.ToByte(row["item_slot"]));
 								}
 							}
 						}

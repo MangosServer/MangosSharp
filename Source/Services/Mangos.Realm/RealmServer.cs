@@ -23,15 +23,14 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using global;
 using Mangos.Common;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
-using Mangos.Common.Logging;
 using Mangos.Configuration;
+using Mangos.Loggers;
 using Mangos.Realm.Factories;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -40,21 +39,29 @@ namespace Mangos.Realm
 {
 	public class RealmServer
 	{
-		private readonly IConfigurationProvider<RealmServerConfiguration> _configurationProvider;
+		private readonly IConfigurationProvider<RealmServerConfiguration> configurationProvider;
+		private readonly ILogger logger;
+
 		private readonly Common.Globals.Functions _CommonGlobalFunctions;
 		private readonly Converter _Converter;
 		private readonly Global_Constants _Global_Constants;
 		private readonly RealmServerClassFactory _RealmServerClassFactory;
 		private const string RealmPath = "configs/RealmServer.ini";
-		public BaseWriter Log = new BaseWriter();
 
-		public RealmServer(Common.Globals.Functions commonGlobalFunctions, Converter converter, Global_Constants globalConstants, RealmServerClassFactory realmServerClassFactory, IConfigurationProvider<RealmServerConfiguration> configurationProvider)
+		public RealmServer(
+			Common.Globals.Functions commonGlobalFunctions,
+			Converter converter,
+			Global_Constants globalConstants,
+			RealmServerClassFactory realmServerClassFactory,
+			IConfigurationProvider<RealmServerConfiguration> configurationProvider,
+			ILogger logger)
 		{
 			_CommonGlobalFunctions = commonGlobalFunctions;
 			_Converter = converter;
 			_Global_Constants = globalConstants;
 			_RealmServerClassFactory = realmServerClassFactory;
-			_configurationProvider = configurationProvider;
+			this.configurationProvider = configurationProvider;
+			this.logger = logger;
 		}
 
 		private void LoadConfig()
@@ -64,23 +71,19 @@ namespace Mangos.Realm
 				// Make sure RealmServer.ini exists
 				if (File.Exists(RealmPath) == false)
 				{
-					Console.ForegroundColor = ConsoleColor.Red;
-					Console.WriteLine("[{0}] Cannot Continue. {1} does not exist.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), RealmPath);
-					Console.WriteLine("Please make sure your ini files are inside config folder where the mangosvb executables are located.");
-					Console.WriteLine("Press any key to exit server: ");
-					Console.ReadKey();
+					logger.Error("Cannot Continue. {0} does not exist. Please make sure your ini files are inside config folder where the mangosvb executables are located. ", RealmPath);
+					logger.Error("Please make sure your ini files are inside config folder where the mangosvb executables are located.");
 					Environment.Exit(0);
 				}
 
-				Console.Write("[{0}] Loading Configuration...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-				Console.WriteLine(".[done]");
+				logger.Debug("Loading Configuration...");
 
 				// DONE: Setting SQL Connection
-				var configuration = _configurationProvider.GetConfiguration();
+				var configuration = configurationProvider.GetConfiguration();
 				var accountDbSettings = Strings.Split(configuration.AccountDatabase, ";");
 				if (accountDbSettings.Length != 6)
 				{
-					Console.WriteLine("Invalid connect string for the account database!");
+					logger.Error("Invalid connect string for the account database!");
 				}
 				else
 				{
@@ -94,7 +97,8 @@ namespace Mangos.Realm
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.ToString());
+				logger.Error(e.ToString());
+				throw;
 			}
 		}
 
@@ -109,26 +113,13 @@ namespace Mangos.Realm
 		{
 			switch (messageId)
 			{
-				case var @case when @case == SQL.EMessages.ID_Error:
-					{
-						Console.ForegroundColor = ConsoleColor.Red;
-						break;
-					}
-
-				case var case1 when case1 == SQL.EMessages.ID_Message:
-					{
-						Console.ForegroundColor = ConsoleColor.DarkGreen;
-						break;
-					}
-
-				default:
-					{
-						break;
-					}
+				case SQL.EMessages.ID_Error:
+					logger.Error(outBuf);
+					break;
+				case SQL.EMessages.ID_Message:
+					logger.Debug(outBuf);
+					break;
 			}
-
-			Console.WriteLine("[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + outBuf);
-			Console.ForegroundColor = ConsoleColor.Gray;
 		}
 
 		// Public Enum WoWLanguage As Byte
@@ -161,7 +152,7 @@ namespace Mangos.Realm
 			int bRevision = data[10];
 			int clientBuild = BitConverter.ToInt16(new byte[] { data[11], data[12] }, 0);
 			string clientLanguage = Conversions.ToString((char)data[24]) + (char)data[23] + (char)data[22] + (char)data[21];
-			Console.WriteLine("[{0}] [{1}:{2}] CMD_AUTH_LOGON_CHALLENGE [{3}] [{4}], WoW Version [{5}.{6}.{7}.{8}] [{9}].", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount, packetIp, bMajor.ToString(), bMinor.ToString(), bRevision.ToString(), clientBuild.ToString(), clientLanguage);
+			logger.Debug("[{0}] [{1}:{2}] CMD_AUTH_LOGON_CHALLENGE [{3}] [{4}], WoW Version [{5}.{6}.{7}.{8}] [{9}].", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount, packetIp, bMajor.ToString(), bMinor.ToString(), bRevision.ToString(), clientBuild.ToString(), clientLanguage);
 
 			// DONE: Check if our build can join the server
 			// If ((RequiredVersion1 = 0 AndAlso RequiredVersion2 = 0 AndAlso RequiredVersion3 = 0) OrElse
@@ -169,9 +160,7 @@ namespace Mangos.Realm
 			// clientBuild >= RequiredBuildLow AndAlso clientBuild <= RequiredBuildHigh Then
 			if (bMajor == 0 & bMinor == 0 & bRevision == 0)
 			{
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("[{0}] [{1}:{2}] Invalid Client", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
-				Console.ForegroundColor = ConsoleColor.White;
+				logger.Debug("[{0}] [{1}:{2}] Invalid Client", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
 				var dataResponse = new byte[2];
 				dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 				dataResponse[1] = (byte)AccountState.LOGIN_BADVERSION;
@@ -210,14 +199,12 @@ namespace Mangos.Realm
 				{
 					case var @case when @case == AccountState.LOGIN_OK:
 						{
-							Console.WriteLine("[{0}] [{1}:{2}] Account found [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
+							logger.Debug("[{0}:{1}] Account found [{3}]", client.Ip, client.Port, packetAccount);
 							var account = new byte[(data[33])];
 							Array.Copy(data, 34, account, 0, data[33]);
 							if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(result.Rows[0]["sha_pass_hash"].ToString().Length, 40, false))) // Invalid password type, should always be 40 characters
 							{
-								Console.ForegroundColor = ConsoleColor.Red;
-								Console.WriteLine("[{0}] [{1}:{2}] Not a valid SHA1 password for account: '{3}' SHA1 Hash: '{4}'", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount, result.Rows[0]["sha_pass_hash"]);
-								Console.ForegroundColor = ConsoleColor.White;
+								logger.Debug("[{0}:{1}] Not a valid SHA1 password for account: '{2}' SHA1 Hash: '{3}'", client.Ip, client.Port, packetAccount, result.Rows[0]["sha_pass_hash"]);
 								var dataResponse = new byte[2];
 								dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 								dataResponse[1] = (byte)AccountState.LOGIN_BAD_PASS;
@@ -257,9 +244,7 @@ namespace Mangos.Realm
 								}
 								catch (Exception ex)
 								{
-									Console.ForegroundColor = ConsoleColor.Red;
-									Console.WriteLine("[{0}] [{1}:{2}] Error loading AuthEngine: {3}{4}", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, Environment.NewLine, ex);
-									Console.ForegroundColor = ConsoleColor.White;
+									logger.Error("[{0}:{1}] Error loading AuthEngine: {2}{3}", client.Ip, client.Port, Environment.NewLine, ex);
 								}
 							}
 
@@ -268,7 +253,7 @@ namespace Mangos.Realm
 
 					case var case1 when case1 == AccountState.LOGIN_UNKNOWN_ACCOUNT:
 						{
-							Console.WriteLine("[{0}] [{1}:{2}] Account not found [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
+							logger.Debug("[{0}:{1}] Account not found [{2}]", client.Ip, client.Port, packetAccount);
 							var dataResponse = new byte[2];
 							dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 							dataResponse[1] = (byte)AccountState.LOGIN_UNKNOWN_ACCOUNT;
@@ -278,7 +263,7 @@ namespace Mangos.Realm
 
 					case var case2 when case2 == AccountState.LOGIN_BANNED:
 						{
-							Console.WriteLine("[{0}] [{1}:{2}] Account banned [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
+							logger.Debug("[{0}] [{1}:{2}] Account banned [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
 							var dataResponse = new byte[2];
 							dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 							dataResponse[1] = (byte)AccountState.LOGIN_BANNED;
@@ -288,7 +273,7 @@ namespace Mangos.Realm
 
 					case var case3 when case3 == AccountState.LOGIN_NOTIME:
 						{
-							Console.WriteLine("[{0}] [{1}:{2}] Account prepaid time used [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
+							logger.Debug("[{0}:{1}] Account prepaid time used [{2}]", client.Ip, client.Port, packetAccount);
 							var dataResponse = new byte[2];
 							dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 							dataResponse[1] = (byte)AccountState.LOGIN_NOTIME;
@@ -298,7 +283,7 @@ namespace Mangos.Realm
 
 					case var case4 when case4 == AccountState.LOGIN_ALREADYONLINE:
 						{
-							Console.WriteLine("[{0}] [{1}:{2}] Account already logged in the game [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
+							logger.Debug("[{0}:{1}] Account already logged in the game [{2}]", client.Ip, client.Port, packetAccount);
 							var dataResponse = new byte[2];
 							dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 							dataResponse[1] = (byte)AccountState.LOGIN_ALREADYONLINE;
@@ -343,7 +328,7 @@ namespace Mangos.Realm
 
 					default:
 						{
-							Console.WriteLine("[{0}] [{1}:{2}] Account error [{3}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, packetAccount);
+							logger.Debug("[{0}:{1}] Account error [{2}]", client.Ip, client.Port, packetAccount);
 							var dataResponse = new byte[2];
 							dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 							dataResponse[1] = (byte)AccountState.LOGIN_FAILED;
@@ -355,7 +340,7 @@ namespace Mangos.Realm
 			else if (!string.IsNullOrEmpty(FileSystem.Dir("Updates/wow-patch-" + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + "-" + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + ".mpq")))
 			{
 				// Send UPDATE_MPQ
-				Console.WriteLine("[{0}] [{1}:{2}] CMD_XFER_INITIATE [" + (char)data[6] + (char)data[5] + (char)data[4] + " " + data[8] + "." + data[9] + "." + data[10] + "." + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + " " + (char)data[15] + (char)data[14] + (char)data[13] + " " + (char)data[19] + (char)data[18] + (char)data[17] + " " + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + "]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
+				logger.Debug("[{0}:{1}] CMD_XFER_INITIATE [" + (char)data[6] + (char)data[5] + (char)data[4] + " " + data[8] + "." + data[9] + "." + data[10] + "." + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + " " + (char)data[15] + (char)data[14] + (char)data[13] + " " + (char)data[19] + (char)data[18] + (char)data[17] + " " + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + "]", client.Ip, client.Port);
 				client.UpdateFile = "Updates/wow-patch-" + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + "-" + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + ".mpq";
 				var dataResponse = new byte[31];
 				dataResponse[0] = (byte)AuthCMD.CMD_XFER_INITIATE;
@@ -383,7 +368,7 @@ namespace Mangos.Realm
 			else
 			{
 				// Send BAD_VERSION
-				Console.WriteLine("[{0}] [{1}:{2}] WRONG_VERSION [" + (char)data[6] + (char)data[5] + (char)data[4] + " " + data[8] + "." + data[9] + "." + data[10] + "." + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + " " + (char)data[15] + (char)data[14] + (char)data[13] + " " + (char)data[19] + (char)data[18] + (char)data[17] + " " + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + "]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
+				logger.Warning("[{0}:{1}] WRONG_VERSION [" + (char)data[6] + (char)data[5] + (char)data[4] + " " + data[8] + "." + data[9] + "." + data[10] + "." + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + " " + (char)data[15] + (char)data[14] + (char)data[13] + " " + (char)data[19] + (char)data[18] + (char)data[17] + " " + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + "]", client.Ip, client.Port);
 				var dataResponse = new byte[2];
 				dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 				dataResponse[1] = (byte)AccountState.LOGIN_BADVERSION;
@@ -393,7 +378,7 @@ namespace Mangos.Realm
 
 		public void On_RS_LOGON_PROOF(ref byte[] data, ref ClientClass client)
 		{
-			Console.WriteLine("[{0}] [{1}:{2}] CMD_AUTH_LOGON_PROOF", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
+			logger.Debug("[{1}:{2}] CMD_AUTH_LOGON_PROOF", client.Ip, client.Port);
 			var a = new byte[32];
 			Array.Copy(data, 1, a, 0, 32);
 			var m1 = new byte[20];
@@ -422,7 +407,7 @@ namespace Mangos.Realm
 			if (!passCheck)
 			{
 				// Wrong pass
-				Console.WriteLine("[{0}] [{1}:{2}] Wrong password for user {3}.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, client.Account);
+				logger.Debug("[{0}:{1}] Wrong password for user {3}.", client.Ip, client.Port, client.Account);
 				var dataResponse = new byte[2];
 				dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 				dataResponse[1] = (byte)AccountState.LOGIN_BAD_PASS;
@@ -448,13 +433,13 @@ namespace Mangos.Realm
 				for (int i = 0; i <= 40 - 1; i++)
 					sshash = client.AuthEngine.SsHash[i] < 16 ? sshash + "0" + Conversion.Hex(client.AuthEngine.SsHash[i]) : sshash + Conversion.Hex(client.AuthEngine.SsHash[i]);
 				AccountDatabase.Update($"UPDATE account SET sessionkey = '{sshash}', last_ip = '{client.Ip}', last_login = '{Strings.Format(DateAndTime.Now, "yyyy-MM-dd")}' WHERE username = '{client.Account}';");
-				Console.WriteLine("[{0}] [{1}:{2}] Auth success for user {3}. [{4}]", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port, client.Account, sshash);
+				logger.Debug("[{0}:{1}] Auth success for user {3}. [{4}]", client.Ip, client.Port, client.Account, sshash);
 			}
 		}
 
 		public void On_RS_REALMLIST(ref byte[] data, ref ClientClass client)
 		{
-			Console.WriteLine("[{0}] [{1}:{2}] CMD_REALM_LIST", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
+			logger.Debug("[{0}:{1}] CMD_REALM_LIST", client.Ip, client.Port);
 			int packetLen = 0;
 			int characterCount = 0;
 			DataTable result = null;
@@ -486,19 +471,19 @@ namespace Mangos.Realm
 			dataResponse[7] = (byte)result.Rows.Count;
 			dataResponse[8] = 0;
 			int tmp = 8;
-			foreach (DataRow row in result.Rows)
+			foreach (DataRow host in result.Rows)
 			{
 
 				// Get Number of Characters for the Realm
-				AccountDatabase.Query($"SELECT * FROM realmcharacters WHERE realmid = \"{row.As<int>("id")}\" AND acctid = \"{Conversions.ToInteger(result.Rows[0]["id"])}\";", ref countresult);
+				AccountDatabase.Query($"SELECT * FROM realmcharacters WHERE realmid = \"{Conversions.ToInteger(host["id"])}\" AND acctid = \"{Conversions.ToInteger(result.Rows[0]["id"])}\";", ref countresult);
 				if (countresult.Rows.Count > 0)
 				{
-					characterCount = countresult.Rows[0].As<int>("numchars");
+					characterCount = Conversions.ToInteger(countresult.Rows[0]["numchars"]);
 				}
 
 				// (uint8) Realm Icon
 				// 0 -> Normal; 1 -> PvP; 6 -> RP; 8 -> RPPvP;
-				_Converter.ToBytes(row.As<byte>("icon"), dataResponse, ref tmp);
+				_Converter.ToBytes(Conversions.ToByte(host["icon"]), dataResponse, ref tmp);
 				// (uint8) IsLocked
 				// 0 -> none; 1 -> locked
 				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
@@ -508,12 +493,12 @@ namespace Mangos.Realm
 				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
 				// (uint8) Realm Color
 				// 0 -> Green; 1 -> Red; 2 -> Offline;
-				_Converter.ToBytes(row.As<byte>("realmflags"), dataResponse, ref tmp);
+				_Converter.ToBytes(Conversions.ToByte(host["realmflags"]), dataResponse, ref tmp);
 				// (string) Realm Name (zero terminated)
-				_Converter.ToBytes(row.As<string>("name"), dataResponse, ref tmp);
+				_Converter.ToBytes(Conversions.ToString(host["name"]), dataResponse, ref tmp);
 				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp); // \0
 																				  // (string) Realm Address ("ip:port", zero terminated)
-				_Converter.ToBytes(Operators.ConcatenateObject(Operators.ConcatenateObject(row["address"], ":"), row["port"]).ToString(), dataResponse, ref tmp);
+				_Converter.ToBytes(Operators.ConcatenateObject(Operators.ConcatenateObject(host["address"], ":"), host["port"]).ToString(), dataResponse, ref tmp);
 				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp); // \0
 																				  // (float) Population
 																				  // 400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High
@@ -521,7 +506,7 @@ namespace Mangos.Realm
 																				  // 00 00 C8 43 -> Full
 																				  // 9C C4 C0 3F -> Low
 																				  // BC 74 B3 3F -> Low
-				_Converter.ToBytes(row.As<float>("population"), dataResponse, ref tmp);
+				_Converter.ToBytes(Conversions.ToSingle(host["population"]), dataResponse, ref tmp);
 				// (byte) Number of character at this realm for this account
 				_Converter.ToBytes(Conversions.ToByte(characterCount), dataResponse, ref tmp);
 				// (byte) Timezone
@@ -555,7 +540,7 @@ namespace Mangos.Realm
 				// 0x1C - QA Server
 				// 0x1D - CN9
 				// 0x1E - Test Server 2
-				_Converter.ToBytes(row.As<byte>("timezone"), dataResponse, ref tmp);
+				_Converter.ToBytes(Conversions.ToByte(host["timezone"]), dataResponse, ref tmp);
 				// (byte) Unknown (may be 2 -> TestRealm, / 6 -> ?)
 				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
 			}
@@ -568,14 +553,14 @@ namespace Mangos.Realm
 		public void On_CMD_XFER_CANCEL(ref byte[] data, ref ClientClass client)
 		{
 			// TODO: data parameter is never used
-			Console.WriteLine("[{0}] [{1}:{2}] CMD_XFER_CANCEL", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
+			logger.Debug("[{0}:{1}] CMD_XFER_CANCEL", client.Ip, client.Port);
 			client.Socket.Close();
 		}
 
 		public void On_CMD_XFER_ACCEPT(ref byte[] data, ref ClientClass client)
 		{
 			// TODO: data parameter is never used
-			Console.WriteLine("[{0}] [{1}:{2}] CMD_XFER_ACCEPT", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
+			logger.Debug("[{0}:{1}] CMD_XFER_ACCEPT", client.Ip, client.Port);
 			int tmp; // = 1
 			byte[] buffer;
 			int filelen;
@@ -623,7 +608,7 @@ namespace Mangos.Realm
 
 		public void On_CMD_XFER_RESUME(ref byte[] data, ref ClientClass client)
 		{
-			Console.WriteLine("[{0}] [{1}:{2}] CMD_XFER_RESUME", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), client.Ip, client.Port);
+			logger.Debug("[{0}:{1}] CMD_XFER_RESUME", client.Ip, client.Port);
 			int tmp = 1;
 			byte[] buffer;
 			int filelen;
@@ -710,9 +695,7 @@ namespace Mangos.Realm
 				buffer += " |" + Environment.NewLine;
 			}
 
-			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine(buffer);
-			Console.ForegroundColor = ConsoleColor.Gray;
+			logger.Error(buffer);
 		}
 
 		private void WorldServer_Status_Report()
@@ -722,81 +705,50 @@ namespace Mangos.Realm
 			returnValues = AccountDatabase.Query(string.Format("SELECT * FROM realmlist WHERE allowedSecurityLevel < '1';"), ref result1);
 			if (returnValues > (byte)SQL.ReturnState.Success) // Ok, An error occurred
 			{
-				Console.WriteLine("[{0}] An SQL Error has occurred", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-				Console.WriteLine("*************************");
-				Console.WriteLine("* Press any key to exit *");
-				Console.WriteLine("*************************");
-				Console.ReadKey();
+				logger.Error("An SQL Error has occurred");
 				Environment.Exit(0);
 			}
 
-			Console.WriteLine();
-			Console.WriteLine("[{0}] Loading known game servers...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-			Console.ForegroundColor = ConsoleColor.DarkGreen;
+			logger.Debug("Loading known game servers...");
 			foreach (DataRow row in result1.Rows)
-			{
-				Console.WriteLine("     [{1}] at {0}:{2} - {3}", row.As<string>("address").PadRight(6),
-				row.As<string>("name").PadRight(6),
-				Strings.Format(row["port"]).PadRight(6),
-				_Global_Constants.WorldServerStatus[(byte)(Conversion.Int(row["realmflags"]))].PadRight(6));
-			}
-			Console.ForegroundColor = ConsoleColor.Gray;
+				logger.Debug("[{1}] at {0}:{2} - {3}", row["address"].ToString().PadRight(6),
+					row["name"].ToString().PadRight(6),
+					Strings.Format(row["port"]).PadRight(6),
+					_Global_Constants.WorldServerStatus[(byte)(Conversion.Int(row["realmflags"]))].PadRight(6));
 		}
 
 		public void Start()
 		{
-			Console.BackgroundColor = ConsoleColor.Black;
 			AssemblyTitleAttribute assemblyTitleAttribute = (AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false)[0];
 			Console.Title = $"{assemblyTitleAttribute.Title} v{Assembly.GetExecutingAssembly().GetName().Version}";
-			Console.ForegroundColor = ConsoleColor.Yellow;
 			AssemblyProductAttribute assemblyProductAttribute = (AssemblyProductAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false)[0];
-			Console.WriteLine("{0}", assemblyProductAttribute.Product);
+			logger.Debug("{0}", assemblyProductAttribute.Product);
 			AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0];
-			Console.WriteLine(assemblyCopyrightAttribute.Copyright);
-			Console.WriteLine();
-			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.WriteLine("  __  __      _  _  ___  ___  ___   __   __ ___               ");
-			Console.WriteLine(@" |  \/  |__ _| \| |/ __|/ _ \/ __|  \ \ / /| _ )      We Love ");
-			Console.WriteLine(@" | |\/| / _` | .` | (_ | (_) \__ \   \ V / | _ \   Vanilla Wow");
-			Console.WriteLine(@" |_|  |_\__,_|_|\_|\___|\___/|___/    \_/  |___/              ");
-			Console.WriteLine("                                                              ");
-			Console.WriteLine(" Website / Forum / Support: https://getmangos.eu/             ");
-			Console.WriteLine("");
-			Console.ForegroundColor = ConsoleColor.Magenta;
-			Console.ForegroundColor = ConsoleColor.White;
+			logger.Debug(assemblyCopyrightAttribute.Copyright);
+			logger.Warning("  __  __      _  _  ___  ___  ___                  ");
+			logger.Warning(@" |  \/  |__ _| \| |/ __|/ _ \/ __|     We Love    ");
+			logger.Warning(@" | |\/| / _` | .` | (_ | (_) \__ \     Vanilla Wow");
+			logger.Warning(@" |_|  |_\__,_|_|\_|\___|\___/|___/                ");
+			logger.Warning("                                                   ");
+			logger.Warning(" Website / Forum / Support: https://getmangos.eu/  ");
 			var attributeType = typeof(AssemblyTitleAttribute);
-			Console.Write(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title);
-			Console.WriteLine(" version {0}", Assembly.GetExecutingAssembly().GetName().Version);
-			Console.WriteLine();
-			Console.ForegroundColor = ConsoleColor.Gray;
-			Console.WriteLine("[{0}] Realm Server Starting...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+			logger.Debug(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title);
+			logger.Debug(" version {0}", Assembly.GetExecutingAssembly().GetName().Version);
+			logger.Debug("Realm Server Starting...");
 			LoadConfig();
-			Console.ForegroundColor = ConsoleColor.Yellow;
-			Log.WriteLine(LogType.INFORMATION, "Running from: {0}", AppDomain.CurrentDomain.BaseDirectory);
-			Console.ForegroundColor = ConsoleColor.Gray;
+			logger.Debug("Running from: {0}", AppDomain.CurrentDomain.BaseDirectory);
 			AccountDatabase.SQLMessage += SqlEventHandler;
 			int ReturnValues;
 			ReturnValues = AccountDatabase.Connect();
 			if (ReturnValues > (int)SQL.ReturnState.Success)   // Ok, An error occurred
 			{
-				Console.WriteLine("[{0}] An SQL Error has occurred", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-				Console.WriteLine("*************************");
-				Console.WriteLine("* Press any key to exit *");
-				Console.WriteLine("*************************");
-				Console.ReadKey();
+				logger.Error("An SQL Error has occurred");
 				Environment.Exit(0);
 			}
 
 			if (_CommonGlobalFunctions.CheckRequiredDbVersion(AccountDatabase, ServerDb.Realm) == false) // Check the Database version, exit if its wrong
 			{
-				if (true)
-				{
-					Console.WriteLine("*************************");
-					Console.WriteLine("* Press any key to exit *");
-					Console.WriteLine("*************************");
-					Console.ReadKey();
-					Environment.Exit(0);
-				}
+				Environment.Exit(0);
 			}
 
 			RealmServerClass = _RealmServerClassFactory.Create(this);
@@ -822,17 +774,6 @@ namespace Mangos.Realm
 			{
 				return 0U;
 			}
-		}
-
-		private void GenericExceptionHandler(object sender, UnhandledExceptionEventArgs e)
-		{
-			Exception ex = (Exception)e.ExceptionObject;
-			Log.WriteLine(LogType.CRITICAL, ex.ToString() + Environment.NewLine);
-			Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'RealmServer-Error-yyyy-mmm-d-h-mm.log' file has been created. Check your log folder for more information.");
-			TextWriter tw;
-			tw = new StreamWriter(new FileStream(string.Format("RealmServer-Error-{0}.log", Strings.Format(DateAndTime.Now, "yyyy-MMM-d-H-mm")), FileMode.Create));
-			tw.Write(ex.ToString());
-			tw.Close();
 		}
 	}
 }

@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using Mangos.Common;
 using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Spell;
@@ -387,8 +386,8 @@ namespace Mangos.World.DataStores
 					enumerator = spellChainQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						WorldServiceLocator._WS_Spells.SpellChains.Add(row.As<int>("spell_id"), row.As<int>("prev_spell"));
+						DataRow spellChain = (DataRow)enumerator.Current;
+						WorldServiceLocator._WS_Spells.SpellChains.Add(Conversions.ToInteger(spellChain["spell_id"]), Conversions.ToInteger(spellChain["prev_spell"]));
 					}
 				}
 				finally
@@ -1184,11 +1183,11 @@ namespace Mangos.World.DataStores
 					enumerator = gossipQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						ulong guid = row.As<ulong>("npc_guid");
+						DataRow gossip = (DataRow)enumerator.Current;
+						ulong guid = Conversions.ToULong(gossip["npc_guid"]);
 						if (!WorldServiceLocator._WS_DBCDatabase.CreatureGossip.ContainsKey(guid))
 						{
-							WorldServiceLocator._WS_DBCDatabase.CreatureGossip.Add(guid, row.As<int>("textid"));
+							WorldServiceLocator._WS_DBCDatabase.CreatureGossip.Add(guid, Conversions.ToInteger(gossip["textid"]));
 						}
 					}
 				}
@@ -1259,13 +1258,13 @@ namespace Mangos.World.DataStores
 					enumerator = movementsQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						int id = row.As<int>("id");
+						DataRow movement = (DataRow)enumerator.Current;
+						int id = Conversions.ToInteger(movement["id"]);
 						if (!WorldServiceLocator._WS_DBCDatabase.CreatureMovement.ContainsKey(id))
 						{
 							WorldServiceLocator._WS_DBCDatabase.CreatureMovement.Add(id, new Dictionary<int, WS_DBCDatabase.CreatureMovePoint>());
 						}
-						WorldServiceLocator._WS_DBCDatabase.CreatureMovement[id].Add(row.As<int>("point"), new WS_DBCDatabase.CreatureMovePoint(row.As<float>("position_x"), row.As<float>("position_y"), row.As<float>("position_z"), row.As<int>("delay"), row.As<int>("move_flag"), row.As<int>("action"), row.As<int>("action_chance")));
+						WorldServiceLocator._WS_DBCDatabase.CreatureMovement[id].Add(Conversions.ToInteger(movement["point"]), new WS_DBCDatabase.CreatureMovePoint(Conversions.ToSingle(movement["position_x"]), Conversions.ToSingle(movement["position_y"]), Conversions.ToSingle(movement["position_z"]), Conversions.ToInteger(movement["delay"]), Conversions.ToInteger(movement["move_flag"]), Conversions.ToInteger(movement["action"]), Conversions.ToInteger(movement["action_chance"])));
 					}
 				}
 				finally
@@ -1300,13 +1299,13 @@ namespace Mangos.World.DataStores
 					enumerator = equipQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						int entry = row.As<int>("entry");
+						DataRow equipInfo = (DataRow)enumerator.Current;
+						int entry = Conversions.ToInteger(equipInfo["entry"]);
 						if (!WorldServiceLocator._WS_DBCDatabase.CreatureEquip.ContainsKey(entry))
 						{
 							try
 							{
-								WorldServiceLocator._WS_DBCDatabase.CreatureEquip.Add(entry, new WS_DBCDatabase.CreatureEquipInfo(row.As<int>("equipmodel1"), row.As<int>("equipmodel2"), row.As<int>("equipmodel3"), row.As<uint>("equipinfo1"), row.As<uint>("equipinfo2"), row.As<uint>("equipinfo3"), row.As<int>("equipslot1"), row.As<int>("equipslot2"), row.As<int>("equipslot3")));
+								WorldServiceLocator._WS_DBCDatabase.CreatureEquip.Add(entry, new WS_DBCDatabase.CreatureEquipInfo(Conversions.ToInteger(equipInfo["equipmodel1"]), Conversions.ToInteger(equipInfo["equipmodel2"]), Conversions.ToInteger(equipInfo["equipmodel3"]), Conversions.ToUInteger(equipInfo["equipinfo1"]), Conversions.ToUInteger(equipInfo["equipinfo2"]), Conversions.ToUInteger(equipInfo["equipinfo3"]), Conversions.ToInteger(equipInfo["equipslot1"]), Conversions.ToInteger(equipInfo["equipslot2"]), Conversions.ToInteger(equipInfo["equipslot3"])));
 							}
 							catch (DataException ex)
 							{
@@ -1352,11 +1351,11 @@ namespace Mangos.World.DataStores
 					enumerator = modelQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						int entry = row.As<int>("modelid");
+						DataRow modelInfo = (DataRow)enumerator.Current;
+						int entry = Conversions.ToInteger(modelInfo["modelid"]);
 						if (!WorldServiceLocator._WS_DBCDatabase.CreatureModel.ContainsKey(entry))
 						{
-							WorldServiceLocator._WS_DBCDatabase.CreatureModel.Add(entry, new WS_DBCDatabase.CreatureModelInfo(row.As<float>("bounding_radius"), row.As<float>("combat_reach"), row.As<byte>("gender"), row.As<int>("modelid_other_gender")));
+							WorldServiceLocator._WS_DBCDatabase.CreatureModel.Add(entry, new WS_DBCDatabase.CreatureModelInfo(Conversions.ToSingle(modelInfo["bounding_radius"]), Conversions.ToSingle(modelInfo["combat_reach"]), Conversions.ToByte(modelInfo["gender"]), Conversions.ToInteger(modelInfo["modelid_other_gender"])));
 						}
 					}
 				}
@@ -1390,9 +1389,9 @@ namespace Mangos.World.DataStores
 				enumerator = questStarters.Rows.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					DataRow row = (DataRow)enumerator.Current;
-					int entry4 = row.As<int>("entry");
-					int quest4 = row.As<int>("quest");
+					DataRow starter3 = (DataRow)enumerator.Current;
+					int entry4 = Conversions.ToInteger(starter3["entry"]);
+					int quest4 = Conversions.ToInteger(starter3["quest"]);
 					if (!WorldServiceLocator._WorldServer.CreatureQuestStarters.ContainsKey(entry4))
 					{
 						WorldServiceLocator._WorldServer.CreatureQuestStarters.Add(entry4, new List<int>());
@@ -1416,9 +1415,9 @@ namespace Mangos.World.DataStores
 				enumerator2 = questStarters.Rows.GetEnumerator();
 				while (enumerator2.MoveNext())
 				{
-					DataRow row = (DataRow)enumerator2.Current;
-					int entry3 = row.As<int>("entry");
-					int quest3 = row.As<int>("quest");
+					DataRow starter4 = (DataRow)enumerator2.Current;
+					int entry3 = Conversions.ToInteger(starter4["entry"]);
+					int quest3 = Conversions.ToInteger(starter4["quest"]);
 					if (!WorldServiceLocator._WorldServer.GameobjectQuestStarters.ContainsKey(entry3))
 					{
 						WorldServiceLocator._WorldServer.GameobjectQuestStarters.Add(entry3, new List<int>());
@@ -1446,9 +1445,9 @@ namespace Mangos.World.DataStores
 					enumerator3 = questFinishers.Rows.GetEnumerator();
 					while (enumerator3.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator3.Current;
-						int entry2 = row.As<int>("entry");
-						int quest2 = row.As<int>("quest");
+						DataRow starter2 = (DataRow)enumerator3.Current;
+						int entry2 = Conversions.ToInteger(starter2["entry"]);
+						int quest2 = Conversions.ToInteger(starter2["quest"]);
 						if (!WorldServiceLocator._WorldServer.CreatureQuestFinishers.ContainsKey(entry2))
 						{
 							WorldServiceLocator._WorldServer.CreatureQuestFinishers.Add(entry2, new List<int>());
@@ -1472,9 +1471,9 @@ namespace Mangos.World.DataStores
 					enumerator4 = questFinishers.Rows.GetEnumerator();
 					while (enumerator4.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator4.Current;
-						int entry = row.As<int>("entry");
-						int quest = row.As<int>("quest");
+						DataRow starter = (DataRow)enumerator4.Current;
+						int entry = Conversions.ToInteger(starter["entry"]);
+						int quest = Conversions.ToInteger(starter["quest"]);
 						if (!WorldServiceLocator._WorldServer.GameobjectQuestFinishers.ContainsKey(entry))
 						{
 							WorldServiceLocator._WorldServer.GameobjectQuestFinishers.Add(entry, new List<int>());
@@ -1520,15 +1519,15 @@ namespace Mangos.World.DataStores
 					enumerator = weatherQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						int zone = row.As<int>("zone");
+						DataRow weather = (DataRow)enumerator.Current;
+						int zone = Conversions.ToInteger(weather["zone"]);
 						if (!WorldServiceLocator._WS_Weather.WeatherZones.ContainsKey(zone))
 						{
 							WS_Weather.WeatherZone zoneChanges = new WS_Weather.WeatherZone(zone);
-							zoneChanges.Seasons[0] = new WS_Weather.WeatherSeasonChances(row.As<int>("spring_rain_chance"), row.As<int>("spring_snow_chance"), row.As<int>("spring_storm_chance"));
-							zoneChanges.Seasons[1] = new WS_Weather.WeatherSeasonChances(row.As<int>("summer_rain_chance"), row.As<int>("summer_snow_chance"), row.As<int>("summer_storm_chance"));
-							zoneChanges.Seasons[2] = new WS_Weather.WeatherSeasonChances(row.As<int>("fall_rain_chance"), row.As<int>("fall_snow_chance"), row.As<int>("fall_storm_chance"));
-							zoneChanges.Seasons[3] = new WS_Weather.WeatherSeasonChances(row.As<int>("winter_rain_chance"), row.As<int>("winter_snow_chance"), row.As<int>("winter_storm_chance"));
+							zoneChanges.Seasons[0] = new WS_Weather.WeatherSeasonChances(Conversions.ToInteger(weather["spring_rain_chance"]), Conversions.ToInteger(weather["spring_snow_chance"]), Conversions.ToInteger(weather["spring_storm_chance"]));
+							zoneChanges.Seasons[1] = new WS_Weather.WeatherSeasonChances(Conversions.ToInteger(weather["summer_rain_chance"]), Conversions.ToInteger(weather["summer_snow_chance"]), Conversions.ToInteger(weather["summer_storm_chance"]));
+							zoneChanges.Seasons[2] = new WS_Weather.WeatherSeasonChances(Conversions.ToInteger(weather["fall_rain_chance"]), Conversions.ToInteger(weather["fall_snow_chance"]), Conversions.ToInteger(weather["fall_storm_chance"]));
+							zoneChanges.Seasons[3] = new WS_Weather.WeatherSeasonChances(Conversions.ToInteger(weather["winter_rain_chance"]), Conversions.ToInteger(weather["winter_snow_chance"]), Conversions.ToInteger(weather["winter_storm_chance"]));
 							WorldServiceLocator._WS_Weather.WeatherZones.Add(zone, zoneChanges);
 						}
 					}

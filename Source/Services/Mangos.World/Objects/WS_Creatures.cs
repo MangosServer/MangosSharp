@@ -23,7 +23,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.Global;
@@ -123,16 +122,16 @@ namespace Mangos.World.Objects
 				{
 					switch (CreatureInfo.CreatureFamily)
 					{
-						case 3:
-						case 10:
-						case 11:
-						case 12:
-						case 20:
-						case 21:
-						case 27:
-							return false;
-						default:
-							return true;
+					case 3:
+					case 10:
+					case 11:
+					case 12:
+					case 20:
+					case 21:
+					case 27:
+						return false;
+					default:
+						return true;
 					}
 				}
 			}
@@ -805,41 +804,41 @@ namespace Mangos.World.Objects
 					WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = 0uL;
 					switch (Character.Group.LootMethod)
 					{
-						case GroupLootMethod.LOOT_FREE_FOR_ALL:
-							foreach (ulong objCharacter in Character.Group.LocalMembers)
+					case GroupLootMethod.LOOT_FREE_FOR_ALL:
+						foreach (ulong objCharacter in Character.Group.LocalMembers)
+						{
+							if (SeenBy.Contains(objCharacter))
 							{
-								if (SeenBy.Contains(objCharacter))
-								{
-									WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = objCharacter;
-									WorldServiceLocator._WorldServer.CHARACTERs[objCharacter].client.Send(ref packet);
-								}
+								WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = objCharacter;
+								WorldServiceLocator._WorldServer.CHARACTERs[objCharacter].client.Send(ref packet);
 							}
-							break;
-						case GroupLootMethod.LOOT_MASTER:
-							if (Character.Group.LocalLootMaster == null)
-							{
-								WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = Character.GUID;
-								Character.client.Send(ref packet);
-							}
-							else
-							{
-								WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = Character.Group.LocalLootMaster.GUID;
-								Character.Group.LocalLootMaster.client.Send(ref packet);
-							}
-							break;
-						case GroupLootMethod.LOOT_ROUND_ROBIN:
-						case GroupLootMethod.LOOT_GROUP:
-						case GroupLootMethod.LOOT_NEED_BEFORE_GREED:
-							{
-								WS_PlayerData.CharacterObject cLooter = Character.Group.GetNextLooter();
-								while (!SeenBy.Contains(cLooter.GUID) && cLooter != Character)
-								{
-									cLooter = Character.Group.GetNextLooter();
-								}
-								WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = cLooter.GUID;
-								cLooter.client.Send(ref packet);
-								break;
-							}
+						}
+						break;
+					case GroupLootMethod.LOOT_MASTER:
+						if (Character.Group.LocalLootMaster == null)
+						{
+							WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = Character.GUID;
+							Character.client.Send(ref packet);
+						}
+						else
+						{
+							WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = Character.Group.LocalLootMaster.GUID;
+							Character.Group.LocalLootMaster.client.Send(ref packet);
+						}
+						break;
+					case GroupLootMethod.LOOT_ROUND_ROBIN:
+					case GroupLootMethod.LOOT_GROUP:
+					case GroupLootMethod.LOOT_NEED_BEFORE_GREED:
+					{
+						WS_PlayerData.CharacterObject cLooter = Character.Group.GetNextLooter();
+						while (!SeenBy.Contains(cLooter.GUID) && cLooter != Character)
+						{
+							cLooter = Character.Group.GetNextLooter();
+						}
+						WorldServiceLocator._WS_Loot.LootTable[GUID].LootOwner = cLooter.GUID;
+						cLooter.client.Send(ref packet);
+						break;
+					}
 					}
 				}
 				else
@@ -884,28 +883,111 @@ namespace Mangos.World.Objects
 						byte GrayLevel = 0;
 						switch (Character.Level)
 						{
+						case 0:
+						case 1:
+						case 2:
+						case 3:
+						case 4:
+						case 5:
+							GrayLevel = 0;
+							break;
+						case 6:
+						case 7:
+						case 8:
+						case 9:
+						case 10:
+						case 11:
+						case 12:
+						case 13:
+						case 14:
+						case 15:
+						case 16:
+						case 17:
+						case 18:
+						case 19:
+						case 20:
+						case 21:
+						case 22:
+						case 23:
+						case 24:
+						case 25:
+						case 26:
+						case 27:
+						case 28:
+						case 29:
+						case 30:
+						case 31:
+						case 32:
+						case 33:
+						case 34:
+						case 35:
+						case 36:
+						case 37:
+						case 38:
+						case 39:
+							GrayLevel = (byte)Math.Round(unchecked((double)(int)Character.Level - Math.Floor((double)(int)Character.Level / 10.0)) - 5.0);
+							break;
+						case 40:
+						case 41:
+						case 42:
+						case 43:
+						case 44:
+						case 45:
+						case 46:
+						case 47:
+						case 48:
+						case 49:
+						case 50:
+						case 51:
+						case 52:
+						case 53:
+						case 54:
+						case 55:
+						case 56:
+						case 57:
+						case 58:
+						case 59:
+							GrayLevel = (byte)Math.Round(unchecked((double)(int)Character.Level - Math.Floor((double)(int)Character.Level / 5.0)) - 1.0);
+							break;
+						default:
+							GrayLevel = (byte)(unchecked((int)Character.Level) - 9);
+							break;
+						}
+						if (unchecked((uint)Level > (uint)GrayLevel))
+						{
+							int ZD = 0;
+							switch (Character.Level)
+							{
 							case 0:
 							case 1:
 							case 2:
 							case 3:
 							case 4:
 							case 5:
-								GrayLevel = 0;
-								break;
 							case 6:
 							case 7:
+								ZD = 5;
+								break;
 							case 8:
 							case 9:
+								ZD = 6;
+								break;
 							case 10:
 							case 11:
+								ZD = 7;
+								break;
 							case 12:
 							case 13:
 							case 14:
 							case 15:
+								ZD = 8;
+								break;
 							case 16:
 							case 17:
 							case 18:
 							case 19:
+								ZD = 9;
+								break;
 							case 20:
 							case 21:
 							case 22:
@@ -916,6 +998,8 @@ namespace Mangos.World.Objects
 							case 27:
 							case 28:
 							case 29:
+								ZD = 11;
+								break;
 							case 30:
 							case 31:
 							case 32:
@@ -926,124 +1010,39 @@ namespace Mangos.World.Objects
 							case 37:
 							case 38:
 							case 39:
-								GrayLevel = (byte)Math.Round(unchecked((double)(int)Character.Level - Math.Floor((double)(int)Character.Level / 10.0)) - 5.0);
+								ZD = 12;
 								break;
 							case 40:
 							case 41:
 							case 42:
 							case 43:
 							case 44:
+								ZD = 13;
+								break;
 							case 45:
 							case 46:
 							case 47:
 							case 48:
 							case 49:
+								ZD = 14;
+								break;
 							case 50:
 							case 51:
 							case 52:
 							case 53:
 							case 54:
+								ZD = 15;
+								break;
 							case 55:
 							case 56:
 							case 57:
 							case 58:
 							case 59:
-								GrayLevel = (byte)Math.Round(unchecked((double)(int)Character.Level - Math.Floor((double)(int)Character.Level / 5.0)) - 1.0);
+								ZD = 16;
 								break;
 							default:
-								GrayLevel = (byte)(unchecked((int)Character.Level) - 9);
+								ZD = 17;
 								break;
-						}
-						if (unchecked((uint)Level > (uint)GrayLevel))
-						{
-							int ZD = 0;
-							switch (Character.Level)
-							{
-								case 0:
-								case 1:
-								case 2:
-								case 3:
-								case 4:
-								case 5:
-								case 6:
-								case 7:
-									ZD = 5;
-									break;
-								case 8:
-								case 9:
-									ZD = 6;
-									break;
-								case 10:
-								case 11:
-									ZD = 7;
-									break;
-								case 12:
-								case 13:
-								case 14:
-								case 15:
-									ZD = 8;
-									break;
-								case 16:
-								case 17:
-								case 18:
-								case 19:
-									ZD = 9;
-									break;
-								case 20:
-								case 21:
-								case 22:
-								case 23:
-								case 24:
-								case 25:
-								case 26:
-								case 27:
-								case 28:
-								case 29:
-									ZD = 11;
-									break;
-								case 30:
-								case 31:
-								case 32:
-								case 33:
-								case 34:
-								case 35:
-								case 36:
-								case 37:
-								case 38:
-								case 39:
-									ZD = 12;
-									break;
-								case 40:
-								case 41:
-								case 42:
-								case 43:
-								case 44:
-									ZD = 13;
-									break;
-								case 45:
-								case 46:
-								case 47:
-								case 48:
-								case 49:
-									ZD = 14;
-									break;
-								case 50:
-								case 51:
-								case 52:
-								case 53:
-								case 54:
-									ZD = 15;
-									break;
-								case 55:
-								case 56:
-								case 57:
-								case 58:
-								case 59:
-									ZD = 16;
-									break;
-								default:
-									ZD = 17;
-									break;
 							}
 							XP = (int)Math.Round((double)XP * (1.0 - (double)(unchecked((int)Character.Level) - unchecked((int)Level)) / (double)ZD));
 						}
@@ -1077,9 +1076,9 @@ namespace Mangos.World.Objects
 					int membersCount = Character.Group.GetMembersCount();
 					XP = ((membersCount <= 2) ? (XP * 1) : (membersCount switch
 					{
-						3 => (int)Math.Round((double)XP * 1.166),
-						4 => (int)Math.Round((double)XP * 1.3),
-						_ => (int)Math.Round((double)XP * 1.4),
+						3 => (int)Math.Round((double)XP * 1.166), 
+						4 => (int)Math.Round((double)XP * 1.3), 
+						_ => (int)Math.Round((double)XP * 1.4), 
 					}));
 					int baseLvl = 0;
 					foreach (ulong Member2 in Character.Group.LocalMembers)
@@ -1363,7 +1362,7 @@ namespace Mangos.World.Objects
 				}
 			}
 
-			public CreatureObject(ulong GUID_, DataRow infoRow = null)
+			public CreatureObject(ulong GUID_, DataRow Info = null)
 			{
 				ID = 0;
 				aiScript = null;
@@ -1395,7 +1394,7 @@ namespace Mangos.World.Objects
 				LastMove = 0;
 				LastMove_Time = 0;
 				PositionUpdated = true;
-				if (infoRow == null)
+				if (Info == null)
 				{
 					DataTable MySQLQuery = new DataTable();
 					WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM creature LEFT OUTER JOIN game_event_creature ON creature.guid = game_event_creature.guid WHERE creature.guid = {GUID_};", ref MySQLQuery);
@@ -1404,19 +1403,19 @@ namespace Mangos.World.Objects
 						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Creature Spawn not found in database. [GUID={0:X}]", GUID_);
 						return;
 					}
-					infoRow = MySQLQuery.Rows[0];
+					Info = MySQLQuery.Rows[0];
 				}
-				DataRow row = null;
+				DataRow AddonInfo = null;
 				DataTable AddonInfoQuery = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM spawns_creatures_addon WHERE spawn_id = {GUID_};", ref AddonInfoQuery);
 				if (AddonInfoQuery.Rows.Count > 0)
 				{
-					row = AddonInfoQuery.Rows[0];
+					AddonInfo = AddonInfoQuery.Rows[0];
 				}
-				positionX = infoRow.As<float>("position_X");
-				positionY = infoRow.As<float>("position_Y");
-				positionZ = infoRow.As<float>("position_Z");
-				orientation = infoRow.As<float>("orientation");
+				positionX = Conversions.ToSingle(Info["position_X"]);
+				positionY = Conversions.ToSingle(Info["position_Y"]);
+				positionZ = Conversions.ToSingle(Info["position_Z"]);
+				orientation = Conversions.ToSingle(Info["orientation"]);
 				OldX = positionX;
 				OldY = positionY;
 				OldZ = positionZ;
@@ -1424,25 +1423,25 @@ namespace Mangos.World.Objects
 				SpawnY = positionY;
 				SpawnZ = positionZ;
 				SpawnO = orientation;
-				ID = infoRow.As<int>("id");
-				MapID = infoRow.As<uint>("map");
-				SpawnID = infoRow.As<int>("guid");
-				Model = infoRow.As<int>("modelid");
-				SpawnTime = infoRow.As<int>("spawntimesecs");
-				SpawnRange = infoRow.As<float>("spawndist");
-				MoveType = infoRow.As<byte>("MovementType");
-				Life.Current = infoRow.As<int>("curhealth");
-				Mana.Current = infoRow.As<int>("curmana");
-				EquipmentID = infoRow.As<int>("equipment_id");
-				if (row != null)
+				ID = Conversions.ToInteger(Info["id"]);
+				MapID = Conversions.ToUInteger(Info["map"]);
+				SpawnID = Conversions.ToInteger(Info["guid"]);
+				Model = Conversions.ToInteger(Info["modelid"]);
+				SpawnTime = Conversions.ToInteger(Info["spawntimesecs"]);
+				SpawnRange = Conversions.ToSingle(Info["spawndist"]);
+				MoveType = Conversions.ToByte(Info["MovementType"]);
+				Life.Current = Conversions.ToInteger(Info["curhealth"]);
+				Mana.Current = Conversions.ToInteger(Info["curmana"]);
+				EquipmentID = Conversions.ToInteger(Info["equipment_id"]);
+				if (AddonInfo != null)
 				{
-					Mount = row.As<int>("spawn_mount");
-					cEmoteState = row.As<int>("spawn_emote");
-					MoveFlags = row.As<int>("spawn_moveflags");
-					cBytes0 = row.As<int>("spawn_bytes0");
-					cBytes1 = row.As<int>("spawn_bytes1");
-					cBytes2 = row.As<int>("spawn_bytes2");
-					WaypointID = row.As<int>("spawn_pathid");
+					Mount = Conversions.ToInteger(AddonInfo["spawn_mount"]);
+					cEmoteState = Conversions.ToInteger(AddonInfo["spawn_emote"]);
+					MoveFlags = Conversions.ToInteger(AddonInfo["spawn_moveflags"]);
+					cBytes0 = Conversions.ToInteger(AddonInfo["spawn_bytes0"]);
+					cBytes1 = Conversions.ToInteger(AddonInfo["spawn_bytes1"]);
+					cBytes2 = Conversions.ToInteger(AddonInfo["spawn_bytes2"]);
+					WaypointID = Conversions.ToInteger(AddonInfo["spawn_pathid"]);
 				}
 				if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(ID))
 				{

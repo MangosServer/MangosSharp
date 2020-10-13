@@ -18,6 +18,7 @@
 
 using global;
 using Mangos.Configuration;
+using Mangos.Loggers;
 
 namespace Mangos.Realm.Factories
 {
@@ -25,18 +26,24 @@ namespace Mangos.Realm.Factories
     {
         private readonly Global_Constants _Global_Constants;
         private readonly ClientClassFactory _ClientClassFactory;
-        private readonly IConfigurationProvider<RealmServerConfiguration> _configurationProvider;
+        private readonly IConfigurationProvider<RealmServerConfiguration> configurationProvider;
+		private readonly ILogger logger;
 
-        public RealmServerClassFactory(Global_Constants globalConstants, ClientClassFactory clientClassFactory, IConfigurationProvider<RealmServerConfiguration> configurationProvider)
-        {
-            _Global_Constants = globalConstants;
-            _ClientClassFactory = clientClassFactory;
-            _configurationProvider = configurationProvider;
-        }
+		public RealmServerClassFactory(
+			Global_Constants globalConstants,
+			ClientClassFactory clientClassFactory,
+			IConfigurationProvider<RealmServerConfiguration> configurationProvider, 
+			ILogger logger)
+		{
+			_Global_Constants = globalConstants;
+			_ClientClassFactory = clientClassFactory;
+			this.configurationProvider = configurationProvider;
+			this.logger = logger;
+		}
 
-        public RealmServerClass Create(RealmServer realmServer)
+		public RealmServerClass Create(RealmServer realmServer)
         {
-            return new RealmServerClass(_Global_Constants, _ClientClassFactory, realmServer, _configurationProvider);
+            return new RealmServerClass(_Global_Constants, _ClientClassFactory, realmServer, configurationProvider, logger);
         }
     }
 }

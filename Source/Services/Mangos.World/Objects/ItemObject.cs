@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Item;
 using Mangos.Common.Enums.Spell;
@@ -415,8 +414,8 @@ namespace Mangos.World.Objects
 						DataRow row = (DataRow)enumerator.Current;
 						if (Operators.ConditionalCompareObjectNotEqual(row["item_slot"], WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, TextCompare: false))
 						{
-							ItemObject tmpItem = new ItemObject(row.As<long, ulong>("item_guid"));
-							Items[row.As<byte>("item_slot")] = tmpItem;
+							ItemObject tmpItem = new ItemObject((ulong)Conversions.ToLong(row["item_guid"]));
+							Items[Conversions.ToByte(row["item_slot"])] = tmpItem;
 						}
 					}
 				}

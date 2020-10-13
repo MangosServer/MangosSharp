@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using Mangos.Common;
 using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
 using Mangos.World.Player;
@@ -198,9 +197,9 @@ namespace Mangos.World.Maps
 							enumerator = GraveQuery.Rows.GetEnumerator();
 							while (enumerator.MoveNext())
 							{
-								DataRow row = (DataRow)enumerator.Current;
-								int GraveyardID2 = row.As<int>("id");
-								int GraveyardFaction2 = row.As<int>("faction");
+								DataRow GraveLink2 = (DataRow)enumerator.Current;
+								int GraveyardID2 = Conversions.ToInteger(GraveLink2["id"]);
+								int GraveyardFaction2 = Conversions.ToInteger(GraveLink2["faction"]);
 								if (!Graveyards.ContainsKey(GraveyardID2))
 								{
 									WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: Graveyard link invalid [{0}]", GraveyardID2);
@@ -267,9 +266,9 @@ namespace Mangos.World.Maps
 					enumerator2 = GraveQuery.Rows.GetEnumerator();
 					while (enumerator2.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator2.Current;
-						int GraveyardID = row.As<int>("id");
-						int GraveyardFaction = row.As<int>("faction");
+						DataRow GraveLink = (DataRow)enumerator2.Current;
+						int GraveyardID = Conversions.ToInteger(GraveLink["id"]);
+						int GraveyardFaction = Conversions.ToInteger(GraveLink["faction"]);
 						if (!Graveyards.ContainsKey(GraveyardID))
 						{
 							WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: Graveyard link invalid [{0}]", GraveyardID);

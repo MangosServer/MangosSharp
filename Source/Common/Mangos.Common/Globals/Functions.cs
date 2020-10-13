@@ -22,6 +22,7 @@ using System.Data;
 using global;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
+using Mangos.Loggers;
 using Microsoft.VisualBasic;
 
 namespace Mangos.Common.Globals
@@ -29,13 +30,15 @@ namespace Mangos.Common.Globals
     public class Functions
     {
         private readonly Global_Constants _Global_Constants;
+		private readonly ILogger logger;
 
-        public Functions(Global_Constants globalConstants)
-        {
-            _Global_Constants = globalConstants;
-        }
+		public Functions(Global_Constants globalConstants, ILogger logger)
+		{
+			_Global_Constants = globalConstants;
+			this.logger = logger;
+		}
 
-        public bool GuidIsCreature(ulong guid)
+		public bool GuidIsCreature(ulong guid)
         {
             if (GuidHigh2(guid) == _Global_Constants.GUID_UNIT)
                 return true;
@@ -293,56 +296,42 @@ namespace Mangos.Common.Globals
 
                 if (dbVersion == coreDbVersion & dbStructure == coreDbStructure & dbContent == coreDbContent) // Full Match
                 {
-                    Console.WriteLine("[{0}] Db Version Matched", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+					logger.Debug("[{0}] Db Version Matched", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
                     return true;
                 }
                 else if (dbVersion == coreDbVersion & dbStructure == coreDbStructure & dbContent != coreDbContent) // Content MisMatch, only a warning
                 {
-                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] -- WARNING: CONTENT VERSION MISMATCH                        --", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}]  Your Database " + thisDatabase.SQLDBName + " requires updating.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}]  You have: Rev{1}.{2}.{3}, however the core expects Rev{4}.{5}.{6}", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent);
-                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}]  The server will run, but you may be missing some database fixes", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+					logger.Warning("--------------------------------------------------------------");
+					logger.Warning("-- WARNING: CONTENT VERSION MISMATCH                        --");
+					logger.Warning("--------------------------------------------------------------");
+					logger.Warning("Your Database " + thisDatabase.SQLDBName + " requires updating.");
+					logger.Warning("You have: Rev{0}.{1}.{2}, however the core expects Rev{3}.{4}.{5}", dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent);
+					logger.Warning("The server will run, but you may be missing some database fixes");
                     return true;
                 }
                 else // Oh no they do not match
                 {
-                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] -- FATAL ERROR: VERSION MISMATCH                            --", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}]  Your Database " + thisDatabase.SQLDBName + " requires updating.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}]  You have: Rev{1}.{2}.{3}, however the core expects Rev{4}.{5}.{6}", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent);
-                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}]  The server is unable to run until the required updates are run", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] You must apply all updates after Rev{1}.{2}.{3} ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), coreDbVersion, coreDbStructure, coreDbContent);
-                    Console.WriteLine("[{0}] These updates are included in the sql/updates folder.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                    // Console.WriteLine("*************************")
-                    // Console.WriteLine("* Press any key to exit *")
-                    // Console.WriteLine("*************************")
-                    // Console.ReadKey()
+					logger.Error("--------------------------------------------------------------");
+					logger.Error("-- FATAL ERROR: VERSION MISMATCH                            --");
+					logger.Error("--------------------------------------------------------------");
+					logger.Error("Your Database " + thisDatabase.SQLDBName + " requires updating.");
+					logger.Error("You have: Rev{0}.{1}.{2}, however the core expects Rev{3}.{4}.{5}", dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent);
+					logger.Error("The server is unable to run until the required updates are run");
+					logger.Error("--------------------------------------------------------------");
+					logger.Error("You must apply all updates after Rev{1}.{2}.{3} ", coreDbVersion, coreDbStructure, coreDbContent);
+					logger.Error("These updates are included in the sql/updates folder.");
+					logger.Error("--------------------------------------------------------------");
                     return false;
                 }
             }
             else
             {
-                Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                Console.WriteLine("[{0}] The table `db_version` in database " + thisDatabase.SQLDBName + " is missing", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                Console.WriteLine("[{0}] --------------------------------------------------------------", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                Console.WriteLine("[{0}] MaNGOSVB cannot find the version info required, please update", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                Console.WriteLine("[{0}] your database to check that the db is up to date.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                Console.WriteLine("[{0}] your database to Rev{1}.{2}.{3} ", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), coreDbVersion, coreDbStructure, coreDbContent);
-                // Console.WriteLine("*************************")
-                // Console.WriteLine("* Press any key to exit *")
-                // Console.WriteLine("*************************")
-                // Console.ReadKey()
+				logger.Debug("--------------------------------------------------------------");
+				logger.Debug("The table `db_version` in database " + thisDatabase.SQLDBName + " is missing");
+				logger.Debug("--------------------------------------------------------------");
+				logger.Debug("MaNGOSVB cannot find the version info required, please update","hh:mm:ss");
+				logger.Debug("your database to check that the db is up to date.",  "hh:mm:ss");
+				logger.Debug("your database to Rev{0}.{1}.{2} ", coreDbVersion, coreDbStructure, coreDbContent);
                 return false;
             }
         }

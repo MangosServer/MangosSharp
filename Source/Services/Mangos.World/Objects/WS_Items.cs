@@ -483,10 +483,10 @@ namespace Mangos.World.Objects
 				InventoryType = (INVENTORY_TYPES)Conversions.ToByte(mySqlQuery.Rows[0]["inventorytype"]);
 				Level = Conversions.ToInteger(mySqlQuery.Rows[0]["itemlevel"]);
 				Type typeFromHandle = typeof(BitConverter);
-				DataRow row;
+				DataRow dataRow;
 				object[] obj = new object[1]
 				{
-					(row = mySqlQuery.Rows[0])["allowableclass"]
+					(dataRow = mySqlQuery.Rows[0])["allowableclass"]
 				};
 				object[] array = obj;
 				bool[] obj2 = new bool[1]
@@ -497,19 +497,19 @@ namespace Mangos.World.Objects
 				object obj3 = NewLateBinding.LateGet(null, typeFromHandle, "GetBytes", obj, null, null, obj2);
 				if (array2[0])
 				{
-					row["allowableclass"] = RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(array[0]));
+					dataRow["allowableclass"] = RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(array[0]));
 				}
 				AvailableClasses = BitConverter.ToUInt32((byte[])obj3, 0);
 				object obj4 = NewLateBinding.LateGet(null, typeof(BitConverter), "GetBytes", array = new object[1]
 				{
-					(row = mySqlQuery.Rows[0])["allowablerace"]
+					(dataRow = mySqlQuery.Rows[0])["allowablerace"]
 				}, null, null, array2 = new bool[1]
 				{
 					true
 				});
 				if (array2[0])
 				{
-					row["allowablerace"] = RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(array[0]));
+					dataRow["allowablerace"] = RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(array[0]));
 				}
 				AvailableRaces = BitConverter.ToUInt32((byte[])obj4, 0);
 				ReqLevel = Conversions.ToInteger(mySqlQuery.Rows[0]["requiredlevel"]);

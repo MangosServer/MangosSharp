@@ -20,7 +20,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
@@ -208,8 +207,8 @@ namespace Mangos.World.Player
 					enumerator = CreateInfoSkills.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator.Current;
-						objCharacter.LearnSkill(row.As<int>("Skill"), row.As<short>("SkillMin"), row.As<short>("SkillMax"));
+						DataRow SkillRow = (DataRow)enumerator.Current;
+						objCharacter.LearnSkill(Conversions.ToInteger(SkillRow["Skill"]), Conversions.ToShort(SkillRow["SkillMin"]), Conversions.ToShort(SkillRow["SkillMax"]));
 					}
 				}
 				finally
@@ -235,11 +234,11 @@ namespace Mangos.World.Player
 					enumerator2 = CreateInfoBars.Rows.GetEnumerator();
 					while (enumerator2.MoveNext())
 					{
-						DataRow row = (DataRow)enumerator2.Current;
-						if (Operators.ConditionalCompareObjectGreater(row["action"], 0, TextCompare: false))
+						DataRow BarRow = (DataRow)enumerator2.Current;
+						if (Operators.ConditionalCompareObjectGreater(BarRow["action"], 0, TextCompare: false))
 						{
-							int ButtonPos = row.As<int>("button");
-							objCharacter.ActionButtons[(byte)ButtonPos] = new WS_PlayerHelper.TActionButton(row.As<int>("action"), row.As<byte>("type"), 0);
+							int ButtonPos = Conversions.ToInteger(BarRow["button"]);
+							objCharacter.ActionButtons[(byte)ButtonPos] = new WS_PlayerHelper.TActionButton(Conversions.ToInteger(BarRow["action"]), Conversions.ToByte(BarRow["type"]), 0);
 						}
 					}
 				}
@@ -267,8 +266,8 @@ namespace Mangos.World.Player
 				enumerator = CreateInfoSpells.Rows.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					DataRow row = (DataRow)enumerator.Current;
-					objCharacter.LearnSpell(row.As<int>("Spell"));
+					DataRow SpellRow = (DataRow)enumerator.Current;
+					objCharacter.LearnSpell(Conversions.ToInteger(SpellRow["Spell"]));
 				}
 			}
 			finally
@@ -296,8 +295,8 @@ namespace Mangos.World.Player
 				enumerator = CreateInfoItems.Rows.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					DataRow row = (DataRow)enumerator.Current;
-					Items.Add(row.As<int>("itemid"), row.As<int>("amount"));
+					DataRow ItemRow = (DataRow)enumerator.Current;
+					Items.Add(Conversions.ToInteger(ItemRow["itemid"]), Conversions.ToInteger(ItemRow["amount"]));
 				}
 			}
 			finally

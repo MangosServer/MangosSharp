@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using Mangos.Common;
 using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
@@ -153,20 +152,20 @@ namespace Mangos.Cluster.DataStores
 			ClusterServiceLocator._WorldCluster.WorldDatabase.Query(string.Format("SELECT * FROM battleground_template"), ref MySQLQuery);
 			foreach (DataRow row in MySQLQuery.Rows)
 			{
-				Entry = row.As<byte>("id");
+				Entry = Conversions.ToByte(row["id"]);
 				Battlegrounds.Add(Entry, new TBattleground());
 
 				// TODO: the MAPId needs to be located from somewhere other than the template file
 				// BUG: THIS IS AN UGLY HACK UNTIL THE ABOVE IS FIXED
 				// Battlegrounds(Entry).Map = row.Item("Map")
-				Battlegrounds[Entry].MinPlayersPerTeam = row.As<byte>("MinPlayersPerTeam");
-				Battlegrounds[Entry].MaxPlayersPerTeam = row.As<byte>("MaxPlayersPerTeam");
-				Battlegrounds[Entry].MinLevel = row.As<byte>("MinLvl");
-				Battlegrounds[Entry].MaxLevel = row.As<byte>("MaxLvl");
-				Battlegrounds[Entry].AllianceStartLoc = row.As<int>("AllianceStartLoc");
-				Battlegrounds[Entry].AllianceStartO = row.As<float>("AllianceStartO");
-				Battlegrounds[Entry].HordeStartLoc = row.As<int>("HordeStartLoc");
-				Battlegrounds[Entry].HordeStartO = row.As<float>("HordeStartO");
+				Battlegrounds[Entry].MinPlayersPerTeam = Conversions.ToByte(row["MinPlayersPerTeam"]);
+				Battlegrounds[Entry].MaxPlayersPerTeam = Conversions.ToByte(row["MaxPlayersPerTeam"]);
+				Battlegrounds[Entry].MinLevel = Conversions.ToByte(row["MinLvl"]);
+				Battlegrounds[Entry].MaxLevel = Conversions.ToByte(row["MaxLvl"]);
+				Battlegrounds[Entry].AllianceStartLoc = Conversions.ToInteger(row["AllianceStartLoc"]);
+				Battlegrounds[Entry].AllianceStartO = Conversions.ToSingle(row["AllianceStartO"]);
+				Battlegrounds[Entry].HordeStartLoc = Conversions.ToInteger(row["HordeStartLoc"]);
+				Battlegrounds[Entry].HordeStartO = Conversions.ToSingle(row["HordeStartO"]);
 			}
 
 			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "World: {0} Battlegrounds Initialized.", MySQLQuery.Rows.Count);
