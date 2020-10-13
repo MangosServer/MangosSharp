@@ -39,11 +39,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration.Xml", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration.Store", "Common\Mangos.Configuration.Store\Mangos.Configuration.Store.csproj", "{FA2E6544-22BF-0E5C-116E-2842CDA11B11}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".development", ".development", "{0C6E9510-5ECF-4EB4-9F7C-D0C9800D39FD}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Loggers", "Loggers", "{E0A07FF5-16B1-444C-8D29-7EFEF8776E3A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangos.Loggers", "Common\Mangos.Loggers\Mangos.Loggers.csproj", "{BF4757A9-ACFF-465C-80DD-22217B4258A4}"
