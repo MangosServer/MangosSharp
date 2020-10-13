@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -36,7 +37,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration", "Com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration.Xml", "Common\Mangos.Configuration.Xml\Mangos.Configuration.Xml.csproj", "{EB435360-64EE-0849-15BF-759DA3CB6753}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangos.Configuration.Store", "Common\Mangos.Configuration.Store\Mangos.Configuration.Store.csproj", "{FA2E6544-22BF-0E5C-116E-2842CDA11B11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration.Store", "Common\Mangos.Configuration.Store\Mangos.Configuration.Store.csproj", "{FA2E6544-22BF-0E5C-116E-2842CDA11B11}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".development", ".development", "{0C6E9510-5ECF-4EB4-9F7C-D0C9800D39FD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
