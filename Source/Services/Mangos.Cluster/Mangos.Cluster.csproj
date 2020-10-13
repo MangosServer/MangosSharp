@@ -13,6 +13,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Loggers.Console\Mangos.Loggers.Console.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Loggers\Mangos.Loggers.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.SignalR\Mangos.SignalR.csproj" />
   </ItemGroup>
 </Project>

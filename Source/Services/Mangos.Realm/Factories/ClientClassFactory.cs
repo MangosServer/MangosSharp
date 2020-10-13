@@ -17,21 +17,24 @@
 //
 
 using global;
+using Mangos.Loggers;
 
 namespace Mangos.Realm.Factories
 {
     public class ClientClassFactory
     {
         private readonly Global_Constants _Global_Constants;
+		private readonly ILogger logger;
 
-        public ClientClassFactory(Global_Constants globalConstants)
-        {
-            _Global_Constants = globalConstants;
-        }
+		public ClientClassFactory(Global_Constants globalConstants, ILogger logger)
+		{
+			_Global_Constants = globalConstants;
+			this.logger = logger;
+		}
 
-        public ClientClass Create(RealmServer realmServer)
+		public ClientClass Create(RealmServer realmServer)
         {
-            return new ClientClass(_Global_Constants, realmServer);
+            return new ClientClass(_Global_Constants, realmServer, logger);
         }
     }
 }
