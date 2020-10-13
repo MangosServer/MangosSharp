@@ -1,21 +1,3 @@
-﻿// 
-// Copyright (C) 2013-2020 getMaNGOS <https://getmangos.eu>
-// 
-// This program is free software. You can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation. either version 2 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY. Without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-// 
-
 using System;
 using System.Collections.Generic;
 using Mangos.Common.Enums.Global;
@@ -23,324 +5,329 @@ using Mangos.Common.Enums.Group;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
 using Mangos.World.Player;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Social
 {
-    public class WS_Group
-    {
-        public readonly Dictionary<long, Group> Groups = new Dictionary<long, Group>();
-        private ulong _lastLooter = 0UL;
+	public class WS_Group
+	{
+		public sealed class Group : IDisposable
+		{
+			public readonly long ID;
 
-        public sealed class Group : IDisposable
-        {
-            public readonly long ID;
-            public GroupType Type = GroupType.PARTY;
-            public GroupDungeonDifficulty DungeonDifficulty = GroupDungeonDifficulty.DIFFICULTY_NORMAL;
-            public GroupLootMethod LootMethod = GroupLootMethod.LOOT_GROUP;
-            public GroupLootThreshold LootThreshold = GroupLootThreshold.Uncommon;
-            public ulong Leader;
-            public List<ulong> LocalMembers;
-            public WS_PlayerData.CharacterObject LocalLootMaster;
+			public GroupType Type;
 
-            public Group(long groupID)
-            {
-                ID = groupID;
-                WorldServiceLocator._WS_Group.Groups.Add(ID, this);
-            }
+			public GroupDungeonDifficulty DungeonDifficulty;
 
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
-            private bool _disposedValue; // To detect redundant calls
+			public GroupLootMethod LootMethod;
 
-            // IDisposable
-            private void Dispose(bool disposing)
-            {
-                if (!_disposedValue)
-                {
-                    // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                    // TODO: set large fields to null.
-                    WorldServiceLocator._WS_Group.Groups.Remove(ID);
-                }
+			public GroupLootThreshold LootThreshold;
 
-                _disposedValue = true;
-            }
+			public ulong Leader;
 
-            // This code added by Visual Basic to correctly implement the disposable pattern.
-            public void Dispose()
-            {
-                // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-            /// <summary>
-            /// Broadcasts the specified p.
-            /// </summary>
-            /// <param name="p">The p.</param>
-            /// <returns></returns>
-            public void Broadcast(Packets.PacketClass p)
-            {
-                p.UpdateLength();
-                WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.BroadcastGroup(ID, p.Data);
-            }
+			public List<ulong> LocalMembers;
 
-            /// <summary>
-            /// Gets the next looter.
-            /// </summary>
-            /// <returns></returns>
-            public WS_PlayerData.CharacterObject GetNextLooter()
-            {
-                bool nextIsLooter = false;
-                bool nextLooterFound = false;
-                foreach (ulong guid in LocalMembers)
-                {
-                    if (nextIsLooter)
-                    {
-                        WorldServiceLocator._WS_Group._lastLooter = guid;
-                        nextLooterFound = true;
-                        break;
-                    }
+			public WS_PlayerData.CharacterObject LocalLootMaster;
 
-                    if (guid == WorldServiceLocator._WS_Group._lastLooter)
-                        nextIsLooter = true;
-                }
+			private bool _disposedValue;
 
-                if (!nextLooterFound)
-                {
-                    WorldServiceLocator._WS_Group._lastLooter = LocalMembers[0];
-                }
+			public Group(long groupID)
+			{
+				Type = GroupType.PARTY;
+				DungeonDifficulty = GroupDungeonDifficulty.DIFFICULTY_NORMAL;
+				LootMethod = GroupLootMethod.LOOT_GROUP;
+				LootThreshold = GroupLootThreshold.Uncommon;
+				ID = groupID;
+				WorldServiceLocator._WS_Group.Groups.Add(ID, this);
+			}
 
-                return WorldServiceLocator._WorldServer.CHARACTERs[WorldServiceLocator._WS_Group._lastLooter];
-            }
+			private void Dispose(bool disposing)
+			{
+				if (!_disposedValue)
+				{
+					WorldServiceLocator._WS_Group.Groups.Remove(ID);
+				}
+				_disposedValue = true;
+			}
 
-            /// <summary>
-            /// Gets the members count.
-            /// </summary>
-            /// <returns></returns>
-            public int GetMembersCount()
-            {
-                return LocalMembers.Count;
-            }
-        }
+			public void Dispose()
+			{
+				Dispose(disposing: true);
+				GC.SuppressFinalize(this);
+			}
 
-        /// <summary>
-        /// Builds the party member stats.
-        /// </summary>
-        /// <param name="objCharacter">The objCharacter.</param>
-        /// <param name="flag">The flag.</param>
-        /// <returns></returns>
-        public Packets.PacketClass BuildPartyMemberStats(ref WS_PlayerData.CharacterObject objCharacter, uint flag)
-        {
-            OPCODES opCode = OPCODES.SMSG_PARTY_MEMBER_STATS;
-            if (flag == (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FULL || flag == (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FULL_PET)
-            {
-                opCode = OPCODES.SMSG_PARTY_MEMBER_STATS_FULL;
-                if (objCharacter.ManaType != ManaTypes.TYPE_MANA)
-                    flag |= (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POWER_TYPE;
-            }
+			void IDisposable.Dispose()
+			{
+				//ILSpy generated this explicit interface implementation from .override directive in Dispose
+				this.Dispose();
+			}
 
-            var packet = new Packets.PacketClass(opCode);
-            packet.AddPackGUID(objCharacter.GUID);
-            packet.AddUInt32(flag);
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS))
-            {
-                byte memberFlags = (byte)Globals.Functions.PartyMemberStatsStatus.STATUS_ONLINE;
-                if (objCharacter.isPvP)
-                    memberFlags = (byte)(memberFlags | (byte)Globals.Functions.PartyMemberStatsStatus.STATUS_PVP);
-                if (objCharacter.DEAD)
-                    memberFlags = (byte)(memberFlags | (byte)Globals.Functions.PartyMemberStatsStatus.STATUS_DEAD);
-                packet.AddInt8(memberFlags);
-            }
+			public void Broadcast(Packets.PacketClass p)
+			{
+				p.UpdateLength();
+				WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.BroadcastGroup(ID, p.Data);
+			}
 
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_HP))
-                packet.AddUInt16((ushort)objCharacter.Life.Current);
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_MAX_HP))
-                packet.AddUInt16((ushort)objCharacter.Life.Maximum);
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POWER_TYPE))
-                packet.AddInt8((byte)objCharacter.ManaType);
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_CUR_POWER))
-            {
-                if (objCharacter.ManaType == ManaTypes.TYPE_RAGE)
-                {
-                    packet.AddUInt16((ushort)objCharacter.Rage.Current);
-                }
-                else if (objCharacter.ManaType == ManaTypes.TYPE_ENERGY)
-                {
-                    packet.AddUInt16((ushort)objCharacter.Energy.Current);
-                }
-                else
-                {
-                    packet.AddUInt16((ushort)objCharacter.Mana.Current);
-                }
-            }
+			public WS_PlayerData.CharacterObject GetNextLooter()
+			{
+				bool nextIsLooter = false;
+				bool nextLooterFound = false;
+				foreach (ulong guid in LocalMembers)
+				{
+					if (nextIsLooter)
+					{
+						WorldServiceLocator._WS_Group._lastLooter = guid;
+						nextLooterFound = true;
+						break;
+					}
+					if (guid == WorldServiceLocator._WS_Group._lastLooter)
+					{
+						nextIsLooter = true;
+					}
+				}
+				if (!nextLooterFound)
+				{
+					WorldServiceLocator._WS_Group._lastLooter = LocalMembers[0];
+				}
+				return WorldServiceLocator._WorldServer.CHARACTERs[WorldServiceLocator._WS_Group._lastLooter];
+			}
 
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_MAX_POWER))
-            {
-                if (objCharacter.ManaType == ManaTypes.TYPE_RAGE)
-                {
-                    packet.AddUInt16((ushort)objCharacter.Rage.Maximum);
-                }
-                else if (objCharacter.ManaType == ManaTypes.TYPE_ENERGY)
-                {
-                    packet.AddUInt16((ushort)objCharacter.Energy.Maximum);
-                }
-                else
-                {
-                    packet.AddUInt16((ushort)objCharacter.Mana.Maximum);
-                }
-            }
+			public int GetMembersCount()
+			{
+				return LocalMembers.Count;
+			}
+		}
 
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_LEVEL))
-                packet.AddUInt16(objCharacter.Level);
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE))
-                packet.AddUInt16((ushort)objCharacter.ZoneID);
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION))
-            {
-                packet.AddInt16((short)Conversion.Fix(objCharacter.positionX));
-                packet.AddInt16((short)Conversion.Fix(objCharacter.positionY));
-            }
+		public readonly Dictionary<long, Group> Groups;
 
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_AURAS))
-            {
-                ulong auraMask = 0UL;
-                int auraPos = packet.Data.Length;
-                packet.AddUInt64(0UL); // AuraMask (is set after the loop)
-                for (int i = 0, loopTo = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1; i <= loopTo; i++)
-                {
-                    if (objCharacter.ActiveSpells[i] is object)
-                    {
-                        auraMask |= 1 << (int)(ulong)i;
-                        packet.AddUInt16((ushort)objCharacter.ActiveSpells[i].SpellID);
-                        packet.AddInt8(1); // Stack Count?
-                    }
-                }
+		private ulong _lastLooter;
 
-                packet.AddUInt64(auraMask, auraPos); // Set the AuraMask
-            }
+		public WS_Group()
+		{
+			Groups = new Dictionary<long, Group>();
+			_lastLooter = 0uL;
+		}
 
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_PET_GUID))
-            {
-                if (objCharacter.Pet is object)
-                {
-                    packet.AddUInt64(objCharacter.Pet.GUID);
-                }
-                else
-                {
-                    packet.AddInt64(0L);
-                }
-            }
-
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_PET_NAME))
-            {
-                if (objCharacter.Pet is object)
-                {
-                    packet.AddString(objCharacter.Pet.PetName);
-                }
-                else
-                {
-                    packet.AddString("");
-                }
-            }
-
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_PET_MODEL_ID))
-            {
-                if (objCharacter.Pet is object)
-                {
-                    packet.AddUInt16((ushort)objCharacter.Pet.Model);
-                }
-                else
-                {
-                    packet.AddInt16(0);
-                }
-            }
-
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_PET_CUR_HP))
-            {
-                if (objCharacter.Pet is object)
-                {
-                    packet.AddUInt16((ushort)objCharacter.Pet.Life.Current);
-                }
-                else
-                {
-                    packet.AddInt16(0);
-                }
-            }
-
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_PET_MAX_HP))
-            {
-                if (objCharacter.Pet is object)
-                {
-                    packet.AddUInt16((ushort)objCharacter.Pet.Life.Maximum);
-                }
-                else
-                {
-                    packet.AddInt16(0);
-                }
-            }
-
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_PET_POWER_TYPE))
-            {
-                if (objCharacter.Pet is object)
-                {
-                    packet.AddInt8((byte)ManaTypes.TYPE_FOCUS);
-                }
-                else
-                {
-                    packet.AddInt8(0);
-                }
-            }
-
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_PET_CUR_POWER))
-            {
-                if (objCharacter.Pet is object)
-                {
-                    packet.AddUInt16((ushort)objCharacter.Pet.Mana.Current);
-                }
-                else
-                {
-                    packet.AddInt16(0);
-                }
-            }
-
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_PET_MAX_POWER))
-            {
-                if (objCharacter.Pet is object)
-                {
-                    packet.AddUInt16((ushort)objCharacter.Pet.Mana.Maximum);
-                }
-                else
-                {
-                    packet.AddInt16(0);
-                }
-            }
-
-            if (Conversions.ToBoolean(flag & (uint)Globals.Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_PET_AURAS))
-            {
-                if (objCharacter.Pet is object)
-                {
-                    ulong auraMask = 0UL;
-                    int auraPos = packet.Data.Length;
-                    packet.AddUInt64(0UL); // AuraMask (is set after the loop)
-                    for (int i = 0, loopTo1 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1; i <= loopTo1; i++)
-                    {
-                        if (objCharacter.Pet.ActiveSpells[i] is object)
-                        {
-                            auraMask |= 1 << (int)(ulong)i;
-                            packet.AddUInt16((ushort)objCharacter.Pet.ActiveSpells[i].SpellID);
-                            packet.AddInt8(1); // Stack Count?
-                        }
-                    }
-
-                    packet.AddUInt64(auraMask, auraPos); // Set the AuraMask
-                }
-                else
-                {
-                    packet.AddInt64(0L);
-                }
-            }
-
-            return packet;
-        }
-    }
+		public Packets.PacketClass BuildPartyMemberStats(ref WS_PlayerData.CharacterObject objCharacter, uint flag)
+		{
+			OPCODES opCode = OPCODES.SMSG_PARTY_MEMBER_STATS;
+			if (flag == 1015 || flag == 524279)
+			{
+				opCode = OPCODES.SMSG_PARTY_MEMBER_STATS_FULL;
+				if (objCharacter.ManaType != 0)
+				{
+					flag |= 8u;
+				}
+			}
+			Packets.PacketClass packet = new Packets.PacketClass(opCode);
+			packet.AddPackGUID(objCharacter.GUID);
+			packet.AddUInt32(flag);
+			if ((flag & (true ? 1u : 0u)) != 0)
+			{
+				byte memberFlags = 1;
+				if (objCharacter.isPvP)
+				{
+					memberFlags = (byte)(memberFlags | 2);
+				}
+				if (objCharacter.DEAD)
+				{
+					memberFlags = (byte)(memberFlags | 0x10);
+				}
+				packet.AddInt8(memberFlags);
+			}
+			checked
+			{
+				if ((flag & 2u) != 0)
+				{
+					packet.AddUInt16((ushort)objCharacter.Life.Current);
+				}
+				if ((flag & 4u) != 0)
+				{
+					packet.AddUInt16((ushort)objCharacter.Life.Maximum);
+				}
+				if ((flag & 8u) != 0)
+				{
+					packet.AddInt8((byte)objCharacter.ManaType);
+				}
+				if ((flag & 0x10u) != 0)
+				{
+					if (objCharacter.ManaType == ManaTypes.TYPE_RAGE)
+					{
+						packet.AddUInt16((ushort)objCharacter.Rage.Current);
+					}
+					else if (objCharacter.ManaType == ManaTypes.TYPE_ENERGY)
+					{
+						packet.AddUInt16((ushort)objCharacter.Energy.Current);
+					}
+					else
+					{
+						packet.AddUInt16((ushort)objCharacter.Mana.Current);
+					}
+				}
+				if ((flag & 0x20u) != 0)
+				{
+					if (objCharacter.ManaType == ManaTypes.TYPE_RAGE)
+					{
+						packet.AddUInt16((ushort)objCharacter.Rage.Maximum);
+					}
+					else if (objCharacter.ManaType == ManaTypes.TYPE_ENERGY)
+					{
+						packet.AddUInt16((ushort)objCharacter.Energy.Maximum);
+					}
+					else
+					{
+						packet.AddUInt16((ushort)objCharacter.Mana.Maximum);
+					}
+				}
+				if ((flag & 0x40u) != 0)
+				{
+					packet.AddUInt16(objCharacter.Level);
+				}
+				if ((flag & 0x80u) != 0)
+				{
+					packet.AddUInt16((ushort)objCharacter.ZoneID);
+				}
+				if ((flag & 0x100u) != 0)
+				{
+					packet.AddInt16((short)objCharacter.positionX);
+					packet.AddInt16((short)objCharacter.positionY);
+				}
+				if ((flag & 0x200u) != 0)
+				{
+					ulong auraMask2 = 0uL;
+					int auraPos2 = packet.Data.Length;
+					packet.AddUInt64(0uL);
+					int num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+					for (int j = 0; j <= num; j++)
+					{
+						if (objCharacter.ActiveSpells[j] != null)
+						{
+							unchecked
+							{
+								auraMask2 |= (ulong)(1L << checked((int)(ulong)j));
+							}
+							packet.AddUInt16((ushort)objCharacter.ActiveSpells[j].SpellID);
+							packet.AddInt8(1);
+						}
+					}
+					packet.AddUInt64(auraMask2, auraPos2);
+				}
+				if ((flag & 0x400u) != 0)
+				{
+					if (objCharacter.Pet != null)
+					{
+						packet.AddUInt64(objCharacter.Pet.GUID);
+					}
+					else
+					{
+						packet.AddInt64(0L);
+					}
+				}
+				if ((flag & 0x800u) != 0)
+				{
+					if (objCharacter.Pet != null)
+					{
+						packet.AddString(objCharacter.Pet.PetName);
+					}
+					else
+					{
+						packet.AddString("");
+					}
+				}
+				if ((flag & 0x1000u) != 0)
+				{
+					if (objCharacter.Pet != null)
+					{
+						packet.AddUInt16((ushort)objCharacter.Pet.Model);
+					}
+					else
+					{
+						packet.AddInt16(0);
+					}
+				}
+				if ((flag & 0x2000u) != 0)
+				{
+					if (objCharacter.Pet != null)
+					{
+						packet.AddUInt16((ushort)objCharacter.Pet.Life.Current);
+					}
+					else
+					{
+						packet.AddInt16(0);
+					}
+				}
+				if ((flag & 0x4000u) != 0)
+				{
+					if (objCharacter.Pet != null)
+					{
+						packet.AddUInt16((ushort)objCharacter.Pet.Life.Maximum);
+					}
+					else
+					{
+						packet.AddInt16(0);
+					}
+				}
+				if ((flag & 0x8000u) != 0)
+				{
+					if (objCharacter.Pet != null)
+					{
+						packet.AddInt8(2);
+					}
+					else
+					{
+						packet.AddInt8(0);
+					}
+				}
+				if ((flag & 0x10000u) != 0)
+				{
+					if (objCharacter.Pet != null)
+					{
+						packet.AddUInt16((ushort)objCharacter.Pet.Mana.Current);
+					}
+					else
+					{
+						packet.AddInt16(0);
+					}
+				}
+				if ((flag & 0x20000u) != 0)
+				{
+					if (objCharacter.Pet != null)
+					{
+						packet.AddUInt16((ushort)objCharacter.Pet.Mana.Maximum);
+					}
+					else
+					{
+						packet.AddInt16(0);
+					}
+				}
+				if ((flag & 0x40000u) != 0)
+				{
+					if (objCharacter.Pet != null)
+					{
+						ulong auraMask = 0uL;
+						int auraPos = packet.Data.Length;
+						packet.AddUInt64(0uL);
+						int num2 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+						for (int i = 0; i <= num2; i++)
+						{
+							if (objCharacter.Pet.ActiveSpells[i] != null)
+							{
+								unchecked
+								{
+									auraMask |= (ulong)(1L << checked((int)(ulong)i));
+								}
+								packet.AddUInt16((ushort)objCharacter.Pet.ActiveSpells[i].SpellID);
+								packet.AddInt8(1);
+							}
+						}
+						packet.AddUInt64(auraMask, auraPos);
+					}
+					else
+					{
+						packet.AddInt64(0L);
+					}
+				}
+				return packet;
+			}
+		}
+	}
 }

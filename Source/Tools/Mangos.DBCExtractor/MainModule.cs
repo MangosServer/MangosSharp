@@ -197,8 +197,8 @@ namespace Mangos.DBCExtractor
             var mapDBC = new BufferedDbc(@"dbc\Map.dbc");
             for (int i = 0, loopTo = mapDBC.Rows - 1; i <= loopTo; i++)
             {
-                MapIDs.Add(Conversions.ToInteger(mapDBC.Item(i, 0)));
-                MapNames.Add(Conversions.ToString(mapDBC.Item(i, 1, DBCValueType.DBC_STRING)));
+                MapIDs.Add(Conversions.ToInteger(mapDBC[i, 0]));
+                MapNames.Add(Conversions.ToString(mapDBC[i, 1, DBCValueType.DBC_STRING]));
             }
 
             Console.WriteLine("Done! ({0} maps loaded)", mapDBC.Rows);
@@ -214,8 +214,8 @@ namespace Mangos.DBCExtractor
             int maxID = -1;
             for (int i = 0, loopTo = areaDBC.Rows - 1; i <= loopTo; i++)
             {
-                int areaID = (int)areaDBC.Item(i, 0);
-                int areaFlag = (int)areaDBC.Item(i, 3);
+                int areaID = (int)areaDBC[i, 0];
+                int areaFlag = (int)areaDBC[i, 3];
                 MapAreas.Add(areaID, areaFlag);
                 if (areaID > maxID)
                     maxID = areaID;
@@ -232,7 +232,7 @@ namespace Mangos.DBCExtractor
             Console.Write("Reading LiquidType.dbc... ");
             var liquidDBC = new BufferedDbc(@"dbc\LiquidType.dbc");
             for (int i = 0, loopTo = liquidDBC.Rows - 1; i <= loopTo; i++)
-                MapLiqTypes.Add((int)liquidDBC.Item(i, 0), (int)liquidDBC.Item(i, 3));
+                MapLiqTypes.Add((int)liquidDBC[i, 0], (int)liquidDBC[i, 3]);
             Console.WriteLine("Done! ({0} LiqTypes loaded)", liquidDBC.Rows);
         }
     }

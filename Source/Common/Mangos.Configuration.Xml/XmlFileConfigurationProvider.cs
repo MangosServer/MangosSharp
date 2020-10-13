@@ -13,13 +13,13 @@ namespace Mangos.Configuration.Xml
             _filePath = filePath;
         }
 
-        public Task<T> GetConfigurationAsync()
+        public T GetConfiguration()
         {
             using (var streamReader = new StreamReader(_filePath))
             {
                 var xmlSerializer = new XmlSerializer(typeof(T));
                 T configuration = (T)xmlSerializer.Deserialize(streamReader);
-                return Task.FromResult(configuration);
+                return configuration;
             }
         }
     }

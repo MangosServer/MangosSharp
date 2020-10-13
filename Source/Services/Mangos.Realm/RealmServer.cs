@@ -57,7 +57,7 @@ namespace Mangos.Realm
             _configurationProvider = configurationProvider;
         }
 
-        private async Task LoadConfig()
+        private void LoadConfig()
         {
             try
             {
@@ -76,7 +76,7 @@ namespace Mangos.Realm
                 Console.WriteLine(".[done]");
 
                 // DONE: Setting SQL Connection
-                var configuration = await _configurationProvider.GetConfigurationAsync();
+                var configuration = _configurationProvider.GetConfiguration();
                 var accountDbSettings = Strings.Split(configuration.AccountDatabase, ";");
                 if (accountDbSettings.Length != 6)
                 {
@@ -738,7 +738,7 @@ namespace Mangos.Realm
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
-        public async Task StartAsync()
+        public void Start()
         {
             Console.BackgroundColor = ConsoleColor.Black;
             AssemblyTitleAttribute assemblyTitleAttribute = (AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false)[0];
@@ -765,7 +765,7 @@ namespace Mangos.Realm
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("[{0}] Realm Server Starting...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-            await LoadConfig();
+            LoadConfig();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Log.WriteLine(LogType.INFORMATION, "Running from: {0}", AppDomain.CurrentDomain.BaseDirectory);
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -795,7 +795,7 @@ namespace Mangos.Realm
             }
 
             RealmServerClass = _RealmServerClassFactory.Create(this);
-            await RealmServerClass.StartAsync();
+            RealmServerClass.Start();
             GC.Collect();
             WorldServer_Status_Report();
         }

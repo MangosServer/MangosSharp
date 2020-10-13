@@ -70,7 +70,7 @@ namespace Mangos.Scripts.Creatures
             if (Conversions.ToBoolean(this.aiCreature.MoveTo((float)Waypoint1.X, (float)Waypoint1.Y, (float)Waypoint1.Z, (float)Waypoint1.Orientation, true)))
             {
                 Mangos.World.Objects.WS_Base.BaseUnit argAttacker = null;
-                this.aiCreature.Heal(50000, Attacker: ref argAttacker);
+                this.aiCreature.Heal(50000, Attacker: argAttacker);
             }
         }
 

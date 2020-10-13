@@ -1,180 +1,186 @@
-﻿// 
-// Copyright (C) 2013-2020 getMaNGOS <https://getmangos.eu>
-// 
-// This program is free software. You can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation. either version 2 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY. Without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-// 
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Server
 {
-    public class ReaderWriterLock_Debug : IDisposable
-    {
-        private readonly string ID;
-        private readonly FileStream file;
-        private readonly StreamWriter writer;
-        private readonly ReaderWriterLock @lock;
-        private readonly Queue<string> WriteQueue = new Queue<string>();
+	public class ReaderWriterLock_Debug : IDisposable
+	{
+		private readonly string ID;
 
-        public ReaderWriterLock_Debug(string s)
-        {
-            ID = s;
-            file = new FileStream(string.Format("ReaderWriterLock_Debug_{0}_{1}.log", ID, DateAndTime.Now.Ticks), FileMode.Create);
-            writer = new StreamWriter(file);
-            @lock = new ReaderWriterLock();
-            var st = new StackTrace();
-            var sf = st.GetFrames();
-            WriteLine("NewLock " + ID + " from:");
-            foreach (StackFrame frame in sf)
-                WriteLine(Constants.vbTab + frame.GetMethod().Name);
-            WriteLine("NewLock " + ID);
-            var writeThread = new Thread(WriteLoop) { Name = "WriteLoop, ReaderWriterLock_Debug - " + s };
-            writeThread.Start();
-        }
+		private readonly FileStream file;
 
-        public void AcquireReaderLock(int t)
-        {
-            var st = new StackTrace();
-            var sf = st.GetFrames();
-            WriteLine("AcquireReaderLock " + ID + " from:");
-            foreach (StackFrame frame in sf)
-                WriteLine(Constants.vbTab + frame.GetMethod().Name);
-            @lock.AcquireReaderLock(t);
-        }
+		private readonly StreamWriter writer;
 
-        public void ReleaseReaderLock()
-        {
-            try
-            {
-                @lock.ReleaseReaderLock();
-                var st = new StackTrace();
-                var sf = st.GetFrames();
-                WriteLine("ReleaseReaderLock " + ID + " from:");
-                foreach (StackFrame frame in sf)
-                    WriteLine(Constants.vbTab + frame.GetMethod().Name);
-            }
-            catch (Exception)
-            {
-                WriteLine("ReleaseReaderLock " + ID + " is not freed!");
-            }
-        }
+		private readonly ReaderWriterLock @lock;
 
-        public void AcquireWriterLock(int t)
-        {
-            var st = new StackTrace();
-            var sf = st.GetFrames();
-            WriteLine("AcquireWriterLock " + ID + " from:");
-            foreach (StackFrame frame in sf)
-                WriteLine(Constants.vbTab + frame.GetMethod().Name);
-            @lock.AcquireWriterLock(t);
-        }
+		private readonly Queue<string> WriteQueue;
 
-        public void ReleaseWriterLock()
-        {
-            try
-            {
-                @lock.ReleaseWriterLock();
-                var st = new StackTrace();
-                var sf = st.GetFrames();
-                WriteLine("ReleaseWriterLock " + ID + " from:");
-                foreach (StackFrame frame in sf)
-                    WriteLine(Constants.vbTab + frame.GetMethod().Name);
-            }
-            catch (Exception)
-            {
-                WriteLine("ReleaseWriterLock " + ID + " is not freed!");
-            }
-        }
+		private bool _disposedValue;
 
-        public bool IsWriterLockHeld()
-        {
-            return @lock.IsWriterLockHeld;
-        }
+		public ReaderWriterLock_Debug(string s)
+		{
+			WriteQueue = new Queue<string>();
+			ID = s;
+			file = new FileStream($"ReaderWriterLock_Debug_{ID}_{DateAndTime.Now.Ticks}.log", FileMode.Create);
+			writer = new StreamWriter(file);
+			@lock = new ReaderWriterLock();
+			StackTrace st = new StackTrace();
+			StackFrame[] sf = st.GetFrames();
+			WriteLine("NewLock " + ID + " from:");
+			StackFrame[] array = sf;
+			foreach (StackFrame frame in array)
+			{
+				WriteLine("\t" + frame.GetMethod()!.Name);
+			}
+			WriteLine("NewLock " + ID);
+			Thread writeThread = new Thread(new ThreadStart(WriteLoop))
+			{
+				Name = "WriteLoop, ReaderWriterLock_Debug - " + s
+			};
+			writeThread.Start();
+		}
 
-        public bool IsReaderLockHeld()
-        {
-            return @lock.IsReaderLockHeld;
-        }
+		public void AcquireReaderLock(int t)
+		{
+			StackTrace st = new StackTrace();
+			StackFrame[] sf = st.GetFrames();
+			WriteLine("AcquireReaderLock " + ID + " from:");
+			StackFrame[] array = sf;
+			foreach (StackFrame frame in array)
+			{
+				WriteLine("\t" + frame.GetMethod()!.Name);
+			}
+			@lock.AcquireReaderLock(t);
+		}
 
-        public void WriteLine(string str)
-        {
-            lock (WriteQueue)
-                WriteQueue.Enqueue(str);
-        }
+		public void ReleaseReaderLock()
+		{
+			try
+			{
+				@lock.ReleaseReaderLock();
+				StackTrace st = new StackTrace();
+				StackFrame[] sf = st.GetFrames();
+				WriteLine("ReleaseReaderLock " + ID + " from:");
+				StackFrame[] array = sf;
+				foreach (StackFrame frame in array)
+				{
+					WriteLine("\t" + frame.GetMethod()!.Name);
+				}
+			}
+			catch (Exception ex2)
+			{
+				ProjectData.SetProjectError(ex2);
+				Exception ex = ex2;
+				WriteLine("ReleaseReaderLock " + ID + " is not freed!");
+				ProjectData.ClearProjectError();
+			}
+		}
 
-        private void WriteLoop()
-        {
-            string str = "";
-            while (true)
-            {
-                int i = 0;
-                while (WriteQueue.Count > 0)
-                {
-                    lock (WriteQueue)
-                        str = WriteQueue.Dequeue();
-                    writer.WriteLine(str);
-                    i += 1;
-                }
+		public void AcquireWriterLock(int t)
+		{
+			StackTrace st = new StackTrace();
+			StackFrame[] sf = st.GetFrames();
+			WriteLine("AcquireWriterLock " + ID + " from:");
+			StackFrame[] array = sf;
+			foreach (StackFrame frame in array)
+			{
+				WriteLine("\t" + frame.GetMethod()!.Name);
+			}
+			@lock.AcquireWriterLock(t);
+		}
 
-                if (i > 0)
-                    writer.Flush();
-                Thread.Sleep(100);
-            }
-        }
+		public void ReleaseWriterLock()
+		{
+			try
+			{
+				@lock.ReleaseWriterLock();
+				StackTrace st = new StackTrace();
+				StackFrame[] sf = st.GetFrames();
+				WriteLine("ReleaseWriterLock " + ID + " from:");
+				StackFrame[] array = sf;
+				foreach (StackFrame frame in array)
+				{
+					WriteLine("\t" + frame.GetMethod()!.Name);
+				}
+			}
+			catch (Exception ex2)
+			{
+				ProjectData.SetProjectError(ex2);
+				Exception ex = ex2;
+				WriteLine("ReleaseWriterLock " + ID + " is not freed!");
+				ProjectData.ClearProjectError();
+			}
+		}
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        private bool _disposedValue; // To detect redundant calls
+		public bool IsWriterLockHeld()
+		{
+			return @lock.IsWriterLockHeld;
+		}
 
-        // IDisposable
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
+		public bool IsReaderLockHeld()
+		{
+			return @lock.IsReaderLockHeld;
+		}
 
-                // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                // TODO: set large fields to null.
-                writer.Dispose();
-                file.Dispose();
-            }
+		public void WriteLine(string str)
+		{
+			lock (WriteQueue)
+			{
+				WriteQueue.Enqueue(str);
+			}
+		}
 
-            _disposedValue = true;
-        }
+		private void WriteLoop()
+		{
+			string str = "";
+			while (true)
+			{
+				int i = 0;
+				while (WriteQueue.Count > 0)
+				{
+					lock (WriteQueue)
+					{
+						str = WriteQueue.Dequeue();
+					}
+					writer.WriteLine(str);
+					i = checked(i + 1);
+				}
+				if (i > 0)
+				{
+					writer.Flush();
+				}
+				Thread.Sleep(100);
+			}
+		}
 
-        // TODO: override Finalize() only if Dispose(ByVal disposing As Boolean) above has code to free unmanaged resources.
-        // Protected Overrides Sub Finalize()
-        // ' Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
-        // Dispose(False)
-        // MyBase.Finalize()
-        // End Sub
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!_disposedValue)
+			{
+				if (disposing)
+				{
+				}
+				writer.Dispose();
+				file.Dispose();
+			}
+			_disposedValue = true;
+		}
 
-        // This code added by Visual Basic to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-    }
+		public void Dispose()
+		{
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
+		}
+
+		void IDisposable.Dispose()
+		{
+			//ILSpy generated this explicit interface implementation from .override directive in Dispose
+			this.Dispose();
+		}
+	}
 }

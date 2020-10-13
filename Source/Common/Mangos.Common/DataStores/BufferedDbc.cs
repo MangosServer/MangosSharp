@@ -61,46 +61,49 @@ namespace Mangos.Common.DataStores
             _disposedValue = true;
         }
 
-        public override object Item(int row, int column, DBCValueType valueType = DBCValueType.DBC_INTEGER)
+        public override object this[int row, int column, DBCValueType valueType = DBCValueType.DBC_INTEGER]
         {
-            if (row >= Rows)
-                throw new ApplicationException("DBC: Row index outside file definition.");
-            if (column >= Columns)
-                throw new ApplicationException("DBC: Column index outside file definition.");
-            TmpOffset = 20 + row * RowLength + column * 4;
-            if (bs.Position != TmpOffset)
-                bs.Seek(TmpOffset, SeekOrigin.Begin);
-            bs.Read(Buffer, 0, 4);
-            switch (valueType)
+            get
             {
-                case DBCValueType.DBC_FLOAT:
-                    {
-                        return BitConverter.ToSingle(Buffer, 0);
-                    }
-                case DBCValueType.DBC_INTEGER:
-                    {
-                        return BitConverter.ToInt32(Buffer, 0);
-                    }
-                case DBCValueType.DBC_STRING:
-                    {
-                        int offset = BitConverter.ToInt32(Buffer, 0);
-                        bs.Seek(20 + Rows * RowLength + offset, SeekOrigin.Begin);
-                        string strResult = "";
-                        byte strByte;
-                        do
+                if (row >= Rows)
+                    throw new ApplicationException("DBC: Row index outside file definition.");
+                if (column >= Columns)
+                    throw new ApplicationException("DBC: Column index outside file definition.");
+                TmpOffset = 20 + row * RowLength + column * 4;
+                if (bs.Position != TmpOffset)
+                    bs.Seek(TmpOffset, SeekOrigin.Begin);
+                bs.Read(Buffer, 0, 4);
+                switch (valueType)
+                {
+                    case DBCValueType.DBC_FLOAT:
                         {
-                            strByte = (byte)bs.ReadByte();
-                            if (strByte != 0)
-                                strResult += Conversions.ToString((char)strByte);
+                            return BitConverter.ToSingle(Buffer, 0);
                         }
-                        while (strByte != 0);
-                        return strResult;
-                    }
+                    case DBCValueType.DBC_INTEGER:
+                        {
+                            return BitConverter.ToInt32(Buffer, 0);
+                        }
+                    case DBCValueType.DBC_STRING:
+                        {
+                            int offset = BitConverter.ToInt32(Buffer, 0);
+                            bs.Seek(20 + Rows * RowLength + offset, SeekOrigin.Begin);
+                            string strResult = "";
+                            byte strByte;
+                            do
+                            {
+                                strByte = (byte)bs.ReadByte();
+                                if (strByte != 0)
+                                    strResult += Conversions.ToString((char)strByte);
+                            }
+                            while (strByte != 0);
+                            return strResult;
+                        }
 
-                default:
-                    {
-                        throw new ApplicationException("DBCReader: Undefined DBC field type.");
-                    }
+                    default:
+                        {
+                            throw new ApplicationException("DBCReader: Undefined DBC field type.");
+                        }
+                }
             }
         }
     }
