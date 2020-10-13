@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.World.Server;
 using Microsoft.VisualBasic.CompilerServices;
@@ -634,8 +635,8 @@ namespace Mangos.World.DataStores
 						while (enumerator.MoveNext())
 						{
 							DataRow row = (DataRow)enumerator.Current;
-							int dbLvl = Conversions.ToInteger(row["lvl"]);
-							long dbXp = Conversions.ToLong(row["xp_for_next_level"]);
+							int dbLvl = row.As<int>("lvl");
+							long dbXp = row.As<long>("xp_for_next_level");
 							WorldServiceLocator._WS_Player_Initializator.XPTable[dbLvl] = checked((int)dbXp);
 						}
 					}
@@ -669,7 +670,7 @@ namespace Mangos.World.DataStores
 				while (enumerator.MoveNext())
 				{
 					DataRow row = (DataRow)enumerator.Current;
-					Battlemasters.Add(Conversions.ToInteger(row["entry"]), Conversions.ToByte(row["bg_template"]));
+					Battlemasters.Add(row.As<int>("entry"), row.As<byte>("bg_template"));
 				}
 			}
 			finally
@@ -693,16 +694,16 @@ namespace Mangos.World.DataStores
 				while (enumerator.MoveNext())
 				{
 					DataRow row = (DataRow)enumerator.Current;
-					byte entry = Conversions.ToByte(row["id"]);
+					byte entry = row.As<byte>("id");
 					Battlegrounds.Add(entry, new TBattleground());
-					Battlegrounds[entry].MinPlayersPerTeam = Conversions.ToByte(row["MinPlayersPerTeam"]);
-					Battlegrounds[entry].MaxPlayersPerTeam = Conversions.ToByte(row["MaxPlayersPerTeam"]);
-					Battlegrounds[entry].MinLevel = Conversions.ToByte(row["MinLvl"]);
-					Battlegrounds[entry].MaxLevel = Conversions.ToByte(row["MaxLvl"]);
-					Battlegrounds[entry].AllianceStartLoc = Conversions.ToSingle(row["AllianceStartLoc"]);
-					Battlegrounds[entry].AllianceStartO = Conversions.ToSingle(row["AllianceStartO"]);
-					Battlegrounds[entry].HordeStartLoc = Conversions.ToSingle(row["HordeStartLoc"]);
-					Battlegrounds[entry].HordeStartO = Conversions.ToSingle(row["HordeStartO"]);
+					Battlegrounds[entry].MinPlayersPerTeam = row.As<byte>("MinPlayersPerTeam");
+					Battlegrounds[entry].MaxPlayersPerTeam = row.As<byte>("MaxPlayersPerTeam");
+					Battlegrounds[entry].MinLevel = row.As<byte>("MinLvl");
+					Battlegrounds[entry].MaxLevel = row.As<byte>("MaxLvl");
+					Battlegrounds[entry].AllianceStartLoc = row.As<float>("AllianceStartLoc");
+					Battlegrounds[entry].AllianceStartO = row.As<float>("AllianceStartO");
+					Battlegrounds[entry].HordeStartLoc = row.As<float>("HordeStartLoc");
+					Battlegrounds[entry].HordeStartO = row.As<float>("HordeStartO");
 				}
 			}
 			finally
@@ -726,13 +727,13 @@ namespace Mangos.World.DataStores
 				while (enumerator.MoveNext())
 				{
 					DataRow row = (DataRow)enumerator.Current;
-					int SpellID = Conversions.ToInteger(row["id"]);
+					int SpellID = row.As<int>("id");
 					TeleportCoords.Add(SpellID, new TTeleportCoords());
-					TeleportCoords[SpellID].Name = Conversions.ToString(row["name"]);
-					TeleportCoords[SpellID].MapID = Conversions.ToUInteger(row["mapId"]);
-					TeleportCoords[SpellID].PosX = Conversions.ToSingle(row["position_x"]);
-					TeleportCoords[SpellID].PosY = Conversions.ToSingle(row["position_y"]);
-					TeleportCoords[SpellID].PosZ = Conversions.ToSingle(row["position_z"]);
+					TeleportCoords[SpellID].Name = row.As<string>("name");
+					TeleportCoords[SpellID].MapID = row.As<uint>("mapId");
+					TeleportCoords[SpellID].PosX = row.As<float>("position_x");
+					TeleportCoords[SpellID].PosY = row.As<float>("position_y");
+					TeleportCoords[SpellID].PosZ = row.As<float>("position_z");
 				}
 			}
 			finally

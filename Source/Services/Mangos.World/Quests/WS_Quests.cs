@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
+using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Quest;
 using Mangos.Common.Enums.Spell;
@@ -51,8 +52,8 @@ namespace Mangos.World.Quests
 				enumerator = cQuests.Rows.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					DataRow cRow = (DataRow)enumerator.Current;
-					int questID = Conversions.ToInteger(cRow["entry"]);
+					DataRow row = (DataRow)enumerator.Current;
+					int questID = row.As<int>("entry");
 					WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
 					_quests.Add(tmpQuest, Conversions.ToString(questID));
 				}
@@ -1008,9 +1009,9 @@ namespace Mangos.World.Quests
 					enumerator = cQuests.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow cRow = (DataRow)enumerator.Current;
-						int questID = Conversions.ToInteger(cRow["quest_id"]);
-						int questStatus = Conversions.ToInteger(cRow["quest_status"]);
+						DataRow row = (DataRow)enumerator.Current;
+						int questID = row.As<int>("quest_id");
+						int questStatus = row.As<int>("quest_status");
 						if (questStatus >= 0)
 						{
 							if (IsValidQuest(questID))
@@ -1420,16 +1421,16 @@ namespace Mangos.World.Quests
 		{
 			return questSort switch
 			{
-				61 => 9, 
-				81 => 1, 
-				82 => 7, 
-				141 => 2, 
-				161 => 8, 
-				162 => 4, 
-				261 => 3, 
-				262 => 5, 
-				263 => 11, 
-				_ => 0, 
+				61 => 9,
+				81 => 1,
+				82 => 7,
+				141 => 2,
+				161 => 8,
+				162 => 4,
+				261 => 3,
+				262 => 5,
+				263 => 11,
+				_ => 0,
 			};
 		}
 
@@ -1949,7 +1950,7 @@ namespace Mangos.World.Quests
 							errorPacket.Dispose();
 						}
 						goto end_IL_0055;
-						IL_01d2:
+					IL_01d2:
 						int k = 0;
 						while (client.Character.TalkCurrentQuest.ObjectivesItem[k] != 0)
 						{
@@ -1987,7 +1988,7 @@ namespace Mangos.World.Quests
 						}
 						client.Character.LogLootItem(tmpItem2, 1, Recieved: true, Created: false);
 						goto IL_034e;
-						IL_034e:
+					IL_034e:
 						if (client.Character.TalkCurrentQuest.RewardGold > 0)
 						{
 							ref uint copper3 = ref client.Character.Copper;
@@ -2093,7 +2094,7 @@ namespace Mangos.World.Quests
 							}
 							SendQuestDetails(ref client, ref client.Character.TalkCurrentQuest, guid, acceptActive: true);
 						}
-						end_IL_0055:;
+					end_IL_0055:;
 					}
 					catch (Exception ex)
 					{
@@ -2133,7 +2134,7 @@ namespace Mangos.World.Quests
 						errorPacket4.Dispose();
 					}
 					goto end_IL_0886;
-					IL_0a03:
+				IL_0a03:
 					int j = 0;
 					while (client.Character.TalkCurrentQuest.ObjectivesItem[j] != 0)
 					{
@@ -2171,7 +2172,7 @@ namespace Mangos.World.Quests
 					}
 					client.Character.LogLootItem(tmpItem, 1, Recieved: true, Created: false);
 					goto IL_0b7f;
-					IL_0b7f:
+				IL_0b7f:
 					if (client.Character.TalkCurrentQuest.RewardGold > 0)
 					{
 						ref uint copper7 = ref client.Character.Copper;
@@ -2277,7 +2278,7 @@ namespace Mangos.World.Quests
 						}
 						SendQuestDetails(ref client, ref client.Character.TalkCurrentQuest, guid, acceptActive: true);
 					}
-					end_IL_0886:;
+				end_IL_0886:;
 				}
 				catch (Exception ex2)
 				{

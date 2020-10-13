@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
+using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.Global;
@@ -525,14 +526,14 @@ namespace Mangos.World.Player
 
 			public float GetCriticalWithSpells => Classe switch
 			{
-				Classes.CLASS_DRUID => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 1.8500000238418579), 
-				Classes.CLASS_MAGE => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 0.9100000262260437), 
-				Classes.CLASS_PRIEST => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 1.2400000095367432), 
-				Classes.CLASS_WARLOCK => (float)Conversion.Fix((double)Intellect.Base / 82.0 + 1.7009999752044678), 
-				Classes.CLASS_PALADIN => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 3.3359999656677246), 
-				Classes.CLASS_SHAMAN => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 2.2000000476837158), 
-				Classes.CLASS_HUNTER => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 3.5999999046325684), 
-				_ => 0f, 
+				Classes.CLASS_DRUID => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 1.8500000238418579),
+				Classes.CLASS_MAGE => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 0.9100000262260437),
+				Classes.CLASS_PRIEST => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 1.2400000095367432),
+				Classes.CLASS_WARLOCK => (float)Conversion.Fix((double)Intellect.Base / 82.0 + 1.7009999752044678),
+				Classes.CLASS_PALADIN => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 3.3359999656677246),
+				Classes.CLASS_SHAMAN => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 2.2000000476837158),
+				Classes.CLASS_HUNTER => (float)Conversion.Fix((double)Intellect.Base / 80.0 + 3.5999999046325684),
+				_ => 0f,
 			};
 
 			public int BaseUnarmedDamage => checked((int)Math.Round((double)(AttackPower + AttackPowerMods) * 0.071428571428571425));
@@ -547,34 +548,34 @@ namespace Mangos.World.Player
 					{
 						switch (Classe)
 						{
-						case Classes.CLASS_WARRIOR:
-						case Classes.CLASS_PALADIN:
-							return unchecked((int)Level) * 3 + Strength.Base * 3 - 20;
-						case Classes.CLASS_SHAMAN:
-							return unchecked((int)Level) * 2 + Strength.Base * 2 - 20;
-						case Classes.CLASS_PRIEST:
-						case Classes.CLASS_MAGE:
-						case Classes.CLASS_WARLOCK:
-							return Strength.Base - 10;
-						case Classes.CLASS_HUNTER:
-						case Classes.CLASS_ROGUE:
-							return unchecked((int)Level) * 2 + Strength.Base + Agility.Base - 20;
-						case Classes.CLASS_DRUID:
-							if (ShapeshiftForm == ShapeshiftForm.FORM_CAT)
-							{
-								return unchecked((int)Level) * 2 + Strength.Base * 2 + Agility.Base - 20;
-							}
-							if ((ShapeshiftForm == ShapeshiftForm.FORM_BEAR) | (ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR))
-							{
-								return unchecked((int)Level) * 3 + Strength.Base * 2 - 20;
-							}
-							if (ShapeshiftForm == ShapeshiftForm.FORM_MOONKIN)
-							{
-								return (int)Math.Round((double)unchecked((int)Level) * 1.5 + (double)Agility.Base + (double)(Strength.Base * 2) - 20.0);
-							}
-							return Strength.Base * 2 - 20;
-						default:
-							return 0;
+							case Classes.CLASS_WARRIOR:
+							case Classes.CLASS_PALADIN:
+								return unchecked((int)Level) * 3 + Strength.Base * 3 - 20;
+							case Classes.CLASS_SHAMAN:
+								return unchecked((int)Level) * 2 + Strength.Base * 2 - 20;
+							case Classes.CLASS_PRIEST:
+							case Classes.CLASS_MAGE:
+							case Classes.CLASS_WARLOCK:
+								return Strength.Base - 10;
+							case Classes.CLASS_HUNTER:
+							case Classes.CLASS_ROGUE:
+								return unchecked((int)Level) * 2 + Strength.Base + Agility.Base - 20;
+							case Classes.CLASS_DRUID:
+								if (ShapeshiftForm == ShapeshiftForm.FORM_CAT)
+								{
+									return unchecked((int)Level) * 2 + Strength.Base * 2 + Agility.Base - 20;
+								}
+								if ((ShapeshiftForm == ShapeshiftForm.FORM_BEAR) | (ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR))
+								{
+									return unchecked((int)Level) * 3 + Strength.Base * 2 - 20;
+								}
+								if (ShapeshiftForm == ShapeshiftForm.FORM_MOONKIN)
+								{
+									return (int)Math.Round((double)unchecked((int)Level) * 1.5 + (double)Agility.Base + (double)(Strength.Base * 2) - 20.0);
+								}
+								return Strength.Base * 2 - 20;
+							default:
+								return 0;
 						}
 					}
 				}
@@ -588,25 +589,25 @@ namespace Mangos.World.Player
 					{
 						switch (Classe)
 						{
-						case Classes.CLASS_WARRIOR:
-						case Classes.CLASS_ROGUE:
-							return unchecked((int)Level) + Agility.Base - 10;
-						case Classes.CLASS_HUNTER:
-							return unchecked((int)Level) * 2 + Agility.Base - 10;
-						case Classes.CLASS_PALADIN:
-						case Classes.CLASS_PRIEST:
-						case Classes.CLASS_SHAMAN:
-						case Classes.CLASS_MAGE:
-						case Classes.CLASS_WARLOCK:
-							return Agility.Base - 10;
-						case Classes.CLASS_DRUID:
-							if ((ShapeshiftForm == ShapeshiftForm.FORM_CAT) | (ShapeshiftForm == ShapeshiftForm.FORM_BEAR) | (ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR) | (ShapeshiftForm == ShapeshiftForm.FORM_MOONKIN))
-							{
+							case Classes.CLASS_WARRIOR:
+							case Classes.CLASS_ROGUE:
+								return unchecked((int)Level) + Agility.Base - 10;
+							case Classes.CLASS_HUNTER:
+								return unchecked((int)Level) * 2 + Agility.Base - 10;
+							case Classes.CLASS_PALADIN:
+							case Classes.CLASS_PRIEST:
+							case Classes.CLASS_SHAMAN:
+							case Classes.CLASS_MAGE:
+							case Classes.CLASS_WARLOCK:
+								return Agility.Base - 10;
+							case Classes.CLASS_DRUID:
+								if ((ShapeshiftForm == ShapeshiftForm.FORM_CAT) | (ShapeshiftForm == ShapeshiftForm.FORM_BEAR) | (ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR) | (ShapeshiftForm == ShapeshiftForm.FORM_MOONKIN))
+								{
+									return 0;
+								}
+								return Agility.Base - 10;
+							default:
 								return 0;
-							}
-							return Agility.Base - 10;
-						default:
-							return 0;
 						}
 					}
 				}
@@ -753,13 +754,13 @@ namespace Mangos.World.Player
 				{
 					switch (Race)
 					{
-					case Races.RACE_HUMAN:
-					case Races.RACE_DWARF:
-					case Races.RACE_NIGHT_ELF:
-					case Races.RACE_GNOME:
-						return false;
-					default:
-						return true;
+						case Races.RACE_HUMAN:
+						case Races.RACE_DWARF:
+						case Races.RACE_NIGHT_ELF:
+						case Races.RACE_GNOME:
+							return false;
+						default:
+							return true;
 					}
 				}
 			}
@@ -770,13 +771,13 @@ namespace Mangos.World.Player
 				{
 					switch (Race)
 					{
-					case Races.RACE_HUMAN:
-					case Races.RACE_DWARF:
-					case Races.RACE_NIGHT_ELF:
-					case Races.RACE_GNOME:
-						return 469;
-					default:
-						return 67;
+						case Races.RACE_HUMAN:
+						case Races.RACE_DWARF:
+						case Races.RACE_NIGHT_ELF:
+						case Races.RACE_GNOME:
+							return 469;
+						default:
+							return 67;
 					}
 				}
 			}
@@ -785,12 +786,12 @@ namespace Mangos.World.Player
 			{
 				return checked(Type switch
 				{
-					0 => (short)Strength.Base, 
-					1 => (short)Agility.Base, 
-					2 => (short)Stamina.Base, 
-					3 => (short)Intellect.Base, 
-					4 => (short)Spirit.Base, 
-					_ => 0, 
+					0 => (short)Strength.Base,
+					1 => (short)Agility.Base,
+					2 => (short)Stamina.Base,
+					3 => (short)Intellect.Base,
+					4 => (short)Spirit.Base,
+					_ => 0,
 				});
 			}
 
@@ -2140,180 +2141,180 @@ namespace Mangos.World.Player
 					int maxSkill = ((Level > WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL) ? (WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL * 5) : (unchecked((int)Level) * 5));
 					switch (SpellID)
 					{
-					case 4036:
-						LearnSpell(3918);
-						LearnSpell(3919);
-						LearnSpell(3920);
-						break;
-					case 3908:
-						LearnSpell(2387);
-						LearnSpell(2963);
-						break;
-					case 7411:
-						LearnSpell(7418);
-						LearnSpell(7421);
-						LearnSpell(13262);
-						break;
-					case 2259:
-						LearnSpell(2329);
-						LearnSpell(7183);
-						LearnSpell(2330);
-						break;
-					case 2018:
-						LearnSpell(2663);
-						LearnSpell(12260);
-						LearnSpell(2660);
-						LearnSpell(3115);
-						break;
-					case 2108:
-						LearnSpell(2152);
-						LearnSpell(9058);
-						LearnSpell(9059);
-						LearnSpell(2149);
-						LearnSpell(7126);
-						LearnSpell(2881);
-						break;
-					case 2550:
-						LearnSpell(818);
-						LearnSpell(2540);
-						LearnSpell(2538);
-						break;
-					case 3273:
-						LearnSpell(3275);
-						break;
-					case 7620:
-						LearnSpell(7738);
-						break;
-					case 2575:
-						LearnSpell(2580);
-						LearnSpell(2656);
-						LearnSpell(2657);
-						break;
-					case 2366:
-						LearnSpell(2383);
-						break;
-					case 264:
-						if (!HaveSpell(75))
-						{
-							LearnSpell(2480);
-						}
-						LearnSkill(45, 1, (short)maxSkill);
-						break;
-					case 266:
-						if (!HaveSpell(75))
-						{
-							LearnSpell(2480);
-						}
-						LearnSkill(46, 1, (short)maxSkill);
-						break;
-					case 5011:
-						if (!HaveSpell(75))
-						{
-							LearnSpell(7919);
-						}
-						LearnSkill(226, 1, (short)maxSkill);
-						break;
-					case 2567:
-						LearnSpell(2764);
-						LearnSkill(176, 1, (short)maxSkill);
-						break;
-					case 5009:
-						LearnSpell(5019);
-						LearnSkill(228, 1, (short)maxSkill);
-						break;
-					case 9078:
-						LearnSkill(415, 1, 1);
-						break;
-					case 9077:
-						LearnSkill(414, 1, 1);
-						break;
-					case 8737:
-						LearnSkill(413, 1, 1);
-						break;
-					case 750:
-						LearnSkill(293, 1, 1);
-						break;
-					case 9116:
-						LearnSkill(433, 1, 1);
-						break;
-					case 674:
-						LearnSkill(118, 1, 1);
-						break;
-					case 196:
-						LearnSkill(44, 1, (short)maxSkill);
-						break;
-					case 197:
-						LearnSkill(172, 1, (short)maxSkill);
-						break;
-					case 227:
-						LearnSkill(136, 1, (short)maxSkill);
-						break;
-					case 198:
-						LearnSkill(54, 1, (short)maxSkill);
-						break;
-					case 199:
-						LearnSkill(160, 1, (short)maxSkill);
-						break;
-					case 201:
-						LearnSkill(43, 1, (short)maxSkill);
-						break;
-					case 202:
-						LearnSkill(55, 1, (short)maxSkill);
-						break;
-					case 1180:
-						LearnSkill(173, 1, (short)maxSkill);
-						break;
-					case 15590:
-						LearnSkill(473, 1, (short)maxSkill);
-						break;
-					case 200:
-						LearnSkill(229, 1, (short)maxSkill);
-						break;
-					case 3386:
-						LearnSkill(227, 1, (short)maxSkill);
-						break;
-					case 2842:
-						LearnSkill(40, 1, (short)maxSkill);
-						break;
-					case 668:
-						LearnSkill(98, 300, 300);
-						break;
-					case 669:
-						LearnSkill(109, 300, 300);
-						break;
-					case 670:
-						LearnSkill(115, 300, 300);
-						break;
-					case 671:
-						LearnSkill(113, 300, 300);
-						break;
-					case 672:
-						LearnSkill(111, 300, 300);
-						break;
-					case 813:
-						LearnSkill(137, 300, 300);
-						break;
-					case 814:
-						LearnSkill(138, 300, 300);
-						break;
-					case 815:
-						LearnSkill(139, 300, 300);
-						break;
-					case 816:
-						LearnSkill(140, 300, 300);
-						break;
-					case 817:
-						LearnSkill(141, 300, 300);
-						break;
-					case 7340:
-						LearnSkill(313, 300, 300);
-						break;
-					case 7341:
-						LearnSkill(315, 300, 300);
-						break;
-					case 17737:
-						LearnSkill(673, 300, 300);
-						break;
+						case 4036:
+							LearnSpell(3918);
+							LearnSpell(3919);
+							LearnSpell(3920);
+							break;
+						case 3908:
+							LearnSpell(2387);
+							LearnSpell(2963);
+							break;
+						case 7411:
+							LearnSpell(7418);
+							LearnSpell(7421);
+							LearnSpell(13262);
+							break;
+						case 2259:
+							LearnSpell(2329);
+							LearnSpell(7183);
+							LearnSpell(2330);
+							break;
+						case 2018:
+							LearnSpell(2663);
+							LearnSpell(12260);
+							LearnSpell(2660);
+							LearnSpell(3115);
+							break;
+						case 2108:
+							LearnSpell(2152);
+							LearnSpell(9058);
+							LearnSpell(9059);
+							LearnSpell(2149);
+							LearnSpell(7126);
+							LearnSpell(2881);
+							break;
+						case 2550:
+							LearnSpell(818);
+							LearnSpell(2540);
+							LearnSpell(2538);
+							break;
+						case 3273:
+							LearnSpell(3275);
+							break;
+						case 7620:
+							LearnSpell(7738);
+							break;
+						case 2575:
+							LearnSpell(2580);
+							LearnSpell(2656);
+							LearnSpell(2657);
+							break;
+						case 2366:
+							LearnSpell(2383);
+							break;
+						case 264:
+							if (!HaveSpell(75))
+							{
+								LearnSpell(2480);
+							}
+							LearnSkill(45, 1, (short)maxSkill);
+							break;
+						case 266:
+							if (!HaveSpell(75))
+							{
+								LearnSpell(2480);
+							}
+							LearnSkill(46, 1, (short)maxSkill);
+							break;
+						case 5011:
+							if (!HaveSpell(75))
+							{
+								LearnSpell(7919);
+							}
+							LearnSkill(226, 1, (short)maxSkill);
+							break;
+						case 2567:
+							LearnSpell(2764);
+							LearnSkill(176, 1, (short)maxSkill);
+							break;
+						case 5009:
+							LearnSpell(5019);
+							LearnSkill(228, 1, (short)maxSkill);
+							break;
+						case 9078:
+							LearnSkill(415, 1, 1);
+							break;
+						case 9077:
+							LearnSkill(414, 1, 1);
+							break;
+						case 8737:
+							LearnSkill(413, 1, 1);
+							break;
+						case 750:
+							LearnSkill(293, 1, 1);
+							break;
+						case 9116:
+							LearnSkill(433, 1, 1);
+							break;
+						case 674:
+							LearnSkill(118, 1, 1);
+							break;
+						case 196:
+							LearnSkill(44, 1, (short)maxSkill);
+							break;
+						case 197:
+							LearnSkill(172, 1, (short)maxSkill);
+							break;
+						case 227:
+							LearnSkill(136, 1, (short)maxSkill);
+							break;
+						case 198:
+							LearnSkill(54, 1, (short)maxSkill);
+							break;
+						case 199:
+							LearnSkill(160, 1, (short)maxSkill);
+							break;
+						case 201:
+							LearnSkill(43, 1, (short)maxSkill);
+							break;
+						case 202:
+							LearnSkill(55, 1, (short)maxSkill);
+							break;
+						case 1180:
+							LearnSkill(173, 1, (short)maxSkill);
+							break;
+						case 15590:
+							LearnSkill(473, 1, (short)maxSkill);
+							break;
+						case 200:
+							LearnSkill(229, 1, (short)maxSkill);
+							break;
+						case 3386:
+							LearnSkill(227, 1, (short)maxSkill);
+							break;
+						case 2842:
+							LearnSkill(40, 1, (short)maxSkill);
+							break;
+						case 668:
+							LearnSkill(98, 300, 300);
+							break;
+						case 669:
+							LearnSkill(109, 300, 300);
+							break;
+						case 670:
+							LearnSkill(115, 300, 300);
+							break;
+						case 671:
+							LearnSkill(113, 300, 300);
+							break;
+						case 672:
+							LearnSkill(111, 300, 300);
+							break;
+						case 813:
+							LearnSkill(137, 300, 300);
+							break;
+						case 814:
+							LearnSkill(138, 300, 300);
+							break;
+						case 815:
+							LearnSkill(139, 300, 300);
+							break;
+						case 816:
+							LearnSkill(140, 300, 300);
+							break;
+						case 817:
+							LearnSkill(141, 300, 300);
+							break;
+						case 7340:
+							LearnSkill(313, 300, 300);
+							break;
+						case 7341:
+							LearnSkill(315, 300, 300);
+							break;
+						case 17737:
+							LearnSkill(673, 300, 300);
+							break;
 					}
 				}
 			}
@@ -3359,242 +3360,242 @@ namespace Mangos.World.Player
 					{
 						switch (dstSlot)
 						{
-						case 0:
-						case 1:
-						case 2:
-						case 3:
-						case 4:
-						case 5:
-						case 6:
-						case 7:
-						case 8:
-						case 9:
-						case 10:
-						case 11:
-						case 12:
-						case 13:
-						case 14:
-						case 15:
-						case 16:
-						case 17:
-						case 18:
-							if (ItemInfo.IsContainer)
-							{
-								return InventoryChangeFailure.EQUIP_ERR_ITEM_CANT_BE_EQUIPPED;
-							}
-							checked
-							{
-								if (!WorldServiceLocator._Functions.HaveFlag(ItemInfo.AvailableClasses, (byte)(unchecked((int)Classe) - 1)))
+							case 0:
+							case 1:
+							case 2:
+							case 3:
+							case 4:
+							case 5:
+							case 6:
+							case 7:
+							case 8:
+							case 9:
+							case 10:
+							case 11:
+							case 12:
+							case 13:
+							case 14:
+							case 15:
+							case 16:
+							case 17:
+							case 18:
+								if (ItemInfo.IsContainer)
 								{
-									return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
+									return InventoryChangeFailure.EQUIP_ERR_ITEM_CANT_BE_EQUIPPED;
 								}
-								if (!WorldServiceLocator._Functions.HaveFlag(ItemInfo.AvailableRaces, (byte)(unchecked((int)Race) - 1)))
+								checked
 								{
-									return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM2;
-								}
-								if (ItemInfo.ReqLevel > Level)
-								{
-									return InventoryChangeFailure.EQUIP_ERR_YOU_MUST_REACH_LEVEL_N;
-								}
-								bool tmp = false;
-								byte[] getSlots = ItemInfo.GetSlots;
-								foreach (byte SlotVal in getSlots)
-								{
-									if (dstSlot == SlotVal)
+									if (!WorldServiceLocator._Functions.HaveFlag(ItemInfo.AvailableClasses, (byte)(unchecked((int)Classe) - 1)))
 									{
-										tmp = true;
+										return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
 									}
-								}
-								if (!tmp)
-								{
-									return InventoryChangeFailure.EQUIP_ERR_ITEM_DOESNT_GO_TO_SLOT;
-								}
-								if (dstSlot == 15 && ItemInfo.InventoryType == INVENTORY_TYPES.INVTYPE_TWOHAND_WEAPON && Items.ContainsKey(16))
-								{
-									return InventoryChangeFailure.EQUIP_ERR_CANT_EQUIP_WITH_TWOHANDED;
-								}
-								if (dstSlot == 16 && Items.ContainsKey(15) && Items[15].ItemInfo.InventoryType == INVENTORY_TYPES.INVTYPE_TWOHAND_WEAPON)
-								{
-									return InventoryChangeFailure.EQUIP_ERR_CANT_EQUIP_WITH_TWOHANDED;
-								}
-								if (dstSlot == 16 && ItemInfo.InventoryType == INVENTORY_TYPES.INVTYPE_WEAPON && !Skills.ContainsKey(118))
-								{
-									return InventoryChangeFailure.EQUIP_ERR_CANT_DUAL_WIELD;
-								}
-								if (ItemInfo.GetReqSkill != 0 && !Skills.ContainsKey(ItemInfo.GetReqSkill))
-								{
-									return InventoryChangeFailure.EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
-								}
-								if (ItemInfo.GetReqSpell != 0 && !Spells.ContainsKey(ItemInfo.GetReqSpell))
-								{
-									return InventoryChangeFailure.EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
-								}
-								if (ItemInfo.ReqSkill != 0)
-								{
-									if (!Skills.ContainsKey(ItemInfo.ReqSkill))
+									if (!WorldServiceLocator._Functions.HaveFlag(ItemInfo.AvailableRaces, (byte)(unchecked((int)Race) - 1)))
+									{
+										return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM2;
+									}
+									if (ItemInfo.ReqLevel > Level)
+									{
+										return InventoryChangeFailure.EQUIP_ERR_YOU_MUST_REACH_LEVEL_N;
+									}
+									bool tmp = false;
+									byte[] getSlots = ItemInfo.GetSlots;
+									foreach (byte SlotVal in getSlots)
+									{
+										if (dstSlot == SlotVal)
+										{
+											tmp = true;
+										}
+									}
+									if (!tmp)
+									{
+										return InventoryChangeFailure.EQUIP_ERR_ITEM_DOESNT_GO_TO_SLOT;
+									}
+									if (dstSlot == 15 && ItemInfo.InventoryType == INVENTORY_TYPES.INVTYPE_TWOHAND_WEAPON && Items.ContainsKey(16))
+									{
+										return InventoryChangeFailure.EQUIP_ERR_CANT_EQUIP_WITH_TWOHANDED;
+									}
+									if (dstSlot == 16 && Items.ContainsKey(15) && Items[15].ItemInfo.InventoryType == INVENTORY_TYPES.INVTYPE_TWOHAND_WEAPON)
+									{
+										return InventoryChangeFailure.EQUIP_ERR_CANT_EQUIP_WITH_TWOHANDED;
+									}
+									if (dstSlot == 16 && ItemInfo.InventoryType == INVENTORY_TYPES.INVTYPE_WEAPON && !Skills.ContainsKey(118))
+									{
+										return InventoryChangeFailure.EQUIP_ERR_CANT_DUAL_WIELD;
+									}
+									if (ItemInfo.GetReqSkill != 0 && !Skills.ContainsKey(ItemInfo.GetReqSkill))
 									{
 										return InventoryChangeFailure.EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
 									}
-									if (Skills[ItemInfo.ReqSkill].Current < ItemInfo.ReqSkillRank)
+									if (ItemInfo.GetReqSpell != 0 && !Spells.ContainsKey(ItemInfo.GetReqSpell))
 									{
-										return InventoryChangeFailure.EQUIP_ERR_SKILL_ISNT_HIGH_ENOUGH;
+										return InventoryChangeFailure.EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
+									}
+									if (ItemInfo.ReqSkill != 0)
+									{
+										if (!Skills.ContainsKey(ItemInfo.ReqSkill))
+										{
+											return InventoryChangeFailure.EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
+										}
+										if (Skills[ItemInfo.ReqSkill].Current < ItemInfo.ReqSkillRank)
+										{
+											return InventoryChangeFailure.EQUIP_ERR_SKILL_ISNT_HIGH_ENOUGH;
+										}
+									}
+									if (ItemInfo.ReqSpell != 0 && !Spells.ContainsKey(ItemInfo.ReqSpell))
+									{
+										return InventoryChangeFailure.EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
 									}
 								}
-								if (ItemInfo.ReqSpell != 0 && !Spells.ContainsKey(ItemInfo.ReqSpell))
+								if (ItemInfo.ReqHonorRank != 0 && (int)HonorHighestRank < ItemInfo.ReqHonorRank)
 								{
-									return InventoryChangeFailure.EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
+									return InventoryChangeFailure.EQUIP_ITEM_RANK_NOT_ENOUGH;
 								}
-							}
-							if (ItemInfo.ReqHonorRank != 0 && (int)HonorHighestRank < ItemInfo.ReqHonorRank)
-							{
-								return InventoryChangeFailure.EQUIP_ITEM_RANK_NOT_ENOUGH;
-							}
-							if (ItemInfo.ReqFaction != 0 && (int)client.Character.GetReputation(ItemInfo.ReqFaction) <= ItemInfo.ReqFactionLevel)
-							{
-								return InventoryChangeFailure.EQUIP_ITEM_REPUTATION_NOT_ENOUGH;
-							}
-							return InventoryChangeFailure.EQUIP_ERR_OK;
-						case 19:
-						case 20:
-						case 21:
-						case 22:
-							if (!ItemInfo.IsContainer)
-							{
-								return InventoryChangeFailure.EQUIP_ERR_NOT_A_BAG;
-							}
-							if (!Item.IsFree)
-							{
-								return InventoryChangeFailure.EQUIP_ERR_NONEMPTY_BAG_OVER_OTHER_BAG;
-							}
-							return InventoryChangeFailure.EQUIP_ERR_OK;
-						case 23:
-						case 24:
-						case 25:
-						case 26:
-						case 27:
-						case 28:
-						case 29:
-						case 30:
-						case 31:
-						case 32:
-						case 33:
-						case 34:
-						case 35:
-						case 36:
-						case 37:
-						case 38:
-							if (ItemInfo.IsContainer)
-							{
-								if (Item.IsFree)
+								if (ItemInfo.ReqFaction != 0 && (int)client.Character.GetReputation(ItemInfo.ReqFaction) <= ItemInfo.ReqFactionLevel)
 								{
-									return InventoryChangeFailure.EQUIP_ERR_OK;
+									return InventoryChangeFailure.EQUIP_ITEM_REPUTATION_NOT_ENOUGH;
 								}
-								return InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
-							}
-							return InventoryChangeFailure.EQUIP_ERR_OK;
-						case 39:
-						case 40:
-						case 41:
-						case 42:
-						case 43:
-						case 44:
-						case 45:
-						case 46:
-						case 47:
-						case 48:
-						case 49:
-						case 50:
-						case 51:
-						case 52:
-						case 53:
-						case 54:
-						case 55:
-						case 56:
-						case 57:
-						case 58:
-						case 59:
-						case 60:
-						case 61:
-						case 62:
-							if (ItemInfo.IsContainer)
-							{
-								if (Item.IsFree)
+								return InventoryChangeFailure.EQUIP_ERR_OK;
+							case 19:
+							case 20:
+							case 21:
+							case 22:
+								if (!ItemInfo.IsContainer)
 								{
-									return InventoryChangeFailure.EQUIP_ERR_OK;
+									return InventoryChangeFailure.EQUIP_ERR_NOT_A_BAG;
 								}
-								return InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
-							}
-							return InventoryChangeFailure.EQUIP_ERR_OK;
-						case 63:
-						case 64:
-						case 65:
-						case 66:
-						case 67:
-						case 68:
-							if ((uint)dstSlot >= (uint)checked((byte)unchecked((uint)(63 + Items_AvailableBankSlots))))
-							{
-								return InventoryChangeFailure.EQUIP_ERR_MUST_PURCHASE_THAT_BAG_SLOT;
-							}
-							if (!ItemInfo.IsContainer)
-							{
-								return InventoryChangeFailure.EQUIP_ERR_NOT_A_BAG;
-							}
-							if (!Item.IsFree)
-							{
-								return InventoryChangeFailure.EQUIP_ERR_NONEMPTY_BAG_OVER_OTHER_BAG;
-							}
-							return InventoryChangeFailure.EQUIP_ERR_OK;
-						case 69:
-						case 70:
-						case 71:
-						case 72:
-						case 73:
-						case 74:
-						case 75:
-						case 76:
-						case 77:
-						case 78:
-						case 79:
-						case 80:
-						case 81:
-						case 82:
-						case 83:
-						case 84:
-						case 85:
-						case 86:
-						case 87:
-						case 88:
-						case 89:
-						case 90:
-						case 91:
-						case 92:
-						case 93:
-						case 94:
-						case 95:
-						case 96:
-						case 97:
-						case 98:
-						case 99:
-						case 100:
-						case 101:
-						case 102:
-						case 103:
-						case 104:
-						case 105:
-						case 106:
-						case 107:
-						case 108:
-						case 109:
-						case 110:
-						case 111:
-						case 112:
-							if (ItemInfo.BagFamily != ITEM_BAG.KEYRING && ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_KEY)
-							{
-								return InventoryChangeFailure.EQUIP_ERR_ITEM_DOESNT_GO_TO_SLOT;
-							}
-							return InventoryChangeFailure.EQUIP_ERR_OK;
-						default:
-							return InventoryChangeFailure.EQUIP_ERR_ITEM_CANT_BE_EQUIPPED;
+								if (!Item.IsFree)
+								{
+									return InventoryChangeFailure.EQUIP_ERR_NONEMPTY_BAG_OVER_OTHER_BAG;
+								}
+								return InventoryChangeFailure.EQUIP_ERR_OK;
+							case 23:
+							case 24:
+							case 25:
+							case 26:
+							case 27:
+							case 28:
+							case 29:
+							case 30:
+							case 31:
+							case 32:
+							case 33:
+							case 34:
+							case 35:
+							case 36:
+							case 37:
+							case 38:
+								if (ItemInfo.IsContainer)
+								{
+									if (Item.IsFree)
+									{
+										return InventoryChangeFailure.EQUIP_ERR_OK;
+									}
+									return InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
+								}
+								return InventoryChangeFailure.EQUIP_ERR_OK;
+							case 39:
+							case 40:
+							case 41:
+							case 42:
+							case 43:
+							case 44:
+							case 45:
+							case 46:
+							case 47:
+							case 48:
+							case 49:
+							case 50:
+							case 51:
+							case 52:
+							case 53:
+							case 54:
+							case 55:
+							case 56:
+							case 57:
+							case 58:
+							case 59:
+							case 60:
+							case 61:
+							case 62:
+								if (ItemInfo.IsContainer)
+								{
+									if (Item.IsFree)
+									{
+										return InventoryChangeFailure.EQUIP_ERR_OK;
+									}
+									return InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
+								}
+								return InventoryChangeFailure.EQUIP_ERR_OK;
+							case 63:
+							case 64:
+							case 65:
+							case 66:
+							case 67:
+							case 68:
+								if ((uint)dstSlot >= (uint)checked((byte)unchecked((uint)(63 + Items_AvailableBankSlots))))
+								{
+									return InventoryChangeFailure.EQUIP_ERR_MUST_PURCHASE_THAT_BAG_SLOT;
+								}
+								if (!ItemInfo.IsContainer)
+								{
+									return InventoryChangeFailure.EQUIP_ERR_NOT_A_BAG;
+								}
+								if (!Item.IsFree)
+								{
+									return InventoryChangeFailure.EQUIP_ERR_NONEMPTY_BAG_OVER_OTHER_BAG;
+								}
+								return InventoryChangeFailure.EQUIP_ERR_OK;
+							case 69:
+							case 70:
+							case 71:
+							case 72:
+							case 73:
+							case 74:
+							case 75:
+							case 76:
+							case 77:
+							case 78:
+							case 79:
+							case 80:
+							case 81:
+							case 82:
+							case 83:
+							case 84:
+							case 85:
+							case 86:
+							case 87:
+							case 88:
+							case 89:
+							case 90:
+							case 91:
+							case 92:
+							case 93:
+							case 94:
+							case 95:
+							case 96:
+							case 97:
+							case 98:
+							case 99:
+							case 100:
+							case 101:
+							case 102:
+							case 103:
+							case 104:
+							case 105:
+							case 106:
+							case 107:
+							case 108:
+							case 109:
+							case 110:
+							case 111:
+							case 112:
+								if (ItemInfo.BagFamily != ITEM_BAG.KEYRING && ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_KEY)
+								{
+									return InventoryChangeFailure.EQUIP_ERR_ITEM_DOESNT_GO_TO_SLOT;
+								}
+								return InventoryChangeFailure.EQUIP_ERR_OK;
+							default:
+								return InventoryChangeFailure.EQUIP_ERR_ITEM_CANT_BE_EQUIPPED;
 						}
 					}
 					if (!Items.ContainsKey(dstBag))
@@ -4181,7 +4182,7 @@ namespace Mangos.World.Player
 							tmp = null;
 							goto IL_0ec5;
 						}
-						IL_06f5:
+					IL_06f5:
 						SendItemAndCharacterUpdate(Items[srcBag]);
 						WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {GUID} WHERE item_guid = {Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
 						if (Items[srcBag].Items.ContainsKey(srcSlot))
@@ -4189,7 +4190,7 @@ namespace Mangos.World.Player
 							WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {Items[srcBag].GUID} WHERE item_guid = {Items[srcBag].Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
 						}
 						goto end_IL_0080;
-						IL_0ab8:
+					IL_0ab8:
 						SendItemAndCharacterUpdate(Items[dstBag]);
 						WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {Items[dstBag].GUID} WHERE item_guid = {Items[dstBag].Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
 						if (Items.ContainsKey(srcSlot))
@@ -4197,7 +4198,7 @@ namespace Mangos.World.Player
 							WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {GUID} WHERE item_guid = {Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
 						}
 						goto end_IL_0080;
-						IL_0ec5:
+					IL_0ec5:
 						SendItemAndCharacterUpdate(Items[dstSlot]);
 						WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {GUID} WHERE item_guid = {Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
 						if (Items.ContainsKey(srcSlot))
@@ -4205,7 +4206,7 @@ namespace Mangos.World.Player
 							WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {GUID} WHERE item_guid = {Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
 						}
 						goto end_IL_0080;
-						IL_02e9:
+					IL_02e9:
 						SendItemUpdate(Items[srcBag]);
 						if (dstBag != srcBag)
 						{
@@ -4216,7 +4217,7 @@ namespace Mangos.World.Player
 						{
 							WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {Items[srcBag].GUID} WHERE item_guid = {Items[srcBag].Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
 						}
-						end_IL_0080:;
+					end_IL_0080:;
 					}
 					catch (Exception ex)
 					{
@@ -4342,50 +4343,50 @@ namespace Mangos.World.Player
 					{
 						switch (Item.ItemInfo.ItemBonusStatType[k])
 						{
-						case 1:
-							Life.Bonus += Item.ItemInfo.ItemBonusStatValue[k];
-							break;
-						case 3:
-						{
-							Agility.Base += Item.ItemInfo.ItemBonusStatValue[k];
-							ref short positiveBonus5 = ref Agility.PositiveBonus;
-							positiveBonus5 = (short)(positiveBonus5 + Item.ItemInfo.ItemBonusStatValue[k]);
-							Resistances[0].Base += Item.ItemInfo.ItemBonusStatValue[k] * 2;
-							break;
-						}
-						case 4:
-						{
-							Strength.Base += Item.ItemInfo.ItemBonusStatValue[k];
-							ref short positiveBonus4 = ref Strength.PositiveBonus;
-							positiveBonus4 = (short)(positiveBonus4 + Item.ItemInfo.ItemBonusStatValue[k]);
-							break;
-						}
-						case 5:
-						{
-							Intellect.Base += Item.ItemInfo.ItemBonusStatValue[k];
-							ref short positiveBonus3 = ref Intellect.PositiveBonus;
-							positiveBonus3 = (short)(positiveBonus3 + Item.ItemInfo.ItemBonusStatValue[k]);
-							Life.Bonus += Item.ItemInfo.ItemBonusStatValue[k] * 15;
-							break;
-						}
-						case 6:
-						{
-							Spirit.Base += Item.ItemInfo.ItemBonusStatValue[k];
-							ref short positiveBonus2 = ref Spirit.PositiveBonus;
-							positiveBonus2 = (short)(positiveBonus2 + Item.ItemInfo.ItemBonusStatValue[k]);
-							break;
-						}
-						case 7:
-						{
-							Stamina.Base += Item.ItemInfo.ItemBonusStatValue[k];
-							ref short positiveBonus = ref Stamina.PositiveBonus;
-							positiveBonus = (short)(positiveBonus + Item.ItemInfo.ItemBonusStatValue[k]);
-							Life.Bonus += Item.ItemInfo.ItemBonusStatValue[k] * 10;
-							break;
-						}
-						case 15:
-							combatBlockValue += Item.ItemInfo.ItemBonusStatValue[k];
-							break;
+							case 1:
+								Life.Bonus += Item.ItemInfo.ItemBonusStatValue[k];
+								break;
+							case 3:
+								{
+									Agility.Base += Item.ItemInfo.ItemBonusStatValue[k];
+									ref short positiveBonus5 = ref Agility.PositiveBonus;
+									positiveBonus5 = (short)(positiveBonus5 + Item.ItemInfo.ItemBonusStatValue[k]);
+									Resistances[0].Base += Item.ItemInfo.ItemBonusStatValue[k] * 2;
+									break;
+								}
+							case 4:
+								{
+									Strength.Base += Item.ItemInfo.ItemBonusStatValue[k];
+									ref short positiveBonus4 = ref Strength.PositiveBonus;
+									positiveBonus4 = (short)(positiveBonus4 + Item.ItemInfo.ItemBonusStatValue[k]);
+									break;
+								}
+							case 5:
+								{
+									Intellect.Base += Item.ItemInfo.ItemBonusStatValue[k];
+									ref short positiveBonus3 = ref Intellect.PositiveBonus;
+									positiveBonus3 = (short)(positiveBonus3 + Item.ItemInfo.ItemBonusStatValue[k]);
+									Life.Bonus += Item.ItemInfo.ItemBonusStatValue[k] * 15;
+									break;
+								}
+							case 6:
+								{
+									Spirit.Base += Item.ItemInfo.ItemBonusStatValue[k];
+									ref short positiveBonus2 = ref Spirit.PositiveBonus;
+									positiveBonus2 = (short)(positiveBonus2 + Item.ItemInfo.ItemBonusStatValue[k]);
+									break;
+								}
+							case 7:
+								{
+									Stamina.Base += Item.ItemInfo.ItemBonusStatValue[k];
+									ref short positiveBonus = ref Stamina.PositiveBonus;
+									positiveBonus = (short)(positiveBonus + Item.ItemInfo.ItemBonusStatValue[k]);
+									Life.Bonus += Item.ItemInfo.ItemBonusStatValue[k] * 10;
+									break;
+								}
+							case 15:
+								combatBlockValue += Item.ItemInfo.ItemBonusStatValue[k];
+								break;
 						}
 						k = (byte)unchecked((uint)(k + 1));
 					}
@@ -4402,15 +4403,15 @@ namespace Mangos.World.Player
 					{
 						switch (slot)
 						{
-						case 17:
-							AttackTimeBase[2] = (short)Item.ItemInfo.Delay;
-							break;
-						case 15:
-							AttackTimeBase[0] = (short)Item.ItemInfo.Delay;
-							break;
-						case 16:
-							AttackTimeBase[1] = (short)Item.ItemInfo.Delay;
-							break;
+							case 17:
+								AttackTimeBase[2] = (short)Item.ItemInfo.Delay;
+								break;
+							case 15:
+								AttackTimeBase[0] = (short)Item.ItemInfo.Delay;
+								break;
+							case 16:
+								AttackTimeBase[1] = (short)Item.ItemInfo.Delay;
+								break;
 						}
 					}
 					byte i = 0;
@@ -4482,50 +4483,50 @@ namespace Mangos.World.Player
 					{
 						switch (Item.ItemInfo.ItemBonusStatType[k])
 						{
-						case 1:
-							Life.Bonus -= Item.ItemInfo.ItemBonusStatValue[k];
-							break;
-						case 3:
-						{
-							Agility.Base -= Item.ItemInfo.ItemBonusStatValue[k];
-							ref short positiveBonus5 = ref Agility.PositiveBonus;
-							positiveBonus5 = (short)(positiveBonus5 - Item.ItemInfo.ItemBonusStatValue[k]);
-							Resistances[0].Base -= Item.ItemInfo.ItemBonusStatValue[k] * 2;
-							break;
-						}
-						case 4:
-						{
-							Strength.Base -= Item.ItemInfo.ItemBonusStatValue[k];
-							ref short positiveBonus4 = ref Strength.PositiveBonus;
-							positiveBonus4 = (short)(positiveBonus4 - Item.ItemInfo.ItemBonusStatValue[k]);
-							break;
-						}
-						case 5:
-						{
-							Intellect.Base -= Item.ItemInfo.ItemBonusStatValue[k];
-							ref short positiveBonus3 = ref Intellect.PositiveBonus;
-							positiveBonus3 = (short)(positiveBonus3 - Item.ItemInfo.ItemBonusStatValue[k]);
-							Mana.Bonus -= Item.ItemInfo.ItemBonusStatValue[k] * 15;
-							break;
-						}
-						case 6:
-						{
-							Spirit.Base -= Item.ItemInfo.ItemBonusStatValue[k];
-							ref short positiveBonus2 = ref Spirit.PositiveBonus;
-							positiveBonus2 = (short)(positiveBonus2 - Item.ItemInfo.ItemBonusStatValue[k]);
-							break;
-						}
-						case 7:
-						{
-							Stamina.Base -= Item.ItemInfo.ItemBonusStatValue[k];
-							ref short positiveBonus = ref Stamina.PositiveBonus;
-							positiveBonus = (short)(positiveBonus - Item.ItemInfo.ItemBonusStatValue[k]);
-							Life.Bonus -= Item.ItemInfo.ItemBonusStatValue[k] * 10;
-							break;
-						}
-						case 15:
-							combatBlockValue -= Item.ItemInfo.ItemBonusStatValue[k];
-							break;
+							case 1:
+								Life.Bonus -= Item.ItemInfo.ItemBonusStatValue[k];
+								break;
+							case 3:
+								{
+									Agility.Base -= Item.ItemInfo.ItemBonusStatValue[k];
+									ref short positiveBonus5 = ref Agility.PositiveBonus;
+									positiveBonus5 = (short)(positiveBonus5 - Item.ItemInfo.ItemBonusStatValue[k]);
+									Resistances[0].Base -= Item.ItemInfo.ItemBonusStatValue[k] * 2;
+									break;
+								}
+							case 4:
+								{
+									Strength.Base -= Item.ItemInfo.ItemBonusStatValue[k];
+									ref short positiveBonus4 = ref Strength.PositiveBonus;
+									positiveBonus4 = (short)(positiveBonus4 - Item.ItemInfo.ItemBonusStatValue[k]);
+									break;
+								}
+							case 5:
+								{
+									Intellect.Base -= Item.ItemInfo.ItemBonusStatValue[k];
+									ref short positiveBonus3 = ref Intellect.PositiveBonus;
+									positiveBonus3 = (short)(positiveBonus3 - Item.ItemInfo.ItemBonusStatValue[k]);
+									Mana.Bonus -= Item.ItemInfo.ItemBonusStatValue[k] * 15;
+									break;
+								}
+							case 6:
+								{
+									Spirit.Base -= Item.ItemInfo.ItemBonusStatValue[k];
+									ref short positiveBonus2 = ref Spirit.PositiveBonus;
+									positiveBonus2 = (short)(positiveBonus2 - Item.ItemInfo.ItemBonusStatValue[k]);
+									break;
+								}
+							case 7:
+								{
+									Stamina.Base -= Item.ItemInfo.ItemBonusStatValue[k];
+									ref short positiveBonus = ref Stamina.PositiveBonus;
+									positiveBonus = (short)(positiveBonus - Item.ItemInfo.ItemBonusStatValue[k]);
+									Life.Bonus -= Item.ItemInfo.ItemBonusStatValue[k] * 10;
+									break;
+								}
+							case 15:
+								combatBlockValue -= Item.ItemInfo.ItemBonusStatValue[k];
+								break;
 						}
 						k = (byte)unchecked((uint)(k + 1));
 					}
@@ -4542,22 +4543,22 @@ namespace Mangos.World.Player
 					{
 						switch (slot)
 						{
-						case 17:
-							AttackTimeBase[2] = 0;
-							break;
-						case 15:
-							if (Classe == Classes.CLASS_ROGUE)
-							{
-								AttackTimeBase[0] = 1900;
-							}
-							else
-							{
-								AttackTimeBase[0] = 2000;
-							}
-							break;
-						case 16:
-							AttackTimeBase[1] = 0;
-							break;
+							case 17:
+								AttackTimeBase[2] = 0;
+								break;
+							case 15:
+								if (Classe == Classes.CLASS_ROGUE)
+								{
+									AttackTimeBase[0] = 1900;
+								}
+								else
+								{
+									AttackTimeBase[0] = 2000;
+								}
+								break;
+							case 16:
+								AttackTimeBase[1] = 0;
+								break;
 						}
 					}
 					byte i = 0;
@@ -5017,28 +5018,28 @@ namespace Mangos.World.Player
 					{
 						switch (Type)
 						{
-						default:
-							return;
-						case ChangeSpeedType.RUN:
-							packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_RUN_SPEED_CHANGE);
-							RunSpeed = NewSpeed;
-							break;
-						case ChangeSpeedType.RUNBACK:
-							packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_RUN_BACK_SPEED_CHANGE);
-							RunBackSpeed = NewSpeed;
-							break;
-						case ChangeSpeedType.SWIM:
-							packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_SWIM_SPEED_CHANGE);
-							SwimSpeed = NewSpeed;
-							break;
-						case ChangeSpeedType.SWIMBACK:
-							packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_SWIM_BACK_SPEED_CHANGE);
-							SwimBackSpeed = NewSpeed;
-							break;
-						case ChangeSpeedType.TURNRATE:
-							packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_TURN_RATE_CHANGE);
-							TurnRate = NewSpeed;
-							break;
+							default:
+								return;
+							case ChangeSpeedType.RUN:
+								packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_RUN_SPEED_CHANGE);
+								RunSpeed = NewSpeed;
+								break;
+							case ChangeSpeedType.RUNBACK:
+								packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_RUN_BACK_SPEED_CHANGE);
+								RunBackSpeed = NewSpeed;
+								break;
+							case ChangeSpeedType.SWIM:
+								packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_SWIM_SPEED_CHANGE);
+								SwimSpeed = NewSpeed;
+								break;
+							case ChangeSpeedType.SWIMBACK:
+								packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_SWIM_BACK_SPEED_CHANGE);
+								SwimBackSpeed = NewSpeed;
+								break;
+							case ChangeSpeedType.TURNRATE:
+								packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_TURN_RATE_CHANGE);
+								TurnRate = NewSpeed;
+								break;
 						}
 						packet.AddPackGUID(GUID);
 						packet.AddInt32(antiHackSpeedChanged_);
@@ -5262,17 +5263,17 @@ namespace Mangos.World.Player
 				}
 				switch (GetReputation(WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[FactionID].FactionID))
 				{
-				case ReputationRank.Hated:
-				case ReputationRank.Hostile:
-					return TReaction.HOSTILE;
-				default:
-					return TReaction.FIGHT_SUPPORT;
-				case ReputationRank.Friendly:
-				case ReputationRank.Honored:
-					return TReaction.FRIENDLY;
-				case ReputationRank.Unfriendly:
-				case ReputationRank.Neutral:
-					return TReaction.NEUTRAL;
+					case ReputationRank.Hated:
+					case ReputationRank.Hostile:
+						return TReaction.HOSTILE;
+					default:
+						return TReaction.FIGHT_SUPPORT;
+					case ReputationRank.Friendly:
+					case ReputationRank.Honored:
+						return TReaction.FRIENDLY;
+					case ReputationRank.Unfriendly:
+					case ReputationRank.Neutral:
+						return TReaction.NEUTRAL;
 				}
 			}
 
@@ -5586,34 +5587,34 @@ namespace Mangos.World.Player
 				{
 					switch (Power)
 					{
-					default:
-						return;
-					case ManaTypes.TYPE_MANA:
-						if (Mana.Current == Mana.Maximum)
-						{
+						default:
 							return;
-						}
-						Mana.Current += Damage;
-						SetUpdateFlag(23, Mana.Current);
-						break;
-					case ManaTypes.TYPE_RAGE:
-						if (Rage.Current == Rage.Maximum)
-						{
+						case ManaTypes.TYPE_MANA:
+							if (Mana.Current == Mana.Maximum)
+							{
+								return;
+							}
+							Mana.Current += Damage;
+							SetUpdateFlag(23, Mana.Current);
+							break;
+						case ManaTypes.TYPE_RAGE:
+							if (Rage.Current == Rage.Maximum)
+							{
+								return;
+							}
+							Rage.Current += Damage;
+							SetUpdateFlag(24, Rage.Current);
+							break;
+						case ManaTypes.TYPE_ENERGY:
+							if (Energy.Current == Energy.Maximum)
+							{
+								return;
+							}
+							Energy.Current += Damage;
+							SetUpdateFlag(26, Energy.Current);
+							break;
+						case ManaTypes.TYPE_FOCUS:
 							return;
-						}
-						Rage.Current += Damage;
-						SetUpdateFlag(24, Rage.Current);
-						break;
-					case ManaTypes.TYPE_ENERGY:
-						if (Energy.Current == Energy.Maximum)
-						{
-							return;
-						}
-						Energy.Current += Damage;
-						SetUpdateFlag(26, Energy.Current);
-						break;
-					case ManaTypes.TYPE_FOCUS:
-						return;
 					}
 					SendCharacterUpdate();
 				}
@@ -5821,8 +5822,8 @@ namespace Mangos.World.Player
 							{
 								WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Spawning new transport!");
 								ulong cGUID = TransportGUID - WorldServiceLocator._Global_Constants.GUID_TRANSPORT;
-								DataRow Info = null;
-								WS_GameObjects.GameObjectObject newGameobject = new WS_GameObjects.GameObjectObject(cGUID, Info);
+								DataRow row = null;
+								WS_GameObjects.GameObjectObject newGameobject = new WS_GameObjects.GameObjectObject(cGUID, row);
 								newGameobject.AddToWorld();
 								OnTransport = newGameobject;
 								transportX = positionX;
@@ -6550,8 +6551,8 @@ namespace Mangos.World.Player
 					enumerator = SpellQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow Spell = (DataRow)enumerator.Current;
-						Spells.Add(Conversions.ToInteger(Spell["spellid"]), new WS_Spells.CharacterSpell(Conversions.ToInteger(Spell["spellid"]), Conversions.ToByte(Spell["active"]), Conversions.ToUInteger(Spell["cooldown"]), Conversions.ToInteger(Spell["cooldownitem"])));
+						DataRow row = (DataRow)enumerator.Current;
+						Spells.Add(row.As<int>("spellid"), new WS_Spells.CharacterSpell(row.As<int>("spellid"), row.As<byte>("active"), row.As<uint>("cooldown"), row.As<int>("cooldownitem")));
 					}
 				}
 				finally
@@ -6720,11 +6721,11 @@ namespace Mangos.World.Player
 							DataRow row = (DataRow)enumerator2.Current;
 							if (Operators.ConditionalCompareObjectNotEqual(row["item_slot"], WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, TextCompare: false))
 							{
-								ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID((ulong)Conversions.ToLong(row["item_guid"]), this, unchecked((uint)Conversions.ToByte(row["item_slot"])) < 19u);
-								Items[Conversions.ToByte(row["item_slot"])] = tmpItem;
-								if (unchecked((uint)Conversions.ToByte(row["item_slot"])) < 23u)
+								ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(row.As<long, ulong>("item_guid"), this, unchecked((uint)row.As<byte>("item_slot")) < 19u);
+								Items[row.As<byte>("item_slot")] = tmpItem;
+								if (unchecked(row.As<byte, uint>("item_slot") < 23u))
 								{
-									UpdateAddItemStats(ref tmpItem, Conversions.ToByte(row["item_slot"]));
+									UpdateAddItemStats(ref tmpItem, row.As<byte>("item_slot"));
 								}
 							}
 						}

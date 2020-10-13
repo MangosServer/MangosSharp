@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using Mangos.Common;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
@@ -418,22 +419,22 @@ namespace Mangos.World.Objects
 					{
 						switch (ID)
 						{
-						case 164871:
-						case 175080:
-						case 176495:
-							SendPlaySound(5154);
-							break;
-						case 20808:
-						case 176231:
-						case 176244:
-						case 176310:
-						case 177233:
-						case 181646:
-							SendPlaySound(5495);
-							break;
-						default:
-							SendPlaySound(5154);
-							break;
+							case 164871:
+							case 175080:
+							case 176495:
+								SendPlaySound(5154);
+								break;
+							case 20808:
+							case 176231:
+							case 176244:
+							case 176310:
+							case 177233:
+							case 181646:
+								SendPlaySound(5495);
+								break;
+							default:
+								SendPlaySound(5154);
+								break;
 						}
 					}
 					NextNodeTime = Waypoints[CurrentWaypoint].Time;
@@ -770,10 +771,10 @@ namespace Mangos.World.Objects
 					enumerator = TransportQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow Transport = (DataRow)enumerator.Current;
-						int TransportEntry = Conversions.ToInteger(Transport["entry"]);
-						string TransportName = Conversions.ToString(Transport["name"]);
-						int TransportPeriod = Conversions.ToInteger(Transport["period"]);
+						DataRow row = (DataRow)enumerator.Current;
+						int TransportEntry = row.As<int>("entry");
+						string TransportName = row.As<string>("name");
+						int TransportPeriod = row.As<int>("period");
 						TransportObject newTransport = new TransportObject(TransportEntry, TransportName, TransportPeriod);
 					}
 				}
