@@ -171,114 +171,114 @@ namespace Mangos.World.Objects
 
 			public byte[] GetSlots => InventoryType switch
 			{
-				INVENTORY_TYPES.INVTYPE_HEAD => new byte[1], 
+				INVENTORY_TYPES.INVTYPE_HEAD => new byte[1],
 				INVENTORY_TYPES.INVTYPE_NECK => new byte[1]
 				{
 					1
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_SHOULDERS => new byte[1]
 				{
 					2
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_BODY => new byte[1]
 				{
 					3
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_CHEST => new byte[1]
 				{
 					4
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_ROBE => new byte[1]
 				{
 					4
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_WAIST => new byte[1]
 				{
 					5
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_LEGS => new byte[1]
 				{
 					6
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_FEET => new byte[1]
 				{
 					7
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_WRISTS => new byte[1]
 				{
 					8
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_HANDS => new byte[1]
 				{
 					9
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_FINGER => new byte[2]
 				{
 					10,
 					11
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_TRINKET => new byte[2]
 				{
 					12,
 					13
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_CLOAK => new byte[1]
 				{
 					14
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_WEAPON => new byte[2]
 				{
 					15,
 					16
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_SHIELD => new byte[1]
 				{
 					16
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_RANGED => new byte[1]
 				{
 					17
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_TWOHAND_WEAPON => new byte[1]
 				{
 					15
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_TABARD => new byte[1]
 				{
 					18
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_WEAPONMAINHAND => new byte[1]
 				{
 					15
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_WEAPONOFFHAND => new byte[1]
 				{
 					16
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_HOLDABLE => new byte[1]
 				{
 					16
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_THROWN => new byte[1]
 				{
 					17
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_RANGEDRIGHT => new byte[1]
 				{
 					17
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_BAG => new byte[4]
 				{
 					19,
 					20,
 					21,
 					22
-				}, 
+				},
 				INVENTORY_TYPES.INVTYPE_RELIC => new byte[1]
 				{
 					17
-				}, 
-				_ => new byte[0], 
+				},
+				_ => new byte[0],
 			};
 
 			public int GetReqSkill
@@ -303,78 +303,78 @@ namespace Mangos.World.Objects
 				{
 					switch (ObjectClass)
 					{
-					case ITEM_CLASS.ITEM_CLASS_WEAPON:
-						switch (SubClass)
-						{
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_MISC_WEAPON:
+						case ITEM_CLASS.ITEM_CLASS_WEAPON:
+							switch (SubClass)
+							{
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_MISC_WEAPON:
+									return 0;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_CONSUMABLE:
+									return 196;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_FOOD:
+									return 197;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID:
+									return 264;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_POTION:
+									return 266;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_SCROLL:
+									return 198;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_BANDAGE:
+									return 199;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_HEALTHSTONE:
+									return 200;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_COMBAT_EFFECT:
+									return 201;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_SWORD:
+									return 202;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_STAFF:
+									return 227;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_EXOTIC:
+									return 262;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_EXOTIC2:
+									return 263;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_FIST_WEAPON:
+									return 15590;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_DAGGER:
+									return 1180;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_THROWN:
+									return 2567;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_SPEAR:
+									return 3386;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_CROSSBOW:
+									return 5011;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_WAND:
+									return 5009;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_FISHING_POLE:
+									return 7738;
+							}
+							break;
+						case ITEM_CLASS.ITEM_CLASS_ARMOR:
+							switch (SubClass)
+							{
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_CONSUMABLE:
+									return 0;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_FOOD:
+									return 9078;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID:
+									return 9077;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_POTION:
+									return 8737;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_SCROLL:
+									return 750;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_HEALTHSTONE:
+									return 9116;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_BANDAGE:
+									return 9124;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_COMBAT_EFFECT:
+									return 27762;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_obsolete:
+									return 27763;
+								case ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_SWORD:
+									return 27764;
+							}
+							break;
+						default:
 							return 0;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_CONSUMABLE:
-							return 196;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_FOOD:
-							return 197;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID:
-							return 264;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_POTION:
-							return 266;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_SCROLL:
-							return 198;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_BANDAGE:
-							return 199;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_HEALTHSTONE:
-							return 200;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_COMBAT_EFFECT:
-							return 201;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_SWORD:
-							return 202;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_STAFF:
-							return 227;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_EXOTIC:
-							return 262;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_EXOTIC2:
-							return 263;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_FIST_WEAPON:
-							return 15590;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_DAGGER:
-							return 1180;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_THROWN:
-							return 2567;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_SPEAR:
-							return 3386;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_CROSSBOW:
-							return 5011;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_WAND:
-							return 5009;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_FISHING_POLE:
-							return 7738;
-						}
-						break;
-					case ITEM_CLASS.ITEM_CLASS_ARMOR:
-						switch (SubClass)
-						{
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_CONSUMABLE:
-							return 0;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_FOOD:
-							return 9078;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID:
-							return 9077;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_POTION:
-							return 8737;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_SCROLL:
-							return 750;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_HEALTHSTONE:
-							return 9116;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_BANDAGE:
-							return 9124;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_COMBAT_EFFECT:
-							return 27762;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_obsolete:
-							return 27763;
-						case ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_SWORD:
-							return 27764;
-						}
-						break;
-					default:
-						return 0;
 					}
 					return 0;
 				}
@@ -483,10 +483,10 @@ namespace Mangos.World.Objects
 				InventoryType = (INVENTORY_TYPES)Conversions.ToByte(mySqlQuery.Rows[0]["inventorytype"]);
 				Level = Conversions.ToInteger(mySqlQuery.Rows[0]["itemlevel"]);
 				Type typeFromHandle = typeof(BitConverter);
-				DataRow dataRow;
+				DataRow row;
 				object[] obj = new object[1]
 				{
-					(dataRow = mySqlQuery.Rows[0])["allowableclass"]
+					(row = mySqlQuery.Rows[0])["allowableclass"]
 				};
 				object[] array = obj;
 				bool[] obj2 = new bool[1]
@@ -497,19 +497,19 @@ namespace Mangos.World.Objects
 				object obj3 = NewLateBinding.LateGet(null, typeFromHandle, "GetBytes", obj, null, null, obj2);
 				if (array2[0])
 				{
-					dataRow["allowableclass"] = RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(array[0]));
+					row["allowableclass"] = RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(array[0]));
 				}
 				AvailableClasses = BitConverter.ToUInt32((byte[])obj3, 0);
 				object obj4 = NewLateBinding.LateGet(null, typeof(BitConverter), "GetBytes", array = new object[1]
 				{
-					(dataRow = mySqlQuery.Rows[0])["allowablerace"]
+					(row = mySqlQuery.Rows[0])["allowablerace"]
 				}, null, null, array2 = new bool[1]
 				{
 					true
 				});
 				if (array2[0])
 				{
-					dataRow["allowablerace"] = RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(array[0]));
+					row["allowablerace"] = RuntimeHelpers.GetObjectValue(RuntimeHelpers.GetObjectValue(array[0]));
 				}
 				AvailableRaces = BitConverter.ToUInt32((byte[])obj4, 0);
 				ReqLevel = Conversions.ToInteger(mySqlQuery.Rows[0]["requiredlevel"]);

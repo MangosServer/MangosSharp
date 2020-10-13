@@ -1115,41 +1115,41 @@ namespace Mangos.World.Handlers
 				Races Race;
 				switch (WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(StringRace))
 				{
-				case "DWARF":
-				case "DW":
-					Race = Races.RACE_DWARF;
-					break;
-				case "GNOME":
-				case "GN":
-					Race = Races.RACE_GNOME;
-					break;
-				case "HUMAN":
-				case "HU":
-					Race = Races.RACE_HUMAN;
-					break;
-				case "NIGHTELF":
-				case "NE":
-					Race = Races.RACE_NIGHT_ELF;
-					break;
-				case "ORC":
-				case "OR":
-					Race = Races.RACE_ORC;
-					break;
-				case "TAUREN":
-				case "TA":
-					Race = Races.RACE_TAUREN;
-					break;
-				case "TROLL":
-				case "TR":
-					Race = Races.RACE_TROLL;
-					break;
-				case "UNDEAD":
-				case "UN":
-					Race = Races.RACE_UNDEAD;
-					break;
-				default:
-					objCharacter.CommandResponse("Unknown race. Use DW, GN, HU, NE, OR, TA, TR, UN for race.");
-					return true;
+					case "DWARF":
+					case "DW":
+						Race = Races.RACE_DWARF;
+						break;
+					case "GNOME":
+					case "GN":
+						Race = Races.RACE_GNOME;
+						break;
+					case "HUMAN":
+					case "HU":
+						Race = Races.RACE_HUMAN;
+						break;
+					case "NIGHTELF":
+					case "NE":
+						Race = Races.RACE_NIGHT_ELF;
+						break;
+					case "ORC":
+					case "OR":
+						Race = Races.RACE_ORC;
+						break;
+					case "TAUREN":
+					case "TA":
+						Race = Races.RACE_TAUREN;
+						break;
+					case "TROLL":
+					case "TR":
+						Race = Races.RACE_TROLL;
+						break;
+					case "UNDEAD":
+					case "UN":
+						Race = Races.RACE_UNDEAD;
+						break;
+					default:
+						objCharacter.CommandResponse("Unknown race. Use DW, GN, HU, NE, OR, TA, TR, UN for race.");
+						return true;
 				}
 				WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM playercreateinfo WHERE race = {(int)Race};", ref Info);
 				Character.Teleport(Conversions.ToSingle(Info.Rows[0]["position_x"]), Conversions.ToSingle(Info.Rows[0]["position_y"]), Conversions.ToSingle(Info.Rows[0]["position_z"]), Conversions.ToSingle(Info.Rows[0]["orientation"]), Conversions.ToInteger(Info.Rows[0]["map"]));
@@ -1297,8 +1297,8 @@ namespace Mangos.World.Handlers
 					enumerator = listSqlQuery.Rows.GetEnumerator();
 					while (enumerator.MoveNext())
 					{
-						DataRow locationRow2 = (DataRow)enumerator.Current;
-						cmdList = Conversions.ToString(Operators.AddObject(cmdList, Operators.ConcatenateObject(locationRow2["name"], ", ")));
+						DataRow row = (DataRow)enumerator.Current;
+						cmdList = Conversions.ToString(Operators.AddObject(cmdList, Operators.ConcatenateObject(row["name"], ", ")));
 					}
 				}
 				finally
@@ -1334,8 +1334,8 @@ namespace Mangos.World.Handlers
 						enumerator2 = mySqlQuery.Rows.GetEnumerator();
 						while (enumerator2.MoveNext())
 						{
-							DataRow locationRow = (DataRow)enumerator2.Current;
-							cmdList2 = Conversions.ToString(Operators.AddObject(cmdList2, Operators.ConcatenateObject(locationRow["name"], ", ")));
+							DataRow row = (DataRow)enumerator2.Current;
+							cmdList2 = Conversions.ToString(Operators.AddObject(cmdList2, Operators.ConcatenateObject(row["name"], ", ")));
 						}
 					}
 					finally
