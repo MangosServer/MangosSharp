@@ -80,12 +80,12 @@ namespace Mangos.Realm
             Console.Title = $"{assemblyTitle} v{Assembly.GetExecutingAssembly().GetName().Version}";
             logger.Debug(product);
             logger.Debug(copyright);
-            logger.Message("  __  __      _  _  ___  ___  ___                ");
-            logger.Message(@" |  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
-            logger.Message(@" | |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
-            logger.Message(@" |_|  |_\__,_|_|\_|\___|\___/|___/              ");
-            logger.Message("                                                 ");
-            logger.Message(" Website / Forum / Support: https://getmangos.eu/");
+            logger.Message(@" __  __      _  _  ___  ___  ___               ");
+            logger.Message(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
+            logger.Message(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
+            logger.Message(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
+            logger.Message("                                                ");
+            logger.Message("Website / Forum / Support: https://getmangos.eu/");
         }
     }
 }
