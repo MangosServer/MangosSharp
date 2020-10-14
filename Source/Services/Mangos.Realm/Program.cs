@@ -54,7 +54,8 @@ namespace Mangos.Realm.Async
 
 		public static void RegisterConfiguration(ContainerBuilder builder)
 		{
-			builder.Register(x => new XmlFileConfigurationProvider<RealmServerConfiguration>(x.Resolve<ILogger>(), "configs/RealmServer.ini"))
+			builder.Register(x => new XmlFileConfigurationProvider<RealmServerConfiguration>(
+					x.Resolve<ILogger>(), "configs/RealmServer.ini"))
 				.As<IConfigurationProvider<RealmServerConfiguration>>()
 				.SingleInstance();
 			builder.RegisterDecorator<StoredConfigurationProvider<RealmServerConfiguration>,
