@@ -22,8 +22,6 @@ using System.IO;
 using System.Linq;
 using Foole.Mpq;
 using Mangos.Common.DataStores;
-using Mangos.Common.Enums.Global;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.DBCExtractor
 {
