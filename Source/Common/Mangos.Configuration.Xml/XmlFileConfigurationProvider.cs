@@ -16,6 +16,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Loggers;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -24,16 +26,19 @@ namespace Mangos.Configuration.Xml
 {
     public class XmlFileConfigurationProvider<T> : IConfigurationProvider<T>
     {
-        private readonly string _filePath;
+        private readonly ILogger logger;
 
-        public XmlFileConfigurationProvider(string filePath)
+        private readonly string filePath;
+
+        public XmlFileConfigurationProvider(ILogger logger, string filePath)
         {
-            _filePath = filePath;
+            this.logger = logger;
+            this.filePath = filePath;
         }
 
         public T GetConfiguration()
         {
-            using (var streamReader = new StreamReader(_filePath))
+            using (var streamReader = new StreamReader(filePath))
             {
                 var xmlSerializer = new XmlSerializer(typeof(T));
                 T configuration = (T)xmlSerializer.Deserialize(streamReader);
@@ -43,11 +48,20 @@ namespace Mangos.Configuration.Xml
 
         public ValueTask<T> GetConfigurationAsync()
         {
-            using (var streamReader = new StreamReader(_filePath))
+            try
             {
-                var xmlSerializer = new XmlSerializer(typeof(T));
-                T configuration = (T)xmlSerializer.Deserialize(streamReader);
-                return new ValueTask<T>(configuration);
+                using (var streamReader = new StreamReader(filePath))
+                {
+                    var xmlSerializer = new XmlSerializer(typeof(T));
+                    T configuration = (T)xmlSerializer.Deserialize(streamReader);
+                    logger.Debug("Get XML Configuration for {0}", typeof(T).FullName);
+                    return new ValueTask<T>(configuration);
+                }
+            }
+            catch(Exception ex)
+            {
+                logger.Error("Unable to load XML configuration for {0}", ex, typeof(T).FullName);
+                throw;
             }
         }
     }

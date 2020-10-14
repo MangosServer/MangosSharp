@@ -16,25 +16,29 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Loggers;
 using System.Threading.Tasks;
 
 namespace Mangos.Configuration.Store
 {
     public class StoredConfigurationProvider<T> : IConfigurationProvider<T>
     {
-        private readonly IConfigurationProvider<T> _configurationProvider;
+        private readonly ILogger logger;
+
+        private readonly IConfigurationProvider<T> configurationProvider;
         private T _configuration;
 
-        public StoredConfigurationProvider(IConfigurationProvider<T> configurationProvider)
+        public StoredConfigurationProvider(ILogger logger, IConfigurationProvider<T> configurationProvider)
         {
-            _configurationProvider = configurationProvider;
+            this.logger = logger;
+            this.configurationProvider = configurationProvider;
         }
 
         public T GetConfiguration()
         {
             if (_configuration is null)
             {
-                _configuration = _configurationProvider.GetConfiguration();
+                _configuration = configurationProvider.GetConfiguration();
             }
             return _configuration;
         }
@@ -43,7 +47,8 @@ namespace Mangos.Configuration.Store
         {
             if (_configuration is null)
             {
-                _configuration = await _configurationProvider.GetConfigurationAsync();
+                _configuration = await configurationProvider.GetConfigurationAsync();
+                logger.Debug("Save configuration {0} in store", typeof(T).FullName);
             }
             return _configuration;
         }

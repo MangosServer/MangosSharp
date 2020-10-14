@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mangos.Loggers\Mangos.Loggers.csproj" />
     <ProjectReference Include="..\Mangos.Storage\Mangos.Storage.csproj" />
   </ItemGroup>
   <ItemGroup>
