@@ -31,29 +31,28 @@ namespace Mangos.Realm.Factories
     {
         private readonly ILogger logger;
         private readonly IAccountStorage accountStorage;
-
-        private readonly Converter _Converter;
-        private readonly Global_Constants _Global_Constants;
+        private readonly Converter converter;
+        private readonly MangosGlobalConstants mangosGlobalConstants;
 
         public RealmServerClientFactory(ILogger logger, 
             IAccountStorage accountStorage, 
             Converter converter, 
-            Global_Constants global_Constants)
+            MangosGlobalConstants mangosGlobalConstants)
         {
             this.logger = logger;
             this.accountStorage = accountStorage;
-            _Converter = converter;
-            _Global_Constants = global_Constants;
+            this.converter = converter;
+            this.mangosGlobalConstants = mangosGlobalConstants;
         }
 
         public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
         {
             return new RealmServerClient(
-                logger, 
-                accountStorage, 
-                (IPEndPoint)clientSocket.RemoteEndPoint,
-                _Converter,
-                _Global_Constants);
+                logger,
+                accountStorage,
+                converter,
+                mangosGlobalConstants,
+                (IPEndPoint)clientSocket.RemoteEndPoint);
         }
     }
 }

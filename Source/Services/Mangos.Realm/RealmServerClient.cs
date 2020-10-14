@@ -43,13 +43,14 @@ namespace Mangos.Realm
 	{
 		private readonly ILogger logger;
 		private readonly IAccountStorage accountStorage;
+		private readonly Converter converter;
+		private readonly MangosGlobalConstants mangosGlobalConstants;
+
 		private readonly AuthEngineClass authEngineClass;
 
 		private Dictionary<AuthCMD, Func<ChannelReader<byte>, ChannelWriter<byte>, Task>> packetHandlers;
 		private readonly IPEndPoint remoteEnpoint;
 
-		private readonly Converter _Converter;
-		private readonly Global_Constants _Global_Constants;
 
 		public string Account = "";
 		public string UpdateFile = "";
@@ -57,18 +58,18 @@ namespace Mangos.Realm
 
         public RealmServerClient(ILogger logger,
             IAccountStorage accountStorage,
-            IPEndPoint remoteEnpoint, 
-			Converter converter, 
-			Global_Constants global_Constants)
+            Converter converter,
+            MangosGlobalConstants mangosGlobalConstants,
+            IPEndPoint remoteEnpoint)
         {
             this.logger = logger;
             this.accountStorage = accountStorage;
-            this.remoteEnpoint = remoteEnpoint;
-            this.authEngineClass = new AuthEngineClass();
+			this.converter = converter;
+			this.mangosGlobalConstants = mangosGlobalConstants;
+			this.remoteEnpoint = remoteEnpoint;
 
+            authEngineClass = new AuthEngineClass();
             packetHandlers = GetPacketHandlers();
-            _Converter = converter;
-            _Global_Constants = global_Constants;
         }
 
         public async void HandleAsync(
@@ -138,7 +139,7 @@ namespace Mangos.Realm
 				dataResponse[1] = (byte)AccountState.LOGIN_BADVERSION;
 				await writer.WriteAsync(dataResponse);
 			}
-			else if (clientBuild == _Global_Constants.Required_Build_1_12_1 | clientBuild == _Global_Constants.Required_Build_1_12_2 | clientBuild == _Global_Constants.Required_Build_1_12_3)
+			else if (clientBuild == mangosGlobalConstants.Required_Build_1_12_1 | clientBuild == mangosGlobalConstants.Required_Build_1_12_2 | clientBuild == mangosGlobalConstants.Required_Build_1_12_3)
 			{
 				// TODO: in the far future should check if the account is expired too
 				var accountInfo = await accountStorage.GetAccountInfoAsync(packetAccount);
@@ -304,13 +305,13 @@ namespace Mangos.Realm
 				dataResponse[0] = (byte)AuthCMD.CMD_XFER_INITIATE;
 				// Name Len 0x05 -> sizeof(Patch)
 				int i = 1;
-				_Converter.ToBytes(Conversions.ToByte(5), dataResponse, ref i);
+				converter.ToBytes(Conversions.ToByte(5), dataResponse, ref i);
 				// Name 'Patch'
-				_Converter.ToBytes("Patch", dataResponse, ref i);
+				converter.ToBytes("Patch", dataResponse, ref i);
 				// Size 0x34 C4 0D 00 = 902,196 byte (180->181 enGB)
-				_Converter.ToBytes(Conversions.ToInteger(FileSystem.FileLen(UpdateFile)), dataResponse, ref i);
+				converter.ToBytes(Conversions.ToInteger(FileSystem.FileLen(UpdateFile)), dataResponse, ref i);
 				// Unknown 0x0 always
-				_Converter.ToBytes(0, dataResponse, ref i);
+				converter.ToBytes(0, dataResponse, ref i);
 				// MD5 CheckSum
 				var md5 = new MD5CryptoServiceProvider();
 				byte[] buffer;
@@ -442,32 +443,32 @@ namespace Mangos.Realm
 
 				// (uint8) Realm Icon
 				// 0 -> Normal; 1 -> PvP; 6 -> RP; 8 -> RPPvP;
-				_Converter.ToBytes(Conversions.ToByte(realmListItem.icon), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToByte(realmListItem.icon), dataResponse, ref tmp);
 				// (uint8) IsLocked
 				// 0 -> none; 1 -> locked
-				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
 				// (uint8) unk
-				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
 				// (uint8) unk
-				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
 				// (uint8) Realm Color
 				// 0 -> Green; 1 -> Red; 2 -> Offline;
-				_Converter.ToBytes(Conversions.ToByte(realmListItem.realmflags), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToByte(realmListItem.realmflags), dataResponse, ref tmp);
 				// (string) Realm Name (zero terminated)
-				_Converter.ToBytes(Conversions.ToString(realmListItem.name), dataResponse, ref tmp);
-				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp); // \0
+				converter.ToBytes(Conversions.ToString(realmListItem.name), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp); // \0
 																				  // (string) Realm Address ("ip:port", zero terminated)
-				_Converter.ToBytes(Operators.ConcatenateObject(Operators.ConcatenateObject(realmListItem.address, ":"), realmListItem.port).ToString(), dataResponse, ref tmp);
-				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp); // \0
+				converter.ToBytes(Operators.ConcatenateObject(Operators.ConcatenateObject(realmListItem.address, ":"), realmListItem.port).ToString(), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp); // \0
 																				  // (float) Population
 																				  // 400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High
 																				  // 00 00 48 43 -> Recommended
 																				  // 00 00 C8 43 -> Full
 																				  // 9C C4 C0 3F -> Low
 																				  // BC 74 B3 3F -> Low
-				_Converter.ToBytes(Conversions.ToSingle(realmListItem.population), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToSingle(realmListItem.population), dataResponse, ref tmp);
 				// (byte) Number of character at this realm for this account
-				_Converter.ToBytes(Conversions.ToByte(characterCount), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToByte(characterCount), dataResponse, ref tmp);
 				// (byte) Timezone
 				// 0x01 - Development
 				// 0x02 - USA
@@ -499,9 +500,9 @@ namespace Mangos.Realm
 				// 0x1C - QA Server
 				// 0x1D - CN9
 				// 0x1E - Test Server 2
-				_Converter.ToBytes(Conversions.ToByte(realmListItem.timezone), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToByte(realmListItem.timezone), dataResponse, ref tmp);
 				// (byte) Unknown (may be 2 -> TestRealm, / 6 -> ?)
-				_Converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
+				converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
 			}
 
 			dataResponse[tmp] = 2; // 2=list of realms 0=wizard

@@ -30,7 +30,7 @@ namespace Mangos.Cluster
     public static class ClusterServiceLocator
     {
         public static IContainer _Container { get; set; } = Program.CreateContainer();
-        public static Global_Constants _Global_Constants { get; set; } = _Container.Resolve<Global_Constants>();
+        public static MangosGlobalConstants _Global_Constants { get; set; } = _Container.Resolve<MangosGlobalConstants>();
         public static Common.Globals.Functions _CommonGlobalFunctions { get; set; } = _Container.Resolve<Common.Globals.Functions>();
         public static Common.Functions _CommonFunctions { get; set; } = _Container.Resolve<Common.Functions>();
         public static GlobalZip _GlobalZip { get; set; } = _Container.Resolve<GlobalZip>();

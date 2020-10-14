@@ -57,7 +57,7 @@ namespace Mangos.World
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static Global_Constants __Global_Constants;
+		private static MangosGlobalConstants __Global_Constants;
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -265,11 +265,11 @@ namespace Mangos.World
 		} = _Container.Resolve<IConfigurationProvider<WorldServerConfiguration>>();
 
 
-		public static Global_Constants _Global_Constants
+		public static MangosGlobalConstants _Global_Constants
 		{
 			get;
 			set;
-		} = _Container.Resolve<Global_Constants>();
+		} = _Container.Resolve<MangosGlobalConstants>();
 
 
 		public static Common.Globals.Functions _CommonGlobalFunctions

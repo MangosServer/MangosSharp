@@ -29,91 +29,91 @@ namespace Mangos.Common.Globals
 {
     public class Functions
     {
-        private readonly Global_Constants _Global_Constants;
+        private readonly MangosGlobalConstants mangosGlobalConstants;
 		private readonly ILogger logger;
 
-		public Functions(Global_Constants globalConstants, ILogger logger)
+		public Functions(ILogger logger, MangosGlobalConstants mangosGlobalConstants)
 		{
-			_Global_Constants = globalConstants;
 			this.logger = logger;
-		}
+            this.mangosGlobalConstants = mangosGlobalConstants;
+        }
 
 		public bool GuidIsCreature(ulong guid)
         {
-            if (GuidHigh2(guid) == _Global_Constants.GUID_UNIT)
+            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_UNIT)
                 return true;
             return false;
         }
 
         public bool GuidIsPet(ulong guid)
         {
-            if (GuidHigh2(guid) == _Global_Constants.GUID_PET)
+            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_PET)
                 return true;
             return false;
         }
 
         public bool GuidIsItem(ulong guid)
         {
-            if (GuidHigh2(guid) == _Global_Constants.GUID_ITEM)
+            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_ITEM)
                 return true;
             return false;
         }
 
         public bool GuidIsGameObject(ulong guid)
         {
-            if (GuidHigh2(guid) == _Global_Constants.GUID_GAMEOBJECT)
+            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_GAMEOBJECT)
                 return true;
             return false;
         }
 
         public bool GuidIsDnyamicObject(ulong guid)
         {
-            if (GuidHigh2(guid) == _Global_Constants.GUID_DYNAMICOBJECT)
+            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_DYNAMICOBJECT)
                 return true;
             return false;
         }
 
         public bool GuidIsTransport(ulong guid)
         {
-            if (GuidHigh2(guid) == _Global_Constants.GUID_TRANSPORT)
+            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_TRANSPORT)
                 return true;
             return false;
         }
 
         public bool GuidIsMoTransport(ulong guid)
         {
-            if (GuidHigh2(guid) == _Global_Constants.GUID_MO_TRANSPORT)
+            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_MO_TRANSPORT)
                 return true;
             return false;
         }
 
         public bool GuidIsCorpse(ulong guid)
         {
-            if (GuidHigh2(guid) == _Global_Constants.GUID_CORPSE)
+            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_CORPSE)
                 return true;
             return false;
         }
 
         public bool GuidIsPlayer(ulong guid)
         {
-            if (GuidHigh2(guid) == _Global_Constants.GUID_PLAYER)
+            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_PLAYER)
                 return true;
             return false;
         }
 
         public ulong GuidHigh2(ulong guid)
         {
-            return guid & _Global_Constants.GUID_MASK_HIGH;
+            return guid & mangosGlobalConstants.GUID_MASK_HIGH;
         }
 
         public uint GuidHigh(ulong guid)
         {
-            return (uint)((guid & _Global_Constants.GUID_MASK_HIGH) >> 32);
+            return (uint)((guid & mangosGlobalConstants.GUID_MASK_HIGH) >> 32);
         }
 
         public uint GuidLow(ulong guid)
         {
-            return (uint)(guid & _Global_Constants.GUID_MASK_LOW);
+            return (uint)(guid & mangosGlobalConstants.GUID_MASK_LOW);
         }
 
         public int GetShapeshiftModel(ShapeshiftForm form, Races race, int model)
@@ -260,25 +260,25 @@ namespace Mangos.Common.Globals
             {
                 case ServerDb.Realm:
                     {
-                        coreDbVersion = _Global_Constants.RevisionDbRealmVersion;
-                        coreDbStructure = _Global_Constants.RevisionDbRealmStructure;
-                        coreDbContent = _Global_Constants.RevisionDbRealmContent;
+                        coreDbVersion = mangosGlobalConstants.RevisionDbRealmVersion;
+                        coreDbStructure = mangosGlobalConstants.RevisionDbRealmStructure;
+                        coreDbContent = mangosGlobalConstants.RevisionDbRealmContent;
                         break;
                     }
 
                 case ServerDb.Character:
                     {
-                        coreDbVersion = _Global_Constants.RevisionDbCharactersVersion;
-                        coreDbStructure = _Global_Constants.RevisionDbCharactersStructure;
-                        coreDbContent = _Global_Constants.RevisionDbCharactersContent;
+                        coreDbVersion = mangosGlobalConstants.RevisionDbCharactersVersion;
+                        coreDbStructure = mangosGlobalConstants.RevisionDbCharactersStructure;
+                        coreDbContent = mangosGlobalConstants.RevisionDbCharactersContent;
                         break;
                     }
 
                 case ServerDb.World:
                     {
-                        coreDbVersion = _Global_Constants.RevisionDbMangosVersion;
-                        coreDbStructure = _Global_Constants.RevisionDbMangosStructure;
-                        coreDbContent = _Global_Constants.RevisionDbMangosContent;
+                        coreDbVersion = mangosGlobalConstants.RevisionDbMangosVersion;
+                        coreDbStructure = mangosGlobalConstants.RevisionDbMangosStructure;
+                        coreDbContent = mangosGlobalConstants.RevisionDbMangosContent;
                         break;
                     }
             }

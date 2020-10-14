@@ -22,9 +22,9 @@ using Mangos.Common.Globals;
 
 namespace global
 {
-    public class Global_Constants
+    public class MangosGlobalConstants
     {
-        public Global_Constants()
+        public MangosGlobalConstants()
         {
             movementOrTurningFlagsMask = movementFlagsMask | TurningFlagsMask;
             MAX_AURA_EFFECTs = MAX_AURA_EFFECTs_VISIBLE + MAX_AURA_EFFECTs_PASSIVE;

@@ -40,7 +40,7 @@ namespace Mangos.Cluster
         {
             var builder = new ContainerBuilder();
 			RegisterLoggers(builder);
-			builder.RegisterType<Global_Constants>().As<Global_Constants>();
+			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>();
             builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>();
             builder.RegisterType<Common.Functions>().As<Common.Functions>();
             builder.RegisterType<GlobalZip>().As<GlobalZip>();

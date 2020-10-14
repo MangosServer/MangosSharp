@@ -84,7 +84,7 @@ namespace Mangos.Realm.Async
 		public static void RegisterServices(ContainerBuilder builder)
 		{
 			builder.RegisterType<Converter>().As<Converter>().SingleInstance();
-			builder.RegisterType<Global_Constants>().As<Global_Constants>().SingleInstance();
+			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
 
 			builder.RegisterType<RealmServer>().As<RealmServer>().SingleInstance();
 			builder.RegisterType<RealmServerClientFactory>().As<ITcpClientFactory>().SingleInstance();

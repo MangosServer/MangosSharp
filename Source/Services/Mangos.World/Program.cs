@@ -77,7 +77,7 @@ namespace Mangos.World
 
 		public static void RegisterServices(ContainerBuilder builder)
 		{
-			builder.RegisterType<Global_Constants>().As<Global_Constants>().SingleInstance();
+			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
 			builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>().SingleInstance();
 			builder.RegisterType<Common.Functions>().As<Common.Functions>().SingleInstance();
 			builder.RegisterType<GlobalZip>().As<GlobalZip>().SingleInstance();
