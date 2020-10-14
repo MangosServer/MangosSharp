@@ -17,26 +17,31 @@
 //
 
 using Mangos.Configuration;
+using Mangos.Loggers;
 using Mangos.Network.Tcp;
 using Mangos.Storage.MySql;
 using System;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Mangos.Realm.Async
 {
     public class RealmServer
     {
+        private readonly ILogger logger;
         private readonly MySqlAccountStorage accountStorage;
         private readonly IConfigurationProvider<RealmServerConfiguration> configurationProvider;
 
         private readonly TcpServer tcpServer;
 
         public RealmServer(
+            ILogger logger,
             MySqlAccountStorage accountStorage,
             IConfigurationProvider<RealmServerConfiguration> configurationProvider,
             TcpServer tcpServer)
         {
+            this.logger = logger;
             this.accountStorage = accountStorage;
             this.configurationProvider = configurationProvider;
             this.tcpServer = tcpServer;
@@ -44,14 +49,43 @@ namespace Mangos.Realm.Async
 
         public async Task StartAsync()
         {
+            LogInitialInformation();
+
+            await ConnectToDatabaseAsync();
+            await StartTcpServer();
+
+            Console.ReadLine();
+        }
+
+        private async Task ConnectToDatabaseAsync()
+        {
             var configuration = await configurationProvider.GetConfigurationAsync();
             await accountStorage.ConnectAsync(configuration.AccountConnectionString);
+        }
 
+        private async Task StartTcpServer()
+        {
+            var configuration = await configurationProvider.GetConfigurationAsync();
             var endpoint = IPEndPoint.Parse(configuration.RealmServerEndpoint);
             tcpServer.Start(endpoint, 10);
+        }
 
-            Console.WriteLine("Started");
-            Console.ReadLine();
+        private void LogInitialInformation()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var assemblyTitle = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
+            var product = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+            var copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
+
+            Console.Title = $"{assemblyTitle} v{Assembly.GetExecutingAssembly().GetName().Version}";
+            logger.Debug(product);
+            logger.Debug(copyright);
+            logger.Message("  __  __      _  _  ___  ___  ___                ");
+            logger.Message(@" |  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
+            logger.Message(@" | |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
+            logger.Message(@" |_|  |_\__,_|_|\_|\___|\___/|___/              ");
+            logger.Message("                                                 ");
+            logger.Message(" Website / Forum / Support: https://getmangos.eu/");
         }
     }
 }
