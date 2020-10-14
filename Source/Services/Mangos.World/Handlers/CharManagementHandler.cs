@@ -246,11 +246,11 @@ namespace Mangos.World.Handlers
 			{
 				return InventoryChangeFailure.EQUIP_ERR_ONLY_AMMO_CAN_GO_HERE;
 			}
-			if ((long)WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableClasses != 0L && (ulong)(WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableClasses & objCharacter.ClassMask) == 0)
+			if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableClasses != 0L && (ulong)(WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableClasses & objCharacter.ClassMask) == 0)
 			{
 				return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
 			}
-			if ((long)WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableRaces != 0L && (ulong)(WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableRaces & objCharacter.RaceMask) == 0)
+			if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableRaces != 0L && (ulong)(WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableRaces & objCharacter.RaceMask) == 0)
 			{
 				return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
 			}

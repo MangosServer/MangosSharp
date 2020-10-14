@@ -63,7 +63,7 @@ namespace Mangos.World.Loots
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 4u);
+				while (i <= 4u);
 				RequiredMiningSkill = ReqMining;
 				RequiredLockingSkill = ReqLock;
 			}
@@ -91,8 +91,7 @@ namespace Mangos.World.Loots
 						catch (Exception ex2)
 						{
 							ProjectData.SetProjectError(ex2);
-							Exception ex = ex2;
-							ProjectData.ClearProjectError();
+                            ProjectData.ClearProjectError();
 						}
 						WorldServiceLocator._WorldServer.ITEMDatabase.Add(ItemID, tmpItem);
 					}
@@ -107,7 +106,7 @@ namespace Mangos.World.Loots
 				ItemID = Item.ItemID;
 				checked
 				{
-					ItemCount = (byte)WorldServiceLocator._WorldServer.Rnd.Next(Item.MinCountOrRef, unchecked((int)Item.MaxCount) + 1);
+					ItemCount = (byte)WorldServiceLocator._WorldServer.Rnd.Next(Item.MinCountOrRef, unchecked(Item.MaxCount) + 1);
 				}
 			}
 
@@ -128,7 +127,7 @@ namespace Mangos.World.Loots
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -328,7 +327,7 @@ namespace Mangos.World.Loots
 					response.AddInt8((byte)Items.Count);
 					byte b = (byte)(Items.Count - 1);
 					byte j = 0;
-					while (unchecked((uint)j <= (uint)b))
+					while (unchecked(j <= (uint)b))
 					{
 						if (Items[j] == null)
 						{
@@ -367,15 +366,17 @@ namespace Mangos.World.Loots
 					b2 = (byte)(Items.Count - 1);
 					i = 0;
 				}
-				while ((uint)i <= (uint)b2)
+				while (i <= (uint)b2)
 				{
 					if (Items[i] != null && WorldServiceLocator._WorldServer.ITEMDatabase[Items[i].ItemID].Quality >= (int)client.Character.Group.LootThreshold)
 					{
-						GroupLootInfo[i] = new GroupLootInfo();
-						GroupLootInfo[i].LootObject = this;
-						GroupLootInfo[i].LootSlot = i;
-						GroupLootInfo[i].Item = Items[i];
-						WorldServiceLocator._WS_Loot.StartRoll(GUID, i, ref client.Character);
+                        GroupLootInfo[i] = new GroupLootInfo
+                        {
+                            LootObject = this,
+                            LootSlot = i,
+                            Item = Items[i]
+                        };
+                        WorldServiceLocator._WS_Loot.StartRoll(GUID, i, ref client.Character);
 						break;
 					}
 					checked
@@ -411,9 +412,11 @@ namespace Mangos.World.Loots
 						response3.Dispose();
 						return;
 					}
-					ItemObject itemObject = new ItemObject(Items[Slot].ItemID, client.Character.GUID);
-					itemObject.StackCount = Items[Slot].ItemCount;
-					ItemObject tmpItem = itemObject;
+                    ItemObject itemObject = new ItemObject(Items[Slot].ItemID, client.Character.GUID)
+                    {
+                        StackCount = Items[Slot].ItemCount
+                    };
+                    ItemObject tmpItem = itemObject;
 					if (client.Character.ItemADD(ref tmpItem))
 					{
 						if (tmpItem.ItemInfo.Bonding == 1)
@@ -484,7 +487,7 @@ namespace Mangos.World.Loots
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -598,7 +601,7 @@ namespace Mangos.World.Loots
 					Templates[Entry] = null;
 					return null;
 				}
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = MysqlQuery.Rows.GetEnumerator();
@@ -719,9 +722,11 @@ namespace Mangos.World.Loots
 							response.Dispose();
 						}
 					}
-					ItemObject itemObject = new ItemObject(Item.ItemID, looterCharacter.GUID);
-					itemObject.StackCount = Item.ItemCount;
-					ItemObject tmpItem = itemObject;
+                    ItemObject itemObject = new ItemObject(Item.ItemID, looterCharacter.GUID)
+                    {
+                        StackCount = Item.ItemCount
+                    };
+                    ItemObject tmpItem = itemObject;
 					Packets.PacketClass wonItem = new Packets.PacketClass(OPCODES.SMSG_LOOT_ROLL_WON);
 					wonItem.AddUInt64(LootObject.GUID);
 					wonItem.AddInt32(LootSlot);
@@ -860,20 +865,20 @@ namespace Mangos.World.Loots
 					{
 						character.client.SendMultiplyPackets(ref sharePcket);
 						ref uint copper3 = ref character.Copper;
-						copper3 = (uint)(unchecked((long)copper3) + unchecked((long)copper2));
+						copper3 = (uint)(unchecked(copper3) + unchecked(copper2));
 						character.SetUpdateFlag(1176, character.Copper);
 						character.SaveCharacter();
 					}
 					client.SendMultiplyPackets(ref sharePcket);
 					ref uint copper4 = ref client.Character.Copper;
-					copper4 = (uint)(unchecked((long)copper4) + unchecked((long)copper2));
+					copper4 = (uint)(unchecked(copper4) + unchecked(copper2));
 					sharePcket.Dispose();
 				}
 				else
 				{
 					int copper = LootTable[client.Character.lootGUID].Money;
 					ref uint copper5 = ref client.Character.Copper;
-					copper5 = (uint)(unchecked((long)copper5) + unchecked((long)copper));
+					copper5 = (uint)(unchecked(copper5) + unchecked(copper));
 					LootTable[client.Character.lootGUID].Money = 0;
 					Packets.PacketClass lootPacket = new Packets.PacketClass(OPCODES.SMSG_LOOT_MONEY_NOTIFY);
 					lootPacket.AddInt32(copper);

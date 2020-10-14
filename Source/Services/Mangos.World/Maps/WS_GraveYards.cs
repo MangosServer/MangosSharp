@@ -92,7 +92,7 @@ namespace Mangos.World.Maps
 
 			public TGraveyard(float locationPosX, float locationPosY, float locationPosZ, int locationMapID)
 			{
-				this = default(TGraveyard);
+				this = default;
 				_locationPosX = locationPosX;
 				_locationPosY = locationPosY;
 				_locationPosZ = locationPosZ;
@@ -116,8 +116,7 @@ namespace Mangos.World.Maps
 
 		public TGraveyard GetGraveYard(int ID)
 		{
-			TGraveyard ret = default(TGraveyard);
-			return Graveyards[ID];
+            return Graveyards[ID];
 		}
 
 		public void InitializeGraveyards()
@@ -150,8 +149,7 @@ namespace Mangos.World.Maps
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : WorldSafeLocs missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -164,8 +162,8 @@ namespace Mangos.World.Maps
 			DataTable GraveQuery = new DataTable();
 			bool foundNear = false;
 			float distNear = 0f;
-			TGraveyard entryNear = default(TGraveyard);
-			TGraveyard entryFar = default(TGraveyard);
+			TGraveyard entryNear = default;
+			TGraveyard entryFar = default;
 			checked
 			{
 				if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsDungeon | WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsBattleGround | WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsRaid)
@@ -192,7 +190,7 @@ namespace Mangos.World.Maps
 					}
 					else
 					{
-						IEnumerator enumerator = default(IEnumerator);
+						IEnumerator enumerator = default;
 						try
 						{
 							enumerator = GraveQuery.Rows.GetEnumerator();
@@ -261,7 +259,7 @@ namespace Mangos.World.Maps
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: No near graveyards for map [{0}], zone [{1}]", Character.MapID, Character.ZoneID);
 					return;
 				}
-				IEnumerator enumerator2 = default(IEnumerator);
+				IEnumerator enumerator2 = default;
 				try
 				{
 					enumerator2 = GraveQuery.Rows.GetEnumerator();
@@ -368,7 +366,7 @@ namespace Mangos.World.Maps
 		void IDisposable.Dispose()
 		{
 			//ILSpy generated this explicit interface implementation from .override directive in Dispose
-			this.Dispose();
+			Dispose();
 		}
 	}
 }

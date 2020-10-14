@@ -633,7 +633,7 @@ namespace Mangos.World.Objects
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -1221,7 +1221,7 @@ namespace Mangos.World.Objects
 						WorldServiceLocator._WorldServer.ALLQUESTS.OnQuestItemRemove(ref client.Character, client.Character.Items[srcSlot].ItemEntry, count);
 						if ((count == 0) | (count >= client.Character.Items[srcSlot].StackCount))
 						{
-							if (unchecked((uint)srcSlot) < 23u)
+							if (unchecked(srcSlot) < 23u)
 							{
 								WS_PlayerData.CharacterObject character = client.Character;
 								Dictionary<byte, ItemObject> items;
@@ -1305,7 +1305,7 @@ namespace Mangos.World.Objects
 						j = (byte)unchecked((uint)(j + 1));
 					}
 				}
-				while ((uint)j <= 4u);
+				while (j <= 4u);
 				if (client.Character.DEAD)
 				{
 					SendInventoryChangeFailure(ref client.Character, InventoryChangeFailure.EQUIP_ERR_YOU_ARE_DEAD, itemGuid, 0uL);
@@ -1371,7 +1371,7 @@ namespace Mangos.World.Objects
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 4u);
+				while (i <= 4u);
 			}
 			catch (Exception ex3)
 			{

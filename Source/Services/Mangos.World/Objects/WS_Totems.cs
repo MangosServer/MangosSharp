@@ -85,7 +85,7 @@ namespace Mangos.World.Objects
 								}
 								k = (byte)unchecked((uint)(k + 1));
 							}
-							while (unchecked((uint)k) <= 2u);
+							while (unchecked(k) <= 2u);
 							if (ActiveSpells[i] != null && ActiveSpells[i].SpellDuration <= 0 && ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
 							{
 								RemoveAura(i, ref ActiveSpells[i].SpellCaster, RemovedByDuration: true);
@@ -122,7 +122,7 @@ namespace Mangos.World.Objects
 							}
 							j = (byte)unchecked((uint)(j + 1));
 						}
-						while (unchecked((uint)j) <= 2u);
+						while (unchecked(j) <= 2u);
 					}
 				}
 			}

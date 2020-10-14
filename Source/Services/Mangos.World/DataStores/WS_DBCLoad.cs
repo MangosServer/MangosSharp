@@ -55,8 +55,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : SpellRadius missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -84,8 +83,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : SpellCastTimes missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -113,8 +111,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : SpellRanges missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -144,8 +141,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : SpellShapeshiftForms missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -173,8 +169,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : SpellFocusObjects missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -202,8 +197,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : SpellDurations missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -295,9 +289,9 @@ namespace Mangos.World.DataStores
 								{
 									WS_Spells.SpellEffect[] spellEffects = WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects;
 									int num2 = k;
-									Dictionary<int, WS_Spells.SpellInfo> sPELLs;
-									int key;
-									WS_Spells.SpellInfo Spell = (sPELLs = WorldServiceLocator._WS_Spells.SPELLs)[key = id];
+                                    Dictionary<int, WS_Spells.SpellInfo> sPELLs;
+                                    int key;
+                                    WS_Spells.SpellInfo Spell = (sPELLs = WorldServiceLocator._WS_Spells.SPELLs)[key = id];
 									WS_Spells.SpellEffect spellEffect = new WS_Spells.SpellEffect(ref Spell);
 									sPELLs[key] = Spell;
 									WS_Spells.SpellEffect spellEffect2 = spellEffect;
@@ -366,8 +360,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex2)
 				{
 					ProjectData.SetProjectError(ex2);
-					DirectoryNotFoundException e = ex2;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : Spells missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -381,7 +374,7 @@ namespace Mangos.World.DataStores
 			{
 				DataTable spellChainQuery = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT spell_id, prev_spell FROM spell_chain", ref spellChainQuery);
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = spellChainQuery.Rows.GetEnumerator();
@@ -403,8 +396,7 @@ namespace Mangos.World.DataStores
 			catch (DirectoryNotFoundException ex)
 			{
 				ProjectData.SetProjectError(ex);
-				DirectoryNotFoundException e = ex;
-				Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine("Database : SpellChains missing.");
 				Console.ForegroundColor = ConsoleColor.Gray;
 				ProjectData.ClearProjectError();
@@ -438,8 +430,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : TaxiNodes missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -469,8 +460,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : TaxiPath missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -511,8 +501,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : TaxiPathNode missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -540,8 +529,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : SkillLines missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -582,8 +570,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : SkillLineAbility missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -624,8 +611,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : Locks missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -670,8 +656,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : AreaTable missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -701,8 +686,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : Emotes missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -732,8 +716,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : EmotesText missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -776,8 +759,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : Factions missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -816,8 +798,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : FactionsTemplates missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -851,8 +832,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : CharRaces missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -880,8 +860,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : CharRaces missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -913,8 +892,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : DurabilityCosts missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -954,8 +932,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : Talents missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -983,8 +960,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : TalentTab missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -1015,8 +991,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : AuctionHouse missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -1054,8 +1029,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : SpellItemEnchantments missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -1074,8 +1048,8 @@ namespace Mangos.World.DataStores
 					int[] spellID = new int[8];
 					int[] itemCount = new int[8];
 					int num = dbc.Rows - 1;
-					int requiredSkillID = default(int);
-					int requiredSkillValue = default(int);
+					int requiredSkillID = default;
+					int requiredSkillValue = default;
 					for (int i = 0; i <= num; i++)
 					{
 						int id = dbc.Read<int>(i, 0);
@@ -1096,8 +1070,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : ItemSet missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -1129,8 +1102,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : ItemDisplayInfo missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -1163,8 +1135,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : ItemRandomProperties missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -1178,7 +1149,7 @@ namespace Mangos.World.DataStores
 			{
 				DataTable gossipQuery = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM npc_gossip;", ref gossipQuery);
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = gossipQuery.Rows.GetEnumerator();
@@ -1204,8 +1175,7 @@ namespace Mangos.World.DataStores
 			catch (DirectoryNotFoundException ex)
 			{
 				ProjectData.SetProjectError(ex);
-				DirectoryNotFoundException e = ex;
-				Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine("Database : npc_gossip missing.");
 				Console.ForegroundColor = ConsoleColor.Gray;
 				ProjectData.ClearProjectError();
@@ -1238,8 +1208,7 @@ namespace Mangos.World.DataStores
 				catch (DirectoryNotFoundException ex)
 				{
 					ProjectData.SetProjectError(ex);
-					DirectoryNotFoundException e = ex;
-					Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine("DBC File : CreatureFamily missing.");
 					Console.ForegroundColor = ConsoleColor.Gray;
 					ProjectData.ClearProjectError();
@@ -1253,7 +1222,7 @@ namespace Mangos.World.DataStores
 			{
 				DataTable movementsQuery = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM waypoint_data ORDER BY id, point;", ref movementsQuery);
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = movementsQuery.Rows.GetEnumerator();
@@ -1280,8 +1249,7 @@ namespace Mangos.World.DataStores
 			catch (DirectoryNotFoundException ex)
 			{
 				ProjectData.SetProjectError(ex);
-				DirectoryNotFoundException e = ex;
-				Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine("Database : Waypoint_Data missing.");
 				Console.ForegroundColor = ConsoleColor.Gray;
 				ProjectData.ClearProjectError();
@@ -1294,7 +1262,7 @@ namespace Mangos.World.DataStores
 			{
 				DataTable equipQuery = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM creature_equip_template_raw;", ref equipQuery);
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = equipQuery.Rows.GetEnumerator();
@@ -1332,8 +1300,7 @@ namespace Mangos.World.DataStores
 			catch (DataException ex2)
 			{
 				ProjectData.SetProjectError(ex2);
-				DataException e = ex2;
-				Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine("Database : Creature_Equip_Template_raw missing.");
 				Console.ForegroundColor = ConsoleColor.Gray;
 				ProjectData.ClearProjectError();
@@ -1346,7 +1313,7 @@ namespace Mangos.World.DataStores
 			{
 				DataTable modelQuery = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM creature_model_info;", ref modelQuery);
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = modelQuery.Rows.GetEnumerator();
@@ -1372,8 +1339,7 @@ namespace Mangos.World.DataStores
 			catch (DirectoryNotFoundException ex)
 			{
 				ProjectData.SetProjectError(ex);
-				DirectoryNotFoundException e = ex;
-				Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine("Database : Creature_Model_Info missing.");
 				Console.ForegroundColor = ConsoleColor.Gray;
 				ProjectData.ClearProjectError();
@@ -1384,7 +1350,7 @@ namespace Mangos.World.DataStores
 		{
 			DataTable questStarters = new DataTable();
 			WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=0 and role =0;", ref questStarters);
-			IEnumerator enumerator = default(IEnumerator);
+			IEnumerator enumerator = default;
 			try
 			{
 				enumerator = questStarters.Rows.GetEnumerator();
@@ -1410,7 +1376,7 @@ namespace Mangos.World.DataStores
 			int questStartersAmount = questStarters.Rows.Count;
 			questStarters.Clear();
 			WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=1 and role=0;", ref questStarters);
-			IEnumerator enumerator2 = default(IEnumerator);
+			IEnumerator enumerator2 = default;
 			try
 			{
 				enumerator2 = questStarters.Rows.GetEnumerator();
@@ -1440,7 +1406,7 @@ namespace Mangos.World.DataStores
 				questStarters.Clear();
 				DataTable questFinishers = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=0 and role=1;", ref questFinishers);
-				IEnumerator enumerator3 = default(IEnumerator);
+				IEnumerator enumerator3 = default;
 				try
 				{
 					enumerator3 = questFinishers.Rows.GetEnumerator();
@@ -1466,7 +1432,7 @@ namespace Mangos.World.DataStores
 				int questFinishersAmount = questFinishers.Rows.Count;
 				questFinishers.Clear();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=1 and role=1;", ref questFinishers);
-				IEnumerator enumerator4 = default(IEnumerator);
+				IEnumerator enumerator4 = default;
 				try
 				{
 					enumerator4 = questFinishers.Rows.GetEnumerator();
@@ -1514,7 +1480,7 @@ namespace Mangos.World.DataStores
 			{
 				DataTable weatherQuery = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM game_weather;", ref weatherQuery);
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = weatherQuery.Rows.GetEnumerator();
@@ -1545,8 +1511,7 @@ namespace Mangos.World.DataStores
 			catch (DirectoryNotFoundException ex)
 			{
 				ProjectData.SetProjectError(ex);
-				DirectoryNotFoundException e = ex;
-				Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine("Database : TransportQuery missing.");
 				Console.ForegroundColor = ConsoleColor.Gray;
 				ProjectData.ClearProjectError();

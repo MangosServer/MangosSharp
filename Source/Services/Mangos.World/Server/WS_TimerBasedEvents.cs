@@ -27,6 +27,7 @@ using Mangos.World.Player;
 using Mangos.World.Spells;
 using Mangos.World.Weather;
 using Microsoft.VisualBasic.CompilerServices;
+using System.Linq;
 
 namespace Mangos.World.Server
 {
@@ -70,7 +71,7 @@ namespace Mangos.World.Server
 
 			private void Regenerate(object state)
 			{
-				if (RegenerationWorking)
+                if (RegenerationWorking)
 				{
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Regenerator skipping update");
 					return;
@@ -96,18 +97,24 @@ namespace Mangos.World.Server
 							_updateFlag = false;
 							if (value.ManaType == ManaTypes.TYPE_RAGE)
 							{
-								if ((value.cUnitFlags & 0x80000) == 0)
-								{
-									if (value.Rage.Current > 0)
-									{
-										value.Rage.Current -= 25;
-									}
-								}
-								else if (value.RageRegenBonus != 0)
-								{
-									value.Rage.Increment(value.RageRegenBonus);
-								}
-							}
+                                switch (value.cUnitFlags & 0x80000)
+                                {
+                                    case 0:
+                                        if (value.Rage.Current > 0)
+                                        {
+                                            value.Rage.Current -= 25;
+                                        }
+
+                                        break;
+                                    default:
+                                        if (value.RageRegenBonus != 0)
+                                        {
+                                            value.Rage.Increment(value.RageRegenBonus);
+                                        }
+
+                                        break;
+                                }
+                            }
 							if (value.ManaType == ManaTypes.TYPE_ENERGY && value.Energy.Current < value.Energy.Maximum)
 							{
 								value.Energy.Increment(20);
@@ -140,44 +147,46 @@ namespace Mangos.World.Server
 							}
 							if (value.Life.Current < value.Life.Maximum && (value.cUnitFlags & 0x80000) == 0)
 							{
-								switch (value.Classe)
-								{
-								case Classes.CLASS_MAGE:
-									value.Life.Increment((int)Math.Round((double)value.Spirit.Base * 0.1 * (double)value.LifeRegenerationModifier) + value.LifeRegenBonus);
-									break;
-								case Classes.CLASS_PRIEST:
-									value.Life.Increment((int)Math.Round((double)value.Spirit.Base * 0.1 * (double)value.LifeRegenerationModifier) + value.LifeRegenBonus);
-									break;
-								case Classes.CLASS_WARLOCK:
-									value.Life.Increment((int)Math.Round((double)value.Spirit.Base * 0.11 * (double)value.LifeRegenerationModifier) + value.LifeRegenBonus);
-									break;
-								case Classes.CLASS_DRUID:
-									value.Life.Increment((int)Math.Round((double)value.Spirit.Base * 0.11 * (double)value.LifeRegenerationModifier) + value.LifeRegenBonus);
-									break;
-								case Classes.CLASS_SHAMAN:
-									value.Life.Increment((int)Math.Round((double)value.Spirit.Base * 0.11 * (double)value.LifeRegenerationModifier) + value.LifeRegenBonus);
-									break;
-								case Classes.CLASS_ROGUE:
-									value.Life.Increment((int)Math.Round((double)value.Spirit.Base * 0.5 * (double)value.LifeRegenerationModifier) + value.LifeRegenBonus);
-									break;
-								case Classes.CLASS_WARRIOR:
-									value.Life.Increment((int)Math.Round((double)value.Spirit.Base * 0.8 * (double)value.LifeRegenerationModifier) + value.LifeRegenBonus);
-									break;
-								case Classes.CLASS_HUNTER:
-									value.Life.Increment((int)Math.Round((double)value.Spirit.Base * 0.25 * (double)value.LifeRegenerationModifier) + value.LifeRegenBonus);
-									break;
-								case Classes.CLASS_PALADIN:
-									value.Life.Increment((int)Math.Round((double)value.Spirit.Base * 0.25 * (double)value.LifeRegenerationModifier) + value.LifeRegenBonus);
-									break;
-								}
-							}
-							if (BaseMana != value.Mana.Current)
+                                switch (value.Classe)
+                                {
+                                    case Classes.CLASS_MAGE:
+                                        value.Life.Increment((int)Math.Round(value.Spirit.Base * 0.1 * value.LifeRegenerationModifier) + value.LifeRegenBonus);
+                                        break;
+                                    case Classes.CLASS_PRIEST:
+                                        value.Life.Increment((int)Math.Round(value.Spirit.Base * 0.1 * value.LifeRegenerationModifier) + value.LifeRegenBonus);
+                                        break;
+                                    case Classes.CLASS_WARLOCK:
+                                        value.Life.Increment((int)Math.Round(value.Spirit.Base * 0.11 * value.LifeRegenerationModifier) + value.LifeRegenBonus);
+                                        break;
+                                    case Classes.CLASS_DRUID:
+                                        value.Life.Increment((int)Math.Round(value.Spirit.Base * 0.11 * value.LifeRegenerationModifier) + value.LifeRegenBonus);
+                                        break;
+                                    case Classes.CLASS_SHAMAN:
+                                        value.Life.Increment((int)Math.Round(value.Spirit.Base * 0.11 * value.LifeRegenerationModifier) + value.LifeRegenBonus);
+                                        break;
+                                    case Classes.CLASS_ROGUE:
+                                        value.Life.Increment((int)Math.Round(value.Spirit.Base * 0.5 * value.LifeRegenerationModifier) + value.LifeRegenBonus);
+                                        break;
+                                    case Classes.CLASS_WARRIOR:
+                                        value.Life.Increment((int)Math.Round(value.Spirit.Base * 0.8 * value.LifeRegenerationModifier) + value.LifeRegenBonus);
+                                        break;
+                                    case Classes.CLASS_HUNTER:
+                                        value.Life.Increment((int)Math.Round(value.Spirit.Base * 0.25 * value.LifeRegenerationModifier) + value.LifeRegenBonus);
+                                        break;
+                                    case Classes.CLASS_PALADIN:
+                                        value.Life.Increment((int)Math.Round(value.Spirit.Base * 0.25 * value.LifeRegenerationModifier) + value.LifeRegenBonus);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            if (BaseMana != value.Mana.Current)
 							{
 								_updateFlag = true;
 								value.GroupUpdateFlag |= 16u;
 								value.SetUpdateFlag(23, value.Mana.Current);
 							}
-							if ((BaseRage != value.Rage.Current) | ((value.cUnitFlags & 0x80000) == 524288))
+							if ((BaseRage != value.Rage.Current) | ((value.cUnitFlags & 0x80000) == 0x80000))
 							{
 								_updateFlag = true;
 								value.GroupUpdateFlag |= 16u;
@@ -217,13 +226,13 @@ namespace Mangos.World.Server
 								value.SendOutOfRangeUpdate();
 							}
 							value = null;
-						}
-						if (WorldServiceLocator._WorldServer.CHARACTERs_Lock.IsReaderLockHeld)
+                        }
+                        if (WorldServiceLocator._WorldServer.CHARACTERs_Lock.IsReaderLockHeld)
 						{
 							WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
 						}
-					}
-					catch (Exception ex2)
+                    }
+                    catch (Exception ex2)
 					{
 						ProjectData.SetProjectError(ex2);
 						Exception ex = ex2;
@@ -231,10 +240,10 @@ namespace Mangos.World.Server
 						ProjectData.ClearProjectError();
 					}
 					RegenerationWorking = false;
-				}
-			}
+                }
+            }
 
-			protected virtual void Dispose(bool disposing)
+            protected virtual void Dispose(bool disposing)
 			{
 				if (!_disposedValue)
 				{
@@ -253,11 +262,11 @@ namespace Mangos.World.Server
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
-		}
+        }
 
-		public class TSpellManager : IDisposable
+        public class TSpellManager : IDisposable
 		{
 			private Timer SpellManagerTimer;
 
@@ -276,7 +285,7 @@ namespace Mangos.World.Server
 
 			private void Update(object state)
 			{
-				if (SpellManagerWorking)
+                if (SpellManagerWorking)
 				{
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Spell Manager skipping update");
 					return;
@@ -290,12 +299,14 @@ namespace Mangos.World.Server
 						long num = WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys.Count - 1;
 						for (long i = 0L; i <= num; i++)
 						{
-							if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[Conversions.ToULong(WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys[(int)i])] != null)
+                            WS_Creatures.CreatureObject creatureObject = WorldServiceLocator._WorldServer.WORLD_CREATUREs[Conversions.ToULong(WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys[(int)i])];
+                            if (creatureObject != null)
 							{
-								Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
-								ulong key;
-								WS_Base.BaseUnit objCharacter = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = Conversions.ToULong(WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys[(int)i])];
-								UpdateSpells(ref objCharacter);
+                                ulong key;
+                                Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
+                                object value = WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys[(int)i];
+                                WS_Base.BaseUnit objCharacter = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = Conversions.ToULong(value)];
+                                UpdateSpells(ref objCharacter);
 								wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)objCharacter;
 							}
 						}
@@ -317,15 +328,12 @@ namespace Mangos.World.Server
 					try
 					{
 						WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-						foreach (KeyValuePair<ulong, WS_PlayerData.CharacterObject> Character in WorldServiceLocator._WorldServer.CHARACTERs)
-						{
-							if (Character.Value != null)
-							{
-								WS_Base.BaseUnit objCharacter = Character.Value;
-								UpdateSpells(ref objCharacter);
-							}
-						}
-					}
+                        foreach (var Character in WorldServiceLocator._WorldServer.CHARACTERs.Where(Character => Character.Value != null))
+                        {
+                            WS_Base.BaseUnit objCharacter = Character.Value;
+                            UpdateSpells(ref objCharacter);
+                        }
+                    }
 					catch (Exception ex5)
 					{
 						ProjectData.SetProjectError(ex5);
@@ -387,20 +395,19 @@ namespace Mangos.World.Server
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 
 			private void UpdateSpells(ref WS_Base.BaseUnit objCharacter)
 			{
-				if (objCharacter is WS_Totems.TotemObject)
+                if (objCharacter is WS_Totems.TotemObject)
 				{
 					((WS_Totems.TotemObject)objCharacter).Update();
 					return;
 				}
 				checked
 				{
-					int num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1;
-					for (int i = 0; i <= num; i++)
+                    for (int i = 0; i <= WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1; i++)
 					{
 						if (objCharacter.ActiveSpells[i] == null)
 						{
@@ -414,16 +421,15 @@ namespace Mangos.World.Server
 							{
 								if (objCharacter.ActiveSpells[i] != null && objCharacter.ActiveSpells[i].Aura[j] != null && objCharacter.ActiveSpells[i].Aura_Info[j] != null && objCharacter.ActiveSpells[i].Aura_Info[j].Amplitude != 0 && unchecked(checked(objCharacter.ActiveSpells[i].GetSpellInfo.GetDuration - objCharacter.ActiveSpells[i].SpellDuration) % objCharacter.ActiveSpells[i].Aura_Info[j].Amplitude) == 0)
 								{
-									WS_Spells.ApplyAuraHandler obj = objCharacter.ActiveSpells[i].Aura[j];
-									ref WS_Base.BaseUnit spellCaster = ref objCharacter.ActiveSpells[i].SpellCaster;
-									ref WS_Base.BaseUnit reference = ref spellCaster;
-									WS_Base.BaseObject Caster = spellCaster;
-									obj(ref objCharacter, ref Caster, ref objCharacter.ActiveSpells[i].Aura_Info[j], objCharacter.ActiveSpells[i].SpellID, objCharacter.ActiveSpells[i].StackCount + 1, AuraAction.AURA_UPDATE);
-									reference = (WS_Base.BaseUnit)Caster;
-								}
+                                    ref WS_Base.BaseUnit spellCaster = ref objCharacter.ActiveSpells[i].SpellCaster;
+                                    WS_Base.BaseObject Caster = spellCaster;
+                                    objCharacter.ActiveSpells[i].Aura[j](ref objCharacter, ref Caster, ref objCharacter.ActiveSpells[i].Aura_Info[j], objCharacter.ActiveSpells[i].SpellID, objCharacter.ActiveSpells[i].StackCount + 1, AuraAction.AURA_UPDATE);
+                                    ref WS_Base.BaseUnit reference = ref spellCaster;
+                                    reference = (WS_Base.BaseUnit)Caster;
+                                }
 								j = (byte)unchecked((uint)(j + 1));
 							}
-							while (unchecked((uint)j) <= 2u);
+							while (unchecked(j) <= 2u);
 							if (objCharacter.ActiveSpells[i] != null && objCharacter.ActiveSpells[i].SpellDuration <= 0 && objCharacter.ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
 							{
 								objCharacter.RemoveAura(i, ref objCharacter.ActiveSpells[i].SpellCaster, RemovedByDuration: true);
@@ -468,15 +474,16 @@ namespace Mangos.World.Server
 								else if (objCharacter.ActiveSpells[i].SpellCaster != null && objCharacter.ActiveSpells[i].SpellCaster.Exist)
 								{
 									WS_PlayerData.CharacterObject caster = null;
-									if (objCharacter.ActiveSpells[i].SpellCaster is WS_PlayerData.CharacterObject)
-									{
-										caster = (WS_PlayerData.CharacterObject)objCharacter.ActiveSpells[i].SpellCaster;
-									}
-									else if (objCharacter.ActiveSpells[i].SpellCaster is WS_Totems.TotemObject && ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster != null && ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster is WS_PlayerData.CharacterObject)
-									{
-										caster = (WS_PlayerData.CharacterObject)((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster;
-									}
-									if (caster == null || caster.Group == null || !caster.Group.LocalMembers.Contains(objCharacter.GUID))
+                                    switch (objCharacter.ActiveSpells[i].SpellCaster)
+                                    {
+                                        case WS_PlayerData.CharacterObject _:
+                                            caster = (WS_PlayerData.CharacterObject)objCharacter.ActiveSpells[i].SpellCaster;
+                                            break;
+                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster != null && ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster is WS_PlayerData.CharacterObject:
+                                            caster = (WS_PlayerData.CharacterObject)((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster;
+                                            break;
+                                    }
+                                    if (caster == null || caster.Group == null || !caster.Group.LocalMembers.Contains(objCharacter.GUID))
 									{
 										objCharacter.RemoveAura(i, ref objCharacter.ActiveSpells[i].SpellCaster);
 									}
@@ -496,7 +503,7 @@ namespace Mangos.World.Server
 							}
 							k = (byte)unchecked((uint)(k + 1));
 						}
-						while (unchecked((uint)k) <= 2u);
+						while (unchecked(k) <= 2u);
 					}
 				}
 			}
@@ -521,7 +528,7 @@ namespace Mangos.World.Server
 
 			private void Update(object state)
 			{
-				if (AIManagerWorking)
+                if (AIManagerWorking)
 				{
 					return;
 				}
@@ -611,7 +618,7 @@ namespace Mangos.World.Server
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -635,7 +642,7 @@ namespace Mangos.World.Server
 
 			private void Update(object state)
 			{
-				if (CharacterSaverWorking)
+                if (CharacterSaverWorking)
 				{
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Character Saver skipping update");
 					return;
@@ -683,7 +690,7 @@ namespace Mangos.World.Server
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -707,7 +714,7 @@ namespace Mangos.World.Server
 
 			private void Update(object state)
 			{
-				if (WeatherWorking)
+                if (WeatherWorking)
 				{
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Weather changer skipping update");
 					return;
@@ -739,7 +746,7 @@ namespace Mangos.World.Server
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -752,5 +759,5 @@ namespace Mangos.World.Server
 		public TCharacterSaver CharacterSaver;
 
 		public TWeatherChanger WeatherChanger;
-	}
+    }
 }

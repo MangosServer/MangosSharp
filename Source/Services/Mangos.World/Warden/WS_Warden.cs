@@ -269,10 +269,10 @@ namespace Mangos.World.Warden
 				InitPointer = 0;
 				init = null;
 				myFuncList = IntPtr.Zero;
-				myFunctionList = default(FuncList);
+				myFunctionList = default;
 				pFuncList = 0;
 				ppFuncList = 0;
-				myWardenList = default(WardenFuncList);
+				myWardenList = default;
 				pWardenList = 0;
 				m_RC4 = 0;
 				m_PKT = new byte[0];
@@ -349,8 +349,7 @@ namespace Mangos.World.Warden
 					catch (Exception ex2)
 					{
 						ProjectData.SetProjectError(ex2);
-						Exception ex = ex2;
-						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] InitModule Failed.");
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] InitModule Failed.");
 						ProjectData.ClearProjectError();
 					}
 					return true;
@@ -671,7 +670,7 @@ namespace Mangos.World.Warden
 					{
 						int pModule = WorldServiceLocator._WS_Warden.ByteArrPtr(ref data);
 						object? obj = Marshal.PtrToStructure(new IntPtr(pModule), typeof(CHeader));
-						Header = ((obj != null) ? ((CHeader)obj) : default(CHeader));
+						Header = ((obj != null) ? ((CHeader)obj) : default);
 						dwModuleSize = Header.dwModuleSize;
 						if (dwModuleSize < int.MaxValue)
 						{
@@ -706,16 +705,16 @@ namespace Mangos.World.Warden
 									if (dwValue < 0)
 									{
 										dwValue = (dwValue & 0x7F) << 8;
-										dwValue = dwValue + unchecked((int)Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 1)))) << 8;
-										dwValue = dwValue + unchecked((int)Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 2)))) << 8;
-										dwValue += unchecked((int)Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 3))));
+										dwValue = dwValue + unchecked(Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 1)))) << 8;
+										dwValue = dwValue + unchecked(Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 2)))) << 8;
+										dwValue += unchecked(Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 3))));
 										pbRelocationTable += 4;
 										int old2 = Marshal.ReadInt32(new IntPtr(m_Mod + dwValue));
 										Marshal.WriteInt32(new IntPtr(m_Mod + dwValue), m_Mod + old2);
 									}
 									else
 									{
-										dwValue = (dwValue << 8) + dwLastRelocation + unchecked((int)Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 1))));
+										dwValue = (dwValue << 8) + dwLastRelocation + unchecked(Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 1))));
 										pbRelocationTable += 2;
 										int old = Marshal.ReadInt32(new IntPtr(m_Mod + dwValue));
 										Marshal.WriteInt32(new IntPtr(m_Mod + dwValue), m_Mod + old);
@@ -728,7 +727,7 @@ namespace Mangos.World.Warden
 								while (dwLibraryIndex < Header.dwLibraryCount)
 								{
 									object? obj2 = Marshal.PtrToStructure(new IntPtr(m_Mod + Header.dwLibraryTable + dwLibraryIndex * 8), typeof(CLibraryEntry));
-									CLibraryEntry pLibraryTable = ((obj2 != null) ? ((CLibraryEntry)obj2) : default(CLibraryEntry));
+									CLibraryEntry pLibraryTable = ((obj2 != null) ? ((CLibraryEntry)obj2) : default);
 									string procLib = Marshal.PtrToStringAnsi(new IntPtr(m_Mod + pLibraryTable.dwFileName));
 									WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "    Library: {0}", procLib);
 									int hModule = NativeMethods.LoadLibrary(procLib, "");
@@ -878,7 +877,7 @@ namespace Mangos.World.Warden
 					}
 					pWardenList = Marshal.ReadInt32(new IntPtr(m_ModMem));
 					object? obj2 = Marshal.PtrToStructure(new IntPtr(pWardenList), typeof(WardenFuncList));
-					myWardenList = ((obj2 != null) ? ((WardenFuncList)obj2) : default(WardenFuncList));
+					myWardenList = ((obj2 != null) ? ((WardenFuncList)obj2) : default);
 					Console.WriteLine("Exports:");
 					Console.WriteLine("  GenerateRC4Keys: 0x{0:X}", myWardenList.fpGenerateRC4Keys);
 					Console.WriteLine("  Unload: 0x{0:X}", myWardenList.fpUnload);
@@ -1014,7 +1013,7 @@ namespace Mangos.World.Warden
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 

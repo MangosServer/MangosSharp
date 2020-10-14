@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Misc;
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Arcanist_Doan : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Arcanist_Doan : World.AI.WS_Creatures_AI.BossAI
     {
         // AI TODO: Fix arcane explosion. Make the AoE silence an AoE instead of random target.
         private const int AI_UPDATE = 1000;
@@ -46,9 +46,9 @@ namespace Mangos.Scripts.Creatures
         public int CurrentWaypoint = 0;
         // Public NextExplosion As Integer = 0
 
-        public CreatureAI_Arcanist_Doan(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Arcanist_Doan(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -69,13 +69,13 @@ namespace Mangos.Scripts.Creatures
             if (NextPolymorph <= 0)
             {
                 NextPolymorph = Polymorph_CD;
-                this.aiCreature.CastSpell(SPELL_POLYMORPH, this.aiCreature.GetRandomTarget());
+                aiCreature.CastSpell(SPELL_POLYMORPH, aiCreature.GetRandomTarget());
             }
 
             if (NextSilence <= 0)
             {
                 NextSilence = Silence_CD;
-                this.aiCreature.CastSpell(SPELL_SILENCE, this.aiCreature.GetRandomTarget());
+                aiCreature.CastSpell(SPELL_SILENCE, aiCreature.GetRandomTarget());
             }
             // No need to handle Detonation or Bubble here.
         }
@@ -96,16 +96,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 1; i <= 2; i++)
             {
-                var target = this.aiCreature.GetRandomTarget(); // Finally learned how random target functions work.
+                var target = aiCreature.GetRandomTarget(); // Finally learned how random target functions work.
                 if (target is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(SPELL_POLYMORPH, this.aiCreature.GetRandomTarget()); // Might not properly work.
+                    aiCreature.CastSpell(SPELL_POLYMORPH, aiCreature.GetRandomTarget()); // Might not properly work.
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("I was unable to cast polymorph. Please report this to a developer!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("I was unable to cast polymorph. Please report this to a developer!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }
@@ -114,16 +114,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 2; i <= 2; i++)
             {
-                var target = this.aiCreature.GetRandomTarget();
+                var target = aiCreature.GetRandomTarget();
                 if (target is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(SPELL_SILENCE, this.aiCreature.GetRandomTarget());
+                    aiCreature.CastSpell(SPELL_SILENCE, aiCreature.GetRandomTarget());
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("I was unable to silence my target. Please report this to a developer!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("I was unable to silence my target. Please report this to a developer!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }
@@ -133,31 +133,31 @@ namespace Mangos.Scripts.Creatures
             base.OnHealthChange(Percent);
             if (Percent <= 50)
             {
-                this.aiCreature.MoveToInstant(148.403458f, (float)-429.035919d, 18.485929f, 0.002225f);
-                this.aiCreature.CastSpellOnSelf(SPELL_ARCANE_BUBBLE);
+                aiCreature.MoveToInstant(148.403458f, (float)-429.035919d, 18.485929f, 0.002225f);
+                aiCreature.CastSpellOnSelf(SPELL_ARCANE_BUBBLE);
             }
 
-            if (this.aiCreature.HaveAura(SPELL_ARCANE_BUBBLE)) // Workaround for casting detonation.
+            if (aiCreature.HaveAura(SPELL_ARCANE_BUBBLE)) // Workaround for casting detonation.
             {
                 try
                 {
-                    this.aiCreature.CastSpell(SPELL_DETONATION, this.aiTarget);
+                    aiCreature.CastSpell(SPELL_DETONATION, aiTarget);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("I was unable to cast Arcane Bubble upon myself. Please report this to a developer!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("I was unable to cast Arcane Bubble upon myself. Please report this to a developer!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
 
-                this.aiCreature.SendPlaySound(5843, true); // Should play sound when he says "Burn in righteous fire!"
-                this.aiCreature.SendChatMessage("Burn in righteous fire!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                aiCreature.SendPlaySound(5843, true); // Should play sound when he says "Burn in righteous fire!"
+                aiCreature.SendChatMessage("Burn in righteous fire!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
             }
         }
 
         public override void OnEnterCombat()
         {
             base.OnEnterCombat();
-            this.aiCreature.SendChatMessage("You will not defile these mysteries!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
-            this.aiCreature.SendPlaySound(5842, true);
+            aiCreature.SendChatMessage("You will not defile these mysteries!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+            aiCreature.SendPlaySound(5842, true);
         }
     }
 }

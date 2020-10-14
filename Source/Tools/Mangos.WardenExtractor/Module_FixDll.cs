@@ -79,13 +79,15 @@ namespace Mangos.WardenExtractor
                 }
 
                 long tmpPos = br.BaseStream.Position;
-                var newSection = new Section();
-                newSection.Name = name;
-                newSection.Address = virtualaddress;
-                newSection.Characteristics = characteristics;
-                newSection.Size = len;
-                newSection.Data = GetSectionData(ref br, BufferPosition, name, virtualaddress, len, characteristics);
-                newSection.Pointer = CurrentPosition;
+                var newSection = new Section
+                {
+                    Name = name,
+                    Address = virtualaddress,
+                    Characteristics = characteristics,
+                    Size = len,
+                    Data = GetSectionData(ref br, BufferPosition, name, virtualaddress, len, characteristics),
+                    Pointer = CurrentPosition
+                };
                 if (type == 32)
                 {
                     newSection.RawSize = 0x6E00;
@@ -116,37 +118,43 @@ namespace Mangos.WardenExtractor
             br = null;
 
             // TODO: Other headers!
-            var ExportSection = new Section();
-            ExportSection.Name = ".edata";
-            ExportSection.Address = ExportAddress;
-            ExportSection.Characteristics = 0x40000040;
-            // 40000000 + 40 (can be read, initialized data)
-            ExportSection.Size = 0x8D;
-            ExportSection.Data = new byte[] { }; // TODO!!
-            ExportSection.Pointer = CurrentPosition;
-            ExportSection.RawSize = 0x200;
+            var ExportSection = new Section
+            {
+                Name = ".edata",
+                Address = ExportAddress,
+                Characteristics = 0x40000040,
+                // 40000000 + 40 (can be read, initialized data)
+                Size = 0x8D,
+                Data = new byte[] { }, // TODO!!
+                Pointer = CurrentPosition,
+                RawSize = 0x200
+            };
             CurrentPosition += ExportSection.RawSize;
             Sections.Add(ExportSection);
-            var ImportSection = new Section();
-            ImportSection.Name = ".idata";
-            ImportSection.Address = ImportAddress;
-            ImportSection.Characteristics = 0x42000040;
-            // 40000000 + 2000000 + 40 (can be read, can be discarded, initialized data)
-            ImportSection.Size = 0x3C;
-            ImportSection.Data = new byte[] { }; // TODO!!
-            ImportSection.Pointer = CurrentPosition;
-            ImportSection.RawSize = 0x200;
+            var ImportSection = new Section
+            {
+                Name = ".idata",
+                Address = ImportAddress,
+                Characteristics = 0x42000040,
+                // 40000000 + 2000000 + 40 (can be read, can be discarded, initialized data)
+                Size = 0x3C,
+                Data = new byte[] { }, // TODO!!
+                Pointer = CurrentPosition,
+                RawSize = 0x200
+            };
             CurrentPosition += ImportSection.RawSize;
             Sections.Add(ImportSection);
-            var RelocSection = new Section();
-            RelocSection.Name = ".reloc";
-            RelocSection.Address = 0xC000;
-            RelocSection.Characteristics = 0x42000040;
-            // 40000000 + 2000000 + 40 (can be read, can be discarded, initialized data)
-            RelocSection.Size = 0x2F4;
-            RelocSection.Data = new byte[] { }; // TODO!!
-            RelocSection.Pointer = CurrentPosition;
-            RelocSection.RawSize = 0x400;
+            var RelocSection = new Section
+            {
+                Name = ".reloc",
+                Address = 0xC000,
+                Characteristics = 0x42000040,
+                // 40000000 + 2000000 + 40 (can be read, can be discarded, initialized data)
+                Size = 0x2F4,
+                Data = new byte[] { }, // TODO!!
+                Pointer = CurrentPosition,
+                RawSize = 0x400
+            };
             CurrentPosition += RelocSection.RawSize;
             Sections.Add(RelocSection);
             var Null = new byte[1025];

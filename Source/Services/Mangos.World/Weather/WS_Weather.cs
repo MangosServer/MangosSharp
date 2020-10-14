@@ -161,7 +161,7 @@ namespace Mangos.World.Weather
 						return CurrentWeather != oldWeather || Intensity != oldIntensity;
 					}
 				}
-				bool ChangeWeather = default(bool);
+				bool ChangeWeather = default;
 				return ChangeWeather;
 			}
 

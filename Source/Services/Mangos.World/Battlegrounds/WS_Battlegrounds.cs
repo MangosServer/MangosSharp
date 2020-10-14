@@ -65,7 +65,7 @@ namespace Mangos.World.Battlegrounds
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 
 			public void Update(object State)
@@ -74,13 +74,23 @@ namespace Mangos.World.Battlegrounds
 
 			public void Broadcast(Packets.PacketClass p)
 			{
-				BroadcastTeam1(p);
+                if (p is null)
+                {
+                    throw new ArgumentNullException(nameof(p));
+                }
+
+                BroadcastTeam1(p);
 				BroadcastTeam2(p);
 			}
 
 			public void BroadcastTeam1(Packets.PacketClass p)
 			{
-				WS_PlayerData.CharacterObject[] array = MembersTeam1.ToArray();
+                if (p is null)
+                {
+                    throw new ArgumentNullException(nameof(p));
+                }
+
+                WS_PlayerData.CharacterObject[] array = MembersTeam1.ToArray();
 				foreach (WS_PlayerData.CharacterObject objCharacter in array)
 				{
 					objCharacter.client.SendMultiplyPackets(ref p);
@@ -89,7 +99,12 @@ namespace Mangos.World.Battlegrounds
 
 			public void BroadcastTeam2(Packets.PacketClass p)
 			{
-				WS_PlayerData.CharacterObject[] array = MembersTeam2.ToArray();
+                if (p is null)
+                {
+                    throw new ArgumentNullException(nameof(p));
+                }
+
+                WS_PlayerData.CharacterObject[] array = MembersTeam2.ToArray();
 				foreach (WS_PlayerData.CharacterObject objCharacter in array)
 				{
 					objCharacter.client.SendMultiplyPackets(ref p);

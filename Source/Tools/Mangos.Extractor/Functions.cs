@@ -272,8 +272,10 @@ namespace Mangos.Extractor
                         continue;
                     }
 
-                    var tmp = new TypeEntry();
-                    tmp.Name = Temp;
+                    var tmp = new TypeEntry
+                    {
+                        Name = Temp
+                    };
                     f.Read(Buffer, 0, 4);
                     Temp = BitConverter.ToInt32(Buffer, 0);
                     tmp.Offset = Temp;

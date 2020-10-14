@@ -76,7 +76,7 @@ namespace Mangos.World.Social
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 
 			public void Broadcast(Packets.PacketClass p)

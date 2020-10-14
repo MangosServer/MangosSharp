@@ -79,8 +79,8 @@ namespace Mangos.World.Handlers
 					angle += (float)Math.PI * 2f;
 				}
 				client.Character.Pet.SetToRealPosition();
-				float tmpX = (float)((double)client.Character.positionX + Math.Cos(angle) * 2.0);
-				float tmpY = (float)((double)client.Character.positionY + Math.Sin(angle) * 2.0);
+				float tmpX = (float)(client.Character.positionX + Math.Cos(angle) * 2.0);
+				float tmpY = (float)(client.Character.positionY + Math.Sin(angle) * 2.0);
 				client.Character.Pet.MoveTo(tmpX, tmpY, client.Character.positionZ, client.Character.orientation, Running: true);
 			}
 			if (((uint)client.Character.charMovementFlags & 0x2000000u) != 0)
@@ -156,14 +156,14 @@ namespace Mangos.World.Handlers
 						if (!WorldServiceLocator._Functions.HaveFlag(client.Character.ZonesExplored[areaFlagOffset], (byte)areaFlag))
 						{
 							WorldServiceLocator._Functions.SetFlag(ref client.Character.ZonesExplored[areaFlagOffset], (byte)areaFlag, flagValue: true);
-							int GainedXP = unchecked((int)WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level) * 10;
-							GainedXP = unchecked((int)WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level) * 10;
+							int GainedXP = unchecked(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level) * 10;
+							GainedXP = unchecked(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level) * 10;
 							Packets.PacketClass SMSG_EXPLORATION_EXPERIENCE = new Packets.PacketClass(OPCODES.SMSG_EXPLORATION_EXPERIENCE);
 							SMSG_EXPLORATION_EXPERIENCE.AddInt32(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].ID);
 							SMSG_EXPLORATION_EXPERIENCE.AddInt32(GainedXP);
 							client.Send(ref SMSG_EXPLORATION_EXPERIENCE);
 							SMSG_EXPLORATION_EXPERIENCE.Dispose();
-							client.Character.SetUpdateFlag(1111 + unchecked((int)areaFlagOffset), client.Character.ZonesExplored[areaFlagOffset]);
+							client.Character.SetUpdateFlag(1111 + unchecked(areaFlagOffset), client.Character.ZonesExplored[areaFlagOffset]);
 							client.Character.AddXP(GainedXP, 0, 0uL);
 							WorldServiceLocator._WorldServer.ALLQUESTS.OnQuestExplore(ref client.Character, exploreFlag);
 						}
@@ -184,17 +184,16 @@ namespace Mangos.World.Handlers
 						{
 							client.Character.FinishSpell(CurrentSpellTypes.CURRENT_GENERIC_SPELL);
 						}
-						castSpellParameters = null;
-					}
-					client.Character.RemoveAurasByInterruptFlag(8);
+                    }
+                    client.Character.RemoveAurasByInterruptFlag(8);
 				}
 				if (client.Character.isTurning)
 				{
 					client.Character.RemoveAurasByInterruptFlag(16);
 				}
 				int MsTime = WorldServiceLocator._WS_Network.MsTime();
-				int ClientTimeDelay = (int)(unchecked((long)MsTime) - unchecked((long)Time));
-				int MoveTime = (int)(unchecked((long)Time) - unchecked((long)checked(MsTime - ClientTimeDelay)) + 500 + MsTime);
+				int ClientTimeDelay = (int)(unchecked(MsTime) - unchecked(Time));
+				int MoveTime = (int)(unchecked(Time) - unchecked(checked(MsTime - ClientTimeDelay)) + 500 + MsTime);
 				packet.AddInt32(MoveTime, 10);
 				Packets.PacketClass response = new Packets.PacketClass(packet.OpCode);
 				response.AddPackGUID(client.Character.GUID);
@@ -230,22 +229,20 @@ namespace Mangos.World.Handlers
 				characterObject.positionY = PositionY;
 				characterObject.positionZ = PositionZ;
 				characterObject.orientation = Orientation;
-				characterObject = null;
-			}
-			else if (Controlled is WS_Creatures.CreatureObject)
+            }
+            else if (Controlled is WS_Creatures.CreatureObject)
 			{
 				WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)Controlled;
 				creatureObject.positionX = PositionX;
 				creatureObject.positionY = PositionY;
 				creatureObject.positionZ = PositionZ;
 				creatureObject.orientation = Orientation;
-				creatureObject = null;
-			}
-			int MsTime = WorldServiceLocator._WS_Network.MsTime();
+            }
+            int MsTime = WorldServiceLocator._WS_Network.MsTime();
 			checked
 			{
-				int ClientTimeDelay = (int)(unchecked((long)MsTime) - unchecked((long)Time));
-				int MoveTime = (int)(unchecked((long)Time) - unchecked((long)checked(MsTime - ClientTimeDelay)) + 500 + MsTime);
+				int ClientTimeDelay = (int)(unchecked(MsTime) - unchecked(Time));
+				int MoveTime = (int)(unchecked(Time) - unchecked(checked(MsTime - ClientTimeDelay)) + 500 + MsTime);
 				packet.AddInt32(MoveTime, 10);
 				Packets.PacketClass response = new Packets.PacketClass(packet.OpCode);
 				response.AddPackGUID(Controlled.GUID);
@@ -421,7 +418,7 @@ namespace Mangos.World.Handlers
 				}
 				goto end_IL_0001;
 				IL_029d:
-				if (reqLevel != 0 && (uint)client.Character.Level < (uint)reqLevel)
+				if (reqLevel != 0 && client.Character.Level < (uint)reqLevel)
 				{
 					SendAreaTriggerMessage(ref client, "Your level is too low");
 				}
@@ -480,8 +477,8 @@ namespace Mangos.World.Handlers
 						}
 						if (FallTime > 1100)
 						{
-							float FallPerc = (float)((double)FallTime / 1100.0);
-							int FallDamage = (int)Math.Round((FallPerc * FallPerc - 1f) / 9f * (float)client.Character.Life.Maximum);
+							float FallPerc = (float)(FallTime / 1100.0);
+							int FallDamage = (int)Math.Round((FallPerc * FallPerc - 1f) / 9f * client.Character.Life.Maximum);
 							if (FallDamage > 0)
 							{
 								if (FallDamage > client.Character.Life.Maximum)
@@ -624,9 +621,8 @@ namespace Mangos.World.Handlers
 						creatureObject.aiScript.State = AIState.AI_MOVE_FOR_ATTACK;
 						creatureObject.aiScript.DoMove();
 					}
-					creatureObject = null;
-				}
-			}
+                }
+            }
 		}
 
 		public void MAP_Load(byte x, byte y, uint Map)
@@ -700,8 +696,7 @@ namespace Mangos.World.Handlers
 				catch (Exception ex2)
 				{
 					ProjectData.SetProjectError(ex2);
-					Exception ex = ex2;
-					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error removing character {0} from map", Character.Name);
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error removing character {0} from map", Character.Name);
 					ProjectData.ClearProjectError();
 				}
 			}
@@ -1070,10 +1065,9 @@ namespace Mangos.World.Handlers
 					}
 				}
 			}
-			tMapTile = null;
-		}
+        }
 
-		public void UpdateCreaturesAndGameObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
+        public void UpdateCreaturesAndGameObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
 		{
 			Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
 			WS_Maps.TMapTile tMapTile = MapTile;
@@ -1188,8 +1182,8 @@ namespace Mangos.World.Handlers
 					}
 				}
 			}
-			tMapTile = null;
-			if (packet.UpdatesCount > 0)
+
+            if (packet.UpdatesCount > 0)
 			{
 				packet.CompressUpdatePacket();
 				WS_Network.ClientClass client = Character.client;
@@ -1234,10 +1228,9 @@ namespace Mangos.World.Handlers
 					}
 				}
 			}
-			tMapTile = null;
-		}
+        }
 
-		public void UpdateGameObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
+        public void UpdateGameObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
 		{
 			WS_Maps.TMapTile tMapTile = MapTile;
 			ulong[] list = tMapTile.GameObjectsHere.ToArray();
@@ -1282,10 +1275,9 @@ namespace Mangos.World.Handlers
 					}
 				}
 			}
-			tMapTile = null;
-		}
+        }
 
-		public void UpdateCorpseObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
+        public void UpdateCorpseObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
 		{
 			WS_Maps.TMapTile tMapTile = MapTile;
 			ulong[] list = tMapTile.CorpseObjectsHere.ToArray();
@@ -1319,7 +1311,6 @@ namespace Mangos.World.Handlers
 					}
 				}
 			}
-			tMapTile = null;
-		}
-	}
+        }
+    }
 }

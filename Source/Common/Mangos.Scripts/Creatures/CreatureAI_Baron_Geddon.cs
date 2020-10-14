@@ -23,7 +23,7 @@ using Mangos.Common.Enums.Misc;
 // AI TODO: Implement a workaround (Or fix, fixes work too!) for Armageddon.
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Baron_Geddon : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Baron_Geddon : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int Inferno_CD = 45000;
@@ -39,9 +39,9 @@ namespace Mangos.Scripts.Creatures
         public int NextIgnite = 0;
         public int NextLivingBomb = 0;
 
-        public CreatureAI_Baron_Geddon(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Baron_Geddon(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -54,19 +54,19 @@ namespace Mangos.Scripts.Creatures
             if (NextInferno <= 0)
             {
                 NextInferno = Inferno_CD;
-                this.aiCreature.CastSpell(Spell_Inferno, this.aiTarget);
+                aiCreature.CastSpell(Spell_Inferno, aiTarget);
             }
 
             if (NextIgnite <= 0)
             {
                 NextIgnite = Ignite_CD;
-                this.aiCreature.CastSpell(Spell_Ignite, this.aiCreature.GetRandomTarget());
+                aiCreature.CastSpell(Spell_Ignite, aiCreature.GetRandomTarget());
             }
 
             if (NextLivingBomb <= 0)
             {
                 NextLivingBomb = Living_Bomb_CD;
-                this.aiCreature.CastSpell(Spell_Living_Bomb, this.aiCreature.GetRandomTarget());
+                aiCreature.CastSpell(Spell_Living_Bomb, aiCreature.GetRandomTarget());
             }
         }
 
@@ -74,10 +74,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                var Target = this.aiTarget;
+                var Target = aiTarget;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(Spell_Inferno, this.aiTarget); // This spell should be mitigated with fire resistance and nothing more.
+                aiCreature.CastSpell(Spell_Inferno, aiTarget); // This spell should be mitigated with fire resistance and nothing more.
             }
         }
 
@@ -85,10 +85,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 1; i <= 3; i++)
             {
-                var target = this.aiCreature.GetRandomTarget();
+                var target = aiCreature.GetRandomTarget();
                 if (target is null)
                     return;
-                this.aiCreature.CastSpell(Spell_Ignite, this.aiCreature.GetRandomTarget()); // This spell drains 400 mana per second and MUST be dispelled immediately or your healers will wipe the group.
+                aiCreature.CastSpell(Spell_Ignite, aiCreature.GetRandomTarget()); // This spell drains 400 mana per second and MUST be dispelled immediately or your healers will wipe the group.
             }
         }
 
@@ -96,10 +96,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 2; i <= 3; i++)
             {
-                var target = this.aiCreature.GetRandomTarget();
+                var target = aiCreature.GetRandomTarget();
                 if (target is null)
                     return;
-                this.aiCreature.CastSpell(Spell_Living_Bomb, this.aiCreature.GetRandomTarget()); // The traditional way of getting away of this is to run where the dead trash is from your group so they don't die, but we may need to fix AoE implementations for this.
+                aiCreature.CastSpell(Spell_Living_Bomb, aiCreature.GetRandomTarget()); // The traditional way of getting away of this is to run where the dead trash is from your group so they don't die, but we may need to fix AoE implementations for this.
             }
         }
 
@@ -110,11 +110,11 @@ namespace Mangos.Scripts.Creatures
             {
                 try
                 {
-                    this.aiCreature.CastSpellOnSelf(Spell_Armageddon); // I think during this time he's supposed to have a kamakazie of sorts.
+                    aiCreature.CastSpellOnSelf(Spell_Armageddon); // I think during this time he's supposed to have a kamakazie of sorts.
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("I have failed to become invincible at 2% or less HP. this is a problem.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("I have failed to become invincible at 2% or less HP. this is a problem.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }

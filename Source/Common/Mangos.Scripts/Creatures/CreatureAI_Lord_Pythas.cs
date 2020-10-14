@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Misc;
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Lord_Pythas : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Lord_Pythas : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int SLUMBER_CD = 10000;
@@ -40,9 +40,9 @@ namespace Mangos.Scripts.Creatures
         public int CurrentWaypoint = 0;
         public int NextHealingTouch = 0;
 
-        public CreatureAI_Lord_Pythas(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Lord_Pythas(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -50,7 +50,7 @@ namespace Mangos.Scripts.Creatures
         public override void OnEnterCombat()
         {
             base.OnEnterCombat();
-            this.aiCreature.SendChatMessage("The coils of death... Will crush you.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL); // If you can do anything, then go serpent form.
+            aiCreature.SendChatMessage("The coils of death... Will crush you.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL); // If you can do anything, then go serpent form.
         }
 
         public override void OnThink()
@@ -62,19 +62,19 @@ namespace Mangos.Scripts.Creatures
             if (NextLightningBolt <= 0)
             {
                 NextLightningBolt = Lightning_Bolt_CD;
-                this.aiCreature.CastSpell(Spell_Lightning_Bolt, this.aiTarget); // Lightning bolt on current target.
+                aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget); // Lightning bolt on current target.
             }
 
             if (NextSlumber <= 0)
             {
                 NextSlumber = SLUMBER_CD;
-                this.aiCreature.CastSpell(Slumber_Spell, this.aiCreature.GetRandomTarget());
+                aiCreature.CastSpell(Slumber_Spell, aiCreature.GetRandomTarget());
             }
 
             if (NextThunderClap <= 0)
             {
                 NextThunderClap = Thunder_Clap_CD;
-                this.aiCreature.CastSpell(Thunderclap_Spell, this.aiTarget); // TODO: Make this an AoE cast.
+                aiCreature.CastSpell(Thunderclap_Spell, aiTarget); // TODO: Make this an AoE cast.
             }
         }
 
@@ -82,10 +82,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(Spell_Lightning_Bolt, this.aiTarget);
+                aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
             }
         }
 
@@ -93,24 +93,24 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 1; i <= 3; i++)
             {
-                var target = this.aiCreature.GetRandomTarget();
+                var target = aiCreature.GetRandomTarget();
                 if (target is null)
                     return;
             }
 
-            this.aiCreature.CastSpell(Slumber_Spell, this.aiCreature.GetRandomTarget());
+            aiCreature.CastSpell(Slumber_Spell, aiCreature.GetRandomTarget());
         }
 
         public void CastThunderClap()
         {
             for (int i = 2; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
                     return;
             }
 
-            this.aiCreature.CastSpell(Thunder_Clap_CD, this.aiTarget);
+            aiCreature.CastSpell(Thunder_Clap_CD, aiTarget);
         }
 
         public override void OnHealthChange(int Percent)
@@ -120,11 +120,11 @@ namespace Mangos.Scripts.Creatures
             {
                 try
                 {
-                    this.aiCreature.CastSpellOnSelf(Healing_Spell);
+                    aiCreature.CastSpellOnSelf(Healing_Spell);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("I was unable to cast healing touch on myself. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("I was unable to cast healing touch on myself. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }

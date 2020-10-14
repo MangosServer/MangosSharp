@@ -23,7 +23,7 @@ using Mangos.Common.Enums.Global;
 // Sand trap not implemented into script, need to make a gameobject I assume.
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Kurinnax : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Kurinnax : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int wound_cooldown = 8000;
@@ -45,12 +45,12 @@ namespace Mangos.Scripts.Creatures
         // Public Next_Summon_1 As Integer = 0
         // Public Next_Summon_2 As Integer = 0
 
-        public CreatureAI_Kurinnax(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Kurinnax(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             phase = 0;
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
-            Creature.VisibleDistance = (float)700;
+            Creature.VisibleDistance = 700;
         }
 
         public override void OnEnterCombat()
@@ -58,15 +58,15 @@ namespace Mangos.Scripts.Creatures
             if (phase > 1)
                 return;
             base.OnEnterCombat();
-            this.AllowedAttack = true;
-            this.aiCreature.Flying = false;
+            AllowedAttack = true;
+            aiCreature.Flying = false;
             // ReinitSpells()
         }
 
         public override void OnLeaveCombat(bool Reset = true)
         {
             base.OnLeaveCombat(Reset);
-            this.AllowedAttack = true;
+            AllowedAttack = true;
             phase = 0;
         }
 
@@ -87,24 +87,24 @@ namespace Mangos.Scripts.Creatures
                 Next_Mortal_Wound = wound_cooldown;
                 try
                 {
-                    this.aiCreature.CastSpell(Spell_Mortal_Wound, this.aiTarget);
+                    aiCreature.CastSpell(Spell_Mortal_Wound, aiTarget);
                 }
                 catch (Exception)
                 {
-                    Mangos.World.WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Mortal Wound failed to cast!");
+                    World.WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Mortal Wound failed to cast!");
                 }
             }
 
             if (Next_Thrash <= 1)
             {
                 Next_Thrash = Thrash_Cooldown;
-                this.aiCreature.CastSpell(spell_Thrash, this.aiTarget);
+                aiCreature.CastSpell(spell_Thrash, aiTarget);
             }
 
             if (Next_Wide_Slash <= 2)
             {
                 Next_Wide_Slash = Wide_Slash_Cooldown;
-                this.aiCreature.CastSpell(spell_Thrash, this.aiTarget);
+                aiCreature.CastSpell(spell_Thrash, aiTarget);
             }
         }
 
@@ -115,7 +115,7 @@ namespace Mangos.Scripts.Creatures
             {
                 if (Percent <= 20)
                 {
-                    this.aiCreature.CastSpellOnSelf(Spell_Frenzy);
+                    aiCreature.CastSpellOnSelf(Spell_Frenzy);
                 }
             }
         }

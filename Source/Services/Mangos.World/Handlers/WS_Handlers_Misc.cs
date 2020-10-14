@@ -152,7 +152,7 @@ namespace Mangos.World.Handlers
 					packet.GetInt16();
 					int Flag = packet.GetInt32();
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TUTORIAL_FLAG [flag={2}]", client.IP, client.Port, Flag);
-					client.Character.TutorialFlags[unchecked(Flag / 8)] = (byte)(unchecked((int)client.Character.TutorialFlags[Flag / 8]) + (1 << 7 - unchecked(Flag % 8)));
+					client.Character.TutorialFlags[unchecked(Flag / 8)] = (byte)(unchecked(client.Character.TutorialFlags[Flag / 8]) + (1 << 7 - unchecked(Flag % 8)));
 					client.Character.SaveCharacter();
 				}
 			}
@@ -462,7 +462,7 @@ namespace Mangos.World.Handlers
 			Character.Mana.Current = 0;
 			Character.Rage.Current = 0;
 			Character.Energy.Current = 0;
-			Character.Life.Current = checked((int)Math.Round((double)Character.Life.Maximum / 2.0));
+			Character.Life.Current = checked((int)Math.Round(Character.Life.Maximum / 2.0));
 			Character.DEAD = false;
 			Character.cPlayerFlags &= ~PlayerFlags.PLAYER_FLAGS_DEAD;
 			Character.cUnitFlags = 8;

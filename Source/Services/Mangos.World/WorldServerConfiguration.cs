@@ -134,7 +134,7 @@ namespace Mangos.World
 			LineOfSightEnabled = false;
 			HeightCalcEnabled = false;
 			LogType = "FILE";
-			LogLevel = Mangos.Common.Enums.Global.LogType.NETWORK;
+			LogLevel = Common.Enums.Global.LogType.NETWORK;
 			LogConfig = "";
 			CompilerInclude = new ArrayList();
 			CreatePartyInstances = false;

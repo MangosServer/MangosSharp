@@ -19,7 +19,7 @@
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Earthborer : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Earthborer : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int ACID_COOLDOWN = 10000;
@@ -28,9 +28,9 @@ namespace Mangos.Scripts.Creatures
         public int NextAcid = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Earthborer(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Earthborer(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -41,7 +41,7 @@ namespace Mangos.Scripts.Creatures
             if (NextAcid <= 0)
             {
                 NextAcid = ACID_COOLDOWN;
-                this.aiCreature.CastSpell(ACID_SPELL, this.aiTarget); // Earthborer Acid
+                aiCreature.CastSpell(ACID_SPELL, aiTarget); // Earthborer Acid
             }
         }
 
@@ -49,10 +49,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(ACID_SPELL, this.aiTarget);
+                aiCreature.CastSpell(ACID_SPELL, aiTarget);
             }
         }
     }

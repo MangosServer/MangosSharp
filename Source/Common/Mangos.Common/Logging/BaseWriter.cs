@@ -90,15 +90,15 @@ namespace Mangos.Common.Logging
         /// <returns></returns>
         public void PrintDiagnosticTest()
         {
-            this.WriteLine(LogType.NETWORK, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(LogType.DEBUG, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(LogType.INFORMATION, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(LogType.USER, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(LogType.SUCCESS, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(LogType.WARNING, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(LogType.FAILED, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(LogType.CRITICAL, "{0}:************************* TEST *************************", (object)1);
-            this.WriteLine(LogType.DATABASE, "{0}:************************* TEST *************************", (object)1);
+            WriteLine(LogType.NETWORK, "{0}:************************* TEST *************************", (object)1);
+            WriteLine(LogType.DEBUG, "{0}:************************* TEST *************************", (object)1);
+            WriteLine(LogType.INFORMATION, "{0}:************************* TEST *************************", (object)1);
+            WriteLine(LogType.USER, "{0}:************************* TEST *************************", (object)1);
+            WriteLine(LogType.SUCCESS, "{0}:************************* TEST *************************", (object)1);
+            WriteLine(LogType.WARNING, "{0}:************************* TEST *************************", (object)1);
+            WriteLine(LogType.FAILED, "{0}:************************* TEST *************************", (object)1);
+            WriteLine(LogType.CRITICAL, "{0}:************************* TEST *************************", (object)1);
+            WriteLine(LogType.DATABASE, "{0}:************************* TEST *************************", (object)1);
         }
 
         /// <summary>

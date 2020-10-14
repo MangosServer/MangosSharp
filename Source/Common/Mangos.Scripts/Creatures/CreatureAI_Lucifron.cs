@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Misc;
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Lucifron : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Lucifron : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int Impending_Doom_Cooldown = 20000;
@@ -38,10 +38,10 @@ namespace Mangos.Scripts.Creatures
         public int NextWaypoint = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Lucifron(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Lucifron(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             Phase = 0;
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -51,8 +51,8 @@ namespace Mangos.Scripts.Creatures
             if (Phase > 1)
                 return;
             base.OnEnterCombat();
-            this.aiCreature.Flying = false;
-            this.AllowedAttack = true;
+            aiCreature.Flying = false;
+            AllowedAttack = true;
             Phase = 1;
             // ReinitSpells()
         }
@@ -60,11 +60,11 @@ namespace Mangos.Scripts.Creatures
         public override void OnLeaveCombat(bool Reset = true)
         {
             base.OnLeaveCombat(Reset);
-            this.AllowedAttack = true;
+            AllowedAttack = true;
             Phase = 0;
         }
 
-        public override void OnKill(ref Mangos.World.Objects.WS_Base.BaseUnit Victim)
+        public override void OnKill(ref World.Objects.WS_Base.BaseUnit Victim)
         {
             // Does he cast a dummy spell on target death?
         }
@@ -86,19 +86,19 @@ namespace Mangos.Scripts.Creatures
                 if (NextImpendingDoom <= 0)
                 {
                     NextImpendingDoom = Impending_Doom_Cooldown;
-                    this.aiCreature.CastSpell(Impending_Doom, this.aiTarget); // Impending DOOOOOM!
+                    aiCreature.CastSpell(Impending_Doom, aiTarget); // Impending DOOOOOM!
                 }
 
                 if (NextLucifronsCurse <= 0)
                 {
                     NextLucifronsCurse = Lucifrons_Curse_Cooldown;
-                    this.aiCreature.CastSpell(Lucifrons_Curse, this.aiTarget); // Lucifrons Curse.
+                    aiCreature.CastSpell(Lucifrons_Curse, aiTarget); // Lucifrons Curse.
                 }
 
                 if (NextShadowShock <= 0)
                 {
                     NextShadowShock = Shadow_Shock_Cooldown;
-                    this.aiCreature.CastSpell(Shadow_Shock, this.aiTarget); // Summon Player
+                    aiCreature.CastSpell(Shadow_Shock, aiTarget); // Summon Player
                 }
             }
 
@@ -116,16 +116,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 2; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit theTarget = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit theTarget = aiCreature;
                 if (theTarget is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(Lucifrons_Curse, this.aiTarget);
+                    aiCreature.CastSpell(Lucifrons_Curse, aiTarget);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("Failed to cast Lucifron's Curse. This is bad. Please report to developers.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+                    aiCreature.SendChatMessage("Failed to cast Lucifron's Curse. This is bad. Please report to developers.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
             }
         }
@@ -134,16 +134,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 1; i <= 2; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit theTarget = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit theTarget = aiCreature;
                 if (theTarget is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(Impending_Doom, this.aiTarget);
+                    aiCreature.CastSpell(Impending_Doom, aiTarget);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("Failed to cast IMPENDING DOOOOOM! Please report this to a developer.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+                    aiCreature.SendChatMessage("Failed to cast IMPENDING DOOOOOM! Please report this to a developer.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
             }
         }
@@ -152,16 +152,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 2; i <= 2; i++)
             {
-                var theTarget = this.aiCreature.GetRandomTarget();
+                var theTarget = aiCreature.GetRandomTarget();
                 if (theTarget is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(Shadow_Shock, theTarget.positionX, theTarget.positionY, theTarget.positionZ);
+                    aiCreature.CastSpell(Shadow_Shock, theTarget.positionX, theTarget.positionY, theTarget.positionZ);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("Failed to cast Shadow Shock. Please report this to a developer.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+                    aiCreature.SendChatMessage("Failed to cast Shadow Shock. Please report this to a developer.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace Mangos.Scripts.Creatures
             {
                 case 0:
                     {
-                        NextWaypoint = this.aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f, true); // No Waypoint Coords! Will need to back track from MaNGOS!
+                        NextWaypoint = aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f, true); // No Waypoint Coords! Will need to back track from MaNGOS!
                         break;
                     }
 
@@ -180,7 +180,7 @@ namespace Mangos.Scripts.Creatures
                     {
                         NextWaypoint = 10000;
                         // NextSummon = NextWaypoint
-                        this.aiCreature.MoveTo(0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f, 0.0f);
                         break;
                     }
 
@@ -193,7 +193,7 @@ namespace Mangos.Scripts.Creatures
                 case 3:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f, 0.0f);
                         break;
                     }
 
@@ -210,28 +210,28 @@ namespace Mangos.Scripts.Creatures
                 case 5:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f);
                         break;
                     }
 
                 case 7:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f);
                         break;
                     }
 
                 case 9:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f, 0.0f);
                         break;
                     }
 
                 case 11:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f);
                         break;
                     }
             }

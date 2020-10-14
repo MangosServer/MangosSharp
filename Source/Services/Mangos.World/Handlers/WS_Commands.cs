@@ -85,11 +85,13 @@ namespace Mangos.World.Handlers
 						ChatCommandAttribute[] array = infos;
 						foreach (ChatCommandAttribute info in array)
 						{
-							ChatCommand chatCommand = new ChatCommand();
-							chatCommand.CommandHelp = info.cmdHelp;
-							chatCommand.CommandAccess = info.cmdAccess;
-							chatCommand.CommandDelegate = (ChatCommandDelegate)Delegate.CreateDelegate(typeof(ChatCommandDelegate), WorldServiceLocator._WS_Commands, tmpMethod);
-							ChatCommand cmd = chatCommand;
+                            ChatCommand chatCommand = new ChatCommand
+                            {
+                                CommandHelp = info.cmdHelp,
+                                CommandAccess = info.cmdAccess,
+                                CommandDelegate = (ChatCommandDelegate)Delegate.CreateDelegate(typeof(ChatCommandDelegate), WorldServiceLocator._WS_Commands, tmpMethod)
+                            };
+                            ChatCommand cmd = chatCommand;
 							ChatCommands.Add(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(info.cmdName), cmd);
 						}
 					}
@@ -423,8 +425,8 @@ namespace Mangos.World.Handlers
 			{
 				objCharacter.CommandResponse($"{u.Key.GUID:X} = {u.Value} hate");
 			}
-			creatureObject = null;
-			return true;
+
+            return true;
 		}
 
 		[ChatCommand("servermessage", "servermessage #type #text - Send text message to all players on the server.", AccessLevel.GameMaster)]
@@ -589,8 +591,8 @@ namespace Mangos.World.Handlers
 		[ChatCommand("playsound", "playsound - Plays a specific sound for every player around you.", AccessLevel.Developer)]
 		public bool cmdPlaySound(ref WS_PlayerData.CharacterObject objCharacter, string Message)
 		{
-			int soundID = 0;
-			if (!int.TryParse(Message, out soundID))
+            int soundID;
+            if (!int.TryParse(Message, out soundID))
 			{
 				return false;
 			}
@@ -652,7 +654,7 @@ namespace Mangos.World.Handlers
 						{
 							timeLeft = checked(Spell.Value.Cooldown - timeNow);
 						}
-						if ((long)timeLeft > 0L)
+						if (timeLeft > 0L)
 						{
 							sCooldowns = sCooldowns + "* Spell: " + Conversions.ToString(Spell.Key) + " - TimeLeft: " + WorldServiceLocator._Functions.GetTimeLeftString(timeLeft) + " sec - Item: " + Conversions.ToString(Spell.Value.CooldownItem) + Environment.NewLine;
 						}
@@ -977,8 +979,8 @@ namespace Mangos.World.Handlers
 		[ChatCommand("changemodel", "changemodel #id - Will morph you into specified model ID.", AccessLevel.GameMaster)]
 		public bool cmdModel(ref WS_PlayerData.CharacterObject objCharacter, string Message)
 		{
-			int value = 0;
-			if (!int.TryParse(Message, out value) || value < 0)
+            int value;
+            if (!int.TryParse(Message, out value) || value < 0)
 			{
 				return false;
 			}
@@ -997,8 +999,8 @@ namespace Mangos.World.Handlers
 		[ChatCommand("mount", "mount #id - Will mount you to specified model ID.", AccessLevel.GameMaster)]
 		public bool cmdMount(ref WS_PlayerData.CharacterObject objCharacter, string Message)
 		{
-			int value = 0;
-			if (!int.TryParse(Message, out value) || value < 0)
+            int value;
+            if (!int.TryParse(Message, out value) || value < 0)
 			{
 				return false;
 			}
@@ -1018,7 +1020,7 @@ namespace Mangos.World.Handlers
 			if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
 			{
 				WS_PlayerHelper.TStatBar life;
-				(life = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life).Current = checked((int)Math.Round((double)life.Current - (double)WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Maximum * 0.1));
+				(life = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life).Current = checked((int)Math.Round(life.Current - WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Maximum * 0.1));
 				WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(22, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Current);
 				WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SendCharacterUpdate();
 				return true;
@@ -1200,8 +1202,8 @@ namespace Mangos.World.Handlers
 					{
 						objCharacter.Teleport(characterObject.positionX, characterObject.positionY, characterObject.positionZ, characterObject.orientation, (int)characterObject.MapID);
 					}
-					characterObject = null;
-					return true;
+
+                    return true;
 				}
 				objCharacter.CommandResponse("Player not found.");
 				return true;
@@ -1242,8 +1244,8 @@ namespace Mangos.World.Handlers
 		[ChatCommand("SetInstance", "SETINSTANCE <ID> - Sets you into another instance.", AccessLevel.Admin)]
 		public bool cmdSetInstance(ref WS_PlayerData.CharacterObject objCharacter, string Message)
 		{
-			int instanceID = 0;
-			if (!int.TryParse(Message, out instanceID))
+            int instanceID;
+            if (!int.TryParse(Message, out instanceID))
 			{
 				return false;
 			}
@@ -1291,7 +1293,7 @@ namespace Mangos.World.Handlers
 				string cmdList = "Listing of available locations:" + Environment.NewLine;
 				DataTable listSqlQuery = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM game_tele order by name", ref listSqlQuery);
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = listSqlQuery.Rows.GetEnumerator();
@@ -1328,7 +1330,7 @@ namespace Mangos.World.Handlers
 				if (mySqlQuery.Rows.Count != 1)
 				{
 					string cmdList2 = "Listing of matching locations:" + Environment.NewLine;
-					IEnumerator enumerator2 = default(IEnumerator);
+					IEnumerator enumerator2 = default;
 					try
 					{
 						enumerator2 = mySqlQuery.Rows.GetEnumerator();
@@ -1829,9 +1831,9 @@ namespace Mangos.World.Handlers
 			{
 				return false;
 			}
-			if ((uint)aLevel < 0u || (uint)aLevel > 3u)
+			if (aLevel < 0u || aLevel > 3u)
 			{
-				objCharacter.CommandResponse($"Not a valid access level. Must be in the range {(byte)0}-{(byte)3}.");
+				objCharacter.CommandResponse($"Not a valid access level. Must be in the range {0}-{3}.");
 				return true;
 			}
 			AccessLevel newLevel = (AccessLevel)aLevel;
@@ -1892,9 +1894,9 @@ namespace Mangos.World.Handlers
 				UpdateData.SetUpdateFlag(Index, Value);
 				if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
 				{
-					Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
-					ulong key;
-					WS_Creatures.CreatureObject updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
+                    Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
+                    ulong key;
+                    WS_Creatures.CreatureObject updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
 					UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
 					wORLD_CREATUREs[key] = updateObject;
 				}
@@ -1902,17 +1904,17 @@ namespace Mangos.World.Handlers
 				{
 					if (GUID == client.Character.GUID)
 					{
-						Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
-						ulong key;
-						WS_PlayerData.CharacterObject updateObject2 = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = GUID];
+                        Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
+                        ulong key;
+                        WS_PlayerData.CharacterObject updateObject2 = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = GUID];
 						UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject2);
 						cHARACTERs[key] = updateObject2;
 					}
 					else
 					{
-						Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
-						ulong key;
-						WS_PlayerData.CharacterObject updateObject2 = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = GUID];
+                        Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
+                        ulong key;
+                        WS_PlayerData.CharacterObject updateObject2 = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = GUID];
 						UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject2);
 						cHARACTERs[key] = updateObject2;
 					}
@@ -1924,8 +1926,7 @@ namespace Mangos.World.Handlers
 			catch (DataException ex2)
 			{
 				ProjectData.SetProjectError(ex2);
-				DataException ex = ex2;
-				noErrors = false;
+                noErrors = false;
 				ProjectData.ClearProjectError();
 			}
 			return noErrors;

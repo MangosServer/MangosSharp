@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Misc;
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Gluth : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Gluth : World.AI.WS_Creatures_AI.BossAI
     {
         // TODO: Implement proper zombie chow summons. Fix decimate. Fix him going underground. Fix mortal wound a debuff instead of dispellable buff. Fix terrifying roar.
         // Reference: https://github.com/mangoszero/scripts/blob/master/scripts/eastern_kingdoms/naxxramas/boss_gluth.cpp
@@ -48,9 +48,9 @@ namespace Mangos.Scripts.Creatures
         public int NextWaypoint = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Gluth(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Gluth(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -64,25 +64,25 @@ namespace Mangos.Scripts.Creatures
             if (NextDecimate <= 0)
             {
                 NextDecimate = Decimate_CD;
-                this.aiCreature.CastSpell(Spell_Decimate, this.aiTarget); // Earthborer Acid
+                aiCreature.CastSpell(Spell_Decimate, aiTarget); // Earthborer Acid
             }
 
             if (NextFrenzy <= 1)
             {
                 NextFrenzy = Frenzy_CD;
-                this.aiCreature.CastSpellOnSelf(Spell_Frenzy);
+                aiCreature.CastSpellOnSelf(Spell_Frenzy);
             }
 
             if (NextMortalWound <= 2)
             {
                 NextMortalWound = Mortal_Wound_CD;
-                this.aiCreature.CastSpell(Spell_Mortal_Wound, this.aiTarget);
+                aiCreature.CastSpell(Spell_Mortal_Wound, aiTarget);
             }
 
             if (NextRoar <= 3)
             {
                 NextRoar = Terrifying_Roar_CD;
-                this.aiCreature.CastSpell(Spell_Terrifying_Roar, this.aiTarget);
+                aiCreature.CastSpell(Spell_Terrifying_Roar, aiTarget);
             }
         }
 
@@ -90,16 +90,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(Spell_Decimate, this.aiTarget);
+                    aiCreature.CastSpell(Spell_Decimate, aiTarget);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("I have failed to cast decimate. Whoever made this script is bad. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("I have failed to cast decimate. Whoever made this script is bad. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }
@@ -108,16 +108,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 1; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpellOnSelf(Spell_Frenzy);
+                    aiCreature.CastSpellOnSelf(Spell_Frenzy);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("I have failed to cast Frenzy. Whoever made this script did a poor job, please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("I have failed to cast Frenzy. Whoever made this script did a poor job, please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }
@@ -126,16 +126,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 2; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(Spell_Mortal_Wound, this.aiTarget);
+                    aiCreature.CastSpell(Spell_Mortal_Wound, aiTarget);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("I have failed to cast Mortal Wound. Whoever made this script did a poor job, please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("I have failed to cast Mortal Wound. Whoever made this script did a poor job, please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }
@@ -144,16 +144,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 3; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(Spell_Terrifying_Roar, this.aiTarget);
+                    aiCreature.CastSpell(Spell_Terrifying_Roar, aiTarget);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("I have failed to cast terrifying roar. Whoever made this script did a poor job, please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("I have failed to cast terrifying roar. Whoever made this script did a poor job, please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }
@@ -161,7 +161,7 @@ namespace Mangos.Scripts.Creatures
         public override void OnDeath()
         {
             base.OnDeath();
-            this.aiCreature.SendChatMessage("I have successfully been slain. Good job!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+            aiCreature.SendChatMessage("I have successfully been slain. Good job!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
         }
 
         public void SpawnZombieChow(int Count)
@@ -170,7 +170,7 @@ namespace Mangos.Scripts.Creatures
             {
                 if (Zombie_Chow_CD <= 0)
                 {
-                    this.aiCreature.SpawnCreature(16360, 3267.9f, -3172.1f, 297.42f);
+                    aiCreature.SpawnCreature(16360, 3267.9f, -3172.1f, 297.42f);
                 }
             }
         }
@@ -178,7 +178,7 @@ namespace Mangos.Scripts.Creatures
         public override void OnLeaveCombat(bool Reset = true)
         {
             base.OnLeaveCombat(Reset);
-            this.aiCreature.MoveTo(3304.269f, (float)-3136.414d, 296.7151f, 0.8140599f);
+            aiCreature.MoveTo(3304.269f, (float)-3136.414d, 296.7151f, 0.8140599f);
         }
     }
 }

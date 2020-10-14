@@ -126,13 +126,13 @@ namespace Mangos.World.Player
 
 			public float Modifier;
 
-			public int Maximum => checked((int)Math.Round((float)(Bonus + Base) * Modifier));
+			public int Maximum => checked((int)Math.Round((Bonus + Base) * Modifier));
 
 			public int Current
 			{
 				get
 				{
-					return checked((int)Math.Round((float)_Current * Modifier));
+					return checked((int)Math.Round(_Current * Modifier));
 				}
 				set
 				{
@@ -228,7 +228,7 @@ namespace Mangos.World.Player
 
 			public float Modifier;
 
-			public int Value => checked((int)Math.Round((float)(PositiveBonus - NegativeBonus) * Modifier));
+			public int Value => checked((int)Math.Round((PositiveBonus - NegativeBonus) * Modifier));
 
 			public TDamageBonus(byte PosValue = 0, byte NegValue = 0)
 			{
@@ -402,7 +402,7 @@ namespace Mangos.World.Player
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -448,7 +448,7 @@ namespace Mangos.World.Player
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -514,7 +514,7 @@ namespace Mangos.World.Player
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 63u);
+				while (i <= 63u);
 				client.Send(ref packet);
 			}
 			finally
@@ -546,7 +546,7 @@ namespace Mangos.World.Player
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 119u);
+				while (i <= 119u);
 				client.Send(ref packet);
 			}
 			finally
@@ -710,7 +710,7 @@ namespace Mangos.World.Player
 							int timeLeft = 0;
 							if (Cooldown.Value.Key > WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))
 							{
-								timeLeft = (int)(unchecked((long)checked(Cooldown.Value.Key - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))) * 1000L);
+								timeLeft = (int)(unchecked(checked(Cooldown.Value.Key - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))) * 1000L);
 							}
 							packet.AddUInt16((ushort)Cooldown.Value.Value);
 							packet.AddUInt16((ushort)WorldServiceLocator._WS_Spells.SPELLs[Cooldown.Key].Category);

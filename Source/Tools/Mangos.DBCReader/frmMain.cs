@@ -42,11 +42,13 @@ namespace Mangos.DBCReader
 
         private void cmdBrowse_Click(object sender, EventArgs e)
         {
-            var fdlg = new OpenFileDialog();
-            fdlg.Title = "Which DBC You Want to View";
-            fdlg.Filter = "DBC File (*.dbc)|*.dbc";
-            fdlg.FilterIndex = 2;
-            fdlg.RestoreDirectory = true;
+            var fdlg = new OpenFileDialog
+            {
+                Title = "Which DBC You Want to View",
+                Filter = "DBC File (*.dbc)|*.dbc",
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
                 txtFile.Text = fdlg.FileName;
@@ -91,9 +93,11 @@ namespace Mangos.DBCReader
             var loopTo = Columns - 1;
             for (i = 0; i <= loopTo; i++)
             {
-                var tmpColumn = new ColumnHeader();
-                tmpColumn.Text = i.ToString();
-                tmpColumn.Width = 90;
+                var tmpColumn = new ColumnHeader
+                {
+                    Text = i.ToString(),
+                    Width = 90
+                };
                 DBCData.Columns.Add(tmpColumn);
                 cmbColumn.Items.Add(i.ToString());
                 AmtZero[i] = 0;

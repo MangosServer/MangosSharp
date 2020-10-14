@@ -66,7 +66,7 @@ namespace Mangos.World.Objects
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 
 			public DynamicObjectObject(ref WS_Base.BaseUnit Caster_, int SpellID_, float PosX, float PosY, float PosZ, int Duration_, float Radius_)
@@ -167,9 +167,8 @@ namespace Mangos.World.Objects
 										SeenBy.Add(plGUID);
 									}
 								}
-								tMapTile = null;
-							}
-							j = (short)unchecked(j + 1);
+                            }
+                            j = (short)unchecked(j + 1);
 						}
 						while (j <= 1);
 						i = (short)unchecked(i + 1);

@@ -43,37 +43,37 @@ namespace Mangos.World.Server
 		public ReaderWriterLock_Debug(string s)
 		{
 			WriteQueue = new Queue<string>();
-			ID = s;
-			file = new FileStream($"ReaderWriterLock_Debug_{ID}_{DateAndTime.Now.Ticks}.log", FileMode.Create);
+			ID = s ?? throw new ArgumentNullException(nameof(s));
+            string path = $"ReaderWriterLock_Debug_{ID}_{DateAndTime.Now.Ticks}.log";
+            file = new FileStream(path, FileMode.Create);
 			writer = new StreamWriter(file);
 			@lock = new ReaderWriterLock();
 			StackTrace st = new StackTrace();
-			StackFrame[] sf = st.GetFrames();
-			WriteLine("NewLock " + ID + " from:");
-			StackFrame[] array = sf;
-			foreach (StackFrame frame in array)
+            WriteLine($"NewLock {ID} from:");
+            StackFrame[] sf = st.GetFrames();
+            StackFrame[] array = sf;
+            foreach (StackFrame frame in array)
 			{
-				WriteLine("\t" + frame.GetMethod()!.Name);
+				WriteLine($"\t{frame.GetMethod()!.Name}");
 			}
-			WriteLine("NewLock " + ID);
-			Thread writeThread = new Thread(new ThreadStart(WriteLoop))
-			{
-				Name = "WriteLoop, ReaderWriterLock_Debug - " + s
-			};
-			writeThread.Start();
+			WriteLine($"NewLock {ID}");
+            new Thread(new ThreadStart(WriteLoop))
+            {
+                Name = $"WriteLoop, ReaderWriterLock_Debug - {s}"
+            }.Start();
 		}
 
 		public void AcquireReaderLock(int t)
 		{
 			StackTrace st = new StackTrace();
-			StackFrame[] sf = st.GetFrames();
-			WriteLine("AcquireReaderLock " + ID + " from:");
-			StackFrame[] array = sf;
-			foreach (StackFrame frame in array)
+            WriteLine($"AcquireReaderLock {ID} from:");
+            StackFrame[] sf = st.GetFrames();
+            StackFrame[] array = sf;
+            foreach (StackFrame frame in array)
 			{
-				WriteLine("\t" + frame.GetMethod()!.Name);
+				WriteLine($"\t{frame.GetMethod()!.Name}");
 			}
-			@lock.AcquireReaderLock(t);
+			@lock.AcquireReaderLock(millisecondsTimeout: t);
 		}
 
 		public void ReleaseReaderLock()
@@ -82,34 +82,32 @@ namespace Mangos.World.Server
 			{
 				@lock.ReleaseReaderLock();
 				StackTrace st = new StackTrace();
-				StackFrame[] sf = st.GetFrames();
-				WriteLine("ReleaseReaderLock " + ID + " from:");
-				StackFrame[] array = sf;
-				foreach (StackFrame frame in array)
+                WriteLine($"ReleaseReaderLock {ID} from:");
+                StackFrame[] sf = st.GetFrames();
+                StackFrame[] array = sf;
+                foreach (StackFrame frame in array)
 				{
-					WriteLine("\t" + frame.GetMethod()!.Name);
+					WriteLine($"\t{ frame.GetMethod()!.Name}");
 				}
 			}
 			catch (Exception ex2)
 			{
 				ProjectData.SetProjectError(ex2);
-				Exception ex = ex2;
-				WriteLine("ReleaseReaderLock " + ID + " is not freed!");
+                WriteLine($"ReleaseReaderLock {ID} is not freed!");
 				ProjectData.ClearProjectError();
 			}
 		}
 
 		public void AcquireWriterLock(int t)
 		{
-			StackTrace st = new StackTrace();
-			StackFrame[] sf = st.GetFrames();
-			WriteLine("AcquireWriterLock " + ID + " from:");
-			StackFrame[] array = sf;
-			foreach (StackFrame frame in array)
-			{
-				WriteLine("\t" + frame.GetMethod()!.Name);
-			}
-			@lock.AcquireWriterLock(t);
+            WriteLine($"AcquireWriterLock {ID} from:");
+            StackTrace st = new StackTrace();
+            StackFrame[] sf = st.GetFrames();
+            foreach (StackFrame frame in sf)
+            {
+                WriteLine($"\t{ frame.GetMethod()!.Name}");
+            }
+            @lock.AcquireWriterLock(millisecondsTimeout: t);
 		}
 
 		public void ReleaseWriterLock()
@@ -117,11 +115,10 @@ namespace Mangos.World.Server
 			try
 			{
 				@lock.ReleaseWriterLock();
-				StackTrace st = new StackTrace();
-				StackFrame[] sf = st.GetFrames();
-				WriteLine("ReleaseWriterLock " + ID + " from:");
-				StackFrame[] array = sf;
-				foreach (StackFrame frame in array)
+                WriteLine("ReleaseWriterLock " + ID + " from:");
+                StackFrame[] sf = new StackTrace().GetFrames();
+                StackFrame[] array = sf;
+                foreach (StackFrame frame in array)
 				{
 					WriteLine("\t" + frame.GetMethod()!.Name);
 				}
@@ -129,25 +126,23 @@ namespace Mangos.World.Server
 			catch (Exception ex2)
 			{
 				ProjectData.SetProjectError(ex2);
-				Exception ex = ex2;
-				WriteLine("ReleaseWriterLock " + ID + " is not freed!");
+                WriteLine("ReleaseWriterLock " + ID + " is not freed!");
 				ProjectData.ClearProjectError();
 			}
 		}
 
-		public bool IsWriterLockHeld()
-		{
-			return @lock.IsWriterLockHeld;
-		}
+        public bool IsWriterLockHeld => @lock.IsWriterLockHeld;
 
-		public bool IsReaderLockHeld()
-		{
-			return @lock.IsReaderLockHeld;
-		}
+        public bool IsReaderLockHeld => @lock.IsReaderLockHeld;
 
-		public void WriteLine(string str)
+        public void WriteLine(string str)
 		{
-			lock (WriteQueue)
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            lock (WriteQueue)
 			{
 				WriteQueue.Enqueue(str);
 			}
@@ -155,26 +150,26 @@ namespace Mangos.World.Server
 
 		private void WriteLoop()
 		{
-			string str = "";
-			while (true)
-			{
-				int i = 0;
-				while (WriteQueue.Count > 0)
-				{
-					lock (WriteQueue)
-					{
-						str = WriteQueue.Dequeue();
-					}
-					writer.WriteLine(str);
-					i = checked(i + 1);
-				}
-				if (i > 0)
-				{
-					writer.Flush();
-				}
-				Thread.Sleep(100);
-			}
-		}
+            while (true)
+            {
+                int i = 0;
+                while (WriteQueue.Count > 0)
+                {
+                    string str = "";
+                    lock (WriteQueue)
+                    {
+                        str = WriteQueue.Dequeue();
+                    }
+                    writer.WriteLine(str);
+                    i = checked(i + 1);
+                }
+                if (i > 0)
+                {
+                    writer.Flush();
+                }
+                Thread.Sleep(100);
+            }
+        }
 
 		protected virtual void Dispose(bool disposing)
 		{
@@ -198,7 +193,7 @@ namespace Mangos.World.Server
 		void IDisposable.Dispose()
 		{
 			//ILSpy generated this explicit interface implementation from .override directive in Dispose
-			this.Dispose();
+			Dispose();
 		}
 	}
 }

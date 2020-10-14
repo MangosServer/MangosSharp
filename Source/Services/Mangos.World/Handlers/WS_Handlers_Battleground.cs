@@ -44,7 +44,7 @@ namespace Mangos.World.Handlers
 			{
 				return;
 			}
-			if ((uint)WorldServiceLocator._WS_DBCDatabase.Battlegrounds[BGType].MinLevel > (uint)client.Character.Level || (uint)WorldServiceLocator._WS_DBCDatabase.Battlegrounds[BGType].MaxLevel < (uint)client.Character.Level)
+			if (WorldServiceLocator._WS_DBCDatabase.Battlegrounds[BGType].MinLevel > (uint)client.Character.Level || WorldServiceLocator._WS_DBCDatabase.Battlegrounds[BGType].MaxLevel < (uint)client.Character.Level)
 			{
 				WorldServiceLocator._Functions.SendMessageNotification(ref client, "You don't meet Battleground level requirements");
 				return;

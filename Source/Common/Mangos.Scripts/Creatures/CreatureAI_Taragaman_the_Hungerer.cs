@@ -19,7 +19,7 @@
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Taragaman_the_Hungerer : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Taragaman_the_Hungerer : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int NOVA_COOLDOWN = 4000;
@@ -31,9 +31,9 @@ namespace Mangos.Scripts.Creatures
         public int NextUPPER = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Taragaman_the_Hungerer(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Taragaman_the_Hungerer(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -45,13 +45,13 @@ namespace Mangos.Scripts.Creatures
             if (NextNOVA <= 0)
             {
                 NextNOVA = NOVA_COOLDOWN;
-                this.aiCreature.CastSpell(NOVA_SPELL, this.aiTarget); // Fire Nova
+                aiCreature.CastSpell(NOVA_SPELL, aiTarget); // Fire Nova
             }
 
             if (NextUPPER <= 1)
             {
                 NextUPPER = UPPER_COOLDOWN;
-                this.aiCreature.CastSpell(UPPER_SPELL, this.aiTarget); // Uppercut
+                aiCreature.CastSpell(UPPER_SPELL, aiTarget); // Uppercut
             }
         }
 
@@ -59,10 +59,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 1; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(NOVA_SPELL, this.aiTarget);
+                aiCreature.CastSpell(NOVA_SPELL, aiTarget);
             }
         }
 
@@ -70,10 +70,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 1; i <= 1; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(UPPER_SPELL, this.aiTarget);
+                aiCreature.CastSpell(UPPER_SPELL, aiTarget);
             }
         }
     }

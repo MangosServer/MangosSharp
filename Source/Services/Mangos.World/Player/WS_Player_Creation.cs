@@ -97,7 +97,7 @@ namespace Mangos.World.Player
 				try
 				{
 					WorldServiceLocator._WS_Player_Initializator.InitializeReputations(ref Character);
-					this.CreateCharacter(ref Character);
+					CreateCharacter(ref Character);
 					Character.SaveAsNewCharacter(Account_ID);
 					CreateCharacterSpells(ref Character);
 					CreateCharacterItems(ref Character);
@@ -141,12 +141,12 @@ namespace Mangos.World.Player
 			{
 				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "No information found in playercreateinfo_skill table for Race: {0}, Class: {1}", objCharacter.Race, objCharacter.Classe);
 			}
-			WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM player_levelstats WHERE race = {(int)objCharacter.Race} AND class = {(int)objCharacter.Classe} AND level = {(int)objCharacter.Level};", ref LevelStats);
+			WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM player_levelstats WHERE race = {(int)objCharacter.Race} AND class = {(int)objCharacter.Classe} AND level = {objCharacter.Level};", ref LevelStats);
 			if (LevelStats.Rows.Count <= 0)
 			{
 				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "No information found in player_levelstats table for Race: {0}, Class: {1}, Level: {2}", objCharacter.Race, objCharacter.Classe, objCharacter.Level);
 			}
-			WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM player_classlevelstats WHERE class = {(int)objCharacter.Classe} AND level = {(int)objCharacter.Level};", ref ClassLevelStats);
+			WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM player_classlevelstats WHERE class = {(int)objCharacter.Classe} AND level = {objCharacter.Level};", ref ClassLevelStats);
 			if (ClassLevelStats.Rows.Count <= 0)
 			{
 				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "No information found in player_classlevelstats table for Class: {0}, Level: {1}", objCharacter.Classe, objCharacter.Level);
@@ -202,7 +202,7 @@ namespace Mangos.World.Player
 				}
 				objCharacter.Damage.Minimum = 5f;
 				objCharacter.Damage.Maximum = 10f;
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = CreateInfoSkills.Rows.GetEnumerator();
@@ -229,7 +229,7 @@ namespace Mangos.World.Player
 					i++;
 				}
 				while (i <= 31);
-				IEnumerator enumerator2 = default(IEnumerator);
+				IEnumerator enumerator2 = default;
 				try
 				{
 					enumerator2 = CreateInfoBars.Rows.GetEnumerator();
@@ -261,7 +261,7 @@ namespace Mangos.World.Player
 			{
 				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "No information found in playercreateinfo_spell table Race: {0}, Class: {1}", objCharacter.Race, objCharacter.Classe);
 			}
-			IEnumerator enumerator = default(IEnumerator);
+			IEnumerator enumerator = default;
 			try
 			{
 				enumerator = CreateInfoSpells.Rows.GetEnumerator();
@@ -290,7 +290,7 @@ namespace Mangos.World.Player
 			}
 			Dictionary<int, int> Items = new Dictionary<int, int>();
 			List<int> Used = new List<int>();
-			IEnumerator enumerator = default(IEnumerator);
+			IEnumerator enumerator = default;
 			try
 			{
 				enumerator = CreateInfoItems.Rows.GetEnumerator();

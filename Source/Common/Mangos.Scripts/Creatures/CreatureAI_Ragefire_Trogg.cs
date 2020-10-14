@@ -19,7 +19,7 @@
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Ragefire_Trogg : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Ragefire_Trogg : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int STRIKE_COOLDOWN = 4000;
@@ -28,9 +28,9 @@ namespace Mangos.Scripts.Creatures
         public int NextStrike = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Ragefire_Trogg(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Ragefire_Trogg(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -41,7 +41,7 @@ namespace Mangos.Scripts.Creatures
             if (NextStrike <= 0)
             {
                 NextStrike = STRIKE_COOLDOWN;
-                this.aiCreature.CastSpell(STRIKE_SPELL, this.aiTarget); // Strike
+                aiCreature.CastSpell(STRIKE_SPELL, aiTarget); // Strike
             }
         }
 
@@ -49,10 +49,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(STRIKE_SPELL, this.aiTarget);
+                aiCreature.CastSpell(STRIKE_SPELL, aiTarget);
             }
         }
     }

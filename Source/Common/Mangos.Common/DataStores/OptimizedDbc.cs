@@ -73,8 +73,7 @@ namespace Mangos.Common.DataStores
 					FileStream.Seek(20 + Rows * RowLength + offset, SeekOrigin.Begin);
 					byte strByte;
 					string strResult;
-					strByte = 0;
-					strResult = "";
+                    strResult = "";
 					do
 					{
 						strByte = (byte)FileStream.ReadByte();

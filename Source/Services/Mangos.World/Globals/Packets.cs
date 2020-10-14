@@ -142,7 +142,7 @@ namespace Mangos.World.Globals
 							}
 						}
 						packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-						packet.AddBitArray(UpdateMask, unchecked((int)checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+						packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
 						int num2 = UpdateMask.Count - 1;
 						for (int j = 0; j <= num2; j++)
 						{
@@ -224,7 +224,7 @@ namespace Mangos.World.Globals
 							}
 						}
 						packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-						packet.AddBitArray(UpdateMask, unchecked((int)checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+						packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
 						int num2 = UpdateMask.Count - 1;
 						for (int j = 0; j <= num2; j++)
 						{
@@ -284,7 +284,7 @@ namespace Mangos.World.Globals
 							}
 						}
 						packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-						packet.AddBitArray(UpdateMask, unchecked((int)checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+						packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
 						int num2 = UpdateMask.Count - 1;
 						for (int i = 0; i <= num2; i++)
 						{
@@ -371,7 +371,7 @@ namespace Mangos.World.Globals
 							}
 						}
 						packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-						packet.AddBitArray(UpdateMask, unchecked((int)checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+						packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
 						int num2 = UpdateMask.Count - 1;
 						for (int j = 0; j <= num2; j++)
 						{
@@ -428,7 +428,7 @@ namespace Mangos.World.Globals
 							}
 						}
 						packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-						packet.AddBitArray(UpdateMask, unchecked((int)checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+						packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
 						int num2 = UpdateMask.Count - 1;
 						for (int j = 0; j <= num2; j++)
 						{
@@ -485,7 +485,7 @@ namespace Mangos.World.Globals
 							}
 						}
 						packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-						packet.AddBitArray(UpdateMask, unchecked((int)checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+						packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
 						int num2 = UpdateMask.Count - 1;
 						for (int i = 0; i <= num2; i++)
 						{
@@ -531,7 +531,7 @@ namespace Mangos.World.Globals
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -549,7 +549,7 @@ namespace Mangos.World.Globals
 				{
 					checked
 					{
-						return unchecked((int)Data[1]) + unchecked((int)Data[0]) * 256;
+						return unchecked(Data[1]) + unchecked(Data[0]) * 256;
 					}
 				}
 			}
@@ -560,7 +560,7 @@ namespace Mangos.World.Globals
 				{
 					if (Information.UBound(Data) > 2)
 					{
-						return (OPCODES)checked(unchecked((int)Data[2]) + unchecked((int)Data[3]) * 256);
+						return (OPCODES)checked(unchecked(Data[2]) + unchecked(Data[3]) * 256);
 					}
 					return OPCODES.MSG_NULL_ACTION;
 				}
@@ -612,7 +612,7 @@ namespace Mangos.World.Globals
 				checked
 				{
 					data = (byte[])Utils.CopyArray(data, new byte[Data.Length - 1 + arraryLen + 1]);
-					byte[] bufferarray = new byte[unchecked((int)checked((byte)Math.Round((double)(buffer.Length + 8) / 8.0))) + 1];
+					byte[] bufferarray = new byte[unchecked(checked((byte)Math.Round((buffer.Length + 8) / 8.0))) + 1];
 					buffer.CopyTo(bufferarray, 0);
 					Array.Copy(bufferarray, 0, Data, Data.Length - arraryLen, arraryLen);
 				}
@@ -761,7 +761,7 @@ namespace Mangos.World.Globals
 						}
 						j = (byte)unchecked((uint)(j + 1));
 					}
-					while (unchecked((uint)j) <= 7u);
+					while (unchecked(j) <= 7u);
 					ref byte[] data = ref Data;
 					data = (byte[])Utils.CopyArray(data, new byte[offsetNewSize + 1]);
 					flags.CopyTo(Data, offsetStart);
@@ -776,7 +776,7 @@ namespace Mangos.World.Globals
 						}
 						i = (byte)unchecked((uint)(i + 1));
 					}
-					while (unchecked((uint)i) <= 7u);
+					while (unchecked(i) <= 7u);
 				}
 			}
 
@@ -797,10 +797,10 @@ namespace Mangos.World.Globals
 				checked
 				{
 					data = (byte[])Utils.CopyArray(data, new byte[Data.Length + 3 + 1]);
-					Data[Data.Length - 4] = (byte)(unchecked((long)buffer) & 0xFFL);
-					Data[Data.Length - 3] = (byte)(unchecked((long)(buffer >> 8)) & 0xFFL);
-					Data[Data.Length - 2] = (byte)(unchecked((long)(buffer >> 16)) & 0xFFL);
-					Data[Data.Length - 1] = (byte)(unchecked((long)(buffer >> 24)) & 0xFFL);
+					Data[Data.Length - 4] = (byte)(unchecked(buffer) & 0xFFL);
+					Data[Data.Length - 3] = (byte)(unchecked(buffer >> 8) & 0xFFL);
+					Data[Data.Length - 2] = (byte)(unchecked(buffer >> 16) & 0xFFL);
+					Data[Data.Length - 1] = (byte)(unchecked(buffer >> 24) & 0xFFL);
 				}
 			}
 
@@ -1026,7 +1026,7 @@ namespace Mangos.World.Globals
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 

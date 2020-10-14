@@ -200,8 +200,8 @@ namespace Mangos.World.Globals
 		{
 			checked
 			{
-				value >>= (int)flagPos;
-				value = (uint)unchecked((long)value % 2L);
+				value >>= flagPos;
+				value = (uint)unchecked(value % 2L);
 			}
 			if ((ulong)value == 1)
 			{
@@ -219,11 +219,11 @@ namespace Mangos.World.Globals
 		{
 			if (flagValue)
 			{
-				value |= (uint)(1 << checked((int)flagPos));
+				value |= (uint)(1 << checked(flagPos));
 			}
 			else
 			{
-				value &= (uint)((0 << checked((int)flagPos)) & -1);
+				value &= (uint)((0 << checked(flagPos)) & -1);
 			}
 		}
 
@@ -264,19 +264,19 @@ namespace Mangos.World.Globals
 
 		public string GetTimeLeftString(uint seconds)
 		{
-			if ((long)seconds < 60L)
+			if (seconds < 60L)
 			{
 				return Conversions.ToString(seconds) + "s";
 			}
-			if ((long)seconds < 3600L)
+			if (seconds < 3600L)
 			{
-				return Conversions.ToString((long)seconds / 60L) + "m " + Conversions.ToString((long)seconds % 60L) + "s";
+				return Conversions.ToString(seconds / 60L) + "m " + Conversions.ToString(seconds % 60L) + "s";
 			}
-			if ((long)seconds < 86400L)
+			if (seconds < 86400L)
 			{
-				return Conversions.ToString((long)seconds / 3600L) + "h " + Conversions.ToString((long)seconds / 60L % 60) + "m " + Conversions.ToString((long)seconds % 60L) + "s";
+				return Conversions.ToString(seconds / 3600L) + "h " + Conversions.ToString(seconds / 60L % 60) + "m " + Conversions.ToString(seconds % 60L) + "s";
 			}
-			return Conversions.ToString((long)seconds / 86400L) + "d " + Conversions.ToString((long)seconds / 3600L % 24) + "h " + Conversions.ToString((long)seconds / 60L % 60) + "m " + Conversions.ToString((long)seconds % 60L) + "s";
+			return Conversions.ToString(seconds / 86400L) + "d " + Conversions.ToString(seconds / 3600L % 24) + "h " + Conversions.ToString(seconds / 60L % 60) + "m " + Conversions.ToString(seconds % 60L) + "s";
 		}
 
 		public string EscapeString(string s)
@@ -665,8 +665,7 @@ namespace Mangos.World.Globals
 			catch (Exception ex2)
 			{
 				ProjectData.SetProjectError(ex2);
-				Exception ex = ex2;
-				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "failed chat message type - {0}!", msgType);
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "failed chat message type - {0}!", msgType);
 				ProjectData.ClearProjectError();
 			}
 			return packet;

@@ -228,7 +228,7 @@ namespace Mangos.World.Spells
 				}
 			}
 
-			public int GetManaCost(int level, int Mana) => checked((int)Math.Round((double)(manaCost + manaCostPerlevel * level) + (double)Mana * ((double)manaCostPercent / 100.0)));
+			public int GetManaCost(int level, int Mana) => checked((int)Math.Round(manaCost + manaCostPerlevel * level + Mana * (manaCostPercent / 100.0)));
 
 			public bool IsAura
 			{
@@ -308,7 +308,7 @@ namespace Mangos.World.Spells
 							i = (byte)unchecked((uint)(i + 1));
 						}
 					}
-					while ((uint)i <= 2u);
+					while (i <= 2u);
 					return (AttributesEx & 0x80) != 0;
 				}
 			}
@@ -560,7 +560,7 @@ namespace Mangos.World.Spells
 								}
 								byte b = (byte)SpellEffects[Index].ChainTarget;
 								byte j = 2;
-								while (unchecked((uint)j <= (uint)b))
+								while (unchecked(j <= (uint)b))
 								{
 									WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
 									WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
@@ -573,7 +573,7 @@ namespace Mangos.World.Spells
 									{
 										if (!UsedTargets.Contains(tmpUnit))
 										{
-											float TmpLife = (float)((double)tmpUnit.Life.Current / (double)tmpUnit.Life.Maximum);
+											float TmpLife = (float)(tmpUnit.Life.Current / (double)tmpUnit.Life.Maximum);
 											if (TmpLife < LowHealth)
 											{
 												LowHealth = TmpLife;
@@ -709,7 +709,7 @@ namespace Mangos.World.Spells
 							i = (byte)unchecked((uint)(i + 1));
 						}
 					}
-					while ((uint)i <= 1u);
+					while (i <= 1u);
 					if (SpellEffects[Index].implicitTargetA == 0 && SpellEffects[Index].implicitTargetB == 0 && TargetsInfected.Count == 0)
 					{
 						if (Targets.unitTarget != null)
@@ -978,7 +978,7 @@ namespace Mangos.World.Spells
 							k = (byte)unchecked((uint)(k + 1));
 						}
 					}
-					while ((uint)k <= 2u);
+					while (k <= 2u);
 					if (NeedSpellLog)
 					{
 						SendSpellLog(ref Caster, ref Targets);
@@ -1069,7 +1069,7 @@ namespace Mangos.World.Spells
 								}
 								l = (byte)unchecked((uint)(l + 1));
 							}
-							while (unchecked((uint)l) <= 7u);
+							while (unchecked(l) <= 7u);
 							if (IsRanged && characterObject.AmmoID > 0)
 							{
 								characterObject.ItemCONSUME(characterObject.AmmoID, 1);
@@ -1086,7 +1086,7 @@ namespace Mangos.World.Spells
 								}
 								else
 								{
-									ManaCost = this.GetManaCost(unchecked((int)characterObject.Level), characterObject.Mana.Base);
+									ManaCost = GetManaCost(unchecked(characterObject.Level), characterObject.Mana.Base);
 									characterObject.Mana.Current -= ManaCost;
 								}
 								if (ManaCost > 0)
@@ -1105,7 +1105,7 @@ namespace Mangos.World.Spells
 								}
 								else
 								{
-									characterObject.Rage.Current -= this.GetManaCost(unchecked((int)characterObject.Level), characterObject.Rage.Base);
+									characterObject.Rage.Current -= GetManaCost(unchecked(characterObject.Level), characterObject.Rage.Base);
 								}
 								characterObject.SetUpdateFlag(24, characterObject.Rage.Current);
 								characterObject.GroupUpdateFlag |= 16u;
@@ -1118,7 +1118,7 @@ namespace Mangos.World.Spells
 								}
 								else
 								{
-									characterObject.Life.Current -= this.GetManaCost(unchecked((int)characterObject.Level), characterObject.Life.Base);
+									characterObject.Life.Current -= GetManaCost(unchecked(characterObject.Level), characterObject.Life.Base);
 								}
 								characterObject.SetUpdateFlag(22, characterObject.Life.Current);
 								characterObject.GroupUpdateFlag |= 2u;
@@ -1131,7 +1131,7 @@ namespace Mangos.World.Spells
 								}
 								else
 								{
-									characterObject.Energy.Current -= this.GetManaCost(unchecked((int)characterObject.Level), characterObject.Energy.Base);
+									characterObject.Energy.Current -= GetManaCost(unchecked(characterObject.Level), characterObject.Energy.Base);
 								}
 								characterObject.SetUpdateFlag(26, characterObject.Energy.Current);
 								characterObject.GroupUpdateFlag |= 16u;
@@ -1162,7 +1162,7 @@ namespace Mangos.World.Spells
 							{
 							case 0:
 							{
-								creatureObject.Mana.Current -= this.GetManaCost(unchecked((int)creatureObject.Level), creatureObject.Mana.Base);
+								creatureObject.Mana.Current -= GetManaCost(unchecked(creatureObject.Level), creatureObject.Mana.Base);
 								Packets.UpdatePacketClass updatePacket2 = new Packets.UpdatePacketClass();
 								Packets.UpdateClass powerUpdate2 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
 								powerUpdate2.SetUpdateFlag(23, creatureObject.Mana.Current);
@@ -1179,7 +1179,7 @@ namespace Mangos.World.Spells
 							}
 							case -2:
 							{
-								creatureObject.Life.Current -= this.GetManaCost(unchecked((int)creatureObject.Level), creatureObject.Life.Base);
+								creatureObject.Life.Current -= GetManaCost(unchecked(creatureObject.Level), creatureObject.Life.Base);
 								Packets.UpdatePacketClass updatePacket = new Packets.UpdatePacketClass();
 								Packets.UpdateClass powerUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
 								powerUpdate.SetUpdateFlag(22, creatureObject.Life.Current);
@@ -1215,7 +1215,7 @@ namespace Mangos.World.Spells
 							}
 							j = (byte)unchecked((uint)(j + 1));
 						}
-						while (unchecked((uint)j) <= 2u);
+						while (unchecked(j) <= 2u);
 						SendSpellGO(ref Caster, ref Targets, ref tmpTargets, ref castParams.Item);
 						if (channelInterruptFlags != 0)
 						{
@@ -1236,7 +1236,7 @@ namespace Mangos.World.Spells
 								castParams.Item.StackCount--;
 								if (castParams.Item.StackCount <= 0)
 								{
-									byte bag = default(byte);
+									byte bag = default;
 									byte slot = ((WS_PlayerData.CharacterObject)Caster).ItemGetSLOTBAG(castParams.Item.GUID, ref bag);
 									if ((bag != WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL) & (slot != WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL))
 									{
@@ -1281,7 +1281,7 @@ namespace Mangos.World.Spells
 							i = (byte)unchecked((uint)(i + 1));
 						}
 					}
-					while ((uint)i <= 2u);
+					while (i <= 2u);
 					if (SpellCastError != SpellFailedReason.SPELL_NO_ERROR)
 					{
 						if (Caster is WS_PlayerData.CharacterObject)
@@ -1465,7 +1465,7 @@ namespace Mangos.World.Spells
 				{
 					return SpellFailedReason.SPELL_FAILED_MOVING;
 				}
-				int ManaCost = this.GetManaCost((int)Character.Level, Character.Mana.Base);
+				int ManaCost = GetManaCost(Character.Level, Character.Mana.Base);
 				if (ManaCost > 0)
 				{
 					if (powerType != (int)Character.ManaType)
@@ -1596,7 +1596,7 @@ namespace Mangos.World.Spells
 							switch (SpellEffects[j].ID)
 							{
 							case SpellEffects_Names.SPELL_EFFECT_DUMMY:
-								if (ID == 1648 && (Targets.unitTarget == null || (double)Targets.unitTarget.Life.Current > (double)Targets.unitTarget.Life.Maximum * 0.2))
+								if (ID == 1648 && (Targets.unitTarget == null || Targets.unitTarget.Life.Current > Targets.unitTarget.Life.Maximum * 0.2))
 								{
 									return SpellFailedReason.SPELL_FAILED_BAD_TARGETS;
 								}
@@ -1608,7 +1608,7 @@ namespace Mangos.World.Spells
 									{
 										return SpellFailedReason.SPELL_FAILED_BAD_IMPLICIT_TARGETS;
 									}
-									if ((double)Targets.unitTarget.Life.Current > (double)Targets.unitTarget.Life.Maximum * 0.2)
+									if (Targets.unitTarget.Life.Current > Targets.unitTarget.Life.Maximum * 0.2)
 									{
 										return SpellFailedReason.SPELL_FAILED_BAD_TARGETS;
 									}
@@ -1627,13 +1627,13 @@ namespace Mangos.World.Spells
 									float selectedY;
 									if (SpellEffects[j].RadiusIndex > 0)
 									{
-										selectedX = (float)((double)Character.positionX + Math.Cos(Character.orientation) * (double)SpellEffects[j].GetRadius);
-										selectedY = (float)((double)Character.positionY + Math.Sin(Character.orientation) * (double)SpellEffects[j].GetRadius);
+										selectedX = (float)(Character.positionX + Math.Cos(Character.orientation) * SpellEffects[j].GetRadius);
+										selectedY = (float)(Character.positionY + Math.Sin(Character.orientation) * SpellEffects[j].GetRadius);
 									}
 									else
 									{
-										selectedX = (float)((double)Character.positionX + Math.Cos(Character.orientation) * (double)GetRange);
-										selectedY = (float)((double)Character.positionY + Math.Sin(Character.orientation) * (double)GetRange);
+										selectedX = (float)(Character.positionX + Math.Cos(Character.orientation) * GetRange);
+										selectedY = (float)(Character.positionY + Math.Sin(Character.orientation) * GetRange);
 									}
 									if (WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Character.MapID) > WorldServiceLocator._WS_Maps.GetWaterLevel(selectedX, selectedY, (int)Character.MapID))
 									{
@@ -1646,7 +1646,7 @@ namespace Mangos.World.Spells
 						j = (byte)unchecked((uint)(j + 1));
 					}
 				}
-				while ((uint)j <= 2u);
+				while (j <= 2u);
 				if (Targets.unitTarget != null)
 				{
 					WS_Maps wS_Maps = WorldServiceLocator._WS_Maps;
@@ -1736,9 +1736,8 @@ namespace Mangos.World.Spells
 							ItemInfo = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.AmmoID];
 						}
 					}
-					characterObject = null;
-				}
-				if (ItemInfo == null)
+                }
+                if (ItemInfo == null)
 				{
 					if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(2512))
 					{
@@ -2001,7 +2000,7 @@ namespace Mangos.World.Spells
 					{
 						return;
 					}
-					objCharacter.Spells[ID].Cooldown = (uint)(unchecked((long)WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked((long)(Recovery / 1000)));
+					objCharacter.Spells[ID].Cooldown = (uint)(unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked(Recovery / 1000));
 					if (castItem != null)
 					{
 						objCharacter.Spells[ID].CooldownItem = castItem.ItemEntry;
@@ -2111,7 +2110,7 @@ namespace Mangos.World.Spells
 				{
 					try
 					{
-						return valueBase + Level * valuePerLevel + ComboPoints * valuePerComboPoint + WorldServiceLocator._WorldServer.Rnd.Next(1, (int)Math.Round((float)valueDie + (float)Level * dicePerLevel));
+						return valueBase + Level * valuePerLevel + ComboPoints * valuePerComboPoint + WorldServiceLocator._WorldServer.Rnd.Next(1, (int)Math.Round(valueDie + Level * dicePerLevel));
 					}
 					catch (Exception projectError)
 					{
@@ -2541,8 +2540,7 @@ namespace Mangos.World.Spells
 				catch (Exception ex2)
 				{
 					ProjectData.SetProjectError(ex2);
-					Exception ex = ex2;
-					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Cast Exception {0} : Interrupted {1}", SpellID, Stopped);
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Cast Exception {0} : Interrupted {1}", SpellID, Stopped);
 					ProjectData.ClearProjectError();
 				}
 			}
@@ -2556,8 +2554,7 @@ namespace Mangos.World.Spells
 				catch (Exception ex2)
 				{
 					ProjectData.SetProjectError(ex2);
-					Exception ex = ex2;
-					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "StopCast Exception {0} : Interrupted {1}", SpellID, Stopped);
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "StopCast Exception {0} : Interrupted {1}", SpellID, Stopped);
 					ProjectData.ClearProjectError();
 				}
 			}
@@ -2600,7 +2597,7 @@ namespace Mangos.World.Spells
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -2976,10 +2973,10 @@ namespace Mangos.World.Spells
 			int Current = 0;
 			foreach (WS_Base.BaseUnit Unit in Infected)
 			{
-				int Damage = ((!(Caster is WS_DynamicObjects.DynamicObjectObject)) ? SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) : SpellInfo.GetValue((int)((WS_DynamicObjects.DynamicObjectObject)Caster).Caster.Level, 0));
+				int Damage = ((!(Caster is WS_DynamicObjects.DynamicObjectObject)) ? SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) : SpellInfo.GetValue(((WS_DynamicObjects.DynamicObjectObject)Caster).Caster.Level, 0));
 				if (Current > 0)
 				{
-					Damage = checked((int)Math.Round((double)Damage * Math.Pow(SpellInfo.DamageMultiplier, Current)));
+					Damage = checked((int)Math.Round(Damage * Math.Pow(SpellInfo.DamageMultiplier, Current)));
 				}
 				WS_Base.BaseUnit realCaster = null;
 				if (Caster is WS_Base.BaseUnit)
@@ -3001,7 +2998,7 @@ namespace Mangos.World.Spells
 
 		public SpellFailedReason SPELL_EFFECT_ENVIRONMENTAL_DAMAGE(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
 		{
-			int Damage = SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+			int Damage = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 			foreach (WS_Base.BaseUnit Unit in Infected)
 			{
 				WS_Base.BaseUnit Attacker = (WS_Base.BaseUnit)Caster;
@@ -3050,7 +3047,7 @@ namespace Mangos.World.Spells
 					b2 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1);
 					i = b;
 				}
-				while ((uint)i <= (uint)b2)
+				while (i <= (uint)b2)
 				{
 					if (Target.unitTarget.ActiveSpells[i] != null && (SPELLs[Target.unitTarget.ActiveSpells[i].SpellID].School & 1) == 0 && ((uint)SPELLs[Target.unitTarget.ActiveSpells[i].SpellID].Attributes & 0x10000u) != 0)
 					{
@@ -3091,9 +3088,8 @@ namespace Mangos.World.Spells
 					{
 						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WARNING: Spell {0} did not have any teleport coordinates.", SpellID);
 					}
-					characterObject = null;
-				}
-			}
+                }
+            }
 			return SpellFailedReason.SPELL_NO_ERROR;
 		}
 
@@ -3103,10 +3099,10 @@ namespace Mangos.World.Spells
 			{
 				foreach (WS_Base.BaseUnit Unit in Infected)
 				{
-					int Damage = SpellInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					int Damage = SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					if (Caster is WS_PlayerData.CharacterObject)
 					{
-						Damage += SpellInfo.valuePerLevel * unchecked((int)((WS_PlayerData.CharacterObject)Caster).Level);
+						Damage += SpellInfo.valuePerLevel * unchecked(((WS_PlayerData.CharacterObject)Caster).Level);
 					}
 					int TargetPower = 0;
 					switch (SpellInfo.MiscValue)
@@ -3223,10 +3219,10 @@ namespace Mangos.World.Spells
 			int Current = 0;
 			foreach (WS_Base.BaseUnit Unit in Infected)
 			{
-				int Damage = SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+				int Damage = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 				if (Current > 0)
 				{
-					Damage = checked((int)Math.Round((double)Damage * Math.Pow(SpellInfo.DamageMultiplier, Current)));
+					Damage = checked((int)Math.Round(Damage * Math.Pow(SpellInfo.DamageMultiplier, Current)));
 				}
 				WS_Base.BaseUnit Caster2 = (WS_Base.BaseUnit)Caster;
 				Unit.DealSpellDamage(ref Caster2, ref SpellInfo, SpellID, Damage, (DamageTypes)checked((byte)SPELLs[SpellID].School), SpellType.SPELL_TYPE_HEAL);
@@ -3244,7 +3240,7 @@ namespace Mangos.World.Spells
 				int Damage = ((WS_Base.BaseUnit)Caster).Life.Maximum;
 				if (Current > 0 && SpellInfo.DamageMultiplier < 1f)
 				{
-					Damage = checked((int)Math.Round((double)Damage * Math.Pow(SpellInfo.DamageMultiplier, Current)));
+					Damage = checked((int)Math.Round(Damage * Math.Pow(SpellInfo.DamageMultiplier, Current)));
 				}
 				WS_Base.BaseUnit Caster2 = (WS_Base.BaseUnit)Caster;
 				Unit.DealSpellDamage(ref Caster2, ref SpellInfo, SpellID, Damage, (DamageTypes)checked((byte)SPELLs[SpellID].School), SpellType.SPELL_TYPE_HEAL);
@@ -3256,7 +3252,7 @@ namespace Mangos.World.Spells
 
 		public SpellFailedReason SPELL_EFFECT_ENERGIZE(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
 		{
-			int Damage = SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+			int Damage = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 			foreach (WS_Base.BaseUnit Unit in Infected)
 			{
 				WS_Base.BaseUnit Caster2 = (WS_Base.BaseUnit)Caster;
@@ -3282,7 +3278,7 @@ namespace Mangos.World.Spells
 				{
 					if (SpellInfo.MiscValue == 0)
 					{
-						Damage = (int)Math.Round((double)SpellInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) / 100.0 * (double)Unit.Mana.Maximum);
+						Damage = (int)Math.Round(SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) / 100.0 * Unit.Mana.Maximum);
 					}
 					Caster2 = (WS_Base.BaseUnit)Caster;
 					SendEnergizeSpellLog(ref Caster2, ref Target.unitTarget, SpellID, Damage, SpellInfo.MiscValue);
@@ -3353,7 +3349,7 @@ namespace Mangos.World.Spells
 					i = (byte)unchecked((uint)(i + 1));
 				}
 			}
-			while ((uint)i <= 4u);
+			while (i <= 4u);
 			int SkillID = 0;
 			if (SPELLs[SpellID].SpellEffects[1] != null && SPELLs[SpellID].SpellEffects[1].ID == SpellEffects_Names.SPELL_EFFECT_SKILL)
 			{
@@ -3408,7 +3404,7 @@ namespace Mangos.World.Spells
 					{
 						if (!creatureObject.IsDead)
 						{
-							int chance = 10 + unchecked((int)((WS_Base.BaseUnit)Caster).Level) - unchecked((int)creatureObject.Level);
+							int chance = 10 + unchecked(((WS_Base.BaseUnit)Caster).Level) - unchecked(creatureObject.Level);
 							if (chance > WorldServiceLocator._WorldServer.Rnd.Next(0, 20))
 							{
 								if (creatureObject.CreatureInfo.PocketLootID > 0)
@@ -3439,9 +3435,8 @@ namespace Mangos.World.Spells
 						}
 						return SpellFailedReason.SPELL_FAILED_TARGETS_DEAD;
 					}
-					creatureObject = null;
-				}
-				return SpellFailedReason.SPELL_FAILED_BAD_TARGETS;
+                }
+                return SpellFailedReason.SPELL_FAILED_BAD_TARGETS;
 			}
 		}
 
@@ -3547,7 +3542,7 @@ namespace Mangos.World.Spells
 			{
 				if ((Unit.DispellImmunity & (1 << SpellInfo.MiscValue)) == 0)
 				{
-					Unit.RemoveAurasByDispellType(SpellInfo.MiscValue, SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0));
+					Unit.RemoveAurasByDispellType(SpellInfo.MiscValue, SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0));
 				}
 			}
 			return SpellFailedReason.SPELL_NO_ERROR;
@@ -3569,7 +3564,7 @@ namespace Mangos.World.Spells
 				{
 					if (Unit is WS_PlayerData.CharacterObject)
 					{
-						((WS_PlayerData.CharacterObject)Unit).combatDodge += SpellInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						((WS_PlayerData.CharacterObject)Unit).combatDodge += SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					}
 				}
 				return SpellFailedReason.SPELL_NO_ERROR;
@@ -3584,7 +3579,7 @@ namespace Mangos.World.Spells
 				{
 					if (Unit is WS_PlayerData.CharacterObject)
 					{
-						((WS_PlayerData.CharacterObject)Unit).combatParry += SpellInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						((WS_PlayerData.CharacterObject)Unit).combatParry += SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					}
 				}
 				return SpellFailedReason.SPELL_NO_ERROR;
@@ -3599,7 +3594,7 @@ namespace Mangos.World.Spells
 				{
 					if (Unit is WS_PlayerData.CharacterObject)
 					{
-						((WS_PlayerData.CharacterObject)Unit).combatBlock += SpellInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						((WS_PlayerData.CharacterObject)Unit).combatBlock += SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					}
 				}
 				return SpellFailedReason.SPELL_NO_ERROR;
@@ -3675,7 +3670,7 @@ namespace Mangos.World.Spells
 					WS_Combat.TAttackTimer attackState = ((WS_PlayerData.CharacterObject)Caster).attackState;
 					WS_PlayerData.CharacterObject Character = (WS_PlayerData.CharacterObject)Caster;
 					WS_Base.BaseObject Victim = null;
-					attackState.DoMeleeDamageBySpell(ref Character, ref Victim, SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0), SpellID);
+					attackState.DoMeleeDamageBySpell(ref Character, ref Victim, SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0), SpellID);
 					Caster = Character;
 				}
 			}
@@ -3718,7 +3713,7 @@ namespace Mangos.World.Spells
 				{
 					if (Unit is WS_PlayerData.CharacterObject)
 					{
-						((WS_PlayerData.CharacterObject)Unit).HonorPoints += SpellInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						((WS_PlayerData.CharacterObject)Unit).HonorPoints += SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 						if (((WS_PlayerData.CharacterObject)Unit).HonorPoints > 75000)
 						{
 							((WS_PlayerData.CharacterObject)Unit).HonorPoints = 75000;
@@ -3776,7 +3771,7 @@ namespace Mangos.World.Spells
 							case 17:
 							case 18:
 							case 19:
-								Duration = (unchecked((int)auraTarget.Level) - 10) * 60 * 1000;
+								Duration = (unchecked(auraTarget.Level) - 10) * 60 * 1000;
 								break;
 							}
 						}
@@ -3954,7 +3949,7 @@ namespace Mangos.World.Spells
 			}
 			checked
 			{
-				int Amount = SpellInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level) - SPELLs[SpellID].spellLevel, 0);
+				int Amount = SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level) - SPELLs[SpellID].spellLevel, 0);
 				if (Amount < 0)
 				{
 					return SpellFailedReason.SPELL_FAILED_ERROR;
@@ -3971,8 +3966,7 @@ namespace Mangos.World.Spells
 				WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
 				List<WS_Base.BaseUnit> friendPlayersAroundMe = GetFriendPlayersAroundMe(ref objCharacter, SpellInfo.GetRadius);
 				Caster = objCharacter;
-				List<WS_Base.BaseUnit> Targets = friendPlayersAroundMe;
-				foreach (WS_Base.BaseUnit Unit in Infected)
+                foreach (WS_Base.BaseUnit Unit in Infected)
 				{
 					if (Unit is WS_PlayerData.CharacterObject)
 					{
@@ -4015,7 +4009,7 @@ namespace Mangos.World.Spells
 					((WS_PlayerData.CharacterObject)Unit).resurrectPositionX = Caster.positionX;
 					((WS_PlayerData.CharacterObject)Unit).resurrectPositionY = Caster.positionY;
 					((WS_PlayerData.CharacterObject)Unit).resurrectPositionZ = Caster.positionZ;
-					((WS_PlayerData.CharacterObject)Unit).resurrectHealth = checked(((WS_PlayerData.CharacterObject)Unit).Life.Maximum * SpellInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0)) / 100;
+					((WS_PlayerData.CharacterObject)Unit).resurrectHealth = checked(((WS_PlayerData.CharacterObject)Unit).Life.Maximum * SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0)) / 100;
 					((WS_PlayerData.CharacterObject)Unit).resurrectMana = checked(((WS_PlayerData.CharacterObject)Unit).Mana.Maximum * SpellInfo.MiscValue) / 100;
 					Packets.PacketClass RessurectRequest2 = new Packets.PacketClass(OPCODES.SMSG_RESURRECT_REQUEST);
 					RessurectRequest2.AddUInt64(Caster.GUID);
@@ -4062,9 +4056,8 @@ namespace Mangos.World.Spells
 					RessurectRequest.AddUInt32(1u);
 					characterObject.client.Send(ref RessurectRequest);
 					RessurectRequest.Dispose();
-					characterObject = null;
-				}
-			}
+                }
+            }
 			return SpellFailedReason.SPELL_NO_ERROR;
 		}
 
@@ -4089,7 +4082,7 @@ namespace Mangos.World.Spells
 					((WS_PlayerData.CharacterObject)Unit).resurrectPositionX = Caster.positionX;
 					((WS_PlayerData.CharacterObject)Unit).resurrectPositionY = Caster.positionY;
 					((WS_PlayerData.CharacterObject)Unit).resurrectPositionZ = Caster.positionZ;
-					((WS_PlayerData.CharacterObject)Unit).resurrectHealth = SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+					((WS_PlayerData.CharacterObject)Unit).resurrectHealth = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 					((WS_PlayerData.CharacterObject)Unit).resurrectMana = SpellInfo.MiscValue;
 					Packets.PacketClass RessurectRequest2 = new Packets.PacketClass(OPCODES.SMSG_RESURRECT_REQUEST);
 					RessurectRequest2.AddUInt64(Caster.GUID);
@@ -4124,7 +4117,7 @@ namespace Mangos.World.Spells
 					WorldServiceLocator._WorldServer.CHARACTERs[((WS_Corpses.CorpseObject)Unit).Owner].resurrectPositionX = Caster.positionX;
 					WorldServiceLocator._WorldServer.CHARACTERs[((WS_Corpses.CorpseObject)Unit).Owner].resurrectPositionY = Caster.positionY;
 					WorldServiceLocator._WorldServer.CHARACTERs[((WS_Corpses.CorpseObject)Unit).Owner].resurrectPositionZ = Caster.positionZ;
-					WorldServiceLocator._WorldServer.CHARACTERs[((WS_Corpses.CorpseObject)Unit).Owner].resurrectHealth = SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+					WorldServiceLocator._WorldServer.CHARACTERs[((WS_Corpses.CorpseObject)Unit).Owner].resurrectHealth = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 					WorldServiceLocator._WorldServer.CHARACTERs[((WS_Corpses.CorpseObject)Unit).Owner].resurrectMana = SpellInfo.MiscValue;
 					Packets.PacketClass RessurectRequest = new Packets.PacketClass(OPCODES.SMSG_RESURRECT_REQUEST);
 					RessurectRequest.AddUInt64(Caster.GUID);
@@ -4175,7 +4168,7 @@ namespace Mangos.World.Spells
 		{
 			foreach (WS_Base.BaseUnit Unit in Infected)
 			{
-				Mangos.World.Globals.Functions functions = WorldServiceLocator._Functions;
+                Globals.Functions functions = WorldServiceLocator._Functions;
 				ref int cBytes = ref Unit.cBytes1;
 				checked
 				{
@@ -4184,7 +4177,7 @@ namespace Mangos.World.Spells
 					cBytes = (int)value;
 					Unit.Invisibility = InvisibilityLevel.INIVISIBILITY;
 				}
-				Unit.Invisibility_Value = SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+				Unit.Invisibility_Value = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 				if (Unit is WS_PlayerData.CharacterObject)
 				{
 					WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
@@ -4200,7 +4193,7 @@ namespace Mangos.World.Spells
 			foreach (WS_Base.BaseUnit Unit in Infected)
 			{
 				Unit.CanSeeInvisibility = InvisibilityLevel.INIVISIBILITY;
-				Unit.CanSeeInvisibility_Stealth = SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+				Unit.CanSeeInvisibility_Stealth = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 				if (Unit is WS_PlayerData.CharacterObject)
 				{
 					WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
@@ -4213,8 +4206,8 @@ namespace Mangos.World.Spells
 
 		public SpellFailedReason SPELL_EFFECT_LEAP(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
 		{
-			float selectedX = (float)((double)Caster.positionX + Math.Cos(Caster.orientation) * (double)SpellInfo.GetRadius);
-			float selectedY = (float)((double)Caster.positionY + Math.Sin(Caster.orientation) * (double)SpellInfo.GetRadius);
+			float selectedX = (float)(Caster.positionX + Math.Cos(Caster.orientation) * SpellInfo.GetRadius);
+			float selectedY = (float)(Caster.positionY + Math.Sin(Caster.orientation) * SpellInfo.GetRadius);
 			float selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID);
 			if (Math.Abs(Caster.positionZ - selectedZ) > SpellInfo.GetRadius)
 			{
@@ -4222,9 +4215,9 @@ namespace Mangos.World.Spells
 				selectedY = Caster.positionY;
 				selectedZ = Caster.positionZ - SpellInfo.GetRadius;
 			}
-			float hitX = default(float);
-			float hitY = default(float);
-			float hitZ = default(float);
+			float hitX = default;
+			float hitY = default;
+			float hitZ = default;
 			if (WorldServiceLocator._WS_Maps.GetObjectHitPos(ref Caster, selectedX, selectedY, selectedZ + 2f, ref hitX, ref hitY, ref hitZ, -1f))
 			{
 				selectedX = hitX;
@@ -4267,15 +4260,17 @@ namespace Mangos.World.Spells
 					SelectedY = Caster.positionY;
 					SelectedZ = Caster.positionZ;
 				}
-				WS_Creatures.CreatureObject creatureObject = new WS_Creatures.CreatureObject(SpellInfo.MiscValue, SelectedX, SelectedY, SelectedZ, Caster.orientation, checked((int)Caster.MapID), Duration);
-				creatureObject.Level = ((WS_Base.BaseUnit)Caster).Level;
-				creatureObject.CreatedBy = Caster.GUID;
-				creatureObject.CreatedBySpell = SpellID;
-				WS_Creatures.CreatureObject tmpCreature = creatureObject;
+                WS_Creatures.CreatureObject creatureObject = new WS_Creatures.CreatureObject(SpellInfo.MiscValue, SelectedX, SelectedY, SelectedZ, Caster.orientation, checked((int)Caster.MapID), Duration)
+                {
+                    Level = ((WS_Base.BaseUnit)Caster).Level,
+                    CreatedBy = Caster.GUID,
+                    CreatedBySpell = SpellID
+                };
+                WS_Creatures.CreatureObject tmpCreature = creatureObject;
 				tmpCreature.AddToWorld();
 				return SpellFailedReason.SPELL_NO_ERROR;
 			}
-			SpellFailedReason SPELL_EFFECT_SUMMON_WILD = default(SpellFailedReason);
+			SpellFailedReason SPELL_EFFECT_SUMMON_WILD = default;
 			return SPELL_EFFECT_SUMMON_WILD;
 		}
 
@@ -4305,7 +4300,7 @@ namespace Mangos.World.Spells
 					goto IL_0041;
 				default:
 					{
-						SpellFailedReason SPELL_EFFECT_SUMMON_TOTEM = default(SpellFailedReason);
+						SpellFailedReason SPELL_EFFECT_SUMMON_TOTEM = default;
 						return SPELL_EFFECT_SUMMON_TOTEM;
 					}
 					IL_0041:
@@ -4322,13 +4317,13 @@ namespace Mangos.World.Spells
 					angle = 0f;
 					if (Slot < 4)
 					{
-						angle = (float)(Math.PI / 4.0 - (double)(unchecked((int)Slot) * 2) * Math.PI / 4.0);
+						angle = (float)(Math.PI / 4.0 - unchecked(Slot) * 2 * Math.PI / 4.0);
 					}
-					selectedX = (float)((double)Caster.positionX + Math.Cos(Caster.orientation) * 2.0);
-					selectedY = (float)((double)Caster.positionY + Math.Sin(Caster.orientation) * 2.0);
+					selectedX = (float)(Caster.positionX + Math.Cos(Caster.orientation) * 2.0);
+					selectedY = (float)(Caster.positionY + Math.Sin(Caster.orientation) * 2.0);
 					selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID);
 					NewTotem = new WS_Totems.TotemObject(SpellInfo.MiscValue, selectedX, selectedY, selectedZ, angle, (int)Caster.MapID, SPELLs[SpellID].GetDuration);
-					NewTotem.Life.Base = SpellInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					NewTotem.Life.Base = SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					NewTotem.Life.Current = NewTotem.Life.Maximum;
 					NewTotem.Caster = (WS_Base.BaseUnit)Caster;
 					NewTotem.Level = ((WS_Base.BaseUnit)Caster).Level;
@@ -4370,20 +4365,22 @@ namespace Mangos.World.Spells
 			float selectedY;
 			if (SpellInfo.RadiusIndex > 0)
 			{
-				selectedX = (float)((double)Caster.positionX + Math.Cos(Caster.orientation) * (double)SpellInfo.GetRadius);
-				selectedY = (float)((double)Caster.positionY + Math.Sin(Caster.orientation) * (double)SpellInfo.GetRadius);
+				selectedX = (float)(Caster.positionX + Math.Cos(Caster.orientation) * SpellInfo.GetRadius);
+				selectedY = (float)(Caster.positionY + Math.Sin(Caster.orientation) * SpellInfo.GetRadius);
 			}
 			else
 			{
-				selectedX = (float)((double)Caster.positionX + Math.Cos(Caster.orientation) * (double)SPELLs[SpellID].GetRange);
-				selectedY = (float)((double)Caster.positionY + Math.Sin(Caster.orientation) * (double)SPELLs[SpellID].GetRange);
+				selectedX = (float)(Caster.positionX + Math.Cos(Caster.orientation) * SPELLs[SpellID].GetRange);
+				selectedY = (float)(Caster.positionY + Math.Sin(Caster.orientation) * SPELLs[SpellID].GetRange);
 			}
 			WS_GameObjects.GameObjectInfo GameobjectInfo = (WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(SpellInfo.MiscValue) ? WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[SpellInfo.MiscValue] : new WS_GameObjects.GameObjectInfo(SpellInfo.MiscValue));
-			WS_GameObjects.GameObjectObject gameObjectObject = new WS_GameObjects.GameObjectObject(PosZ: (GameobjectInfo.Type != GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE) ? WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID) : WorldServiceLocator._WS_Maps.GetWaterLevel(selectedX, selectedY, checked((int)Caster.MapID)), ID_: SpellInfo.MiscValue, MapID_: Caster.MapID, PosX: selectedX, PosY: selectedY, Rotation: Caster.orientation, Owner_: Caster.GUID);
-			gameObjectObject.CreatedBySpell = SpellID;
-			gameObjectObject.Level = ((WS_Base.BaseUnit)Caster).Level;
-			gameObjectObject.instance = Caster.instance;
-			WS_GameObjects.GameObjectObject tmpGO = gameObjectObject;
+            WS_GameObjects.GameObjectObject gameObjectObject = new WS_GameObjects.GameObjectObject(PosZ: (GameobjectInfo.Type != GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE) ? WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID) : WorldServiceLocator._WS_Maps.GetWaterLevel(selectedX, selectedY, checked((int)Caster.MapID)), ID_: SpellInfo.MiscValue, MapID_: Caster.MapID, PosX: selectedX, PosY: selectedY, Rotation: Caster.orientation, Owner_: Caster.GUID)
+            {
+                CreatedBySpell = SpellID,
+                Level = ((WS_Base.BaseUnit)Caster).Level,
+                instance = Caster.instance
+            };
+            WS_GameObjects.GameObjectObject tmpGO = gameObjectObject;
 			((WS_Base.BaseUnit)Caster).gameObjects.Add(tmpGO);
 			if (GameobjectInfo.Type == GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE)
 			{
@@ -4542,8 +4539,8 @@ namespace Mangos.World.Spells
 				packet.AddInt32(0);
 				packet.AddSingle((float)Math.Cos(Direction));
 				packet.AddSingle((float)Math.Sin(Direction));
-				packet.AddSingle((float)SpellInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 10f);
-				packet.AddSingle((float)SpellInfo.MiscValue / -10f);
+				packet.AddSingle(SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 10f);
+				packet.AddSingle(SpellInfo.MiscValue / -10f);
 				Unit.SendToNearPlayers(ref packet, 0uL);
 				packet.Dispose();
 				if (!(Unit is WS_Creatures.CreatureObject))
@@ -4634,7 +4631,7 @@ namespace Mangos.World.Spells
 					packet.Dispose();
 					return SpellFailedReason.SPELL_NO_ERROR;
 				}
-				SpellFailedReason SPELL_EFFECT_DUEL = default(SpellFailedReason);
+				SpellFailedReason SPELL_EFFECT_DUEL = default;
 				return SPELL_EFFECT_DUEL;
 			}
 			return SpellFailedReason.SPELL_FAILED_BAD_IMPLICIT_TARGETS;
@@ -4888,7 +4885,7 @@ namespace Mangos.World.Spells
 			{
 				if (SpellID == 33763)
 				{
-					int Damage = EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+					int Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 					WS_Base.BaseUnit Caster2 = (WS_Base.BaseUnit)Caster;
 					SendHealSpellLog(ref Caster2, ref Target, SpellID, Damage, CriticalHit: false);
 					Caster = Caster2;
@@ -5064,14 +5061,14 @@ namespace Mangos.World.Spells
 			case AuraAction.AURA_ADD:
 			{
 				ref float size2 = ref Target.Size;
-				size2 = (float)((double)size2 * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+				size2 = (float)(size2 * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 				break;
 			}
 			case AuraAction.AURA_REMOVE:
 			case AuraAction.AURA_REMOVEBYDURATION:
 			{
 				ref float size = ref Target.Size;
-				size = (float)((double)size / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+				size = (float)(size / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 				break;
 			}
 			}
@@ -5109,24 +5106,22 @@ namespace Mangos.World.Spells
 					{
 						WS_PlayerData.CharacterObject characterObject2 = (WS_PlayerData.CharacterObject)Target;
 						ref short bonus2 = ref characterObject2.Skills[EffectInfo.MiscValue].Bonus;
-						bonus2 = (short)(bonus2 + EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0));
+						bonus2 = (short)(bonus2 + EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0));
 						characterObject2.SetUpdateFlag(718 + characterObject2.SkillsPositions[EffectInfo.MiscValue] * 3 + 2, characterObject2.Skills[EffectInfo.MiscValue].Bonus);
 						characterObject2.SendCharacterUpdate();
-						characterObject2 = null;
-					}
-					break;
+                        }
+                        break;
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
 					if (Target is WS_PlayerData.CharacterObject && ((WS_PlayerData.CharacterObject)Target).Skills.ContainsKey(EffectInfo.MiscValue))
 					{
 						WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)Target;
 						ref short bonus = ref characterObject.Skills[EffectInfo.MiscValue].Bonus;
-						bonus = (short)(bonus - EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0));
+						bonus = (short)(bonus - EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0));
 						characterObject.SetUpdateFlag(718 + characterObject.SkillsPositions[EffectInfo.MiscValue] * 3 + 2, characterObject.Skills[EffectInfo.MiscValue].Bonus);
 						characterObject.SendCharacterUpdate();
-						characterObject = null;
-					}
-					break;
+                        }
+                        break;
 				}
 			}
 		}
@@ -5155,7 +5150,7 @@ namespace Mangos.World.Spells
 						case 43706:
 						case 46755:
 						{
-							int Damage = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+							int Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 							((WS_PlayerData.CharacterObject)Target).ManaRegenBonus += Damage;
 							((WS_PlayerData.CharacterObject)Target).UpdateManaRegen();
 							break;
@@ -5182,7 +5177,7 @@ namespace Mangos.World.Spells
 						case 43706:
 						case 46755:
 						{
-							int Damage2 = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+							int Damage2 = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 							((WS_PlayerData.CharacterObject)Target).ManaRegenBonus -= Damage2;
 							((WS_PlayerData.CharacterObject)Target).UpdateManaRegen();
 							break;
@@ -5196,11 +5191,11 @@ namespace Mangos.World.Spells
 						int Damage3;
 						if (Caster is WS_DynamicObjects.DynamicObjectObject)
 						{
-							Damage3 = EffectInfo.GetValue(unchecked((int)((WS_DynamicObjects.DynamicObjectObject)Caster).Caster.Level), 0) * StackCount;
+							Damage3 = EffectInfo.GetValue(unchecked(((WS_DynamicObjects.DynamicObjectObject)Caster).Caster.Level), 0) * StackCount;
 							Target.DealDamage(Damage3, ((WS_DynamicObjects.DynamicObjectObject)Caster).Caster);
 							break;
 						}
-						Damage3 = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+						Damage3 = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 						WS_Base.BaseUnit obj = Target;
 						int damage = Damage3;
 						WS_Base.BaseUnit Attacker = (WS_Base.BaseUnit)Caster;
@@ -5227,7 +5222,7 @@ namespace Mangos.World.Spells
 					int Damage2;
 					checked
 					{
-						Damage2 = EffectInfo.GetValue(unchecked((int)((WS_DynamicObjects.DynamicObjectObject)Caster).Caster.Level), 0) * StackCount;
+						Damage2 = EffectInfo.GetValue(unchecked(((WS_DynamicObjects.DynamicObjectObject)Caster).Caster.Level), 0) * StackCount;
 					}
 					Target.DealSpellDamage(ref ((WS_DynamicObjects.DynamicObjectObject)Caster).Caster, ref EffectInfo, SpellID, Damage2, (DamageTypes)checked((byte)SPELLs[SpellID].School), SpellType.SPELL_TYPE_DOT);
 					break;
@@ -5237,7 +5232,7 @@ namespace Mangos.World.Spells
 				WS_Base.BaseUnit Caster2;
 				checked
 				{
-					Damage = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					obj = Target;
 					Caster2 = (WS_Base.BaseUnit)Caster;
 				}
@@ -5264,7 +5259,7 @@ namespace Mangos.World.Spells
 				WS_Base.BaseUnit Caster2;
 				checked
 				{
-					Damage = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					obj = Target;
 					Caster2 = (WS_Base.BaseUnit)Caster;
 				}
@@ -5291,7 +5286,7 @@ namespace Mangos.World.Spells
 				WS_Base.BaseUnit Caster2;
 				checked
 				{
-					Damage = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					Caster2 = (WS_Base.BaseUnit)Caster;
 				}
 				SendPeriodicAuraLog(ref Caster2, ref Target, SpellID, (int)Power, Damage, EffectInfo.ApplyAuraIndex);
@@ -5318,7 +5313,7 @@ namespace Mangos.World.Spells
 					break;
 				case AuraAction.AURA_UPDATE:
 				{
-					int Damage = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					int Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					WS_Base.BaseUnit Caster2 = (WS_Base.BaseUnit)Caster;
 					SendPeriodicAuraLog(ref Caster2, ref Target, SpellID, SPELLs[SpellID].School, Damage, EffectInfo.ApplyAuraIndex);
 					Caster = Caster2;
@@ -5350,7 +5345,7 @@ namespace Mangos.World.Spells
 				ManaTypes Power = (ManaTypes)EffectInfo.MiscValue;
 				checked
 				{
-					int Damage = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					int Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					WS_Base.BaseUnit Target2 = (WS_Base.BaseUnit)Caster;
 					SendPeriodicAuraLog(ref Target, ref Target2, SpellID, unchecked((int)Power), Damage, EffectInfo.ApplyAuraIndex);
 					Caster = Target2;
@@ -5408,7 +5403,7 @@ namespace Mangos.World.Spells
 				WS_Base.BaseUnit Caster2;
 				checked
 				{
-					Damage = (int)Math.Round((double)(Target.Life.Maximum * EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0)) / 100.0 * (double)StackCount);
+					Damage = (int)Math.Round(Target.Life.Maximum * EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) / 100.0 * StackCount);
 					obj = Target;
 					Caster2 = (WS_Base.BaseUnit)Caster;
 				}
@@ -5430,7 +5425,7 @@ namespace Mangos.World.Spells
 				WS_Base.BaseUnit Caster2;
 				checked
 				{
-					Damage = (int)Math.Round((double)(Target.Life.Maximum * EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0)) / 100.0 * (double)StackCount);
+					Damage = (int)Math.Round(Target.Life.Maximum * EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) / 100.0 * StackCount);
 					obj = Target;
 					Caster2 = (WS_Base.BaseUnit)Caster;
 				}
@@ -5457,7 +5452,7 @@ namespace Mangos.World.Spells
 				WS_Base.BaseUnit Caster2;
 				checked
 				{
-					Damage = (int)Math.Round((double)(Target.Mana.Maximum * EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0)) / 100.0 * (double)StackCount);
+					Damage = (int)Math.Round(Target.Mana.Maximum * EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) / 100.0 * StackCount);
 					Caster2 = (WS_Base.BaseUnit)Caster;
 				}
 				SendPeriodicAuraLog(ref Caster2, ref Target, SpellID, (int)Power, Damage, EffectInfo.ApplyAuraIndex);
@@ -5490,7 +5485,7 @@ namespace Mangos.World.Spells
 					break;
 				case AuraAction.AURA_ADD:
 				{
-					int Damage2 = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					int Damage2 = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					((WS_PlayerData.CharacterObject)Target).LifeRegenBonus += Damage2;
 					if ((unchecked((uint)SPELLs[SpellID].auraInterruptFlags) & 0x40000u) != 0)
 					{
@@ -5505,7 +5500,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
 				{
-					int Damage = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					int Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					((WS_PlayerData.CharacterObject)Target).LifeRegenBonus -= Damage;
 					break;
 				}
@@ -5527,7 +5522,7 @@ namespace Mangos.World.Spells
 					break;
 				case AuraAction.AURA_ADD:
 				{
-					int Damage = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					int Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					if (EffectInfo.MiscValue == 0)
 					{
 						((WS_PlayerData.CharacterObject)Target).ManaRegenBonus += Damage;
@@ -5536,7 +5531,7 @@ namespace Mangos.World.Spells
 					else if (EffectInfo.MiscValue == 1)
 					{
 						ref int rageRegenBonus2 = ref ((WS_PlayerData.CharacterObject)Target).RageRegenBonus;
-						rageRegenBonus2 = (int)Math.Round((double)rageRegenBonus2 + (double)Damage / 17.0 * 10.0);
+						rageRegenBonus2 = (int)Math.Round(rageRegenBonus2 + Damage / 17.0 * 10.0);
 					}
 					if ((unchecked((uint)SPELLs[SpellID].auraInterruptFlags) & 0x40000u) != 0)
 					{
@@ -5551,7 +5546,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
 				{
-					int Damage2 = EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					int Damage2 = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					if (EffectInfo.MiscValue == 0)
 					{
 						((WS_PlayerData.CharacterObject)Target).ManaRegenBonus -= Damage2;
@@ -5560,7 +5555,7 @@ namespace Mangos.World.Spells
 					else if (EffectInfo.MiscValue == 1)
 					{
 						ref int rageRegenBonus = ref ((WS_PlayerData.CharacterObject)Target).RageRegenBonus;
-						rageRegenBonus = (int)Math.Round((double)rageRegenBonus - (double)Damage2 / 17.0 * 10.0);
+						rageRegenBonus = (int)Math.Round(rageRegenBonus - Damage2 / 17.0 * 10.0);
 					}
 					break;
 				}
@@ -5583,7 +5578,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_ADD:
 					if (EffectInfo.MiscValue == 0)
 					{
-						int Damage2 = (int)Math.Round((double)(EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount) / 100.0);
+						int Damage2 = (int)Math.Round(EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount / 100.0);
 						((WS_PlayerData.CharacterObject)Target).ManaRegenerationModifier += Damage2;
 						((WS_PlayerData.CharacterObject)Target).UpdateManaRegen();
 					}
@@ -5591,7 +5586,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
 				{
-					int Damage = (int)Math.Round((double)(EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount) / 100.0);
+					int Damage = (int)Math.Round(EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount / 100.0);
 					((WS_PlayerData.CharacterObject)Target).ManaRegenerationModifier -= Damage;
 					((WS_PlayerData.CharacterObject)Target).UpdateManaRegen();
 					break;
@@ -5691,13 +5686,13 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_ADD:
 					((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 = ((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 | 0x4000;
 					Target.Invisibility = InvisibilityLevel.INIVISIBILITY;
-					Target.Invisibility_Value += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.Invisibility_Value += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
 					((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 = ((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 & -16385;
 					Target.Invisibility = InvisibilityLevel.VISIBLE;
-					Target.Invisibility_Value -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.Invisibility_Value -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				}
 				if (Target is WS_PlayerData.CharacterObject)
@@ -5721,12 +5716,12 @@ namespace Mangos.World.Spells
 					return;
 				case AuraAction.AURA_ADD:
 					Target.Invisibility = InvisibilityLevel.STEALTH;
-					Target.Invisibility_Value += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.Invisibility_Value += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
 					Target.Invisibility = InvisibilityLevel.VISIBLE;
-					Target.Invisibility_Value -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.Invisibility_Value -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				}
 				WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
@@ -5744,11 +5739,11 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_UPDATE:
 					break;
 				case AuraAction.AURA_ADD:
-					Target.Invisibility_Bonus += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.Invisibility_Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
-					Target.Invisibility_Bonus -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.Invisibility_Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				}
 			}
@@ -5763,11 +5758,11 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_UPDATE:
 					return;
 				case AuraAction.AURA_ADD:
-					Target.CanSeeInvisibility_Invisibility += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.CanSeeInvisibility_Invisibility += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
-					Target.CanSeeInvisibility_Invisibility -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.CanSeeInvisibility_Invisibility -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				}
 				if (Target is WS_PlayerData.CharacterObject)
@@ -5788,11 +5783,11 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_UPDATE:
 					return;
 				case AuraAction.AURA_ADD:
-					Target.CanSeeInvisibility_Stealth += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.CanSeeInvisibility_Stealth += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
-					Target.CanSeeInvisibility_Stealth -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.CanSeeInvisibility_Stealth -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				}
 				if (Target is WS_PlayerData.CharacterObject)
@@ -5873,7 +5868,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_ADD:
 					if (!Target.AbsorbSpellLeft.ContainsKey(SpellID))
 					{
-						Target.AbsorbSpellLeft.Add(SpellID, (uint)EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) + ((uint)EffectInfo.MiscValue << 23));
+						Target.AbsorbSpellLeft.Add(SpellID, (uint)EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) + ((uint)EffectInfo.MiscValue << 23));
 					}
 					break;
 				case AuraAction.AURA_REMOVE:
@@ -5914,7 +5909,7 @@ namespace Mangos.World.Spells
 				}
 				else
 				{
-					Target.Model = WorldServiceLocator._CommonGlobalFunctions.GetShapeshiftModel((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), (Races)0, Target.Model);
+					Target.Model = WorldServiceLocator._CommonGlobalFunctions.GetShapeshiftModel((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), 0, Target.Model);
 				}
 				break;
 			}
@@ -5966,9 +5961,8 @@ namespace Mangos.World.Spells
 				characterObject.GroupUpdateFlag |= 16u;
 				characterObject.GroupUpdateFlag |= 32u;
 				WorldServiceLocator._WS_PlayerHelper.InitializeTalentSpells((WS_PlayerData.CharacterObject)Target);
-				characterObject = null;
-			}
-			else
+            }
+            else
 			{
 				Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
 				Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
@@ -6113,14 +6107,14 @@ namespace Mangos.World.Spells
 				if (Target is WS_PlayerData.CharacterObject)
 				{
 					float newSpeed = ((WS_PlayerData.CharacterObject)Target).RunSpeed;
-					newSpeed = (float)((double)newSpeed * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					newSpeed = (float)(newSpeed * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed);
 				}
 				else if (Target is WS_Creatures.CreatureObject)
 				{
 					((WS_Creatures.CreatureObject)Target).SetToRealPosition();
 					ref float speedMod2 = ref ((WS_Creatures.CreatureObject)Target).SpeedMod;
-					speedMod2 = (float)((double)speedMod2 * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					speedMod2 = (float)(speedMod2 * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 				}
 				break;
 			case AuraAction.AURA_REMOVE:
@@ -6130,7 +6124,7 @@ namespace Mangos.World.Spells
 					float newSpeed2 = ((WS_PlayerData.CharacterObject)Target).RunSpeed;
 					if (Caster != null)
 					{
-						newSpeed2 = (float)((double)newSpeed2 / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+						newSpeed2 = (float)(newSpeed2 / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					}
 					((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed2);
 				}
@@ -6138,7 +6132,7 @@ namespace Mangos.World.Spells
 				{
 					((WS_Creatures.CreatureObject)Target).SetToRealPosition();
 					ref float speedMod = ref ((WS_Creatures.CreatureObject)Target).SpeedMod;
-					speedMod = (float)((double)speedMod / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					speedMod = (float)(speedMod / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 				}
 				break;
 			case AuraAction.AURA_UPDATE:
@@ -6154,22 +6148,22 @@ namespace Mangos.World.Spells
 				if (Target is WS_PlayerData.CharacterObject)
 				{
 					float newSpeed = ((WS_PlayerData.CharacterObject)Target).RunSpeed;
-					newSpeed = ((EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) >= 0) ? ((float)((double)newSpeed / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0))) : ((float)((double)newSpeed / (Math.Abs((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0))));
+					newSpeed = ((EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) >= 0) ? ((float)(newSpeed / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0))) : ((float)(newSpeed / (Math.Abs(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0))));
 					((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed);
 					((WS_PlayerData.CharacterObject)Target).RemoveAurasByInterruptFlag(128);
 				}
 				else if (Target is WS_Creatures.CreatureObject)
 				{
 					((WS_Creatures.CreatureObject)Target).SetToRealPosition();
-					if (EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) < 0)
+					if (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) < 0)
 					{
 						ref float speedMod3 = ref ((WS_Creatures.CreatureObject)Target).SpeedMod;
-						speedMod3 = (float)((double)speedMod3 / (Math.Abs((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0));
+						speedMod3 = (float)(speedMod3 / (Math.Abs(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0));
 					}
 					else
 					{
 						ref float speedMod4 = ref ((WS_Creatures.CreatureObject)Target).SpeedMod;
-						speedMod4 = (float)((double)speedMod4 / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+						speedMod4 = (float)(speedMod4 / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					}
 				}
 				break;
@@ -6178,21 +6172,21 @@ namespace Mangos.World.Spells
 				if (Target is WS_PlayerData.CharacterObject)
 				{
 					float newSpeed2 = ((WS_PlayerData.CharacterObject)Target).RunSpeed;
-					newSpeed2 = ((EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) >= 0) ? ((float)((double)newSpeed2 * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0))) : ((float)((double)newSpeed2 * (Math.Abs((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0))));
+					newSpeed2 = ((EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) >= 0) ? ((float)(newSpeed2 * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0))) : ((float)(newSpeed2 * (Math.Abs(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0))));
 					((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed2);
 				}
 				else if (Target is WS_Creatures.CreatureObject)
 				{
 					((WS_Creatures.CreatureObject)Target).SetToRealPosition();
-					if (EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) < 0)
+					if (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) < 0)
 					{
 						ref float speedMod = ref ((WS_Creatures.CreatureObject)Target).SpeedMod;
-						speedMod = (float)((double)speedMod * (Math.Abs((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0));
+						speedMod = (float)(speedMod * (Math.Abs(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0));
 					}
 					else
 					{
 						ref float speedMod2 = ref ((WS_Creatures.CreatureObject)Target).SpeedMod;
-						speedMod2 = (float)((double)speedMod2 * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+						speedMod2 = (float)(speedMod2 * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					}
 				}
 				break;
@@ -6210,7 +6204,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_ADD:
 				{
 					float newSpeed = ((WS_PlayerData.CharacterObject)Target).RunSpeed;
-					newSpeed = (float)((double)newSpeed * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					newSpeed = (float)(newSpeed * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed);
 					break;
 				}
@@ -6218,7 +6212,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_REMOVEBYDURATION:
 				{
 					float newSpeed2 = ((WS_PlayerData.CharacterObject)Target).RunSpeed;
-					newSpeed2 = (float)((double)newSpeed2 / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					newSpeed2 = (float)(newSpeed2 / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed2);
 					break;
 				}
@@ -6237,7 +6231,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_ADD:
 				{
 					float newSpeed = ((WS_PlayerData.CharacterObject)Target).RunSpeed;
-					newSpeed = (float)((double)newSpeed * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					newSpeed = (float)(newSpeed * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed);
 					break;
 				}
@@ -6245,7 +6239,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_REMOVEBYDURATION:
 				{
 					float newSpeed2 = ((WS_PlayerData.CharacterObject)Target).RunSpeed;
-					newSpeed2 = (float)((double)newSpeed2 / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					newSpeed2 = (float)(newSpeed2 / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed2);
 					break;
 				}
@@ -6264,7 +6258,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_ADD:
 				{
 					float newSpeed = ((WS_PlayerData.CharacterObject)Target).RunSpeed;
-					newSpeed = (float)((double)newSpeed * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					newSpeed = (float)(newSpeed * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed);
 					break;
 				}
@@ -6272,7 +6266,7 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_REMOVEBYDURATION:
 				{
 					float newSpeed2 = ((WS_PlayerData.CharacterObject)Target).RunSpeed;
-					newSpeed2 = (float)((double)newSpeed2 / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					newSpeed2 = (float)(newSpeed2 / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed2);
 					break;
 				}
@@ -6293,7 +6287,7 @@ namespace Mangos.World.Spells
 			case AuraAction.AURA_ADD:
 			{
 				float newSpeed = ((WS_PlayerData.CharacterObject)Target).SwimSpeed;
-				newSpeed = (float)((double)newSpeed * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+				newSpeed = (float)(newSpeed * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 				((WS_PlayerData.CharacterObject)Target).SwimSpeed = newSpeed;
 				((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.SWIM, newSpeed);
 				break;
@@ -6304,7 +6298,7 @@ namespace Mangos.World.Spells
 				float newSpeed2 = ((WS_PlayerData.CharacterObject)Target).SwimSpeed;
 				if (Caster != null)
 				{
-					newSpeed2 = (float)((double)newSpeed2 / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					newSpeed2 = (float)(newSpeed2 / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 				}
 				((WS_PlayerData.CharacterObject)Target).SwimSpeed = newSpeed2;
 				((WS_PlayerData.CharacterObject)Target).ChangeSpeedForced(ChangeSpeedType.SWIM, newSpeed2);
@@ -6380,18 +6374,18 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_ADD:
 				{
 					ref float reference3 = ref characterObject.AttackTimeMods[0];
-					reference3 = (float)((double)reference3 / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					reference3 = (float)(reference3 / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					ref float reference4 = ref characterObject.AttackTimeMods[1];
-					reference4 = (float)((double)reference4 / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					reference4 = (float)(reference4 / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					break;
 				}
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
 				{
 					ref float reference = ref characterObject.AttackTimeMods[0];
-					reference = (float)((double)reference * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					reference = (float)(reference * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					ref float reference2 = ref characterObject.AttackTimeMods[1];
-					reference2 = (float)((double)reference2 * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					reference2 = (float)(reference2 * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					break;
 				}
 				case AuraAction.AURA_UPDATE:
@@ -6400,9 +6394,8 @@ namespace Mangos.World.Spells
 				characterObject.SetUpdateFlag(126, characterObject.GetAttackTime(WeaponAttackType.BASE_ATTACK));
 				characterObject.SetUpdateFlag(128, characterObject.GetAttackTime(WeaponAttackType.OFF_ATTACK));
 				characterObject.SendCharacterUpdate(toNear: false);
-				characterObject = null;
-			}
-		}
+            }
+        }
 
 		public void SPELL_AURA_MOD_RANGED_HASTE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
 		{
@@ -6414,14 +6407,14 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_ADD:
 				{
 					ref float reference2 = ref characterObject.AttackTimeMods[2];
-					reference2 = (float)((double)reference2 / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					reference2 = (float)(reference2 / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					break;
 				}
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
 				{
 					ref float reference = ref characterObject.AttackTimeMods[2];
-					reference = (float)((double)reference * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					reference = (float)(reference * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					break;
 				}
 				case AuraAction.AURA_UPDATE:
@@ -6429,9 +6422,8 @@ namespace Mangos.World.Spells
 				}
 				characterObject.SetUpdateFlag(128, characterObject.GetAttackTime(WeaponAttackType.RANGED_ATTACK));
 				characterObject.SendCharacterUpdate(toNear: false);
-				characterObject = null;
-			}
-		}
+            }
+        }
 
 		public void SPELL_AURA_MOD_RANGED_AMMO_HASTE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
 		{
@@ -6443,14 +6435,14 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_ADD:
 				{
 					ref float ammoMod2 = ref characterObject.AmmoMod;
-					ammoMod2 = (float)((double)ammoMod2 * ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					ammoMod2 = (float)(ammoMod2 * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					break;
 				}
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
 				{
 					ref float ammoMod = ref characterObject.AmmoMod;
-					ammoMod = (float)((double)ammoMod / ((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
+					ammoMod = (float)(ammoMod / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
 					break;
 				}
 				case AuraAction.AURA_UPDATE:
@@ -6460,9 +6452,8 @@ namespace Mangos.World.Spells
 				WS_PlayerData.CharacterObject objCharacter = (WS_PlayerData.CharacterObject)Target;
 				wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
 				characterObject.SendCharacterUpdate(toNear: false);
-				characterObject = null;
-			}
-		}
+            }
+        }
 
 		public void SPELL_AURA_MOD_ROOT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
 		{
@@ -6746,7 +6737,7 @@ namespace Mangos.World.Spells
 				return;
 			}
 			SpellModOp op = (SpellModOp)EffectInfo.MiscValue;
-			int value = EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+			int value = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 			int mask = EffectInfo.ItemType;
 			checked
 			{
@@ -6757,8 +6748,8 @@ namespace Mangos.World.Spells
 				{
 					short tmpval = (short)EffectInfo.valueBase;
 					uint shiftdata = 1u;
-					ushort send_val = default(ushort);
-					ushort send_mark = default(ushort);
+					ushort send_val = default;
+					ushort send_mark = default;
 					if (tmpval != 0)
 					{
 						if (tmpval > 0)
@@ -6811,7 +6802,7 @@ namespace Mangos.World.Spells
 				return;
 			}
 			SpellModOp op = (SpellModOp)EffectInfo.MiscValue;
-			int value = EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+			int value = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 			int mask = EffectInfo.ItemType;
 			checked
 			{
@@ -6822,8 +6813,8 @@ namespace Mangos.World.Spells
 				{
 					short tmpval = (short)EffectInfo.valueBase;
 					uint shiftdata = 1u;
-					ushort send_val = default(ushort);
-					ushort send_mark = default(ushort);
+					ushort send_val = default;
+					ushort send_mark = default;
 					if (tmpval != 0)
 					{
 						if (tmpval > 0)
@@ -6875,7 +6866,7 @@ namespace Mangos.World.Spells
 			{
 				return;
 			}
-			int value = EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+			int value = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 			int value_sign = value;
 			checked
 			{
@@ -6888,30 +6879,30 @@ namespace Mangos.World.Spells
 				case -1:
 				{
 					ref int base9 = ref ((WS_PlayerData.CharacterObject)Target).Strength.Base;
-					base9 = (int)Math.Round((float)base9 / ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
+					base9 = (int)Math.Round(base9 / ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Strength.Base += value;
 					ref int base10 = ref ((WS_PlayerData.CharacterObject)Target).Strength.Base;
-					base10 = (int)Math.Round((float)base10 * ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
+					base10 = (int)Math.Round(base10 * ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
 					ref int base11 = ref ((WS_PlayerData.CharacterObject)Target).Agility.Base;
-					base11 = (int)Math.Round((float)base11 / ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
+					base11 = (int)Math.Round(base11 / ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Agility.Base += value;
 					ref int base12 = ref ((WS_PlayerData.CharacterObject)Target).Agility.Base;
-					base12 = (int)Math.Round((float)base12 * ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
+					base12 = (int)Math.Round(base12 * ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
 					ref int base13 = ref ((WS_PlayerData.CharacterObject)Target).Stamina.Base;
-					base13 = (int)Math.Round((float)base13 / ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
+					base13 = (int)Math.Round(base13 / ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Stamina.Base += value;
 					ref int base14 = ref ((WS_PlayerData.CharacterObject)Target).Stamina.Base;
-					base14 = (int)Math.Round((float)base14 * ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
+					base14 = (int)Math.Round(base14 * ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
 					ref int base15 = ref ((WS_PlayerData.CharacterObject)Target).Spirit.Base;
-					base15 = (int)Math.Round((float)base15 / ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
+					base15 = (int)Math.Round(base15 / ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Spirit.Base += value;
 					ref int base16 = ref ((WS_PlayerData.CharacterObject)Target).Spirit.Base;
-					base16 = (int)Math.Round((float)base16 * ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
+					base16 = (int)Math.Round(base16 * ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
 					ref int base17 = ref ((WS_PlayerData.CharacterObject)Target).Intellect.Base;
-					base17 = (int)Math.Round((float)base17 / ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
+					base17 = (int)Math.Round(base17 / ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Intellect.Base += value;
 					ref int base18 = ref ((WS_PlayerData.CharacterObject)Target).Intellect.Base;
-					base18 = (int)Math.Round((float)base18 * ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
+					base18 = (int)Math.Round(base18 * ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus5 = ref ((WS_PlayerData.CharacterObject)Target).Strength.PositiveBonus;
@@ -6943,10 +6934,10 @@ namespace Mangos.World.Spells
 				case 0:
 				{
 					ref int base5 = ref ((WS_PlayerData.CharacterObject)Target).Strength.Base;
-					base5 = (int)Math.Round((float)base5 / ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
+					base5 = (int)Math.Round(base5 / ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Strength.Base += value;
 					ref int base6 = ref ((WS_PlayerData.CharacterObject)Target).Strength.Base;
-					base6 = (int)Math.Round((float)base6 * ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
+					base6 = (int)Math.Round(base6 * ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus3 = ref ((WS_PlayerData.CharacterObject)Target).Strength.PositiveBonus;
@@ -6962,10 +6953,10 @@ namespace Mangos.World.Spells
 				case 1:
 				{
 					ref int base19 = ref ((WS_PlayerData.CharacterObject)Target).Agility.Base;
-					base19 = (int)Math.Round((float)base19 / ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
+					base19 = (int)Math.Round(base19 / ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Agility.Base += value;
 					ref int base20 = ref ((WS_PlayerData.CharacterObject)Target).Agility.Base;
-					base20 = (int)Math.Round((float)base20 * ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
+					base20 = (int)Math.Round(base20 * ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus10 = ref ((WS_PlayerData.CharacterObject)Target).Agility.PositiveBonus;
@@ -6981,10 +6972,10 @@ namespace Mangos.World.Spells
 				case 2:
 				{
 					ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Stamina.Base;
-					base3 = (int)Math.Round((float)base3 / ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
+					base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Stamina.Base += value;
 					ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Stamina.Base;
-					base4 = (int)Math.Round((float)base4 * ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
+					base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus2 = ref ((WS_PlayerData.CharacterObject)Target).Stamina.PositiveBonus;
@@ -7000,10 +6991,10 @@ namespace Mangos.World.Spells
 				case 3:
 				{
 					ref int base7 = ref ((WS_PlayerData.CharacterObject)Target).Intellect.Base;
-					base7 = (int)Math.Round((float)base7 / ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
+					base7 = (int)Math.Round(base7 / ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Intellect.Base += value;
 					ref int base8 = ref ((WS_PlayerData.CharacterObject)Target).Intellect.Base;
-					base8 = (int)Math.Round((float)base8 * ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
+					base8 = (int)Math.Round(base8 * ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus4 = ref ((WS_PlayerData.CharacterObject)Target).Intellect.PositiveBonus;
@@ -7019,10 +7010,10 @@ namespace Mangos.World.Spells
 				case 4:
 				{
 					ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Spirit.Base;
-					@base = (int)Math.Round((float)@base / ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
+					@base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Spirit.Base += value;
 					ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Spirit.Base;
-					base2 = (int)Math.Round((float)base2 * ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
+					base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus = ref ((WS_PlayerData.CharacterObject)Target).Spirit.PositiveBonus;
@@ -7073,8 +7064,8 @@ namespace Mangos.World.Spells
 		{
 			if (Action != AuraAction.AURA_UPDATE && Target is WS_PlayerData.CharacterObject)
 			{
-				float value = (float)((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0);
-				int value_sign = EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+				float value = (float)(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0);
+				int value_sign = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 				if (Action == AuraAction.AURA_REMOVE)
 				{
 					value = 0f - value;
@@ -7091,61 +7082,61 @@ namespace Mangos.World.Spells
 					case -1:
 					{
 						WS_PlayerHelper.TStat spirit;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Strength).RealBase = (int)Math.Round((float)spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Strength.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Strength).RealBase = (int)Math.Round(spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Strength.BaseModifier);
 						((WS_PlayerData.CharacterObject)Target).Strength.BaseModifier += value;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Strength).RealBase = (int)Math.Round((float)spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Strength.BaseModifier);
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Agility).RealBase = (int)Math.Round((float)spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Agility.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Strength).RealBase = (int)Math.Round(spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Strength.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Agility).RealBase = (int)Math.Round(spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Agility.BaseModifier);
 						((WS_PlayerData.CharacterObject)Target).Agility.BaseModifier += value;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Agility).RealBase = (int)Math.Round((float)spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Agility.BaseModifier);
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Stamina).RealBase = (int)Math.Round((float)spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Stamina.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Agility).RealBase = (int)Math.Round(spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Agility.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Stamina).RealBase = (int)Math.Round(spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Stamina.BaseModifier);
 						((WS_PlayerData.CharacterObject)Target).Stamina.BaseModifier += value;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Stamina).RealBase = (int)Math.Round((float)spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Stamina.BaseModifier);
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Spirit).RealBase = (int)Math.Round((float)spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Spirit.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Stamina).RealBase = (int)Math.Round(spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Stamina.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Spirit).RealBase = (int)Math.Round(spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Spirit.BaseModifier);
 						((WS_PlayerData.CharacterObject)Target).Spirit.BaseModifier += value;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Spirit).RealBase = (int)Math.Round((float)spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Spirit.BaseModifier);
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Intellect).RealBase = (int)Math.Round((float)spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Intellect.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Spirit).RealBase = (int)Math.Round(spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Spirit.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Intellect).RealBase = (int)Math.Round(spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Intellect.BaseModifier);
 						((WS_PlayerData.CharacterObject)Target).Intellect.BaseModifier += value;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Intellect).RealBase = (int)Math.Round((float)spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Intellect.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Intellect).RealBase = (int)Math.Round(spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Intellect.BaseModifier);
 						break;
 					}
 					case 0:
 					{
 						WS_PlayerHelper.TStat spirit;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Strength).RealBase = (int)Math.Round((float)spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Strength.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Strength).RealBase = (int)Math.Round(spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Strength.BaseModifier);
 						((WS_PlayerData.CharacterObject)Target).Strength.BaseModifier += value;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Strength).RealBase = (int)Math.Round((float)spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Strength.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Strength).RealBase = (int)Math.Round(spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Strength.BaseModifier);
 						break;
 					}
 					case 1:
 					{
 						WS_PlayerHelper.TStat spirit;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Agility).RealBase = (int)Math.Round((float)spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Agility.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Agility).RealBase = (int)Math.Round(spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Agility.BaseModifier);
 						((WS_PlayerData.CharacterObject)Target).Agility.BaseModifier += value;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Agility).RealBase = (int)Math.Round((float)spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Agility.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Agility).RealBase = (int)Math.Round(spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Agility.BaseModifier);
 						break;
 					}
 					case 2:
 					{
 						WS_PlayerHelper.TStat spirit;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Stamina).RealBase = (int)Math.Round((float)spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Stamina.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Stamina).RealBase = (int)Math.Round(spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Stamina.BaseModifier);
 						((WS_PlayerData.CharacterObject)Target).Stamina.BaseModifier += value;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Stamina).RealBase = (int)Math.Round((float)spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Stamina.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Stamina).RealBase = (int)Math.Round(spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Stamina.BaseModifier);
 						break;
 					}
 					case 3:
 					{
 						WS_PlayerHelper.TStat spirit;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Intellect).RealBase = (int)Math.Round((float)spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Intellect.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Intellect).RealBase = (int)Math.Round(spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Intellect.BaseModifier);
 						((WS_PlayerData.CharacterObject)Target).Intellect.BaseModifier += value;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Intellect).RealBase = (int)Math.Round((float)spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Intellect.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Intellect).RealBase = (int)Math.Round(spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Intellect.BaseModifier);
 						break;
 					}
 					case 4:
 					{
 						WS_PlayerHelper.TStat spirit;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Spirit).RealBase = (int)Math.Round((float)spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Spirit.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Spirit).RealBase = (int)Math.Round(spirit.RealBase / ((WS_PlayerData.CharacterObject)Target).Spirit.BaseModifier);
 						((WS_PlayerData.CharacterObject)Target).Spirit.BaseModifier += value;
-						(spirit = ((WS_PlayerData.CharacterObject)Target).Spirit).RealBase = (int)Math.Round((float)spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Spirit.BaseModifier);
+						(spirit = ((WS_PlayerData.CharacterObject)Target).Spirit).RealBase = (int)Math.Round(spirit.RealBase * ((WS_PlayerData.CharacterObject)Target).Spirit.BaseModifier);
 						break;
 					}
 					}
@@ -7189,8 +7180,8 @@ namespace Mangos.World.Spells
 			{
 				return;
 			}
-			float value = (float)((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0);
-			int value_sign = EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+			float value = (float)(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0);
+			int value_sign = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 			if (Action == AuraAction.AURA_REMOVE)
 			{
 				value = 0f - value;
@@ -7207,30 +7198,30 @@ namespace Mangos.World.Spells
 				case -1:
 				{
 					ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Strength.Base;
-					base3 = (int)Math.Round((float)base3 / ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
+					base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Strength.Modifier += value;
 					ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Strength.Base;
-					base4 = (int)Math.Round((float)base4 * ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
+					base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
 					ref int base5 = ref ((WS_PlayerData.CharacterObject)Target).Agility.Base;
-					base5 = (int)Math.Round((float)base5 / ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
+					base5 = (int)Math.Round(base5 / ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Agility.Modifier += value;
 					ref int base6 = ref ((WS_PlayerData.CharacterObject)Target).Agility.Base;
-					base6 = (int)Math.Round((float)base6 * ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
+					base6 = (int)Math.Round(base6 * ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
 					ref int base7 = ref ((WS_PlayerData.CharacterObject)Target).Stamina.Base;
-					base7 = (int)Math.Round((float)base7 / ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
+					base7 = (int)Math.Round(base7 / ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Stamina.Modifier += value;
 					ref int base8 = ref ((WS_PlayerData.CharacterObject)Target).Stamina.Base;
-					base8 = (int)Math.Round((float)base8 * ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
+					base8 = (int)Math.Round(base8 * ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
 					ref int base9 = ref ((WS_PlayerData.CharacterObject)Target).Spirit.Base;
-					base9 = (int)Math.Round((float)base9 / ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
+					base9 = (int)Math.Round(base9 / ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Spirit.Modifier += value;
 					ref int base10 = ref ((WS_PlayerData.CharacterObject)Target).Spirit.Base;
-					base10 = (int)Math.Round((float)base10 * ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
+					base10 = (int)Math.Round(base10 * ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
 					ref int base11 = ref ((WS_PlayerData.CharacterObject)Target).Intellect.Base;
-					base11 = (int)Math.Round((float)base11 / ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
+					base11 = (int)Math.Round(base11 / ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Intellect.Modifier += value;
 					ref int base12 = ref ((WS_PlayerData.CharacterObject)Target).Intellect.Base;
-					base12 = (int)Math.Round((float)base12 * ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
+					base12 = (int)Math.Round(base12 * ((WS_PlayerData.CharacterObject)Target).Intellect.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus2 = ref ((WS_PlayerData.CharacterObject)Target).Strength.PositiveBonus;
@@ -7262,10 +7253,10 @@ namespace Mangos.World.Spells
 				case 0:
 				{
 					ref int base17 = ref ((WS_PlayerData.CharacterObject)Target).Strength.Base;
-					base17 = (int)Math.Round((float)base17 / ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
+					base17 = (int)Math.Round(base17 / ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Strength.Modifier += value;
 					ref int base18 = ref ((WS_PlayerData.CharacterObject)Target).Strength.Base;
-					base18 = (int)Math.Round((float)base18 * ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
+					base18 = (int)Math.Round(base18 * ((WS_PlayerData.CharacterObject)Target).Strength.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus9 = ref ((WS_PlayerData.CharacterObject)Target).Strength.PositiveBonus;
@@ -7281,10 +7272,10 @@ namespace Mangos.World.Spells
 				case 1:
 				{
 					ref int base13 = ref ((WS_PlayerData.CharacterObject)Target).Agility.Base;
-					base13 = (int)Math.Round((float)base13 / ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
+					base13 = (int)Math.Round(base13 / ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Agility.Modifier += value;
 					ref int base14 = ref ((WS_PlayerData.CharacterObject)Target).Agility.Base;
-					base14 = (int)Math.Round((float)base14 * ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
+					base14 = (int)Math.Round(base14 * ((WS_PlayerData.CharacterObject)Target).Agility.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus7 = ref ((WS_PlayerData.CharacterObject)Target).Agility.PositiveBonus;
@@ -7300,10 +7291,10 @@ namespace Mangos.World.Spells
 				case 2:
 				{
 					ref int base15 = ref ((WS_PlayerData.CharacterObject)Target).Stamina.Base;
-					base15 = (int)Math.Round((float)base15 / ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
+					base15 = (int)Math.Round(base15 / ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Stamina.Modifier += value;
 					ref int base16 = ref ((WS_PlayerData.CharacterObject)Target).Stamina.Base;
-					base16 = (int)Math.Round((float)base16 * ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
+					base16 = (int)Math.Round(base16 * ((WS_PlayerData.CharacterObject)Target).Stamina.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus8 = ref ((WS_PlayerData.CharacterObject)Target).Stamina.PositiveBonus;
@@ -7319,10 +7310,10 @@ namespace Mangos.World.Spells
 				case 4:
 				{
 					ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Spirit.Base;
-					@base = (int)Math.Round((float)@base / ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
+					@base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
 					((WS_PlayerData.CharacterObject)Target).Spirit.Modifier += value;
 					ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Spirit.Base;
-					base2 = (int)Math.Round((float)base2 * ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
+					base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Spirit.Modifier);
 					if (value_sign > 0)
 					{
 						ref short positiveBonus = ref ((WS_PlayerData.CharacterObject)Target).Spirit.PositiveBonus;
@@ -7378,11 +7369,11 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_UPDATE:
 					return;
 				case AuraAction.AURA_ADD:
-					Target.Life.Bonus += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.Life.Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
-					Target.Life.Bonus -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+					Target.Life.Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 					break;
 				}
 				if (Target is WS_PlayerData.CharacterObject)
@@ -7417,14 +7408,14 @@ namespace Mangos.World.Spells
 			case AuraAction.AURA_ADD:
 			{
 				ref float modifier2 = ref Target.Life.Modifier;
-				modifier2 = (float)((double)modifier2 + (double)EffectInfo.GetValue((int)Target.Level, 0) / 100.0);
+				modifier2 = (float)(modifier2 + EffectInfo.GetValue(Target.Level, 0) / 100.0);
 				break;
 			}
 			case AuraAction.AURA_REMOVE:
 			case AuraAction.AURA_REMOVEBYDURATION:
 			{
 				ref float modifier = ref Target.Life.Modifier;
-				modifier = (float)((double)modifier - (double)EffectInfo.GetValue((int)Target.Level, 0) / 100.0);
+				modifier = (float)(modifier - EffectInfo.GetValue(Target.Level, 0) / 100.0);
 				break;
 			}
 			}
@@ -7465,19 +7456,19 @@ namespace Mangos.World.Spells
 				{
 					if (!(Target is WS_PlayerData.CharacterObject))
 					{
-						Target.Mana.Bonus += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						Target.Mana.Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 						break;
 					}
 					switch (Target.ManaType)
 					{
 					case ManaTypes.TYPE_ENERGY:
-						((WS_PlayerData.CharacterObject)Target).Energy.Bonus += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						((WS_PlayerData.CharacterObject)Target).Energy.Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 						break;
 					case ManaTypes.TYPE_MANA:
-						((WS_PlayerData.CharacterObject)Target).Mana.Bonus += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						((WS_PlayerData.CharacterObject)Target).Mana.Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 						break;
 					case ManaTypes.TYPE_RAGE:
-						((WS_PlayerData.CharacterObject)Target).Rage.Bonus += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						((WS_PlayerData.CharacterObject)Target).Rage.Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 						break;
 					}
 					break;
@@ -7492,19 +7483,19 @@ namespace Mangos.World.Spells
 				{
 					if (!(Target is WS_PlayerData.CharacterObject))
 					{
-						Target.Mana.Bonus -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						Target.Mana.Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 						break;
 					}
 					switch (Target.ManaType)
 					{
 					case ManaTypes.TYPE_ENERGY:
-						((WS_PlayerData.CharacterObject)Target).Energy.Bonus -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						((WS_PlayerData.CharacterObject)Target).Energy.Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 						break;
 					case ManaTypes.TYPE_MANA:
-						((WS_PlayerData.CharacterObject)Target).Mana.Bonus -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						((WS_PlayerData.CharacterObject)Target).Mana.Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 						break;
 					case ManaTypes.TYPE_RAGE:
-						((WS_PlayerData.CharacterObject)Target).Rage.Bonus -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0);
+						((WS_PlayerData.CharacterObject)Target).Rage.Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
 						break;
 					}
 					break;
@@ -7552,10 +7543,10 @@ namespace Mangos.World.Spells
 						ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)i].Base;
 						checked
 						{
-							base3 = (int)Math.Round((float)base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Modifier);
-							((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Base += EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+							base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Modifier);
+							((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Base += EffectInfo.GetValue(unchecked(Target.Level), 0);
 							ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Base;
-							base4 = (int)Math.Round((float)base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Modifier);
+							base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Modifier);
 							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Base);
 						}
 					}
@@ -7575,10 +7566,10 @@ namespace Mangos.World.Spells
 						ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)j].Base;
 						checked
 						{
-							@base = (int)Math.Round((float)@base / ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Modifier);
-							((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Base -= EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+							@base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Modifier);
+							((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Base -= EffectInfo.GetValue(unchecked(Target.Level), 0);
 							ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Base;
-							base2 = (int)Math.Round((float)base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Modifier);
+							base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Modifier);
 							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Base);
 						}
 					}
@@ -7610,17 +7601,17 @@ namespace Mangos.World.Spells
 						if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
 						{
 							ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-							base3 = (int)Math.Round((float)base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+							base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
 							ref float modifier2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier;
-							modifier2 = (float)((double)modifier2 + (double)EffectInfo.GetValue(unchecked((int)Target.Level), 0) / 100.0);
+							modifier2 = (float)(modifier2 + EffectInfo.GetValue(unchecked(Target.Level), 0) / 100.0);
 							ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-							base4 = (int)Math.Round((float)base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
+							base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
 						}
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 6u);
+				while (i <= 6u);
 				break;
 			}
 			case AuraAction.AURA_REMOVE:
@@ -7634,17 +7625,17 @@ namespace Mangos.World.Spells
 						if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
 						{
 							ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-							@base = (int)Math.Round((float)@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+							@base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
 							ref float modifier = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier;
-							modifier = (float)((double)modifier - (double)EffectInfo.GetValue(unchecked((int)Target.Level), 0) / 100.0);
+							modifier = (float)(modifier - EffectInfo.GetValue(unchecked(Target.Level), 0) / 100.0);
 							ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-							base2 = (int)Math.Round((float)base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
+							base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
 						}
 						j = (byte)unchecked((uint)(j + 1));
 					}
 				}
-				while ((uint)j <= 6u);
+				while (j <= 6u);
 				break;
 			}
 			}
@@ -7669,32 +7660,32 @@ namespace Mangos.World.Spells
 					{
 						if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
 						{
-							if (EffectInfo.GetValue(unchecked((int)Target.Level), 0) > 0)
+							if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
 							{
 								ref int base5 = ref Target.Resistances[i].Base;
-								base5 = (int)Math.Round((float)base5 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-								Target.Resistances[i].Base += EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								base5 = (int)Math.Round(base5 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								Target.Resistances[i].Base += EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base6 = ref Target.Resistances[i].Base;
-								base6 = (int)Math.Round((float)base6 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								base6 = (int)Math.Round(base6 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
 								ref short positiveBonus2 = ref Target.Resistances[i].PositiveBonus;
-								positiveBonus2 = (short)(positiveBonus2 + EffectInfo.GetValue(unchecked((int)Target.Level), 0));
+								positiveBonus2 = (short)(positiveBonus2 + EffectInfo.GetValue(unchecked(Target.Level), 0));
 							}
 							else
 							{
 								ref int base7 = ref Target.Resistances[i].Base;
-								base7 = (int)Math.Round((float)base7 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-								Target.Resistances[i].Base += EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								base7 = (int)Math.Round(base7 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								Target.Resistances[i].Base += EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base8 = ref Target.Resistances[i].Base;
-								base8 = (int)Math.Round((float)base8 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								base8 = (int)Math.Round(base8 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
 								ref short negativeBonus2 = ref Target.Resistances[i].NegativeBonus;
-								negativeBonus2 = (short)(negativeBonus2 - EffectInfo.GetValue(unchecked((int)Target.Level), 0));
+								negativeBonus2 = (short)(negativeBonus2 - EffectInfo.GetValue(unchecked(Target.Level), 0));
 							}
-							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
+							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
 						}
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 6u);
+				while (i <= 6u);
 				break;
 			}
 			case AuraAction.AURA_REMOVE:
@@ -7707,32 +7698,32 @@ namespace Mangos.World.Spells
 					{
 						if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
 						{
-							if (EffectInfo.GetValue(unchecked((int)Target.Level), 0) > 0)
+							if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
 							{
 								ref int @base = ref Target.Resistances[j].Base;
-								@base = (int)Math.Round((float)@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-								Target.Resistances[j].Base -= EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								@base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								Target.Resistances[j].Base -= EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base2 = ref Target.Resistances[j].Base;
-								base2 = (int)Math.Round((float)base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
 								ref short positiveBonus = ref Target.Resistances[j].PositiveBonus;
-								positiveBonus = (short)(positiveBonus - EffectInfo.GetValue(unchecked((int)Target.Level), 0));
+								positiveBonus = (short)(positiveBonus - EffectInfo.GetValue(unchecked(Target.Level), 0));
 							}
 							else
 							{
 								ref int base3 = ref Target.Resistances[j].Base;
-								base3 = (int)Math.Round((float)base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-								Target.Resistances[j].Base -= EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								Target.Resistances[j].Base -= EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base4 = ref Target.Resistances[j].Base;
-								base4 = (int)Math.Round((float)base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
 								ref short negativeBonus = ref Target.Resistances[j].NegativeBonus;
-								negativeBonus = (short)(negativeBonus + EffectInfo.GetValue(unchecked((int)Target.Level), 0));
+								negativeBonus = (short)(negativeBonus + EffectInfo.GetValue(unchecked(Target.Level), 0));
 							}
-							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
+							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
 						}
 						j = (byte)unchecked((uint)(j + 1));
 					}
 				}
-				while ((uint)j <= 6u);
+				while (j <= 6u);
 				break;
 			}
 			}
@@ -7759,32 +7750,32 @@ namespace Mangos.World.Spells
 						if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
 						{
 							short OldBase = (short)((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-							if (EffectInfo.GetValue(unchecked((int)Target.Level), 0) > 0)
+							if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
 							{
 								ref int base5 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-								base5 = (int)Math.Round((float)base5 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-								((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier += EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								base5 = (int)Math.Round(base5 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier += EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base6 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-								base6 = (int)Math.Round((float)base6 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								base6 = (int)Math.Round(base6 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
 								ref short positiveBonus2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].PositiveBonus;
 								positiveBonus2 = (short)(positiveBonus2 + (((WS_PlayerData.CharacterObject)Target).Resistances[i].Base - OldBase));
 							}
 							else
 							{
 								ref int base7 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-								base7 = (int)Math.Round((float)base7 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-								((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier -= EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								base7 = (int)Math.Round(base7 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier -= EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base8 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-								base8 = (int)Math.Round((float)base8 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								base8 = (int)Math.Round(base8 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
 								ref short positiveBonus3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].PositiveBonus;
 								positiveBonus3 = (short)(positiveBonus3 + (((WS_PlayerData.CharacterObject)Target).Resistances[i].Base - OldBase));
 							}
-							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
+							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
 						}
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 6u);
+				while (i <= 6u);
 				break;
 			}
 			case AuraAction.AURA_REMOVE:
@@ -7798,32 +7789,32 @@ namespace Mangos.World.Spells
 						if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
 						{
 							short OldBase2 = (short)((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-							if (EffectInfo.GetValue(unchecked((int)Target.Level), 0) > 0)
+							if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
 							{
 								ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-								@base = (int)Math.Round((float)@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-								((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier -= EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								@base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier -= EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-								base2 = (int)Math.Round((float)base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
 								ref short positiveBonus = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].PositiveBonus;
 								positiveBonus = (short)(positiveBonus - (((WS_PlayerData.CharacterObject)Target).Resistances[j].Base - OldBase2));
 							}
 							else
 							{
 								ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-								base3 = (int)Math.Round((float)base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-								((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier += EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier += EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-								base4 = (int)Math.Round((float)base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
 								ref short negativeBonus = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].NegativeBonus;
 								negativeBonus = (short)(negativeBonus - (((WS_PlayerData.CharacterObject)Target).Resistances[j].Base - OldBase2));
 							}
-							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
+							((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
 						}
 						j = (byte)unchecked((uint)(j + 1));
 					}
 				}
-				while ((uint)j <= 6u);
+				while (j <= 6u);
 				break;
 			}
 			}
@@ -7849,33 +7840,33 @@ namespace Mangos.World.Spells
 					{
 						if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
 						{
-							if (EffectInfo.GetValue(unchecked((int)Target.Level), 0) > 0)
+							if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
 							{
 								ref int base5 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-								base5 = (int)Math.Round((float)base5 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-								((WS_PlayerData.CharacterObject)Target).Resistances[i].Base += EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								base5 = (int)Math.Round(base5 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								((WS_PlayerData.CharacterObject)Target).Resistances[i].Base += EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base6 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-								base6 = (int)Math.Round((float)base6 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								base6 = (int)Math.Round(base6 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
 								ref short positiveBonus3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].PositiveBonus;
-								positiveBonus3 = (short)(positiveBonus3 + EffectInfo.GetValue(unchecked((int)Target.Level), 0));
-								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
+								positiveBonus3 = (short)(positiveBonus3 + EffectInfo.GetValue(unchecked(Target.Level), 0));
+								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
 							}
 							else
 							{
 								ref int base7 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-								base7 = (int)Math.Round((float)base7 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-								((WS_PlayerData.CharacterObject)Target).Resistances[i].Base -= EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								base7 = (int)Math.Round(base7 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								((WS_PlayerData.CharacterObject)Target).Resistances[i].Base -= EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base8 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-								base8 = (int)Math.Round((float)base8 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
+								base8 = (int)Math.Round(base8 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
 								ref short negativeBonus = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].NegativeBonus;
-								negativeBonus = (short)(negativeBonus - EffectInfo.GetValue(unchecked((int)Target.Level), 0));
-								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
+								negativeBonus = (short)(negativeBonus - EffectInfo.GetValue(unchecked(Target.Level), 0));
+								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
 							}
 						}
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 6u);
+				while (i <= 6u);
 				break;
 			}
 			case AuraAction.AURA_REMOVE:
@@ -7888,33 +7879,33 @@ namespace Mangos.World.Spells
 					{
 						if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
 						{
-							if (EffectInfo.GetValue(unchecked((int)Target.Level), 0) > 0)
+							if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
 							{
 								ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-								@base = (int)Math.Round((float)@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-								((WS_PlayerData.CharacterObject)Target).Resistances[j].Base -= EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								@base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								((WS_PlayerData.CharacterObject)Target).Resistances[j].Base -= EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-								base2 = (int)Math.Round((float)base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
 								ref short positiveBonus = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].PositiveBonus;
-								positiveBonus = (short)(positiveBonus - EffectInfo.GetValue(unchecked((int)Target.Level), 0));
-								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
+								positiveBonus = (short)(positiveBonus - EffectInfo.GetValue(unchecked(Target.Level), 0));
+								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
 							}
 							else
 							{
 								ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-								base3 = (int)Math.Round((float)base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-								((WS_PlayerData.CharacterObject)Target).Resistances[j].Base += EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								((WS_PlayerData.CharacterObject)Target).Resistances[j].Base += EffectInfo.GetValue(unchecked(Target.Level), 0);
 								ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-								base4 = (int)Math.Round((float)base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
+								base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
 								ref short positiveBonus2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].PositiveBonus;
-								positiveBonus2 = (short)(positiveBonus2 + EffectInfo.GetValue(unchecked((int)Target.Level), 0));
-								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
+								positiveBonus2 = (short)(positiveBonus2 + EffectInfo.GetValue(unchecked(Target.Level), 0));
+								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
 							}
 						}
 						j = (byte)unchecked((uint)(j + 1));
 					}
 				}
-				while ((uint)j <= 6u);
+				while (j <= 6u);
 				break;
 			}
 			}
@@ -7930,11 +7921,11 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_UPDATE:
 					return;
 				case AuraAction.AURA_ADD:
-					Target.AttackPowerMods += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					Target.AttackPowerMods += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					break;
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
-					Target.AttackPowerMods -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					Target.AttackPowerMods -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					break;
 				}
 				if (Target is WS_PlayerData.CharacterObject)
@@ -7961,11 +7952,11 @@ namespace Mangos.World.Spells
 				case AuraAction.AURA_UPDATE:
 					return;
 				case AuraAction.AURA_ADD:
-					Target.AttackPowerModsRanged += EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					Target.AttackPowerModsRanged += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					break;
 				case AuraAction.AURA_REMOVE:
 				case AuraAction.AURA_REMOVEBYDURATION:
-					Target.AttackPowerModsRanged -= EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+					Target.AttackPowerModsRanged -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
 					break;
 				}
 				if (Target is WS_PlayerData.CharacterObject)
@@ -7984,7 +7975,7 @@ namespace Mangos.World.Spells
 		{
 			if (Target is WS_PlayerData.CharacterObject)
 			{
-				int Value = EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0);
+				int Value = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
 				checked
 				{
 					switch (Action)
@@ -8007,7 +7998,7 @@ namespace Mangos.World.Spells
 		{
 			if (Target is WS_PlayerData.CharacterObject)
 			{
-				float Value = (float)((double)EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) / 100.0);
+				float Value = (float)(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0);
 				switch (Action)
 				{
 				case AuraAction.AURA_UPDATE:
@@ -8042,14 +8033,14 @@ namespace Mangos.World.Spells
 					{
 						if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, unchecked((byte)i)))
 						{
-							if (EffectInfo.GetValue(unchecked((int)Target.Level), 0) > 0)
+							if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
 							{
-								((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)i)].PositiveBonus += EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)i)].PositiveBonus += EffectInfo.GetValue(unchecked(Target.Level), 0);
 								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1201 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)i)].PositiveBonus);
 							}
 							else
 							{
-								((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)i)].NegativeBonus -= EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)i)].NegativeBonus -= EffectInfo.GetValue(unchecked(Target.Level), 0);
 								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1208 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)i)].NegativeBonus);
 							}
 						}
@@ -8069,14 +8060,14 @@ namespace Mangos.World.Spells
 					{
 						if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, unchecked((byte)j)))
 						{
-							if (EffectInfo.GetValue(unchecked((int)Target.Level), 0) > 0)
+							if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
 							{
-								((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)j)].PositiveBonus -= EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)j)].PositiveBonus -= EffectInfo.GetValue(unchecked(Target.Level), 0);
 								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1201 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)j)].PositiveBonus);
 							}
 							else
 							{
-								((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)j)].NegativeBonus += EffectInfo.GetValue(unchecked((int)Target.Level), 0);
+								((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)j)].NegativeBonus += EffectInfo.GetValue(unchecked(Target.Level), 0);
 								((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1208 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)j)].NegativeBonus);
 							}
 						}
@@ -8108,7 +8099,7 @@ namespace Mangos.World.Spells
 					if (WorldServiceLocator._Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)i))
 					{
 						ref float modifier2 = ref ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)i].Modifier;
-						modifier2 = (float)((double)modifier2 + (double)EffectInfo.GetValue((int)Target.Level, 0) / 100.0);
+						modifier2 = (float)(modifier2 + EffectInfo.GetValue(Target.Level, 0) / 100.0);
 						((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(checked(1215 + unchecked((int)i)), ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)i].Modifier);
 					}
 					i++;
@@ -8125,7 +8116,7 @@ namespace Mangos.World.Spells
 					if (WorldServiceLocator._Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)j))
 					{
 						ref float modifier = ref ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)j].Modifier;
-						modifier = (float)((double)modifier - (double)EffectInfo.GetValue((int)Target.Level, 0) / 100.0);
+						modifier = (float)(modifier - EffectInfo.GetValue(Target.Level, 0) / 100.0);
 						((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(checked(1215 + unchecked((int)j)), ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)j].Modifier);
 					}
 					j++;
@@ -8247,7 +8238,7 @@ namespace Mangos.World.Spells
 			case AuraAction.AURA_UPDATE:
 				break;
 			case AuraAction.AURA_ADD:
-				if (Target.Level <= EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0))
+				if (Target.Level <= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0))
 				{
 					Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
 					Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
@@ -8436,19 +8427,19 @@ namespace Mangos.World.Spells
 
 		public void SPELL_AURA_MOD_TOTAL_THREAT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
 		{
-			int Value = default(int);
+			int Value = default;
 			switch (Action)
 			{
 			case AuraAction.AURA_UPDATE:
 				return;
 			case AuraAction.AURA_ADD:
-				Value = ((!(Target is WS_PlayerData.CharacterObject)) ? EffectInfo.GetValue((int)((WS_Base.BaseUnit)Caster).Level, 0) : EffectInfo.GetValue((int)Target.Level, 0));
+				Value = ((!(Target is WS_PlayerData.CharacterObject)) ? EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) : EffectInfo.GetValue(Target.Level, 0));
 				break;
 			case AuraAction.AURA_REMOVE:
 			case AuraAction.AURA_REMOVEBYDURATION:
 				checked
 				{
-					Value = ((!(Target is WS_PlayerData.CharacterObject)) ? (-EffectInfo.GetValue(unchecked((int)((WS_Base.BaseUnit)Caster).Level), 0)) : (-EffectInfo.GetValue(unchecked((int)Target.Level), 0)));
+					Value = ((!(Target is WS_PlayerData.CharacterObject)) ? (-EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0)) : (-EffectInfo.GetValue(unchecked(Target.Level), 0)));
 					break;
 				}
 			}

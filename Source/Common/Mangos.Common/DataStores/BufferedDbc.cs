@@ -65,16 +65,16 @@ namespace Mangos.Common.DataStores
 				case TypeCode.String:
 					int offset = BitConverter.ToInt32(Buffer, 0);
 					BStream.Seek(20 + Rows * RowLength + offset, SeekOrigin.Begin);
-					byte strByte = 0;
-					string strResult = "";
-					do
-					{
-						strByte = (byte)BStream.ReadByte();
-						if (strByte != 0)
-							strResult += Convert.ToString((char)strByte);
-					}
-					while (strByte != 0);
-					return (T)Convert.ChangeType(strResult, typeof(T));
+                    string strResult = "";
+                    byte strByte;
+                    do
+                    {
+                        strByte = (byte)BStream.ReadByte();
+                        if (strByte != 0)
+                            strResult += Convert.ToString((char)strByte);
+                    }
+                    while (strByte != 0);
+                    return (T)Convert.ChangeType(strResult, typeof(T));
 				default:
 					return (T)Convert.ChangeType(BitConverter.ToInt32(Buffer, 0), typeof(T));
 			}

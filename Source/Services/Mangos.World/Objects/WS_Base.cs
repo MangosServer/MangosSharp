@@ -111,7 +111,7 @@ namespace Mangos.World.Objects
 				{
 					return false;
 				}
-				if (objCharacter.Invisibility == InvisibilityLevel.STEALTH && Math.Sqrt(Math.Pow(objCharacter.positionX - positionX, 2.0) + Math.Pow(objCharacter.positionY - positionY, 2.0)) < (double)WorldServiceLocator._Global_Constants.DEFAULT_DISTANCE_DETECTION)
+				if (objCharacter.Invisibility == InvisibilityLevel.STEALTH && Math.Sqrt(Math.Pow(objCharacter.positionX - positionX, 2.0) + Math.Pow(objCharacter.positionY - positionY, 2.0)) < WorldServiceLocator._Global_Constants.DEFAULT_DISTANCE_DETECTION)
 				{
 					return true;
 				}
@@ -123,7 +123,7 @@ namespace Mangos.World.Objects
 				{
 					return false;
 				}
-				if (Math.Sqrt(Math.Pow(objCharacter.positionX - positionX, 2.0) + Math.Pow(objCharacter.positionY - positionY, 2.0)) > (double)objCharacter.VisibleDistance)
+				if (Math.Sqrt(Math.Pow(objCharacter.positionX - positionX, 2.0) + Math.Pow(objCharacter.positionY - positionY, 2.0)) > objCharacter.VisibleDistance)
 				{
 					return false;
 				}
@@ -518,7 +518,7 @@ namespace Mangos.World.Objects
 				{
 					byte b = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1);
 					byte i = 0;
-					while (unchecked((uint)i <= (uint)b))
+					while (unchecked(i <= (uint)b))
 					{
 						if (ActiveSpells[i] != null && ActiveSpells[i].SpellID == SpellID)
 						{
@@ -550,7 +550,7 @@ namespace Mangos.World.Objects
 							}
 							j = (byte)unchecked((uint)(j + 1));
 						}
-						while (unchecked((uint)j) <= 2u);
+						while (unchecked(j) <= 2u);
 					}
 					return false;
 				}
@@ -562,7 +562,7 @@ namespace Mangos.World.Objects
 				{
 					byte b = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1);
 					byte i = 0;
-					while (unchecked((uint)i <= (uint)b))
+					while (unchecked(i <= (uint)b))
 					{
 						if (ActiveSpells[i] != null && ActiveSpells[i].SpellID == SpellID)
 						{
@@ -581,7 +581,7 @@ namespace Mangos.World.Objects
 					byte b = (byte)WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE;
 					byte b2 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1);
 					byte i = b;
-					while (unchecked((uint)i <= (uint)b2))
+					while (unchecked(i <= (uint)b2))
 					{
 						if (ActiveSpells[i] != null && ActiveSpells[i].SpellID == SpellID)
 						{
@@ -618,7 +618,7 @@ namespace Mangos.World.Objects
 							i = (byte)unchecked((uint)(i + 1));
 						}
 					}
-					while ((uint)i <= 2u);
+					while (i <= 2u);
 				}
 				if (SendUpdate && Slot < WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE)
 				{
@@ -669,7 +669,7 @@ namespace Mangos.World.Objects
 							}
 							j = (byte)unchecked((uint)(j + 1));
 						}
-						while (unchecked((uint)j) <= 2u);
+						while (unchecked(j) <= 2u);
 					}
 				}
 			}
@@ -728,18 +728,16 @@ namespace Mangos.World.Objects
 						{
 							characterObject.FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL);
 						}
-						characterObject = null;
-					}
-					else if (this is WS_Creatures.CreatureObject)
+                    }
+                    else if (this is WS_Creatures.CreatureObject)
 					{
 						WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)this;
 						if (creatureObject.SpellCasted != null && (creatureObject.SpellCasted.SpellInfo.channelInterruptFlags & AuraInterruptFlag) != 0)
 						{
 							creatureObject.StopCasting();
 						}
-						creatureObject = null;
-					}
-				}
+                    }
+                }
 			}
 
 			public int GetAuraModifier(AuraEffects_Names AuraIndex)
@@ -759,11 +757,11 @@ namespace Mangos.World.Objects
 						{
 							if (ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == unchecked((int)AuraIndex))
 							{
-								Modifier += ActiveSpells[i].Aura_Info[j].GetValue(unchecked((int)Level), 0);
+								Modifier += ActiveSpells[i].Aura_Info[j].GetValue(unchecked(Level), 0);
 							}
 							j = (byte)unchecked((uint)(j + 1));
 						}
-						while (unchecked((uint)j) <= 2u);
+						while (unchecked(j) <= 2u);
 					}
 					return Modifier;
 				}
@@ -786,11 +784,11 @@ namespace Mangos.World.Objects
 						{
 							if (ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == unchecked((int)AuraIndex) && (ActiveSpells[i].Aura_Info[j].MiscValue & Mask) == Mask)
 							{
-								Modifier += ActiveSpells[i].Aura_Info[j].GetValue(unchecked((int)Level), 0);
+								Modifier += ActiveSpells[i].Aura_Info[j].GetValue(unchecked(Level), 0);
 							}
 							j = (byte)unchecked((uint)(j + 1));
 						}
-						while (unchecked((uint)j) <= 2u);
+						while (unchecked(j) <= 2u);
 					}
 					return Modifier;
 				}
@@ -944,15 +942,14 @@ namespace Mangos.World.Objects
 					break;
 				}
 				int SpellDamageBenefit = 0;
-				bool IsCrit;
-				int Resist;
-				int Absorb;
-				checked
+                bool IsCrit;
+                int Resist;
+                int Absorb;
+                checked
 				{
 					if (Caster is WS_PlayerData.CharacterObject)
 					{
-						WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)Caster;
-						int PenaltyFactor = 0;
+                        int PenaltyFactor = 0;
 						int EffectCount = 0;
 						int i = 0;
 						do
@@ -968,11 +965,10 @@ namespace Mangos.World.Objects
 						{
 							PenaltyFactor = 5;
 						}
-						int SpellDamage = 0;
-						SpellDamage = ((!IsHeal) ? ((WS_PlayerData.CharacterObject)Caster).spellDamage[unchecked((uint)DamageType)].Value : ((WS_PlayerData.CharacterObject)Caster).healing.Value);
-						if (IsDot)
+                        int SpellDamage = ((!IsHeal) ? ((WS_PlayerData.CharacterObject)Caster).spellDamage[unchecked((uint)DamageType)].Value : ((WS_PlayerData.CharacterObject)Caster).healing.Value);
+                        if (IsDot)
 						{
-							int TickAmount = (int)Math.Round((double)WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration / (double)EffectInfo.Amplitude);
+							int TickAmount = (int)Math.Round(WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration / (double)EffectInfo.Amplitude);
 							if (TickAmount < 5)
 							{
 								TickAmount = 5;
@@ -990,19 +986,18 @@ namespace Mangos.World.Objects
 							{
 								CastTime = 3500;
 							}
-							SpellDamageBenefit = (int)((double)((float)SpellDamage * ((float)CastTime / 1000f)) * ((double)(100 - PenaltyFactor) / 100.0) / 3.5);
+							SpellDamageBenefit = (int)(SpellDamage * (CastTime / 1000f) * ((100 - PenaltyFactor) / 100.0) / 3.5);
 						}
 						if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].IsAOE)
 						{
 							SpellDamageBenefit = unchecked(SpellDamageBenefit / 3);
 						}
-						characterObject = null;
-					}
-					Damage += SpellDamageBenefit;
+                    }
+                    Damage += SpellDamageBenefit;
 					IsCrit = false;
 					if (!IsDot && Caster is WS_PlayerData.CharacterObject && WorldServiceLocator._Functions.RollChance(((WS_PlayerData.CharacterObject)Caster).GetCriticalWithSpells))
 					{
-						Damage = (int)(1.5f * (float)Damage);
+						Damage = (int)(1.5f * Damage);
 						IsCrit = true;
 					}
 					Resist = 0;
@@ -1010,7 +1005,7 @@ namespace Mangos.World.Objects
 					if (!IsHeal)
 					{
 						float DamageReduction = GetDamageReduction(ref Caster, DamageType, Damage);
-						Damage = (int)Math.Round((float)Damage - (float)Damage * DamageReduction);
+						Damage = (int)Math.Round(Damage - Damage * DamageReduction);
 						if (Damage > 0)
 						{
 							Resist = (int)Math.Round(GetResist(ref Caster, DamageType, Damage));
@@ -1076,7 +1071,7 @@ namespace Mangos.World.Objects
 				int lchance = ((this is WS_PlayerData.CharacterObject) ? 7 : 11);
 				checked
 				{
-					int leveldiff = unchecked((int)Level) - unchecked((int)Caster.Level);
+					int leveldiff = unchecked(Level) - unchecked(Caster.Level);
 					int modHitChance = ((leveldiff >= 3) ? (94 - (leveldiff - 2) * lchance) : (96 - leveldiff));
 					modHitChance += Caster.GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT, unchecked((int)Spell.SchoolMask));
 					modHitChance += GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, unchecked((int)Spell.SchoolMask));
@@ -1141,7 +1136,7 @@ namespace Mangos.World.Objects
 				int attackerWeaponSkill = obj.GetWeaponSkill(attType2, ref Victim);
 				checked
 				{
-					int skillDiff = attackerWeaponSkill - unchecked((int)Level) * 5;
+					int skillDiff = attackerWeaponSkill - unchecked(Level) * 5;
 					int fullSkillDiff = attackerWeaponSkill - GetDefenceSkill(ref Caster);
 					int roll = WorldServiceLocator._WorldServer.Rnd.Next(0, 10001);
 					int missChance = 0;
@@ -1186,15 +1181,13 @@ namespace Mangos.World.Objects
 			{
 				if (this is WS_PlayerData.CharacterObject)
 				{
-					int value = 0;
-					WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)this;
-					value = ((!Attacker.IsPlayer) ? characterObject.Skills[95].CurrentWithBonus : characterObject.Skills[95].MaximumWithBonus);
-					characterObject = null;
-					return value;
+                    WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)this;
+                    int value = ((!Attacker.IsPlayer) ? characterObject.Skills[95].CurrentWithBonus : characterObject.Skills[95].MaximumWithBonus);
+                    return value;
 				}
 				checked
 				{
-					return unchecked((int)Level) * 5;
+					return unchecked(Level) * 5;
 				}
 			}
 
@@ -1204,8 +1197,7 @@ namespace Mangos.World.Objects
 				{
 					if (this is WS_PlayerData.CharacterObject)
 					{
-						int value = 0;
-						WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)this;
+                        WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)this;
 						ItemObject item = null;
 						switch (attType)
 						{
@@ -1234,14 +1226,13 @@ namespace Mangos.World.Objects
 						}
 						if (IsInFeralForm)
 						{
-							return unchecked((int)Level) * 5;
+							return unchecked(Level) * 5;
 						}
 						int skill = item?.GetSkill ?? 162;
-						value = ((!Victim.IsPlayer) ? characterObject.Skills[skill].CurrentWithBonus : characterObject.Skills[skill].MaximumWithBonus);
-						characterObject = null;
-						return value;
+                        int value = ((!Victim.IsPlayer) ? characterObject.Skills[skill].CurrentWithBonus : characterObject.Skills[skill].MaximumWithBonus);
+                        return value;
 					}
-					return unchecked((int)Level) * 5;
+					return unchecked(Level) * 5;
 				}
 			}
 
@@ -1252,12 +1243,12 @@ namespace Mangos.World.Objects
 					float DamageReduction;
 					if (School == DamageTypes.DMG_PHYSICAL)
 					{
-						DamageReduction = (float)((double)Resistances[0].Base / (double)(Resistances[0].Base + 400 + 85 * unchecked((int)Level)));
+						DamageReduction = (float)(Resistances[0].Base / (double)(Resistances[0].Base + 400 + 85 * unchecked(Level)));
 					}
 					else
 					{
-						int effectiveResistanceRating = t.Resistances[unchecked((uint)School)].Base + Math.Max((unchecked((int)t.Level) - unchecked((int)Level)) * 5, 0);
-						DamageReduction = (float)((double)effectiveResistanceRating / (double)(unchecked((int)Level) * 5) * 0.75);
+						int effectiveResistanceRating = t.Resistances[unchecked((uint)School)].Base + Math.Max((unchecked(t.Level) - unchecked(Level)) * 5, 0);
+						DamageReduction = (float)(effectiveResistanceRating / (double)(unchecked(Level) * 5) * 0.75);
 					}
 					if (DamageReduction > 0.75f)
 					{
@@ -1327,7 +1318,7 @@ namespace Mangos.World.Objects
 					{
 						0 => 0f, 
 						4 => Damage, 
-						_ => (float)((double)(Damage * j) / 4.0), 
+						_ => (float)(Damage * j / 4.0), 
 					};
 				}
 			}
@@ -1342,7 +1333,7 @@ namespace Mangos.World.Objects
 					foreach (KeyValuePair<int, uint> tmpSpell in AbsorbSpellLeft)
 					{
 						int Schools = (int)(tmpSpell.Value >> 23);
-						int AbsorbDamage = (int)(unchecked((long)tmpSpell.Value) & 0x7FFFFFL);
+						int AbsorbDamage = (int)(unchecked(tmpSpell.Value) & 0x7FFFFFL);
 						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Spell: {0} [{1}]", AbsorbDamage, Schools);
 						if (WorldServiceLocator._Functions.HaveFlag((uint)Schools, unchecked((byte)School)))
 						{
@@ -1444,7 +1435,7 @@ namespace Mangos.World.Objects
 						Resistances[i] = new WS_PlayerHelper.TStat(0, 0, 0);
 						i = (byte)unchecked((uint)(i + 1));
 					}
-					while (unchecked((uint)i) <= 6u);
+					while (unchecked(i) <= 6u);
 				}
 			}
 		}

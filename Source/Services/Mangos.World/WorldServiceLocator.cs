@@ -61,11 +61,11 @@ namespace Mangos.World
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static Mangos.Common.Globals.Functions __CommonGlobalFunctions;
+		private static Common.Globals.Functions __CommonGlobalFunctions;
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static Mangos.Common.Functions __CommonFunctions;
+		private static Common.Functions __CommonFunctions;
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -73,7 +73,7 @@ namespace Mangos.World
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static Mangos.Common.NativeMethods __NativeMethods;
+		private static Common.NativeMethods __NativeMethods;
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -81,7 +81,7 @@ namespace Mangos.World
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static Mangos.World.Globals.Functions __Functions;
+		private static Globals.Functions __Functions;
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -272,18 +272,18 @@ namespace Mangos.World
 		} = _Container.Resolve<Global_Constants>();
 
 
-		public static Mangos.Common.Globals.Functions _CommonGlobalFunctions
+		public static Common.Globals.Functions _CommonGlobalFunctions
 		{
 			get;
 			set;
-		} = _Container.Resolve<Mangos.Common.Globals.Functions>();
+		} = _Container.Resolve<Common.Globals.Functions>();
 
 
-		public static Mangos.Common.Functions _CommonFunctions
+		public static Common.Functions _CommonFunctions
 		{
 			get;
 			set;
-		} = _Container.Resolve<Mangos.Common.Functions>();
+		} = _Container.Resolve<Common.Functions>();
 
 
 		public static GlobalZip _GlobalZip
@@ -293,11 +293,11 @@ namespace Mangos.World
 		} = _Container.Resolve<GlobalZip>();
 
 
-		public static Mangos.Common.NativeMethods _NativeMethods
+		public static Common.NativeMethods _NativeMethods
 		{
 			get;
 			set;
-		} = _Container.Resolve<Mangos.Common.NativeMethods>();
+		} = _Container.Resolve<Common.NativeMethods>();
 
 
 		public static WorldServer _WorldServer
@@ -307,11 +307,11 @@ namespace Mangos.World
 		} = _Container.Resolve<WorldServer>();
 
 
-		public static Mangos.World.Globals.Functions _Functions
+		public static Globals.Functions _Functions
 		{
 			get;
 			set;
-		} = _Container.Resolve<Mangos.World.Globals.Functions>();
+		} = _Container.Resolve<Globals.Functions>();
 
 
 		public static WS_Creatures_AI _WS_Creatures_AI

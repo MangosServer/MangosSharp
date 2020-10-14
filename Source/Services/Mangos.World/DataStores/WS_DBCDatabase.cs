@@ -305,7 +305,7 @@ namespace Mangos.World.DataStores
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 2u);
+				while (i <= 2u);
 				AuraID = AuraID_;
 				Slot = Slot_;
 			}
@@ -343,7 +343,7 @@ namespace Mangos.World.DataStores
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 7u);
+				while (i <= 7u);
 				Name = Name_;
 				Required_Skill_ID = Required_Skill_ID_;
 				Required_Skill_Value = Required_Skill_Value_;
@@ -591,19 +591,19 @@ namespace Mangos.World.DataStores
 
 		public int GetNearestTaxi(float x, float y, int map)
 		{
-			float minDistance = 1E+08f;
-			int selectedTaxiNode = 0;
-			foreach (KeyValuePair<int, TTaxiNode> TaxiNode in TaxiNodes)
+            int selectedTaxiNode = 0;
+            foreach (KeyValuePair<int, TTaxiNode> TaxiNode in TaxiNodes)
 			{
 				if (TaxiNode.Value.MapID == map)
 				{
 					float tmp = WorldServiceLocator._WS_Combat.GetDistance(x, TaxiNode.Value.x, y, TaxiNode.Value.y);
-					if (tmp < minDistance)
-					{
-						minDistance = tmp;
-						selectedTaxiNode = TaxiNode.Key;
-					}
-				}
+                    float minDistance = 1E+08f;
+                    if (tmp < minDistance)
+                    {
+                        minDistance = tmp;
+                        selectedTaxiNode = TaxiNode.Key;
+                    }
+                }
 			}
 			return selectedTaxiNode;
 		}
@@ -628,7 +628,7 @@ namespace Mangos.World.DataStores
 				WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM player_xp_for_level order by lvl;", ref result);
 				if (result.Rows.Count > 0)
 				{
-					IEnumerator enumerator = default(IEnumerator);
+					IEnumerator enumerator = default;
 					try
 					{
 						enumerator = result.Rows.GetEnumerator();
@@ -653,8 +653,7 @@ namespace Mangos.World.DataStores
 			catch (Exception ex2)
 			{
 				ProjectData.SetProjectError(ex2);
-				Exception ex = ex2;
-				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "XPTable initialization failed.");
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "XPTable initialization failed.");
 				ProjectData.ClearProjectError();
 			}
 		}
@@ -663,7 +662,7 @@ namespace Mangos.World.DataStores
 		{
 			DataTable MySQLQuery = new DataTable();
 			WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM battlemaster_entry", ref MySQLQuery);
-			IEnumerator enumerator = default(IEnumerator);
+			IEnumerator enumerator = default;
 			try
 			{
 				enumerator = MySQLQuery.Rows.GetEnumerator();
@@ -687,7 +686,7 @@ namespace Mangos.World.DataStores
 		{
 			DataTable mySqlQuery = new DataTable();
 			WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM battleground_template", ref mySqlQuery);
-			IEnumerator enumerator = default(IEnumerator);
+			IEnumerator enumerator = default;
 			try
 			{
 				enumerator = mySqlQuery.Rows.GetEnumerator();
@@ -720,7 +719,7 @@ namespace Mangos.World.DataStores
 		{
 			DataTable MySQLQuery = new DataTable();
 			WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM spells_teleport_coords", ref MySQLQuery);
-			IEnumerator enumerator = default(IEnumerator);
+			IEnumerator enumerator = default;
 			try
 			{
 				enumerator = MySQLQuery.Rows.GetEnumerator();

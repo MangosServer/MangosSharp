@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Misc;
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Targorr_the_Dread : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Targorr_the_Dread : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int ThrashCD = 7000;
@@ -34,9 +34,9 @@ namespace Mangos.Scripts.Creatures
         public int NextAcid = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Targorr_the_Dread(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Targorr_the_Dread(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -47,7 +47,7 @@ namespace Mangos.Scripts.Creatures
             if (NextThrash <= 0)
             {
                 NextThrash = ThrashCD;
-                this.aiCreature.CastSpellOnSelf(Spell_Thrash); // Should be cast on self. Correct me if wrong.
+                aiCreature.CastSpellOnSelf(Spell_Thrash); // Should be cast on self. Correct me if wrong.
             }
         }
 
@@ -55,16 +55,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 0; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpellOnSelf(Spell_Thrash);
+                    aiCreature.CastSpellOnSelf(Spell_Thrash);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("AI was unable to cast Thrash on himself. Please report this to a developer.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("AI was unable to cast Thrash on himself. Please report this to a developer.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }
@@ -76,11 +76,11 @@ namespace Mangos.Scripts.Creatures
             {
                 try
                 {
-                    this.aiCreature.CastSpellOnSelf(Spell_Frenzy);
+                    aiCreature.CastSpellOnSelf(Spell_Frenzy);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("AI was unable to cast Frenzy on himself. Please report this to a developer.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("AI was unable to cast Frenzy on himself. Please report this to a developer.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }

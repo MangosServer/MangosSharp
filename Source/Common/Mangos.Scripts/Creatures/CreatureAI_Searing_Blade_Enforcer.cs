@@ -19,7 +19,7 @@
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Searing_Blade_Enforcer : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Searing_Blade_Enforcer : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int SLAM_COOLDOWN = 8000;
@@ -28,9 +28,9 @@ namespace Mangos.Scripts.Creatures
         public int NextSLAM = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Searing_Blade_Enforcer(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Searing_Blade_Enforcer(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -41,7 +41,7 @@ namespace Mangos.Scripts.Creatures
             if (NextSLAM <= 0)
             {
                 NextSLAM = SLAM_COOLDOWN;
-                this.aiCreature.CastSpell(SLAM_SPELL, this.aiTarget); // Curse of Agony
+                aiCreature.CastSpell(SLAM_SPELL, aiTarget); // Curse of Agony
             }
         }
 
@@ -49,10 +49,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(SLAM_SPELL, this.aiTarget);
+                aiCreature.CastSpell(SLAM_SPELL, aiTarget);
             }
         }
     }

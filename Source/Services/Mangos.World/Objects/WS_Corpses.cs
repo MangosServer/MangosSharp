@@ -187,7 +187,7 @@ namespace Mangos.World.Objects
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 
 			public CorpseObject(ref WS_PlayerData.CharacterObject Character)
@@ -204,7 +204,7 @@ namespace Mangos.World.Objects
 				checked
 				{
 					Bytes1 = unchecked((int)((uint)Character.Race << 8)) + unchecked((int)((uint)Character.Gender << 16)) + (Character.Skin << 24);
-					Bytes2 = unchecked((int)Character.Face) + (Character.HairStyle << 8) + (Character.HairColor << 16) + (Character.FacialHair << 24);
+					Bytes2 = unchecked(Character.Face) + (Character.HairStyle << 8) + (Character.HairColor << 16) + (Character.FacialHair << 24);
 					Model = Character.Model;
 					positionX = Character.positionX;
 					positionY = Character.positionY;
@@ -239,7 +239,7 @@ namespace Mangos.World.Objects
 						}
 						i = (byte)unchecked((uint)(i + 1));
 					}
-					while (unchecked((uint)i) <= 18u);
+					while (unchecked(i) <= 18u);
 					Flags = 4;
 					WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Add(GUID, this);
 				}
@@ -337,9 +337,8 @@ namespace Mangos.World.Objects
 											SeenBy.Add(plGUID);
 										}
 									}
-									tMapTile = null;
-								}
-								j = (short)unchecked(j + 1);
+                                }
+                                j = (short)unchecked(j + 1);
 							}
 							while (j <= 1);
 							i = (short)unchecked(i + 1);
@@ -374,9 +373,8 @@ namespace Mangos.World.Objects
 						WorldServiceLocator._WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Remove(GUID);
 					}
 				}
-				tMapTile = null;
-			}
-		}
+            }
+        }
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		private ulong GetNewGUID()

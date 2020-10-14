@@ -137,7 +137,7 @@ namespace Mangos.World.Social
 					return;
 				}
 				ref uint copper = ref client.Character.Copper;
-				copper = (uint)(unchecked((long)copper) - unchecked((long)CharterPrice));
+				copper = (uint)(unchecked(copper) - unchecked(CharterPrice));
 				client.Character.SetUpdateFlag(1176, client.Character.Copper);
 				client.Character.SendCharacterUpdate(toNear: false);
 				ItemObject tmpItem = new ItemObject(CharterID, client.Character.GUID)
@@ -171,7 +171,7 @@ namespace Mangos.World.Social
 					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[0]["petition_signedMembers"]));
 					byte b = Conversions.ToByte(MySQLQuery.Rows[0]["petition_signedMembers"]);
 					byte i = 1;
-					while (unchecked((uint)i <= (uint)b))
+					while (unchecked(i <= (uint)b))
 					{
 						response.AddUInt64(Conversions.ToULong(MySQLQuery.Rows[0]["petition_signedMember" + Conversions.ToString(i)]));
 						response.AddInt32(0);
@@ -223,8 +223,8 @@ namespace Mangos.World.Social
 					}
 					else
 					{
-						response.AddInt32(unchecked((int)Conversions.ToByte(MySQLQuery.Rows[0]["petition_type"])) - 1);
-						response.AddInt32(unchecked((int)Conversions.ToByte(MySQLQuery.Rows[0]["petition_type"])) - 1);
+						response.AddInt32(unchecked(Conversions.ToByte(MySQLQuery.Rows[0]["petition_type"])) - 1);
+						response.AddInt32(unchecked(Conversions.ToByte(MySQLQuery.Rows[0]["petition_type"])) - 1);
 						response.AddInt32(Conversions.ToByte(MySQLQuery.Rows[0]["petition_type"]));
 					}
 					response.AddInt32(0);

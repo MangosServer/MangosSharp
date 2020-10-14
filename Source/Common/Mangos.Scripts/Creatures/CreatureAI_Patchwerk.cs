@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Misc;
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Patchwerk : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Patchwerk : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int BERSERK_COOLDOWN = 420000; // Heavy enrage, cuts through raid like butter.
@@ -43,10 +43,10 @@ namespace Mangos.Scripts.Creatures
         // Public NextSummon As Integer = 0
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Patchwerk(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Patchwerk(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             Phase = 0;
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -56,32 +56,32 @@ namespace Mangos.Scripts.Creatures
             if (Phase > 1)
                 return;
             base.OnEnterCombat();
-            this.aiCreature.Flying = false;
-            this.AllowedAttack = true;
+            aiCreature.Flying = false;
+            AllowedAttack = true;
             Phase = 1;
             // ReinitSpells()
-            this.aiCreature.SendChatMessage("Patchwerk want to play!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
-            this.aiCreature.SendPlaySound(8909, true);
+            aiCreature.SendChatMessage("Patchwerk want to play!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            aiCreature.SendPlaySound(8909, true);
         }
 
         public override void OnLeaveCombat(bool Reset = true)
         {
             base.OnLeaveCombat(Reset);
-            this.AllowedAttack = true;
+            AllowedAttack = true;
             Phase = 0;
-            this.aiCreature.SendChatMessage("LEAVING COMBAT!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            aiCreature.SendChatMessage("LEAVING COMBAT!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
         }
 
-        public override void OnKill(ref Mangos.World.Objects.WS_Base.BaseUnit Victim)
+        public override void OnKill(ref World.Objects.WS_Base.BaseUnit Victim)
         {
-            this.aiCreature.SendChatMessage("No more play?", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
-            this.aiCreature.SendPlaySound(8912, true);
+            aiCreature.SendChatMessage("No more play?", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            aiCreature.SendPlaySound(8912, true);
         }
 
         public override void OnDeath()
         {
-            this.aiCreature.SendChatMessage("What happened to.. Patch..", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
-            this.aiCreature.SendPlaySound(8911, true);
+            aiCreature.SendChatMessage("What happened to.. Patch..", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            aiCreature.SendPlaySound(8911, true);
         }
 
         public override void OnThink()
@@ -97,13 +97,13 @@ namespace Mangos.Scripts.Creatures
                 if (NextBerserk <= 0)
                 {
                     NextBerserk = BERSERK_COOLDOWN;
-                    this.aiCreature.CastSpellOnSelf(BERSERK_SPELL); // Berserk
+                    aiCreature.CastSpellOnSelf(BERSERK_SPELL); // Berserk
                 }
 
                 if (NextFrenzy <= 1)
                 {
                     NextFrenzy = FRENZY_COOLDOWN;
-                    this.aiCreature.CastSpellOnSelf(FRENZY_SPELL); // Frenzy
+                    aiCreature.CastSpellOnSelf(FRENZY_SPELL); // Frenzy
                 }
 
                 // If NextSummon <= 0 Then
@@ -127,7 +127,7 @@ namespace Mangos.Scripts.Creatures
             base.OnHealthChange(Percent);
             if (Percent <= 5)
             {
-                this.aiCreature.CastSpellOnSelf(FRENZY_SPELL);
+                aiCreature.CastSpellOnSelf(FRENZY_SPELL);
             }
         }
 
@@ -135,17 +135,17 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 1; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Self = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Self = aiCreature;
                 if (Self is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpellOnSelf(BERSERK_SPELL);
+                    aiCreature.CastSpellOnSelf(BERSERK_SPELL);
                 }
                 catch (Exception)
                 {
                     // Log.WriteLine(LogType.WARNING, "BERSERK FAILED TO CAST ON PATCHWERK!")
-                    this.aiCreature.SendChatMessage("BERSERK FAILED TO CAST ON PATCHWERK! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+                    aiCreature.SendChatMessage("BERSERK FAILED TO CAST ON PATCHWERK! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
             }
         }
@@ -168,7 +168,7 @@ namespace Mangos.Scripts.Creatures
             {
                 case 0:
                     {
-                        NextWaypoint = this.aiCreature.MoveTo(3261.996582f, 3228.5979f, 294.063354f, 2.53919f, true); // Coordinates do not work, but they are accurate for when we figure out how to move Patchwerk.
+                        NextWaypoint = aiCreature.MoveTo(3261.996582f, 3228.5979f, 294.063354f, 2.53919f, true); // Coordinates do not work, but they are accurate for when we figure out how to move Patchwerk.
                         break;
                     }
 
@@ -176,7 +176,7 @@ namespace Mangos.Scripts.Creatures
                     {
                         NextWaypoint = 10000;
                         // NextSummon = NextWaypoint
-                        this.aiCreature.MoveTo(316.822021f, 3149.243652f, 294.063354f, 2.437088f);
+                        aiCreature.MoveTo(316.822021f, 3149.243652f, 294.063354f, 2.437088f);
                         break;
                     }
 
@@ -189,7 +189,7 @@ namespace Mangos.Scripts.Creatures
                 case 3:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(3130.012695f, 3141.432861f, 294.063354f, 3.364644f);
+                        aiCreature.MoveTo(3130.012695f, 3141.432861f, 294.063354f, 3.364644f);
                         break;
                     }
 
@@ -206,21 +206,21 @@ namespace Mangos.Scripts.Creatures
                 case 5:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(3162.650635f, 3152.284912f, 294.063354f, 5.952532f);
+                        aiCreature.MoveTo(3162.650635f, 3152.284912f, 294.063354f, 5.952532f);
                         break;
                     }
 
                 case 7:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(3248.241211f, 3226.086426f, 294.063354f, 5.571616f);
+                        aiCreature.MoveTo(3248.241211f, 3226.086426f, 294.063354f, 5.571616f);
                         break;
                     }
 
                 case 9:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(3313.826904f, 3231.999512f, 294.063354f, 6.231347f);
+                        aiCreature.MoveTo(3313.826904f, 3231.999512f, 294.063354f, 6.231347f);
                         break;
                     }
             }

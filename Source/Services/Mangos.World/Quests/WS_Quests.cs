@@ -46,7 +46,7 @@ namespace Mangos.World.Quests
 			DataTable cQuests = new DataTable();
 			WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Loading Quests...");
 			WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT entry FROM quests;", ref cQuests);
-			IEnumerator enumerator = default(IEnumerator);
+			IEnumerator enumerator = default;
 			try
 			{
 				enumerator = cQuests.Rows.GetEnumerator();
@@ -70,7 +70,7 @@ namespace Mangos.World.Quests
 
 		public int ReturnQuestIdByName(string searchValue)
 		{
-			IEnumerator enumerator = default(IEnumerator);
+			IEnumerator enumerator = default;
 			try
 			{
 				enumerator = _quests.GetEnumerator();
@@ -96,7 +96,7 @@ namespace Mangos.World.Quests
 		public bool DoesPreQuestExist(int questID, int preQuestID)
 		{
 			bool ret = false;
-			IEnumerator enumerator = default(IEnumerator);
+			IEnumerator enumerator = default;
 			try
 			{
 				enumerator = _quests.GetEnumerator();
@@ -131,7 +131,7 @@ namespace Mangos.World.Quests
 		public string ReturnQuestNameById(int questId)
 		{
 			string ret = "";
-			IEnumerator enumerator = default(IEnumerator);
+			IEnumerator enumerator = default;
 			try
 			{
 				enumerator = _quests.GetEnumerator();
@@ -167,8 +167,7 @@ namespace Mangos.World.Quests
 			catch (Exception ex2)
 			{
 				ProjectData.SetProjectError(ex2);
-				Exception ex = ex2;
-				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "ReturnQuestInfoById returned error on QuestId {0}", questId);
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "ReturnQuestInfoById returned error on QuestId {0}", questId);
 				ProjectData.ClearProjectError();
 			}
 			return ret;
@@ -943,7 +942,7 @@ namespace Mangos.World.Quests
 					{
 						if (quest.ObjectivesItem[j] != 0)
 						{
-							requiredItemsCount = (byte)(unchecked((int)requiredItemsCount) + 1);
+							requiredItemsCount = (byte)(unchecked(requiredItemsCount) + 1);
 						}
 					}
 					packet.AddInt32(requiredItemsCount);
@@ -1003,7 +1002,7 @@ namespace Mangos.World.Quests
 			WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT quest_id, quest_status FROM characters_quests q WHERE q.char_guid = {objCharacter.GUID};", ref cQuests);
 			checked
 			{
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = cQuests.Rows.GetEnumerator();
@@ -1066,7 +1065,7 @@ namespace Mangos.World.Quests
 						byte j = 0;
 						do
 						{
-							if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesObject[j] == creature.ID && (uint)wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
+							if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesObject[j] == creature.ID && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
 							{
 								wS_QuestsBase.AddKill(objCharacter, j, creature.GUID);
 								return;
@@ -1076,10 +1075,9 @@ namespace Mangos.World.Quests
 								j = (byte)unchecked((uint)(j + 1));
 							}
 						}
-						while ((uint)j <= 3u);
-						wS_QuestsBase = null;
-					}
-				}
+						while (j <= 3u);
+                    }
+                }
 				i = checked(i + 1);
 			}
 			while (i <= 24);
@@ -1102,7 +1100,7 @@ namespace Mangos.World.Quests
 						byte j = 0;
 						do
 						{
-							if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesSpell[j] == spellID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == creature.ID) && (uint)wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
+							if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesSpell[j] == spellID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == creature.ID) && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
 							{
 								wS_QuestsBase.AddCast(objCharacter, j, creature.GUID);
 								return;
@@ -1112,10 +1110,9 @@ namespace Mangos.World.Quests
 								j = (byte)unchecked((uint)(j + 1));
 							}
 						}
-						while ((uint)j <= 3u);
-						wS_QuestsBase = null;
-					}
-				}
+						while (j <= 3u);
+                    }
+                }
 				i = checked(i + 1);
 			}
 			while (i <= 24);
@@ -1138,7 +1135,7 @@ namespace Mangos.World.Quests
 						byte j = 0;
 						do
 						{
-							if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesSpell[j] == spellID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == checked(-gameObject.ID)) && (uint)wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
+							if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesSpell[j] == spellID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == checked(-gameObject.ID)) && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
 							{
 								wS_QuestsBase.AddCast(objCharacter, j, gameObject.GUID);
 								return;
@@ -1148,10 +1145,9 @@ namespace Mangos.World.Quests
 								j = (byte)unchecked((uint)(j + 1));
 							}
 						}
-						while ((uint)j <= 3u);
-						wS_QuestsBase = null;
-					}
-				}
+						while (j <= 3u);
+                    }
+                }
 				i = checked(i + 1);
 			}
 			while (i <= 24);
@@ -1174,7 +1170,7 @@ namespace Mangos.World.Quests
 						byte j = 0;
 						do
 						{
-							if (wS_QuestsBase.ObjectivesType[j] == 64 && wS_QuestsBase.ObjectivesSpell[j] == emoteID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == creature.ID) && (uint)wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
+							if (wS_QuestsBase.ObjectivesType[j] == 64 && wS_QuestsBase.ObjectivesSpell[j] == emoteID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == creature.ID) && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
 							{
 								wS_QuestsBase.AddEmote(objCharacter, j);
 								return;
@@ -1184,10 +1180,9 @@ namespace Mangos.World.Quests
 								j = (byte)unchecked((uint)(j + 1));
 							}
 						}
-						while ((uint)j <= 3u);
-						wS_QuestsBase = null;
-					}
-				}
+						while (j <= 3u);
+                    }
+                }
 				i = checked(i + 1);
 			}
 			while (i <= 24);
@@ -1210,7 +1205,7 @@ namespace Mangos.World.Quests
 							byte l = 0;
 							do
 							{
-								if (wS_QuestsBase.ObjectivesItem[l] == itemEntry && (uint)wS_QuestsBase.ProgressItem[l] < (uint)wS_QuestsBase.ObjectivesItemCount[l])
+								if (wS_QuestsBase.ObjectivesItem[l] == itemEntry && wS_QuestsBase.ProgressItem[l] < (uint)wS_QuestsBase.ObjectivesItemCount[l])
 								{
 									return true;
 								}
@@ -1219,15 +1214,13 @@ namespace Mangos.World.Quests
 									l = (byte)unchecked((uint)(l + 1));
 								}
 							}
-							while ((uint)l <= 3u);
-							wS_QuestsBase = null;
-						}
-						j = checked(j + 1);
+							while (l <= 3u);
+                        }
+                        j = checked(j + 1);
 					}
 					while (j <= 24);
-					characterObject = null;
-				}
-			}
+                }
+            }
 			else
 			{
 				int i = 0;
@@ -1239,7 +1232,7 @@ namespace Mangos.World.Quests
 						byte k = 0;
 						do
 						{
-							if (wS_QuestsBase2.ObjectivesItem[k] == itemEntry && (uint)wS_QuestsBase2.ProgressItem[k] < (uint)wS_QuestsBase2.ObjectivesItemCount[k])
+							if (wS_QuestsBase2.ObjectivesItem[k] == itemEntry && wS_QuestsBase2.ProgressItem[k] < (uint)wS_QuestsBase2.ObjectivesItemCount[k])
 							{
 								return true;
 							}
@@ -1248,10 +1241,9 @@ namespace Mangos.World.Quests
 								k = (byte)unchecked((uint)(k + 1));
 							}
 						}
-						while ((uint)k <= 3u);
-						wS_QuestsBase2 = null;
-					}
-					i = checked(i + 1);
+						while (k <= 3u);
+                    }
+                    i = checked(i + 1);
 				}
 				while (i <= 24);
 			}
@@ -1283,7 +1275,7 @@ namespace Mangos.World.Quests
 								j = (byte)unchecked((uint)(j + 1));
 							}
 						}
-						while ((uint)j <= 3u);
+						while (j <= 3u);
 					}
 					i = checked(i + 1);
 				}
@@ -1325,7 +1317,7 @@ namespace Mangos.World.Quests
 						int j = 0;
 						do
 						{
-							if (wS_QuestsBase.ObjectivesItem[j] == itemID && (uint)wS_QuestsBase.ProgressItem[j] < (uint)wS_QuestsBase.ObjectivesItemCount[j])
+							if (wS_QuestsBase.ObjectivesItem[j] == itemID && wS_QuestsBase.ProgressItem[j] < (uint)wS_QuestsBase.ObjectivesItemCount[j])
 							{
 								wS_QuestsBase.AddItem(objCharacter, checked((byte)j), count);
 								return;
@@ -1333,9 +1325,8 @@ namespace Mangos.World.Quests
 							j = checked(j + 1);
 						}
 						while (j <= 3);
-						wS_QuestsBase = null;
-					}
-				}
+                    }
+                }
 				i = checked(i + 1);
 			}
 			while (i <= 24);
@@ -1371,10 +1362,9 @@ namespace Mangos.World.Quests
 								}
 								j = (byte)unchecked((uint)(j + 1));
 							}
-							while (unchecked((uint)j) <= 3u);
-							wS_QuestsBase = null;
-						}
-					}
+							while (unchecked(j) <= 3u);
+                        }
+                    }
 					i++;
 				}
 				while (i <= 24);
@@ -1408,10 +1398,9 @@ namespace Mangos.World.Quests
 								j = (byte)unchecked((uint)(j + 1));
 							}
 						}
-						while ((uint)j <= 3u);
-						wS_QuestsBase = null;
-					}
-				}
+						while (j <= 3u);
+                    }
+                }
 				i = checked(i + 1);
 			}
 			while (i <= 24);
@@ -1463,8 +1452,7 @@ namespace Mangos.World.Quests
 							catch (Exception ex3)
 							{
 								ProjectData.SetProjectError(ex3);
-								Exception ex = ex3;
-								WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "GetQuestGiverStatus Error");
+                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "GetQuestGiverStatus Error");
 								ProjectData.ClearProjectError();
 							}
 						}
@@ -1482,8 +1470,7 @@ namespace Mangos.World.Quests
 								catch (Exception ex4)
 								{
 									ProjectData.SetProjectError(ex4);
-									Exception ex2 = ex4;
-									WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "GetQuestGiverStatus Error");
+                                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "GetQuestGiverStatus Error");
 									ProjectData.ClearProjectError();
 								}
 							}
@@ -1941,7 +1928,7 @@ namespace Mangos.World.Quests
 							if (-client.Character.TalkCurrentQuest.RewardGold <= client.Character.Copper)
 							{
 								ref uint copper = ref client.Character.Copper;
-								copper = (uint)(unchecked((long)copper) + unchecked((long)client.Character.TalkCurrentQuest.RewardGold));
+								copper = (uint)(unchecked(copper) + unchecked(client.Character.TalkCurrentQuest.RewardGold));
 								goto IL_01d2;
 							}
 							Packets.PacketClass errorPacket = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
@@ -1959,7 +1946,7 @@ namespace Mangos.World.Quests
 								if (client.Character.TalkCurrentQuest.RewardGold < 0)
 								{
 									ref uint copper2 = ref client.Character.Copper;
-									copper2 = (uint)(unchecked((long)copper2) - unchecked((long)client.Character.TalkCurrentQuest.RewardGold));
+									copper2 = (uint)(unchecked(copper2) - unchecked(client.Character.TalkCurrentQuest.RewardGold));
 								}
 								Packets.PacketClass errorPacket3 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
 								errorPacket3.AddInt32(21);
@@ -1992,7 +1979,7 @@ namespace Mangos.World.Quests
 						if (client.Character.TalkCurrentQuest.RewardGold > 0)
 						{
 							ref uint copper3 = ref client.Character.Copper;
-							copper3 = (uint)(unchecked((long)copper3) + unchecked((long)client.Character.TalkCurrentQuest.RewardGold));
+							copper3 = (uint)(unchecked(copper3) + unchecked(client.Character.TalkCurrentQuest.RewardGold));
 						}
 						client.Character.SetUpdateFlag(1176, client.Character.Copper);
 						if (client.Character.TalkCurrentQuest.RewardHonor != 0)
@@ -2039,27 +2026,27 @@ namespace Mangos.World.Quests
 							{
 								if (qLevel2 >= 65)
 								{
-									fullxp2 = (float)reqMoneyMaxLevel2 / 6f;
+									fullxp2 = reqMoneyMaxLevel2 / 6f;
 								}
 								else if (qLevel2 == 64)
 								{
-									fullxp2 = (float)reqMoneyMaxLevel2 / 4.8f;
+									fullxp2 = reqMoneyMaxLevel2 / 4.8f;
 								}
 								else if (qLevel2 == 63)
 								{
-									fullxp2 = (float)reqMoneyMaxLevel2 / 3.6f;
+									fullxp2 = reqMoneyMaxLevel2 / 3.6f;
 								}
 								else if (qLevel2 == 62)
 								{
-									fullxp2 = (float)reqMoneyMaxLevel2 / 2.4f;
+									fullxp2 = reqMoneyMaxLevel2 / 2.4f;
 								}
 								else if (qLevel2 == 61)
 								{
-									fullxp2 = (float)reqMoneyMaxLevel2 / 1.2f;
+									fullxp2 = reqMoneyMaxLevel2 / 1.2f;
 								}
 								else if (qLevel2 > 0 && qLevel2 <= 60)
 								{
-									fullxp2 = (float)reqMoneyMaxLevel2 / 0.6f;
+									fullxp2 = reqMoneyMaxLevel2 / 0.6f;
 								}
 								xp2 = ((pLevel2 <= qLevel2 + 5) ? ((int)fullxp2) : ((pLevel2 == qLevel2 + 6) ? ((int)(fullxp2 * 0.8f)) : ((pLevel2 == qLevel2 + 7) ? ((int)(fullxp2 * 0.6f)) : ((pLevel2 == qLevel2 + 8) ? ((int)(fullxp2 * 0.4f)) : ((pLevel2 != qLevel2 + 9) ? ((int)(fullxp2 * 0.1f)) : ((int)(fullxp2 * 0.2f)))))));
 								client.Character.AddXP(xp2, 0, 0uL);
@@ -2076,7 +2063,7 @@ namespace Mangos.World.Quests
 						else
 						{
 							ref uint copper4 = ref client.Character.Copper;
-							copper4 = (uint)(unchecked((long)copper4) + unchecked((long)gold2));
+							copper4 = (uint)(unchecked(copper4) + unchecked(gold2));
 						}
 						client.Character.SetUpdateFlag(1176, client.Character.Copper);
 						client.Character.SendCharacterUpdate();
@@ -2125,7 +2112,7 @@ namespace Mangos.World.Quests
 						if (-client.Character.TalkCurrentQuest.RewardGold <= client.Character.Copper)
 						{
 							ref uint copper5 = ref client.Character.Copper;
-							copper5 = (uint)(unchecked((long)copper5) + unchecked((long)client.Character.TalkCurrentQuest.RewardGold));
+							copper5 = (uint)(unchecked(copper5) + unchecked(client.Character.TalkCurrentQuest.RewardGold));
 							goto IL_0a03;
 						}
 						Packets.PacketClass errorPacket4 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
@@ -2143,7 +2130,7 @@ namespace Mangos.World.Quests
 							if (client.Character.TalkCurrentQuest.RewardGold < 0)
 							{
 								ref uint copper6 = ref client.Character.Copper;
-								copper6 = (uint)(unchecked((long)copper6) - unchecked((long)client.Character.TalkCurrentQuest.RewardGold));
+								copper6 = (uint)(unchecked(copper6) - unchecked(client.Character.TalkCurrentQuest.RewardGold));
 							}
 							Packets.PacketClass errorPacket2 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
 							errorPacket2.AddInt32(21);
@@ -2176,7 +2163,7 @@ namespace Mangos.World.Quests
 					if (client.Character.TalkCurrentQuest.RewardGold > 0)
 					{
 						ref uint copper7 = ref client.Character.Copper;
-						copper7 = (uint)(unchecked((long)copper7) + unchecked((long)client.Character.TalkCurrentQuest.RewardGold));
+						copper7 = (uint)(unchecked(copper7) + unchecked(client.Character.TalkCurrentQuest.RewardGold));
 					}
 					client.Character.SetUpdateFlag(1176, client.Character.Copper);
 					if (client.Character.TalkCurrentQuest.RewardHonor != 0)
@@ -2223,27 +2210,27 @@ namespace Mangos.World.Quests
 						{
 							if (qLevel >= 65)
 							{
-								fullxp = (float)reqMoneyMaxLevel / 6f;
+								fullxp = reqMoneyMaxLevel / 6f;
 							}
 							else if (qLevel == 64)
 							{
-								fullxp = (float)reqMoneyMaxLevel / 4.8f;
+								fullxp = reqMoneyMaxLevel / 4.8f;
 							}
 							else if (qLevel == 63)
 							{
-								fullxp = (float)reqMoneyMaxLevel / 3.6f;
+								fullxp = reqMoneyMaxLevel / 3.6f;
 							}
 							else if (qLevel == 62)
 							{
-								fullxp = (float)reqMoneyMaxLevel / 2.4f;
+								fullxp = reqMoneyMaxLevel / 2.4f;
 							}
 							else if (qLevel == 61)
 							{
-								fullxp = (float)reqMoneyMaxLevel / 1.2f;
+								fullxp = reqMoneyMaxLevel / 1.2f;
 							}
 							else if (qLevel > 0 && qLevel <= 60)
 							{
-								fullxp = (float)reqMoneyMaxLevel / 0.6f;
+								fullxp = reqMoneyMaxLevel / 0.6f;
 							}
 							xp = ((pLevel <= qLevel + 5) ? ((int)fullxp) : ((pLevel == qLevel + 6) ? ((int)(fullxp * 0.8f)) : ((pLevel == qLevel + 7) ? ((int)(fullxp * 0.6f)) : ((pLevel == qLevel + 8) ? ((int)(fullxp * 0.4f)) : ((pLevel != qLevel + 9) ? ((int)(fullxp * 0.1f)) : ((int)(fullxp * 0.2f)))))));
 							client.Character.AddXP(xp, 0, 0uL);
@@ -2260,7 +2247,7 @@ namespace Mangos.World.Quests
 					else
 					{
 						ref uint copper8 = ref client.Character.Copper;
-						copper8 = (uint)(unchecked((long)copper8) + unchecked((long)gold));
+						copper8 = (uint)(unchecked(copper8) + unchecked(gold));
 					}
 					client.Character.SetUpdateFlag(1176, client.Character.Copper);
 					client.Character.SendCharacterUpdate();
@@ -2356,9 +2343,8 @@ namespace Mangos.World.Quests
 						client.Send(ref errorPacket2);
 						errorPacket2.Dispose();
 					}
-					characterObject = null;
-				}
-				return;
+                }
+                return;
 			}
 			foreach (ulong guid2 in client.Character.Group.LocalMembers)
 			{
@@ -2410,9 +2396,8 @@ namespace Mangos.World.Quests
 					client.Send(ref errorPacket);
 					errorPacket.Dispose();
 				}
-				characterObject2 = null;
-			}
-		}
+            }
+        }
 
 		public void On_MSG_QUEST_PUSH_RESULT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
 		{

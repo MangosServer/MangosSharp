@@ -456,7 +456,7 @@ namespace Mangos.WoWFakeClient
                     library = getNTString(ref br2, br2.ReadInt32());
                     // Console.WriteLine("  Library: {0}", library)
 
-                    int hModule = WardenMaiev.LoadLibrary(library);
+                    int hModule = LoadLibrary(library);
                     br2.BaseStream.Position = proc_start + 4;
                     int proc_offset = br2.ReadInt32();
                     br2.BaseStream.Position = proc_offset;
@@ -466,7 +466,7 @@ namespace Mangos.WoWFakeClient
                         if (proc > 0)
                         {
                             string strProc = getNTString(ref br2, proc);
-                            int addr = WardenMaiev.GetProcAddress(hModule, strProc);
+                            int addr = GetProcAddress(hModule, strProc);
 
                             // Console.WriteLine("    Function: {0} (0x{1:X})", strProc, addr)
                             bw.BaseStream.Position = proc_offset;
@@ -474,7 +474,6 @@ namespace Mangos.WoWFakeClient
                         }
                         else
                         {
-                            proc &= 0x7FFFFFFF;
                             // Console.WriteLine("Proc: ord(0x{0:X})", proc)
                         }
 
@@ -593,14 +592,16 @@ namespace Mangos.WoWFakeClient
                 FreeMemoryD = FreeMemory;
                 SetRC4DataD = SetRC4Data;
                 GetRC4DataD = GetRC4Data;
-                myFunctionList = new FuncList();
-                myFunctionList.fpSendPacket = Marshal.GetFunctionPointerForDelegate(SendPacketD).ToInt32();
-                myFunctionList.fpCheckModule = Marshal.GetFunctionPointerForDelegate(CheckModuleD).ToInt32();
-                myFunctionList.fpLoadModule = Marshal.GetFunctionPointerForDelegate(ModuleLoadD).ToInt32();
-                myFunctionList.fpAllocateMemory = Marshal.GetFunctionPointerForDelegate(AllocateMemD).ToInt32();
-                myFunctionList.fpReleaseMemory = Marshal.GetFunctionPointerForDelegate(FreeMemoryD).ToInt32();
-                myFunctionList.fpSetRC4Data = Marshal.GetFunctionPointerForDelegate(SetRC4DataD).ToInt32();
-                myFunctionList.fpGetRC4Data = Marshal.GetFunctionPointerForDelegate(GetRC4DataD).ToInt32();
+                myFunctionList = new FuncList
+                {
+                    fpSendPacket = Marshal.GetFunctionPointerForDelegate(SendPacketD).ToInt32(),
+                    fpCheckModule = Marshal.GetFunctionPointerForDelegate(CheckModuleD).ToInt32(),
+                    fpLoadModule = Marshal.GetFunctionPointerForDelegate(ModuleLoadD).ToInt32(),
+                    fpAllocateMemory = Marshal.GetFunctionPointerForDelegate(AllocateMemD).ToInt32(),
+                    fpReleaseMemory = Marshal.GetFunctionPointerForDelegate(FreeMemoryD).ToInt32(),
+                    fpSetRC4Data = Marshal.GetFunctionPointerForDelegate(SetRC4DataD).ToInt32(),
+                    fpGetRC4Data = Marshal.GetFunctionPointerForDelegate(GetRC4DataD).ToInt32()
+                };
                 Console.WriteLine("Imports: ");
                 Console.WriteLine("  SendPacket: 0x{0:X}", myFunctionList.fpSendPacket);
                 Console.WriteLine("  CheckModule: 0x{0:X}", myFunctionList.fpCheckModule);

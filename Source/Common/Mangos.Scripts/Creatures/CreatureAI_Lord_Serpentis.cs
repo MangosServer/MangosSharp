@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Misc;
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Lord_Serpentis : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Lord_Serpentis : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int SLUMBER_CD = 10000;
@@ -37,9 +37,9 @@ namespace Mangos.Scripts.Creatures
         // Public NextSerpentForm As Integer = 0 'This should never be re-casted.
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Lord_Serpentis(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Lord_Serpentis(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -47,7 +47,7 @@ namespace Mangos.Scripts.Creatures
         public override void OnEnterCombat()
         {
             base.OnEnterCombat();
-            this.aiCreature.SendChatMessage("I am the serpent king, I can do anything!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL); // If you can do anything, then go serpent form.
+            aiCreature.SendChatMessage("I am the serpent king, I can do anything!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL); // If you can do anything, then go serpent form.
         }
 
         public override void OnThink()
@@ -57,13 +57,13 @@ namespace Mangos.Scripts.Creatures
             if (NextLightningBolt <= 0)
             {
                 NextLightningBolt = Lightning_Bolt_CD;
-                this.aiCreature.CastSpell(Spell_Lightning_Bolt, this.aiTarget); // Lightning bolt on current target.
+                aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget); // Lightning bolt on current target.
             }
 
             if (NextSlumber <= 0)
             {
                 NextSlumber = SLUMBER_CD;
-                this.aiCreature.CastSpell(Slumber_Spell, this.aiTarget); // Not sure if its supposed to take a random target, stays like this for now.
+                aiCreature.CastSpell(Slumber_Spell, aiTarget); // Not sure if its supposed to take a random target, stays like this for now.
             }
         }
 
@@ -71,10 +71,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(Spell_Lightning_Bolt, this.aiTarget);
+                aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
             }
         }
 
@@ -82,12 +82,12 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 1; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
                     return;
             }
 
-            this.aiCreature.CastSpell(Slumber_Spell, this.aiTarget);
+            aiCreature.CastSpell(Slumber_Spell, aiTarget);
         }
 
         public override void OnHealthChange(int Percent)
@@ -97,11 +97,11 @@ namespace Mangos.Scripts.Creatures
             {
                 try
                 {
-                    this.aiCreature.CastSpellOnSelf(Healing_Spell);
+                    aiCreature.CastSpellOnSelf(Healing_Spell);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("I was unable to cast healing touch on myself. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
+                    aiCreature.SendChatMessage("I was unable to cast healing touch on myself. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
                 }
             }
         }

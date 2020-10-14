@@ -110,7 +110,7 @@ namespace Mangos.World.Handlers
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 
 			public void SendTradeUpdateToTrader()
@@ -289,16 +289,16 @@ namespace Mangos.World.Handlers
 					{
 						if (TraderSlots[i] > 0)
 						{
-							TargetReqItems = (byte)(unchecked((int)TargetReqItems) + 1);
+							TargetReqItems = (byte)(unchecked(TargetReqItems) + 1);
 						}
 						if (TargetSlots[i] > 0)
 						{
-							TraderReqItems = (byte)(unchecked((int)TraderReqItems) + 1);
+							TraderReqItems = (byte)(unchecked(TraderReqItems) + 1);
 						}
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 5u);
+				while (i <= 5u);
 				try
 				{
 					if (Target.ItemFREESLOTS() < TargetReqItems)
@@ -361,7 +361,7 @@ namespace Mangos.World.Handlers
 						}
 						return;
 					}
-					if (((long)TargetGold > 0L) | ((long)TraderGold > 0L))
+					if ((TargetGold > 0L) | (TraderGold > 0L))
 					{
 						checked
 						{
@@ -411,7 +411,7 @@ namespace Mangos.World.Handlers
 								j = (byte)unchecked((uint)(j + 1));
 							}
 						}
-						while ((uint)j <= 5u);
+						while (j <= 5u);
 					}
 					Trader.SendCharacterUpdate();
 					Target.SendCharacterUpdate();
@@ -510,12 +510,12 @@ namespace Mangos.World.Handlers
 				{
 					if (client.Character.tradeInfo.Trader == client.Character)
 					{
-						client.Character.tradeInfo.TraderSlots[slot] = (myBag << 8) + unchecked((int)mySlot);
+						client.Character.tradeInfo.TraderSlots[slot] = (myBag << 8) + unchecked(mySlot);
 						client.Character.tradeInfo.SendTradeUpdateToTarget();
 					}
 					else
 					{
-						client.Character.tradeInfo.TargetSlots[slot] = (myBag << 8) + unchecked((int)mySlot);
+						client.Character.tradeInfo.TargetSlots[slot] = (myBag << 8) + unchecked(mySlot);
 						client.Character.tradeInfo.SendTradeUpdateToTrader();
 					}
 				}
@@ -727,13 +727,12 @@ namespace Mangos.World.Handlers
 				return;
 			}
 			ref WS_PlayerData.CharacterObject character = ref client.Character;
-			Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
-			ulong key;
-			WS_PlayerData.CharacterObject Target_ = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = targetGUID];
+            Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
+            ulong key;
+            WS_PlayerData.CharacterObject Target_ = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = targetGUID];
 			TTradeInfo tTradeInfo = new TTradeInfo(ref character, ref Target_);
 			cHARACTERs[key] = Target_;
-			TTradeInfo tmpTradeInfo = tTradeInfo;
-			Packets.PacketClass response_ok = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
+            Packets.PacketClass response_ok = new Packets.PacketClass(OPCODES.SMSG_TRADE_STATUS);
 			try
 			{
 				response_ok.AddInt32(1);

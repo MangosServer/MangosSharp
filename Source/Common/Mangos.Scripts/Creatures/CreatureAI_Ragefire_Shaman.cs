@@ -19,7 +19,7 @@
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Ragefire_Shaman : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Ragefire_Shaman : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int HEAL_COOLDOWN = 8000;
@@ -31,9 +31,9 @@ namespace Mangos.Scripts.Creatures
         public int NextBolt = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Ragefire_Shaman(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Ragefire_Shaman(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -45,13 +45,13 @@ namespace Mangos.Scripts.Creatures
             if (NextHeal <= 0)
             {
                 NextHeal = HEAL_COOLDOWN;
-                this.aiCreature.CastSpell(HEAL_SPELL, this.aiTarget); // HEALING WAVE
+                aiCreature.CastSpell(HEAL_SPELL, aiTarget); // HEALING WAVE
             }
 
             if (NextBolt <= 1)
             {
                 NextBolt = BOLT_COOLDOWN;
-                this.aiCreature.CastSpell(BOLT_SPELL, this.aiTarget); // LIGHTNING BOLT
+                aiCreature.CastSpell(BOLT_SPELL, aiTarget); // LIGHTNING BOLT
             }
         }
 
@@ -59,10 +59,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 1; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(HEAL_SPELL, this.aiTarget);
+                aiCreature.CastSpell(HEAL_SPELL, aiTarget);
             }
         }
 
@@ -70,10 +70,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 1; i <= 1; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(BOLT_SPELL, this.aiTarget);
+                aiCreature.CastSpell(BOLT_SPELL, aiTarget);
             }
         }
     }

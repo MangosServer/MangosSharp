@@ -208,7 +208,7 @@ namespace Mangos.World.Maps
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -311,8 +311,7 @@ namespace Mangos.World.Maps
 					catch (DirectoryNotFoundException ex)
 					{
 						ProjectData.SetProjectError(ex);
-						DirectoryNotFoundException e = ex;
-						Console.ForegroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.Red;
 						Console.WriteLine("DBC File : Map missing.");
 						Console.ForegroundColor = ConsoleColor.Gray;
 						ProjectData.ClearProjectError();
@@ -357,7 +356,7 @@ namespace Mangos.World.Maps
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -445,12 +444,12 @@ namespace Mangos.World.Maps
 
 		public byte GetSubMapTileX(float x)
 		{
-			return checked((byte)((float)RESOLUTION_ZMAP * (32f - ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE - Conversion.Fix(32f - ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE))));
+			return checked((byte)(RESOLUTION_ZMAP * (32f - ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE - Conversion.Fix(32f - ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE))));
 		}
 
 		public byte GetSubMapTileY(float y)
 		{
-			return checked((byte)((float)RESOLUTION_ZMAP * (32f - ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE - Conversion.Fix(32f - ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE))));
+			return checked((byte)(RESOLUTION_ZMAP * (32f - ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE - Conversion.Fix(32f - ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE))));
 		}
 
 		public float GetZCoord(float x, float y, uint Map)
@@ -463,14 +462,14 @@ namespace Mangos.World.Maps
 					y = ValidateMapCoord(y);
 					byte MapTileX = (byte)(32f - x / WorldServiceLocator._Global_Constants.SIZE);
 					byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
-					byte MapTile_LocalX = (byte)Math.Round((float)RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - (float)unchecked((int)MapTileX)));
-					byte MapTile_LocalY = (byte)Math.Round((float)RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - (float)unchecked((int)MapTileY)));
-					float xNormalized;
-					float yNormalized;
-					unchecked
+					byte MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - unchecked(MapTileX)));
+					byte MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - unchecked(MapTileY)));
+                    float xNormalized;
+                    float yNormalized;
+                    unchecked
 					{
-						xNormalized = (float)RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - (float)(int)MapTileX) - (float)(int)MapTile_LocalX;
-						yNormalized = (float)RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - (float)(int)MapTileY) - (float)(int)MapTile_LocalY;
+						xNormalized = RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX) - MapTile_LocalX;
+						yNormalized = RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY) - MapTile_LocalY;
 						if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
 						{
 							return 0f;
@@ -478,8 +477,8 @@ namespace Mangos.World.Maps
 					}
 					try
 					{
-						float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(unchecked((int)MapTile_LocalX) + 1), MapTile_LocalY), xNormalized);
-						float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(unchecked((int)MapTile_LocalY) + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(unchecked((int)MapTile_LocalX) + 1), (byte)(unchecked((int)MapTile_LocalY) + 1)), xNormalized);
+						float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(unchecked(MapTile_LocalX) + 1), MapTile_LocalY), xNormalized);
+						float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(unchecked(MapTile_LocalY) + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(unchecked(MapTile_LocalX) + 1), (byte)(unchecked(MapTile_LocalY) + 1)), xNormalized);
 						return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
 					}
 					catch (Exception projectError)
@@ -493,8 +492,7 @@ namespace Mangos.World.Maps
 				catch (Exception ex)
 				{
 					ProjectData.SetProjectError(ex);
-					Exception e = ex;
-					float GetZCoord = 0f;
+                    float GetZCoord = 0f;
 					ProjectData.ClearProjectError();
 					return GetZCoord;
 				}
@@ -509,8 +507,8 @@ namespace Mangos.World.Maps
 			{
 				byte MapTileX = (byte)(32f - x / WorldServiceLocator._Global_Constants.SIZE);
 				byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
-				byte MapTile_LocalX = (byte)Math.Round((float)WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - x / WorldServiceLocator._Global_Constants.SIZE - (float)unchecked((int)MapTileX)));
-				byte MapTile_LocalY = (byte)Math.Round((float)WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - y / WorldServiceLocator._Global_Constants.SIZE - (float)unchecked((int)MapTileY)));
+				byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - x / WorldServiceLocator._Global_Constants.SIZE - unchecked(MapTileX)));
+				byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - y / WorldServiceLocator._Global_Constants.SIZE - unchecked(MapTileY)));
 				if (Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
 				{
 					return 0f;
@@ -527,8 +525,8 @@ namespace Mangos.World.Maps
 			{
 				byte MapTileX = (byte)(32f - x / WorldServiceLocator._Global_Constants.SIZE);
 				byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
-				byte MapTile_LocalX = (byte)Math.Round((float)WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - x / WorldServiceLocator._Global_Constants.SIZE - (float)unchecked((int)MapTileX)));
-				byte MapTile_LocalY = (byte)Math.Round((float)WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - y / WorldServiceLocator._Global_Constants.SIZE - (float)unchecked((int)MapTileY)));
+				byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - x / WorldServiceLocator._Global_Constants.SIZE - unchecked(MapTileX)));
+				byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - y / WorldServiceLocator._Global_Constants.SIZE - unchecked(MapTileY)));
 				if (Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
 				{
 					return 0;
@@ -545,8 +543,8 @@ namespace Mangos.World.Maps
 			{
 				byte MapTileX = (byte)(32f - x / WorldServiceLocator._Global_Constants.SIZE);
 				byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
-				byte MapTile_LocalX = (byte)Math.Round((float)WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - x / WorldServiceLocator._Global_Constants.SIZE - (float)unchecked((int)MapTileX)));
-				byte MapTile_LocalY = (byte)Math.Round((float)WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - y / WorldServiceLocator._Global_Constants.SIZE - (float)unchecked((int)MapTileY)));
+				byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - x / WorldServiceLocator._Global_Constants.SIZE - unchecked(MapTileX)));
+				byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - y / WorldServiceLocator._Global_Constants.SIZE - unchecked(MapTileY)));
 				if (Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
 				{
 					return 0;
@@ -571,14 +569,14 @@ namespace Mangos.World.Maps
 					z = ValidateMapCoord(z);
 					byte MapTileX = (byte)(32f - x / WorldServiceLocator._Global_Constants.SIZE);
 					byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
-					byte MapTile_LocalX = (byte)Math.Round((float)RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - (float)unchecked((int)MapTileX)));
-					byte MapTile_LocalY = (byte)Math.Round((float)RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - (float)unchecked((int)MapTileY)));
+					byte MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - unchecked(MapTileX)));
+					byte MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - unchecked(MapTileY)));
 					float xNormalized;
 					float yNormalized;
 					unchecked
 					{
-						xNormalized = (float)RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - (float)(int)MapTileX) - (float)(int)MapTile_LocalX;
-						yNormalized = (float)RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - (float)(int)MapTileY) - (float)(int)MapTile_LocalY;
+						xNormalized = RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX) - MapTile_LocalX;
+						yNormalized = RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY) - MapTile_LocalY;
 						if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
 						{
 							float VMapHeight2 = GetVMapHeight(Map, x, y, z + 5f);
@@ -599,8 +597,8 @@ namespace Mangos.World.Maps
 					}
 					try
 					{
-						float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(unchecked((int)MapTile_LocalX) + 1), MapTile_LocalY), xNormalized);
-						float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(unchecked((int)MapTile_LocalY) + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(unchecked((int)MapTile_LocalX) + 1), (byte)(unchecked((int)MapTile_LocalY) + 1)), xNormalized);
+						float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(unchecked(MapTile_LocalX) + 1), MapTile_LocalY), xNormalized);
+						float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(unchecked(MapTile_LocalY) + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(unchecked(MapTile_LocalX) + 1), (byte)(unchecked(MapTile_LocalY) + 1)), xNormalized);
 						return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
 					}
 					catch (Exception projectError)
@@ -629,22 +627,22 @@ namespace Mangos.World.Maps
 			{
 				if (MapTileLocalX > RESOLUTION_ZMAP)
 				{
-					MapTileX = (byte)(unchecked((int)MapTileX) + 1);
-					MapTileLocalX = (byte)(unchecked((int)MapTileLocalX) - (RESOLUTION_ZMAP + 1));
+					MapTileX = (byte)(unchecked(MapTileX) + 1);
+					MapTileLocalX = (byte)(unchecked(MapTileLocalX) - (RESOLUTION_ZMAP + 1));
 				}
 				else if (MapTileLocalX < 0)
 				{
-					MapTileX = (byte)(unchecked((int)MapTileX) - 1);
+					MapTileX = (byte)(unchecked(MapTileX) - 1);
 					MapTileLocalX = (byte)((short)unchecked(-MapTileLocalX) - 1);
 				}
 				if (MapTileLocalY > RESOLUTION_ZMAP)
 				{
-					MapTileY = (byte)(unchecked((int)MapTileY) + 1);
-					MapTileLocalY = (byte)(unchecked((int)MapTileLocalY) - (RESOLUTION_ZMAP + 1));
+					MapTileY = (byte)(unchecked(MapTileY) + 1);
+					MapTileLocalY = (byte)(unchecked(MapTileLocalY) - (RESOLUTION_ZMAP + 1));
 				}
 				else if (MapTileLocalY < 0)
 				{
-					MapTileY = (byte)(unchecked((int)MapTileY) - 1);
+					MapTileY = (byte)(unchecked(MapTileY) - 1);
 					MapTileLocalY = (byte)((short)unchecked(-MapTileLocalY) - 1);
 				}
 				return Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTileLocalX, MapTileLocalY];
@@ -717,10 +715,10 @@ namespace Mangos.World.Maps
 		{
 			checked
 			{
-				float MinX = (float)(32 - unchecked((int)TileX)) * WorldServiceLocator._Global_Constants.SIZE;
-				float MaxX = (float)(32 - (unchecked((int)TileX) + 1)) * WorldServiceLocator._Global_Constants.SIZE;
-				float MinY = (float)(32 - unchecked((int)TileY)) * WorldServiceLocator._Global_Constants.SIZE;
-				float MaxY = (float)(32 - (unchecked((int)TileY) + 1)) * WorldServiceLocator._Global_Constants.SIZE;
+				float MinX = (32 - unchecked(TileX)) * WorldServiceLocator._Global_Constants.SIZE;
+				float MaxX = (32 - (unchecked(TileX) + 1)) * WorldServiceLocator._Global_Constants.SIZE;
+				float MinY = (32 - unchecked(TileY)) * WorldServiceLocator._Global_Constants.SIZE;
+				float MaxY = (32 - (unchecked(TileY) + 1)) * WorldServiceLocator._Global_Constants.SIZE;
 				if (MinX > MaxX)
 				{
 					float tmpSng2 = MinX;
@@ -734,13 +732,13 @@ namespace Mangos.World.Maps
 					MaxY = tmpSng;
 				}
 				ulong InstanceGuidAdd = 0uL;
-				if (unchecked((long)TileInstance) > 0L)
+				if (unchecked(TileInstance) > 0L)
 				{
-					InstanceGuidAdd = Convert.ToUInt64(decimal.Add(new decimal(1000000L), decimal.Multiply(new decimal(unchecked((long)TileInstance) - 1L), new decimal(100000L))));
+					InstanceGuidAdd = Convert.ToUInt64(decimal.Add(new decimal(1000000L), decimal.Multiply(new decimal(unchecked(TileInstance) - 1L), new decimal(100000L))));
 				}
 				DataTable MysqlQuery = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM creature LEFT OUTER JOIN game_event_creature ON creature.guid = game_event_creature.guid WHERE map={TileMap} AND position_X BETWEEN '{MinX}' AND '{MaxX}' AND position_Y BETWEEN '{MinY}' AND '{MaxY}';", ref MysqlQuery);
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = MysqlQuery.Rows.GetEnumerator();
@@ -778,7 +776,7 @@ namespace Mangos.World.Maps
 				}
 				MysqlQuery.Clear();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM gameobject LEFT OUTER JOIN game_event_gameobject ON gameobject.guid = game_event_gameobject.guid WHERE map={TileMap} AND spawntimesecs>=0 AND position_X BETWEEN '{MinX}' AND '{MaxX}' AND position_Y BETWEEN '{MinY}' AND '{MaxY}';", ref MysqlQuery);
-				IEnumerator enumerator2 = default(IEnumerator);
+				IEnumerator enumerator2 = default;
 				try
 				{
 					enumerator2 = MysqlQuery.Rows.GetEnumerator();
@@ -816,7 +814,7 @@ namespace Mangos.World.Maps
 				}
 				MysqlQuery.Clear();
 				WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM corpse WHERE map={0} AND instance={5} AND position_x BETWEEN '{1}' AND '{2}' AND position_y BETWEEN '{3}' AND '{4}';", TileMap, MinX, MaxX, MinY, MaxY, TileInstance), ref MysqlQuery);
-				IEnumerator enumerator3 = default(IEnumerator);
+				IEnumerator enumerator3 = default;
 				try
 				{
 					enumerator3 = MysqlQuery.Rows.GetEnumerator();
@@ -891,10 +889,10 @@ namespace Mangos.World.Maps
 		{
 			checked
 			{
-				float MinX = (float)(32 - unchecked((int)TileX)) * WorldServiceLocator._Global_Constants.SIZE;
-				float MaxX = (float)(32 - (unchecked((int)TileX) + 1)) * WorldServiceLocator._Global_Constants.SIZE;
-				float MinY = (float)(32 - unchecked((int)TileY)) * WorldServiceLocator._Global_Constants.SIZE;
-				float MaxY = (float)(32 - (unchecked((int)TileY) + 1)) * WorldServiceLocator._Global_Constants.SIZE;
+				float MinX = (32 - unchecked(TileX)) * WorldServiceLocator._Global_Constants.SIZE;
+				float MaxX = (32 - (unchecked(TileX) + 1)) * WorldServiceLocator._Global_Constants.SIZE;
+				float MinY = (32 - unchecked(TileY)) * WorldServiceLocator._Global_Constants.SIZE;
+				float MaxY = (32 - (unchecked(TileY) + 1)) * WorldServiceLocator._Global_Constants.SIZE;
 				if (MinX > MaxX)
 				{
 					float tmpSng2 = MinX;

@@ -131,7 +131,7 @@ namespace Mangos.World.Server
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 
 			public void ClusterConnect()
@@ -211,8 +211,12 @@ namespace Mangos.World.Server
 
 			void IWorld.ClientConnect(uint id, ClientInfo client)
 			{
-				//ILSpy generated this explicit interface implementation from .override directive in ClientConnect
-				this.ClientConnect(id, client);
+                if (client is null)
+                {
+                    throw new ArgumentNullException(nameof(client));
+                }
+                //ILSpy generated this explicit interface implementation from .override directive in ClientConnect
+                ClientConnect(id, client);
 			}
 
 			public void ClientDisconnect(uint id)
@@ -229,7 +233,7 @@ namespace Mangos.World.Server
 			void IWorld.ClientDisconnect(uint id)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in ClientDisconnect
-				this.ClientDisconnect(id);
+				ClientDisconnect(id);
 			}
 
 			public void ClientLogin(uint id, ulong guid)
@@ -259,7 +263,7 @@ namespace Mangos.World.Server
 			void IWorld.ClientLogin(uint id, ulong guid)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in ClientLogin
-				this.ClientLogin(id, guid);
+				ClientLogin(id, guid);
 			}
 
 			public void ClientLogout(uint id)
@@ -271,7 +275,7 @@ namespace Mangos.World.Server
 			void IWorld.ClientLogout(uint id)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in ClientLogout
-				this.ClientLogout(id);
+				ClientLogout(id);
 			}
 
 			public void ClientPacket(uint id, byte[] data)
@@ -306,19 +310,38 @@ namespace Mangos.World.Server
 			void IWorld.ClientPacket(uint id, byte[] data)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in ClientPacket
-				this.ClientPacket(id, data);
+				ClientPacket(id, data);
 			}
 
 			public int ClientCreateCharacter(string account, string name, byte race, byte classe, byte gender, byte skin, byte face, byte hairStyle, byte hairColor, byte facialHair, byte outfitId)
 			{
-				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Account {0} Created a character with Name {1}, Race {2}, Class {3}, Gender {4}, Skin {5}, Face {6}, HairStyle {7}, HairColor {8}, FacialHair {9}, outfitID {10}", account, name, race, classe, gender, skin, face, hairStyle, hairColor, facialHair, outfitId);
+                if (string.IsNullOrEmpty(account))
+                {
+                    throw new ArgumentException($"'{nameof(account)}' cannot be null or empty", nameof(account));
+                }
+
+                if (string.IsNullOrEmpty(name))
+                {
+                    throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+                }
+
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Account {0} Created a character with Name {1}, Race {2}, Class {3}, Gender {4}, Skin {5}, Face {6}, HairStyle {7}, HairColor {8}, FacialHair {9}, outfitID {10}", account, name, race, classe, gender, skin, face, hairStyle, hairColor, facialHair, outfitId);
 				return WorldServiceLocator._WS_Player_Creation.CreateCharacter(account, name, race, classe, gender, skin, face, hairStyle, hairColor, facialHair, outfitId);
 			}
 
 			int IWorld.ClientCreateCharacter(string account, string name, byte race, byte classe, byte gender, byte skin, byte face, byte hairStyle, byte hairColor, byte facialHair, byte outfitId)
 			{
-				//ILSpy generated this explicit interface implementation from .override directive in ClientCreateCharacter
-				return this.ClientCreateCharacter(account, name, race, classe, gender, skin, face, hairStyle, hairColor, facialHair, outfitId);
+                if (string.IsNullOrEmpty(account))
+                {
+                    throw new ArgumentException($"'{nameof(account)}' cannot be null or empty", nameof(account));
+                }
+
+                if (string.IsNullOrEmpty(name))
+                {
+                    throw new ArgumentException($"'{nameof(name)}' cannot be null or empty", nameof(name));
+                }
+                //ILSpy generated this explicit interface implementation from .override directive in ClientCreateCharacter
+                return ClientCreateCharacter(account, name, race, classe, gender, skin, face, hairStyle, hairColor, facialHair, outfitId);
 			}
 
 			public int Ping(int timestamp, int latency)
@@ -335,12 +358,12 @@ namespace Mangos.World.Server
 			int IWorld.Ping(int timestamp, int latency)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Ping
-				return this.Ping(timestamp, latency);
+				return Ping(timestamp, latency);
 			}
 
 			public void CheckConnection(object State)
 			{
-				if (checked(WorldServiceLocator._NativeMethods.timeGetTime("") - WorldServiceLocator._WS_Network.LastPing) > 40000)
+                if (checked(WorldServiceLocator._NativeMethods.timeGetTime("") - WorldServiceLocator._WS_Network.LastPing) > 40000)
 				{
 					if (Cluster != null)
 					{
@@ -354,7 +377,7 @@ namespace Mangos.World.Server
 
 			public void CheckCPU(object State)
 			{
-				TimeSpan TimeSinceLastCheck = DateAndTime.Now.Subtract(LastInfo);
+                TimeSpan TimeSinceLastCheck = DateAndTime.Now.Subtract(LastInfo);
 				UsageCPU = (float)((Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds - LastCPUTime) / TimeSinceLastCheck.TotalMilliseconds * 100.0);
 				LastInfo = DateAndTime.Now;
 				LastCPUTime = Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds;
@@ -362,16 +385,18 @@ namespace Mangos.World.Server
 
 			public ServerInfo GetServerInfo()
 			{
-				ServerInfo serverInfo = new ServerInfo();
-				serverInfo.cpuUsage = UsageCPU;
-				serverInfo.memoryUsage = checked((ulong)Math.Round((double)Process.GetCurrentProcess().WorkingSet64 / 1048576.0));
-				return serverInfo;
+                ServerInfo serverInfo = new ServerInfo
+                {
+                    cpuUsage = UsageCPU,
+                    memoryUsage = checked((ulong)Math.Round(Process.GetCurrentProcess().WorkingSet64 / 1048576.0))
+                };
+                return serverInfo;
 			}
 
 			ServerInfo IWorld.GetServerInfo()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in GetServerInfo
-				return this.GetServerInfo();
+				return GetServerInfo();
 			}
 
 			public void InstanceCreate(uint MapID)
@@ -385,7 +410,7 @@ namespace Mangos.World.Server
 			void IWorld.InstanceCreate(uint MapID)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in InstanceCreate
-				this.InstanceCreate(MapID);
+				InstanceCreate(MapID);
 			}
 
 			public void InstanceDestroy(uint MapID)
@@ -396,7 +421,7 @@ namespace Mangos.World.Server
 			void IWorld.InstanceDestroy(uint MapID)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in InstanceDestroy
-				this.InstanceDestroy(MapID);
+				InstanceDestroy(MapID);
 			}
 
 			public bool InstanceCanCreate(int Type)
@@ -415,7 +440,7 @@ namespace Mangos.World.Server
 			bool IWorld.InstanceCanCreate(int Type)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in InstanceCanCreate
-				return this.InstanceCanCreate(Type);
+				return InstanceCanCreate(Type);
 			}
 
 			public void ClientSetGroup(uint ID, long GroupID)
@@ -444,7 +469,7 @@ namespace Mangos.World.Server
 			void IWorld.ClientSetGroup(uint ID, long GroupID)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in ClientSetGroup
-				this.ClientSetGroup(ID, GroupID);
+				ClientSetGroup(ID, GroupID);
 			}
 
 			public void GroupUpdate(long GroupID, byte GroupType, ulong GroupLeader, ulong[] Members)
@@ -475,7 +500,7 @@ namespace Mangos.World.Server
 			void IWorld.GroupUpdate(long GroupID, byte GroupType, ulong GroupLeader, ulong[] Members)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in GroupUpdate
-				this.GroupUpdate(GroupID, GroupType, GroupLeader, Members);
+				GroupUpdate(GroupID, GroupType, GroupLeader, Members);
 			}
 
 			public void GroupUpdateLoot(long GroupID, byte Difficulty, byte Method, byte Threshold, ulong Master)
@@ -500,7 +525,7 @@ namespace Mangos.World.Server
 			void IWorld.GroupUpdateLoot(long GroupID, byte Difficulty, byte Method, byte Threshold, ulong Master)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in GroupUpdateLoot
-				this.GroupUpdateLoot(GroupID, Difficulty, Method, Threshold, Master);
+				GroupUpdateLoot(GroupID, Difficulty, Method, Threshold, Master);
 			}
 
 			public byte[] GroupMemberStats(ulong GUID, int Flag)
@@ -523,7 +548,7 @@ namespace Mangos.World.Server
 			byte[] IWorld.GroupMemberStats(ulong GUID, int Flag)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in GroupMemberStats
-				return this.GroupMemberStats(GUID, Flag);
+				return GroupMemberStats(GUID, Flag);
 			}
 
 			public void GuildUpdate(ulong GUID, uint GuildID, byte GuildRank)
@@ -538,7 +563,7 @@ namespace Mangos.World.Server
 			void IWorld.GuildUpdate(ulong GUID, uint GuildID, byte GuildRank)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in GuildUpdate
-				this.GuildUpdate(GUID, GuildID, GuildRank);
+				GuildUpdate(GUID, GuildID, GuildRank);
 			}
 
 			public void BattlefieldCreate(int BattlefieldID, byte BattlefieldMapType, uint Map)
@@ -549,7 +574,7 @@ namespace Mangos.World.Server
 			void IWorld.BattlefieldCreate(int BattlefieldID, byte BattlefieldMapType, uint Map)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in BattlefieldCreate
-				this.BattlefieldCreate(BattlefieldID, BattlefieldMapType, Map);
+				BattlefieldCreate(BattlefieldID, BattlefieldMapType, Map);
 			}
 
 			public void BattlefieldDelete(int BattlefieldID)
@@ -560,7 +585,7 @@ namespace Mangos.World.Server
 			void IWorld.BattlefieldDelete(int BattlefieldID)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in BattlefieldDelete
-				this.BattlefieldDelete(BattlefieldID);
+				BattlefieldDelete(BattlefieldID);
 			}
 
 			public void BattlefieldJoin(int BattlefieldID, ulong GUID)
@@ -571,7 +596,7 @@ namespace Mangos.World.Server
 			void IWorld.BattlefieldJoin(int BattlefieldID, ulong GUID)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in BattlefieldJoin
-				this.BattlefieldJoin(BattlefieldID, GUID);
+				BattlefieldJoin(BattlefieldID, GUID);
 			}
 
 			public void BattlefieldLeave(int BattlefieldID, ulong GUID)
@@ -582,7 +607,7 @@ namespace Mangos.World.Server
 			void IWorld.BattlefieldLeave(int BattlefieldID, ulong GUID)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in BattlefieldLeave
-				this.BattlefieldLeave(BattlefieldID, GUID);
+				BattlefieldLeave(BattlefieldID, GUID);
 			}
 		}
 
@@ -598,7 +623,12 @@ namespace Mangos.World.Server
 
 			public void OnPacket(object state)
 			{
-				while (Packets.Count >= 1)
+                if (state is null)
+                {
+                    throw new ArgumentNullException(nameof(state));
+                }
+
+                while (Packets.Count >= 1)
 				{
 					try
 					{
@@ -640,7 +670,7 @@ namespace Mangos.World.Server
 								}
 								else
 								{
-									WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Unknown Opcode 0x{2:X} [DataLen={3} {4}]", base.IP, base.Port, (int)p.OpCode, p.Data.Length, p.OpCode);
+									WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Unknown Opcode 0x{2:X} [DataLen={3} {4}]", IP, Port, (int)p.OpCode, p.Data.Length, p.OpCode);
 									if (!Information.IsNothing(p))
 									{
 										Packets packets2 = WorldServiceLocator._Packets;
@@ -652,7 +682,7 @@ namespace Mangos.World.Server
 							}
 							else
 							{
-								WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] No Packet Information in Queue", base.IP, base.Port);
+								WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] No Packet Information in Queue", IP, Port);
 								if (!Information.IsNothing(p))
 								{
 									Packets packets3 = WorldServiceLocator._Packets;
@@ -666,7 +696,7 @@ namespace Mangos.World.Server
 						{
 							ProjectData.SetProjectError(ex4);
 							Exception err2 = ex4;
-							WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Connection from [{0}:{1}] cause error {2}{3}", base.IP, base.Port, err2.ToString(), Environment.NewLine);
+							WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Connection from [{0}:{1}] cause error {2}{3}", IP, Port, err2.ToString(), Environment.NewLine);
 							Delete();
 							ProjectData.ClearProjectError();
 						}
@@ -699,7 +729,7 @@ namespace Mangos.World.Server
 					{
 						ProjectData.SetProjectError(ex6);
 						Exception err = ex6;
-						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Connection from [{0}:{1}] cause error {2}{3}", base.IP, base.Port, err.ToString(), Environment.NewLine);
+						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Connection from [{0}:{1}] cause error {2}{3}", IP, Port, err.ToString(), Environment.NewLine);
 						Delete();
 						ProjectData.ClearProjectError();
 					}
@@ -711,8 +741,8 @@ namespace Mangos.World.Server
 						catch (Exception ex7)
 						{
 							ProjectData.SetProjectError(ex7);
-							Exception ex = ex7;
-							WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Unable to dispose of packet");
+                            Exception ex;
+                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Unable to dispose of packet");
 							ProjectData.ClearProjectError();
 						}
 					}
@@ -721,11 +751,16 @@ namespace Mangos.World.Server
 
 			public void Send(ref byte[] data)
 			{
-				lock (this)
+                if (data is null)
+                {
+                    throw new ArgumentNullException(nameof(data));
+                }
+
+                lock (this)
 				{
 					try
 					{
-						WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSend(base.Index, data);
+						WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSend(Index, data);
 					}
 					catch (Exception ex)
 					{
@@ -736,7 +771,7 @@ namespace Mangos.World.Server
 							ProjectData.ClearProjectError();
 							return;
 						}
-						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] cause error {3}{2}", base.IP, base.Port, Err.ToString(), Environment.NewLine);
+						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] cause error {3}{2}", IP, Port, Err.ToString(), Environment.NewLine);
 						WorldServiceLocator._WorldServer.ClsWorldServer.Cluster = null;
 						Delete();
 						ProjectData.ClearProjectError();
@@ -761,7 +796,7 @@ namespace Mangos.World.Server
 						packet.UpdateLength();
 						if (!Information.IsNothing(WorldServiceLocator._WorldServer.ClsWorldServer.Cluster))
 						{
-							WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSend(base.Index, packet.Data);
+							WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSend(Index, packet.Data);
 						}
 						packet.Dispose();
 					}
@@ -774,7 +809,7 @@ namespace Mangos.World.Server
 							ProjectData.ClearProjectError();
 							return;
 						}
-						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] cause error {3}{2}", base.IP, base.Port, Err.ToString(), Environment.NewLine);
+						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] cause error {3}{2}", IP, Port, Err.ToString(), Environment.NewLine);
 						WorldServiceLocator._WorldServer.ClsWorldServer.Cluster = null;
 						Delete();
 						ProjectData.ClearProjectError();
@@ -800,7 +835,7 @@ namespace Mangos.World.Server
 						byte[] data = (byte[])packet.Data.Clone();
 						if (!Information.IsNothing(WorldServiceLocator._WorldServer.ClsWorldServer.Cluster))
 						{
-							WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSend(base.Index, data);
+							WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSend(Index, data);
 						}
 					}
 					catch (Exception ex)
@@ -812,7 +847,7 @@ namespace Mangos.World.Server
 							ProjectData.ClearProjectError();
 							return;
 						}
-						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] cause error {3}{2}", base.IP, base.Port, Err.ToString(), Environment.NewLine);
+						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] cause error {3}{2}", IP, Port, Err.ToString(), Environment.NewLine);
 						WorldServiceLocator._WorldServer.ClsWorldServer.Cluster = null;
 						Delete();
 						ProjectData.ClearProjectError();
@@ -824,12 +859,12 @@ namespace Mangos.World.Server
 			{
 				if (!_disposedValue)
 				{
-					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "Connection from [{0}:{1}] disposed", base.IP, base.Port);
+					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "Connection from [{0}:{1}] disposed", IP, Port);
 					if (!Information.IsNothing(WorldServiceLocator._WorldServer.ClsWorldServer.Cluster))
 					{
-						WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientDrop(base.Index);
+						WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientDrop(Index);
 					}
-					WorldServiceLocator._WorldServer.CLIENTs.Remove(base.Index);
+					WorldServiceLocator._WorldServer.CLIENTs.Remove(Index);
 					if (Character != null)
 					{
 						Character.client = null;
@@ -848,20 +883,20 @@ namespace Mangos.World.Server
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 
 			public void Delete()
 			{
 				//Discarded unreachable code: IL_005b, IL_0089, IL_008b, IL_0092, IL_0095, IL_0096, IL_00a3, IL_00c5
-				int num = default(int);
-				int num3 = default(int);
+				int num = default;
+				int num3 = default;
 				try
 				{
 					ProjectData.ClearProjectError();
 					num = -2;
 					int num2 = 2;
-					WorldServiceLocator._WorldServer.CLIENTs.Remove(base.Index);
+					WorldServiceLocator._WorldServer.CLIENTs.Remove(Index);
 					num2 = 3;
 					if (Character != null)
 					{
@@ -875,7 +910,7 @@ namespace Mangos.World.Server
 				}
 				catch (Exception obj) when (num != 0 && num3 == 0)
 				{
-					ProjectData.SetProjectError((Exception)obj);
+					ProjectData.SetProjectError(obj);
 					/*Error near IL_00c3: Could not find block for branch target IL_008b*/;
 				}
 				if (num3 != 0)
@@ -901,11 +936,11 @@ namespace Mangos.World.Server
 			{
 				Packets = new Queue<Packets.PacketClass>();
 				DEBUG_CONNECTION = false;
-				base.Access = ci.Access;
-				base.Account = ci.Account;
-				base.Index = ci.Index;
-				base.IP = ci.IP;
-				base.Port = ci.Port;
+                Access = ci.Access;
+                Account = ci.Account;
+                Index = ci.Index;
+                IP = ci.IP;
+                Port = ci.Port;
 			}
 		}
 

@@ -21,7 +21,7 @@ using Microsoft.VisualBasic.CompilerServices;
 // Basically, this AI is kitable and if the AI hits Gluth, it heals her for 5% of her HP (50,000 in this case.). Since we can't really do it that way, it has a set waypoint.
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Zombie_Chow : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Zombie_Chow : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int Infected_Wound_CD = 15000;
@@ -31,9 +31,9 @@ namespace Mangos.Scripts.Creatures
         public int NextWaypoint = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Zombie_Chow(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Zombie_Chow(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -44,7 +44,7 @@ namespace Mangos.Scripts.Creatures
             if (NextInfectedWound <= 0) // Not really Blizzlike, but it'll make the zombies more blizzlike.
             {
                 NextInfectedWound = Infected_Wound_CD;
-                this.aiCreature.CastSpell(Spell_Infected_Wound, this.aiTarget);
+                aiCreature.CastSpell(Spell_Infected_Wound, aiTarget);
             }
         }
 
@@ -52,25 +52,27 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 0; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
                     return;
-                this.aiCreature.CastSpell(Spell_Infected_Wound, this.aiTarget);
+                aiCreature.CastSpell(Spell_Infected_Wound, aiTarget);
             }
         }
 
-        public void HealGluth(ref Mangos.World.Objects.WS_Creatures.CreatureObject NPC_Gluth, ref Mangos.World.Objects.WS_Creatures.CreatureObject Zombie_Chow)
+        public void HealGluth(ref World.Objects.WS_Creatures.CreatureObject NPC_Gluth, ref World.Objects.WS_Creatures.CreatureObject Zombie_Chow)
         {
-            var Waypoint1 = new coords();
-            Waypoint1.X = 3304.919922d;
-            Waypoint1.Y = 3139.149902d;
-            Waypoint1.Z = 296.890015d;
-            Waypoint1.Orientation = 1.33d;
-            this.aiCreature.MoveTo((float)Waypoint1.X, (float)Waypoint1.Y, (float)Waypoint1.Z, (float)Waypoint1.Orientation);
-            if (Conversions.ToBoolean(this.aiCreature.MoveTo((float)Waypoint1.X, (float)Waypoint1.Y, (float)Waypoint1.Z, (float)Waypoint1.Orientation, true)))
+            var Waypoint1 = new coords
             {
-                Mangos.World.Objects.WS_Base.BaseUnit argAttacker = null;
-                this.aiCreature.Heal(50000, Attacker: argAttacker);
+                X = 3304.919922d,
+                Y = 3139.149902d,
+                Z = 296.890015d,
+                Orientation = 1.33d
+            };
+            aiCreature.MoveTo((float)Waypoint1.X, (float)Waypoint1.Y, (float)Waypoint1.Z, (float)Waypoint1.Orientation);
+            if (Conversions.ToBoolean(aiCreature.MoveTo((float)Waypoint1.X, (float)Waypoint1.Y, (float)Waypoint1.Z, (float)Waypoint1.Orientation, true)))
+            {
+                World.Objects.WS_Base.BaseUnit argAttacker = null;
+                aiCreature.Heal(50000, Attacker: argAttacker);
             }
         }
 

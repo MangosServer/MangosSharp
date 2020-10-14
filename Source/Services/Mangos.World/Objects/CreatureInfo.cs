@@ -385,8 +385,8 @@ namespace Mangos.World.Objects
 			UnkFloat2 = 1f;
 			AIScriptSource = "";
 			TalkScript = null;
-			Damage.Minimum = 0.8f * (float)BaseAttackTime / 1000f * ((float)(int)LevelMin * 10f);
-			Damage.Maximum = 1.2f * (float)BaseAttackTime / 1000f * ((float)(int)LevelMax * 10f);
+			Damage.Minimum = 0.8f * BaseAttackTime / 1000f * (LevelMin * 10f);
+			Damage.Maximum = 1.2f * BaseAttackTime / 1000f * (LevelMax * 10f);
 		}
 
 		protected virtual void Dispose(bool disposing)
@@ -407,7 +407,7 @@ namespace Mangos.World.Objects
 		void IDisposable.Dispose()
 		{
 			//ILSpy generated this explicit interface implementation from .override directive in Dispose
-			this.Dispose();
+			Dispose();
 		}
 	}
 }

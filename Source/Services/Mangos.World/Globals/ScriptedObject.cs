@@ -41,7 +41,7 @@ namespace Mangos.World.Globals
 			string AssemblyFile = "Mangos.Scripts.dll";
 			string[] AssemblySources = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "\\Scripts\\", "*.vb", SearchOption.AllDirectories);
 			string[] array = AssemblySources;
-			DateTime LastDate = default(DateTime);
+			DateTime LastDate = default;
 			foreach (string Source in array)
 			{
 				if (DateTime.Compare(LastDate, FileSystem.FileDateTime(Source)) < 0)
@@ -59,7 +59,7 @@ namespace Mangos.World.Globals
 			{
 				VBCodeProvider vBcp = new VBCodeProvider();
 				CompilerParameters cParameters = new CompilerParameters();
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = WorldServiceLocator._ConfigurationProvider.GetConfiguration().CompilerInclude.GetEnumerator();
@@ -84,7 +84,7 @@ namespace Mangos.World.Globals
 				CompilerResults cResults = vBcp.CompileAssemblyFromFile(cParameters, AssemblySources);
 				if (cResults.Errors.HasErrors)
 				{
-					IEnumerator enumerator2 = default(IEnumerator);
+					IEnumerator enumerator2 = default;
 					try
 					{
 						enumerator2 = cResults.Errors.GetEnumerator();
@@ -134,7 +134,7 @@ namespace Mangos.World.Globals
 				{
 					cParameters.OutputAssembly = AssemblyFile;
 				}
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = WorldServiceLocator._ConfigurationProvider.GetConfiguration().CompilerInclude.GetEnumerator();
@@ -171,7 +171,7 @@ namespace Mangos.World.Globals
 				IL_01b5:
 				if (cResults.Errors.HasErrors)
 				{
-					IEnumerator enumerator2 = default(IEnumerator);
+					IEnumerator enumerator2 = default;
 					try
 					{
 						enumerator2 = cResults.Errors.GetEnumerator();
@@ -222,8 +222,7 @@ namespace Mangos.World.Globals
 			catch (Exception ex2)
 			{
 				ProjectData.SetProjectError(ex2);
-				Exception e = ex2;
-				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Script Method [{0}] not found in [Scripts.{1}]!", MyMethod, MyModule);
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Script Method [{0}] not found in [Scripts.{1}]!", MyMethod, MyModule);
 				ProjectData.ClearProjectError();
 			}
 		}
@@ -360,7 +359,7 @@ namespace Mangos.World.Globals
 		void IDisposable.Dispose()
 		{
 			//ILSpy generated this explicit interface implementation from .override directive in Dispose
-			this.Dispose();
+			Dispose();
 		}
 	}
 }

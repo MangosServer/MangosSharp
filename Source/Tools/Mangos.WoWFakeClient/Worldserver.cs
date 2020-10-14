@@ -75,8 +75,10 @@ namespace Mangos.WoWFakeClient
             {
                 Connection.Connect(IP, Port);
                 Thread NewThread;
-                NewThread = new Thread(ProcessServerConnection);
-                NewThread.Name = "World Server, Connected";
+                NewThread = new Thread(ProcessServerConnection)
+                {
+                    Name = "World Server, Connected"
+                };
                 NewThread.Start();
             }
             catch (Exception)

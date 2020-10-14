@@ -19,7 +19,7 @@
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Searing_Blade_Cultist : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Searing_Blade_Cultist : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int COA_COOLDOWN = 15000;
@@ -28,9 +28,9 @@ namespace Mangos.Scripts.Creatures
         public int NextCOA = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Searing_Blade_Cultist(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Searing_Blade_Cultist(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -41,7 +41,7 @@ namespace Mangos.Scripts.Creatures
             if (NextCOA <= 0)
             {
                 NextCOA = COA_COOLDOWN;
-                this.aiCreature.CastSpell(COA_SPELL, this.aiTarget); // Curse of Agony
+                aiCreature.CastSpell(COA_SPELL, aiTarget); // Curse of Agony
             }
         }
 
@@ -49,10 +49,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
-                this.aiCreature.CastSpell(COA_SPELL, this.aiTarget);
+                aiCreature.CastSpell(COA_SPELL, aiTarget);
             }
         }
     }

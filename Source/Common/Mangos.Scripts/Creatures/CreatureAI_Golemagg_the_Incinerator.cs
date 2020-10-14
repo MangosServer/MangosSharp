@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Misc;
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Golemagg_the_Incinerator : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Golemagg_the_Incinerator : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int EARTHQUAKE_COOLDOWN = 10000;
@@ -43,10 +43,10 @@ namespace Mangos.Scripts.Creatures
         // Public NextSummon As Integer = 0
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Golemagg_the_Incinerator(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Golemagg_the_Incinerator(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             Phase = 0;
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -56,8 +56,8 @@ namespace Mangos.Scripts.Creatures
             if (Phase > 1)
                 return;
             base.OnEnterCombat();
-            this.aiCreature.Flying = false;
-            this.AllowedAttack = true;
+            aiCreature.Flying = false;
+            AllowedAttack = true;
             Phase = 1;
             // ReinitSpells()
         }
@@ -65,11 +65,11 @@ namespace Mangos.Scripts.Creatures
         public override void OnLeaveCombat(bool Reset = true)
         {
             base.OnLeaveCombat(Reset);
-            this.AllowedAttack = true;
+            AllowedAttack = true;
             Phase = 0;
         }
 
-        public override void OnKill(ref Mangos.World.Objects.WS_Base.BaseUnit Victim)
+        public override void OnKill(ref World.Objects.WS_Base.BaseUnit Victim)
         {
             // This is only here for if something is needed when a target is killed, Golemagg doesn't have a yell.
         }
@@ -93,19 +93,19 @@ namespace Mangos.Scripts.Creatures
                 if (NextEarthQuake <= 0)
                 {
                     NextEarthQuake = EARTHQUAKE_COOLDOWN;
-                    this.aiCreature.CastSpell(EARTHQUAKE_SPELL, this.aiTarget); // EarthQuake
+                    aiCreature.CastSpell(EARTHQUAKE_SPELL, aiTarget); // EarthQuake
                 }
 
                 if (NextMagmaSplash <= 1)
                 {
                     NextMagmaSplash = MAGMASPLASH_COOLDOWN;
-                    this.aiCreature.CastSpell(MAGMASPLASH_SPELL, this.aiTarget); // MagmaSplash
+                    aiCreature.CastSpell(MAGMASPLASH_SPELL, aiTarget); // MagmaSplash
                 }
 
                 if (NextPyroBlast <= 2)
                 {
                     NextPyroBlast = PYROBLAST_COOLDOWN;
-                    this.aiCreature.CastSpell(PYROBLAST_SPELL, this.aiTarget); // PyroBlast
+                    aiCreature.CastSpell(PYROBLAST_SPELL, aiTarget); // PyroBlast
                 }
                 // If NextSummon <= 0 Then
                 // NextSummon = SUMMONPLAYER_COOLDOWN
@@ -118,16 +118,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 2; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(EARTHQUAKE_SPELL, this.aiTarget);
+                    aiCreature.CastSpell(EARTHQUAKE_SPELL, aiTarget);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("Earthquake FAILED TO CAST ON MY TARGET! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+                    aiCreature.SendChatMessage("Earthquake FAILED TO CAST ON MY TARGET! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
             }
         }
@@ -136,16 +136,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 1; i <= 2; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(MAGMASPLASH_SPELL, this.aiTarget);
+                    aiCreature.CastSpell(MAGMASPLASH_SPELL, aiTarget);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("MAGMASPLASH FAILED TO CAST ON TARGET! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+                    aiCreature.SendChatMessage("MAGMASPLASH FAILED TO CAST ON TARGET! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
             }
         }
@@ -154,16 +154,16 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 2; i <= 2; i++)
             {
-                Mangos.World.Objects.WS_Base.BaseUnit Target = this.aiCreature;
+                World.Objects.WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try
                 {
-                    this.aiCreature.CastSpell(PYROBLAST_SPELL, this.aiTarget);
+                    aiCreature.CastSpell(PYROBLAST_SPELL, aiTarget);
                 }
                 catch (Exception)
                 {
-                    this.aiCreature.SendChatMessage("PYROBLAST FAILED TO CAST ON TARGET! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+                    aiCreature.SendChatMessage("PYROBLAST FAILED TO CAST ON TARGET! Please report this to the DEV'S!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
                 }
             }
         }

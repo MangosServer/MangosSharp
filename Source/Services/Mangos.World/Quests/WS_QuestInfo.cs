@@ -377,7 +377,7 @@ namespace Mangos.World.Quests
 		void IDisposable.Dispose()
 		{
 			//ILSpy generated this explicit interface implementation from .override directive in Dispose
-			this.Dispose();
+			Dispose();
 		}
 
 		private void InitQuest()
@@ -426,7 +426,7 @@ namespace Mangos.World.Quests
 			bool retValue = true;
 			checked
 			{
-				if (unchecked((int)objCharacter.Level) + 6 < Level_Start)
+				if (unchecked(objCharacter.Level) + 6 < Level_Start)
 				{
 					retValue = false;
 				}
@@ -439,7 +439,7 @@ namespace Mangos.World.Quests
 			{
 				WS_Quests tmpQuest = new WS_Quests();
 				byte reqSort = tmpQuest.ClassByQuestSort(checked(-ZoneOrSort));
-				if (reqSort > 0 && (uint)reqSort != (uint)objCharacter.Classe)
+				if (reqSort > 0 && reqSort != (uint)objCharacter.Classe)
 				{
 					retValue = false;
 				}
@@ -497,7 +497,7 @@ namespace Mangos.World.Quests
 
 		public bool SatisfyQuestLevel(ref WS_PlayerData.CharacterObject objCharacter)
 		{
-			if ((uint)objCharacter.Level < (uint)Level_Start)
+			if (objCharacter.Level < (uint)Level_Start)
 			{
 				return false;
 			}

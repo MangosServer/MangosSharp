@@ -108,7 +108,7 @@ namespace Mangos.World.Quests
 					bytLoop5 = (byte)unchecked((uint)(bytLoop5 + 1));
 				}
 			}
-			while ((uint)bytLoop5 <= 3u);
+			while (bytLoop5 <= 3u);
 			byte bytLoop4 = 0;
 			do
 			{
@@ -129,12 +129,12 @@ namespace Mangos.World.Quests
 							}
 							bytLoop6 = (byte)unchecked((uint)(bytLoop6 + 1));
 						}
-						while (unchecked((uint)bytLoop6) <= 3u);
+						while (unchecked(bytLoop6) <= 3u);
 					}
 					bytLoop4 = (byte)unchecked((uint)(bytLoop4 + 1));
 				}
 			}
-			while ((uint)bytLoop4 <= 3u);
+			while (bytLoop4 <= 3u);
 			byte bytLoop3 = 0;
 			do
 			{
@@ -150,7 +150,7 @@ namespace Mangos.World.Quests
 					bytLoop3 = (byte)unchecked((uint)(bytLoop3 + 1));
 				}
 			}
-			while ((uint)bytLoop3 <= 3u);
+			while (bytLoop3 <= 3u);
 			if (((uint)Quest.SpecialFlags & 2u) != 0)
 			{
 				ObjectiveFlags |= 2;
@@ -164,7 +164,7 @@ namespace Mangos.World.Quests
 						bytLoop2 = (byte)unchecked((uint)(bytLoop2 + 1));
 					}
 				}
-				while ((uint)bytLoop2 <= 3u);
+				while (bytLoop2 <= 3u);
 			}
 			if (((uint)Quest.SpecialFlags & 8u) != 0)
 			{
@@ -195,7 +195,7 @@ namespace Mangos.World.Quests
 						ObjectivesType[bytLoop] = 0;
 						bytLoop = (byte)unchecked((uint)(bytLoop + 1));
 					}
-					while (unchecked((uint)bytLoop) <= 3u);
+					while (unchecked(bytLoop) <= 3u);
 					IsCompleted();
 				}
 				Title = Quest.Title;
@@ -204,7 +204,7 @@ namespace Mangos.World.Quests
 				ObjectivesDeliver = Quest.ObjectivesDeliver;
 				if (Quest.TimeLimit > 0)
 				{
-					TimeEnd = (int)(unchecked((long)WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked((long)Quest.TimeLimit));
+					TimeEnd = (int)(unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked(Quest.TimeLimit));
 				}
 			}
 		}
@@ -224,7 +224,7 @@ namespace Mangos.World.Quests
 					i = (byte)unchecked((uint)(i + 1));
 				}
 			}
-			while ((uint)i <= 3u);
+			while (i <= 3u);
 			if ((ObjectiveFlags & 2) == 0)
 			{
 				Explored = true;
@@ -261,7 +261,7 @@ namespace Mangos.World.Quests
 					i = (byte)unchecked((uint)(i + 1));
 				}
 			}
-			while ((uint)i <= 3u);
+			while (i <= 3u);
 			if (((uint)ObjectiveFlags & 2u) != 0)
 			{
 				Explored = false;
@@ -271,13 +271,13 @@ namespace Mangos.World.Quests
 
 		public virtual bool IsCompleted()
 		{
-			Complete = (uint)ObjectivesCount[0] <= (uint)Progress[0] && (uint)ObjectivesCount[1] <= (uint)Progress[1] && (uint)ObjectivesCount[2] <= (uint)Progress[2] && (uint)ObjectivesCount[3] <= (uint)Progress[3] && (uint)ObjectivesItemCount[0] <= (uint)ProgressItem[0] && (uint)ObjectivesItemCount[1] <= (uint)ProgressItem[1] && (uint)ObjectivesItemCount[2] <= (uint)ProgressItem[2] && (uint)ObjectivesItemCount[3] <= (uint)ProgressItem[3] && Explored && !Failed;
+			Complete = ObjectivesCount[0] <= (uint)Progress[0] && ObjectivesCount[1] <= (uint)Progress[1] && ObjectivesCount[2] <= (uint)Progress[2] && ObjectivesCount[3] <= (uint)Progress[3] && ObjectivesItemCount[0] <= (uint)ProgressItem[0] && ObjectivesItemCount[1] <= (uint)ProgressItem[1] && ObjectivesItemCount[2] <= (uint)ProgressItem[2] && ObjectivesItemCount[3] <= (uint)ProgressItem[3] && Explored && !Failed;
 			return Complete;
 		}
 
 		public virtual int GetState(bool ForSave = false)
 		{
-			int tmpState = default(int);
+			int tmpState = default;
 			if (Complete)
 			{
 				tmpState = 1;
@@ -296,7 +296,7 @@ namespace Mangos.World.Quests
 			{
 				if (ForSave)
 				{
-					tmpProgress += unchecked((int)Progress[0]);
+					tmpProgress += unchecked(Progress[0]);
 					tmpProgress += Progress[1] << 6;
 					tmpProgress += Progress[2] << 12;
 					tmpProgress += Progress[3] << 18;
@@ -315,7 +315,7 @@ namespace Mangos.World.Quests
 				}
 				else
 				{
-					tmpProgress += unchecked((int)Progress[0]);
+					tmpProgress += unchecked(Progress[0]);
 					tmpProgress += Progress[1] << 6;
 					tmpProgress += Progress[2] << 12;
 					tmpProgress += Progress[3] << 18;
@@ -389,7 +389,7 @@ namespace Mangos.World.Quests
 
 		public void AddItem(WS_PlayerData.CharacterObject objCharacter, byte index, byte Count)
 		{
-			if ((uint)checked((byte)unchecked((uint)(ProgressItem[index] + Count))) > (uint)ObjectivesItemCount[index])
+			if (checked((byte)unchecked((uint)(ProgressItem[index] + Count))) > (uint)ObjectivesItemCount[index])
 			{
 				checked
 				{
@@ -402,7 +402,7 @@ namespace Mangos.World.Quests
 				reference = (byte)unchecked((uint)(reference + Count));
 				IsCompleted();
 				objCharacter.TalkUpdateQuest(Slot);
-				int ItemCount = unchecked((int)Count) - 1;
+				int ItemCount = unchecked(Count) - 1;
 				WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddItem(ref objCharacter.client, ObjectivesItem[index], ItemCount);
 			}
 		}
@@ -411,7 +411,7 @@ namespace Mangos.World.Quests
 		{
 			checked
 			{
-				if (unchecked((int)ProgressItem[index]) - unchecked((int)Count) < 0)
+				if (unchecked(ProgressItem[index]) - unchecked(Count) < 0)
 				{
 					Count = ProgressItem[index];
 				}
@@ -439,7 +439,7 @@ namespace Mangos.World.Quests
 		void IDisposable.Dispose()
 		{
 			//ILSpy generated this explicit interface implementation from .override directive in Dispose
-			this.Dispose();
+			Dispose();
 		}
 	}
 }

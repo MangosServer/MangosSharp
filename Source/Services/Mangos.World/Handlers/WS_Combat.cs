@@ -104,7 +104,7 @@ namespace Mangos.World.Handlers
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 
 			public TAttackTimer(ref WS_Base.BaseObject Victim_, ref WS_PlayerData.CharacterObject Character_)
@@ -328,7 +328,7 @@ namespace Mangos.World.Handlers
 							{
 								if (TimeLeftMainHand == -1)
 								{
-									TimeLeftMainHand = (int)Math.Round((double)Character.GetAttackTime(WeaponAttackType.OFF_ATTACK) / 2.0);
+									TimeLeftMainHand = (int)Math.Round(Character.GetAttackTime(WeaponAttackType.OFF_ATTACK) / 2.0);
 								}
 								TimeLeftOffHand = Character.GetAttackTime(WeaponAttackType.OFF_ATTACK);
 							}
@@ -336,7 +336,7 @@ namespace Mangos.World.Handlers
 							{
 								if (TimeLeftMainHand == -1)
 								{
-									TimeLeftOffHand = (int)Math.Round((double)Character.GetAttackTime(WeaponAttackType.BASE_ATTACK) / 2.0);
+									TimeLeftOffHand = (int)Math.Round(Character.GetAttackTime(WeaponAttackType.BASE_ATTACK) / 2.0);
 								}
 								TimeLeftMainHand = Character.GetAttackTime(WeaponAttackType.BASE_ATTACK);
 							}
@@ -494,7 +494,7 @@ namespace Mangos.World.Handlers
 				{
 					byte b = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1);
 					byte i = 0;
-					while (unchecked((uint)i <= (uint)b))
+					while (unchecked(i <= (uint)b))
 					{
 						if (Victim.ActiveSpells[i] != null && (unchecked((uint)Victim.ActiveSpells[i].GetSpellInfo.procFlags) & (true ? 1u : 0u)) != 0)
 						{
@@ -513,13 +513,13 @@ namespace Mangos.World.Handlers
 								}
 								j = (byte)unchecked((uint)(j + 1));
 							}
-							while (unchecked((uint)j) <= 2u);
+							while (unchecked(j) <= 2u);
 						}
 						i = (byte)unchecked((uint)(i + 1));
 					}
 					if (Character.Classe == Classes.CLASS_WARRIOR || (Character.Classe == Classes.CLASS_DRUID && (Character.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || Character.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR)))
 					{
-						Character.Rage.Increment((int)((7.5 * (double)damageInfo.Damage / (double)Character.GetRageConversion + (double)(Character.GetHitFactor((damageInfo.HitInfo & 4) == 0, (damageInfo.HitInfo & 0x200) != 0) * (float)WorldServiceLocator._WS_Combat.GetAttackTime(ref Character, ref combatDualWield))) / 2.0));
+						Character.Rage.Increment((int)((7.5 * damageInfo.Damage / Character.GetRageConversion + Character.GetHitFactor((damageInfo.HitInfo & 4) == 0, (damageInfo.HitInfo & 0x200) != 0) * WorldServiceLocator._WS_Combat.GetAttackTime(ref Character, ref combatDualWield)) / 2.0));
 						Character.SetUpdateFlag(24, Character.Rage.Current);
 						Character.SendCharacterUpdate();
 					}
@@ -598,14 +598,14 @@ namespace Mangos.World.Handlers
 						Character = (WS_PlayerData.CharacterObject)Attacker;
 						if (((WS_PlayerData.CharacterObject)Victim2).Classe == Classes.CLASS_WARRIOR)
 						{
-							((WS_PlayerData.CharacterObject)Victim2).Rage.Increment((int)((double)damageInfo.Damage / (double)(unchecked((int)((WS_PlayerData.CharacterObject)Victim2).Level) * 4) * 25.0 + 10.0));
+							((WS_PlayerData.CharacterObject)Victim2).Rage.Increment((int)(damageInfo.Damage / (double)(unchecked(((WS_PlayerData.CharacterObject)Victim2).Level) * 4) * 25.0 + 10.0));
 							((WS_PlayerData.CharacterObject)Victim2).SetUpdateFlag(24, ((WS_PlayerData.CharacterObject)Victim2).Rage.Current);
 							Character.SendCharacterUpdate();
 						}
 					}
 					if (Character.Classe == Classes.CLASS_WARRIOR || (Character.Classe == Classes.CLASS_DRUID && (Character.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || Character.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR)))
 					{
-						Character.Rage.Increment((int)((double)damageInfo.Damage / (double)(unchecked((int)Character.Level) * 4) * 75.0 + 10.0));
+						Character.Rage.Increment((int)(damageInfo.Damage / (double)(unchecked(Character.Level) * 4) * 75.0 + 10.0));
 						Character.SetUpdateFlag(24, Character.Rage.Current);
 						Character.SendCharacterUpdate();
 					}
@@ -653,7 +653,7 @@ namespace Mangos.World.Handlers
 					i = (byte)unchecked((uint)(i + 1));
 				}
 			}
-			while ((uint)i <= 4u);
+			while (i <= 4u);
 			return Dmg;
 		}
 
@@ -663,8 +663,8 @@ namespace Mangos.World.Handlers
 			{
 				return AttackType switch
 				{
-					WeaponAttackType.BASE_ATTACK => (float)((WS_Creatures.CreatureObject)objCharacter).CreatureInfo.BaseAttackTime / 1000f, 
-					WeaponAttackType.RANGED_ATTACK => (float)((WS_Creatures.CreatureObject)objCharacter).CreatureInfo.BaseRangedAttackTime / 1000f, 
+					WeaponAttackType.BASE_ATTACK => ((WS_Creatures.CreatureObject)objCharacter).CreatureInfo.BaseAttackTime / 1000f, 
+					WeaponAttackType.RANGED_ATTACK => ((WS_Creatures.CreatureObject)objCharacter).CreatureInfo.BaseRangedAttackTime / 1000f, 
 					_ => 0f, 
 				};
 			}
@@ -759,8 +759,8 @@ namespace Mangos.World.Handlers
 			}
 			else if (objCharacter.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || objCharacter.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR || objCharacter.ShapeshiftForm == ShapeshiftForm.FORM_CAT)
 			{
-				WepMin = (float)((double)WepMin + (double)(int)objCharacter.Level * 0.85 * (double)AttSpeed);
-				WepMax = (float)((double)WepMax + (double)(int)objCharacter.Level * 0.85 * (double)AttSpeed);
+				WepMin = (float)(WepMin + objCharacter.Level * 0.85 * AttSpeed);
+				WepMax = (float)(WepMax + objCharacter.Level * 0.85 * AttSpeed);
 			}
 			float MinDamage = (BaseValue + WepMin) * BasePercent;
 			float MaxDamage = (BaseValue + WepMax) * BasePercent;
@@ -789,7 +789,7 @@ namespace Mangos.World.Handlers
 
 		public DamageInfo CalculateDamage(ref WS_Base.BaseUnit Attacker, ref WS_Base.BaseUnit Victim, bool DualWield, bool Ranged, WS_Spells.SpellInfo Ability = null, WS_Spells.SpellEffect Effect = null)
 		{
-			DamageInfo result = default(DamageInfo);
+			DamageInfo result = default;
 			result.victimState = AttackVictimState.VICTIMSTATE_NORMAL;
 			result.Blocked = 0;
 			result.Absorbed = 0;
@@ -824,9 +824,8 @@ namespace Mangos.World.Handlers
 				{
 					result.DamageType = (DamageTypes)checked((byte)characterObject.Items[15].ItemInfo.Damage[0].Type);
 				}
-				characterObject = null;
-			}
-			else
+            }
+            else
 			{
 				result.DamageType = DamageTypes.DMG_PHYSICAL;
 			}
@@ -849,20 +848,20 @@ namespace Mangos.World.Handlers
 				float chanceToParry = GetBasePercentParry(ref Victim, skillDiference);
 				float chanceToDodge = GetBasePercentDodge(ref Victim, skillDiference);
 				short chanceToGlancingBlow = 0;
-				if (Attacker is WS_PlayerData.CharacterObject && Victim is WS_Creatures.CreatureObject && Attacker.Level > unchecked((int)Victim.Level) + 2 && skillDiference <= -15)
+				if (Attacker is WS_PlayerData.CharacterObject && Victim is WS_Creatures.CreatureObject && Attacker.Level > unchecked(Victim.Level) + 2 && skillDiference <= -15)
 				{
-					chanceToGlancingBlow = (short)((unchecked((int)Victim.Level) - unchecked((int)Attacker.Level)) * 10);
+					chanceToGlancingBlow = (short)((unchecked(Victim.Level) - unchecked(Attacker.Level)) * 10);
 				}
 				short chanceToCrushingBlow = 0;
-				if (Attacker is WS_Creatures.CreatureObject && Victim is WS_PlayerData.CharacterObject && Ability == null && Attacker.Level > unchecked((int)Victim.Level) + 2)
+				if (Attacker is WS_Creatures.CreatureObject && Victim is WS_PlayerData.CharacterObject && Ability == null && Attacker.Level > unchecked(Victim.Level) + 2)
 				{
-					chanceToCrushingBlow = (short)Math.Round((float)skillDiference * 2f - 15f);
+					chanceToCrushingBlow = (short)Math.Round(skillDiference * 2f - 15f);
 				}
 				if (chanceToMiss > 60f)
 				{
 					chanceToMiss = 60f;
 				}
-				if ((float)chanceToGlancingBlow > 40f)
+				if (chanceToGlancingBlow > 40f)
 				{
 					chanceToGlancingBlow = 40;
 				}
@@ -886,11 +885,11 @@ namespace Mangos.World.Handlers
 				{
 					chanceToDodge = 0f;
 				}
-				if ((float)chanceToGlancingBlow < 0f)
+				if (chanceToGlancingBlow < 0f)
 				{
 					chanceToGlancingBlow = 0;
 				}
-				if ((float)chanceToCrushingBlow < 0f)
+				if (chanceToCrushingBlow < 0f)
 				{
 					chanceToCrushingBlow = 0;
 				}
@@ -906,12 +905,12 @@ namespace Mangos.World.Handlers
 				GetDamage(ref Attacker, DualWield, ref result);
 				if (Effect != null)
 				{
-					result.Damage += Effect.GetValue(unchecked((int)Attacker.Level), 0);
+					result.Damage += Effect.GetValue(unchecked(Attacker.Level), 0);
 				}
 				float DamageReduction = Victim.GetDamageReduction(ref Attacker, result.DamageType, result.Damage);
 				ref int damage = ref result.Damage;
-				damage = (int)Math.Round((float)damage - (float)result.Damage * DamageReduction);
-				float roll = (float)((double)WorldServiceLocator._WorldServer.Rnd.Next(0, 10000) / 100.0);
+				damage = (int)Math.Round(damage - result.Damage * DamageReduction);
+				float roll = (float)(WorldServiceLocator._WorldServer.Rnd.Next(0, 10000) / 100.0);
 				float num = roll;
 				if (num < chanceToMiss)
 				{
@@ -946,18 +945,18 @@ namespace Mangos.World.Handlers
 						((WS_PlayerData.CharacterObject)Victim).SendCharacterUpdate();
 					}
 				}
-				else if (num < chanceToMiss + chanceToDodge + chanceToParry + (float)chanceToGlancingBlow)
+				else if (num < chanceToMiss + chanceToDodge + chanceToParry + chanceToGlancingBlow)
 				{
 					ref int damage2 = ref result.Damage;
-					damage2 = (int)Math.Round((float)damage2 - Conversion.Fix((float)skillDiference * 0.03f * (float)result.Damage));
+					damage2 = (int)Math.Round(damage2 - Conversion.Fix(skillDiference * 0.03f * result.Damage));
 					result.HitInfo |= 2;
 					result.HitInfo |= 65536;
 				}
-				else if (num < chanceToMiss + chanceToDodge + chanceToParry + (float)chanceToGlancingBlow + chanceToBlock)
+				else if (num < chanceToMiss + chanceToDodge + chanceToParry + chanceToGlancingBlow + chanceToBlock)
 				{
 					if (Victim is WS_PlayerData.CharacterObject)
 					{
-						result.Blocked = (int)Math.Round((double)((WS_PlayerData.CharacterObject)Victim).combatBlockValue + (double)((WS_PlayerData.CharacterObject)Victim).Strength.Base / 20.0);
+						result.Blocked = (int)Math.Round(((WS_PlayerData.CharacterObject)Victim).combatBlockValue + ((WS_PlayerData.CharacterObject)Victim).Strength.Base / 20.0);
 						if (((WS_PlayerData.CharacterObject)Victim).combatBlockValue != 0)
 						{
 							WS_Base.BaseObject Unit = Victim;
@@ -978,7 +977,7 @@ namespace Mangos.World.Handlers
 						result.HitInfo |= 2048;
 					}
 				}
-				else if (num < chanceToMiss + chanceToDodge + chanceToParry + (float)chanceToGlancingBlow + chanceToBlock + chanceToCrit)
+				else if (num < chanceToMiss + chanceToDodge + chanceToParry + chanceToGlancingBlow + chanceToBlock + chanceToCrit)
 				{
 					result.Damage *= 2;
 					result.HitInfo |= 2;
@@ -987,7 +986,7 @@ namespace Mangos.World.Handlers
 					DoEmote(34, ref Unit);
 					Victim = (WS_Base.BaseUnit)Unit;
 				}
-				else if (num < chanceToMiss + chanceToDodge + chanceToParry + (float)chanceToGlancingBlow + chanceToBlock + chanceToCrit + (float)chanceToCrushingBlow)
+				else if (num < chanceToMiss + chanceToDodge + chanceToParry + chanceToGlancingBlow + chanceToBlock + chanceToCrit + chanceToCrushingBlow)
 				{
 					result.Damage = result.Damage * 3 >> 1;
 					result.HitInfo |= 2;
@@ -1033,21 +1032,21 @@ namespace Mangos.World.Handlers
 						switch (((WS_PlayerData.CharacterObject)objCharacter).Classe)
 						{
 						case Classes.CLASS_HUNTER:
-							combatDodgeAgilityBonus = (int)((float)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 26.5f);
+							combatDodgeAgilityBonus = (int)(((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 26.5f);
 							break;
 						case Classes.CLASS_ROGUE:
-							combatDodgeAgilityBonus = (int)((float)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 14.5f);
+							combatDodgeAgilityBonus = (int)(((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 14.5f);
 							break;
 						case Classes.CLASS_PALADIN:
 						case Classes.CLASS_MAGE:
 						case Classes.CLASS_WARLOCK:
-							combatDodgeAgilityBonus = (int)((float)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.5f);
+							combatDodgeAgilityBonus = (int)(((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.5f);
 							break;
 						default:
-							combatDodgeAgilityBonus = (int)((double)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+							combatDodgeAgilityBonus = (int)(((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
 							break;
 						}
-						return (float)(((WS_PlayerData.CharacterObject)objCharacter).combatDodge + combatDodgeAgilityBonus) - (float)skillDiference * 0.04f;
+						return ((WS_PlayerData.CharacterObject)objCharacter).combatDodge + combatDodgeAgilityBonus - skillDiference * 0.04f;
 					}
 				}
 			}
@@ -1058,7 +1057,7 @@ namespace Mangos.World.Handlers
 		{
 			if (objCharacter is WS_PlayerData.CharacterObject && ((WS_PlayerData.CharacterObject)objCharacter).combatParry > 0)
 			{
-				return (float)((WS_PlayerData.CharacterObject)objCharacter).combatParry - (float)skillDiference * 0.04f;
+				return ((WS_PlayerData.CharacterObject)objCharacter).combatParry - skillDiference * 0.04f;
 			}
 			return 0f;
 		}
@@ -1067,7 +1066,7 @@ namespace Mangos.World.Handlers
 		{
 			if (objCharacter is WS_PlayerData.CharacterObject && ((WS_PlayerData.CharacterObject)objCharacter).combatBlock > 0)
 			{
-				return (float)((WS_PlayerData.CharacterObject)objCharacter).combatBlock - (float)skillDiference * 0.04f;
+				return ((WS_PlayerData.CharacterObject)objCharacter).combatBlock - skillDiference * 0.04f;
 			}
 			return 0f;
 		}
@@ -1083,19 +1082,18 @@ namespace Mangos.World.Handlers
 					{
 						if (skillDiference > 10)
 						{
-							return 24f - (float)skillDiference * 0.1f;
+							return 24f - skillDiference * 0.1f;
 						}
-						return 24f - (float)skillDiference * 0.2f;
+						return 24f - skillDiference * 0.2f;
 					}
 					if (skillDiference > 10)
 					{
-						return 5f - (float)skillDiference * 0.1f;
+						return 5f - skillDiference * 0.1f;
 					}
-					return 5f - (float)skillDiference * 0.2f;
+					return 5f - skillDiference * 0.2f;
 				}
-				characterObject = null;
-			}
-			return 5f - (float)skillDiference * 0.04f;
+            }
+            return 5f - skillDiference * 0.04f;
 		}
 
 		public float GetBasePercentCrit(ref WS_Base.BaseUnit objCharacter, int skillDiference)
@@ -1106,36 +1104,36 @@ namespace Mangos.World.Handlers
 				switch (((WS_PlayerData.CharacterObject)objCharacter).Classe)
 				{
 				case Classes.CLASS_ROGUE:
-					baseCrit = (float)(0.0 + (double)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 29.0);
+					baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 29.0);
 					break;
 				case Classes.CLASS_DRUID:
-					baseCrit = (float)(0.92000001668930054 + (double)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+					baseCrit = (float)(0.92000001668930054 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
 					break;
 				case Classes.CLASS_HUNTER:
-					baseCrit = (float)(0.0 + (double)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 33.0);
+					baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 33.0);
 					break;
 				case Classes.CLASS_MAGE:
-					baseCrit = (float)(3.2000000476837158 + (double)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.44);
+					baseCrit = (float)(3.2000000476837158 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.44);
 					break;
 				case Classes.CLASS_PALADIN:
-					baseCrit = (float)(0.699999988079071 + (double)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.77);
+					baseCrit = (float)(0.699999988079071 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.77);
 					break;
 				case Classes.CLASS_PRIEST:
-					baseCrit = (float)(3.0 + (double)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+					baseCrit = (float)(3.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
 					break;
 				case Classes.CLASS_SHAMAN:
-					baseCrit = (float)(1.7000000476837158 + (double)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.7);
+					baseCrit = (float)(1.7000000476837158 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.7);
 					break;
 				case Classes.CLASS_WARLOCK:
-					baseCrit = (float)(2.0 + (double)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+					baseCrit = (float)(2.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
 					break;
 				case Classes.CLASS_WARRIOR:
-					baseCrit = (float)(0.0 + (double)((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+					baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
 					break;
 				}
-				return baseCrit + (float)((WS_PlayerData.CharacterObject)objCharacter).combatCrit + (float)skillDiference * 0.2f;
+				return baseCrit + ((WS_PlayerData.CharacterObject)objCharacter).combatCrit + skillDiference * 0.2f;
 			}
-			return 5f + (float)skillDiference * 0.2f;
+			return 5f + skillDiference * 0.2f;
 		}
 
 		public float GetDistance(WS_Base.BaseObject Object1, WS_Base.BaseObject Object2)
@@ -1163,7 +1161,7 @@ namespace Mangos.World.Handlers
 			float angle = (float)Math.Atan2(y2 - y1, x2 - x1);
 			if (angle < 0f)
 			{
-				angle = (float)((double)angle + Math.PI * 2.0);
+				angle = (float)(angle + Math.PI * 2.0);
 			}
 			return angle;
 		}
@@ -1180,7 +1178,7 @@ namespace Mangos.World.Handlers
 			float hiAngle = Object1.orientation + (float)Math.PI / 3f;
 			if (lowAngle < 0f)
 			{
-				return ((double)angle2 >= Math.PI * 2.0 + (double)lowAngle && (double)angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle);
+				return (angle2 >= Math.PI * 2.0 + lowAngle && angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle);
 			}
 			return angle2 >= lowAngle && angle2 <= hiAngle;
 		}
@@ -1197,7 +1195,7 @@ namespace Mangos.World.Handlers
 			float hiAngle = Object1.orientation + (float)Math.PI / 3f;
 			if (lowAngle < 0f)
 			{
-				return ((double)angle2 >= Math.PI * 2.0 + (double)lowAngle && (double)angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle);
+				return (angle2 >= Math.PI * 2.0 + lowAngle && angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle);
 			}
 			return angle2 >= lowAngle && angle2 <= hiAngle;
 		}
@@ -1209,7 +1207,7 @@ namespace Mangos.World.Handlers
 				if (objCharacter is WS_PlayerData.CharacterObject)
 				{
 					WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)objCharacter;
-					int tmpSkill = default(int);
+					int tmpSkill = default;
 					switch (characterObject.attackSheathState)
 					{
 					case SHEATHE_SLOT.SHEATHE_NONE:
@@ -1234,12 +1232,12 @@ namespace Mangos.World.Handlers
 					}
 					if (tmpSkill == 0)
 					{
-						return unchecked((int)objCharacter.Level) * 5;
+						return unchecked(objCharacter.Level) * 5;
 					}
 					characterObject.UpdateSkill(tmpSkill, 0.01f);
 					return characterObject.Skills[tmpSkill].CurrentWithBonus;
 				}
-				return unchecked((int)objCharacter.Level) * 5;
+				return unchecked(objCharacter.Level) * 5;
 			}
 		}
 
@@ -1252,7 +1250,7 @@ namespace Mangos.World.Handlers
 			}
 			checked
 			{
-				return unchecked((int)objCharacter.Level) * 5;
+				return unchecked(objCharacter.Level) * 5;
 			}
 		}
 
@@ -1280,7 +1278,7 @@ namespace Mangos.World.Handlers
 				return objCharacter.GetAttackTime(WeaponAttackType.RANGED_ATTACK);
 			default:
 			{
-				int GetAttackTime = default(int);
+				int GetAttackTime = default;
 				return GetAttackTime;
 			}
 			}
@@ -1320,16 +1318,14 @@ namespace Mangos.World.Handlers
 						result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.RangedDamage.Minimum), (int)Math.Round(characterObject.RangedDamage.Maximum + 1f)) + characterObject.BaseRangedDamage;
 						break;
 					}
-					characterObject = null;
-				}
-				else
+                }
+                else
 				{
 					WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)objCharacter;
 					result.DamageType = DamageTypes.DMG_PHYSICAL;
 					result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(WorldServiceLocator._WorldServer.CREATURESDatabase[creatureObject.ID].Damage.Minimum), (int)Math.Round(WorldServiceLocator._WorldServer.CREATURESDatabase[creatureObject.ID].Damage.Maximum + 1f));
-					creatureObject = null;
-				}
-			}
+                }
+            }
 		}
 
 		public void SetPlayerInCombat(ref WS_PlayerData.CharacterObject objCharacter)

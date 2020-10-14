@@ -171,8 +171,8 @@ namespace Mangos.World.Objects
 			{
 				checked
 				{
-					int PathID = (int)base.GetSound((byte)0);
-					float ShipSpeed = base.GetSound((byte)1);
+					int PathID = (int)GetSound(0);
+					float ShipSpeed = GetSound(1);
 					if (!WorldServiceLocator._WS_DBCDatabase.TaxiPaths.ContainsKey(PathID))
 					{
 						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "An transport [{0} - {1}] is created with an invalid TaxiPath.", ID, TransportName);
@@ -542,8 +542,8 @@ namespace Mangos.World.Objects
 
 			public void CheckCell(bool Teleported = false)
 			{
-				byte TileX = default(byte);
-				byte TileY = default(byte);
+				byte TileX = default;
+				byte TileY = default;
 				WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref TileX, ref TileY);
 				if (!Teleported && CellX == TileX && CellY == TileY)
 				{
@@ -640,9 +640,8 @@ namespace Mangos.World.Objects
 										packet.Dispose();
 									}
 								}
-								tMapTile = null;
-							}
-							j = (short)unchecked(j + 1);
+                            }
+                            j = (short)unchecked(j + 1);
 						}
 						while (j <= 1);
 						i = (short)unchecked(i + 1);
@@ -745,10 +744,10 @@ namespace Mangos.World.Objects
 				Update.SetUpdateFlag(16, positionY);
 				Update.SetUpdateFlag(17, positionZ);
 				Update.SetUpdateFlag(14, 0, (byte)State);
-				Update.SetUpdateFlag(21, (int)base.Type);
+				Update.SetUpdateFlag(21, (int)Type);
 				Update.SetUpdateFlag(20, Faction);
 				Update.SetUpdateFlag(9, Flags);
-				Update.SetUpdateFlag(8, base.ObjectInfo.Model);
+				Update.SetUpdateFlag(8, ObjectInfo.Model);
 			}
 		}
 
@@ -765,7 +764,7 @@ namespace Mangos.World.Objects
 			{
 				DataTable TransportQuery = new DataTable();
 				WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM transports", ref TransportQuery);
-				IEnumerator enumerator = default(IEnumerator);
+				IEnumerator enumerator = default;
 				try
 				{
 					enumerator = TransportQuery.Rows.GetEnumerator();
@@ -790,8 +789,7 @@ namespace Mangos.World.Objects
 			catch (DirectoryNotFoundException ex)
 			{
 				ProjectData.SetProjectError(ex);
-				DirectoryNotFoundException e = ex;
-				Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine("Database : TransportQuery missing.");
 				Console.ForegroundColor = ConsoleColor.Gray;
 				ProjectData.ClearProjectError();

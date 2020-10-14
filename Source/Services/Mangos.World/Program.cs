@@ -78,12 +78,12 @@ namespace Mangos.World
 		public static void RegisterServices(ContainerBuilder builder)
 		{
 			builder.RegisterType<Global_Constants>().As<Global_Constants>().SingleInstance();
-			builder.RegisterType<Mangos.Common.Globals.Functions>().As<Mangos.Common.Globals.Functions>().SingleInstance();
-			builder.RegisterType<Mangos.Common.Functions>().As<Mangos.Common.Functions>().SingleInstance();
+			builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>().SingleInstance();
+			builder.RegisterType<Common.Functions>().As<Common.Functions>().SingleInstance();
 			builder.RegisterType<GlobalZip>().As<GlobalZip>().SingleInstance();
-			builder.RegisterType<Mangos.Common.NativeMethods>().As<Mangos.Common.NativeMethods>().SingleInstance();
+			builder.RegisterType<Common.NativeMethods>().As<Common.NativeMethods>().SingleInstance();
 			builder.RegisterType<WorldServer>().As<WorldServer>().SingleInstance();
-			builder.RegisterType<Mangos.World.Globals.Functions>().As<Mangos.World.Globals.Functions>().SingleInstance();
+			builder.RegisterType<Globals.Functions>().As<Globals.Functions>().SingleInstance();
 			builder.RegisterType<WS_Creatures_AI>().As<WS_Creatures_AI>().SingleInstance();
 			builder.RegisterType<WS_Auction>().As<WS_Auction>().SingleInstance();
 			builder.RegisterType<WS_Battlegrounds>().As<WS_Battlegrounds>().SingleInstance();

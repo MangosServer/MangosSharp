@@ -86,6 +86,8 @@ namespace Mangos.World.AntiCheat
                         case ViolationType.AC_VIOLATION_SPEEDHACK_MEM:
                             sData.Violations -= 0;
                             break;
+                        default:
+                            break;
                     }
                 }
                 if (sData.Violations < 0)

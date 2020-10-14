@@ -99,7 +99,7 @@ namespace Mangos.World.Objects
 						i = (byte)unchecked((uint)(i + 1));
 					}
 				}
-				while ((uint)i <= 23u);
+				while (i <= 23u);
 			}
 
 			protected virtual void Dispose(bool disposing)
@@ -120,7 +120,7 @@ namespace Mangos.World.Objects
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 		}
 
@@ -176,36 +176,36 @@ namespace Mangos.World.Objects
 
 			public int LockID => checked(ObjectInfo.Type switch
 			{
-				GameObjectType.GAMEOBJECT_TYPE_DOOR => (int)this.GetSound((byte)1), 
-				GameObjectType.GAMEOBJECT_TYPE_BUTTON => (int)this.GetSound((byte)1), 
-				GameObjectType.GAMEOBJECT_TYPE_QUESTGIVER => (int)this.GetSound((byte)0), 
-				GameObjectType.GAMEOBJECT_TYPE_CHEST => (int)this.GetSound((byte)0), 
-				GameObjectType.GAMEOBJECT_TYPE_TRAP => (int)this.GetSound((byte)0), 
-				GameObjectType.GAMEOBJECT_TYPE_GOOBER => (int)this.GetSound((byte)0), 
-				GameObjectType.GAMEOBJECT_TYPE_AREADAMAGE => (int)this.GetSound((byte)0), 
-				GameObjectType.GAMEOBJECT_TYPE_CAMERA => (int)this.GetSound((byte)0), 
-				GameObjectType.GAMEOBJECT_TYPE_FLAGSTAND => (int)this.GetSound((byte)0), 
-				GameObjectType.GAMEOBJECT_TYPE_FISHINGHOLE => (int)this.GetSound((byte)4), 
-				GameObjectType.GAMEOBJECT_TYPE_FLAGDROP => (int)this.GetSound((byte)0), 
+				GameObjectType.GAMEOBJECT_TYPE_DOOR => (int)GetSound(1), 
+				GameObjectType.GAMEOBJECT_TYPE_BUTTON => (int)GetSound(1), 
+				GameObjectType.GAMEOBJECT_TYPE_QUESTGIVER => (int)GetSound(0), 
+				GameObjectType.GAMEOBJECT_TYPE_CHEST => (int)GetSound(0), 
+				GameObjectType.GAMEOBJECT_TYPE_TRAP => (int)GetSound(0), 
+				GameObjectType.GAMEOBJECT_TYPE_GOOBER => (int)GetSound(0), 
+				GameObjectType.GAMEOBJECT_TYPE_AREADAMAGE => (int)GetSound(0), 
+				GameObjectType.GAMEOBJECT_TYPE_CAMERA => (int)GetSound(0), 
+				GameObjectType.GAMEOBJECT_TYPE_FLAGSTAND => (int)GetSound(0), 
+				GameObjectType.GAMEOBJECT_TYPE_FISHINGHOLE => (int)GetSound(4), 
+				GameObjectType.GAMEOBJECT_TYPE_FLAGDROP => (int)GetSound(0), 
 				_ => 0, 
 			});
 
 			public int LootID => checked(ObjectInfo.Type switch
 			{
-				GameObjectType.GAMEOBJECT_TYPE_CHEST => (int)this.GetSound((byte)1), 
-				GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE => (int)this.GetSound((byte)1), 
-				GameObjectType.GAMEOBJECT_TYPE_FISHINGHOLE => (int)this.GetSound((byte)1), 
+				GameObjectType.GAMEOBJECT_TYPE_CHEST => (int)GetSound(1), 
+				GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE => (int)GetSound(1), 
+				GameObjectType.GAMEOBJECT_TYPE_FISHINGHOLE => (int)GetSound(1), 
 				_ => 0, 
 			});
 
 			public int AutoCloseTime => checked(ObjectInfo.Type switch
 			{
-				GameObjectType.GAMEOBJECT_TYPE_DOOR => (int)Math.Round((double)this.GetSound((byte)2) / 65536.0 * 1000.0), 
-				GameObjectType.GAMEOBJECT_TYPE_BUTTON => (int)Math.Round((double)this.GetSound((byte)2) / 65536.0 * 1000.0), 
-				GameObjectType.GAMEOBJECT_TYPE_TRAP => (int)Math.Round((double)this.GetSound((byte)6) / 65536.0 * 1000.0), 
-				GameObjectType.GAMEOBJECT_TYPE_GOOBER => (int)Math.Round((double)this.GetSound((byte)3) / 65536.0 * 1000.0), 
-				GameObjectType.GAMEOBJECT_TYPE_TRANSPORT => (int)Math.Round((double)this.GetSound((byte)2) / 65536.0 * 1000.0), 
-				GameObjectType.GAMEOBJECT_TYPE_AREADAMAGE => (int)Math.Round((double)this.GetSound((byte)5) / 65536.0 * 1000.0), 
+				GameObjectType.GAMEOBJECT_TYPE_DOOR => (int)Math.Round(GetSound(2) / 65536.0 * 1000.0), 
+				GameObjectType.GAMEOBJECT_TYPE_BUTTON => (int)Math.Round(GetSound(2) / 65536.0 * 1000.0), 
+				GameObjectType.GAMEOBJECT_TYPE_TRAP => (int)Math.Round(GetSound(6) / 65536.0 * 1000.0), 
+				GameObjectType.GAMEOBJECT_TYPE_GOOBER => (int)Math.Round(GetSound(3) / 65536.0 * 1000.0), 
+				GameObjectType.GAMEOBJECT_TYPE_TRANSPORT => (int)Math.Round(GetSound(2) / 65536.0 * 1000.0), 
+				GameObjectType.GAMEOBJECT_TYPE_AREADAMAGE => (int)Math.Round(GetSound(5) / 65536.0 * 1000.0), 
 				_ => 0, 
 			});
 
@@ -216,7 +216,7 @@ namespace Mangos.World.Objects
 					GameObjectType type = ObjectInfo.Type;
 					if (type == GameObjectType.GAMEOBJECT_TYPE_CHEST)
 					{
-						return (ulong)this.GetSound((byte)3) == 1;
+						return (ulong)GetSound(3) == 1;
 					}
 					return false;
 				}
@@ -238,7 +238,7 @@ namespace Mangos.World.Objects
 				Update.SetUpdateFlag(18, orientation);
 				long Rotation = 0L;
 				float f_rot1 = (float)Math.Sin(orientation / 2f);
-				long i_rot1 = checked((long)Math.Round((double)f_rot1 / Math.Atan(Math.Pow(2.0, -20.0))));
+				long i_rot1 = checked((long)Math.Round(f_rot1 / Math.Atan(Math.Pow(2.0, -20.0))));
 				Rotation |= (i_rot1 << 43 >> 43) & 0x1FFFFF;
 				Update.SetUpdateFlag(10, Rotation);
 				int DynFlags = 0;
@@ -312,7 +312,7 @@ namespace Mangos.World.Objects
 			void IDisposable.Dispose()
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				this.Dispose();
+				Dispose();
 			}
 
 			public GameObjectObject(int ID_)
@@ -556,9 +556,8 @@ namespace Mangos.World.Objects
 										packet.Dispose();
 									}
 								}
-								tMapTile = null;
-							}
-							j = (short)unchecked(j + 1);
+                            }
+                            j = (short)unchecked(j + 1);
 						}
 						while (j <= 1);
 						i = (short)unchecked(i + 1);
@@ -755,7 +754,7 @@ namespace Mangos.World.Objects
 						{
 							if (Force || MineRemaining == 0)
 							{
-								MineRemaining = WorldServiceLocator._WorldServer.Rnd.Next((int)this.GetSound((byte)4), (int)(unchecked((long)this.GetSound((byte)5)) + 1L));
+								MineRemaining = WorldServiceLocator._WorldServer.Rnd.Next((int)GetSound(4), (int)(unchecked(GetSound(5)) + 1L));
 							}
 							break;
 						}
@@ -901,8 +900,8 @@ namespace Mangos.World.Objects
 				}
 				return targetGameobject;
 			}
-			byte cellX = default(byte);
-			byte cellY = default(byte);
+			byte cellX = default;
+			byte cellY = default;
 			WorldServiceLocator._WS_Maps.GetMapTile(unit.positionX, unit.positionY, ref cellX, ref cellY);
 			int x = -1;
 			checked
@@ -912,9 +911,9 @@ namespace Mangos.World.Objects
 					int y = -1;
 					do
 					{
-						if (x + unchecked((int)cellX) > -1 && x + unchecked((int)cellX) < 64 && y + unchecked((int)cellY) > -1 && y + unchecked((int)cellY) < 64 && WorldServiceLocator._WS_Maps.Maps[unit.MapID].Tiles[x + unchecked((int)cellX), y + unchecked((int)cellY)] != null)
+						if (x + unchecked(cellX) > -1 && x + unchecked(cellX) < 64 && y + unchecked(cellY) > -1 && y + unchecked(cellY) < 64 && WorldServiceLocator._WS_Maps.Maps[unit.MapID].Tiles[x + unchecked(cellX), y + unchecked(cellY)] != null)
 						{
-							ulong[] gameobjects = WorldServiceLocator._WS_Maps.Maps[unit.MapID].Tiles[x + unchecked((int)cellX), y + unchecked((int)cellY)].GameObjectsHere.ToArray();
+							ulong[] gameobjects = WorldServiceLocator._WS_Maps.Maps[unit.MapID].Tiles[x + unchecked(cellX), y + unchecked(cellY)].GameObjectsHere.ToArray();
 							ulong[] array2 = gameobjects;
 							foreach (ulong GUID in array2)
 							{
@@ -975,15 +974,14 @@ namespace Mangos.World.Objects
 						response.AddUInt32(GameObject.Fields[i]);
 						i = (byte)unchecked((uint)(i + 1));
 					}
-					while (unchecked((uint)i) <= 23u);
+					while (unchecked(i) <= 23u);
 					client.Send(ref response);
 					response.Dispose();
 				}
 				catch (Exception ex)
 				{
 					ProjectData.SetProjectError(ex);
-					Exception e = ex;
-					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Unknown Error: Unable to find GameObjectID={0} in database.", GameObjectID);
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Unknown Error: Unable to find GameObjectID={0} in database.", GameObjectID);
 					ProjectData.ClearProjectError();
 				}
 			}
@@ -1026,7 +1024,7 @@ namespace Mangos.World.Objects
 					Packets.PacketClass StandState = new Packets.PacketClass(OPCODES.CMSG_STANDSTATECHANGE);
 					try
 					{
-						StandState.AddInt8((byte)(4L + unchecked((long)WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound((byte)1))));
+						StandState.AddInt8((byte)(4L + unchecked(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound(1))));
 						client.Character.Teleport(GO.positionX, GO.positionY, GO.positionZ, GO.orientation, (int)GO.MapID);
 						client.Send(ref StandState);
 					}
@@ -1037,7 +1035,7 @@ namespace Mangos.World.Objects
 					Packets.PacketClass packetACK = new Packets.PacketClass(OPCODES.SMSG_STANDSTATE_CHANGE_ACK);
 					try
 					{
-						packetACK.AddInt8((byte)(4L + unchecked((long)GO.GetSound((byte)1))));
+						packetACK.AddInt8((byte)(4L + unchecked(GO.GetSound(1))));
 						client.Send(ref packetACK);
 					}
 					finally
@@ -1049,7 +1047,7 @@ namespace Mangos.World.Objects
 				case GameObjectType.GAMEOBJECT_TYPE_CAMERA:
 				{
 					Packets.PacketClass cinematicPacket = new Packets.PacketClass(OPCODES.SMSG_TRIGGER_CINEMATIC);
-					cinematicPacket.AddUInt32(GO.GetSound((byte)1));
+					cinematicPacket.AddUInt32(GO.GetSound(1));
 					client.Send(ref cinematicPacket);
 					cinematicPacket.Dispose();
 					break;
@@ -1059,13 +1057,13 @@ namespace Mangos.World.Objects
 					if ((GO.Owner == client.Character.GUID || client.Character.IsInGroup) && (GO.Owner == client.Character.GUID || (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GO.Owner) && WorldServiceLocator._WorldServer.CHARACTERs[GO.Owner].IsInGroup && WorldServiceLocator._WorldServer.CHARACTERs[GO.Owner].Group == client.Character.Group)))
 					{
 						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Casting ritual spell.");
-						client.Character.CastOnSelf((int)GO.GetSound((byte)1));
+						client.Character.CastOnSelf((int)GO.GetSound(1));
 					}
 					break;
 				case GameObjectType.GAMEOBJECT_TYPE_SPELLCASTER:
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Clicked a spellcaster.");
 					GO.Flags = 2;
-					if (GO.GetSound((byte)2) != 0)
+					if (GO.GetSound(2) != 0)
 					{
 						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Spellcaster requires same group.");
 						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Owner: {0:X}  You: {1:X}", WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].Owner, client.Character.GUID);
@@ -1075,14 +1073,14 @@ namespace Mangos.World.Objects
 						}
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Casted spellcaster spell.");
-					client.Character.CastOnSelf((int)GO.GetSound((byte)0));
+					client.Character.CastOnSelf((int)GO.GetSound(0));
 					break;
 				case GameObjectType.GAMEOBJECT_TYPE_MEETINGSTONE:
-					if (client.Character.Level < GO.GetSound((byte)0))
+					if (client.Character.Level < GO.GetSound(0))
 					{
 						WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_LEVEL_REQUIREMENT, ref client, 23598);
 					}
-					else if (client.Character.Level > WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound((byte)1))
+					else if (client.Character.Level > WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound(1))
 					{
 						WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_LEVEL_REQUIREMENT, ref client, 23598);
 					}

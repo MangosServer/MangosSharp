@@ -39,7 +39,7 @@ namespace Mangos.World.AntiCheat
         public SpeedHackViolation(string Name, int cTime, int sTime)
         {
             LastViolation = ViolationType.AC_VIOLATION_NONE;
-            Character = Name;
+            Character = Name ?? throw new ArgumentNullException(nameof(Name));
             Violations = 0;
             LastClientTime = cTime;
             LastServerTime = sTime;

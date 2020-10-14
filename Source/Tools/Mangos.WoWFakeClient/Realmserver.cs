@@ -70,8 +70,10 @@ namespace Mangos.WoWFakeClient
             Worldserver.timeBeginPeriod(1);
             ConnectToRealm();
             Thread NewThread;
-            NewThread = new Thread(CheckConnection);
-            NewThread.Name = "Checking Connection State";
+            NewThread = new Thread(CheckConnection)
+            {
+                Name = "Checking Connection State"
+            };
             NewThread.Start();
             string sChatMsg = "";
             while (true)
@@ -109,8 +111,10 @@ namespace Mangos.WoWFakeClient
                 Console.ForegroundColor = ConsoleColor.White;
                 Connection.Connect(RealmIP, RealmPort);
                 Thread NewThread;
-                NewThread = new Thread(ProcessServerConnection);
-                NewThread.Name = "Realm Server, Connected";
+                NewThread = new Thread(ProcessServerConnection)
+                {
+                    Name = "Realm Server, Connected"
+                };
                 NewThread.Start();
             }
             catch (Exception)

@@ -221,12 +221,12 @@ namespace Mangos.World.Handlers
 			float discountMod = client.Character.GetDiscountMod(WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].Faction);
 			checked
 			{
-				int totalCost = default(int);
+				int totalCost = default;
 				foreach (KeyValuePair<int, WS_DBCDatabase.TTaxiPath> taxiPath in WorldServiceLocator._WS_DBCDatabase.TaxiPaths)
 				{
 					if (taxiPath.Value.TFrom == srcNode && taxiPath.Value.TTo == dstNode)
 					{
-						totalCost = (int)Math.Round((float)totalCost + (float)taxiPath.Value.Price * discountMod);
+						totalCost = (int)Math.Round(totalCost + taxiPath.Value.Price * discountMod);
 						break;
 					}
 				}
@@ -236,7 +236,7 @@ namespace Mangos.World.Handlers
 					return;
 				}
 				ref uint copper = ref client.Character.Copper;
-				copper = (uint)(unchecked((long)copper) - unchecked((long)totalCost));
+				copper = (uint)(unchecked(copper) - unchecked(totalCost));
 				client.Character.TaxiNodes.Clear();
 				client.Character.TaxiNodes.Enqueue(srcNode);
 				client.Character.TaxiNodes.Enqueue(dstNode);
@@ -353,7 +353,7 @@ namespace Mangos.World.Handlers
 					{
 						if (taxiPath.Value.TFrom == srcNode && taxiPath.Value.TTo == dstNode)
 						{
-							totalCost = (int)Math.Round((float)totalCost + (float)taxiPath.Value.Price * discountMod);
+							totalCost = (int)Math.Round(totalCost + taxiPath.Value.Price * discountMod);
 							break;
 						}
 					}
@@ -363,7 +363,7 @@ namespace Mangos.World.Handlers
 						return;
 					}
 					ref uint copper = ref client.Character.Copper;
-					copper = (uint)(unchecked((long)copper) - unchecked((long)totalCost));
+					copper = (uint)(unchecked(copper) - unchecked(totalCost));
 					client.Character.TaxiNodes.Clear();
 					foreach (int node in nodes)
 					{
@@ -441,13 +441,13 @@ namespace Mangos.World.Handlers
 						}
 						else
 						{
-							int price = (int)Math.Round((float)WorldServiceLocator._WS_DBCDatabase.TaxiPaths[path].Price * discountMod);
+							int price = (int)Math.Round(WorldServiceLocator._WS_DBCDatabase.TaxiPaths[path].Price * discountMod);
 							if (character.Copper < price)
 							{
 								break;
 							}
 							ref uint copper = ref character.Copper;
-							copper = (uint)(unchecked((long)copper) - unchecked((long)price));
+							copper = (uint)(unchecked(copper) - unchecked(price));
 							character.SetUpdateFlag(1176, character.Copper);
 							character.SendCharacterUpdate(toNear: false);
 							Console.WriteLine("Paying {0}", price);

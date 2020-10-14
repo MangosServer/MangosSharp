@@ -146,25 +146,25 @@ namespace Mangos.World.Handlers
 					int i = 1;
 					do
 					{
-						val = val + unchecked((int)key[checked(i * 4 - 4)]) + unchecked((int)@base[position % @base.Length]);
+						val = val + unchecked(key[checked(i * 4 - 4)]) + unchecked(@base[position % @base.Length]);
 						val &= 0xFF;
 						position++;
 						byte temp = key[i * 4 - 4];
 						key[i * 4 - 4] = key[val & 0xFF];
 						key[val & 0xFF] = temp;
-						val = val + unchecked((int)key[checked(i * 4 - 3)]) + unchecked((int)@base[position % @base.Length]);
+						val = val + unchecked(key[checked(i * 4 - 3)]) + unchecked(@base[position % @base.Length]);
 						val &= 0xFF;
 						position++;
 						temp = key[i * 4 - 3];
 						key[i * 4 - 3] = key[val & 0xFF];
 						key[val & 0xFF] = temp;
-						val = val + unchecked((int)key[checked(i * 4 - 2)]) + unchecked((int)@base[position % @base.Length]);
+						val = val + unchecked(key[checked(i * 4 - 2)]) + unchecked(@base[position % @base.Length]);
 						val &= 0xFF;
 						position++;
 						temp = key[i * 4 - 2];
 						key[i * 4 - 2] = key[val & 0xFF];
 						key[val & 0xFF] = temp;
-						val = val + unchecked((int)key[checked(i * 4 - 1)]) + unchecked((int)@base[position % @base.Length]);
+						val = val + unchecked(key[checked(i * 4 - 1)]) + unchecked(@base[position % @base.Length]);
 						val &= 0xFF;
 						position++;
 						temp = key[i * 4 - 1];
@@ -184,14 +184,14 @@ namespace Mangos.World.Handlers
 					int num = data.Length - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						key[256] = (byte)((unchecked((int)key[256]) + 1) & 0xFF);
-						key[257] = (byte)((unchecked((int)key[257]) + unchecked((int)key[key[256]])) & 0xFF);
+						key[256] = (byte)((unchecked(key[256]) + 1) & 0xFF);
+						key[257] = (byte)((unchecked(key[257]) + unchecked(key[key[256]])) & 0xFF);
 						byte temp = key[key[257] & 0xFF];
 						key[key[257]] = key[key[256]];
 						key[key[256]] = temp;
 						unchecked
 						{
-							data[i] = (byte)(data[i] ^ key[checked(unchecked((int)key[key[257]]) + unchecked((int)key[key[256]])) & 0xFF]);
+							data[i] = (byte)(data[i] ^ key[checked(unchecked(key[key[257]]) + unchecked(key[key[256]])) & 0xFF]);
 						}
 					}
 				}

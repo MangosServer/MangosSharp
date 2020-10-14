@@ -21,7 +21,7 @@ using Mangos.Common.Enums.Misc;
 
 namespace Mangos.Scripts.Creatures
 {
-    public class CreatureAI_Onyxia : Mangos.World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Onyxia : World.AI.WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int BREATH_COOLDOWN = 11000;
@@ -48,10 +48,10 @@ namespace Mangos.Scripts.Creatures
         public int RoarTimer = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Onyxia(ref Mangos.World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Onyxia(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             Phase = 0;
-            this.AllowedMove = false;
+            AllowedMove = false;
             Creature.Flying = false;
             Creature.VisibleDistance = 700f;
         }
@@ -61,31 +61,31 @@ namespace Mangos.Scripts.Creatures
             if (Phase > 1)
                 return;
             base.OnEnterCombat();
-            this.aiCreature.Flying = false;
-            this.AllowedAttack = true;
+            aiCreature.Flying = false;
+            AllowedAttack = true;
             Phase = 1;
             ReinitSpells();
-            this.aiCreature.SendChatMessage("How fortuitous, usually I must leave my lair to feed!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            aiCreature.SendChatMessage("How fortuitous, usually I must leave my lair to feed!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
         }
 
         public override void OnLeaveCombat(bool Reset = true)
         {
             base.OnLeaveCombat(Reset);
-            this.AllowedAttack = true;
+            AllowedAttack = true;
             Phase = 0;
-            this.aiCreature.SendChatMessage("LEAVING COMBAT!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            aiCreature.SendChatMessage("LEAVING COMBAT!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
         }
 
-        public override void OnKill(ref Mangos.World.Objects.WS_Base.BaseUnit Victim)
+        public override void OnKill(ref World.Objects.WS_Base.BaseUnit Victim)
         {
             // TODO: Yell
             // TODO: Send sound (Die mortal?)!
-            this.aiCreature.SendChatMessage("Die mortal, $N!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL, Victim.GUID);
+            aiCreature.SendChatMessage("Die mortal, $N!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL, Victim.GUID);
         }
 
         public override void OnHealthChange(int Percent)
         {
-            this.aiCreature.SendChatMessage("My health: " + Percent + "%! (" + Phase + ")", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            aiCreature.SendChatMessage("My health: " + Percent + "%! (" + Phase + ")", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
             if (Phase == 1)
             {
                 if (Percent <= 65)
@@ -107,7 +107,7 @@ namespace Mangos.Scripts.Creatures
         public override void OnDeath()
         {
             // TODO: Yell
-            this.aiCreature.SendChatMessage("I shouldn't have died yet! Feed my kids plx!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            aiCreature.SendChatMessage("I shouldn't have died yet! Feed my kids plx!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
         }
 
         public override void OnThink()
@@ -122,19 +122,19 @@ namespace Mangos.Scripts.Creatures
                 if (NextBreathe <= 0)
                 {
                     NextBreathe = BREATH_COOLDOWN;
-                    this.aiCreature.CastSpell(BREATH_SPELL, this.aiTarget); // Flame breathe
+                    aiCreature.CastSpell(BREATH_SPELL, aiTarget); // Flame breathe
                 }
 
                 if (NextWingBuffet <= 0)
                 {
                     NextWingBuffet = WING_BUFFET_COOLDOWN;
-                    this.aiCreature.CastSpell(WING_BUFFET_SPELL, this.aiTarget); // Wing buffet
+                    aiCreature.CastSpell(WING_BUFFET_SPELL, aiTarget); // Wing buffet
                 }
 
                 if (NextCleave <= 0)
                 {
                     NextCleave = CLEAVE_COOLDOWN;
-                    this.aiCreature.CastSpell(CLEAVE_SPELL, this.aiTarget); // Cleave
+                    aiCreature.CastSpell(CLEAVE_SPELL, aiTarget); // Cleave
                     // aiCreature.CastSpell(TAIL_SWEEP_SPELL, aiTarget) 'Tail Sweep
                 }
 
@@ -145,14 +145,14 @@ namespace Mangos.Scripts.Creatures
                     if (KnockTimer <= 0)
                     {
                         KnockTimer = KNOCK_COOLDOWN;
-                        this.aiCreature.CastSpell(KNOCK_SPELL, this.aiTarget); // Knock Away
-                        this.aiHateTable[this.aiTarget] = (int)(this.aiHateTable[this.aiTarget] * 0.75f);
+                        aiCreature.CastSpell(KNOCK_SPELL, aiTarget); // Knock Away
+                        aiHateTable[aiTarget] = (int)(aiHateTable[aiTarget] * 0.75f);
                     }
 
                     if (RoarTimer <= 0)
                     {
                         RoarTimer = ROAR_COOLDOWN;
-                        this.aiCreature.CastSpell(ROAR_SPELL, this.aiTarget); // Bellowing Roar
+                        aiCreature.CastSpell(ROAR_SPELL, aiTarget); // Bellowing Roar
                     }
                 }
             }
@@ -180,10 +180,10 @@ namespace Mangos.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                var theTarget = this.aiCreature.GetRandomTarget();
+                var theTarget = aiCreature.GetRandomTarget();
                 if (theTarget is null)
                     return;
-                this.aiCreature.CastSpell(FIREBALL_SPELL, theTarget.positionX, theTarget.positionY, theTarget.positionZ);
+                aiCreature.CastSpell(FIREBALL_SPELL, theTarget.positionX, theTarget.positionY, theTarget.positionZ);
             }
         }
 
@@ -195,30 +195,30 @@ namespace Mangos.Scripts.Creatures
             // TODO: Do emote
             // TODO: Whelps
             // TODO: Movement in the air
-            this.aiCreature.SendChatMessage("Phase 2!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            aiCreature.SendChatMessage("Phase 2!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
             CurrentWaypoint = 0;
             On_Waypoint();
             // DONE: Reset hate table
-            this.AllowedAttack = false;
-            this.aiTarget = null;
-            this.ResetThreatTable();
-            this.aiCreature.SendTargetUpdate(0UL);
+            AllowedAttack = false;
+            aiTarget = null;
+            ResetThreatTable();
+            aiCreature.SendTargetUpdate(0UL);
         }
 
         public void Go_LastPhase()
         {
             // TODO: Land again
             // TODO: Do emote
-            this.aiCreature.SendChatMessage("Phase 3!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            aiCreature.SendChatMessage("Phase 3!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
             NextWaypoint = 0;
-            this.aiCreature.Flying = false;
+            aiCreature.Flying = false;
             // TODO: Do these after landing
             ReinitSpells();
             // DONE: Reset hate table
-            this.AllowedAttack = true;
-            this.aiTarget = null;
-            this.ResetThreatTable();
-            this.aiCreature.SendTargetUpdate(0UL);
+            AllowedAttack = true;
+            aiTarget = null;
+            ResetThreatTable();
+            aiCreature.SendTargetUpdate(0UL);
         }
 
         public void ReinitSpells()
@@ -236,17 +236,17 @@ namespace Mangos.Scripts.Creatures
             {
                 case 0:
                     {
-                        NextWaypoint = this.aiCreature.MoveTo(-75.945f, -219.245f, -83.375f, 0.004947f, true);
+                        NextWaypoint = aiCreature.MoveTo(-75.945f, -219.245f, -83.375f, 0.004947f, true);
                         break;
                     }
 
                 case 1:
                     {
                         // TODO: Set Flying
-                        this.aiCreature.Flying = true;
+                        aiCreature.Flying = true;
                         NextWaypoint = 10000;
                         NextFireball = NextWaypoint;
-                        this.aiCreature.MoveTo(42.621f, -217.195f, -66.056f, 3.014011f);
+                        aiCreature.MoveTo(42.621f, -217.195f, -66.056f, 3.014011f);
                         break;
                     }
 
@@ -262,7 +262,7 @@ namespace Mangos.Scripts.Creatures
                 case 3:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(12.27f, -254.694f, -67.997f, 2.395585f);
+                        aiCreature.MoveTo(12.27f, -254.694f, -67.997f, 2.395585f);
                         break;
                     }
 
@@ -282,28 +282,28 @@ namespace Mangos.Scripts.Creatures
                 case 5:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(-79.02f, -252.374f, -68.965f, 0.885179f);
+                        aiCreature.MoveTo(-79.02f, -252.374f, -68.965f, 0.885179f);
                         break;
                     }
 
                 case 7:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(-80.257f, -174.24f, -69.293f, 5.695741f);
+                        aiCreature.MoveTo(-80.257f, -174.24f, -69.293f, 5.695741f);
                         break;
                     }
 
                 case 9:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(27.875f, -178.547f, -66.041f, 3.908957f);
+                        aiCreature.MoveTo(27.875f, -178.547f, -66.041f, 3.908957f);
                         break;
                     }
 
                 case 11:
                     {
                         NextWaypoint = 10000;
-                        this.aiCreature.MoveTo(-4.868f, -217.171f, -86.71f, 3.14159f);
+                        aiCreature.MoveTo(-4.868f, -217.171f, -86.71f, 3.14159f);
                         break;
                     }
             }
@@ -316,13 +316,13 @@ namespace Mangos.Scripts.Creatures
         public void SpawnWhelpsLeft(int Count)
         {
             for (int i = 1, loopTo = Count; i <= loopTo; i++)
-                this.aiCreature.SpawnCreature(WHELP_CREATURE, -30.812f, -166.395f, -89.0f);
+                aiCreature.SpawnCreature(WHELP_CREATURE, -30.812f, -166.395f, -89.0f);
         }
 
         public void SpawnWhelpsRight(int Count)
         {
             for (int i = 1, loopTo = Count; i <= loopTo; i++)
-                this.aiCreature.SpawnCreature(WHELP_CREATURE, -30.233f, -264.158f, 89.896f);
+                aiCreature.SpawnCreature(WHELP_CREATURE, -30.233f, -264.158f, 89.896f);
         }
     }
 }

@@ -38,6 +38,7 @@ using Mangos.World.Quests;
 using Mangos.World.Server;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System.Linq;
 
 namespace Mangos.World.AntiCheat
 {
@@ -169,13 +170,13 @@ namespace Mangos.World.AntiCheat
                 string FileName = "configs/WorldServer.ini";
                 string[] args = Environment.GetCommandLineArgs();
                 string[] array = args;
-                foreach (string arg in array)
+                foreach (var arg in from string arg in array
+                                    where arg.IndexOf("config") != -1
+                                    select arg)
                 {
-                    if (arg.IndexOf("config") != -1)
-                    {
-                        FileName = Strings.Trim(arg.Substring(checked(arg.IndexOf("=") + 1)));
-                    }
+                    FileName = Strings.Trim(arg.Substring(checked(arg.IndexOf("=") + 1)));
                 }
+
                 if (!File.Exists(FileName))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -258,6 +259,11 @@ namespace Mangos.World.AntiCheat
 
         public void AccountSQLEventHandler(SQL.EMessages MessageID, string OutBuf)
         {
+            if (OutBuf is null)
+            {
+                throw new ArgumentNullException(nameof(OutBuf));
+            }
+
             switch (MessageID)
             {
                 case SQL.EMessages.ID_Error:
@@ -271,6 +277,11 @@ namespace Mangos.World.AntiCheat
 
         public void CharacterSQLEventHandler(SQL.EMessages MessageID, string OutBuf)
         {
+            if (OutBuf is null)
+            {
+                throw new ArgumentNullException(nameof(OutBuf));
+            }
+
             switch (MessageID)
             {
                 case SQL.EMessages.ID_Error:
@@ -284,6 +295,11 @@ namespace Mangos.World.AntiCheat
 
         public void WorldSQLEventHandler(SQL.EMessages MessageID, string OutBuf)
         {
+            if (OutBuf is null)
+            {
+                throw new ArgumentNullException(nameof(OutBuf));
+            }
+
             switch (MessageID)
             {
                 case SQL.EMessages.ID_Error:
@@ -478,12 +494,21 @@ namespace Mangos.World.AntiCheat
 
         private void GenericExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
+            if (sender is null)
+            {
+                throw new ArgumentNullException(nameof(sender));
+            }
+
+            if (e is null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             Exception EX = (Exception)e.ExceptionObject;
             Log.WriteLine(LogType.CRITICAL, EX.ToString() + Environment.NewLine);
             Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'WorldServer-Error-yyyy-mmm-d-h-mm.log' file has been created. Check your log folder for more information.");
-            TextWriter tw = new StreamWriter(new FileStream(string.Format("WorldServer-Error-{0}.log", Strings.Format(DateAndTime.Now, "yyyy-MMM-d-H-mm")), FileMode.Create));
-            tw.Write(EX.ToString());
-            tw.Close();
+            new StreamWriter(new FileStream(string.Format("WorldServer-Error-{0}.log", Strings.Format(DateAndTime.Now, "yyyy-MMM-d-H-mm")), FileMode.Create)).Write(EX.ToString());
+            new StreamWriter(new FileStream(string.Format("WorldServer-Error-{0}.log", Strings.Format(DateAndTime.Now, "yyyy-MMM-d-H-mm")), FileMode.Create)).Close();
         }
     }
 }
