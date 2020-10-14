@@ -9,6 +9,6 @@
     <PackageReference Include="MpqTool.netstandard" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
   </ItemGroup>
 </Project>

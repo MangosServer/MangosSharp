@@ -23,7 +23,7 @@
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.Configuration.Store\Mangos.Configuration.Store.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.Configuration.Xml\Mangos.Configuration.Xml.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.Configuration\Mangos.Configuration.csproj" />

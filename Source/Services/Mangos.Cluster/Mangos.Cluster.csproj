@@ -12,7 +12,7 @@
     <PackageReference Include="Autofac" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.Loggers.Console\Mangos.Loggers.Console.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.Loggers\Mangos.Loggers.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.SignalR\Mangos.SignalR.csproj" />
