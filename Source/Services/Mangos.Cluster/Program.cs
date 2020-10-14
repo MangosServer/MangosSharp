@@ -23,7 +23,7 @@ using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Server;
 using Mangos.Common;
-using Mangos.Common.Globals;
+using Mangos.Common.Zip;
 using Mangos.Loggers;
 using Mangos.Loggers.Console;
 
@@ -43,7 +43,7 @@ namespace Mangos.Cluster
 			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>();
             builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>();
             builder.RegisterType<Common.Functions>().As<Common.Functions>();
-            builder.RegisterType<GlobalZip>().As<GlobalZip>();
+            builder.RegisterType<ZipService>().As<ZipService>();
             builder.RegisterType<NativeMethods>().As<NativeMethods>();
             builder.RegisterType<WorldCluster>().As<WorldCluster>();
             builder.RegisterType<WS_DBCDatabase>().As<WS_DBCDatabase>();

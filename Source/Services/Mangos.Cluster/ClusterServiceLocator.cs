@@ -23,7 +23,7 @@ using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Server;
 using Mangos.Common;
-using Mangos.Common.Globals;
+using Mangos.Common.Zip;
 
 namespace Mangos.Cluster
 {
@@ -33,7 +33,7 @@ namespace Mangos.Cluster
         public static MangosGlobalConstants _Global_Constants { get; set; } = _Container.Resolve<MangosGlobalConstants>();
         public static Common.Globals.Functions _CommonGlobalFunctions { get; set; } = _Container.Resolve<Common.Globals.Functions>();
         public static Common.Functions _CommonFunctions { get; set; } = _Container.Resolve<Common.Functions>();
-        public static GlobalZip _GlobalZip { get; set; } = _Container.Resolve<GlobalZip>();
+        public static ZipService _GlobalZip { get; set; } = _Container.Resolve<ZipService>();
         public static NativeMethods _NativeMethods { get; set; } = _Container.Resolve<NativeMethods>();
         public static WorldCluster _WorldCluster { get; set; } = _Container.Resolve<WorldCluster>();
         public static WS_DBCDatabase _WS_DBCDatabase { get; set; } = _Container.Resolve<WS_DBCDatabase>();

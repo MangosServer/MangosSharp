@@ -21,7 +21,7 @@ using System.Runtime.CompilerServices;
 using Autofac;
 using global;
 using Mangos.Common;
-using Mangos.Common.Globals;
+using Mangos.Common.Zip;
 using Mangos.Configuration;
 using Mangos.World.AI;
 using Mangos.World.AntiCheat;
@@ -69,7 +69,7 @@ namespace Mangos.World
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static GlobalZip __GlobalZip;
+		private static ZipService __GlobalZip;
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -286,11 +286,11 @@ namespace Mangos.World
 		} = _Container.Resolve<Common.Functions>();
 
 
-		public static GlobalZip _GlobalZip
+		public static ZipService _GlobalZip
 		{
 			get;
 			set;
-		} = _Container.Resolve<GlobalZip>();
+		} = _Container.Resolve<ZipService>();
 
 
 		public static Common.NativeMethods _NativeMethods

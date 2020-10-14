@@ -18,7 +18,7 @@
 
 using Autofac;
 using global;
-using Mangos.Common.Globals;
+using Mangos.Common.Zip;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
@@ -45,7 +45,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World
 {
-	[StandardModule]
+    [StandardModule]
 	public sealed class Program
 	{
 		public static void Main()
@@ -80,7 +80,7 @@ namespace Mangos.World
 			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
 			builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>().SingleInstance();
 			builder.RegisterType<Common.Functions>().As<Common.Functions>().SingleInstance();
-			builder.RegisterType<GlobalZip>().As<GlobalZip>().SingleInstance();
+			builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
 			builder.RegisterType<Common.NativeMethods>().As<Common.NativeMethods>().SingleInstance();
 			builder.RegisterType<WorldServer>().As<WorldServer>().SingleInstance();
 			builder.RegisterType<Globals.Functions>().As<Globals.Functions>().SingleInstance();

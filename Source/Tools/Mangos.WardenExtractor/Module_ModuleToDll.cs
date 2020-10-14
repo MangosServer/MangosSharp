@@ -20,6 +20,7 @@ using System;
 using System.IO;
 using System.Numerics;
 using System.Security.Cryptography;
+using Mangos.Common.Zip;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -159,7 +160,7 @@ namespace Mangos.WardenExtractor
                 return;
             }
 
-            var DecompressedData = Program.DeCompress(CompressedData);
+            var DecompressedData = new ZipService().DeCompress(CompressedData);
             var fs3 = new FileStream(@"dlls\" + ModName.Replace(Path.GetExtension(ModName), "") + ".before.dll", FileMode.Create, FileAccess.Write, FileShare.None);
             fs3.Write(DecompressedData, 0, DecompressedData.Length);
             fs3.Close();
@@ -177,7 +178,7 @@ namespace Mangos.WardenExtractor
             string RC4Key = Console.ReadLine();
             var Key = Program.ParseKey(RC4Key);
             Key = Program.RC4.Init(Key);
-            var CompressedData = Program.Compress(DllData, 0, DllData.Length);
+            var CompressedData = new ZipService().Compress(DllData, 0, DllData.Length);
             var mw = new MemoryStream();
             var bw = new BinaryWriter(mw);
             bw.Write(DllData.Length); // Uncompressed buffer

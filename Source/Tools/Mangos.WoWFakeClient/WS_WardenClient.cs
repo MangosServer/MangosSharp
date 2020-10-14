@@ -21,6 +21,7 @@ using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using Mangos.Common.Zip;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -328,7 +329,7 @@ namespace Mangos.WoWFakeClient
                     return false;
                 }
 
-                var DecompressedData = ZLib.DeCompress(CompressedData);
+                var DecompressedData = new ZipService().DeCompress(CompressedData);
                 var ms = new MemoryStream(DecompressedData);
                 var br = new BinaryReader(ms);
                 ModuleData = PrepairModule(ref br);

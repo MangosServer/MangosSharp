@@ -5,10 +5,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.21" />
-    <PackageReference Include="SharpZipLib" Version="1.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mangos.Common.DataStores\Mangos.Common.DataStores.csproj" />
+    <ProjectReference Include="..\Mangos.Common.Zip\Mangos.Common.Zip.csproj" />
     <ProjectReference Include="..\Mangos.Common\Mangos.Common.csproj" />
     <ProjectReference Include="..\Mangos.Loggers\Mangos.Loggers.csproj" />
   </ItemGroup>
