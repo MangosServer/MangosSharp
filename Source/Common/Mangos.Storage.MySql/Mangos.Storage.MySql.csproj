@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../Mangos.props" />
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -11,9 +11,17 @@
     <PackageReference Include="MySql.Data" Version="8.0.21" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Account\IsBannedAsync.sql" />
+    <None Remove="Account\GetAccountInfoAsync.sql" />
+    <None Remove="Account\GetNumcharsAsync.sql" />
+    <None Remove="Account\GetRealmListAsync.sql" />
+    <None Remove="Account\IsBannedAccountAsync.sql" />
+    <None Remove="Account\UpdateAccountAsync.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Account\IsBannedAsync.sql" />
+    <EmbeddedResource Include="Account\GetAccountInfoAsync.sql" />
+    <EmbeddedResource Include="Account\GetRealmListAsync.sql" />
+    <EmbeddedResource Include="Account\IsBannedAccountAsync.sql" />
+    <EmbeddedResource Include="Account\UpdateAccountAsync.sql" />
+    <EmbeddedResource Include="Account\GetNumcharsAsync.sql" />
   </ItemGroup>
 </Project>

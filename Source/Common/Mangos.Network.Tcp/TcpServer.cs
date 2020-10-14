@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Channels;
@@ -30,7 +31,7 @@ namespace Mangos.Network.Tcp
 
 		private async void StartAcceptLoop()
 		{
-			while (cancellationTokenSource.IsCancellationRequested)
+			while (!cancellationTokenSource.IsCancellationRequested)
 			{
 				var client = await socket.AcceptAsync();
 				OnAcceptAsync(client);
@@ -39,7 +40,7 @@ namespace Mangos.Network.Tcp
 
 		private async void OnAcceptAsync(Socket clientSocket)
 		{
-			var tcpClient = await tcpClientFactory.CreateTcpClientAsync();
+			var tcpClient = await tcpClientFactory.CreateTcpClientAsync(clientSocket);
 			var recieveChannel = Channel.CreateUnbounded<byte>();
 			var sendChannel = Channel.CreateUnbounded<byte>();
 
@@ -55,6 +56,11 @@ namespace Mangos.Network.Tcp
 			while(!cancellationTokenSource.IsCancellationRequested)
             {
 				var bytesRead = await client.ReceiveAsync(buffer, SocketFlags.None);
+				if(bytesRead == 0)
+                {
+					client.Dispose();
+					return;
+				}
 				await writer.WriteAsync(buffer, bytesRead);
 			}
 		}
@@ -64,7 +70,11 @@ namespace Mangos.Network.Tcp
 			var buffer = new byte[client.SendBufferSize];
 			while (!cancellationTokenSource.IsCancellationRequested)
 			{
-				var writeCount = await reader.ReadAllAsync().Select((x, i) => buffer[i] = x).CountAsync();
+				await reader.WaitToReadAsync();
+				int writeCount;
+				for (writeCount = 0; 
+					writeCount < buffer.Length && reader.TryRead(out buffer[writeCount]); 
+					writeCount++);
 				var arraySegment = new ArraySegment<byte>(buffer, 0, writeCount);
 				await client.SendAsync(arraySegment, SocketFlags.None);
 			}

@@ -1,10 +1,11 @@
 ﻿using Dapper;
+using Mangos.Storage.Account.Responses;
+using Mangos.Storage.Account.Results;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -14,17 +15,17 @@ namespace Mangos.Storage.MySql
 {
     public class MySqlAccountStorage : IAccountStorage, IAsyncDisposable
     {
-        private readonly MySqlConnection connection;
+        private MySqlConnection connection;
         private readonly Dictionary<string, string> sql;
 
-        public MySqlAccountStorage(string conenctionString)
+        public MySqlAccountStorage()
         {
-            connection = new MySqlConnection(conenctionString);
             sql = GetEmbeddedSqlResources();
         }
 
-        public async Task StartAsync()
+        public async Task ConnectAsync(string conenctionString)
         {
+            connection = new MySqlConnection(conenctionString);
             await connection.OpenAsync();
         }
 
@@ -60,13 +61,74 @@ namespace Mangos.Storage.MySql
             return await connection.QuerySingleAsync<T>(sql[callerMemberName], parameters);
         }
 
-        public async Task<bool> IsBannedAsync(IPAddress address)
+        private async Task<T> QuerySingleOrDefaultAsync<T>(
+            object parameters,
+            [CallerMemberName] string callerMemberName = null)
+        {
+            return await connection.QuerySingleOrDefaultAsync<T>(sql[callerMemberName], parameters);
+        }
+
+        private async Task<T> QueryFirstOrDefault<T>(
+            object parameters,
+            [CallerMemberName] string callerMemberName = null)
+        {
+            return await connection.QueryFirstOrDefaultAsync<T>(sql[callerMemberName], parameters);
+        }
+
+        private async Task<List<T>> QueryAsync<T>(
+            object parameters,
+            [CallerMemberName] string callerMemberName = null)
+        {
+            var data = await connection.QueryAsync<T>(sql[callerMemberName], parameters);
+            return data.ToList();
+        }
+
+        private async Task UpdateAsync(
+           object parameters,
+           [CallerMemberName] string callerMemberName = null)
+        {
+            await connection.QueryAsync(sql[callerMemberName], parameters);
+        }
+
+        public async Task<bool> IsBannedAccountAsync(string id)
         {
             var count = await QuerySingleAsync<int>(new
             {
-                Address = address
+                Id = id
             });
             return count > 0;
+        }
+
+        public async Task<AccountInfo> GetAccountInfoAsync(string username)
+        {
+            return await QueryFirstOrDefault<AccountInfo>(new
+            {
+                Username = username
+            });
+        }
+
+        public async Task<List<RealmListItem>> GetRealmListAsync()
+        {
+            return await QueryAsync<RealmListItem>(null);
+        }
+
+        public async Task UpdateAccountAsync(string sessionkey, string last_ip, string last_login, string username)
+        {
+            await UpdateAsync(new
+            {
+                Sessionkey = sessionkey,
+                Last_ip = last_ip,
+                Last_login = last_login,
+                Username = username
+            });
+        }
+
+        public async Task<int> GetNumcharsAsync(string realmId)
+        {
+            return await QuerySingleOrDefaultAsync<int>(new
+            {
+                Realmid = realmId
+            });
         }
     }
 }
