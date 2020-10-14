@@ -20,18 +20,45 @@ using System;
 using System.Collections;
 using System.Numerics;
 using System.Security.Cryptography;
-using Mangos.Common.Logging;
 
 namespace Mangos.Realm
 {
-    public sealed class AuthEngineClass : IDisposable
+    public sealed class AuthEngineClass
     {
-        private static readonly Random _random = new Random();
-        private readonly BaseWriter _log = new BaseWriter();
+        public static readonly byte[] CrcSalt;
+        private static readonly Random _random;
+
+        private byte[] _a;
+        private readonly byte[] _b;
+        public byte[] PublicB;
+        public byte[] g;
+        private readonly byte[] _k;
+        // Private PublicK As Byte() = SS_Hash
+        public byte[] M2;
+        public readonly byte[] N;
+        // Private Password As Byte()
+        private byte[] _s;
+        public readonly byte[] Salt;
+        private byte[] _u;
+        // Public CrcHash As Byte()
+        private byte[] _username;
+        public byte[] M1;
+        public byte[] SsHash;
+        private BigInteger _bna;
+        private BigInteger _bNb;
+        private BigInteger _bnPublicB;
+        private BigInteger _bNg;
+        private BigInteger _bNk;
+        private BigInteger _bNn;
+        private BigInteger _bns;
+        private BigInteger _bnu;
+        private BigInteger _bNv;
+        private BigInteger _bNx;
 
         static AuthEngineClass()
         {
             CrcSalt = new byte[16];
+            _random = new Random();
             _random.NextBytes(CrcSalt);
         }
 
@@ -280,59 +307,5 @@ namespace Mangos.Realm
             ReturnList.Add(SplitBuffer2);
             return ReturnList;
         }
-
-        private byte[] _a;
-        private readonly byte[] _b;
-        public byte[] PublicB;
-        public byte[] g;
-        private readonly byte[] _k;
-        // Private PublicK As Byte() = SS_Hash
-        public byte[] M2;
-        public readonly byte[] N;
-        // Private Password As Byte()
-        private byte[] _s;
-        public readonly byte[] Salt;
-        private byte[] _u;
-        public static readonly byte[] CrcSalt;
-        // Public CrcHash As Byte()
-        private byte[] _username;
-        public byte[] M1;
-        public byte[] SsHash;
-        private BigInteger _bna;
-        private BigInteger _bNb;
-        private BigInteger _bnPublicB;
-        private BigInteger _bNg;
-        private BigInteger _bNk;
-        private BigInteger _bNn;
-        private BigInteger _bns;
-        private BigInteger _bnu;
-        private BigInteger _bNv;
-        private BigInteger _bNx;
-
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        private bool _disposedValue; // To detect redundant calls
-
-        // IDisposable
-        private void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                // TODO: set large fields to null.
-                _log.Dispose();
-            }
-
-            _disposedValue = true;
-        }
-
-        // This code added by Visual Basic to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
     }
 }

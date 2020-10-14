@@ -71,7 +71,7 @@ namespace Mangos.World
 
 		public static void RegisterConfiguration(ContainerBuilder builder)
 		{
-			builder.Register((x) => new XmlFileConfigurationProvider<WorldServerConfiguration>("configs/WorldServer.ini")).As<IConfigurationProvider<WorldServerConfiguration>>().SingleInstance();
+			builder.Register((x) => new XmlFileConfigurationProvider<WorldServerConfiguration>(x.Resolve<ILogger>(), "configs/WorldServer.ini")).As<IConfigurationProvider<WorldServerConfiguration>>().SingleInstance();
 			builder.RegisterDecorator<StoredConfigurationProvider<WorldServerConfiguration>, IConfigurationProvider<WorldServerConfiguration>>();
 		}
 

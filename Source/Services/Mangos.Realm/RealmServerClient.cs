@@ -37,7 +37,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace Mangos.Realm.Async
+namespace Mangos.Realm
 {
     public class RealmServerClient : ITcpClient
 	{

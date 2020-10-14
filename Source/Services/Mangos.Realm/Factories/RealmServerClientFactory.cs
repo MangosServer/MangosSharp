@@ -21,12 +21,11 @@ using Mangos.Common.Globals;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
 using Mangos.Storage;
-using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace Mangos.Realm.Async.Factories
+namespace Mangos.Realm.Factories
 {
     public class RealmServerClientFactory : ITcpClientFactory
     {
