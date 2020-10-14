@@ -430,7 +430,7 @@ namespace Mangos.Cluster
         }
 
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        public Dictionary<OPCODES, HandlePacket> PacketHandlers { get; set; } = new Dictionary<OPCODES, HandlePacket>();
+        public Dictionary<Opcodes, HandlePacket> PacketHandlers { get; set; } = new Dictionary<Opcodes, HandlePacket>();
         public XMLConfigFile Config { get; set; }
         public SQL AccountDatabase { get; set; } = new SQL();
         public SQL CharacterDatabase { get; set; } = new SQL();

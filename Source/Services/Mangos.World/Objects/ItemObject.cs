@@ -302,7 +302,7 @@ namespace Mangos.World.Objects
 
 		public void SendContainedItemsUpdate(ref WS_Network.ClientClass client, int updatetype = 2)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 			packet.AddInt32(Items.Count);
 			packet.AddInt8(0);
 			foreach (KeyValuePair<byte, ItemObject> item in Items)
@@ -634,7 +634,7 @@ namespace Mangos.World.Objects
 
 		private void UpdateDurability(ref WS_Network.ClientClass client)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 			packet.AddInt32(1);
 			packet.AddInt8(0);
 			Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
@@ -757,7 +757,7 @@ namespace Mangos.World.Objects
 					Enchantments.Remove(slot);
 					if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(OwnerGUID))
 					{
-						Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+						Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 						packet.AddInt32(1);
 						packet.AddInt8(0);
 						Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
@@ -782,7 +782,7 @@ namespace Mangos.World.Objects
 				Save();
 				if (client != null)
 				{
-					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 					packet.AddInt32(1);
 					packet.AddInt8(0);
 					Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);

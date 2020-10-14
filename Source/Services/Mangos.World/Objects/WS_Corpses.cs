@@ -94,7 +94,7 @@ namespace Mangos.World.Objects
 						j++;
 					}
 					while (j <= 18);
-					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 					try
 					{
 						packet.AddInt32(1);
@@ -155,7 +155,7 @@ namespace Mangos.World.Objects
 
 			public void Destroy()
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_DESTROY_OBJECT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_DESTROY_OBJECT);
 				try
 				{
 					packet.AddUInt64(GUID);
@@ -287,7 +287,7 @@ namespace Mangos.World.Objects
 					WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
 				}
 				WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Add(GUID);
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 				checked
 				{
 					try

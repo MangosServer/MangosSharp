@@ -1126,7 +1126,7 @@ namespace Mangos.World.Warden
 
 			public Packets.PacketClass GetPacket()
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
 				packet.AddInt8(2);
 				foreach (string tmpStr in UsedStrings)
 				{

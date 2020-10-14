@@ -329,7 +329,7 @@ namespace Mangos.World.Quests
 			{
 				questMenu = GetQuestMenu(ref objCharacter, guid);
 			}
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_LIST);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_LIST);
 			checked
 			{
 				try
@@ -368,7 +368,7 @@ namespace Mangos.World.Quests
 
 		public void SendQuestDetails(ref WS_Network.ClientClass client, ref WS_QuestInfo quest, ulong guid, bool acceptActive)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_DETAILS);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_DETAILS);
 			checked
 			{
 				try
@@ -538,7 +538,7 @@ namespace Mangos.World.Quests
 
 		public void SendQuest(ref WS_Network.ClientClass client, ref WS_QuestInfo quest)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUEST_QUERY_RESPONSE);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUEST_QUERY_RESPONSE);
 			checked
 			{
 				try
@@ -663,7 +663,7 @@ namespace Mangos.World.Quests
 
 		public void SendQuestMessageAddItem(ref WS_Network.ClientClass client, int itemID, int itemCount)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTUPDATE_ADD_ITEM);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTUPDATE_ADD_ITEM);
 			try
 			{
 				packet.AddInt32(itemID);
@@ -678,7 +678,7 @@ namespace Mangos.World.Quests
 
 		public void SendQuestMessageAddKill(ref WS_Network.ClientClass client, int questID, ulong killGuid, int killID, int killCurrentCount, int killCount)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTUPDATE_ADD_KILL);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTUPDATE_ADD_KILL);
 			try
 			{
 				packet.AddInt32(questID);
@@ -700,7 +700,7 @@ namespace Mangos.World.Quests
 
 		public void SendQuestMessageFailed(ref WS_Network.ClientClass client, int questID)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_FAILED);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_FAILED);
 			try
 			{
 				packet.AddInt32(questID);
@@ -714,7 +714,7 @@ namespace Mangos.World.Quests
 
 		public void SendQuestMessageFailedTimer(ref WS_Network.ClientClass client, int questID)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTUPDATE_FAILEDTIMER);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTUPDATE_FAILEDTIMER);
 			try
 			{
 				packet.AddInt32(questID);
@@ -728,7 +728,7 @@ namespace Mangos.World.Quests
 
 		public void SendQuestMessageComplete(ref WS_Network.ClientClass client, int questID)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTUPDATE_COMPLETE);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTUPDATE_COMPLETE);
 			try
 			{
 				packet.AddInt32(questID);
@@ -742,7 +742,7 @@ namespace Mangos.World.Quests
 
 		public void SendQuestComplete(ref WS_Network.ClientClass client, ref WS_QuestInfo quest, int xP, int gold)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_COMPLETE);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_COMPLETE);
 			checked
 			{
 				try
@@ -786,7 +786,7 @@ namespace Mangos.World.Quests
 
 		public void SendQuestReward(ref WS_Network.ClientClass client, ref WS_QuestInfo quest, ulong guid, ref WS_QuestsBase objBaseQuest)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_OFFER_REWARD);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_OFFER_REWARD);
 			try
 			{
 				packet.AddUInt64(guid);
@@ -909,7 +909,7 @@ namespace Mangos.World.Quests
 
 		public void SendQuestRequireItems(ref WS_Network.ClientClass client, ref WS_QuestInfo quest, ulong guid, ref WS_QuestsBase objBaseQuest)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_REQUEST_ITEMS);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_REQUEST_ITEMS);
 			checked
 			{
 				try
@@ -1532,7 +1532,7 @@ namespace Mangos.World.Quests
 						packet.GetInt16();
 						ulong guid = packet.GetUInt64();
 						QuestgiverStatusFlag status = GetQuestgiverStatus(ref client.Character, guid);
-						Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_STATUS);
+						Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_STATUS);
 						try
 						{
 							response.AddUInt64(guid);
@@ -1662,7 +1662,7 @@ namespace Mangos.World.Quests
 			{
 				if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(guid))
 				{
-					Packets.PacketClass response3 = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
+					Packets.PacketClass response3 = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
 					try
 					{
 						response3.AddUInt64(client.Character.GUID);
@@ -1678,7 +1678,7 @@ namespace Mangos.World.Quests
 				else
 				{
 					QuestgiverStatusFlag status = GetQuestgiverStatus(ref client.Character, guid);
-					Packets.PacketClass response2 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_STATUS);
+					Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_STATUS);
 					try
 					{
 						response2.AddUInt64(guid);
@@ -1693,7 +1693,7 @@ namespace Mangos.World.Quests
 			}
 			else
 			{
-				Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_QUESTLOG_FULL);
+				Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_QUESTLOG_FULL);
 				try
 				{
 					client.Send(ref response);
@@ -1931,7 +1931,7 @@ namespace Mangos.World.Quests
 								copper = (uint)(unchecked(copper) + unchecked(client.Character.TalkCurrentQuest.RewardGold));
 								goto IL_01d2;
 							}
-							Packets.PacketClass errorPacket = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
+							Packets.PacketClass errorPacket = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
 							errorPacket.AddInt32(23);
 							client.Send(ref errorPacket);
 							errorPacket.Dispose();
@@ -1948,7 +1948,7 @@ namespace Mangos.World.Quests
 									ref uint copper2 = ref client.Character.Copper;
 									copper2 = (uint)(unchecked(copper2) - unchecked(client.Character.TalkCurrentQuest.RewardGold));
 								}
-								Packets.PacketClass errorPacket3 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
+								Packets.PacketClass errorPacket3 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
 								errorPacket3.AddInt32(21);
 								client.Send(ref errorPacket3);
 								errorPacket3.Dispose();
@@ -2115,7 +2115,7 @@ namespace Mangos.World.Quests
 							copper5 = (uint)(unchecked(copper5) + unchecked(client.Character.TalkCurrentQuest.RewardGold));
 							goto IL_0a03;
 						}
-						Packets.PacketClass errorPacket4 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
+						Packets.PacketClass errorPacket4 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
 						errorPacket4.AddInt32(23);
 						client.Send(ref errorPacket4);
 						errorPacket4.Dispose();
@@ -2132,7 +2132,7 @@ namespace Mangos.World.Quests
 								ref uint copper6 = ref client.Character.Copper;
 								copper6 = (uint)(unchecked(copper6) - unchecked(client.Character.TalkCurrentQuest.RewardGold));
 							}
-							Packets.PacketClass errorPacket2 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
+							Packets.PacketClass errorPacket2 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
 							errorPacket2.AddInt32(21);
 							client.Send(ref errorPacket2);
 							errorPacket2.Dispose();
@@ -2300,7 +2300,7 @@ namespace Mangos.World.Quests
 						continue;
 					}
 					WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[guid];
-					Packets.PacketClass response2 = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
+					Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
 					response2.AddUInt64(guid);
 					response2.AddInt32(0);
 					response2.AddInt8(0);
@@ -2336,7 +2336,7 @@ namespace Mangos.World.Quests
 					}
 					if (message2 != 0)
 					{
-						Packets.PacketClass errorPacket2 = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
+						Packets.PacketClass errorPacket2 = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
 						errorPacket2.AddUInt64(characterObject.GUID);
 						errorPacket2.AddInt32((int)message2);
 						errorPacket2.AddInt8(0);
@@ -2353,7 +2353,7 @@ namespace Mangos.World.Quests
 					continue;
 				}
 				WS_PlayerData.CharacterObject characterObject2 = WorldServiceLocator._WorldServer.CHARACTERs[guid2];
-				Packets.PacketClass response = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
+				Packets.PacketClass response = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
 				response.AddUInt64(guid2);
 				response.AddInt32(0);
 				response.AddInt8(0);
@@ -2389,7 +2389,7 @@ namespace Mangos.World.Quests
 				}
 				if (message != 0)
 				{
-					Packets.PacketClass errorPacket = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
+					Packets.PacketClass errorPacket = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
 					errorPacket.AddUInt64(characterObject2.GUID);
 					errorPacket.AddInt32((int)message);
 					errorPacket.AddInt8(0);
@@ -2407,7 +2407,7 @@ namespace Mangos.World.Quests
 				ulong guid = packet.GetUInt64();
 				QuestPartyPushError message = (QuestPartyPushError)packet.GetInt8();
 				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_QUEST_PUSH_RESULT [{2:X} {3}]", client.IP, client.Port, guid, message);
-				Packets.PacketClass response = new Packets.PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT);
+				Packets.PacketClass response = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
 				response.AddUInt64(guid);
 				response.AddInt8(2);
 				response.AddInt32(0);

@@ -59,7 +59,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GMTICKET_GETTICKET(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GMTICKET_GETTICKET", client.IP, client.Port);
-            var SMSG_GMTICKET_GETTICKET = new Packets.PacketClass(OPCODES.SMSG_GMTICKET_GETTICKET);
+            var SMSG_GMTICKET_GETTICKET = new Packets.PacketClass(Opcodes.SMSG_GMTICKET_GETTICKET);
             var MySQLResult = new DataTable();
             ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters_tickets WHERE char_guid = {0};", client.Character.Guid), ref MySQLResult);
             if (MySQLResult.Rows.Count > 0)
@@ -74,7 +74,7 @@ namespace Mangos.Cluster.Handlers
 
             client.Send(SMSG_GMTICKET_GETTICKET);
             SMSG_GMTICKET_GETTICKET.Dispose();
-            var SMSG_QUERY_TIME_RESPONSE = new Packets.PacketClass(OPCODES.SMSG_QUERY_TIME_RESPONSE);
+            var SMSG_QUERY_TIME_RESPONSE = new Packets.PacketClass(Opcodes.SMSG_QUERY_TIME_RESPONSE);
             SMSG_QUERY_TIME_RESPONSE.AddInt32(ClusterServiceLocator._NativeMethods.timeGetTime("")); // GetTimestamp(Now))
             client.Send(SMSG_QUERY_TIME_RESPONSE);
             SMSG_QUERY_TIME_RESPONSE.Dispose();
@@ -96,7 +96,7 @@ namespace Mangos.Cluster.Handlers
             string ticket_text = ClusterServiceLocator._Functions.EscapeString(packet.GetString());
             var MySQLResult = new DataTable();
             ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters_tickets WHERE char_guid = {0};", client.Character.Guid), ref MySQLResult);
-            var SMSG_GMTICKET_CREATE = new Packets.PacketClass(OPCODES.SMSG_GMTICKET_CREATE);
+            var SMSG_GMTICKET_CREATE = new Packets.PacketClass(Opcodes.SMSG_GMTICKET_CREATE);
             if (MySQLResult.Rows.Count > 0)
             {
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GMTICKET_CREATE", client.IP, client.Port);
@@ -123,7 +123,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GMTICKET_SYSTEMSTATUS(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GMTICKET_SYSTEMSTATUS", client.IP, client.Port);
-            var SMSG_GMTICKET_SYSTEMSTATUS = new Packets.PacketClass(OPCODES.SMSG_GMTICKET_SYSTEMSTATUS);
+            var SMSG_GMTICKET_SYSTEMSTATUS = new Packets.PacketClass(Opcodes.SMSG_GMTICKET_SYSTEMSTATUS);
             SMSG_GMTICKET_SYSTEMSTATUS.AddInt32((int)GMTicketSystemStatus.GMTICKET_SYSTEMSTATUS_SURVEY);
             client.Send(SMSG_GMTICKET_SYSTEMSTATUS);
             SMSG_GMTICKET_SYSTEMSTATUS.Dispose();
@@ -138,7 +138,7 @@ namespace Mangos.Cluster.Handlers
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GMTICKET_DELETETICKET", client.IP, client.Port);
             ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM characters_tickets WHERE char_guid = {0};", client.Character.Guid));
-            var SMSG_GMTICKET_DELETETICKET = new Packets.PacketClass(OPCODES.SMSG_GMTICKET_DELETETICKET);
+            var SMSG_GMTICKET_DELETETICKET = new Packets.PacketClass(Opcodes.SMSG_GMTICKET_DELETETICKET);
             SMSG_GMTICKET_DELETETICKET.AddInt32((int)GMTicketDeleteResult.GMTICKET_DELETE_SUCCESS);
             client.Send(SMSG_GMTICKET_DELETETICKET);
             SMSG_GMTICKET_DELETETICKET.Dispose();
@@ -159,7 +159,7 @@ namespace Mangos.Cluster.Handlers
             packet.GetInt16();
             string Name = packet.GetString();
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_WHOIS [{2}]", client.IP, client.Port, Name);
-            var response = new Packets.PacketClass(OPCODES.SMSG_WHOIS);
+            var response = new Packets.PacketClass(Opcodes.SMSG_WHOIS);
             response.AddString("This feature is not available yet.");
             client.Send(response);
             response.Dispose();

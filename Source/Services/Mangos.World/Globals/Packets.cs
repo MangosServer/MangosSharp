@@ -554,19 +554,19 @@ namespace Mangos.World.Globals
 				}
 			}
 
-			public OPCODES OpCode
+			public Opcodes OpCode
 			{
 				get
 				{
 					if (Information.UBound(Data) > 2)
 					{
-						return (OPCODES)checked(unchecked(Data[2]) + unchecked(Data[3]) * 256);
+						return (Opcodes)checked(unchecked(Data[2]) + unchecked(Data[3]) * 256);
 					}
-					return OPCODES.MSG_NULL_ACTION;
+					return Opcodes.MSG_NULL_ACTION;
 				}
 			}
 
-			public PacketClass(OPCODES opcode)
+			public PacketClass(Opcodes opcode)
 			{
 				Offset = 4;
 				Data = new byte[4];
@@ -588,7 +588,7 @@ namespace Mangos.World.Globals
 
 			public void CompressUpdatePacket()
 			{
-				if (OpCode == OPCODES.SMSG_UPDATE_OBJECT && Data.Length >= 200)
+				if (OpCode == Opcodes.SMSG_UPDATE_OBJECT && Data.Length >= 200)
 				{
 					int uncompressedSize = Data.Length;
 					byte[] compressedBuffer = WorldServiceLocator._GlobalZip.Compress(Data, 4, checked(Data.Length - 4));
@@ -1051,7 +1051,7 @@ namespace Mangos.World.Globals
 			}
 
 			public UpdatePacketClass()
-				: base(OPCODES.SMSG_UPDATE_OBJECT)
+				: base(Opcodes.SMSG_UPDATE_OBJECT)
 			{
 				AddInt32(0);
 				AddInt8(0);

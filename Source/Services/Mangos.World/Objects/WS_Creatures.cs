@@ -413,7 +413,7 @@ namespace Mangos.World.Objects
 				orientation = o;
 				if (SeenBy.Count > 0)
 				{
-					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.MSG_MOVE_HEARTBEAT);
+					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_MOVE_HEARTBEAT);
 					packet.AddPackGUID(GUID);
 					packet.AddInt32(0);
 					packet.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
@@ -475,7 +475,7 @@ namespace Mangos.World.Objects
 					ProjectData.ClearProjectError();
 				}
 				int TimeToMove = 1;
-				Packets.PacketClass SMSG_MONSTER_MOVE = new Packets.PacketClass(OPCODES.SMSG_MONSTER_MOVE);
+				Packets.PacketClass SMSG_MONSTER_MOVE = new Packets.PacketClass(Opcodes.SMSG_MONSTER_MOVE);
 				checked
 				{
 					try
@@ -584,7 +584,7 @@ namespace Mangos.World.Objects
 				orientation = orientation_;
 				if (SeenBy.Count > 0 && (aiScript == null || !aiScript.IsMoving()))
 				{
-					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.MSG_MOVE_HEARTBEAT);
+					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_MOVE_HEARTBEAT);
 					try
 					{
 						packet.AddPackGUID(GUID);
@@ -780,7 +780,7 @@ namespace Mangos.World.Objects
 					}
 					cUnitFlags |= 67108864;
 				}
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 				packet.AddInt32(1);
 				packet.AddInt8(0);
 				Packets.UpdateClass UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
@@ -1219,7 +1219,7 @@ namespace Mangos.World.Objects
 
 			public void SendChatMessage(string Message, ChatMsg msgType, LANGUAGES msgLanguage, ulong SecondGUID = 0uL)
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_MESSAGECHAT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MESSAGECHAT);
 				byte flag = 0;
 				packet.AddInt8(checked((byte)msgType));
 				packet.AddInt32((int)msgLanguage);
@@ -1682,7 +1682,7 @@ namespace Mangos.World.Objects
 				{
 					WorldServiceLocator._WorldServer.CHARACTERs[SummonedBy].NonCombatPet = null;
 				}
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_DESTROY_OBJECT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_DESTROY_OBJECT);
 				packet.AddUInt64(GUID);
 				SendToNearPlayers(ref packet, 0uL);
 				packet.Dispose();
@@ -1787,7 +1787,7 @@ namespace Mangos.World.Objects
 									WS_Base.BaseObject objCharacter = this;
 									if (characterObject.CanSee(ref objCharacter))
 									{
-										Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+										Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 										try
 										{
 											packet.AddInt32(1);
@@ -2074,7 +2074,7 @@ namespace Mangos.World.Objects
 				{
 					return;
 				}
-				Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_CREATURE_QUERY_RESPONSE);
+				Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_CREATURE_QUERY_RESPONSE);
 				packet.GetInt16();
 				int CreatureID = packet.GetInt32();
 				ulong CreatureGUID = packet.GetUInt64();
@@ -2161,7 +2161,7 @@ namespace Mangos.World.Objects
 				{
 					if (WorldServiceLocator._WorldServer.CREATURESDatabase[WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].ID].TalkScript == null)
 					{
-						Packets.PacketClass test = new Packets.PacketClass(OPCODES.SMSG_NPC_WONT_TALK);
+						Packets.PacketClass test = new Packets.PacketClass(Opcodes.SMSG_NPC_WONT_TALK);
 						test.AddUInt64(GUID);
 						test.AddInt8(1);
 						client.Send(ref test);

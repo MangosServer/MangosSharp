@@ -19,7 +19,7 @@
 
 namespace Mangos.Common.Globals
 {
-    public enum ObjectTypeID
+    public enum ObjectTypeId
     {
         TYPEID_OBJECT = 0,
         TYPEID_ITEM = 1,

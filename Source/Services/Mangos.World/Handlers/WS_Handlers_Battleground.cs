@@ -49,7 +49,7 @@ namespace Mangos.World.Handlers
 				WorldServiceLocator._Functions.SendMessageNotification(ref client, "You don't meet Battleground level requirements");
 				return;
 			}
-			Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_BATTLEFIELD_LIST);
+			Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_BATTLEFIELD_LIST);
 			try
 			{
 				response.AddUInt64(client.Character.GUID);

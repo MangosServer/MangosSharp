@@ -82,7 +82,7 @@ namespace Mangos.World.Objects
 				if (Owner is WS_PlayerData.CharacterObject)
 				{
 					((WS_PlayerData.CharacterObject)Owner).GroupUpdateFlag = ((WS_PlayerData.CharacterObject)Owner).GroupUpdateFlag | 0x7FC00u;
-					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_PET_SPELLS);
+					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PET_SPELLS);
 					packet.AddUInt64(0uL);
 					((WS_PlayerData.CharacterObject)Owner).client.Send(ref packet);
 					packet.Dispose();
@@ -209,7 +209,7 @@ namespace Mangos.World.Objects
 		{
 			if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(PetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[PetGUID] is PetObject)
 			{
-				Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_PET_NAME_QUERY_RESPONSE);
+				Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_PET_NAME_QUERY_RESPONSE);
 				response.AddInt32(PetNumber);
 				response.AddString(((PetObject)WorldServiceLocator._WorldServer.WORLD_CREATUREs[PetGUID]).PetName);
 				response.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
@@ -268,7 +268,7 @@ namespace Mangos.World.Objects
 				Command = ((PetObject)Pet).Command;
 				State = ((PetObject)Pet).State;
 			}
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_PET_SPELLS);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PET_SPELLS);
 			packet.AddUInt64(Pet.GUID);
 			packet.AddInt32(0);
 			packet.AddInt32(16842752);

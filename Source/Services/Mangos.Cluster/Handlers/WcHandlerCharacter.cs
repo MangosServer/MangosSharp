@@ -281,7 +281,7 @@ namespace Mangos.Cluster.Handlers
             /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
             public void Transfer(float posX, float posY, float posZ, float ori, int thisMap)
             {
-                var p = new Packets.PacketClass(OPCODES.SMSG_TRANSFER_PENDING);
+                var p = new Packets.PacketClass(Opcodes.SMSG_TRANSFER_PENDING);
                 p.AddInt32(thisMap);
                 Client.Send(p);
                 p.Dispose();
@@ -297,7 +297,7 @@ namespace Mangos.Cluster.Handlers
 
             public void Transfer(float posX, float posY, float posZ, float ori)
             {
-                var p = new Packets.PacketClass(OPCODES.SMSG_TRANSFER_PENDING);
+                var p = new Packets.PacketClass(Opcodes.SMSG_TRANSFER_PENDING);
                 p.AddInt32((int)Map);
                 Client.Send(p);
                 p.Dispose();

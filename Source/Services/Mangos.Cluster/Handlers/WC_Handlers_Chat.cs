@@ -124,7 +124,7 @@ namespace Mangos.Cluster.Handlers
                         }
                         else
                         {
-                            var smsgChatPlayerNotFound = new Packets.PacketClass(OPCODES.SMSG_CHAT_PLAYER_NOT_FOUND);
+                            var smsgChatPlayerNotFound = new Packets.PacketClass(Opcodes.SMSG_CHAT_PLAYER_NOT_FOUND);
                             smsgChatPlayerNotFound.AddString(toUser);
                             client.Send(smsgChatPlayerNotFound);
                             smsgChatPlayerNotFound.Dispose();

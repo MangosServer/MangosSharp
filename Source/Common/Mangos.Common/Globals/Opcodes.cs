@@ -19,7 +19,7 @@
 
 namespace Mangos.Common.Globals
 {
-    public enum OPCODES
+    public enum Opcodes
     {
         MSG_NULL_ACTION = 0x0,
         CMSG_BOOTME = 0x1,

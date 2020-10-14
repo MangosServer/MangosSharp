@@ -447,7 +447,7 @@ namespace Mangos.World.Objects
 
 			public void CreateEveryoneOnTransport(ref WS_PlayerData.CharacterObject Character)
 			{
-				Packets.PacketClass mePacket = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+				Packets.PacketClass mePacket = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 				mePacket.AddInt32(1);
 				mePacket.AddInt8(0);
 				Packets.UpdateClass meTmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
@@ -472,7 +472,7 @@ namespace Mangos.World.Objects
 						tmpUnit = (WS_Base.BaseUnit)objCharacter;
 						if (flag)
 						{
-							Packets.PacketClass myPacket2 = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+							Packets.PacketClass myPacket2 = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 							try
 							{
 								myPacket2.AddInt32(1);
@@ -515,7 +515,7 @@ namespace Mangos.World.Objects
 						tmpUnit = (WS_Base.BaseUnit)objCharacter;
 						if (flag)
 						{
-							Packets.PacketClass myPacket = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+							Packets.PacketClass myPacket = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 							try
 							{
 								myPacket.AddInt32(1);
@@ -610,7 +610,7 @@ namespace Mangos.World.Objects
 									{
 										continue;
 									}
-									Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+									Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 									try
 									{
 										packet.AddInt32(1);

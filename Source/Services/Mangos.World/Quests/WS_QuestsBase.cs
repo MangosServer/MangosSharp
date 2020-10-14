@@ -240,7 +240,7 @@ namespace Mangos.World.Quests
 				if (!objCharacter.ItemADD(ref tmpItem))
 				{
 					tmpItem.Delete();
-					Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_FAILED);
+					Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_FAILED);
 					response.AddInt32(ID);
 					response.AddInt32(4);
 					objCharacter.client.Send(ref response);

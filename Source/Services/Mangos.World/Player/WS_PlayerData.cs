@@ -899,7 +899,7 @@ namespace Mangos.World.Player
 
 			public void HonorLog(int honorPoints, ulong victimGUID, int victimRank)
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_PVP_CREDIT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PVP_CREDIT);
 				try
 				{
 					packet.AddInt32(honorPoints);
@@ -1238,7 +1238,7 @@ namespace Mangos.World.Player
 				{
 					return;
 				}
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 				try
 				{
 					packet.AddInt32(1);
@@ -1267,7 +1267,7 @@ namespace Mangos.World.Player
 					{
 						updateCount++;
 					}
-					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 					try
 					{
 						packet.AddInt32(updateCount);
@@ -1315,7 +1315,7 @@ namespace Mangos.World.Player
 
 			public void SendItemUpdate(ItemObject Item)
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 				try
 				{
 					packet.AddInt32(1);
@@ -1334,7 +1334,7 @@ namespace Mangos.World.Player
 
 			public void SendInventoryUpdate()
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 				try
 				{
 					packet.AddInt32(1);
@@ -1376,7 +1376,7 @@ namespace Mangos.World.Player
 
 			public void SendItemAndCharacterUpdate(ItemObject Item, int UPDATETYPE = 0)
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 				Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
 				try
 				{
@@ -1453,7 +1453,7 @@ namespace Mangos.World.Player
                         UpdateMask = (BitArray)UpdateMask.Clone()
                     };
                     Packets.UpdateClass forOthers = updateClass;
-					Packets.PacketClass packetForOthers = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+					Packets.PacketClass packetForOthers = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 					try
 					{
 						packetForOthers.AddInt32(1);
@@ -1469,7 +1469,7 @@ namespace Mangos.World.Player
 				}
 				if (!notMe && client != null)
 				{
-					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 					try
 					{
 						packet.AddInt32(1);
@@ -1978,7 +1978,7 @@ namespace Mangos.World.Player
 
 			public void ProhibitSpellSchool(int School, int Time)
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_SPELL_COOLDOWN);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SPELL_COOLDOWN);
 				checked
 				{
 					try
@@ -2087,7 +2087,7 @@ namespace Mangos.World.Player
 				{
 					return;
 				}
-				Packets.PacketClass SMSG_LEARNED_SPELL = new Packets.PacketClass(OPCODES.SMSG_LEARNED_SPELL);
+				Packets.PacketClass SMSG_LEARNED_SPELL = new Packets.PacketClass(Opcodes.SMSG_LEARNED_SPELL);
 				try
 				{
 					SMSG_LEARNED_SPELL.AddInt32(SpellID);
@@ -2124,7 +2124,7 @@ namespace Mangos.World.Player
 				{
 					Spells[WorldServiceLocator._WS_Spells.SpellChains[SpellID]].Active = 0;
 					WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_spells SET active = 0 WHERE guid = {GUID} AND spellid = {SpellID};");
-					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_SUPERCEDED_SPELL);
+					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SUPERCEDED_SPELL);
 					try
 					{
 						packet.AddInt32(WorldServiceLocator._WS_Spells.SpellChains[SpellID]);
@@ -2325,7 +2325,7 @@ namespace Mangos.World.Player
 				{
 					Spells.Remove(SpellID);
 					WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM characters_spells WHERE guid = {GUID} AND spellid = {SpellID};");
-					Packets.PacketClass SMSG_REMOVED_SPELL = new Packets.PacketClass(OPCODES.SMSG_REMOVED_SPELL);
+					Packets.PacketClass SMSG_REMOVED_SPELL = new Packets.PacketClass(Opcodes.SMSG_REMOVED_SPELL);
 					try
 					{
 						SMSG_REMOVED_SPELL.AddInt32(SpellID);
@@ -2458,7 +2458,7 @@ namespace Mangos.World.Player
 							WS_Player_Initializator wS_Player_Initializator = WorldServiceLocator._WS_Player_Initializator;
 							CharacterObject objCharacter = this;
 							wS_Player_Initializator.CalculateOnLevelUP(ref objCharacter);
-							Packets.PacketClass SMSG_LEVELUP_INFO = new Packets.PacketClass(OPCODES.SMSG_LEVELUP_INFO);
+							Packets.PacketClass SMSG_LEVELUP_INFO = new Packets.PacketClass(Opcodes.SMSG_LEVELUP_INFO);
 							try
 							{
 								SMSG_LEVELUP_INFO.AddInt32(Level);
@@ -3687,7 +3687,7 @@ namespace Mangos.World.Player
 				{
 					if (!client.Character.Items.ContainsKey(srcSlot))
 					{
-						Packets.PacketClass EQUIP_ERR_ITEM_NOT_FOUND = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
+						Packets.PacketClass EQUIP_ERR_ITEM_NOT_FOUND = new Packets.PacketClass(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
 						try
 						{
 							EQUIP_ERR_ITEM_NOT_FOUND.AddInt8(23);
@@ -3708,7 +3708,7 @@ namespace Mangos.World.Player
 				{
 					if (!client.Character.Items[srcBag].Items.ContainsKey(srcSlot))
 					{
-						Packets.PacketClass EQUIP_ERR_ITEM_NOT_FOUND2 = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
+						Packets.PacketClass EQUIP_ERR_ITEM_NOT_FOUND2 = new Packets.PacketClass(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
 						try
 						{
 							EQUIP_ERR_ITEM_NOT_FOUND2.AddInt8(23);
@@ -3740,7 +3740,7 @@ namespace Mangos.World.Player
 				{
 					if (dstSlot == byte.MaxValue)
 					{
-						Packets.PacketClass notHandledYet = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
+						Packets.PacketClass notHandledYet = new Packets.PacketClass(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
 						try
 						{
 							notHandledYet.AddInt8(27);
@@ -3760,7 +3760,7 @@ namespace Mangos.World.Player
 					}
 					else if (Count > srcItem.StackCount)
 					{
-						Packets.PacketClass EQUIP_ERR_TRIED_TO_SPLIT_MORE_THAN_COUNT = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
+						Packets.PacketClass EQUIP_ERR_TRIED_TO_SPLIT_MORE_THAN_COUNT = new Packets.PacketClass(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
 						try
 						{
 							EQUIP_ERR_TRIED_TO_SPLIT_MORE_THAN_COUNT.AddInt8(26);
@@ -3834,7 +3834,7 @@ namespace Mangos.World.Player
 						}
 						srcItem.Save(saveAll: false);
 						dstItem.Save(saveAll: false);
-						Packets.PacketClass EQUIP_ERR_OK = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
+						Packets.PacketClass EQUIP_ERR_OK = new Packets.PacketClass(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
 						try
 						{
 							EQUIP_ERR_OK.AddInt8(0);
@@ -3850,7 +3850,7 @@ namespace Mangos.World.Player
 					}
 					else
 					{
-						Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE);
+						Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
 						try
 						{
 							response.AddInt8(27);
@@ -4426,7 +4426,7 @@ namespace Mangos.World.Player
 							}
 							else if (Item.ItemInfo.Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.USE)
 							{
-								Packets.PacketClass cooldown = new Packets.PacketClass(OPCODES.SMSG_ITEM_COOLDOWN);
+								Packets.PacketClass cooldown = new Packets.PacketClass(Opcodes.SMSG_ITEM_COOLDOWN);
 								try
 								{
 									cooldown.AddUInt64(Item.GUID);
@@ -4598,7 +4598,7 @@ namespace Mangos.World.Player
 
 			public void SendGossip(ulong cGUID, int cTextID, GossipMenu Menu = null, QuestMenu qMenu = null)
 			{
-				Packets.PacketClass SMSG_GOSSIP_MESSAGE = new Packets.PacketClass(OPCODES.SMSG_GOSSIP_MESSAGE);
+				Packets.PacketClass SMSG_GOSSIP_MESSAGE = new Packets.PacketClass(Opcodes.SMSG_GOSSIP_MESSAGE);
 				checked
 				{
 					try
@@ -4646,7 +4646,7 @@ namespace Mangos.World.Player
 
 			public void SendGossipComplete()
 			{
-				Packets.PacketClass SMSG_GOSSIP_COMPLETE = new Packets.PacketClass(OPCODES.SMSG_GOSSIP_COMPLETE);
+				Packets.PacketClass SMSG_GOSSIP_COMPLETE = new Packets.PacketClass(Opcodes.SMSG_GOSSIP_COMPLETE);
 				try
 				{
 					client.Send(ref SMSG_GOSSIP_COMPLETE);
@@ -4659,7 +4659,7 @@ namespace Mangos.World.Player
 
 			public void SendPointOfInterest(float x, float y, int icon, int flags, int data, string name)
 			{
-				Packets.PacketClass SMSG_GOSSIP_POI = new Packets.PacketClass(OPCODES.SMSG_GOSSIP_POI);
+				Packets.PacketClass SMSG_GOSSIP_POI = new Packets.PacketClass(Opcodes.SMSG_GOSSIP_POI);
 				try
 				{
 					SMSG_GOSSIP_POI.AddInt32(flags);
@@ -4682,7 +4682,7 @@ namespace Mangos.World.Player
 				{
 					WS_Creatures.NPCText tmpText = new WS_Creatures.NPCText(TextID);
 				}
-				Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_NPC_TEXT_UPDATE);
+				Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_NPC_TEXT_UPDATE);
 				try
 				{
 					response.AddInt32(TextID);
@@ -4734,7 +4734,7 @@ namespace Mangos.World.Player
 				bindpoint_map_id = checked((int)MapID);
 				bindpoint_zone_id = ZoneID;
 				SaveCharacter();
-				Packets.PacketClass SMSG_BINDPOINTUPDATE = new Packets.PacketClass(OPCODES.SMSG_BINDPOINTUPDATE);
+				Packets.PacketClass SMSG_BINDPOINTUPDATE = new Packets.PacketClass(Opcodes.SMSG_BINDPOINTUPDATE);
 				try
 				{
 					SMSG_BINDPOINTUPDATE.AddSingle(bindpoint_positionX);
@@ -4748,7 +4748,7 @@ namespace Mangos.World.Player
 				{
 					SMSG_BINDPOINTUPDATE.Dispose();
 				}
-				Packets.PacketClass SMSG_PLAYERBOUND = new Packets.PacketClass(OPCODES.SMSG_PLAYERBOUND);
+				Packets.PacketClass SMSG_PLAYERBOUND = new Packets.PacketClass(Opcodes.SMSG_PLAYERBOUND);
 				try
 				{
 					SMSG_PLAYERBOUND.AddUInt64(cGUID);
@@ -4770,7 +4770,7 @@ namespace Mangos.World.Player
 				}
 				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: Player Teleport: X[{0}], Y[{1}], Z[{2}], O[{3}]", posX, posY, posZ, ori);
 				charMovementFlags = 0;
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.MSG_MOVE_TELEPORT_ACK);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_MOVE_TELEPORT_ACK);
 				try
 				{
 					packet.AddPackGUID(GUID);
@@ -4804,7 +4804,7 @@ namespace Mangos.World.Player
 			public void Transfer(float posX, float posY, float posZ, float ori, int map)
 			{
 				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: Player Transfer: X[{0}], Y[{1}], Z[{2}], O[{3}], MAP[{4}]", posX, posY, posZ, ori, map);
-				Packets.PacketClass p = new Packets.PacketClass(OPCODES.SMSG_TRANSFER_PENDING);
+				Packets.PacketClass p = new Packets.PacketClass(Opcodes.SMSG_TRANSFER_PENDING);
 				checked
 				{
 					try
@@ -5021,23 +5021,23 @@ namespace Mangos.World.Player
 							default:
 								return;
 							case ChangeSpeedType.RUN:
-								packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_RUN_SPEED_CHANGE);
+								packet = new Packets.PacketClass(Opcodes.SMSG_FORCE_RUN_SPEED_CHANGE);
 								RunSpeed = NewSpeed;
 								break;
 							case ChangeSpeedType.RUNBACK:
-								packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_RUN_BACK_SPEED_CHANGE);
+								packet = new Packets.PacketClass(Opcodes.SMSG_FORCE_RUN_BACK_SPEED_CHANGE);
 								RunBackSpeed = NewSpeed;
 								break;
 							case ChangeSpeedType.SWIM:
-								packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_SWIM_SPEED_CHANGE);
+								packet = new Packets.PacketClass(Opcodes.SMSG_FORCE_SWIM_SPEED_CHANGE);
 								SwimSpeed = NewSpeed;
 								break;
 							case ChangeSpeedType.SWIMBACK:
-								packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_SWIM_BACK_SPEED_CHANGE);
+								packet = new Packets.PacketClass(Opcodes.SMSG_FORCE_SWIM_BACK_SPEED_CHANGE);
 								SwimBackSpeed = NewSpeed;
 								break;
 							case ChangeSpeedType.TURNRATE:
-								packet = new Packets.PacketClass(OPCODES.SMSG_FORCE_TURN_RATE_CHANGE);
+								packet = new Packets.PacketClass(Opcodes.SMSG_FORCE_TURN_RATE_CHANGE);
 								TurnRate = NewSpeed;
 								break;
 						}
@@ -5055,7 +5055,7 @@ namespace Mangos.World.Player
 
 			public void SetWaterWalk()
 			{
-				Packets.PacketClass SMSG_MOVE_WATER_WALK = new Packets.PacketClass(OPCODES.SMSG_MOVE_WATER_WALK);
+				Packets.PacketClass SMSG_MOVE_WATER_WALK = new Packets.PacketClass(Opcodes.SMSG_MOVE_WATER_WALK);
 				try
 				{
 					SMSG_MOVE_WATER_WALK.AddPackGUID(GUID);
@@ -5070,7 +5070,7 @@ namespace Mangos.World.Player
 
 			public void SetLandWalk()
 			{
-				Packets.PacketClass SMSG_MOVE_LAND_WALK = new Packets.PacketClass(OPCODES.SMSG_MOVE_LAND_WALK);
+				Packets.PacketClass SMSG_MOVE_LAND_WALK = new Packets.PacketClass(Opcodes.SMSG_MOVE_LAND_WALK);
 				try
 				{
 					SMSG_MOVE_LAND_WALK.AddPackGUID(GUID);
@@ -5085,7 +5085,7 @@ namespace Mangos.World.Player
 
 			public void SetMoveRoot()
 			{
-				Packets.PacketClass SMSG_FORCE_MOVE_ROOT = new Packets.PacketClass(OPCODES.SMSG_FORCE_MOVE_ROOT);
+				Packets.PacketClass SMSG_FORCE_MOVE_ROOT = new Packets.PacketClass(Opcodes.SMSG_FORCE_MOVE_ROOT);
 				try
 				{
 					SMSG_FORCE_MOVE_ROOT.AddPackGUID(GUID);
@@ -5101,7 +5101,7 @@ namespace Mangos.World.Player
 
 			public void SetMoveUnroot()
 			{
-				Packets.PacketClass SMSG_FORCE_MOVE_UNROOT = new Packets.PacketClass(OPCODES.SMSG_FORCE_MOVE_UNROOT);
+				Packets.PacketClass SMSG_FORCE_MOVE_UNROOT = new Packets.PacketClass(Opcodes.SMSG_FORCE_MOVE_UNROOT);
 				try
 				{
 					SMSG_FORCE_MOVE_UNROOT.AddPackGUID(GUID);
@@ -5117,7 +5117,7 @@ namespace Mangos.World.Player
 
 			public void StartMirrorTimer(MirrorTimer Type, int MaxValue)
 			{
-				Packets.PacketClass SMSG_START_MIRROR_TIMER = new Packets.PacketClass(OPCODES.SMSG_START_MIRROR_TIMER);
+				Packets.PacketClass SMSG_START_MIRROR_TIMER = new Packets.PacketClass(Opcodes.SMSG_START_MIRROR_TIMER);
 				try
 				{
 					SMSG_START_MIRROR_TIMER.AddInt32((int)Type);
@@ -5136,7 +5136,7 @@ namespace Mangos.World.Player
 
 			public void ModifyMirrorTimer(MirrorTimer Type, int MaxValue, int CurrentValue, int Regen)
 			{
-				Packets.PacketClass SMSG_START_MIRROR_TIMER = new Packets.PacketClass(OPCODES.SMSG_START_MIRROR_TIMER);
+				Packets.PacketClass SMSG_START_MIRROR_TIMER = new Packets.PacketClass(Opcodes.SMSG_START_MIRROR_TIMER);
 				try
 				{
 					SMSG_START_MIRROR_TIMER.AddInt32((int)Type);
@@ -5155,7 +5155,7 @@ namespace Mangos.World.Player
 
 			public void StopMirrorTimer(MirrorTimer Type)
 			{
-				Packets.PacketClass SMSG_STOP_MIRROR_TIMER = new Packets.PacketClass(OPCODES.SMSG_STOP_MIRROR_TIMER);
+				Packets.PacketClass SMSG_STOP_MIRROR_TIMER = new Packets.PacketClass(Opcodes.SMSG_STOP_MIRROR_TIMER);
 				try
 				{
 					SMSG_STOP_MIRROR_TIMER.AddInt32((int)Type);
@@ -5373,7 +5373,7 @@ namespace Mangos.World.Player
 					}
 					if (client != null)
 					{
-						Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_SET_FACTION_STANDING);
+						Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SET_FACTION_STANDING);
 						try
 						{
 							packet.AddInt32(Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Flags);
@@ -5458,7 +5458,7 @@ namespace Mangos.World.Player
 							i = (byte)unchecked((uint)(i + 1));
 						}
 						while (unchecked(i) <= 18u);
-						Packets.PacketClass SMSG_DURABILITY_DAMAGE_DEATH = new Packets.PacketClass(OPCODES.SMSG_DURABILITY_DAMAGE_DEATH);
+						Packets.PacketClass SMSG_DURABILITY_DAMAGE_DEATH = new Packets.PacketClass(Opcodes.SMSG_DURABILITY_DAMAGE_DEATH);
 						try
 						{
 							client.Send(ref SMSG_DURABILITY_DAMAGE_DEATH);
@@ -5474,7 +5474,7 @@ namespace Mangos.World.Player
 
 			public void SendDeathReleaseLoc(float x, float y, float z, int MapID)
 			{
-				Packets.PacketClass p = new Packets.PacketClass(OPCODES.CMSG_REPOP_REQUEST);
+				Packets.PacketClass p = new Packets.PacketClass(Opcodes.CMSG_REPOP_REQUEST);
 				try
 				{
 					p.AddInt32(MapID);
@@ -5669,7 +5669,7 @@ namespace Mangos.World.Player
 						WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[DuelArbiter].Destroy(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[DuelArbiter]);
 					}
 				}
-				Packets.PacketClass SMSG_LOGOUT_COMPLETE = new Packets.PacketClass(OPCODES.SMSG_LOGOUT_COMPLETE);
+				Packets.PacketClass SMSG_LOGOUT_COMPLETE = new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE);
 				try
 				{
 					client.Send(ref SMSG_LOGOUT_COMPLETE);
@@ -5762,7 +5762,7 @@ namespace Mangos.World.Player
 					{
 						if (ActiveSpells[i] != null)
 						{
-							Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(OPCODES.SMSG_UPDATE_AURA_DURATION);
+							Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(Opcodes.SMSG_UPDATE_AURA_DURATION);
 							try
 							{
 								SMSG_UPDATE_AURA_DURATION.AddInt8((byte)i);
@@ -7234,7 +7234,7 @@ namespace Mangos.World.Player
 					int status = Conversions.ToInteger(DBResult.Rows[0]["quest_status"]);
 					if (status == -1)
 					{
-						Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
+						Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
 						try
 						{
 							packet.AddInt32(7);
@@ -7247,7 +7247,7 @@ namespace Mangos.World.Player
 					}
 					else
 					{
-						Packets.PacketClass packet2 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
+						Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
 						try
 						{
 							packet2.AddInt32(13);
@@ -7264,7 +7264,7 @@ namespace Mangos.World.Player
 				{
 					if (Quest.RequiredRace != 0 && (Quest.RequiredRace & (1 << unchecked((int)Race) - 1)) == 0)
 					{
-						Packets.PacketClass packet4 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
+						Packets.PacketClass packet4 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
 						try
 						{
 							packet4.AddInt32(6);
@@ -7278,7 +7278,7 @@ namespace Mangos.World.Player
 					}
 					if (Quest.RequiredClass != 0 && (Quest.RequiredClass & (1 << unchecked((int)Classe) - 1)) == 0)
 					{
-						Packets.PacketClass packet5 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
+						Packets.PacketClass packet5 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
 						try
 						{
 							packet5.AddInt32(0);
@@ -7292,7 +7292,7 @@ namespace Mangos.World.Player
 					}
 					if (Quest.RequiredTradeSkill != 0 && !Skills.ContainsKey(Quest.RequiredTradeSkill))
 					{
-						Packets.PacketClass packet3 = new Packets.PacketClass(OPCODES.SMSG_QUESTGIVER_QUEST_INVALID);
+						Packets.PacketClass packet3 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
 						try
 						{
 							packet3.AddInt32(0);
@@ -7332,7 +7332,7 @@ namespace Mangos.World.Player
 
 			public void LogXPGain(int Ammount, int Rested, ulong VictimGUID, float Group)
 			{
-				Packets.PacketClass SMSG_LOG_XPGAIN = new Packets.PacketClass(OPCODES.SMSG_LOG_XPGAIN);
+				Packets.PacketClass SMSG_LOG_XPGAIN = new Packets.PacketClass(Opcodes.SMSG_LOG_XPGAIN);
 				try
 				{
 					SMSG_LOG_XPGAIN.AddUInt64(VictimGUID);
@@ -7357,7 +7357,7 @@ namespace Mangos.World.Player
 
 			public void LogHonorGain(int Ammount, ulong VictimGUID = 0uL, byte VictimRANK = 0)
 			{
-				Packets.PacketClass SMSG_PVP_CREDIT = new Packets.PacketClass(OPCODES.SMSG_PVP_CREDIT);
+				Packets.PacketClass SMSG_PVP_CREDIT = new Packets.PacketClass(Opcodes.SMSG_PVP_CREDIT);
 				try
 				{
 					SMSG_PVP_CREDIT.AddInt32(Ammount);
@@ -7373,7 +7373,7 @@ namespace Mangos.World.Player
 
 			public void LogLootItem(ItemObject Item, byte ItemCount, bool Recieved, bool Created)
 			{
-				Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_ITEM_PUSH_RESULT);
+				Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_ITEM_PUSH_RESULT);
 				try
 				{
 					response.AddUInt64(GUID);
@@ -7408,7 +7408,7 @@ namespace Mangos.World.Player
 
 			public void LogEnvironmentalDamage(DamageTypes dmgType, int Damage)
 			{
-				Packets.PacketClass SMSG_ENVIRONMENTALDAMAGELOG = new Packets.PacketClass(OPCODES.SMSG_ENVIRONMENTALDAMAGELOG);
+				Packets.PacketClass SMSG_ENVIRONMENTALDAMAGELOG = new Packets.PacketClass(Opcodes.SMSG_ENVIRONMENTALDAMAGELOG);
 				try
 				{
 					SMSG_ENVIRONMENTALDAMAGELOG.AddUInt64(GUID);

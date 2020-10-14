@@ -155,8 +155,8 @@ namespace Mangos.Cluster.Server
                         {
                             if (objCharacter.Value.Character is object && objCharacter.Value.Character.IsInWorld && objCharacter.Value.Character.Map == map)
                             {
-                                objCharacter.Value.Send(new Packets.PacketClass(OPCODES.SMSG_LOGOUT_COMPLETE));
-                                new Packets.PacketClass(OPCODES.SMSG_LOGOUT_COMPLETE).Dispose();
+                                objCharacter.Value.Send(new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));
+                                new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE).Dispose();
                                 objCharacter.Value.Character.Dispose();
                                 objCharacter.Value.Character = null;
                             }
@@ -266,7 +266,7 @@ namespace Mangos.Cluster.Server
             public void ClientTransfer(uint ID, float posX, float posY, float posZ, float ori, uint map)
             {
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "[{0:000000}] Client has transferred from map {1:000} to map {2:000}", ID, ClusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Map, map);
-                var p = new Packets.PacketClass(OPCODES.SMSG_NEW_WORLD);
+                var p = new Packets.PacketClass(Opcodes.SMSG_NEW_WORLD);
                 p.AddUInt32(map);
                 p.AddSingle(posX);
                 p.AddSingle(posY);
@@ -361,8 +361,8 @@ namespace Mangos.Cluster.Server
                     if (ClusterServiceLocator._Functions.IsContinentMap((int)MapID))
                     {
                         ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0:000000}] Requested Instance Map [{1}] is a continent", client.Index, MapID);
-                        client.Send(new Packets.PacketClass(OPCODES.SMSG_LOGOUT_COMPLETE));
-                        new Packets.PacketClass(OPCODES.SMSG_LOGOUT_COMPLETE).Dispose();
+                        client.Send(new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));
+                        new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE).Dispose();
                         client.Character.IsInWorld = false;
                         return false;
                     }
@@ -391,8 +391,8 @@ namespace Mangos.Cluster.Server
                     if (ParentMap is null)
                     {
                         ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0:000000}] Requested Instance Map [{1}] can't be loaded", client.Index, MapID);
-                        client.Send(new Packets.PacketClass(OPCODES.SMSG_LOGOUT_COMPLETE));
-                        new Packets.PacketClass(OPCODES.SMSG_LOGOUT_COMPLETE).Dispose();
+                        client.Send(new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));
+                        new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE).Dispose();
                         client.Character.IsInWorld = false;
                         return false;
                     }
@@ -598,7 +598,7 @@ namespace Mangos.Cluster.Server
                 Socket.BeginReceive(SocketBuffer, 0, SocketBuffer.Length, SocketFlags.None, OnData, null);
 
                 // Send Auth Challenge
-                var p = new Packets.PacketClass(OPCODES.SMSG_AUTH_CHALLENGE);
+                var p = new Packets.PacketClass(Opcodes.SMSG_AUTH_CHALLENGE);
                 p.AddInt32((int)Index);
                 Send(p);
                 Index = (uint)Interlocked.Increment(ref ClusterServiceLocator._WorldCluster.CLIETNIDs);
@@ -971,9 +971,9 @@ namespace Mangos.Cluster.Server
                 {
                     if (!Socket.Connected)
                         return;
-                    new Packets.PacketClass(OPCODES.SMSG_AUTH_RESPONSE).AddInt8((byte)LoginResponse.LOGIN_WAIT_QUEUE);
-                    new Packets.PacketClass(OPCODES.SMSG_AUTH_RESPONSE).AddInt32(ClusterServiceLocator._WorldCluster.CLIENTs.Count - ClusterServiceLocator._WorldCluster.CHARACTERs.Count);            // amount of players in queue
-                    Send(new Packets.PacketClass(OPCODES.SMSG_AUTH_RESPONSE));
+                    new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE).AddInt8((byte)LoginResponse.LOGIN_WAIT_QUEUE);
+                    new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE).AddInt32(ClusterServiceLocator._WorldCluster.CLIENTs.Count - ClusterServiceLocator._WorldCluster.CHARACTERs.Count);            // amount of players in queue
+                    Send(new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE));
                     ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "[{1}:{2}] AUTH_WAIT_QUEUE: Server player limit reached!", IP, Port);
                     Thread.Sleep(6000);
                 }

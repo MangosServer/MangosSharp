@@ -206,7 +206,7 @@ namespace Mangos.World.Weather
 
 			public void SendUpdate()
 			{
-				Packets.PacketClass SMSG_WEATHER = new Packets.PacketClass(OPCODES.SMSG_WEATHER);
+				Packets.PacketClass SMSG_WEATHER = new Packets.PacketClass(Opcodes.SMSG_WEATHER);
 				SMSG_WEATHER.AddInt32((int)CurrentWeather);
 				SMSG_WEATHER.AddSingle(Intensity);
 				SMSG_WEATHER.AddInt32(GetSound());
@@ -265,7 +265,7 @@ namespace Mangos.World.Weather
 			if (WeatherZones.ContainsKey(ZoneID))
 			{
 				WeatherZone Weather = WeatherZones[ZoneID];
-				Packets.PacketClass SMSG_WEATHER = new Packets.PacketClass(OPCODES.SMSG_WEATHER);
+				Packets.PacketClass SMSG_WEATHER = new Packets.PacketClass(Opcodes.SMSG_WEATHER);
 				SMSG_WEATHER.AddInt32((int)Weather.CurrentWeather);
 				SMSG_WEATHER.AddSingle(Weather.Intensity);
 				SMSG_WEATHER.AddInt32(Weather.GetSound());

@@ -454,7 +454,7 @@ namespace Mangos.World.Player
 
 		public void SendBindPointUpdate(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
 		{
-			Packets.PacketClass SMSG_BINDPOINTUPDATE = new Packets.PacketClass(OPCODES.SMSG_BINDPOINTUPDATE);
+			Packets.PacketClass SMSG_BINDPOINTUPDATE = new Packets.PacketClass(Opcodes.SMSG_BINDPOINTUPDATE);
 			try
 			{
 				SMSG_BINDPOINTUPDATE.AddSingle(Character.bindpoint_positionX);
@@ -472,7 +472,7 @@ namespace Mangos.World.Player
 
 		public void Send_SMSG_SET_REST_START(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
 		{
-			Packets.PacketClass SMSG_SET_REST_START = new Packets.PacketClass(OPCODES.SMSG_SET_REST_START);
+			Packets.PacketClass SMSG_SET_REST_START = new Packets.PacketClass(Opcodes.SMSG_SET_REST_START);
 			try
 			{
 				SMSG_SET_REST_START.AddInt32(WorldServiceLocator._WS_Network.MsTime());
@@ -486,7 +486,7 @@ namespace Mangos.World.Player
 
 		public void SendTutorialFlags(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
 		{
-			Packets.PacketClass SMSG_TUTORIAL_FLAGS = new Packets.PacketClass(OPCODES.SMSG_TUTORIAL_FLAGS);
+			Packets.PacketClass SMSG_TUTORIAL_FLAGS = new Packets.PacketClass(Opcodes.SMSG_TUTORIAL_FLAGS);
 			try
 			{
 				SMSG_TUTORIAL_FLAGS.AddByteArray(Character.TutorialFlags);
@@ -500,7 +500,7 @@ namespace Mangos.World.Player
 
 		public void SendFactions(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_INITIALIZE_FACTIONS);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_INITIALIZE_FACTIONS);
 			try
 			{
 				packet.AddInt32(64);
@@ -525,7 +525,7 @@ namespace Mangos.World.Player
 
 		public void SendActionButtons(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_ACTION_BUTTONS);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_ACTION_BUTTONS);
 			try
 			{
 				byte i = 0;
@@ -611,7 +611,7 @@ namespace Mangos.World.Player
 				NumberOfFields = 10;
 				break;
 			}
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_INIT_WORLD_STATES);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_INIT_WORLD_STATES);
 			try
 			{
 				packet.AddUInt32(Character.MapID);
@@ -675,7 +675,7 @@ namespace Mangos.World.Player
 
 		public void SendInitialSpells(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_INITIAL_SPELLS);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_INITIAL_SPELLS);
 			checked
 			{
 				try

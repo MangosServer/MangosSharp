@@ -124,11 +124,11 @@ namespace Mangos.World.Auction
                 throw new ArgumentNullException(nameof(objCharacter));
             }
 
-            Packets.PacketClass packet = new Packets.PacketClass(OPCODES.MSG_AUCTION_HELLO);
-            new Packets.PacketClass(OPCODES.MSG_AUCTION_HELLO).AddUInt64(GUID);
-            new Packets.PacketClass(OPCODES.MSG_AUCTION_HELLO).AddInt32((int)GetAuctionSide(GUID));
+            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO);
+            new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).AddUInt64(GUID);
+            new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).AddInt32((int)GetAuctionSide(GUID));
 			objCharacter.client.Send(ref packet);
-            new Packets.PacketClass(OPCODES.MSG_AUCTION_HELLO).Dispose();
+            new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).Dispose();
 		}
 
 		public void AuctionListAddItem(ref Packets.PacketClass packet, ref DataRow row)
@@ -170,13 +170,13 @@ namespace Mangos.World.Auction
                 throw new ArgumentNullException(nameof(client));
             }
 
-            Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_AUCTION_COMMAND_RESULT);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_COMMAND_RESULT).AddInt32(AuctionID);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_COMMAND_RESULT).AddInt32((int)AuctionAction);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_COMMAND_RESULT).AddInt32((int)AuctionError);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_COMMAND_RESULT).AddInt32(BidError);
+            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32(AuctionID);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32((int)AuctionAction);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32((int)AuctionError);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32(BidError);
 			client.Send(ref response);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_COMMAND_RESULT).Dispose();
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).Dispose();
 		}
 
 		public void SendAuctionBidderNotification(ref WS_PlayerData.CharacterObject objCharacter)
@@ -186,16 +186,16 @@ namespace Mangos.World.Auction
                 throw new ArgumentNullException(nameof(objCharacter));
             }
 
-            Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_AUCTION_BIDDER_NOTIFICATION);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_BIDDER_NOTIFICATION).AddUInt64(0uL);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
+            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddUInt64(0uL);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
 			objCharacter.client.Send(ref packet);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_BIDDER_NOTIFICATION).Dispose();
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).Dispose();
 		}
 
 		public void SendAuctionOwnerNotification(ref WS_PlayerData.CharacterObject objCharacter)
@@ -205,26 +205,26 @@ namespace Mangos.World.Auction
                 throw new ArgumentNullException(nameof(objCharacter));
             }
 
-            Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_NOTIFICATION);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
+            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
 			objCharacter.client.Send(ref packet);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_NOTIFICATION).Dispose();
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).Dispose();
 		}
 
 		public void SendAuctionRemovedNotification(ref WS_PlayerData.CharacterObject objCharacter)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_AUCTION_REMOVED_NOTIFICATION);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
 			objCharacter.client.Send(ref packet);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_REMOVED_NOTIFICATION).Dispose();
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).Dispose();
 		}
 
 		public void SendAuctionListOwnerItems(ref WS_Network.ClientClass client)
@@ -234,16 +234,16 @@ namespace Mangos.World.Auction
                 throw new ArgumentNullException(nameof(client));
             }
 
-            Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_LIST_RESULT);
+            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT);
 			DataTable MySQLQuery = new DataTable();
 			WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM auctionhouse WHERE auction_owner = " + Conversions.ToString(client.Character.GUID) + ";", ref MySQLQuery);
 			if (MySQLQuery.Rows.Count > 50)
 			{
-                new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_LIST_RESULT).AddInt32(50);
+                new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT).AddInt32(50);
 			}
 			else
 			{
-                new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_LIST_RESULT).AddInt32(MySQLQuery.Rows.Count);
+                new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT).AddInt32(MySQLQuery.Rows.Count);
 			}
 			int count = 0;
 			IEnumerator enumerator = Enumerator;
@@ -268,15 +268,15 @@ namespace Mangos.World.Auction
 					(enumerator as IDisposable).Dispose();
 				}
 			}
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_LIST_RESULT).AddInt32(MySQLQuery.Rows.Count);
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT).AddInt32(MySQLQuery.Rows.Count);
 			client.Send(ref response);
-            new Packets.PacketClass(OPCODES.SMSG_AUCTION_OWNER_LIST_RESULT).Dispose();
+            new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT).Dispose();
 			WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_AUCTION_OWNER_LIST_RESULT", client.IP, client.Port);
 		}
 
 		public void SendAuctionListBidderItems(ref WS_Network.ClientClass client)
 		{
-			Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_AUCTION_BIDDER_LIST_RESULT);
+			Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_LIST_RESULT);
 			DataTable MySQLQuery = new DataTable();
 			WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM auctionhouse WHERE auction_bidder = " + Conversions.ToString(client.Character.GUID) + ";", ref MySQLQuery);
 			if (MySQLQuery.Rows.Count > 50)
@@ -518,7 +518,7 @@ namespace Mangos.World.Auction
 				int itemQuality = packet.GetInt32();
 				int mustBeUsable = packet.GetInt8();
 				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_LIST_ITEMS [{2} ({3}-{4})]", client.IP, client.Port, Name, LevelMIN, LevelMAX);
-				Packets.PacketClass response = new Packets.PacketClass(OPCODES.SMSG_AUCTION_LIST_RESULT);
+				Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_LIST_RESULT);
 				string QueryString = "SELECT auctionhouse.* FROM " + WorldServiceLocator._WorldServer.CharacterDatabase.SQLDBName + ".auctionhouse, " + WorldServiceLocator._WorldServer.WorldDatabase.SQLDBName + ".item_template WHERE item_template.entry = auctionhouse.auction_itemId";
 				if (Operators.CompareString(Name, "", TextCompare: false) != 0)
 				{

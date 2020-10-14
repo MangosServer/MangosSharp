@@ -217,7 +217,7 @@ namespace Mangos.World.Handlers
 			{
 				if (Victim == null)
 				{
-					Packets.PacketClass SMSG_ATTACKSWING_CANT_ATTACK2 = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_CANT_ATTACK);
+					Packets.PacketClass SMSG_ATTACKSWING_CANT_ATTACK2 = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_CANT_ATTACK);
 					Character.client.Send(ref SMSG_ATTACKSWING_CANT_ATTACK2);
 					SMSG_ATTACKSWING_CANT_ATTACK2.Dispose();
 					Character.AutoShotSpell = 0;
@@ -241,7 +241,7 @@ namespace Mangos.World.Handlers
 						}
 						if (Victim.IsDead)
 						{
-							Packets.PacketClass SMSG_ATTACKSWING_DEADTARGET = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_DEADTARGET);
+							Packets.PacketClass SMSG_ATTACKSWING_DEADTARGET = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_DEADTARGET);
 							Character.client.Send(ref SMSG_ATTACKSWING_DEADTARGET);
 							SMSG_ATTACKSWING_DEADTARGET.Dispose();
 							Character.AutoShotSpell = 0;
@@ -250,7 +250,7 @@ namespace Mangos.World.Handlers
 						}
 						if (Character.IsDead)
 						{
-							Packets.PacketClass SMSG_ATTACKSWING_DEADTARGET2 = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_DEADTARGET);
+							Packets.PacketClass SMSG_ATTACKSWING_DEADTARGET2 = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_DEADTARGET);
 							Character.client.Send(ref SMSG_ATTACKSWING_DEADTARGET2);
 							SMSG_ATTACKSWING_DEADTARGET2.Dispose();
 							Character.AutoShotSpell = 0;
@@ -259,7 +259,7 @@ namespace Mangos.World.Handlers
 						}
 						if (Character.StandState > 0)
 						{
-							Packets.PacketClass SMSG_ATTACKSWING_NOTSTANDING = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_NOTSTANDING);
+							Packets.PacketClass SMSG_ATTACKSWING_NOTSTANDING = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_NOTSTANDING);
 							Character.client.Send(ref SMSG_ATTACKSWING_NOTSTANDING);
 							SMSG_ATTACKSWING_NOTSTANDING.Dispose();
 							Character.AutoShotSpell = 0;
@@ -283,7 +283,7 @@ namespace Mangos.World.Handlers
 								return;
 							}
 							NextAttackTimer.Change(2000, -1);
-							Packets.PacketClass SMSG_ATTACKSWING_NOTINRANGE2 = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_NOTINRANGE);
+							Packets.PacketClass SMSG_ATTACKSWING_NOTINRANGE2 = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_NOTINRANGE);
 							Character.client.Send(ref SMSG_ATTACKSWING_NOTINRANGE2);
 							SMSG_ATTACKSWING_NOTINRANGE2.Dispose();
 							return;
@@ -291,7 +291,7 @@ namespace Mangos.World.Handlers
 						if (tmpDist > combatReach)
 						{
 							NextAttackTimer.Change(2000, -1);
-							Packets.PacketClass SMSG_ATTACKSWING_NOTINRANGE = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_NOTINRANGE);
+							Packets.PacketClass SMSG_ATTACKSWING_NOTINRANGE = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_NOTINRANGE);
 							Character.client.Send(ref SMSG_ATTACKSWING_NOTINRANGE);
 							SMSG_ATTACKSWING_NOTINRANGE.Dispose();
 							return;
@@ -304,7 +304,7 @@ namespace Mangos.World.Handlers
 						if (!flag)
 						{
 							NextAttackTimer.Change(2000, -1);
-							Packets.PacketClass SMSG_ATTACKSWING_BADFACING = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_BADFACING);
+							Packets.PacketClass SMSG_ATTACKSWING_BADFACING = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_BADFACING);
 							Character.client.Send(ref SMSG_ATTACKSWING_BADFACING);
 							SMSG_ATTACKSWING_BADFACING.Dispose();
 							return;
@@ -368,7 +368,7 @@ namespace Mangos.World.Handlers
 						Exception e = ex;
 						if (Character != null && Character.client != null)
 						{
-							Packets.PacketClass SMSG_ATTACKSWING_CANT_ATTACK = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_CANT_ATTACK);
+							Packets.PacketClass SMSG_ATTACKSWING_CANT_ATTACK = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_CANT_ATTACK);
 							Character.client.Send(ref SMSG_ATTACKSWING_CANT_ATTACK);
 							SMSG_ATTACKSWING_CANT_ATTACK.Dispose();
 						}
@@ -401,7 +401,7 @@ namespace Mangos.World.Handlers
 				}
 				if (Victim.Life.Current == 0)
 				{
-					Packets.PacketClass SMSG_ATTACKSWING_DEADTARGET2 = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_DEADTARGET);
+					Packets.PacketClass SMSG_ATTACKSWING_DEADTARGET2 = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_DEADTARGET);
 					Character.client.Send(ref SMSG_ATTACKSWING_DEADTARGET2);
 					SMSG_ATTACKSWING_DEADTARGET2.Dispose();
 					Character.AutoShotSpell = 0;
@@ -410,7 +410,7 @@ namespace Mangos.World.Handlers
 				}
 				if (Character.DEAD)
 				{
-					Packets.PacketClass SMSG_ATTACKSWING_DEADTARGET = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_DEADTARGET);
+					Packets.PacketClass SMSG_ATTACKSWING_DEADTARGET = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_DEADTARGET);
 					Character.client.Send(ref SMSG_ATTACKSWING_DEADTARGET);
 					SMSG_ATTACKSWING_DEADTARGET.Dispose();
 					Character.AutoShotSpell = 0;
@@ -419,7 +419,7 @@ namespace Mangos.World.Handlers
 				}
 				if (Character.StandState > 0)
 				{
-					Packets.PacketClass SMSG_ATTACKSWING_NOTSTANDING = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_NOTSTANDING);
+					Packets.PacketClass SMSG_ATTACKSWING_NOTSTANDING = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_NOTSTANDING);
 					Character.client.Send(ref SMSG_ATTACKSWING_NOTSTANDING);
 					SMSG_ATTACKSWING_NOTSTANDING.Dispose();
 					Character.AutoShotSpell = 0;
@@ -436,7 +436,7 @@ namespace Mangos.World.Handlers
 				if (tmpDist < minRanged)
 				{
 					NextAttackTimer.Change(2000, -1);
-					Packets.PacketClass SMSG_ATTACKSWING_NOTINRANGE = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_NOTINRANGE);
+					Packets.PacketClass SMSG_ATTACKSWING_NOTINRANGE = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_NOTINRANGE);
 					Character.client.Send(ref SMSG_ATTACKSWING_NOTINRANGE);
 					SMSG_ATTACKSWING_NOTINRANGE.Dispose();
 					return;
@@ -449,7 +449,7 @@ namespace Mangos.World.Handlers
 				if (!flag)
 				{
 					NextAttackTimer.Change(2000, -1);
-					Packets.PacketClass SMSG_ATTACKSWING_BADFACING = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_BADFACING);
+					Packets.PacketClass SMSG_ATTACKSWING_BADFACING = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_BADFACING);
 					Character.client.Send(ref SMSG_ATTACKSWING_BADFACING);
 					SMSG_ATTACKSWING_BADFACING.Dispose();
 				}
@@ -615,7 +615,7 @@ namespace Mangos.World.Handlers
 
 		public void DoEmote(int AnimationID, ref WS_Base.BaseObject Unit)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_EMOTE);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_EMOTE);
 			packet.AddInt32(AnimationID);
 			packet.AddUInt64(Unit.GUID);
 			Unit.SendToNearPlayers(ref packet, 0uL);
@@ -1363,7 +1363,7 @@ namespace Mangos.World.Handlers
 				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ATTACKSWING [GUID={2:X}]", client.IP, client.Port, GUID);
 				if (client.Character.Spell_Pacifyed)
 				{
-					Packets.PacketClass SMSG_ATTACKSWING_CANT_ATTACK2 = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_CANT_ATTACK);
+					Packets.PacketClass SMSG_ATTACKSWING_CANT_ATTACK2 = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_CANT_ATTACK);
 					client.Send(ref SMSG_ATTACKSWING_CANT_ATTACK2);
 					SMSG_ATTACKSWING_CANT_ATTACK2.Dispose();
 					SendAttackStop(client.Character.GUID, GUID, ref client);
@@ -1378,7 +1378,7 @@ namespace Mangos.World.Handlers
 				}
 				else
 				{
-					Packets.PacketClass SMSG_ATTACKSWING_CANT_ATTACK = new Packets.PacketClass(OPCODES.SMSG_ATTACKSWING_CANT_ATTACK);
+					Packets.PacketClass SMSG_ATTACKSWING_CANT_ATTACK = new Packets.PacketClass(Opcodes.SMSG_ATTACKSWING_CANT_ATTACK);
 					client.Send(ref SMSG_ATTACKSWING_CANT_ATTACK);
 					SMSG_ATTACKSWING_CANT_ATTACK.Dispose();
 					SendAttackStop(client.Character.GUID, GUID, ref client);
@@ -1581,7 +1581,7 @@ namespace Mangos.World.Handlers
 
 		public void SendAttackStop(ulong attackerGUID, ulong victimGUID, ref WS_Network.ClientClass client)
 		{
-			Packets.PacketClass SMSG_ATTACKSTOP = new Packets.PacketClass(OPCODES.SMSG_ATTACKSTOP);
+			Packets.PacketClass SMSG_ATTACKSTOP = new Packets.PacketClass(Opcodes.SMSG_ATTACKSTOP);
 			SMSG_ATTACKSTOP.AddPackGUID(attackerGUID);
 			SMSG_ATTACKSTOP.AddPackGUID(victimGUID);
 			SMSG_ATTACKSTOP.AddInt32(0);
@@ -1592,7 +1592,7 @@ namespace Mangos.World.Handlers
 
 		public void SendAttackStart(ulong attackerGUID, ulong victimGUID, WS_Network.ClientClass client)
 		{
-			Packets.PacketClass SMSG_ATTACKSTART = new Packets.PacketClass(OPCODES.SMSG_ATTACKSTART);
+			Packets.PacketClass SMSG_ATTACKSTART = new Packets.PacketClass(Opcodes.SMSG_ATTACKSTART);
 			SMSG_ATTACKSTART.AddUInt64(attackerGUID);
 			SMSG_ATTACKSTART.AddUInt64(victimGUID);
 			client.Character.SendToNearPlayers(ref SMSG_ATTACKSTART, 0uL);
@@ -1601,7 +1601,7 @@ namespace Mangos.World.Handlers
 
 		public void SendAttackerStateUpdate(ref WS_Base.BaseObject Attacker, ref WS_Base.BaseObject Victim, DamageInfo damageInfo, WS_Network.ClientClass client = null)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_ATTACKERSTATEUPDATE);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_ATTACKERSTATEUPDATE);
 			packet.AddInt32(damageInfo.HitInfo);
 			packet.AddPackGUID(Attacker.GUID);
 			packet.AddPackGUID(Victim.GUID);

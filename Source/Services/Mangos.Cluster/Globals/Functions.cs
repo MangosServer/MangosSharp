@@ -525,7 +525,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendMessageNotification(WC_Network.ClientClass client, string message)
         {
-            var packet = new Packets.PacketClass(OPCODES.SMSG_NOTIFICATION);
+            var packet = new Packets.PacketClass(Opcodes.SMSG_NOTIFICATION);
             try
             {
                 packet.AddString(message);
@@ -581,7 +581,7 @@ namespace Mangos.Cluster.Globals
             // End If
             // End If
 
-            var smsgAccountDataTimes = new Packets.PacketClass(OPCODES.SMSG_ACCOUNT_DATA_MD5);
+            var smsgAccountDataTimes = new Packets.PacketClass(Opcodes.SMSG_ACCOUNT_DATA_MD5);
             try
             {
                 // Dim md5hash As MD5 = MD5.Create()
@@ -618,7 +618,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendTriggerCinematic(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
-            var packet = new Packets.PacketClass(OPCODES.SMSG_TRIGGER_CINEMATIC);
+            var packet = new Packets.PacketClass(Opcodes.SMSG_TRIGGER_CINEMATIC);
             try
             {
                 if (ClusterServiceLocator._WS_DBCDatabase.CharRaces.ContainsKey((int)character.Race))
@@ -651,7 +651,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendGameTime(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
-            var smsgLoginSettimespeed = new Packets.PacketClass(OPCODES.SMSG_LOGIN_SETTIMESPEED);
+            var smsgLoginSettimespeed = new Packets.PacketClass(Opcodes.SMSG_LOGIN_SETTIMESPEED);
             try
             {
                 var time = DateTime.Now;
@@ -677,7 +677,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendProficiency(WC_Network.ClientClass client, byte proficiencyType, int proficiencyFlags)
         {
-            var packet = new Packets.PacketClass(OPCODES.SMSG_SET_PROFICIENCY);
+            var packet = new Packets.PacketClass(Opcodes.SMSG_SET_PROFICIENCY);
             try
             {
                 packet.AddInt8(proficiencyType);
@@ -694,7 +694,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendCorpseReclaimDelay(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character, int seconds = 30)
         {
-            var packet = new Packets.PacketClass(OPCODES.SMSG_CORPSE_RECLAIM_DELAY);
+            var packet = new Packets.PacketClass(Opcodes.SMSG_CORPSE_RECLAIM_DELAY);
             try
             {
                 packet.AddInt32(seconds * 1000);
@@ -710,7 +710,7 @@ namespace Mangos.Cluster.Globals
 
         public Packets.PacketClass BuildChatMessage(ulong senderGuid, string message, ChatMsg msgType, LANGUAGES msgLanguage, byte flag = 0, string msgChannel = "Global")
         {
-            var packet = new Packets.PacketClass(OPCODES.SMSG_MESSAGECHAT);
+            var packet = new Packets.PacketClass(Opcodes.SMSG_MESSAGECHAT);
             try
             {
                 packet.AddInt8((byte)msgType);
@@ -832,7 +832,7 @@ namespace Mangos.Cluster.Globals
 
         public Packets.PacketClass BuildPartyMemberStatsOffline(ulong guid)
         {
-            var packet = new Packets.PacketClass(OPCODES.SMSG_PARTY_MEMBER_STATS_FULL);
+            var packet = new Packets.PacketClass(Opcodes.SMSG_PARTY_MEMBER_STATS_FULL);
             packet.AddPackGUID(guid);
             packet.AddUInt32((uint)PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS);
             packet.AddInt8((byte)PartyMemberStatsStatus.STATUS_OFFLINE);

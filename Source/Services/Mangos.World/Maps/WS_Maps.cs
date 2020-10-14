@@ -947,7 +947,7 @@ namespace Mangos.World.Maps
 		public void SendTransferAborted(ref WS_Network.ClientClass client, int Map, TransferAbortReason Reason)
 		{
 			WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRANSFER_ABORTED [{2}:{3}]", client.IP, client.Port, Map, Reason);
-			Packets.PacketClass p = new Packets.PacketClass(OPCODES.SMSG_TRANSFER_ABORTED);
+			Packets.PacketClass p = new Packets.PacketClass(Opcodes.SMSG_TRANSFER_ABORTED);
 			try
 			{
 				p.AddInt32(Map);

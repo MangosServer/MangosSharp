@@ -469,7 +469,7 @@ namespace Mangos.World.Globals
 
 		public void SendMessageNotification(ref WS_Network.ClientClass client, string Message)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_NOTIFICATION);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_NOTIFICATION);
 			try
 			{
 				packet.AddString(Message);
@@ -510,7 +510,7 @@ namespace Mangos.World.Globals
 		public void SendAccountMD5(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
 		{
 			bool FoundData = false;
-			Packets.PacketClass SMSG_ACCOUNT_DATA_TIMES = new Packets.PacketClass(OPCODES.SMSG_ACCOUNT_DATA_MD5);
+			Packets.PacketClass SMSG_ACCOUNT_DATA_TIMES = new Packets.PacketClass(Opcodes.SMSG_ACCOUNT_DATA_MD5);
 			try
 			{
 				int i = 0;
@@ -535,7 +535,7 @@ namespace Mangos.World.Globals
 
 		public void SendTriggerCinematic(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_TRIGGER_CINEMATIC);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_TRIGGER_CINEMATIC);
 			try
 			{
 				if (!WorldServiceLocator._WS_DBCDatabase.CharRaces.ContainsKey((int)Character.Race))
@@ -559,7 +559,7 @@ namespace Mangos.World.Globals
 
 		public void SendGameTime(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
 		{
-			Packets.PacketClass SMSG_LOGIN_SETTIMESPEED = new Packets.PacketClass(OPCODES.SMSG_LOGIN_SETTIMESPEED);
+			Packets.PacketClass SMSG_LOGIN_SETTIMESPEED = new Packets.PacketClass(Opcodes.SMSG_LOGIN_SETTIMESPEED);
 			checked
 			{
 				try
@@ -585,7 +585,7 @@ namespace Mangos.World.Globals
 
 		public void SendProficiency(ref WS_Network.ClientClass client, byte ProficiencyType, int ProficiencyFlags)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_SET_PROFICIENCY);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SET_PROFICIENCY);
 			try
 			{
 				packet.AddInt8(ProficiencyType);
@@ -601,7 +601,7 @@ namespace Mangos.World.Globals
 
 		public void SendCorpseReclaimDelay(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character, int Seconds = 30)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_CORPSE_RECLAIM_DELAY);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_CORPSE_RECLAIM_DELAY);
 			try
 			{
 				packet.AddInt32(checked(Seconds * 1000));
@@ -616,7 +616,7 @@ namespace Mangos.World.Globals
 
 		public Packets.PacketClass BuildChatMessage(ulong SenderGUID, string Message, ChatMsg msgType, LANGUAGES msgLanguage, byte Flag = 0, string msgChannel = "Global")
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_MESSAGECHAT);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MESSAGECHAT);
 			try
 			{
 				packet.AddInt8(checked((byte)msgType));
@@ -673,7 +673,7 @@ namespace Mangos.World.Globals
 
 		public Packets.PacketClass BuildPartyMemberStatsOffline(ulong GUID)
 		{
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_PARTY_MEMBER_STATS_FULL);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PARTY_MEMBER_STATS_FULL);
 			packet.AddPackGUID(GUID);
 			packet.AddUInt32(1u);
 			packet.AddInt8(0);

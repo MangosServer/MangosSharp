@@ -106,7 +106,7 @@ namespace Mangos.World.AntiCheat
 
         public BaseWriter Log;
 
-        public Dictionary<OPCODES, HandlePacket> PacketHandlers;
+        public Dictionary<Opcodes, HandlePacket> PacketHandlers;
 
         public Random Rnd;
 
@@ -155,7 +155,7 @@ namespace Mangos.World.AntiCheat
             DynamicObjectsGUIDCounter = WorldServiceLocator._Global_Constants.GUID_DYNAMICOBJECT;
             TransportGUIDCounter = WorldServiceLocator._Global_Constants.GUID_MO_TRANSPORT;
             Log = new BaseWriter();
-            PacketHandlers = new Dictionary<OPCODES, HandlePacket>();
+            PacketHandlers = new Dictionary<Opcodes, HandlePacket>();
             Rnd = new Random();
             AccountDatabase = new SQL();
             CharacterDatabase = new SQL();

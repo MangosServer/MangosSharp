@@ -279,7 +279,7 @@ namespace Mangos.Cluster.Handlers
                     // Do nothing
                 }
 
-                var p = new Packets.PacketClass(OPCODES.SMSG_BATTLEFIELD_STATUS);
+                var p = new Packets.PacketClass(Opcodes.SMSG_BATTLEFIELD_STATUS);
                 try
                 {
                     p.AddUInt32(slot);               // Slot (0, 1 or 2)
@@ -434,7 +434,7 @@ namespace Mangos.Cluster.Handlers
             // 3 - Your group has joined the queue for AB
 
 
-            var p = new Packets.PacketClass(OPCODES.SMSG_GROUP_JOINED_BATTLEGROUND);
+            var p = new Packets.PacketClass(Opcodes.SMSG_GROUP_JOINED_BATTLEGROUND);
             try
             {
                 p.AddUInt32(0xFFFFFFFEU);
@@ -448,7 +448,7 @@ namespace Mangos.Cluster.Handlers
 
         public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
-            var p = new Packets.PacketClass(OPCODES.MSG_BATTLEGROUND_PLAYER_POSITIONS);
+            var p = new Packets.PacketClass(Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS);
             try
             {
                 p.AddUInt32(0U);

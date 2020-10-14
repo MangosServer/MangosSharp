@@ -78,7 +78,7 @@ namespace Mangos.Cluster.Globals
             string buffer = "";
             try
             {
-                OPCODES opcode = (OPCODES)BitConverter.ToInt16(data, 2);
+                Opcodes opcode = (Opcodes)BitConverter.ToInt16(data, 2);
                 if (IgnorePacket(opcode))
                     return;
                 int StartAt = 6;
@@ -126,14 +126,14 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        private bool IgnorePacket(OPCODES opcode)
+        private bool IgnorePacket(Opcodes opcode)
         {
             if (string.Format("{0}", opcode).StartsWith("MSG_MOVE"))
                 return true;
             switch (opcode)
             {
-                case var @case when @case == OPCODES.SMSG_MONSTER_MOVE:
-                case var case1 when case1 == OPCODES.SMSG_UPDATE_OBJECT:
+                case var @case when @case == Opcodes.SMSG_MONSTER_MOVE:
+                case var case1 when case1 == Opcodes.SMSG_UPDATE_OBJECT:
                     {
                         return true;
                     }
@@ -171,13 +171,13 @@ namespace Mangos.Cluster.Globals
                 }
             }
 
-            public OPCODES OpCode
+            public Opcodes OpCode
             {
                 get
                 {
                     if (Information.UBound(Data) > 2)
                     {
-                        return (OPCODES)(Data[2] + Data[3] * 256);
+                        return (Opcodes)(Data[2] + Data[3] * 256);
                     }
                     else
                     {
@@ -187,7 +187,7 @@ namespace Mangos.Cluster.Globals
                 }
             }
 
-            public PacketClass(OPCODES opcode)
+            public PacketClass(Opcodes opcode)
             {
                 Array.Resize(ref Data, 4);
                 Data[0] = 0;

@@ -310,7 +310,7 @@ namespace Mangos.World.Handlers
 				throw new ApplicationException("Maiev.mod not ready!");
 			}
 			WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [{2}]", objCharacter.client.IP, objCharacter.client.Port, WorldServiceLocator._WS_Warden.Maiev.ModuleName);
-			Packets.PacketClass r = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
+			Packets.PacketClass r = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
 			r.AddInt8(0);
 			r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.WardenModule);
 			r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.ModuleKey);
@@ -330,7 +330,7 @@ namespace Mangos.World.Handlers
 				int size;
 				for (size = (int)file.Length; size > 500; size -= 500)
 				{
-					Packets.PacketClass r = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
+					Packets.PacketClass r = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
 					r.AddInt8(1);
 					r.AddInt16(500);
 					int i = 1;
@@ -345,7 +345,7 @@ namespace Mangos.World.Handlers
 				}
 				if (size > 0)
 				{
-					Packets.PacketClass r2 = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
+					Packets.PacketClass r2 = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
 					r2.AddInt8(1);
 					r2.AddUInt16((ushort)size);
 					int num = size;
@@ -361,7 +361,7 @@ namespace Mangos.World.Handlers
 
 		public void MaievSendUnk(ref WS_PlayerData.CharacterObject objCharacter)
 		{
-			Packets.PacketClass unk = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
+			Packets.PacketClass unk = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
 			try
 			{
 				unk.AddInt8(3);
@@ -452,7 +452,7 @@ namespace Mangos.World.Handlers
 
 		public void MaievSendSeed(ref WS_PlayerData.CharacterObject objCharacter)
 		{
-			Packets.PacketClass r = new Packets.PacketClass(OPCODES.SMSG_WARDEN_DATA);
+			Packets.PacketClass r = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
 			r.AddInt8(5);
 			r.AddByteArray(objCharacter.WardenData.Seed);
 			WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);

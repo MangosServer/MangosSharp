@@ -240,13 +240,13 @@ namespace Mangos.World.Handlers
 			{
 				if (objCharacter.MindControl is WS_PlayerData.CharacterObject)
 				{
-					Packets.PacketClass packet1 = new Packets.PacketClass(OPCODES.SMSG_DEATH_NOTIFY_OBSOLETE);
+					Packets.PacketClass packet1 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
 					packet1.AddPackGUID(objCharacter.MindControl.GUID);
 					packet1.AddInt8(1);
 					((WS_PlayerData.CharacterObject)objCharacter.MindControl).client.Send(ref packet1);
 					packet1.Dispose();
 				}
-				Packets.PacketClass packet4 = new Packets.PacketClass(OPCODES.SMSG_DEATH_NOTIFY_OBSOLETE);
+				Packets.PacketClass packet4 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
 				packet4.AddPackGUID(objCharacter.MindControl.GUID);
 				packet4.AddInt8(0);
 				objCharacter.client.Send(ref packet4);
@@ -261,7 +261,7 @@ namespace Mangos.World.Handlers
 			}
 			if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
 			{
-				Packets.PacketClass packet2 = new Packets.PacketClass(OPCODES.SMSG_DEATH_NOTIFY_OBSOLETE);
+				Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
 				packet2.AddPackGUID(objCharacter.TargetGUID);
 				packet2.AddInt8(0);
 				WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].client.Send(ref packet2);
@@ -277,7 +277,7 @@ namespace Mangos.World.Handlers
 				}
 				objCharacter.MindControl = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
 			}
-			Packets.PacketClass packet3 = new Packets.PacketClass(OPCODES.SMSG_DEATH_NOTIFY_OBSOLETE);
+			Packets.PacketClass packet3 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
 			packet3.AddPackGUID(objCharacter.TargetGUID);
 			packet3.AddInt8(1);
 			objCharacter.client.Send(ref packet3);
@@ -439,7 +439,7 @@ namespace Mangos.World.Handlers
 			}
 			int Type = Conversions.ToInteger(tmp[0]);
 			string Text = tmp[1];
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_SERVER_MESSAGE);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SERVER_MESSAGE);
 			packet.AddInt32(Type);
 			packet.AddString(Text);
 			packet.UpdateLength();
@@ -455,7 +455,7 @@ namespace Mangos.World.Handlers
 			{
 				return false;
 			}
-			Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_NOTIFICATION);
+			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_NOTIFICATION);
 			packet.AddString(Text);
 			packet.UpdateLength();
 			WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
@@ -704,7 +704,7 @@ namespace Mangos.World.Handlers
 				}
 				foreach (int SpellID in cooldownSpells)
 				{
-					Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_CLEAR_COOLDOWN);
+					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_CLEAR_COOLDOWN);
 					packet.AddInt32(SpellID);
 					packet.AddUInt64(targetUnit.GUID);
 					((WS_PlayerData.CharacterObject)targetUnit).client.Send(ref packet);
@@ -1887,7 +1887,7 @@ namespace Mangos.World.Handlers
 			bool noErrors = true;
 			try
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 				packet.AddInt32(1);
 				packet.AddInt8(0);
 				Packets.UpdateClass UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);

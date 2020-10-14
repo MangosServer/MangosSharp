@@ -789,7 +789,7 @@ namespace Mangos.World.Server
 				{
 					try
 					{
-						if (packet.OpCode == OPCODES.SMSG_UPDATE_OBJECT)
+						if (packet.OpCode == Opcodes.SMSG_UPDATE_OBJECT)
 						{
 							packet.CompressUpdatePacket();
 						}
@@ -827,7 +827,7 @@ namespace Mangos.World.Server
 				{
 					try
 					{
-						if (packet.OpCode == OPCODES.SMSG_UPDATE_OBJECT)
+						if (packet.OpCode == Opcodes.SMSG_UPDATE_OBJECT)
 						{
 							packet.CompressUpdatePacket();
 						}

@@ -158,7 +158,7 @@ namespace Mangos.World.Handlers
 							WorldServiceLocator._Functions.SetFlag(ref client.Character.ZonesExplored[areaFlagOffset], (byte)areaFlag, flagValue: true);
 							int GainedXP = unchecked(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level) * 10;
 							GainedXP = unchecked(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level) * 10;
-							Packets.PacketClass SMSG_EXPLORATION_EXPERIENCE = new Packets.PacketClass(OPCODES.SMSG_EXPLORATION_EXPERIENCE);
+							Packets.PacketClass SMSG_EXPLORATION_EXPERIENCE = new Packets.PacketClass(Opcodes.SMSG_EXPLORATION_EXPERIENCE);
 							SMSG_EXPLORATION_EXPERIENCE.AddInt32(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].ID);
 							SMSG_EXPLORATION_EXPERIENCE.AddInt32(GainedXP);
 							client.Send(ref SMSG_EXPLORATION_EXPERIENCE);
@@ -320,19 +320,19 @@ namespace Mangos.World.Handlers
 					client.Character.antiHackSpeedChanged_--;
 					switch (packet.OpCode)
 					{
-					case OPCODES.CMSG_FORCE_RUN_SPEED_CHANGE_ACK:
+					case Opcodes.CMSG_FORCE_RUN_SPEED_CHANGE_ACK:
 						client.Character.RunSpeed = newSpeed;
 						break;
-					case OPCODES.CMSG_FORCE_RUN_BACK_SPEED_CHANGE_ACK:
+					case Opcodes.CMSG_FORCE_RUN_BACK_SPEED_CHANGE_ACK:
 						client.Character.RunBackSpeed = newSpeed;
 						break;
-					case OPCODES.CMSG_FORCE_SWIM_BACK_SPEED_CHANGE_ACK:
+					case Opcodes.CMSG_FORCE_SWIM_BACK_SPEED_CHANGE_ACK:
 						client.Character.SwimBackSpeed = newSpeed;
 						break;
-					case OPCODES.CMSG_FORCE_SWIM_SPEED_CHANGE_ACK:
+					case Opcodes.CMSG_FORCE_SWIM_SPEED_CHANGE_ACK:
 						client.Character.SwimSpeed = newSpeed;
 						break;
-					case OPCODES.CMSG_FORCE_TURN_RATE_CHANGE_ACK:
+					case Opcodes.CMSG_FORCE_TURN_RATE_CHANGE_ACK:
 						client.Character.TurnRate = newSpeed;
 						break;
 					}
@@ -342,7 +342,7 @@ namespace Mangos.World.Handlers
 
 		public void SendAreaTriggerMessage(ref WS_Network.ClientClass client, string Text)
 		{
-			Packets.PacketClass p = new Packets.PacketClass(OPCODES.SMSG_AREA_TRIGGER_MESSAGE);
+			Packets.PacketClass p = new Packets.PacketClass(Opcodes.SMSG_AREA_TRIGGER_MESSAGE);
 			p.AddInt32(Text.Length);
 			p.AddString(Text);
 			client.Send(ref p);
@@ -502,7 +502,7 @@ namespace Mangos.World.Handlers
 					if (client.Character.LogoutTimer != null)
 					{
 						Packets.UpdateClass UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-						Packets.PacketClass SMSG_UPDATE_OBJECT = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+						Packets.PacketClass SMSG_UPDATE_OBJECT = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 						try
 						{
 							SMSG_UPDATE_OBJECT.AddInt32(1);
@@ -518,7 +518,7 @@ namespace Mangos.World.Handlers
 						{
 							SMSG_UPDATE_OBJECT.Dispose();
 						}
-						Packets.PacketClass packetACK = new Packets.PacketClass(OPCODES.SMSG_STANDSTATE_CHANGE_ACK);
+						Packets.PacketClass packetACK = new Packets.PacketClass(Opcodes.SMSG_STANDSTATE_CHANGE_ACK);
 						try
 						{
 							packetACK.AddInt8(1);
@@ -1027,7 +1027,7 @@ namespace Mangos.World.Handlers
 					cHARACTERs[key] = (WS_PlayerData.CharacterObject)objCharacter;
 					if (flag)
 					{
-						Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+						Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 						packet.AddInt32(1);
 						packet.AddInt8(0);
 						Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
@@ -1051,7 +1051,7 @@ namespace Mangos.World.Handlers
 					Character = (WS_PlayerData.CharacterObject)objCharacter;
 					if (flag)
 					{
-						Packets.PacketClass myPacket = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+						Packets.PacketClass myPacket = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 						myPacket.AddInt32(1);
 						myPacket.AddInt8(0);
 						Packets.UpdateClass myTmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
@@ -1211,7 +1211,7 @@ namespace Mangos.World.Handlers
 					wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)objCharacter;
 					if (flag)
 					{
-						Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+						Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 						packet.AddInt32(1);
 						packet.AddInt8(0);
 						Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
@@ -1256,7 +1256,7 @@ namespace Mangos.World.Handlers
 					}
 					if (num != 0)
 					{
-						Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+						Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 						packet.AddInt32(1);
 						packet.AddInt8(0);
 						Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
@@ -1294,7 +1294,7 @@ namespace Mangos.World.Handlers
 					wORLD_CORPSEOBJECTs[key] = (WS_Corpses.CorpseObject)objCharacter;
 					if (flag)
 					{
-						Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+						Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
 						packet.AddInt32(1);
 						packet.AddInt8(0);
 						Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);

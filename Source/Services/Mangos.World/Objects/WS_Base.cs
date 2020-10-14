@@ -141,7 +141,7 @@ namespace Mangos.World.Objects
 
 			public void SendPlaySound(int SoundID, bool OnlyToSelf = false)
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_PLAY_OBJECT_SOUND);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PLAY_OBJECT_SOUND);
 				try
 				{
 					packet.AddInt32(SoundID);
@@ -453,7 +453,7 @@ namespace Mangos.World.Objects
 						((WS_PlayerData.CharacterObject)this).SetUpdateFlag(113 + AuraLevel_Slot, ActiveSpells_Count[AuraLevel_Slot]);
 						((WS_PlayerData.CharacterObject)this).SetUpdateFlag(101 + AuraLevel_Slot, ActiveSpells_Level[AuraLevel_Slot]);
 						((WS_PlayerData.CharacterObject)this).SendCharacterUpdate();
-						Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(OPCODES.SMSG_UPDATE_AURA_DURATION);
+						Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(Opcodes.SMSG_UPDATE_AURA_DURATION);
 						try
 						{
 							SMSG_UPDATE_AURA_DURATION.AddInt8((byte)Slot);
@@ -875,7 +875,7 @@ namespace Mangos.World.Objects
 					{
 						((WS_PlayerData.CharacterObject)this).SetUpdateFlag(113 + AuraFlag_Slot, ActiveSpells_Count[AuraFlag_Slot]);
 						((WS_PlayerData.CharacterObject)this).SendCharacterUpdate();
-						Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(OPCODES.SMSG_UPDATE_AURA_DURATION);
+						Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(Opcodes.SMSG_UPDATE_AURA_DURATION);
 						try
 						{
 							SMSG_UPDATE_AURA_DURATION.AddInt8((byte)Slot);
@@ -911,7 +911,7 @@ namespace Mangos.World.Objects
 
 			public void DoEmote(int EmoteID)
 			{
-				Packets.PacketClass packet = new Packets.PacketClass(OPCODES.SMSG_EMOTE);
+				Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_EMOTE);
 				try
 				{
 					packet.AddInt32(EmoteID);

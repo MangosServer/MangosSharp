@@ -29,7 +29,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_QUERY_TIME(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUERY_TIME", client.IP, client.Port);
-            var response = new Packets.PacketClass(OPCODES.SMSG_QUERY_TIME_RESPONSE);
+            var response = new Packets.PacketClass(Opcodes.SMSG_QUERY_TIME_RESPONSE);
             response.AddInt32(ClusterServiceLocator._NativeMethods.timeGetTime("")); // GetTimestamp(Now))
             client.Send(response);
             response.Dispose();
@@ -49,7 +49,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_PLAYED_TIME(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY", client.IP, client.Port);
-            var response = new Packets.PacketClass(OPCODES.SMSG_PLAYED_TIME);
+            var response = new Packets.PacketClass(Opcodes.SMSG_PLAYED_TIME);
             response.AddInt32(1);
             response.AddInt32(1);
             client.Send(response);
@@ -65,7 +65,7 @@ namespace Mangos.Cluster.Handlers
             ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY [GUID={2:X}]", client.IP, client.Port, GUID);
             if (ClusterServiceLocator._CommonGlobalFunctions.GuidIsPlayer(GUID) && ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(GUID))
             {
-                var SMSG_NAME_QUERY_RESPONSE = new Packets.PacketClass(OPCODES.SMSG_NAME_QUERY_RESPONSE);
+                var SMSG_NAME_QUERY_RESPONSE = new Packets.PacketClass(Opcodes.SMSG_NAME_QUERY_RESPONSE);
                 SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
                 SMSG_NAME_QUERY_RESPONSE.AddString(ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Name);
                 SMSG_NAME_QUERY_RESPONSE.AddInt32((byte)ClusterServiceLocator._WorldCluster.CHARACTERs[GUID].Race);

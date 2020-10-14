@@ -447,7 +447,7 @@ namespace Mangos.Cluster.Handlers
                 }
                 else
                 {
-                    var packet = new Packets.PacketClass(OPCODES.SMSG_CHANNEL_LIST);
+                    var packet = new Packets.PacketClass(Opcodes.SMSG_CHANNEL_LIST);
                     packet.AddInt8(0);                   // ChannelType
                     packet.AddString(ChannelName);       // ChannelName
                     packet.AddInt8(ChannelFlags);        // ChannelFlags
@@ -834,7 +834,7 @@ namespace Mangos.Cluster.Handlers
 
             protected Packets.PacketClass BuildChannelNotify(CHANNEL_NOTIFY_FLAGS Notify, ulong GUID1, ulong GUID2, string Name)
             {
-                var response = new Packets.PacketClass(OPCODES.SMSG_CHANNEL_NOTIFY);
+                var response = new Packets.PacketClass(Opcodes.SMSG_CHANNEL_NOTIFY);
                 response.AddInt8((byte)Notify);
                 response.AddString(ChannelName);
                 switch (Notify)
