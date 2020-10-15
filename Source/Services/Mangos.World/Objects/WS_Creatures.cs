@@ -199,24 +199,23 @@ namespace Mangos.World.Objects
 				{
 					return true;
 				}
-				if (Unit is WS_PlayerData.CharacterObject)
-				{
-					WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)Unit;
-					if (characterObject.GM)
-					{
-						return true;
-					}
-					if (characterObject.GetReputation(characterObject.Faction) < ReputationRank.Friendly)
-					{
-						return false;
-					}
-					if (characterObject.GetReaction(characterObject.Faction) < TReaction.NEUTRAL)
-					{
-						return false;
-					}
+                if (Unit is WS_PlayerData.CharacterObject characterObject)
+                {
+                    if (characterObject.GM)
+                    {
+                        return true;
+                    }
+                    if (characterObject.GetReputation(characterObject.Faction) < ReputationRank.Friendly)
+                    {
+                        return false;
+                    }
+                    if (characterObject.GetReaction(characterObject.Faction) < TReaction.NEUTRAL)
+                    {
+                        return false;
+                    }
                 }
                 else if (Unit is CreatureObject)
-				{
+                {
                 }
                 return true;
 			}
@@ -227,24 +226,23 @@ namespace Mangos.World.Objects
 				{
 					return false;
 				}
-				if (Unit is WS_PlayerData.CharacterObject)
-				{
-					WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)Unit;
-					if (characterObject.GM)
-					{
-						return false;
-					}
-					if (characterObject.GetReputation(characterObject.Faction) < ReputationRank.Friendly)
-					{
-						return true;
-					}
-					if (characterObject.GetReaction(characterObject.Faction) < TReaction.NEUTRAL)
-					{
-						return true;
-					}
+                if (Unit is WS_PlayerData.CharacterObject characterObject)
+                {
+                    if (characterObject.GM)
+                    {
+                        return false;
+                    }
+                    if (characterObject.GetReputation(characterObject.Faction) < ReputationRank.Friendly)
+                    {
+                        return true;
+                    }
+                    if (characterObject.GetReaction(characterObject.Faction) < TReaction.NEUTRAL)
+                    {
+                        return true;
+                    }
                 }
                 else if (Unit is CreatureObject)
-				{
+                {
                 }
                 return false;
 			}

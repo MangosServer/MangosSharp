@@ -91,7 +91,7 @@ namespace Mangos.World.Handlers
 				{
 					SMSG_UPDATE_OBJECT.AddInt32(1);
 					SMSG_UPDATE_OBJECT.AddInt8(0);
-					client.Character.cUnitFlags = client.Character.cUnitFlags | 0x40000;
+					client.Character.cUnitFlags |= 0x40000;
 					UpdateData.SetUpdateFlag(46, client.Character.cUnitFlags);
 					client.Character.StandState = 1;
 					UpdateData.SetUpdateFlag(138, client.Character.cBytes1);
@@ -161,7 +161,7 @@ namespace Mangos.World.Handlers
 					{
 						SMSG_UPDATE_OBJECT.AddInt32(1);
 						SMSG_UPDATE_OBJECT.AddInt8(0);
-						client.Character.cUnitFlags = client.Character.cUnitFlags & -262145;
+						client.Character.cUnitFlags &= -262145;
 						UpdateData.SetUpdateFlag(46, client.Character.cUnitFlags);
 						client.Character.StandState = 0;
 						UpdateData.SetUpdateFlag(138, client.Character.cBytes1);

@@ -919,9 +919,8 @@ namespace Mangos.World.Player
                 {
                     return true;
                 }
-                if (Unit is CharacterObject)
+                if (Unit is CharacterObject characterObject)
                 {
-                    CharacterObject characterObject = (CharacterObject)Unit;
                     if (characterObject.GM)
                     {
                         return true;
@@ -948,9 +947,8 @@ namespace Mangos.World.Player
                     }
                     return !characterObject.isPvP;
                 }
-                if (Unit is WS_Creatures.CreatureObject)
+                if (Unit is WS_Creatures.CreatureObject creatureObject)
                 {
-                    WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)Unit;
                     if (GetReputation(creatureObject.Faction) < ReputationRank.Friendly)
                     {
                         return false;
@@ -969,9 +967,8 @@ namespace Mangos.World.Player
                 {
                     return false;
                 }
-                if (Unit is CharacterObject)
+                if (Unit is CharacterObject characterObject)
                 {
-                    CharacterObject characterObject = (CharacterObject)Unit;
                     if (characterObject.GM)
                     {
                         return false;
@@ -998,9 +995,8 @@ namespace Mangos.World.Player
                     }
                     return characterObject.isPvP;
                 }
-                if (Unit is WS_Creatures.CreatureObject)
+                if (Unit is WS_Creatures.CreatureObject creatureObject)
                 {
-                    WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)Unit;
                     if (GetReputation(creatureObject.Faction) < ReputationRank.Neutral)
                     {
                         return true;
@@ -1072,16 +1068,17 @@ namespace Mangos.World.Player
                 {
                     return false;
                 }
-                if (objCharacter is WS_Creatures.CreatureObject)
+                switch (objCharacter)
                 {
-                    if (((WS_Creatures.CreatureObject)objCharacter).aiScript != null && ((WS_Creatures.CreatureObject)objCharacter).aiScript.State == AIState.AI_RESPAWN)
-                    {
+                    case WS_Creatures.CreatureObject _:
+                        if (((WS_Creatures.CreatureObject)objCharacter).aiScript != null && ((WS_Creatures.CreatureObject)objCharacter).aiScript.State == AIState.AI_RESPAWN)
+                        {
+                            return false;
+                        }
+
+                        break;
+                    case WS_GameObjects.GameObjectObject _ when ((WS_GameObjects.GameObjectObject)objCharacter).Despawned:
                         return false;
-                    }
-                }
-                else if (objCharacter is WS_GameObjects.GameObjectObject && ((WS_GameObjects.GameObjectObject)objCharacter).Despawned)
-                {
-                    return false;
                 }
                 float distance = WorldServiceLocator._WS_Combat.GetDistance(this, objCharacter);
                 if (Group != null && objCharacter is CharacterObject && ((CharacterObject)objCharacter).Group == Group)
@@ -1304,9 +1301,9 @@ namespace Mangos.World.Player
                     {
                         packet.Dispose();
                     }
-                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject)
+                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject @object)
                     {
-                        WS_Transports.TransportObject obj = (WS_Transports.TransportObject)OnTransport;
+                        WS_Transports.TransportObject obj = @object;
                         CharacterObject Character = this;
                         obj.CreateEveryoneOnTransport(ref Character);
                     }
@@ -4824,9 +4821,9 @@ namespace Mangos.World.Player
                     WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                     CharacterObject Character = this;
                     wS_CharMovement.RemoveFromWorld(ref Character);
-                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject)
+                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject @object)
                     {
-                        WS_Transports.TransportObject obj = (WS_Transports.TransportObject)OnTransport;
+                        WS_Transports.TransportObject obj = @object;
                         WS_Base.BaseUnit Unit = this;
                         obj.RemovePassenger(ref Unit);
                     }
@@ -5403,9 +5400,9 @@ namespace Mangos.World.Player
             {
                 DEAD = true;
                 corpseGUID = 0uL;
-                if (Attacker != null && Attacker is WS_Creatures.CreatureObject && ((WS_Creatures.CreatureObject)Attacker).aiScript != null)
+                if (Attacker != null && Attacker is WS_Creatures.CreatureObject @object && @object.aiScript != null)
                 {
-                    WS_Creatures_AI.TBaseAI aiScript = ((WS_Creatures.CreatureObject)Attacker).aiScript;
+                    WS_Creatures_AI.TBaseAI aiScript = @object.aiScript;
                     WS_Base.BaseUnit Victim = this;
                     aiScript.OnKill(ref Victim);
                 }
@@ -5519,14 +5516,14 @@ namespace Mangos.World.Player
                         CheckCombat();
                         SendCharacterUpdate();
                     }
-                    if (Attacker is CharacterObject && !((CharacterObject)Attacker).inCombatWith.Contains(GUID))
+                    if (Attacker is CharacterObject @object && !@object.inCombatWith.Contains(GUID))
                     {
-                        ((CharacterObject)Attacker).inCombatWith.Add(GUID);
-                        if ((((CharacterObject)Attacker).cUnitFlags & 0x80000) == 0)
+                        @object.inCombatWith.Add(GUID);
+                        if ((@object.cUnitFlags & 0x80000) == 0)
                         {
-                            ((CharacterObject)Attacker).cUnitFlags = ((CharacterObject)Attacker).cUnitFlags | 0x80000;
-                            ((CharacterObject)Attacker).SetUpdateFlag(46, ((CharacterObject)Attacker).cUnitFlags);
-                            ((CharacterObject)Attacker).SendCharacterUpdate();
+                            @object.cUnitFlags = @object.cUnitFlags | 0x80000;
+                            @object.SetUpdateFlag(46, @object.cUnitFlags);
+                            @object.SendCharacterUpdate();
                         }
                     }
                     ulong[] array = creaturesNear.ToArray();
@@ -5649,9 +5646,9 @@ namespace Mangos.World.Player
                         Group = null;
                     }
                 }
-                if (OnTransport != null && OnTransport is WS_Transports.TransportObject)
+                if (OnTransport != null && OnTransport is WS_Transports.TransportObject @object)
                 {
-                    WS_Transports.TransportObject obj = (WS_Transports.TransportObject)OnTransport;
+                    WS_Transports.TransportObject obj = @object;
                     WS_Base.BaseUnit Unit = this;
                     obj.RemovePassenger(ref Unit);
                 }
@@ -7124,9 +7121,8 @@ namespace Mangos.World.Player
                         if (TalkQuests[i] == null)
                         {
                             WorldServiceLocator._WorldServer.ALLQUESTS.CreateQuest(ref TalkQuests[i], ref Quest);
-                            if (TalkQuests[i] is WS_QuestsBaseScripted)
+                            if (TalkQuests[i] is WS_QuestsBaseScripted obj)
                             {
-                                WS_QuestsBaseScripted obj = (WS_QuestsBaseScripted)TalkQuests[i];
                                 CharacterObject objCharacter = this;
                                 obj.OnQuestStart(ref objCharacter);
                             }
@@ -7159,9 +7155,8 @@ namespace Mangos.World.Player
                 {
                     return false;
                 }
-                if (TalkQuests[QuestSlot] is WS_QuestsBaseScripted)
+                if (TalkQuests[QuestSlot] is WS_QuestsBaseScripted obj)
                 {
-                    WS_QuestsBaseScripted obj = (WS_QuestsBaseScripted)TalkQuests[QuestSlot];
                     CharacterObject objCharacter = this;
                     obj.OnQuestCancel(ref objCharacter);
                 }
@@ -7184,9 +7179,8 @@ namespace Mangos.World.Player
                 {
                     return false;
                 }
-                if (TalkQuests[QuestSlot] is WS_QuestsBaseScripted)
+                if (TalkQuests[QuestSlot] is WS_QuestsBaseScripted obj)
                 {
-                    WS_QuestsBaseScripted obj = (WS_QuestsBaseScripted)TalkQuests[QuestSlot];
                     CharacterObject objCharacter = this;
                     obj.OnQuestComplete(ref objCharacter);
                 }

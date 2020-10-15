@@ -118,16 +118,15 @@ namespace Mangos.World.Handlers
 			}
 			else if (client.Character.OnTransport != null)
 			{
-				if (client.Character.OnTransport is WS_Transports.TransportObject)
-				{
-					WS_Transports.TransportObject obj2 = (WS_Transports.TransportObject)client.Character.OnTransport;
-					ref WS_PlayerData.CharacterObject character3 = ref client.Character;
-					ref WS_PlayerData.CharacterObject reference = ref character3;
-					WS_Base.BaseUnit Unit = character3;
-					obj2.RemovePassenger(ref Unit);
-					reference = (WS_PlayerData.CharacterObject)Unit;
-				}
-				client.Character.OnTransport = null;
+                if (client.Character.OnTransport is WS_Transports.TransportObject obj2)
+                {
+                    ref WS_PlayerData.CharacterObject character3 = ref client.Character;
+                    ref WS_PlayerData.CharacterObject reference = ref character3;
+                    WS_Base.BaseUnit Unit = character3;
+                    obj2.RemovePassenger(ref Unit);
+                    reference = (WS_PlayerData.CharacterObject)Unit;
+                }
+                client.Character.OnTransport = null;
 			}
 			if (((uint)client.Character.charMovementFlags & 0x200000u) != 0)
 			{
@@ -222,22 +221,20 @@ namespace Mangos.World.Handlers
 			float PositionY = packet.GetFloat();
 			float PositionZ = packet.GetFloat();
 			float Orientation = packet.GetFloat();
-			if (Controlled is WS_PlayerData.CharacterObject)
-			{
-				WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)Controlled;
-				characterObject.charMovementFlags = MovementFlags;
-				characterObject.positionX = PositionX;
-				characterObject.positionY = PositionY;
-				characterObject.positionZ = PositionZ;
-				characterObject.orientation = Orientation;
+            if (Controlled is WS_PlayerData.CharacterObject characterObject)
+            {
+                characterObject.charMovementFlags = MovementFlags;
+                characterObject.positionX = PositionX;
+                characterObject.positionY = PositionY;
+                characterObject.positionZ = PositionZ;
+                characterObject.orientation = Orientation;
             }
-            else if (Controlled is WS_Creatures.CreatureObject)
-			{
-				WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)Controlled;
-				creatureObject.positionX = PositionX;
-				creatureObject.positionY = PositionY;
-				creatureObject.positionZ = PositionZ;
-				creatureObject.orientation = Orientation;
+            else if (Controlled is WS_Creatures.CreatureObject creatureObject)
+            {
+                creatureObject.positionX = PositionX;
+                creatureObject.positionY = PositionY;
+                creatureObject.positionZ = PositionZ;
+                creatureObject.orientation = Orientation;
             }
             int MsTime = WorldServiceLocator._WS_Network.MsTime();
 			checked
@@ -373,7 +370,7 @@ namespace Mangos.World.Handlers
 				WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM areatrigger_tavern WHERE id = {triggerID};", ref q);
 				if (q.Rows.Count > 0)
 				{
-					client.Character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_RESTING;
+					client.Character.cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_RESTING;
 					client.Character.SetUpdateFlag(190, (int)client.Character.cPlayerFlags);
 					client.Character.SendCharacterUpdate();
 					return;
@@ -508,7 +505,7 @@ namespace Mangos.World.Handlers
 						{
 							SMSG_UPDATE_OBJECT.AddInt32(1);
 							SMSG_UPDATE_OBJECT.AddInt8(0);
-							client.Character.cUnitFlags = client.Character.cUnitFlags | 0x40000;
+							client.Character.cUnitFlags |= 0x40000;
 							UpdateData.SetUpdateFlag(46, client.Character.cUnitFlags);
 							client.Character.StandState = 1;
 							UpdateData.SetUpdateFlag(138, client.Character.cBytes1);
@@ -574,7 +571,7 @@ namespace Mangos.World.Handlers
 				MoveCell(ref client.Character);
 			}
 			UpdateCell(ref client.Character);
-			client.Character.GroupUpdateFlag = client.Character.GroupUpdateFlag | 0x100u;
+			client.Character.GroupUpdateFlag |= 0x100u;
 			client.Character.ZoneCheck();
 			WS_Maps wS_Maps = WorldServiceLocator._WS_Maps;
 			WS_Base.BaseObject objCharacter = client.Character;

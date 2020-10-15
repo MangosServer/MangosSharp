@@ -721,21 +721,19 @@ namespace Mangos.World.Objects
 							RemoveAura(i, ref ActiveSpells[i].SpellCaster);
 						}
 					}
-					if (this is WS_PlayerData.CharacterObject)
-					{
-						WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)this;
-						if (characterObject.spellCasted[3] != null && !characterObject.spellCasted[3].Finished && (characterObject.spellCasted[3].SpellInfo.channelInterruptFlags & AuraInterruptFlag) != 0)
-						{
-							characterObject.FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL);
-						}
+                    if (this is WS_PlayerData.CharacterObject characterObject)
+                    {
+                        if (characterObject.spellCasted[3] != null && !characterObject.spellCasted[3].Finished && (characterObject.spellCasted[3].SpellInfo.channelInterruptFlags & AuraInterruptFlag) != 0)
+                        {
+                            characterObject.FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL);
+                        }
                     }
-                    else if (this is WS_Creatures.CreatureObject)
-					{
-						WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)this;
-						if (creatureObject.SpellCasted != null && (creatureObject.SpellCasted.SpellInfo.channelInterruptFlags & AuraInterruptFlag) != 0)
-						{
-							creatureObject.StopCasting();
-						}
+                    else if (this is WS_Creatures.CreatureObject creatureObject)
+                    {
+                        if (creatureObject.SpellCasted != null && (creatureObject.SpellCasted.SpellInfo.channelInterruptFlags & AuraInterruptFlag) != 0)
+                        {
+                            creatureObject.StopCasting();
+                        }
                     }
                 }
 			}
@@ -1179,13 +1177,12 @@ namespace Mangos.World.Objects
 
 			public int GetDefenceSkill(ref BaseUnit Attacker)
 			{
-				if (this is WS_PlayerData.CharacterObject)
-				{
-                    WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)this;
+                if (this is WS_PlayerData.CharacterObject characterObject)
+                {
                     int value = ((!Attacker.IsPlayer) ? characterObject.Skills[95].CurrentWithBonus : characterObject.Skills[95].MaximumWithBonus);
                     return value;
-				}
-				checked
+                }
+                checked
 				{
 					return unchecked(Level) * 5;
 				}
@@ -1195,44 +1192,43 @@ namespace Mangos.World.Objects
 			{
 				checked
 				{
-					if (this is WS_PlayerData.CharacterObject)
-					{
-                        WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)this;
-						ItemObject item = null;
-						switch (attType)
-						{
-						case WeaponAttackType.BASE_ATTACK:
-							if (characterObject.Items.ContainsKey(15))
-							{
-								item = characterObject.Items[15];
-							}
-							break;
-						case WeaponAttackType.OFF_ATTACK:
-							if (characterObject.Items.ContainsKey(16))
-							{
-								item = characterObject.Items[16];
-							}
-							break;
-						case WeaponAttackType.RANGED_ATTACK:
-							if (characterObject.Items.ContainsKey(17))
-							{
-								item = characterObject.Items[17];
-							}
-							break;
-						}
-						if (attType != 0 && item == null)
-						{
-							return 0;
-						}
-						if (IsInFeralForm)
-						{
-							return unchecked(Level) * 5;
-						}
-						int skill = item?.GetSkill ?? 162;
+                    if (this is WS_PlayerData.CharacterObject characterObject)
+                    {
+                        ItemObject item = null;
+                        switch (attType)
+                        {
+                            case WeaponAttackType.BASE_ATTACK:
+                                if (characterObject.Items.ContainsKey(15))
+                                {
+                                    item = characterObject.Items[15];
+                                }
+                                break;
+                            case WeaponAttackType.OFF_ATTACK:
+                                if (characterObject.Items.ContainsKey(16))
+                                {
+                                    item = characterObject.Items[16];
+                                }
+                                break;
+                            case WeaponAttackType.RANGED_ATTACK:
+                                if (characterObject.Items.ContainsKey(17))
+                                {
+                                    item = characterObject.Items[17];
+                                }
+                                break;
+                        }
+                        if (attType != 0 && item == null)
+                        {
+                            return 0;
+                        }
+                        if (IsInFeralForm)
+                        {
+                            return unchecked(Level) * 5;
+                        }
+                        int skill = item?.GetSkill ?? 162;
                         int value = ((!Victim.IsPlayer) ? characterObject.Skills[skill].CurrentWithBonus : characterObject.Skills[skill].MaximumWithBonus);
                         return value;
-					}
-					return unchecked(Level) * 5;
+                    }
+                    return unchecked(Level) * 5;
 				}
 			}
 

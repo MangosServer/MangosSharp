@@ -103,9 +103,9 @@ namespace Mangos.World.Auction
 			num = (int)MailAction;
 			valuesString = str2 + str3 + ":0:" + num;
 			queryString += "mail_body,";
-			valuesString = valuesString ?? "";
+			valuesString ??= "";
 			queryString += "mail_money,";
-			valuesString = valuesString ?? "";
+			valuesString ??= "";
 			queryString += "mail_COD,";
 			valuesString += "0";
 			queryString += "mail_time,";

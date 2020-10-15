@@ -151,7 +151,7 @@ namespace Mangos.World.Loots
 				packet.GetInt16();
 				ulong GUID = packet.GetUInt64();
 				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT [GUID={2:X}]", client.IP, client.Port, GUID);
-				client.Character.cUnitFlags = client.Character.cUnitFlags | 0x400;
+				client.Character.cUnitFlags |= 0x400;
 				client.Character.SetUpdateFlag(46, client.Character.cUnitFlags);
 				client.Character.SendCharacterUpdate();
 				if (LootTable.ContainsKey(GUID))
@@ -178,7 +178,7 @@ namespace Mangos.World.Loots
 			{
 				client.Character.spellCasted[1].State = SpellCastState.SPELL_STATE_IDLE;
 			}
-			client.Character.cUnitFlags = client.Character.cUnitFlags & -1025;
+			client.Character.cUnitFlags &= -1025;
 			client.Character.SetUpdateFlag(46, client.Character.cUnitFlags);
 			client.Character.SendCharacterUpdate();
 			if (LootTable.ContainsKey(GUID))

@@ -190,11 +190,11 @@ namespace Mangos.World.Handlers
 			WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TOGGLE_HELM", client.IP, client.Port);
 			if ((client.Character.cPlayerFlags & PlayerFlags.PLAYER_FLAGS_HIDE_HELM) != 0)
 			{
-				client.Character.cPlayerFlags = client.Character.cPlayerFlags & ~PlayerFlags.PLAYER_FLAGS_HIDE_HELM;
+				client.Character.cPlayerFlags &= ~PlayerFlags.PLAYER_FLAGS_HIDE_HELM;
 			}
 			else
 			{
-				client.Character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_HIDE_HELM;
+				client.Character.cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_HIDE_HELM;
 			}
 			client.Character.SetUpdateFlag(190, (int)client.Character.cPlayerFlags);
 			client.Character.SendCharacterUpdate();
@@ -205,11 +205,11 @@ namespace Mangos.World.Handlers
 			WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TOGGLE_CLOAK", client.IP, client.Port);
 			if ((client.Character.cPlayerFlags & PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK) != 0)
 			{
-				client.Character.cPlayerFlags = client.Character.cPlayerFlags & ~PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK;
+				client.Character.cPlayerFlags &= ~PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK;
 			}
 			else
 			{
-				client.Character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK;
+				client.Character.cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK;
 			}
 			client.Character.SetUpdateFlag(190, (int)client.Character.cPlayerFlags);
 			client.Character.SendCharacterUpdate();

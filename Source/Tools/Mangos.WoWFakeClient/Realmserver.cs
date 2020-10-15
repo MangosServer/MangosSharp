@@ -469,9 +469,11 @@ namespace Mangos.WoWFakeClient
                 num2 += 1;
             }
 
-            var list1 = new ArrayList();
-            list1.Add(buffer2);
-            list1.Add(buffer3);
+            var list1 = new ArrayList
+            {
+                buffer2,
+                buffer3
+            };
             return list1;
         }
 

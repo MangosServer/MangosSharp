@@ -577,33 +577,31 @@ namespace Mangos.World.Handlers
 					wS_Spells.SendNonMeleeDamageLog(ref baseUnit, ref Attacker, SpellID, unchecked((int)damageInfo.DamageType), damageInfo.Damage, 0, damageInfo.Absorbed, IsCrit);
 					Victim2 = Attacker;
 					Character = (WS_PlayerData.CharacterObject)baseUnit;
-					if (Victim2 is WS_Creatures.CreatureObject)
-					{
-						WS_Creatures.CreatureObject obj = (WS_Creatures.CreatureObject)Victim2;
-						int getDamage = damageInfo.GetDamage;
-						Attacker = Character;
-						obj.DealDamage(getDamage, Attacker);
-						Character = (WS_PlayerData.CharacterObject)Attacker;
-						if (Victim2 == Victim && ((WS_Creatures.CreatureObject)Victim).IsDead)
-						{
-							AttackStop();
-						}
-					}
-					else if (Victim2 is WS_PlayerData.CharacterObject)
-					{
-						WS_PlayerData.CharacterObject obj2 = (WS_PlayerData.CharacterObject)Victim2;
-						int getDamage2 = damageInfo.GetDamage;
-						Attacker = Character;
-						obj2.DealDamage(getDamage2, Attacker);
-						Character = (WS_PlayerData.CharacterObject)Attacker;
-						if (((WS_PlayerData.CharacterObject)Victim2).Classe == Classes.CLASS_WARRIOR)
-						{
-							((WS_PlayerData.CharacterObject)Victim2).Rage.Increment((int)(damageInfo.Damage / (double)(unchecked(((WS_PlayerData.CharacterObject)Victim2).Level) * 4) * 25.0 + 10.0));
-							((WS_PlayerData.CharacterObject)Victim2).SetUpdateFlag(24, ((WS_PlayerData.CharacterObject)Victim2).Rage.Current);
-							Character.SendCharacterUpdate();
-						}
-					}
-					if (Character.Classe == Classes.CLASS_WARRIOR || (Character.Classe == Classes.CLASS_DRUID && (Character.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || Character.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR)))
+                    if (Victim2 is WS_Creatures.CreatureObject obj)
+                    {
+                        int getDamage = damageInfo.GetDamage;
+                        Attacker = Character;
+                        obj.DealDamage(getDamage, Attacker);
+                        Character = (WS_PlayerData.CharacterObject)Attacker;
+                        if (Victim2 == Victim && ((WS_Creatures.CreatureObject)Victim).IsDead)
+                        {
+                            AttackStop();
+                        }
+                    }
+                    else if (Victim2 is WS_PlayerData.CharacterObject obj2)
+                    {
+                        int getDamage2 = damageInfo.GetDamage;
+                        Attacker = Character;
+                        obj2.DealDamage(getDamage2, Attacker);
+                        Character = (WS_PlayerData.CharacterObject)Attacker;
+                        if (((WS_PlayerData.CharacterObject)Victim2).Classe == Classes.CLASS_WARRIOR)
+                        {
+                            ((WS_PlayerData.CharacterObject)Victim2).Rage.Increment((int)(damageInfo.Damage / (double)(unchecked(((WS_PlayerData.CharacterObject)Victim2).Level) * 4) * 25.0 + 10.0));
+                            ((WS_PlayerData.CharacterObject)Victim2).SetUpdateFlag(24, ((WS_PlayerData.CharacterObject)Victim2).Rage.Current);
+                            Character.SendCharacterUpdate();
+                        }
+                    }
+                    if (Character.Classe == Classes.CLASS_WARRIOR || (Character.Classe == Classes.CLASS_DRUID && (Character.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || Character.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR)))
 					{
 						Character.Rage.Increment((int)(damageInfo.Damage / (double)(unchecked(Character.Level) * 4) * 75.0 + 10.0));
 						Character.SetUpdateFlag(24, Character.Rage.Current);
@@ -803,33 +801,32 @@ namespace Mangos.World.Handlers
 			{
 				result.DamageType = (DamageTypes)checked((byte)Ability.School);
 			}
-			else if (Attacker is WS_PlayerData.CharacterObject)
-			{
-				WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)Attacker;
-				if (Ranged)
-				{
-					if (characterObject.Items.ContainsKey(17))
-					{
-						result.DamageType = (DamageTypes)checked((byte)characterObject.Items[17].ItemInfo.Damage[0].Type);
-					}
-				}
-				else if (DualWield)
-				{
-					if (characterObject.Items.ContainsKey(16))
-					{
-						result.DamageType = (DamageTypes)checked((byte)characterObject.Items[16].ItemInfo.Damage[0].Type);
-					}
-				}
-				else if (characterObject.Items.ContainsKey(15))
-				{
-					result.DamageType = (DamageTypes)checked((byte)characterObject.Items[15].ItemInfo.Damage[0].Type);
-				}
+			else if (Attacker is WS_PlayerData.CharacterObject characterObject)
+            {
+                if (Ranged)
+                {
+                    if (characterObject.Items.ContainsKey(17))
+                    {
+                        result.DamageType = (DamageTypes)checked((byte)characterObject.Items[17].ItemInfo.Damage[0].Type);
+                    }
+                }
+                else if (DualWield)
+                {
+                    if (characterObject.Items.ContainsKey(16))
+                    {
+                        result.DamageType = (DamageTypes)checked((byte)characterObject.Items[16].ItemInfo.Damage[0].Type);
+                    }
+                }
+                else if (characterObject.Items.ContainsKey(15))
+                {
+                    result.DamageType = (DamageTypes)checked((byte)characterObject.Items[15].ItemInfo.Damage[0].Type);
+                }
             }
             else
-			{
-				result.DamageType = DamageTypes.DMG_PHYSICAL;
-			}
-			if (Victim is WS_Creatures.CreatureObject && ((WS_Creatures.CreatureObject)Victim).aiScript != null && ((WS_Creatures.CreatureObject)Victim).aiScript.State == AIState.AI_MOVING_TO_SPAWN)
+            {
+                result.DamageType = DamageTypes.DMG_PHYSICAL;
+            }
+            if (Victim is WS_Creatures.CreatureObject && ((WS_Creatures.CreatureObject)Victim).aiScript != null && ((WS_Creatures.CreatureObject)Victim).aiScript.State == AIState.AI_MOVING_TO_SPAWN)
 			{
 				result.HitInfo |= 16;
 				return result;
@@ -1073,25 +1070,24 @@ namespace Mangos.World.Handlers
 
 		public float GetBasePercentMiss(ref WS_Base.BaseUnit objCharacter, int skillDiference)
 		{
-			if (objCharacter is WS_PlayerData.CharacterObject)
-			{
-				WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)objCharacter;
-				if (characterObject.attackSheathState == SHEATHE_SLOT.SHEATHE_WEAPON)
-				{
-					if (characterObject.Items.ContainsKey(16) && characterObject.Items[16].ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON)
-					{
-						if (skillDiference > 10)
-						{
-							return 24f - skillDiference * 0.1f;
-						}
-						return 24f - skillDiference * 0.2f;
-					}
-					if (skillDiference > 10)
-					{
-						return 5f - skillDiference * 0.1f;
-					}
-					return 5f - skillDiference * 0.2f;
-				}
+            if (objCharacter is WS_PlayerData.CharacterObject characterObject)
+            {
+                if (characterObject.attackSheathState == SHEATHE_SLOT.SHEATHE_WEAPON)
+                {
+                    if (characterObject.Items.ContainsKey(16) && characterObject.Items[16].ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON)
+                    {
+                        if (skillDiference > 10)
+                        {
+                            return 24f - skillDiference * 0.1f;
+                        }
+                        return 24f - skillDiference * 0.2f;
+                    }
+                    if (skillDiference > 10)
+                    {
+                        return 5f - skillDiference * 0.1f;
+                    }
+                    return 5f - skillDiference * 0.2f;
+                }
             }
             return 5f - skillDiference * 0.04f;
 		}
@@ -1204,40 +1200,39 @@ namespace Mangos.World.Handlers
 		{
 			checked
 			{
-				if (objCharacter is WS_PlayerData.CharacterObject)
-				{
-					WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)objCharacter;
-					int tmpSkill = default;
-					switch (characterObject.attackSheathState)
-					{
-					case SHEATHE_SLOT.SHEATHE_NONE:
-						tmpSkill = 162;
-						break;
-					case SHEATHE_SLOT.SHEATHE_WEAPON:
-						if (DualWield && characterObject.Items.ContainsKey(16))
-						{
-							tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.Items[16].ItemEntry].GetReqSkill;
-						}
-						else if (characterObject.Items.ContainsKey(15))
-						{
-							tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.Items[15].ItemEntry].GetReqSkill;
-						}
-						break;
-					case SHEATHE_SLOT.SHEATHE_RANGED:
-						if (characterObject.Items.ContainsKey(17))
-						{
-							tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.Items[17].ItemEntry].GetReqSkill;
-						}
-						break;
-					}
-					if (tmpSkill == 0)
-					{
-						return unchecked(objCharacter.Level) * 5;
-					}
-					characterObject.UpdateSkill(tmpSkill, 0.01f);
-					return characterObject.Skills[tmpSkill].CurrentWithBonus;
-				}
-				return unchecked(objCharacter.Level) * 5;
+                if (objCharacter is WS_PlayerData.CharacterObject characterObject)
+                {
+                    int tmpSkill = default;
+                    switch (characterObject.attackSheathState)
+                    {
+                        case SHEATHE_SLOT.SHEATHE_NONE:
+                            tmpSkill = 162;
+                            break;
+                        case SHEATHE_SLOT.SHEATHE_WEAPON:
+                            if (DualWield && characterObject.Items.ContainsKey(16))
+                            {
+                                tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.Items[16].ItemEntry].GetReqSkill;
+                            }
+                            else if (characterObject.Items.ContainsKey(15))
+                            {
+                                tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.Items[15].ItemEntry].GetReqSkill;
+                            }
+                            break;
+                        case SHEATHE_SLOT.SHEATHE_RANGED:
+                            if (characterObject.Items.ContainsKey(17))
+                            {
+                                tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.Items[17].ItemEntry].GetReqSkill;
+                            }
+                            break;
+                    }
+                    if (tmpSkill == 0)
+                    {
+                        return unchecked(objCharacter.Level) * 5;
+                    }
+                    characterObject.UpdateSkill(tmpSkill, 0.01f);
+                    return characterObject.Skills[tmpSkill].CurrentWithBonus;
+                }
+                return unchecked(objCharacter.Level) * 5;
 			}
 		}
 
@@ -1288,42 +1283,41 @@ namespace Mangos.World.Handlers
 		{
 			checked
 			{
-				if (objCharacter is WS_PlayerData.CharacterObject)
-				{
-					WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)objCharacter;
-					switch (characterObject.attackSheathState)
-					{
-					case SHEATHE_SLOT.SHEATHE_NONE:
-						result.HitInfo = 0;
-						result.DamageType = DamageTypes.DMG_PHYSICAL;
-						result.Damage = WorldServiceLocator._WorldServer.Rnd.Next(characterObject.BaseUnarmedDamage, characterObject.BaseUnarmedDamage + 1);
-						break;
-					case SHEATHE_SLOT.SHEATHE_WEAPON:
-						if (DualWield)
-						{
-							result.HitInfo = 6;
-							result.DamageType = DamageTypes.DMG_PHYSICAL;
-							result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.OffHandDamage.Minimum / 2f), (int)Math.Round(characterObject.OffHandDamage.Maximum / 2f + 1f)) + characterObject.BaseUnarmedDamage;
-						}
-						else
-						{
-							result.HitInfo = 2;
-							result.DamageType = DamageTypes.DMG_PHYSICAL;
-							result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.Damage.Minimum), (int)Math.Round(characterObject.Damage.Maximum + 1f)) + characterObject.BaseUnarmedDamage;
-						}
-						break;
-					case SHEATHE_SLOT.SHEATHE_RANGED:
-						result.HitInfo = 10;
-						result.DamageType = DamageTypes.DMG_PHYSICAL;
-						result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.RangedDamage.Minimum), (int)Math.Round(characterObject.RangedDamage.Maximum + 1f)) + characterObject.BaseRangedDamage;
-						break;
-					}
+                if (objCharacter is WS_PlayerData.CharacterObject characterObject)
+                {
+                    switch (characterObject.attackSheathState)
+                    {
+                        case SHEATHE_SLOT.SHEATHE_NONE:
+                            result.HitInfo = 0;
+                            result.DamageType = DamageTypes.DMG_PHYSICAL;
+                            result.Damage = WorldServiceLocator._WorldServer.Rnd.Next(characterObject.BaseUnarmedDamage, characterObject.BaseUnarmedDamage + 1);
+                            break;
+                        case SHEATHE_SLOT.SHEATHE_WEAPON:
+                            if (DualWield)
+                            {
+                                result.HitInfo = 6;
+                                result.DamageType = DamageTypes.DMG_PHYSICAL;
+                                result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.OffHandDamage.Minimum / 2f), (int)Math.Round(characterObject.OffHandDamage.Maximum / 2f + 1f)) + characterObject.BaseUnarmedDamage;
+                            }
+                            else
+                            {
+                                result.HitInfo = 2;
+                                result.DamageType = DamageTypes.DMG_PHYSICAL;
+                                result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.Damage.Minimum), (int)Math.Round(characterObject.Damage.Maximum + 1f)) + characterObject.BaseUnarmedDamage;
+                            }
+                            break;
+                        case SHEATHE_SLOT.SHEATHE_RANGED:
+                            result.HitInfo = 10;
+                            result.DamageType = DamageTypes.DMG_PHYSICAL;
+                            result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.RangedDamage.Minimum), (int)Math.Round(characterObject.RangedDamage.Maximum + 1f)) + characterObject.BaseRangedDamage;
+                            break;
+                    }
                 }
                 else
-				{
-					WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)objCharacter;
-					result.DamageType = DamageTypes.DMG_PHYSICAL;
-					result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(WorldServiceLocator._WorldServer.CREATURESDatabase[creatureObject.ID].Damage.Minimum), (int)Math.Round(WorldServiceLocator._WorldServer.CREATURESDatabase[creatureObject.ID].Damage.Maximum + 1f));
+                {
+                    WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)objCharacter;
+                    result.DamageType = DamageTypes.DMG_PHYSICAL;
+                    result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(WorldServiceLocator._WorldServer.CREATURESDatabase[creatureObject.ID].Damage.Minimum), (int)Math.Round(WorldServiceLocator._WorldServer.CREATURESDatabase[creatureObject.ID].Damage.Maximum + 1f));
                 }
             }
 		}
