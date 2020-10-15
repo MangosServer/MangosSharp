@@ -244,10 +244,10 @@ namespace Mangos.Cluster.Server
 				{
 					f.WriteStartElement("gmplayer");
 					f.WriteStartElement("name");
-					f.WriteValue(objCharacter.Value.Name);
+					f.WriteValue(objCharacter.Value.Name.ToString());
 					f.WriteEndElement();
 					f.WriteStartElement("access");
-					f.WriteValue(objCharacter.Value.Access);
+					f.WriteValue(objCharacter.Value.Access.ToString());
 					f.WriteEndElement();
 					f.WriteEndElement();
 				}
@@ -261,7 +261,7 @@ namespace Mangos.Cluster.Server
 				{
 					f.WriteStartElement("player");
 					f.WriteStartElement("name");
-					f.WriteValue(objCharacter.Value.Name);
+					f.WriteValue(objCharacter.Value.Name.ToString());
 					f.WriteEndElement();
 					f.WriteStartElement("race");
 					f.WriteValue((byte)objCharacter.Value.Race);
@@ -270,19 +270,19 @@ namespace Mangos.Cluster.Server
 					f.WriteValue((byte)objCharacter.Value.Classe);
 					f.WriteEndElement();
 					f.WriteStartElement("level");
-					f.WriteValue(objCharacter.Value.Level);
+					f.WriteValue(objCharacter.Value.Level.ToString());
 					f.WriteEndElement();
 					f.WriteStartElement("map");
-					f.WriteValue(objCharacter.Value.Map);
+					f.WriteValue(objCharacter.Value.Map.ToString());
 					f.WriteEndElement();
 					f.WriteStartElement("zone");
-					f.WriteValue(objCharacter.Value.Zone);
+					f.WriteValue(objCharacter.Value.Zone.ToString());
 					f.WriteEndElement();
 					f.WriteStartElement("ontime");
 					f.WriteValue(FormatUptime(DateAndTime.Now - objCharacter.Value.Time));
 					f.WriteEndElement();
 					f.WriteStartElement("latency");
-					f.WriteValue(objCharacter.Value.Latency);
+					f.WriteValue(objCharacter.Value.Latency.ToString());
 					f.WriteEndElement();
 					f.WriteEndElement();
 				}
