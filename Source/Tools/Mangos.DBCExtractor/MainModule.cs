@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Foole.Mpq;
-using Mangos.Common.DataStores;
 
 namespace Mangos.DBCExtractor
 {
@@ -144,93 +143,6 @@ namespace Mangos.DBCExtractor
 
 			Console.ForegroundColor = ConsoleColor.Green;
 			Console.Write(" Done.");
-		}
-
-		// Public Sub ExtractMaps()
-		// Dim mapCount As Integer = ReadMapDBC()
-		// ReadAreaTableDBC()
-		// ReadLiquidTypeTableDBC()
-
-		// Console.WriteLine()
-		// Console.ForegroundColor = ConsoleColor.White
-		// Console.Write("Extracting Maps")
-		// Console.ForegroundColor = ConsoleColor.Gray
-
-		// Dim mapFolder As String = Path.GetFullPath("maps")
-
-		// Dim total As Integer = mapCount * 64 * 64
-		// Dim done As Integer = 0
-		// Dim totalDiv30 As Integer = total \ 30
-		// For i As Integer = 0 To mapCount - 1
-		// 'Dim wdtName As String = String.Format("World\Maps\{0}\{0}.wdt", MapNames(i))
-		// 'Dim wdt As New WDT_File()
-		// 'If Not wdt.LoadFile(wdtName) Then
-		// '    Console.ForegroundColor = ConsoleColor.Red
-		// '    Console.WriteLine()
-		// '    Console.WriteLine("WDT File [{0}] could not be read.", wdtName)
-		// '    Console.ForegroundColor = ConsoleColor.Gray
-		// 'End If
-
-		// For x As Integer = 0 To 63
-		// For y As Integer = 0 To 63
-		// Dim mpqFileName As String = String.Format("World\Maps\{0}\{0}_{1}_{2}.adt", MapNames(i), x, y)
-		// Dim outputName As String = String.Format("{0}{1}{2}.map", Format(MapIDs(i), "000"), Format(x, "00"), Format(y, "00"))
-		// ConvertADT(mpqFileName, Path.Combine(mapFolder, outputName))
-		// done += 1
-		// If (done Mod totalDiv30) = 0 Then Console.Write(".")
-		// Next
-		// Next
-		// Next
-
-		// Console.Write(" Done!")
-		// End Sub
-
-		public static int ReadMapDBC()
-		{
-			Console.WriteLine();
-			Console.ForegroundColor = ConsoleColor.White;
-			Console.Write("Reading Map.dbc... ");
-			var mapDBC = new BufferedDbc(@"dbc\Map.dbc");
-			for (int i = 0, loopTo = mapDBC.Rows - 1; i <= loopTo; i++)
-			{
-				MapIDs.Add(mapDBC.Read<int>(i, 0));
-				MapNames.Add(mapDBC.Read<string>(i, 1));
-			}
-
-			Console.WriteLine("Done! ({0} maps loaded)", mapDBC.Rows);
-			return mapDBC.Rows;
-		}
-
-		public static void ReadAreaTableDBC()
-		{
-			Console.WriteLine();
-			Console.ForegroundColor = ConsoleColor.White;
-			Console.Write("Reading AreaTable.dbc... ");
-			var areaDBC = new BufferedDbc(@"dbc\AreaTable.dbc");
-			int maxID = -1;
-			for (int i = 0, loopTo = areaDBC.Rows - 1; i <= loopTo; i++)
-			{
-				int areaID = areaDBC.Read<int>(i, 0);
-				int areaFlag = areaDBC.Read<int>(i, 3);
-				MapAreas.Add(areaID, areaFlag);
-
-				if (areaID > maxID)
-					maxID = areaID;
-			}
-
-			MaxAreaID = maxID;
-			Console.WriteLine("Done! ({0} areas loaded)", areaDBC.Rows);
-		}
-
-		public static void ReadLiquidTypeTableDBC()
-		{
-			Console.WriteLine();
-			Console.ForegroundColor = ConsoleColor.White;
-			Console.Write("Reading LiquidType.dbc... ");
-			var liquidDBC = new BufferedDbc(@"dbc\LiquidType.dbc");
-			for (int i = 0, loopTo = liquidDBC.Rows - 1; i <= loopTo; i++)
-				MapLiqTypes.Add(liquidDBC.Read<int>(i, 0), liquidDBC.Read<int>(i, 3));
-			Console.WriteLine("Done! ({0} LiqTypes loaded)", liquidDBC.Rows);
 		}
 	}
 }
