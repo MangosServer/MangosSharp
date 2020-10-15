@@ -17,6 +17,7 @@
 //
 
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace Mangos.Common
 {
@@ -39,7 +40,7 @@ namespace Mangos.Common
         [Description("Tell the cluster about your CPU & Memory Usage")]
         ServerInfo GetServerInfo();
         [Description("Make world create specific map.")]
-        void InstanceCreate(uint Map);
+        Task InstanceCreateAsync(uint Map);
         [Description("Make world destroy specific map.")]
         void InstanceDestroy(uint Map);
         [Description("Check world configuration.")]

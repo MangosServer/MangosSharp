@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Threading.Tasks;
 using Mangos.Common;
 using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
@@ -35,22 +36,28 @@ namespace Mangos.World.DataStores
 {
 	public class WS_DBCLoad
 	{
-		public void InitializeSpellRadius()
+		private readonly DataStoreProvider dataStoreProvider;
+
+        public WS_DBCLoad(DataStoreProvider dataStoreProvider)
+        {
+            this.dataStoreProvider = dataStoreProvider;
+        }
+
+        public async Task InitializeSpellRadiusAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "SpellRadius.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellRadius.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int radiusID = tmpDBC.Read<int>(i, 0);
-						float radiusValue = tmpDBC.Read<float>(i, 1);
+						int radiusID = tmpDBC.ReadInt(i, 0);
+						float radiusValue = tmpDBC.ReadFloat(i, 1);
 						WorldServiceLocator._WS_Spells.SpellRadius[radiusID] = radiusValue;
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellRadius initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -63,22 +70,21 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeSpellCastTime()
+		public async Task InitializeSpellCastTimeAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "SpellCastTimes.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellCastTimes.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int spellCastID = tmpDBC.Read<int>(i, 0);
-						int spellCastTimeS = tmpDBC.Read<int>(i, 1);
+						int spellCastID = tmpDBC.ReadInt(i, 0);
+						int spellCastTimeS = tmpDBC.ReadInt(i, 1);
 						WorldServiceLocator._WS_Spells.SpellCastTime[spellCastID] = spellCastTimeS;
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellCastTimes initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -91,22 +97,21 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeSpellRange()
+		public async Task InitializeSpellRangeAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "SpellRange.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellRange.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int spellRangeIndex = tmpDBC.Read<int>(i, 0);
-						float spellRangeMax = tmpDBC.Read<float>(i, 2);
+						int spellRangeIndex = tmpDBC.ReadInt(i, 0);
+						float spellRangeMax = tmpDBC.ReadFloat(i, 2);
 						WorldServiceLocator._WS_Spells.SpellRange[spellRangeIndex] = spellRangeMax;
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellRanges initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -119,23 +124,22 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeSpellShapeShift()
+		public async Task InitializeSpellShapeShiftAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "SpellShapeshiftForm.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellShapeshiftForm.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int id = tmpDBC.Read<int>(i, 0);
-						int flags1 = tmpDBC.Read<int>(i, 11);
-						int creatureType = tmpDBC.Read<int>(i, 12);
-						int attackSpeed = tmpDBC.Read<int>(i, 13);
+						int id = tmpDBC.ReadInt(i, 0);
+						int flags1 = tmpDBC.ReadInt(i, 11);
+						int creatureType = tmpDBC.ReadInt(i, 12);
+						int attackSpeed = tmpDBC.ReadInt(i, 13);
 						WorldServiceLocator._WS_DBCDatabase.SpellShapeShiftForm.Add(new WS_DBCDatabase.TSpellShapeshiftForm(id, flags1, creatureType, attackSpeed));
 					}
-					tmpDBC.Dispose();
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellShapeshiftForms initialized.", tmpDBC.Rows - 1);
 				}
 				catch (DirectoryNotFoundException ex)
@@ -149,22 +153,21 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeSpellFocusObject()
+		public async Task InitializeSpellFocusObjectAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "SpellFocusObject.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellFocusObject.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int spellFocusIndex = tmpDBC.Read<int>(i, 0);
-						string spellFocusObjectName = tmpDBC.Read<string>(i, 1);
+						int spellFocusIndex = tmpDBC.ReadInt(i, 0);
+						string spellFocusObjectName = tmpDBC.ReadString(i, 1);
 						WorldServiceLocator._WS_Spells.SpellFocusObject[spellFocusIndex] = spellFocusObjectName;
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellFocusObjects initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -177,21 +180,20 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeSpellDuration()
+		public async Task InitializeSpellDurationAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "SpellDuration.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellDuration.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int spellDurationIndex = tmpDBC.Read<int>(i, 0);
-						int spellDurationValue = tmpDBC.Read<int>(i, 1);
+						int spellDurationIndex = tmpDBC.ReadInt(i, 0);
+						int spellDurationValue = tmpDBC.ReadInt(i, 1);
 						WorldServiceLocator._WS_Spells.SpellDuration[spellDurationIndex] = spellDurationValue;
 					}
-					tmpDBC.Dispose();
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellDurations initialized.", tmpDBC.Rows - 1);
 				}
 				catch (DirectoryNotFoundException ex)
@@ -205,87 +207,86 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeSpells()
+		public async Task InitializeSpellsAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc spellDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "Spell.dbc");
+					var spellDBC = await dataStoreProvider.GetDataStoreAsync("Spell.dbc");
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: Initializing Spells - This may take a few moments....");
-					long num = spellDBC.Rows - 1;
-					for (long i = 0L; i <= num; i++)
+                    for (int i = 0; i <= spellDBC.Rows - 1; i++)
 					{
 						try
 						{
-							int id = spellDBC.Read<int>(i, 0);
+							int id = spellDBC.ReadInt(i, 0);
 							WorldServiceLocator._WS_Spells.SPELLs[id] = new WS_Spells.SpellInfo
 							{
 								ID = id,
-								School = spellDBC.Read<int>(i, 1),
-								Category = spellDBC.Read<int>(i, 2),
-								DispellType = spellDBC.Read<int>(i, 4),
-								Mechanic = spellDBC.Read<int>(i, 5),
-								Attributes = spellDBC.Read<int>(i, 6),
-								AttributesEx = spellDBC.Read<int>(i, 7),
-								AttributesEx2 = spellDBC.Read<int>(i, 8),
-								RequredCasterStance = spellDBC.Read<int>(i, 11),
-								ShapeshiftExclude = spellDBC.Read<int>(i, 12),
-								Target = spellDBC.Read<int>(i, 13),
-								TargetCreatureType = spellDBC.Read<int>(i, 14),
-								FocusObjectIndex = spellDBC.Read<int>(i, 15),
-								CasterAuraState = spellDBC.Read<int>(i, 16),
-								TargetAuraState = spellDBC.Read<int>(i, 17),
-								SpellCastTimeIndex = spellDBC.Read<int>(i, 18),
-								SpellCooldown = spellDBC.Read<int>(i, 19),
-								CategoryCooldown = spellDBC.Read<int>(i, 20),
-								interruptFlags = spellDBC.Read<int>(i, 21),
-								auraInterruptFlags = spellDBC.Read<int>(i, 22),
-								channelInterruptFlags = spellDBC.Read<int>(i, 23),
-								procFlags = spellDBC.Read<int>(i, 24),
-								procChance = spellDBC.Read<int>(i, 25),
-								procCharges = spellDBC.Read<int>(i, 26),
-								maxLevel = spellDBC.Read<int>(i, 27),
-								baseLevel = spellDBC.Read<int>(i, 28),
-								spellLevel = spellDBC.Read<int>(i, 29),
-								DurationIndex = spellDBC.Read<int>(i, 30),
-								powerType = spellDBC.Read<int>(i, 31),
-								manaCost = spellDBC.Read<int>(i, 32),
-								manaCostPerlevel = spellDBC.Read<int>(i, 33),
-								manaPerSecond = spellDBC.Read<int>(i, 34),
-								manaPerSecondPerLevel = spellDBC.Read<int>(i, 35),
-								rangeIndex = spellDBC.Read<int>(i, 36),
-								Speed = spellDBC.Read<float>(i, 37),
-								modalNextSpell = spellDBC.Read<int>(i, 38),
-								maxStack = spellDBC.Read<int>(i, 39)
+								School = spellDBC.ReadInt(i, 1),
+								Category = spellDBC.ReadInt(i, 2),
+								DispellType = spellDBC.ReadInt(i, 4),
+								Mechanic = spellDBC.ReadInt(i, 5),
+								Attributes = spellDBC.ReadInt(i, 6),
+								AttributesEx = spellDBC.ReadInt(i, 7),
+								AttributesEx2 = spellDBC.ReadInt(i, 8),
+								RequredCasterStance = spellDBC.ReadInt(i, 11),
+								ShapeshiftExclude = spellDBC.ReadInt(i, 12),
+								Target = spellDBC.ReadInt(i, 13),
+								TargetCreatureType = spellDBC.ReadInt(i, 14),
+								FocusObjectIndex = spellDBC.ReadInt(i, 15),
+								CasterAuraState = spellDBC.ReadInt(i, 16),
+								TargetAuraState = spellDBC.ReadInt(i, 17),
+								SpellCastTimeIndex = spellDBC.ReadInt(i, 18),
+								SpellCooldown = spellDBC.ReadInt(i, 19),
+								CategoryCooldown = spellDBC.ReadInt(i, 20),
+								interruptFlags = spellDBC.ReadInt(i, 21),
+								auraInterruptFlags = spellDBC.ReadInt(i, 22),
+								channelInterruptFlags = spellDBC.ReadInt(i, 23),
+								procFlags = spellDBC.ReadInt(i, 24),
+								procChance = spellDBC.ReadInt(i, 25),
+								procCharges = spellDBC.ReadInt(i, 26),
+								maxLevel = spellDBC.ReadInt(i, 27),
+								baseLevel = spellDBC.ReadInt(i, 28),
+								spellLevel = spellDBC.ReadInt(i, 29),
+								DurationIndex = spellDBC.ReadInt(i, 30),
+								powerType = spellDBC.ReadInt(i, 31),
+								manaCost = spellDBC.ReadInt(i, 32),
+								manaCostPerlevel = spellDBC.ReadInt(i, 33),
+								manaPerSecond = spellDBC.ReadInt(i, 34),
+								manaPerSecondPerLevel = spellDBC.ReadInt(i, 35),
+								rangeIndex = spellDBC.ReadInt(i, 36),
+								Speed = spellDBC.ReadFloat(i, 37),
+								modalNextSpell = spellDBC.ReadInt(i, 38),
+								maxStack = spellDBC.ReadInt(i, 39)
 							};
 
-							WorldServiceLocator._WS_Spells.SPELLs[id].Totem[0] = spellDBC.Read<int>(i, 40);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Totem[1] = spellDBC.Read<int>(i, 41);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[0] = spellDBC.Read<int>(i, 42);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[1] = spellDBC.Read<int>(i, 43);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[2] = spellDBC.Read<int>(i, 44);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[3] = spellDBC.Read<int>(i, 45);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[4] = spellDBC.Read<int>(i, 46);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[5] = spellDBC.Read<int>(i, 47);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[6] = spellDBC.Read<int>(i, 48);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[7] = spellDBC.Read<int>(i, 49);
-							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[0] = spellDBC.Read<int>(i, 50);
-							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[1] = spellDBC.Read<int>(i, 51);
-							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[2] = spellDBC.Read<int>(i, 52);
-							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[3] = spellDBC.Read<int>(i, 53);
-							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[4] = spellDBC.Read<int>(i, 54);
-							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[5] = spellDBC.Read<int>(i, 55);
-							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[6] = spellDBC.Read<int>(i, 56);
-							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[7] = spellDBC.Read<int>(i, 57);
-							WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemClass = spellDBC.Read<int>(i, 58);
-							WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemSubClass = spellDBC.Read<int>(i, 59);
-							WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemInventoryType = spellDBC.Read<int>(i, 60);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Totem[0] = spellDBC.ReadInt(i, 40);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Totem[1] = spellDBC.ReadInt(i, 41);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[0] = spellDBC.ReadInt(i, 42);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[1] = spellDBC.ReadInt(i, 43);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[2] = spellDBC.ReadInt(i, 44);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[3] = spellDBC.ReadInt(i, 45);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[4] = spellDBC.ReadInt(i, 46);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[5] = spellDBC.ReadInt(i, 47);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[6] = spellDBC.ReadInt(i, 48);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Reagents[7] = spellDBC.ReadInt(i, 49);
+							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[0] = spellDBC.ReadInt(i, 50);
+							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[1] = spellDBC.ReadInt(i, 51);
+							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[2] = spellDBC.ReadInt(i, 52);
+							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[3] = spellDBC.ReadInt(i, 53);
+							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[4] = spellDBC.ReadInt(i, 54);
+							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[5] = spellDBC.ReadInt(i, 55);
+							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[6] = spellDBC.ReadInt(i, 56);
+							WorldServiceLocator._WS_Spells.SPELLs[id].ReagentsCount[7] = spellDBC.ReadInt(i, 57);
+							WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemClass = spellDBC.ReadInt(i, 58);
+							WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemSubClass = spellDBC.ReadInt(i, 59);
+							WorldServiceLocator._WS_Spells.SPELLs[id].EquippedItemInventoryType = spellDBC.ReadInt(i, 60);
 
 							int k = 0;
 							do
 							{
-								if (spellDBC.Read<int>(i, 61 + k) != 0)
+								if (spellDBC.ReadInt(i, 61 + k) != 0)
 								{
 									WS_Spells.SpellEffect[] spellEffects = WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects;
 									int num2 = k;
@@ -296,24 +297,24 @@ namespace Mangos.World.DataStores
 									sPELLs[key] = Spell;
 									WS_Spells.SpellEffect spellEffect2 = spellEffect;
 
-									spellEffect2.ID = (SpellEffects_Names)spellDBC.Read<int>(i, 61 + k);
-									spellEffect2.valueDie = spellDBC.Read<int>(i, 64 + k);
-									spellEffect2.diceBase = spellDBC.Read<int>(i, 67 + k);
-									spellEffect2.dicePerLevel = spellDBC.Read<float>(i, 70 + k);
-									spellEffect2.valuePerLevel = (int)spellDBC.Read<float>(i, 73 + k);
-									spellEffect2.valueBase = spellDBC.Read<int>(i, 76 + k);
-									spellEffect2.Mechanic = spellDBC.Read<int>(i, 79 + k);
-									spellEffect2.implicitTargetA = spellDBC.Read<int>(i, 82 + k);
-									spellEffect2.implicitTargetB = spellDBC.Read<int>(i, 85 + k);
-									spellEffect2.RadiusIndex = spellDBC.Read<int>(i, 88 + k);
-									spellEffect2.ApplyAuraIndex = spellDBC.Read<int>(i, 91 + k);
-									spellEffect2.Amplitude = spellDBC.Read<int>(i, 94 + k);
-									spellEffect2.MultipleValue = spellDBC.Read<int>(i, 97 + k);
-									spellEffect2.ChainTarget = spellDBC.Read<int>(i, 100 + k);
-									spellEffect2.ItemType = spellDBC.Read<int>(i, 103 + k);
-									spellEffect2.MiscValue = spellDBC.Read<int>(i, 106 + k);
-									spellEffect2.TriggerSpell = spellDBC.Read<int>(i, 109 + k);
-									spellEffect2.valuePerComboPoint = spellDBC.Read<int>(i, 112 + k);
+									spellEffect2.ID = (SpellEffects_Names)spellDBC.ReadInt(i, 61 + k);
+									spellEffect2.valueDie = spellDBC.ReadInt(i, 64 + k);
+									spellEffect2.diceBase = spellDBC.ReadInt(i, 67 + k);
+									spellEffect2.dicePerLevel = spellDBC.ReadFloat(i, 70 + k);
+									spellEffect2.valuePerLevel = (int)spellDBC.ReadFloat(i, 73 + k);
+									spellEffect2.valueBase = spellDBC.ReadInt(i, 76 + k);
+									spellEffect2.Mechanic = spellDBC.ReadInt(i, 79 + k);
+									spellEffect2.implicitTargetA = spellDBC.ReadInt(i, 82 + k);
+									spellEffect2.implicitTargetB = spellDBC.ReadInt(i, 85 + k);
+									spellEffect2.RadiusIndex = spellDBC.ReadInt(i, 88 + k);
+									spellEffect2.ApplyAuraIndex = spellDBC.ReadInt(i, 91 + k);
+									spellEffect2.Amplitude = spellDBC.ReadInt(i, 94 + k);
+									spellEffect2.MultipleValue = spellDBC.ReadInt(i, 97 + k);
+									spellEffect2.ChainTarget = spellDBC.ReadInt(i, 100 + k);
+									spellEffect2.ItemType = spellDBC.ReadInt(i, 103 + k);
+									spellEffect2.MiscValue = spellDBC.ReadInt(i, 106 + k);
+									spellEffect2.TriggerSpell = spellDBC.ReadInt(i, 109 + k);
+									spellEffect2.valuePerComboPoint = spellDBC.ReadInt(i, 112 + k);
 									spellEffects[num2] = spellEffect2;
 								}
 								else
@@ -323,24 +324,24 @@ namespace Mangos.World.DataStores
 								k++;
 							}
 							while (k <= 2);
-							WorldServiceLocator._WS_Spells.SPELLs[id].SpellVisual = spellDBC.Read<int>(i, 115);
-							WorldServiceLocator._WS_Spells.SPELLs[id].SpellIconID = spellDBC.Read<int>(i, 117);
-							WorldServiceLocator._WS_Spells.SPELLs[id].ActiveIconID = spellDBC.Read<int>(i, 118);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Name = spellDBC.Read<string>(i, 120);
-							WorldServiceLocator._WS_Spells.SPELLs[id].Rank = spellDBC.Read<string>(i, 129);
-							WorldServiceLocator._WS_Spells.SPELLs[id].manaCostPercent = spellDBC.Read<int>(i, 156);
-							WorldServiceLocator._WS_Spells.SPELLs[id].StartRecoveryCategory = spellDBC.Read<int>(i, 157);
-							WorldServiceLocator._WS_Spells.SPELLs[id].StartRecoveryTime = spellDBC.Read<int>(i, 158);
-							WorldServiceLocator._WS_Spells.SPELLs[id].AffectedTargetLevel = spellDBC.Read<int>(i, 159);
-							WorldServiceLocator._WS_Spells.SPELLs[id].SpellFamilyName = spellDBC.Read<int>(i, 160);
-							WorldServiceLocator._WS_Spells.SPELLs[id].SpellFamilyFlags = spellDBC.Read<int>(i, 161);
-							WorldServiceLocator._WS_Spells.SPELLs[id].MaxTargets = spellDBC.Read<int>(i, 163);
-							WorldServiceLocator._WS_Spells.SPELLs[id].DamageType = spellDBC.Read<int>(i, 164);
+							WorldServiceLocator._WS_Spells.SPELLs[id].SpellVisual = spellDBC.ReadInt(i, 115);
+							WorldServiceLocator._WS_Spells.SPELLs[id].SpellIconID = spellDBC.ReadInt(i, 117);
+							WorldServiceLocator._WS_Spells.SPELLs[id].ActiveIconID = spellDBC.ReadInt(i, 118);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Name = spellDBC.ReadString(i, 120);
+							WorldServiceLocator._WS_Spells.SPELLs[id].Rank = spellDBC.ReadString(i, 129);
+							WorldServiceLocator._WS_Spells.SPELLs[id].manaCostPercent = spellDBC.ReadInt(i, 156);
+							WorldServiceLocator._WS_Spells.SPELLs[id].StartRecoveryCategory = spellDBC.ReadInt(i, 157);
+							WorldServiceLocator._WS_Spells.SPELLs[id].StartRecoveryTime = spellDBC.ReadInt(i, 158);
+							WorldServiceLocator._WS_Spells.SPELLs[id].AffectedTargetLevel = spellDBC.ReadInt(i, 159);
+							WorldServiceLocator._WS_Spells.SPELLs[id].SpellFamilyName = spellDBC.ReadInt(i, 160);
+							WorldServiceLocator._WS_Spells.SPELLs[id].SpellFamilyFlags = spellDBC.ReadInt(i, 161);
+							WorldServiceLocator._WS_Spells.SPELLs[id].MaxTargets = spellDBC.ReadInt(i, 163);
+							WorldServiceLocator._WS_Spells.SPELLs[id].DamageType = spellDBC.ReadInt(i, 164);
 							int j = 0;
 							do
 							{
 								if (WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects[j] != null)
-									WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects[j].DamageMultiplier = spellDBC.Read<float>(i, 167 + j);
+									WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects[j].DamageMultiplier = spellDBC.ReadFloat(i, 167 + j);
 								j++;
 							}
 							while (j <= 2);
@@ -355,7 +356,6 @@ namespace Mangos.World.DataStores
 						}
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Spells initialized.", spellDBC.Rows - 1);
-					spellDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex2)
 				{
@@ -403,29 +403,28 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeTaxiNodes()
+		public async Task InitializeTaxiNodesAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "TaxiNodes.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("TaxiNodes.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int taxiNode = tmpDBC.Read<int>(i, 0);
-						int taxiMapID = tmpDBC.Read<int>(i, 1);
-						float taxiPosX = tmpDBC.Read<float>(i, 2);
-						float taxiPosY = tmpDBC.Read<float>(i, 3);
-						float taxiPosZ = tmpDBC.Read<float>(i, 4);
-						int taxiMountTypeHorde = tmpDBC.Read<int>(i, 14);
-						int taxiMountTypeAlliance = tmpDBC.Read<int>(i, 15);
+						int taxiNode = tmpDBC.ReadInt(i, 0);
+						int taxiMapID = tmpDBC.ReadInt(i, 1);
+						float taxiPosX = tmpDBC.ReadFloat(i, 2);
+						float taxiPosY = tmpDBC.ReadFloat(i, 3);
+						float taxiPosZ = tmpDBC.ReadFloat(i, 4);
+						int taxiMountTypeHorde = tmpDBC.ReadInt(i, 14);
+						int taxiMountTypeAlliance = tmpDBC.ReadInt(i, 15);
 
 						if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Contains(taxiMapID.ToString()))
 							WorldServiceLocator._WS_DBCDatabase.TaxiNodes.Add(taxiNode, new WS_DBCDatabase.TTaxiNode(taxiPosX, taxiPosY, taxiPosZ, taxiMapID, taxiMountTypeHorde, taxiMountTypeAlliance));
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} TaxiNodes initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -438,24 +437,23 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeTaxiPaths()
+		public async Task InitializeTaxiPathsAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "TaxiPath.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("TaxiPath.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int taxiNode = tmpDBC.Read<int>(i, 0);
-						int taxiFrom = tmpDBC.Read<int>(i, 1);
-						int taxiTo = tmpDBC.Read<int>(i, 2);
-						int taxiPrice = tmpDBC.Read<int>(i, 3);
+						int taxiNode = tmpDBC.ReadInt(i, 0);
+						int taxiFrom = tmpDBC.ReadInt(i, 1);
+						int taxiTo = tmpDBC.ReadInt(i, 2);
+						int taxiPrice = tmpDBC.ReadInt(i, 3);
 						WorldServiceLocator._WS_DBCDatabase.TaxiPaths.Add(taxiNode, new WS_DBCDatabase.TTaxiPath(taxiFrom, taxiTo, taxiPrice));
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} TaxiPaths initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -468,24 +466,24 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeTaxiPathNodes()
+		public async Task InitializeTaxiPathNodesAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "TaxiPathNode.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("TaxiPathNode.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int taxiPath = tmpDBC.Read<int>(i, 1);
-						int taxiSeq = tmpDBC.Read<int>(i, 2);
-						int taxiMapID = tmpDBC.Read<int>(i, 3);
-						float taxiPosX = tmpDBC.Read<float>(i, 4);
-						float taxiPosY = tmpDBC.Read<float>(i, 5);
-						float taxiPosZ = tmpDBC.Read<float>(i, 6);
-						int taxiAction = tmpDBC.Read<int>(i, 7);
-						int taxiWait = tmpDBC.Read<int>(i, 8);
+						int taxiPath = tmpDBC.ReadInt(i, 1);
+						int taxiSeq = tmpDBC.ReadInt(i, 2);
+						int taxiMapID = tmpDBC.ReadInt(i, 3);
+						float taxiPosX = tmpDBC.ReadFloat(i, 4);
+						float taxiPosY = tmpDBC.ReadFloat(i, 5);
+						float taxiPosZ = tmpDBC.ReadFloat(i, 6);
+						int taxiAction = tmpDBC.ReadInt(i, 7);
+						int taxiWait = tmpDBC.ReadInt(i, 8);
 						if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Contains(taxiMapID.ToString()))
 						{
 							if (!WorldServiceLocator._WS_DBCDatabase.TaxiPathNodes.ContainsKey(taxiPath))
@@ -496,7 +494,6 @@ namespace Mangos.World.DataStores
 						}
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} TaxiPathNodes initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -509,22 +506,21 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeSkillLines()
+		public async Task InitializeSkillLinesAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "SkillLine.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SkillLine.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int skillID = tmpDBC.Read<int>(i, 0);
-						int skillLine = tmpDBC.Read<int>(i, 1);
+						int skillID = tmpDBC.ReadInt(i, 0);
+						int skillLine = tmpDBC.ReadInt(i, 1);
 						WorldServiceLocator._WS_DBCDatabase.SkillLines[skillID] = skillLine;
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SkillLines initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -537,35 +533,34 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeSkillLineAbility()
+		public async Task InitializeSkillLineAbilityAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "SkillLineAbility.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SkillLineAbility.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
 						WS_DBCDatabase.TSkillLineAbility tmpSkillLineAbility = new WS_DBCDatabase.TSkillLineAbility
 						{
-							ID = tmpDBC.Read<int>(i, 0),
-							SkillID = tmpDBC.Read<int>(i, 1),
-							SpellID = tmpDBC.Read<int>(i, 2),
-							Unknown1 = tmpDBC.Read<int>(i, 3),
-							Unknown2 = tmpDBC.Read<int>(i, 4),
-							Unknown3 = tmpDBC.Read<int>(i, 5),
-							Unknown4 = tmpDBC.Read<int>(i, 6),
-							Required_Skill_Value = tmpDBC.Read<int>(i, 7),
-							Forward_SpellID = tmpDBC.Read<int>(i, 8),
-							Unknown5 = tmpDBC.Read<int>(i, 9),
-							Max_Value = tmpDBC.Read<int>(i, 10),
-							Min_Value = tmpDBC.Read<int>(i, 11)
+							ID = tmpDBC.ReadInt(i, 0),
+							SkillID = tmpDBC.ReadInt(i, 1),
+							SpellID = tmpDBC.ReadInt(i, 2),
+							Unknown1 = tmpDBC.ReadInt(i, 3),
+							Unknown2 = tmpDBC.ReadInt(i, 4),
+							Unknown3 = tmpDBC.ReadInt(i, 5),
+							Unknown4 = tmpDBC.ReadInt(i, 6),
+							Required_Skill_Value = tmpDBC.ReadInt(i, 7),
+							Forward_SpellID = tmpDBC.ReadInt(i, 8),
+							Unknown5 = tmpDBC.ReadInt(i, 9),
+							Max_Value = tmpDBC.ReadInt(i, 10),
+							Min_Value = tmpDBC.ReadInt(i, 11)
 						};
 						WorldServiceLocator._WS_DBCDatabase.SkillLineAbility.Add(tmpSkillLineAbility.ID, tmpSkillLineAbility);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SkillLineAbilitys initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -578,35 +573,34 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeLocks()
+		public async Task InitializeLocksAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "Lock.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("Lock.dbc");
 					byte[] keyType = new byte[5];
 					int[] key = new int[5];
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int lockID = tmpDBC.Read<int>(i, 0);
-						keyType[0] = tmpDBC.Read<byte>(i, 1);
-						keyType[1] = tmpDBC.Read<byte>(i, 2);
-						keyType[2] = tmpDBC.Read<byte>(i, 3);
-						keyType[3] = tmpDBC.Read<byte>(i, 4);
-						keyType[4] = tmpDBC.Read<byte>(i, 5);
-						key[0] = tmpDBC.Read<int>(i, 9);
-						key[1] = tmpDBC.Read<int>(i, 10);
-						key[2] = tmpDBC.Read<int>(i, 11);
-						key[3] = tmpDBC.Read<int>(i, 12);
-						key[4] = tmpDBC.Read<int>(i, 13);
-						int reqMining = tmpDBC.Read<int>(i, 17);
-						int reqLockSkill = tmpDBC.Read<int>(i, 17);
+						int lockID = tmpDBC.ReadInt(i, 0);
+						keyType[0] = (byte)tmpDBC.ReadInt(i, 1);
+						keyType[1] = (byte)tmpDBC.ReadInt(i, 2);
+						keyType[2] = (byte)tmpDBC.ReadInt(i, 3);
+						keyType[3] = (byte)tmpDBC.ReadInt(i, 4);
+						keyType[4] = (byte)tmpDBC.ReadInt(i, 5);
+						key[0] = tmpDBC.ReadInt(i, 9);
+						key[1] = tmpDBC.ReadInt(i, 10);
+						key[2] = tmpDBC.ReadInt(i, 11);
+						key[3] = tmpDBC.ReadInt(i, 12);
+						key[4] = tmpDBC.ReadInt(i, 13);
+						int reqMining = tmpDBC.ReadInt(i, 17);
+						int reqLockSkill = tmpDBC.ReadInt(i, 17);
 						WorldServiceLocator._WS_Loot.Locks[lockID] = new WS_Loot.TLock(keyType, key, (short)reqMining, (short)reqLockSkill);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Locks initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -619,22 +613,22 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeAreaTable()
+		public async Task InitializeAreaTableAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "AreaTable.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("AreaTable.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int areaID = tmpDBC.Read<int>(i, 0);
-						int areaMapID = tmpDBC.Read<int>(i, 1);
-						int areaZone = tmpDBC.Read<int>(i, 2);
-						int areaExploreFlag = tmpDBC.Read<int>(i, 3);
-						int areaZoneType = tmpDBC.Read<int>(i, 4);
-						int areaLevel = tmpDBC.Read<int>(i, 10);
+						int areaID = tmpDBC.ReadInt(i, 0);
+						int areaMapID = tmpDBC.ReadInt(i, 1);
+						int areaZone = tmpDBC.ReadInt(i, 2);
+						int areaExploreFlag = tmpDBC.ReadInt(i, 3);
+						int areaZoneType = tmpDBC.ReadInt(i, 4);
+						int areaLevel = tmpDBC.ReadInt(i, 10);
 
 						if (areaLevel > 255)
 							areaLevel = 255;
@@ -651,7 +645,6 @@ namespace Mangos.World.DataStores
 						};
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Areas initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -664,24 +657,23 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeEmotes()
+		public async Task InitializeEmotesAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "Emotes.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("Emotes.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int emoteID = tmpDBC.Read<int>(i, 0);
-						int emoteState = tmpDBC.Read<int>(i, 4);
+						int emoteID = tmpDBC.ReadInt(i, 0);
+						int emoteState = tmpDBC.ReadInt(i, 4);
 
 						if (emoteID != 0)
 							WorldServiceLocator._WS_DBCDatabase.EmotesState[emoteID] = emoteState;
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Emotes initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -694,24 +686,23 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeEmotesText()
+		public async Task InitializeEmotesTextAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "EmotesText.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("EmotesText.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int textEmoteID = tmpDBC.Read<int>(i, 0);
-						int emoteID = tmpDBC.Read<int>(i, 2);
+						int textEmoteID = tmpDBC.ReadInt(i, 0);
+						int emoteID = tmpDBC.ReadInt(i, 2);
 
 						if (emoteID != 0)
 							WorldServiceLocator._WS_DBCDatabase.EmotesText[textEmoteID] = emoteID;
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} EmotesText initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -724,37 +715,36 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeFactions()
+		public async Task InitializeFactionsAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "Faction.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("Faction.dbc");
 					int[] flags = new int[4];
 					int[] reputationStats = new int[4];
 					int[] reputationFlags = new int[4];
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int factionID = tmpDBC.Read<int>(i, 0);
-						int factionFlag = tmpDBC.Read<int>(i, 1);
-						flags[0] = tmpDBC.Read<int>(i, 2);
-						flags[1] = tmpDBC.Read<int>(i, 3);
-						flags[2] = tmpDBC.Read<int>(i, 4);
-						flags[3] = tmpDBC.Read<int>(i, 5);
-						reputationStats[0] = tmpDBC.Read<int>(i, 10);
-						reputationStats[1] = tmpDBC.Read<int>(i, 11);
-						reputationStats[2] = tmpDBC.Read<int>(i, 12);
-						reputationStats[3] = tmpDBC.Read<int>(i, 13);
-						reputationFlags[0] = tmpDBC.Read<int>(i, 14);
-						reputationFlags[1] = tmpDBC.Read<int>(i, 15);
-						reputationFlags[2] = tmpDBC.Read<int>(i, 16);
-						reputationFlags[3] = tmpDBC.Read<int>(i, 17);
+						int factionID = tmpDBC.ReadInt(i, 0);
+						int factionFlag = tmpDBC.ReadInt(i, 1);
+						flags[0] = tmpDBC.ReadInt(i, 2);
+						flags[1] = tmpDBC.ReadInt(i, 3);
+						flags[2] = tmpDBC.ReadInt(i, 4);
+						flags[3] = tmpDBC.ReadInt(i, 5);
+						reputationStats[0] = tmpDBC.ReadInt(i, 10);
+						reputationStats[1] = tmpDBC.ReadInt(i, 11);
+						reputationStats[2] = tmpDBC.ReadInt(i, 12);
+						reputationStats[3] = tmpDBC.ReadInt(i, 13);
+						reputationFlags[0] = tmpDBC.ReadInt(i, 14);
+						reputationFlags[1] = tmpDBC.ReadInt(i, 15);
+						reputationFlags[2] = tmpDBC.ReadInt(i, 16);
+						reputationFlags[3] = tmpDBC.ReadInt(i, 17);
 						WorldServiceLocator._WS_DBCDatabase.FactionInfo[factionID] = new WS_DBCDatabase.TFaction((short)factionID, (short)factionFlag, flags[0], flags[1], flags[2], flags[3], reputationStats[0], reputationStats[1], reputationStats[2], reputationStats[3], reputationFlags[0], reputationFlags[1], reputationFlags[2], reputationFlags[3]);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Factions initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -767,33 +757,32 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeFactionTemplates()
+		public async Task InitializeFactionTemplatesAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "FactionTemplate.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("FactionTemplate.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int templateID = tmpDBC.Read<int>(i, 0);
+						int templateID = tmpDBC.ReadInt(i, 0);
 						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo.Add(templateID, new WS_DBCDatabase.TFactionTemplate());
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].FactionID = tmpDBC.Read<int>(i, 1);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].ourMask = tmpDBC.Read<uint>(i, 3);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendMask = tmpDBC.Read<uint>(i, 4);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyMask = tmpDBC.Read<uint>(i, 5);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction1 = tmpDBC.Read<int>(i, 6);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction2 = tmpDBC.Read<int>(i, 7);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction3 = tmpDBC.Read<int>(i, 8);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction4 = tmpDBC.Read<int>(i, 9);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction1 = tmpDBC.Read<int>(i, 10);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction2 = tmpDBC.Read<int>(i, 11);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction3 = tmpDBC.Read<int>(i, 12);
-						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction4 = tmpDBC.Read<int>(i, 13);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].FactionID = tmpDBC.ReadInt(i, 1);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].ourMask = (uint)tmpDBC.ReadInt(i, 3);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendMask = (uint)tmpDBC.ReadInt(i, 4);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyMask = (uint)tmpDBC.ReadInt(i, 5);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction1 = tmpDBC.ReadInt(i, 6);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction2 = tmpDBC.ReadInt(i, 7);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction3 = tmpDBC.ReadInt(i, 8);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].enemyFaction4 = tmpDBC.ReadInt(i, 9);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction1 = tmpDBC.ReadInt(i, 10);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction2 = tmpDBC.ReadInt(i, 11);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction3 = tmpDBC.ReadInt(i, 12);
+						WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[templateID].friendFaction4 = tmpDBC.ReadInt(i, 13);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} FactionTemplates initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -806,28 +795,27 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeCharRaces()
+		public async Task InitializeCharRacesAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "ChrRaces.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("ChrRaces.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int raceID = tmpDBC.Read<int>(i, 0);
-						int factionID = tmpDBC.Read<int>(i, 2);
-						int modelM = tmpDBC.Read<int>(i, 4);
-						int modelF = tmpDBC.Read<int>(i, 5);
-						int teamID = tmpDBC.Read<int>(i, 8);
-						uint taxiMask = tmpDBC.Read<uint>(i, 14);
-						int cinematicID = tmpDBC.Read<int>(i, 16);
-						string name = tmpDBC.Read<string>(i, 17);
+						int raceID = tmpDBC.ReadInt(i, 0);
+						int factionID = tmpDBC.ReadInt(i, 2);
+						int modelM = tmpDBC.ReadInt(i, 4);
+						int modelF = tmpDBC.ReadInt(i, 5);
+						int teamID = tmpDBC.ReadInt(i, 8);
+						uint taxiMask = (uint)tmpDBC.ReadInt(i, 14);
+						int cinematicID = tmpDBC.ReadInt(i, 16);
+						string name = tmpDBC.ReadString(i, 17);
 						WorldServiceLocator._WS_DBCDatabase.CharRaces[(byte)raceID] = new WS_DBCDatabase.TCharRace((short)factionID, modelM, modelF, (byte)teamID, taxiMask, cinematicID, name);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} CharRaces initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -840,22 +828,21 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeCharClasses()
+		public async Task InitializeCharClassesAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "ChrClasses.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("ChrClasses.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int classID = tmpDBC.Read<int>(i, 0);
-						int cinematicID = tmpDBC.Read<int>(i, 5);
+						int classID = tmpDBC.ReadInt(i, 0);
+						int cinematicID = tmpDBC.ReadInt(i, 5);
 						WorldServiceLocator._WS_DBCDatabase.CharClasses[(byte)classID] = new WS_DBCDatabase.TCharClass(cinematicID);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} CharClasses initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -868,26 +855,25 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeDurabilityCosts()
+		public async Task InitializeDurabilityCostsAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "DurabilityCosts.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("DurabilityCosts.dbc");
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int itemBroken = tmpDBC.Read<int>(i, 0);
+						int itemBroken = tmpDBC.ReadInt(i, 0);
 						int num2 = tmpDBC.Columns - 1;
 						for (int itemType = 1; itemType <= num2; itemType++)
 						{
-							int itemPrice = tmpDBC.Read<int>(i, itemType);
+							int itemPrice = tmpDBC.ReadInt(i, itemType);
 							WorldServiceLocator._WS_DBCDatabase.DurabilityCosts[itemBroken, itemType - 1] = (short)itemPrice;
 						}
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} DurabilityCosts initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -900,34 +886,33 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void LoadTalentDbc()
+		public async Task LoadTalentDbcAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc dbc = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "Talent.dbc");
+					var dbc = await dataStoreProvider.GetDataStoreAsync("Talent.dbc");
 					int num = dbc.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
 						WS_DBCDatabase.TalentInfo tmpInfo = new WS_DBCDatabase.TalentInfo
 						{
-							TalentID = dbc.Read<int>(i, 0),
-							TalentTab = dbc.Read<int>(i, 1),
-							Row = dbc.Read<int>(i, 2),
-							Col = dbc.Read<int>(i, 3)
+							TalentID = dbc.ReadInt(i, 0),
+							TalentTab = dbc.ReadInt(i, 1),
+							Row = dbc.ReadInt(i, 2),
+							Col = dbc.ReadInt(i, 3)
 						};
-						tmpInfo.RankID[0] = dbc.Read<int>(i, 4);
-						tmpInfo.RankID[1] = dbc.Read<int>(i, 5);
-						tmpInfo.RankID[2] = dbc.Read<int>(i, 6);
-						tmpInfo.RankID[3] = dbc.Read<int>(i, 7);
-						tmpInfo.RankID[4] = dbc.Read<int>(i, 8);
-						tmpInfo.RequiredTalent[0] = dbc.Read<int>(i, 13);
-						tmpInfo.RequiredPoints[0] = dbc.Read<int>(i, 16);
+						tmpInfo.RankID[0] = dbc.ReadInt(i, 4);
+						tmpInfo.RankID[1] = dbc.ReadInt(i, 5);
+						tmpInfo.RankID[2] = dbc.ReadInt(i, 6);
+						tmpInfo.RankID[3] = dbc.ReadInt(i, 7);
+						tmpInfo.RankID[4] = dbc.ReadInt(i, 8);
+						tmpInfo.RequiredTalent[0] = dbc.ReadInt(i, 13);
+						tmpInfo.RequiredPoints[0] = dbc.ReadInt(i, 16);
 						WorldServiceLocator._WS_DBCDatabase.Talents.Add(tmpInfo.TalentID, tmpInfo);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Talents initialized.", dbc.Rows - 1);
-					dbc.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -940,22 +925,21 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void LoadTalentTabDbc()
+		public async Task LoadTalentTabDbcAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc dbc = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "TalentTab.dbc");
+					var dbc = await dataStoreProvider.GetDataStoreAsync("TalentTab.dbc");
 					int num = dbc.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int talentTab = dbc.Read<int>(i, 0);
-						int talentMask = dbc.Read<int>(i, 12);
+						int talentTab = dbc.ReadInt(i, 0);
+						int talentMask = dbc.ReadInt(i, 12);
 						WorldServiceLocator._WS_DBCDatabase.TalentsTab.Add(talentTab, talentMask);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Talent tabs initialized.", dbc.Rows - 1);
-					dbc.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -968,25 +952,24 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void LoadAuctionHouseDbc()
+		public async Task LoadAuctionHouseDbcAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc dbc = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "AuctionHouse.dbc");
+					var dbc = await dataStoreProvider.GetDataStoreAsync("AuctionHouse.dbc");
 					int num = dbc.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int ahId = dbc.Read<int>(i, 0);
-						int fee = dbc.Read<int>(i, 2);
-						int tax = dbc.Read<int>(i, 3);
+						int ahId = dbc.ReadInt(i, 0);
+						int fee = dbc.ReadInt(i, 2);
+						int tax = dbc.ReadInt(i, 3);
 						WorldServiceLocator._WS_Auction.AuctionID = ahId;
 						WorldServiceLocator._WS_Auction.AuctionFee = fee;
 						WorldServiceLocator._WS_Auction.AuctionTax = tax;
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} AuctionHouses initialized.", dbc.Rows - 1);
-					dbc.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -999,32 +982,31 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void LoadSpellItemEnchantments()
+		public async Task LoadSpellItemEnchantmentsAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc dbc = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "SpellItemEnchantment.dbc");
+					var dbc = await dataStoreProvider.GetDataStoreAsync("SpellItemEnchantment.dbc");
 					int[] type = new int[3];
 					int[] amount = new int[3];
 					int[] spellID = new int[3];
 					int num = dbc.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int id = dbc.Read<int>(i, 0);
-						type[0] = dbc.Read<int>(i, 1);
-						type[1] = dbc.Read<int>(i, 2);
-						amount[0] = dbc.Read<int>(i, 4);
-						amount[1] = dbc.Read<int>(i, 7);
-						spellID[0] = dbc.Read<int>(i, 10);
-						spellID[1] = dbc.Read<int>(i, 11);
-						int auraID = dbc.Read<int>(i, 22);
-						int slot = dbc.Read<int>(i, 23);
+						int id = dbc.ReadInt(i, 0);
+						type[0] = dbc.ReadInt(i, 1);
+						type[1] = dbc.ReadInt(i, 2);
+						amount[0] = dbc.ReadInt(i, 4);
+						amount[1] = dbc.ReadInt(i, 7);
+						spellID[0] = dbc.ReadInt(i, 10);
+						spellID[1] = dbc.ReadInt(i, 11);
+						int auraID = dbc.ReadInt(i, 22);
+						int slot = dbc.ReadInt(i, 23);
 						WorldServiceLocator._WS_DBCDatabase.SpellItemEnchantments.Add(id, new WS_DBCDatabase.TSpellItemEnchantment(type, amount, spellID, auraID, slot));
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} SpellItemEnchantments initialized.", dbc.Rows - 1);
-					dbc.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -1037,13 +1019,13 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void LoadItemSet()
+		public async Task LoadItemSetAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc dbc = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "ItemSet.dbc");
+					var dbc = await dataStoreProvider.GetDataStoreAsync("ItemSet.dbc");
 					int[] itemID = new int[8];
 					int[] spellID = new int[8];
 					int[] itemCount = new int[8];
@@ -1052,20 +1034,19 @@ namespace Mangos.World.DataStores
 					int requiredSkillValue = default;
 					for (int i = 0; i <= num; i++)
 					{
-						int id = dbc.Read<int>(i, 0);
-						string name = dbc.Read<string>(i, 1);
-						itemID[0] = dbc.Read<int>(i, 10);
-						itemID[1] = dbc.Read<int>(i, 11);
-						itemID[2] = dbc.Read<int>(i, 12);
-						itemID[3] = dbc.Read<int>(i, 13);
-						itemID[4] = dbc.Read<int>(i, 14);
-						itemID[5] = dbc.Read<int>(i, 15);
-						itemID[6] = dbc.Read<int>(i, 16);
-						itemID[7] = dbc.Read<int>(i, 17);
+						int id = dbc.ReadInt(i, 0);
+						string name = dbc.ReadString(i, 1);
+						itemID[0] = dbc.ReadInt(i, 10);
+						itemID[1] = dbc.ReadInt(i, 11);
+						itemID[2] = dbc.ReadInt(i, 12);
+						itemID[3] = dbc.ReadInt(i, 13);
+						itemID[4] = dbc.ReadInt(i, 14);
+						itemID[5] = dbc.ReadInt(i, 15);
+						itemID[6] = dbc.ReadInt(i, 16);
+						itemID[7] = dbc.ReadInt(i, 17);
 						WorldServiceLocator._WS_DBCDatabase.ItemSet.Add(id, new WS_DBCDatabase.TItemSet(name, itemID, spellID, itemCount, requiredSkillID, requiredSkillValue));
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ItemSets initialized.", dbc.Rows - 1);
-					dbc.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -1078,26 +1059,25 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void LoadItemDisplayInfoDbc()
+		public async Task LoadItemDisplayInfoDbcAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc dbc = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "ItemDisplayInfo.dbc");
+					var dbc = await dataStoreProvider.GetDataStoreAsync("ItemDisplayInfo.dbc");
 					int num = dbc.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
 						WS_DBCDatabase.TItemDisplayInfo tmpItemDisplayInfo = new WS_DBCDatabase.TItemDisplayInfo
 						{
-							ID = dbc.Read<int>(i, 0),
-							RandomPropertyChance = dbc.Read<int>(i, 11),
-							Unknown = dbc.Read<int>(i, 22)
+							ID = dbc.ReadInt(i, 0),
+							RandomPropertyChance = dbc.ReadInt(i, 11),
+							Unknown = dbc.ReadInt(i, 22)
 						};
 						WorldServiceLocator._WS_DBCDatabase.ItemDisplayInfo.Add(tmpItemDisplayInfo.ID, tmpItemDisplayInfo);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ItemDisplayInfos initialized.", dbc.Rows - 1);
-					dbc.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -1110,27 +1090,26 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void LoadItemRandomPropertiesDbc()
+		public async Task LoadItemRandomPropertiesDbcAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc dbc = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "ItemRandomProperties.dbc");
+					var dbc = await dataStoreProvider.GetDataStoreAsync("ItemRandomProperties.dbc");
 					int num = dbc.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
 						WS_DBCDatabase.TItemRandomPropertiesInfo tmpInfo = new WS_DBCDatabase.TItemRandomPropertiesInfo
 						{
-							ID = dbc.Read<int>(i, 0)
+							ID = dbc.ReadInt(i, 0)
 						};
-						tmpInfo.Enchant_ID[0] = dbc.Read<int>(i, 2);
-						tmpInfo.Enchant_ID[1] = dbc.Read<int>(i, 3);
-						tmpInfo.Enchant_ID[2] = dbc.Read<int>(i, 4);
+						tmpInfo.Enchant_ID[0] = dbc.ReadInt(i, 2);
+						tmpInfo.Enchant_ID[1] = dbc.ReadInt(i, 3);
+						tmpInfo.Enchant_ID[2] = dbc.ReadInt(i, 4);
 						WorldServiceLocator._WS_DBCDatabase.ItemRandomPropertiesInfo.Add(tmpInfo.ID, tmpInfo);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ItemRandomProperties initialized.", dbc.Rows - 1);
-					dbc.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{
@@ -1143,7 +1122,7 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void LoadCreatureGossip()
+		public async Task LoadCreatureGossipAsync()
 		{
 			try
 			{
@@ -1182,28 +1161,27 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void LoadCreatureFamilyDbc()
+		public async Task LoadCreatureFamilyDbcAsync()
 		{
 			checked
 			{
 				try
 				{
-					BufferedDbc dbc = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "CreatureFamily.dbc");
+					var dbc = await dataStoreProvider.GetDataStoreAsync("CreatureFamily.dbc");
 					int num = dbc.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
 						WS_DBCDatabase.CreatureFamilyInfo tmpInfo = new WS_DBCDatabase.CreatureFamilyInfo
 						{
-							ID = dbc.Read<int>(i, 0),
-							Unknown1 = dbc.Read<int>(i, 5),
-							Unknown2 = dbc.Read<int>(i, 6),
-							PetFoodID = dbc.Read<int>(i, 7),
-							Name = dbc.Read<string>(i, 12)
+							ID = dbc.ReadInt(i, 0),
+							Unknown1 = dbc.ReadInt(i, 5),
+							Unknown2 = dbc.ReadInt(i, 6),
+							PetFoodID = dbc.ReadInt(i, 7),
+							Name = dbc.ReadString(i, 12)
 						};
 						WorldServiceLocator._WS_DBCDatabase.CreaturesFamily.Add(tmpInfo.ID, tmpInfo);
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} CreatureFamilys initialized.", dbc.Rows - 1);
-					dbc.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{

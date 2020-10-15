@@ -23,54 +23,57 @@ using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Server;
 using Mangos.Common;
+using Mangos.Common.DataStores;
 using Mangos.Common.Zip;
 using Mangos.Loggers;
 using Mangos.Loggers.Console;
+using System.Threading.Tasks;
 
 namespace Mangos.Cluster
 {
     public static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
-            ClusterServiceLocator._WorldCluster.Main();
+            await ClusterServiceLocator._WorldCluster.StartAsync();
         }
 
         public static IContainer CreateContainer()
         {
             var builder = new ContainerBuilder();
 			RegisterLoggers(builder);
-			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>();
-            builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>();
-            builder.RegisterType<Common.Functions>().As<Common.Functions>();
-            builder.RegisterType<ZipService>().As<ZipService>();
-            builder.RegisterType<NativeMethods>().As<NativeMethods>();
-            builder.RegisterType<WorldCluster>().As<WorldCluster>();
-            builder.RegisterType<WS_DBCDatabase>().As<WS_DBCDatabase>();
-            builder.RegisterType<WS_DBCLoad>().As<WS_DBCLoad>();
-            builder.RegisterType<Globals.Functions>().As<Globals.Functions>();
-            builder.RegisterType<Packets>().As<Packets>();
-            builder.RegisterType<WC_Guild>().As<WC_Guild>();
-            builder.RegisterType<WC_Stats>().As<WC_Stats>();
-            builder.RegisterType<WC_Network>().As<WC_Network>();
-            builder.RegisterType<WC_Handlers>().As<WC_Handlers>();
-            builder.RegisterType<WC_Handlers_Auth>().As<WC_Handlers_Auth>();
-            builder.RegisterType<WC_Handlers_Battleground>().As<WC_Handlers_Battleground>();
-            builder.RegisterType<WC_Handlers_Chat>().As<WC_Handlers_Chat>();
-            builder.RegisterType<WC_Handlers_Group>().As<WC_Handlers_Group>();
-            builder.RegisterType<WC_Handlers_Guild>().As<WC_Handlers_Guild>();
-            builder.RegisterType<WC_Handlers_Misc>().As<WC_Handlers_Misc>();
-            builder.RegisterType<WC_Handlers_Movement>().As<WC_Handlers_Movement>();
-            builder.RegisterType<WC_Handlers_Social>().As<WC_Handlers_Social>();
-            builder.RegisterType<WC_Handlers_Tickets>().As<WC_Handlers_Tickets>();
-            builder.RegisterType<WS_Handler_Channels>().As<WS_Handler_Channels>();
-            builder.RegisterType<WcHandlerCharacter>().As<WcHandlerCharacter>();
+			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
+            builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>().SingleInstance();
+            builder.RegisterType<Common.Functions>().As<Common.Functions>().SingleInstance();
+            builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
+            builder.RegisterType<NativeMethods>().As<NativeMethods>().SingleInstance();
+            builder.RegisterType<WorldCluster>().As<WorldCluster>().SingleInstance();
+            builder.RegisterType<WS_DBCDatabase>().As<WS_DBCDatabase>().SingleInstance();
+            builder.RegisterType<WS_DBCLoad>().As<WS_DBCLoad>().SingleInstance();
+            builder.RegisterType<Globals.Functions>().As<Globals.Functions>().SingleInstance();
+            builder.RegisterType<Packets>().As<Packets>().SingleInstance();
+            builder.RegisterType<WC_Guild>().As<WC_Guild>().SingleInstance();
+            builder.RegisterType<WC_Stats>().As<WC_Stats>().SingleInstance();
+            builder.RegisterType<WC_Network>().As<WC_Network>().SingleInstance();
+            builder.RegisterType<WC_Handlers>().As<WC_Handlers>().SingleInstance();
+            builder.RegisterType<WC_Handlers_Auth>().As<WC_Handlers_Auth>().SingleInstance();
+            builder.RegisterType<WC_Handlers_Battleground>().As<WC_Handlers_Battleground>().SingleInstance();
+            builder.RegisterType<WC_Handlers_Chat>().As<WC_Handlers_Chat>().SingleInstance();
+            builder.RegisterType<WC_Handlers_Group>().As<WC_Handlers_Group>().SingleInstance();
+            builder.RegisterType<WC_Handlers_Guild>().As<WC_Handlers_Guild>().SingleInstance();
+            builder.RegisterType<WC_Handlers_Misc>().As<WC_Handlers_Misc>().SingleInstance();
+            builder.RegisterType<WC_Handlers_Movement>().As<WC_Handlers_Movement>().SingleInstance();
+            builder.RegisterType<WC_Handlers_Social>().As<WC_Handlers_Social>().SingleInstance();
+            builder.RegisterType<WC_Handlers_Tickets>().As<WC_Handlers_Tickets>().SingleInstance();
+            builder.RegisterType<WS_Handler_Channels>().As<WS_Handler_Channels>().SingleInstance();
+            builder.RegisterType<WcHandlerCharacter>().As<WcHandlerCharacter>().SingleInstance();
+            builder.RegisterType<DataStoreProvider>().As<DataStoreProvider>().SingleInstance();
             return builder.Build();
 		}
 
 		public static void RegisterLoggers(ContainerBuilder builder)
 		{
-			builder.RegisterType<ConsoleLogger>().As<ILogger>();
-		}
+			builder.RegisterType<ConsoleLogger>().As<ILogger>().SingleInstance();
+        }
 	}
 }

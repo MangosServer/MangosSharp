@@ -33,22 +33,6 @@ namespace Mangos.Common.DataStores
             dataStores = new Dictionary<string, DataStore>();
         }
 
-        public DataStore GetDataStore(string dbcFileName)
-        {
-            if (dataStores.ContainsKey(dbcFileName))
-            {
-                return dataStores[dbcFileName];
-            }
-            else
-            {
-                var path = Path.Combine(dbcDirectory, dbcFileName);
-                var dataStore = new DataStore();
-                dataStore.LoadFromFile(path);
-                dataStores[dbcFileName] = dataStore;
-                return dataStore;
-            }
-        }
-
         public async ValueTask<DataStore> GetDataStoreAsync(string dbcFileName)
         {
             if(dataStores.ContainsKey(dbcFileName))

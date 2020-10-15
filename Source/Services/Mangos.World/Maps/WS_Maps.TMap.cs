@@ -80,7 +80,7 @@ namespace Mangos.World.Maps
 				}
 			}
 
-			public TMap(int Map)
+			public TMap(int Map, DataStore mapDataStore)
 			{
 				Type = MapTypes.MAP_COMMON;
 				Name = "";
@@ -108,21 +108,19 @@ namespace Mangos.World.Maps
 					while (x <= 63);
 					try
 					{
-						BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "Map.dbc");
-						int num = tmpDBC.Rows - 1;
+						int num = mapDataStore.Rows - 1;
 						for (int i = 0; i <= num; i++)
 						{
-							int tmpMap = tmpDBC.Read<int>(i, 0);
+							int tmpMap = mapDataStore.ReadInt(i, 0);
 							if (tmpMap == Map)
 							{
 								ID = Map;
-								Type = unchecked((MapTypes)tmpDBC.Read<int>(i, 2));
-								Name = tmpDBC.Read<string>(i, 4);
+								Type = unchecked((MapTypes)mapDataStore.ReadInt(i, 2));
+								Name = mapDataStore.ReadString(i, 4);
 								break;
 							}
 						}
-						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: 1 Map initialized.", tmpDBC.Rows - 1);
-						tmpDBC.Dispose();
+						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: 1 Map initialized.", mapDataStore.Rows - 1);
 					}
 					catch (DirectoryNotFoundException ex)
 					{

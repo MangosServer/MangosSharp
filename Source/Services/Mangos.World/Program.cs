@@ -18,6 +18,7 @@
 
 using Autofac;
 using global;
+using Mangos.Common.DataStores;
 using Mangos.Common.Zip;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
@@ -42,17 +43,18 @@ using Mangos.World.Spells;
 using Mangos.World.Warden;
 using Mangos.World.Weather;
 using Microsoft.VisualBasic.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Mangos.World
 {
     [StandardModule]
 	public sealed class Program
 	{
-		public static void Main()
+		public static async Task Main()
 		{
 			IContainer container = WorldServiceLocator._Container;
 			WorldServer worldServer = container.Resolve<WorldServer>();
-			worldServer.Start();
+			await worldServer.StartAsync();
 		}
 
 		public static IContainer CreateContainer()
@@ -126,6 +128,7 @@ namespace Mangos.World
 			builder.RegisterType<WS_Spells>().As<WS_Spells>().SingleInstance();
 			builder.RegisterType<WS_Warden>().As<WS_Warden>().SingleInstance();
 			builder.RegisterType<WS_Weather>().As<WS_Weather>().SingleInstance();
+			builder.RegisterType<DataStoreProvider>().As<DataStoreProvider>().SingleInstance();
 		}
 	}
 }

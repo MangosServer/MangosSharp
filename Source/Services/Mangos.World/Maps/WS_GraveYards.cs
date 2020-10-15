@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Threading.Tasks;
 using Mangos.Common;
 using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
@@ -32,7 +33,9 @@ namespace Mangos.World.Maps
 {
 	public class WS_GraveYards : IDisposable
 	{
-		public struct TGraveyard
+		private readonly DataStoreProvider dataStoreProvider;
+
+        public struct TGraveyard
 		{
 			private float _locationPosX;
 
@@ -104,12 +107,13 @@ namespace Mangos.World.Maps
 
 		private bool _disposedValue;
 
-		public WS_GraveYards()
+        public WS_GraveYards(DataStoreProvider dataStoreProvider)
 		{
+			this.dataStoreProvider = dataStoreProvider;
 			Graveyards = new Dictionary<int, TGraveyard>();
-		}
+        }
 
-		public void AddGraveYard(int ID, float locationPosX, float locationPosY, float locationPosZ, int locationMapID)
+        public void AddGraveYard(int ID, float locationPosX, float locationPosY, float locationPosZ, int locationMapID)
 		{
 			Graveyards.Add(ID, new TGraveyard(locationPosX, locationPosY, locationPosZ, locationMapID));
 		}
@@ -119,23 +123,23 @@ namespace Mangos.World.Maps
             return Graveyards[ID];
 		}
 
-		public void InitializeGraveyards()
+		public async Task InitializeGraveyardsAsync()
 		{
 			checked
 			{
 				try
 				{
 					Graveyards.Clear();
-					BufferedDbc tmpDBC = new BufferedDbc("dbc" + Conversions.ToString(Path.DirectorySeparatorChar) + "WorldSafeLocs.dbc");
+					var tmpDBC = await dataStoreProvider.GetDataStoreAsync("WorldSafeLocs.dbc");
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading.... {0} Graveyard Locations", tmpDBC.Rows - 1);
 					int num = tmpDBC.Rows - 1;
 					for (int i = 0; i <= num; i++)
 					{
-						int locationIndex = tmpDBC.Read<int>(i, 0);
-						int locationMapID = tmpDBC.Read<int>(i, 1);
-						float locationPosX = tmpDBC.Read<float>(i, 2);
-						float locationPosY = tmpDBC.Read<float>(i, 3);
-						float locationPosZ = tmpDBC.Read<float>(i, 4);
+						int locationIndex = tmpDBC.ReadInt(i, 0);
+						int locationMapID = tmpDBC.ReadInt(i, 1);
+						float locationPosX = tmpDBC.ReadFloat(i, 2);
+						float locationPosY = tmpDBC.ReadFloat(i, 3);
+						float locationPosZ = tmpDBC.ReadFloat(i, 4);
 						if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Contains(locationMapID.ToString()))
 						{
 							Graveyards.Add(locationIndex, new TGraveyard(locationPosX, locationPosY, locationPosZ, locationMapID));
@@ -144,7 +148,6 @@ namespace Mangos.World.Maps
 					}
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Finished loading Graveyard Locations", tmpDBC.Rows - 1);
 					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Graveyards initialized.", tmpDBC.Rows - 1);
-					tmpDBC.Dispose();
 				}
 				catch (DirectoryNotFoundException ex)
 				{

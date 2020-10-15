@@ -16,11 +16,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using Autofac;
 using global;
-using Mangos.Common;
+using Mangos.Common.DataStores;
 using Mangos.Common.Zip;
 using Mangos.Configuration;
 using Mangos.World.AI;
@@ -47,216 +45,14 @@ namespace Mangos.World
     [StandardModule]
 	public sealed class WorldServiceLocator
 	{
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly IContainer __Container;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly IConfigurationProvider<WorldServerConfiguration> __ConfigurationProvider;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly MangosGlobalConstants __Global_Constants;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly Common.Globals.Functions __CommonGlobalFunctions;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly Common.Functions __CommonFunctions;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly ZipService __GlobalZip;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly Common.NativeMethods __NativeMethods;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WorldServer __WorldServer;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly Globals.Functions __Functions;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Creatures_AI __WS_Creatures_AI;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Auction __WS_Auction;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Battlegrounds __WS_Battlegrounds;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_DBCDatabase __WS_DBCDatabase;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_DBCLoad __WS_DBCLoad;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly Packets __Packets;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_GuardGossip __WS_GuardGossip;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Loot __WS_Loot;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Maps __WS_Maps;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Corpses __WS_Corpses;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Creatures __WS_Creatures;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_DynamicObjects __WS_DynamicObjects;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_GameObjects __WS_GameObjects;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Items __WS_Items;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_NPCs __WS_NPCs;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Pets __WS_Pets;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Transports __WS_Transports;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly CharManagementHandler __CharManagementHandler;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_CharMovement __WS_CharMovement;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Combat __WS_Combat;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Commands __WS_Commands;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Handlers __WS_Handlers;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Handlers_Battleground __WS_Handlers_Battleground;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Handlers_Chat __WS_Handlers_Chat;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Handlers_Gamemaster __WS_Handlers_Gamemaster;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Handlers_Instance __WS_Handlers_Instance;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Handlers_Misc __WS_Handlers_Misc;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Handlers_Taxi __WS_Handlers_Taxi;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Handlers_Trade __WS_Handlers_Trade;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Handlers_Warden __WS_Handlers_Warden;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Player_Creation __WS_Player_Creation;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Player_Initializator __WS_Player_Initializator;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_PlayerData __WS_PlayerData;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_PlayerHelper __WS_PlayerHelper;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Network __WS_Network;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_TimerBasedEvents __WS_TimerBasedEvents;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Group __WS_Group;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Guilds __WS_Guilds;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Mail __WS_Mail;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Spells __WS_Spells;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Warden __WS_Warden;
-
-		[CompilerGenerated]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private static readonly WS_Weather __WS_Weather;
-
 		public static IContainer _Container
 		{
 			get;
 			set;
 		} = Program.CreateContainer();
 
+
+		public static DataStoreProvider _DataStoreProvider => _Container.Resolve<DataStoreProvider>();
 
 		public static IConfigurationProvider<WorldServerConfiguration> _ConfigurationProvider
 		{

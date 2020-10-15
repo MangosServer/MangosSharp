@@ -20,7 +20,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using Mangos.Common;
+using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
 using Mangos.Common.Globals;
@@ -34,6 +36,7 @@ namespace Mangos.World.Maps
 {
     public partial class WS_Maps
 	{
+		private readonly DataStoreProvider dataStoreProvider;
 
 		public Dictionary<int, TArea> AreaTable;
 
@@ -43,14 +46,15 @@ namespace Mangos.World.Maps
 
 		public string MapList;
 
-		public WS_Maps()
+        public WS_Maps(DataStoreProvider dataStoreProvider)
 		{
+			this.dataStoreProvider = dataStoreProvider;
 			AreaTable = new Dictionary<int, TArea>();
-			RESOLUTION_ZMAP = 0;
-			Maps = new Dictionary<uint, TMap>();
-		}
+            RESOLUTION_ZMAP = 0;
+            Maps = new Dictionary<uint, TMap>();
+        }
 
-		public int GetAreaIDByMapandParent(int mapId, int parentID)
+        public int GetAreaIDByMapandParent(int mapId, int parentID)
 		{
 			foreach (KeyValuePair<int, TArea> thisArea in AreaTable)
 			{
@@ -64,7 +68,7 @@ namespace Mangos.World.Maps
 			return -999;
 		}
 
-		public void InitializeMaps()
+		public async Task InitializeMapsAsync()
 		{
 			IEnumerator e = WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.GetEnumerator();
 			e.Reset();
@@ -73,14 +77,13 @@ namespace Mangos.World.Maps
 				MapList = Conversions.ToString(e.Current);
 				while (e.MoveNext())
 				{
-					ref string mapList = ref MapList;
-					mapList = Conversions.ToString(Operators.AddObject(mapList, Operators.ConcatenateObject(", ", e.Current)));
+					MapList = Conversions.ToString(Operators.AddObject(MapList, Operators.ConcatenateObject(", ", e.Current)));
 				}
 			}
 			foreach (string map2 in WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps)
 			{
 				uint id = Conversions.ToUInteger(map2);
-				TMap map = new TMap(checked((int)id));
+				var map = new TMap(checked((int)id), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));
 			}
 			WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: {0} Maps initialized.", Maps.Count);
 		}

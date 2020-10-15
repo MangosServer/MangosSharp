@@ -22,7 +22,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Mangos.Common;
+using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
 using Mangos.SignalR;
@@ -40,6 +42,9 @@ namespace Mangos.World.Server
 	{
         public class WorldServerClass : Hub, IWorld, IDisposable
 		{
+
+			private readonly DataStoreProvider dataStoreProvider;
+
 			[Serializable]
 			[CompilerGenerated]
 			internal sealed class _Closure_0024__
@@ -93,22 +98,23 @@ namespace Mangos.World.Server
 
 			private bool _disposedValue;
 
-			public WorldServerClass()
-			{
-				_flagStopListen = false;
-				LastCPUTime = 0.0;
-				UsageCPU = 0f;
-				Cluster = null;
-				WorldServerConfiguration configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
-				m_RemoteURI = $"http://{configuration.ClusterConnectHost}:{configuration.ClusterConnectPort}";
-				LocalURI = $"http://{configuration.LocalConnectHost}:{configuration.LocalConnectPort}";
-				Cluster = null;
-				WorldServiceLocator._WS_Network.LastPing = WorldServiceLocator._NativeMethods.timeGetTime("");
-				m_Connection = new Timer(new TimerCallback(CheckConnection), null, 10000, 10000);
-				m_TimerCPU = new Timer(new TimerCallback(CheckCPU), null, 1000, 1000);
-			}
+            public WorldServerClass(DataStoreProvider dataStoreProvider)
+            {
+                _flagStopListen = false;
+                LastCPUTime = 0.0;
+                UsageCPU = 0f;
+                Cluster = null;
+                WorldServerConfiguration configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
+                m_RemoteURI = $"http://{configuration.ClusterConnectHost}:{configuration.ClusterConnectPort}";
+                LocalURI = $"http://{configuration.LocalConnectHost}:{configuration.LocalConnectPort}";
+                Cluster = null;
+                WorldServiceLocator._WS_Network.LastPing = WorldServiceLocator._NativeMethods.timeGetTime("");
+                m_Connection = new Timer(new TimerCallback(CheckConnection), null, 10000, 10000);
+                m_TimerCPU = new Timer(new TimerCallback(CheckCPU), null, 1000, 1000);
+                this.dataStoreProvider = dataStoreProvider;
+            }
 
-			protected new virtual void Dispose(bool disposing)
+            protected new virtual void Dispose(bool disposing)
 			{
 				if (!_disposedValue)
 				{
@@ -393,18 +399,18 @@ namespace Mangos.World.Server
 				return GetServerInfo();
 			}
 
-			public void InstanceCreate(uint MapID)
+			public async Task InstanceCreateAsync(uint MapID)
 			{
 				if (!WorldServiceLocator._WS_Maps.Maps.ContainsKey(MapID))
 				{
-					WS_Maps.TMap Map = new WS_Maps.TMap(checked((int)MapID));
+					WS_Maps.TMap Map = new WS_Maps.TMap(checked((int)MapID), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));
 				}
 			}
 
-			void IWorld.InstanceCreate(uint MapID)
+			async Task IWorld.InstanceCreateAsync(uint MapID)
 			{
 				//ILSpy generated this explicit interface implementation from .override directive in InstanceCreate
-				InstanceCreate(MapID);
+				await InstanceCreateAsync(MapID);
 			}
 
 			public void InstanceDestroy(uint MapID)

@@ -23,6 +23,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
@@ -269,8 +270,7 @@ namespace Mangos.Cluster
             }
         }
 
-        [MTAThread()]
-        public void Main()
+        public async Task StartAsync()
         {
             Console.BackgroundColor = ConsoleColor.Black;
             AssemblyTitleAttribute assemblyTitleAttribute = (AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false)[0];
@@ -341,7 +341,7 @@ namespace Mangos.Cluster
             }
 
             GetWorldDatabase().Update("SET NAMES 'utf8';");
-            ClusterServiceLocator._WS_DBCLoad.InitializeInternalDatabase();
+            await ClusterServiceLocator._WS_DBCLoad.InitializeInternalDatabaseAsync();
             ClusterServiceLocator._WC_Handlers.IntializePacketHandlers();
             if (ClusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(GetAccountDatabase(), ServerDb.Realm) == false)         // Check the Database version, exit if its wrong
             {

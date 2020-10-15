@@ -20,39 +20,45 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Threading.Tasks;
 using Mangos.Common;
 using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Cluster.DataStores
 {
-	public class WS_DBCDatabase
+    public class WS_DBCDatabase
 	{
-		private readonly string MapDBC = "dbc" + Path.DirectorySeparatorChar + "Map.dbc";
+		private readonly DataStoreProvider dataStoreProvider;
+
+        public WS_DBCDatabase(DataStoreProvider dataStoreProvider)
+        {
+            this.dataStoreProvider = dataStoreProvider;
+        }
+
+        private readonly string MapDBC = "Map.dbc";
 		public Dictionary<int, MapInfo> Maps = new Dictionary<int, MapInfo>();
 
-		public void InitializeMaps()
+		public async Task InitializeMapsAsync()
 		{
 			try
 			{
-				var data = new BufferedDbc(MapDBC);
-				for (int i = 0, loopTo = new BufferedDbc(MapDBC).Rows - 1; i <= loopTo; i++)
+				var data = await dataStoreProvider.GetDataStoreAsync(MapDBC);
+				for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
 				{
 					var m = new MapInfo()
 					{
-						ID = data.Read<int>(i, 0),
-						Type = (MapTypes)data.Read<int>(i, 2),
-						Name = data.Read<string>(i, 4),
-						ParentMap = data.Read<int>(i, 3),
-						ResetTime = data.Read<int>(i, 38),
+						ID = data.ReadInt(i, 0),
+						Type = (MapTypes)data.ReadInt(i, 2),
+						Name = data.ReadString(i, 4),
+						ParentMap = data.ReadInt(i, 3),
+						ResetTime = data.ReadInt(i, 38),
 					};
 					Maps.Add(m.ID, m);
 				}
 
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Maps Initialized.", new BufferedDbc(MapDBC).Rows - 1);
-				new BufferedDbc(MapDBC).Dispose();
+				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Maps Initialized.", data.Rows - 1);
 			}
 			catch (DirectoryNotFoundException)
 			{
@@ -79,29 +85,28 @@ namespace Mangos.Cluster.DataStores
             public bool HasResetTime => ResetTime != 0;
         }
 
-		private readonly string WorldSafeLocsDBC = "dbc" + Path.DirectorySeparatorChar + "WorldSafeLocs.dbc";
+		private readonly string WorldSafeLocsDBC = "WorldSafeLocs.dbc";
 		public Dictionary<int, TWorldSafeLoc> WorldSafeLocs = new Dictionary<int, TWorldSafeLoc>();
 
-		public void InitializeWorldSafeLocs()
+		public async Task InitializeWorldSafeLocsAsync()
 		{
 			try
 			{
-				var data = new BufferedDbc(WorldSafeLocsDBC);
-				for (int i = 0, loopTo = new BufferedDbc(WorldSafeLocsDBC).Rows - 1; i <= loopTo; i++)
+				var data = await dataStoreProvider.GetDataStoreAsync(WorldSafeLocsDBC);
+				for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
 				{
 					var WorldSafeLoc = new TWorldSafeLoc()
 					{
-						ID = data.Read<int>(i, 0),
-						map = data.Read<uint>(i, 1),
-						x = data.Read<float>(i, 2),
-						y = data.Read<float>(i, 3),
-						z = data.Read<float>(i, 4),
+						ID = data.ReadInt(i, 0),
+						map = (uint)data.ReadInt(i, 1),
+						x = data.ReadFloat(i, 2),
+						y = data.ReadFloat(i, 3),
+						z = data.ReadFloat(i, 4),
 					};
 					WorldSafeLocs.Add(WorldSafeLoc.ID, WorldSafeLoc);
 				}
 
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} WorldSafeLocs Initialized.", new BufferedDbc(WorldSafeLocsDBC).Rows - 1);
-				new BufferedDbc(WorldSafeLocsDBC).Dispose();
+				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} WorldSafeLocs Initialized.", data.Rows - 1);
 			}
 			catch (DirectoryNotFoundException)
 			{
@@ -161,27 +166,26 @@ namespace Mangos.Cluster.DataStores
 			public float HordeStartO;
 		}
 
-		private readonly string ChatChannelsDBC = "dbc" + Path.DirectorySeparatorChar + "ChatChannels.dbc";
+		private readonly string ChatChannelsDBC = "ChatChannels.dbc";
 		public Dictionary<int, ChatChannelInfo> ChatChannelsInfo = new Dictionary<int, ChatChannelInfo>();
 
-		public void InitializeChatChannels()
+		public async Task InitializeChatChannelsAsync()
 		{
 			try
 			{
-				var data = new BufferedDbc(ChatChannelsDBC);
-				for (int i = 0, loopTo = new BufferedDbc(ChatChannelsDBC).Rows - 1; i <= loopTo; i++)
+				var data = await dataStoreProvider.GetDataStoreAsync(ChatChannelsDBC);
+				for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
 				{
 					var ChatChannels = new ChatChannelInfo()
 					{
-						Index = data.Read<int>(i, 0),
-						Flags = data.Read<int>(i, 1),
-						Name = data.Read<string>(i, 3),
+						Index = data.ReadInt(i, 0),
+						Flags = data.ReadInt(i, 1),
+						Name = data.ReadString(i, 3),
 					};
 					ChatChannelsInfo.Add(ChatChannels.Index, ChatChannels);
 				}
 
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChatChannels Initialized.", new BufferedDbc(ChatChannelsDBC).Rows - 1);
-				new BufferedDbc(ChatChannelsDBC).Dispose();
+				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChatChannels Initialized.", data.Rows - 1);
 			}
 			catch (DirectoryNotFoundException)
 			{
@@ -198,9 +202,9 @@ namespace Mangos.Cluster.DataStores
 			public string Name;
 		}
 
-		private readonly string ChrRacesDBC = "dbc" + Path.DirectorySeparatorChar + "ChrRaces.dbc";
+		private readonly string ChrRacesDBC = "ChrRaces.dbc";
 
-		public void InitializeCharRaces()
+		public async Task InitializeCharRacesAsync()
 		{
 			try
 			{
@@ -211,20 +215,19 @@ namespace Mangos.Cluster.DataStores
 				int modelF;
 				int teamID; // 1 = Horde / 7 = Alliance
 				int cinematicID;
-				var data = new BufferedDbc(ChrRacesDBC);
-				for (int i = 0, loopTo = new BufferedDbc(ChrRacesDBC).Rows - 1; i <= loopTo; i++)
+				var data = await dataStoreProvider.GetDataStoreAsync(ChrRacesDBC);
+				for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
 				{
-					raceID = data.Read<int>(i, 0);
-					factionID = data.Read<int>(i, 2);
-					modelM = data.Read<int>(i, 4);
-					modelF = data.Read<int>(i, 5);
-					teamID = data.Read<int>(i, 8);
-					cinematicID = data.Read<int>(i, 16);
+					raceID = data.ReadInt(i, 0);
+					factionID = data.ReadInt(i, 2);
+					modelM = data.ReadInt(i, 4);
+					modelF = data.ReadInt(i, 5);
+					teamID = data.ReadInt(i, 8);
+					cinematicID = data.ReadInt(i, 16);
 					CharRaces[(byte)raceID] = new TCharRace((short)factionID, modelM, modelF, (byte)teamID, cinematicID);
 				}
 
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrRace Loaded.", new BufferedDbc(ChrRacesDBC).Rows - 1);
-				new BufferedDbc(ChrRacesDBC).Dispose();
+				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrRace Loaded.", data.Rows - 1);
 			}
 			catch (DirectoryNotFoundException)
 			{
@@ -234,25 +237,24 @@ namespace Mangos.Cluster.DataStores
 			}
 		}
 
-		private readonly string ChrClassesDBC = "dbc" + Path.DirectorySeparatorChar + "ChrClasses.dbc";
+		private readonly string ChrClassesDBC = "ChrClasses.dbc";
 
-		public void InitializeCharClasses()
+		public async Task InitializeCharClassesAsync()
 		{
 			try
 			{
 				// Loading from DBC
 				int classID;
 				int cinematicID;
-				for (int i = 0, loopTo = new BufferedDbc(ChrClassesDBC).Rows - 1; i <= loopTo; i++)
+				var dataStore = await dataStoreProvider.GetDataStoreAsync(ChrClassesDBC);
+				for (int i = 0, loopTo = dataStore.Rows - 1; i <= loopTo; i++)
 				{
-					var data = new BufferedDbc(ChrClassesDBC);
-					classID = data.Read<int>(i, 0);
-					cinematicID = data.Read<int>(i, 5); // or 14 or 15?
+					classID = dataStore.ReadInt(i, 0);
+					cinematicID = dataStore.ReadInt(i, 5); // or 14 or 15?
 					CharClasses[(byte)classID] = new TCharClass(cinematicID);
 				}
 
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrClasses Loaded.", new BufferedDbc(ChrClassesDBC).Rows - 1);
-				new BufferedDbc(ChrClassesDBC).Dispose();
+				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrClasses Loaded.", dataStore.Rows - 1);
 			}
 			catch (DirectoryNotFoundException)
 			{

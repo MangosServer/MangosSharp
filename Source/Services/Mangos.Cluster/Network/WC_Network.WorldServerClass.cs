@@ -384,7 +384,7 @@ namespace Mangos.Cluster.Server
                         return false;
                     }
 
-                    ParentMap.InstanceCreate(MapID);
+                    ParentMap.InstanceCreateAsync(MapID).Wait();
                     ClusterServiceLocator._WC_Network.WorldServer.Worlds.Add(MapID, ParentMap);
                     ClusterServiceLocator._WC_Network.WorldServer.WorldsInfo.Add(MapID, ParentMapInfo);
                     return true;
@@ -427,7 +427,7 @@ namespace Mangos.Cluster.Server
                         return false;
                     }
 
-                    ParentMap.InstanceCreate(MapID);
+                    ParentMap.InstanceCreateAsync(MapID).Wait();
                     ClusterServiceLocator._WC_Network.WorldServer.Worlds.Add(MapID, ParentMap);
                     ClusterServiceLocator._WC_Network.WorldServer.WorldsInfo.Add(MapID, ParentMapInfo);
                     return true;

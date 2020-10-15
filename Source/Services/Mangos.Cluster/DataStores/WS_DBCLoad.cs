@@ -17,6 +17,7 @@
 //
 
 using System;
+using System.Threading.Tasks;
 using Mangos.Common.Enums.Global;
 using Microsoft.VisualBasic;
 
@@ -24,9 +25,9 @@ namespace Mangos.Cluster.DataStores
 {
     public class WS_DBCLoad
     {
-        public void InitializeInternalDatabase()
+        public async Task InitializeInternalDatabaseAsync()
         {
-            InitializeLoadDbCs();
+            await InitializeLoadDataStoresAsync();
             try
             {
                 // Set all characters offline
@@ -38,14 +39,15 @@ namespace Mangos.Cluster.DataStores
             }
         }
 
-        private void InitializeLoadDbCs()
+        private async Task InitializeLoadDataStoresAsync()
         {
-            ClusterServiceLocator._WS_DBCDatabase.InitializeMaps();
-            ClusterServiceLocator._WS_DBCDatabase.InitializeChatChannels();
             ClusterServiceLocator._WS_DBCDatabase.InitializeBattlegrounds();
-            ClusterServiceLocator._WS_DBCDatabase.InitializeWorldSafeLocs();
-            ClusterServiceLocator._WS_DBCDatabase.InitializeCharRaces();
-            ClusterServiceLocator._WS_DBCDatabase.InitializeCharClasses();
+            await Task.WhenAll(
+                ClusterServiceLocator._WS_DBCDatabase.InitializeMapsAsync(),
+                ClusterServiceLocator._WS_DBCDatabase.InitializeChatChannelsAsync(),
+                ClusterServiceLocator._WS_DBCDatabase.InitializeWorldSafeLocsAsync(),
+                ClusterServiceLocator._WS_DBCDatabase.InitializeCharRacesAsync(),
+                ClusterServiceLocator._WS_DBCDatabase.InitializeCharClassesAsync());
         }
     }
 }

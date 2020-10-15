@@ -39,6 +39,7 @@ using Mangos.World.Server;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Mangos.World.AntiCheat
 {
@@ -130,7 +131,7 @@ namespace Mangos.World.AntiCheat
             CHARACTERs = new Dictionary<ulong, WS_PlayerData.CharacterObject>();
             CHARACTERs_Lock = new ReaderWriterLock();
             ALLQUESTS = new WS_Quests();
-            AllGraveYards = new WS_GraveYards();
+            AllGraveYards = new WS_GraveYards(WorldServiceLocator._DataStoreProvider);
             CreatureQuestStarters = new Dictionary<int, List<int>>();
             CreatureQuestFinishers = new Dictionary<int, List<int>>();
             GameobjectQuestStarters = new Dictionary<int, List<int>>();
@@ -311,9 +312,8 @@ namespace Mangos.World.AntiCheat
             }
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         [MTAThread]
-        public void Start()
+        public async Task StartAsync()
         {
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Title = $"{((AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), inherit: false)[0]).Title} v{Assembly.GetExecutingAssembly().GetName().Version}";
@@ -399,12 +399,12 @@ namespace Mangos.World.AntiCheat
                 Console.ReadKey();
                 ProjectData.EndApp();
             }
-            WorldServiceLocator._WS_DBCDatabase.InitializeInternalDatabase();
+            await WorldServiceLocator._WS_DBCDatabase.InitializeInternalDatabaseAsync();
             WorldServiceLocator._WS_Handlers.IntializePacketHandlers();
             ALLQUESTS.LoadAllQuests();
-            AllGraveYards.InitializeGraveyards();
+            await AllGraveYards.InitializeGraveyardsAsync();
             WorldServiceLocator._WS_Transports.LoadTransports();
-            ClsWorldServer = new WS_Network.WorldServerClass();
+            ClsWorldServer = new WS_Network.WorldServerClass(WorldServiceLocator._DataStoreProvider);
             WorldServerConfiguration configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
             server = new ProxyServer<WS_Network.WorldServerClass>(Dns.GetHostAddresses(configuration.LocalConnectHost)[0], configuration.LocalConnectPort, ClsWorldServer);
             ClsWorldServer.ClusterConnect();

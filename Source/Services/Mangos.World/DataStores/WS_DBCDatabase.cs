@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.World.Server;
@@ -745,9 +746,9 @@ namespace Mangos.World.DataStores
 			WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: {0} Teleport Coords Loaded.", MySQLQuery.Rows.Count);
 		}
 
-		public void InitializeInternalDatabase()
+		public async Task InitializeInternalDatabaseAsync()
 		{
-			InitializeLoadDBCs();
+			await InitializeLoadDBCsAsync();
 			WorldServiceLocator._WS_Spells.InitializeSpellDB();
 			WorldServiceLocator._WS_Commands.RegisterChatCommands();
 			try
@@ -848,50 +849,53 @@ namespace Mangos.World.DataStores
 			}
 		}
 
-		public void InitializeLoadDBCs()
+		public async Task InitializeLoadDBCsAsync()
 		{
-			WorldServiceLocator._WS_Maps.InitializeMaps();
 			InitializeXpTableFromDb();
-			WorldServiceLocator._WS_DBCLoad.InitializeEmotes();
-			WorldServiceLocator._WS_DBCLoad.InitializeEmotesText();
-			WorldServiceLocator._WS_DBCLoad.InitializeAreaTable();
-			WorldServiceLocator._WS_DBCLoad.InitializeFactions();
-			WorldServiceLocator._WS_DBCLoad.InitializeFactionTemplates();
-			WorldServiceLocator._WS_DBCLoad.InitializeCharRaces();
-			WorldServiceLocator._WS_DBCLoad.InitializeCharClasses();
-			WorldServiceLocator._WS_DBCLoad.InitializeSkillLines();
-			WorldServiceLocator._WS_DBCLoad.InitializeSkillLineAbility();
-			WorldServiceLocator._WS_DBCLoad.InitializeLocks();
-			WorldServiceLocator._WS_DBCLoad.InitializeTaxiNodes();
-			WorldServiceLocator._WS_DBCLoad.InitializeTaxiPaths();
-			WorldServiceLocator._WS_DBCLoad.InitializeTaxiPathNodes();
-			WorldServiceLocator._WS_DBCLoad.InitializeDurabilityCosts();
-			WorldServiceLocator._WS_DBCLoad.LoadSpellItemEnchantments();
-			WorldServiceLocator._WS_DBCLoad.LoadItemSet();
-			WorldServiceLocator._WS_DBCLoad.LoadItemDisplayInfoDbc();
-			WorldServiceLocator._WS_DBCLoad.LoadItemRandomPropertiesDbc();
-			WorldServiceLocator._WS_DBCLoad.LoadTalentDbc();
-			WorldServiceLocator._WS_DBCLoad.LoadTalentTabDbc();
-			WorldServiceLocator._WS_DBCLoad.LoadAuctionHouseDbc();
 			WorldServiceLocator._WS_DBCLoad.LoadLootStores();
 			WorldServiceLocator._WS_DBCLoad.LoadWeather();
 			InitializeBattlemasters();
 			InitializeBattlegrounds();
 			InitializeTeleportCoords();
-			WorldServiceLocator._WS_DBCLoad.LoadCreatureFamilyDbc();
-			WorldServiceLocator._WS_DBCLoad.InitializeSpellRadius();
-			WorldServiceLocator._WS_DBCLoad.InitializeSpellDuration();
-			WorldServiceLocator._WS_DBCLoad.InitializeSpellCastTime();
-			WorldServiceLocator._WS_DBCLoad.InitializeSpellRange();
-			WorldServiceLocator._WS_DBCLoad.InitializeSpellFocusObject();
-			WorldServiceLocator._WS_DBCLoad.InitializeSpells();
-			WorldServiceLocator._WS_DBCLoad.InitializeSpellShapeShift();
-			WorldServiceLocator._WS_DBCLoad.InitializeSpellChains();
-			WorldServiceLocator._WS_DBCLoad.LoadCreatureGossip();
 			WorldServiceLocator._WS_DBCLoad.LoadCreatureMovements();
 			WorldServiceLocator._WS_DBCLoad.LoadCreatureEquipTable();
 			WorldServiceLocator._WS_DBCLoad.LoadCreatureModelInfo();
 			WorldServiceLocator._WS_DBCLoad.LoadQuestStartersAndFinishers();
+			WorldServiceLocator._WS_DBCLoad.InitializeSpellChains();
+
+			await Task.WhenAll(
+				WorldServiceLocator._WS_Maps.InitializeMapsAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeEmotesAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeEmotesTextAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeAreaTableAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeFactionsAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeFactionTemplatesAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeCharRacesAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeCharClassesAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeSkillLinesAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeSkillLineAbilityAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeLocksAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeTaxiNodesAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeTaxiPathsAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeTaxiPathNodesAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeDurabilityCostsAsync(),
+				WorldServiceLocator._WS_DBCLoad.LoadSpellItemEnchantmentsAsync(),
+				WorldServiceLocator._WS_DBCLoad.LoadItemSetAsync(),
+				WorldServiceLocator._WS_DBCLoad.LoadItemDisplayInfoDbcAsync(),
+				WorldServiceLocator._WS_DBCLoad.LoadItemRandomPropertiesDbcAsync(),
+				WorldServiceLocator._WS_DBCLoad.LoadTalentDbcAsync(),
+				WorldServiceLocator._WS_DBCLoad.LoadTalentTabDbcAsync(),
+				WorldServiceLocator._WS_DBCLoad.LoadAuctionHouseDbcAsync(),
+				WorldServiceLocator._WS_DBCLoad.LoadCreatureFamilyDbcAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeSpellRadiusAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeSpellDurationAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeSpellCastTimeAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeSpellRangeAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeSpellFocusObjectAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeSpellsAsync(),
+				WorldServiceLocator._WS_DBCLoad.InitializeSpellShapeShiftAsync(),
+				WorldServiceLocator._WS_DBCLoad.LoadCreatureGossipAsync()
+				);
 		}
 	}
 }

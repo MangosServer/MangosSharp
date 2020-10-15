@@ -29,30 +29,19 @@ namespace Mangos.Common.DataStores
         private byte[] data;
 
         [Description("Header information: File type.")]
-        public string Type;
+        public string Type { get; private set; }
 
         [Description("Header information: Rows contained in the file.")]
-        public int Rows;
+        public int Rows { get; private set; }
 
         [Description("Header information: Columns for each row.")]
-        public int Columns;
+        public int Columns { get; private set; }
 
         [Description("Header information: Bytes ocupied by each row.")]
-        public int RowLength;
+        public int RowLength { get; private set; }
 
         [Description("Header information: Strings data block length.")]
-        public int StringBlockLength;
-
-        public void LoadFromFile(string path)
-        {
-            data = File.ReadAllBytes(path);
-
-            Type = Encoding.ASCII.GetString(data, 0, 4);
-            Rows = BitConverter.ToInt32(new ReadOnlySpan<byte>(data, 4, 4));
-            Columns = BitConverter.ToInt32(new ReadOnlySpan<byte>(data, 8, 4));
-            RowLength = BitConverter.ToInt32(new ReadOnlySpan<byte>(data, 12, 4));
-            StringBlockLength = BitConverter.ToInt32(new ReadOnlySpan<byte>(data, 16, 4));
-        }
+        public int StringBlockLength { get; private set; }
 
         public async Task LoadFromFileAsync(string path)
         {
