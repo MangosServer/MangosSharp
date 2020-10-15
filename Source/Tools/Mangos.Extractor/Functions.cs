@@ -358,7 +358,7 @@ namespace Mangos.Extractor
                 }
 
                 if (!string.IsNullOrEmpty(LastFieldType))
-                    w.WriteLine("    {0,-78}' 0x{1:X3}", LastFieldType.ToUpper() + "_END = " + BasedOnName + " + &H" + Conversion.Hex(Info[Info.Count - 1].Offset + Info[Info.Count - 1].Size), BasedOn + Info[Info.Count - 1].Offset + Info[Info.Count - 1].Size);
+                    w.WriteLine("    {0,-78}' 0x{1:X3}", LastFieldType.ToUpper() + "_END = " + BasedOnName + " + &H" + Conversion.Hex(Info[^1].Offset + Info[^1].Size), BasedOn + Info[^1].Offset + Info[^1].Size);
                 w.WriteLine("End Enum");
                 w.Flush();
             }

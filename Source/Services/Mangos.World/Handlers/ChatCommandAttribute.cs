@@ -28,15 +28,15 @@ namespace Mangos.World.Handlers
 	{
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private string _cmdName;
+		private readonly string _cmdName;
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private string _cmdHelp;
+		private readonly string _cmdHelp;
 
 		[CompilerGenerated]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private AccessLevel _cmdAccess;
+		private readonly AccessLevel _cmdAccess;
 
 		public string cmdName
 		{

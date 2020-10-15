@@ -306,7 +306,7 @@ namespace Mangos.World.Globals
 		{
 			Type ty = ass.GetType("Scripts." + MyModule);
 			MethodInfo mi = ty.GetMethod(MyMethod);
-			if ((object)mi == null)
+			if (mi is null)
 			{
 				return false;
 			}

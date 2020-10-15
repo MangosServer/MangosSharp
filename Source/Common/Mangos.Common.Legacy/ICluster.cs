@@ -53,5 +53,6 @@ namespace Mangos.Common
         void BroadcastGuildOfficers(long guildId, byte[] data);
         [Description("Send update for the requested group.")]
         void GroupRequestUpdate(uint id);
+        void Dispose();
     }
 }

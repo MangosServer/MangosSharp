@@ -592,12 +592,11 @@ namespace Mangos.World.Handlers
 		[ChatCommand("playsound", "playsound - Plays a specific sound for every player around you.", AccessLevel.Developer)]
 		public bool cmdPlaySound(ref WS_PlayerData.CharacterObject objCharacter, string Message)
 		{
-            int soundID;
-            if (!int.TryParse(Message, out soundID))
-			{
-				return false;
-			}
-			objCharacter.SendPlaySound(soundID);
+            if (!int.TryParse(Message, out int soundID))
+            {
+                return false;
+            }
+            objCharacter.SendPlaySound(soundID);
 			return true;
 		}
 
@@ -980,12 +979,11 @@ namespace Mangos.World.Handlers
 		[ChatCommand("changemodel", "changemodel #id - Will morph you into specified model ID.", AccessLevel.GameMaster)]
 		public bool cmdModel(ref WS_PlayerData.CharacterObject objCharacter, string Message)
 		{
-            int value;
-            if (!int.TryParse(Message, out value) || value < 0)
-			{
-				return false;
-			}
-			if (WorldServiceLocator._WS_DBCDatabase.CreatureModel.ContainsKey(value))
+            if (!int.TryParse(Message, out int value) || value < 0)
+            {
+                return false;
+            }
+            if (WorldServiceLocator._WS_DBCDatabase.CreatureModel.ContainsKey(value))
 			{
 				objCharacter.BoundingRadius = WorldServiceLocator._WS_DBCDatabase.CreatureModel[value].BoundingRadius;
 				objCharacter.CombatReach = WorldServiceLocator._WS_DBCDatabase.CreatureModel[value].CombatReach;
@@ -1000,12 +998,11 @@ namespace Mangos.World.Handlers
 		[ChatCommand("mount", "mount #id - Will mount you to specified model ID.", AccessLevel.GameMaster)]
 		public bool cmdMount(ref WS_PlayerData.CharacterObject objCharacter, string Message)
 		{
-            int value;
-            if (!int.TryParse(Message, out value) || value < 0)
-			{
-				return false;
-			}
-			objCharacter.SetUpdateFlag(133, value);
+            if (!int.TryParse(Message, out int value) || value < 0)
+            {
+                return false;
+            }
+            objCharacter.SetUpdateFlag(133, value);
 			objCharacter.SendCharacterUpdate();
 			return true;
 		}
@@ -1245,12 +1242,11 @@ namespace Mangos.World.Handlers
 		[ChatCommand("SetInstance", "SETINSTANCE <ID> - Sets you into another instance.", AccessLevel.Admin)]
 		public bool cmdSetInstance(ref WS_PlayerData.CharacterObject objCharacter, string Message)
 		{
-            int instanceID;
-            if (!int.TryParse(Message, out instanceID))
-			{
-				return false;
-			}
-			if (instanceID < 0 || instanceID > 400000)
+            if (!int.TryParse(Message, out int instanceID))
+            {
+                return false;
+            }
+            if (instanceID < 0 || instanceID > 400000)
 			{
 				return false;
 			}

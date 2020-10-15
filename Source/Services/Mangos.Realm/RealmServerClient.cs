@@ -48,7 +48,7 @@ namespace Mangos.Realm
 
 		private readonly AuthEngineClass authEngineClass;
 
-		private Dictionary<AuthCMD, Func<ChannelReader<byte>, ChannelWriter<byte>, Task>> packetHandlers;
+		private readonly Dictionary<AuthCMD, Func<ChannelReader<byte>, ChannelWriter<byte>, Task>> packetHandlers;
 		private readonly IPEndPoint remoteEnpoint;
 
 

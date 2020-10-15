@@ -130,11 +130,9 @@ namespace Mangos.DBCExtractor
 				{
 					using (var mpqStream = mpqArchive.OpenFile(mpqFile))
 					{
-						using (var fileStream = File.Create(Path.Combine(dbcFolder, Path.GetFileName(mpqFile.Filename))))
-						{
-							mpqStream.CopyTo(fileStream);
-						}
-					}
+                        using var fileStream = File.Create(Path.Combine(dbcFolder, Path.GetFileName(mpqFile.Filename)));
+                        mpqStream.CopyTo(fileStream);
+                    }
 
 					i += 1;
 					if (i % numDiv30 == 0)

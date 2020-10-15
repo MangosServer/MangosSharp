@@ -153,7 +153,7 @@ namespace Mangos.WoWFakeClient
                     Data[1] = (byte)((Data.Length - 2) % 256);
                 }
 
-                Data[Data.Length - 1] = buffer;
+                Data[^1] = buffer;
             }
 
             public void AddInt16(short buffer)
@@ -165,8 +165,8 @@ namespace Mangos.WoWFakeClient
                     Data[1] = (byte)((Data.Length - 2) % 256);
                 }
 
-                Data[Data.Length - 2] = Conversions.ToByte(buffer & 255);
-                Data[Data.Length - 1] = Conversions.ToByte(buffer >> 8 & 255);
+                Data[^2] = Conversions.ToByte(buffer & 255);
+                Data[^1] = Conversions.ToByte(buffer >> 8 & 255);
             }
 
             public void AddInt32(int buffer, int position = 0)
@@ -197,14 +197,14 @@ namespace Mangos.WoWFakeClient
                     Data[1] = (byte)((Data.Length - 2) % 256);
                 }
 
-                Data[Data.Length - 8] = Conversions.ToByte(buffer & 255L);
-                Data[Data.Length - 7] = Conversions.ToByte(buffer >> 8 & 255L);
-                Data[Data.Length - 6] = Conversions.ToByte(buffer >> 16 & 255L);
-                Data[Data.Length - 5] = Conversions.ToByte(buffer >> 24 & 255L);
-                Data[Data.Length - 4] = Conversions.ToByte(buffer >> 32 & 255L);
-                Data[Data.Length - 3] = Conversions.ToByte(buffer >> 40 & 255L);
-                Data[Data.Length - 2] = Conversions.ToByte(buffer >> 48 & 255L);
-                Data[Data.Length - 1] = Conversions.ToByte(buffer >> 56 & 255L);
+                Data[^8] = Conversions.ToByte(buffer & 255L);
+                Data[^7] = Conversions.ToByte(buffer >> 8 & 255L);
+                Data[^6] = Conversions.ToByte(buffer >> 16 & 255L);
+                Data[^5] = Conversions.ToByte(buffer >> 24 & 255L);
+                Data[^4] = Conversions.ToByte(buffer >> 32 & 255L);
+                Data[^3] = Conversions.ToByte(buffer >> 40 & 255L);
+                Data[^2] = Conversions.ToByte(buffer >> 48 & 255L);
+                Data[^1] = Conversions.ToByte(buffer >> 56 & 255L);
             }
 
             public void AddString(string buffer, bool EndZero = true, bool Reversed = false)
@@ -352,10 +352,10 @@ namespace Mangos.WoWFakeClient
                     Data[1] = (byte)((Data.Length - 2) % 256);
                 }
 
-                Data[Data.Length - 4] = Conversions.ToByte(buffer & 255L);
-                Data[Data.Length - 3] = Conversions.ToByte(buffer >> 8 & 255L);
-                Data[Data.Length - 2] = Conversions.ToByte(buffer >> 16 & 255L);
-                Data[Data.Length - 1] = Conversions.ToByte(buffer >> 24 & 255L);
+                Data[^4] = Conversions.ToByte(buffer & 255L);
+                Data[^3] = Conversions.ToByte(buffer >> 8 & 255L);
+                Data[^2] = Conversions.ToByte(buffer >> 16 & 255L);
+                Data[^1] = Conversions.ToByte(buffer >> 24 & 255L);
             }
 
             public void AddUInt64(ulong buffer)
@@ -367,14 +367,14 @@ namespace Mangos.WoWFakeClient
                     Data[1] = (byte)((Data.Length - 2) % 256);
                 }
 
-                Data[Data.Length - 8] = Conversions.ToByte((long)buffer & 255L);
-                Data[Data.Length - 7] = Conversions.ToByte((long)(buffer >> 8) & 255L);
-                Data[Data.Length - 6] = Conversions.ToByte((long)(buffer >> 16) & 255L);
-                Data[Data.Length - 5] = Conversions.ToByte((long)(buffer >> 24) & 255L);
-                Data[Data.Length - 4] = Conversions.ToByte((long)(buffer >> 32) & 255L);
-                Data[Data.Length - 3] = Conversions.ToByte((long)(buffer >> 40) & 255L);
-                Data[Data.Length - 2] = Conversions.ToByte((long)(buffer >> 48) & 255L);
-                Data[Data.Length - 1] = Conversions.ToByte((long)(buffer >> 56) & 255L);
+                Data[^8] = Conversions.ToByte((long)buffer & 255L);
+                Data[^7] = Conversions.ToByte((long)(buffer >> 8) & 255L);
+                Data[^6] = Conversions.ToByte((long)(buffer >> 16) & 255L);
+                Data[^5] = Conversions.ToByte((long)(buffer >> 24) & 255L);
+                Data[^4] = Conversions.ToByte((long)(buffer >> 32) & 255L);
+                Data[^3] = Conversions.ToByte((long)(buffer >> 40) & 255L);
+                Data[^2] = Conversions.ToByte((long)(buffer >> 48) & 255L);
+                Data[^1] = Conversions.ToByte((long)(buffer >> 56) & 255L);
             }
 
             public byte GetInt8()

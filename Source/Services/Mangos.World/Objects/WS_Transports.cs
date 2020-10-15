@@ -290,7 +290,7 @@ namespace Mangos.World.Objects
 							PathPoints[l].tTo *= 1000f;
 						}
 						bool teleport = false;
-						if (PathPoints[PathPoints.Count - 1].MapID != PathPoints[0].MapID)
+						if (PathPoints[^1].MapID != PathPoints[0].MapID)
 						{
 							teleport = true;
 						}

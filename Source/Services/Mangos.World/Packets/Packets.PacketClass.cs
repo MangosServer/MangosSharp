@@ -191,7 +191,7 @@ namespace Mangos.World.Globals
 					{
 						Data[Data.Length - 1 - bytes.Length + i] = bytes[i];
 					}
-					Data[Data.Length - 1] = 0;
+					Data[^1] = 0;
 				}
 			}
 
@@ -278,8 +278,8 @@ namespace Mangos.World.Globals
 				checked
 				{
 					data = (byte[])Utils.CopyArray(data, new byte[Data.Length + 1 + 1]);
-					Data[Data.Length - 2] = (byte)(buffer & 0xFF);
-					Data[Data.Length - 1] = (byte)(unchecked((ushort)((uint)buffer >> 8)) & 0xFF);
+					Data[^2] = (byte)(buffer & 0xFF);
+					Data[^1] = (byte)(unchecked((ushort)((uint)buffer >> 8)) & 0xFF);
 				}
 			}
 
@@ -289,10 +289,10 @@ namespace Mangos.World.Globals
 				checked
 				{
 					data = (byte[])Utils.CopyArray(data, new byte[Data.Length + 3 + 1]);
-					Data[Data.Length - 4] = (byte)(unchecked(buffer) & 0xFFL);
-					Data[Data.Length - 3] = (byte)(unchecked(buffer >> 8) & 0xFFL);
-					Data[Data.Length - 2] = (byte)(unchecked(buffer >> 16) & 0xFFL);
-					Data[Data.Length - 1] = (byte)(unchecked(buffer >> 24) & 0xFFL);
+					Data[^4] = (byte)(unchecked(buffer) & 0xFFL);
+					Data[^3] = (byte)(unchecked(buffer >> 8) & 0xFFL);
+					Data[^2] = (byte)(unchecked(buffer >> 16) & 0xFFL);
+					Data[^1] = (byte)(unchecked(buffer >> 24) & 0xFFL);
 				}
 			}
 

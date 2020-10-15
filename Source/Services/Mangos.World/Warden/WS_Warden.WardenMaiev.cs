@@ -747,7 +747,7 @@ namespace Mangos.World.Warden
 												string procFunc = Marshal.PtrToStringAnsi(new IntPtr(m_Mod + dwCurrent));
 												MethodInfo procRedirector = typeof(ApiRedirector).GetMethod("my" + procFunc);
 												Type procDelegate = typeof(ApiRedirector).GetNestedType("d" + procFunc);
-												if ((object)procRedirector == null || (object)procDelegate == null)
+												if (procRedirector is null || procDelegate is null)
 												{
 													procAddr = (int)(uint)NativeMethods.GetProcAddress((IntPtr)hModule, procFunc, "");
 													WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "        Function: {0} @ 0x{1:X8}", procFunc, procAddr);

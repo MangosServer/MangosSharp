@@ -38,25 +38,21 @@ namespace Mangos.Configuration.Xml
 
         public T GetConfiguration()
         {
-            using (var streamReader = new StreamReader(filePath))
-            {
-                var xmlSerializer = new XmlSerializer(typeof(T));
-                T configuration = (T)xmlSerializer.Deserialize(streamReader);
-                return configuration;
-            }
+            using var streamReader = new StreamReader(filePath);
+            var xmlSerializer = new XmlSerializer(typeof(T));
+            T configuration = (T)xmlSerializer.Deserialize(streamReader);
+            return configuration;
         }
 
         public ValueTask<T> GetConfigurationAsync()
         {
             try
             {
-                using (var streamReader = new StreamReader(filePath))
-                {
-                    var xmlSerializer = new XmlSerializer(typeof(T));
-                    T configuration = (T)xmlSerializer.Deserialize(streamReader);
-                    logger.Debug("Get XML Configuration for {0}", typeof(T).FullName);
-                    return new ValueTask<T>(configuration);
-                }
+                using var streamReader = new StreamReader(filePath);
+                var xmlSerializer = new XmlSerializer(typeof(T));
+                T configuration = (T)xmlSerializer.Deserialize(streamReader);
+                logger.Debug("Get XML Configuration for {0}", typeof(T).FullName);
+                return new ValueTask<T>(configuration);
             }
             catch(Exception ex)
             {
