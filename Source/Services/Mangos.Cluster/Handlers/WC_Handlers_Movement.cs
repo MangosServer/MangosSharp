@@ -59,7 +59,7 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_START_BACKWARD [{2}}", client.IP, client.Port, client.Character.Map);
+                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_START_BACKWARD [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {

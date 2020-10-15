@@ -165,13 +165,9 @@ namespace Mangos.Common.Logging
             }
 
             if (arg is null)
-            {
-                Console.WriteLine("[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr);
-            }
+                Console.WriteLine($"[{DateAndTime.TimeOfDay.ToString("hh:mm:ss")}] {formatStr}");
             else
-            {
-                Console.WriteLine("[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
-            }
+                Console.WriteLine($"[{DateAndTime.TimeOfDay.ToString("hh:mm:ss")}] {String.Format(formatStr, arg)}");
 
             Console.ForegroundColor = ConsoleColor.Gray;
         }
