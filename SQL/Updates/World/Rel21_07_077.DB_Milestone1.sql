@@ -1,0 +1,1 @@
+INSERT INTO `db_version` VALUES (21, 07, 077, "db update milestone 1", "db update milestone 1");

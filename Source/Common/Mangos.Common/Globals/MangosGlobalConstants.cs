@@ -38,7 +38,7 @@ namespace global
         public readonly int RevisionDbCharactersContent = 0;
         public readonly int RevisionDbMangosVersion = 21;
         public readonly int RevisionDbMangosStructure = 7;
-        public readonly int RevisionDbMangosContent = 1;
+        public readonly int RevisionDbMangosContent = 77;
         public readonly int RevisionDbRealmVersion = 21;
         public readonly int RevisionDbRealmStructure = 2;
         public readonly int RevisionDbRealmContent = 1;
