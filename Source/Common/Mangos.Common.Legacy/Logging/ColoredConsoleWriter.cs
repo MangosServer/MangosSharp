@@ -19,7 +19,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using Mangos.Common.Enums.Global;
-//using Microsoft.VisualBasic;
 
 // Using this logging type, all logs are displayed in console.
 // Writting commands is done trought console.

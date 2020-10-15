@@ -18,15 +18,13 @@
 
 using System;
 using System.Runtime.InteropServices;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Warden
 {
-	[StandardModule]
 	public sealed class NativeMethods
 	{
 		[DllImport("kernel32.dll", CharSet = CharSet.Ansi, EntryPoint = "LoadLibraryA", ExactSpelling = true, SetLastError = true)]
-		private static extern int LoadLibrary([MarshalAs(UnmanagedType.VBByRefStr)] ref string lpLibFileName);
+		private static extern int LoadLibrary([MarshalAs(UnmanagedType.LPStr)] ref string lpLibFileName); //Is this the correct type?
 
 		public static int LoadLibrary(string lpLibFileName, string dummy)
 		{
