@@ -36,7 +36,7 @@ using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster
 {
-    public class WorldCluster
+    public partial class WorldCluster
     {
         private const string ClusterPath = "configs/WorldCluster.ini";
 
@@ -52,295 +52,6 @@ namespace Mangos.Cluster
         public Random Rnd = new Random();
 
         public delegate void HandlePacket(Packets.PacketClass packet, WC_Network.ClientClass client);
-
-        [XmlRoot(ElementName = "WorldCluster")]
-        public class XMLConfigFile
-        {
-            [XmlElement(ElementName = "WorldClusterPort")]
-            private int _worldClusterPort = 8085;
-            [XmlElement(ElementName = "WorldClusterAddress")]
-            private string _worldClusterAddress = "127.0.0.1";
-            [XmlElement(ElementName = "ServerPlayerLimit")]
-            private int _serverPlayerLimit = 10;
-
-            // Database Settings
-            [XmlElement(ElementName = "AccountDatabase")]
-            private string _accountDatabase = "root;mangosVB;localhost;3306;mangosVB;MySQL";
-            [XmlElement(ElementName = "CharacterDatabase")]
-            private string _characterDatabase = "root;mangosVB;localhost;3306;mangosVB;MySQL";
-            [XmlElement(ElementName = "WorldDatabase")]
-            private string _worldDatabase = "root;mangosVB;localhost;3306;mangosVB;MySQL";
-
-            // Cluster Settings
-
-            [XmlElement(ElementName = "ClusterListenAddress")]
-            private string _clusterListenAddress = "127.0.0.1";
-            [XmlElement(ElementName = "ClusterListenPort")]
-            private int _clusterListenPort = 50001;
-
-            // Stats Settings
-            [XmlElement(ElementName = "StatsEnabled")]
-            private bool _statsEnabled = true;
-            [XmlElement(ElementName = "StatsTimer")]
-            private int _statsTimer = 120000;
-            [XmlElement(ElementName = "StatsLocation")]
-            private string _statsLocation = "stats.xml";
-
-            // Logging Settings
-            [XmlElement(ElementName = "LogType")]
-            private string _logType = "FILE";
-            [XmlElement(ElementName = "LogLevel")]
-            private LogType _logLevel = Common.Enums.Global.LogType.NETWORK;
-            [XmlElement(ElementName = "LogConfig")]
-            private string _logConfig = "";
-            [XmlElement(ElementName = "PacketLogging")]
-            private bool _packetLogging = false;
-            [XmlElement(ElementName = "GMLogging")]
-            private bool _gMLogging = false;
-
-            public int WorldClusterPort
-            {
-                get
-                {
-                    return _worldClusterPort;
-                }
-
-                set
-                {
-                    _worldClusterPort = value;
-                }
-            }
-
-            public string WorldClusterAddress
-            {
-                get
-                {
-                    return _worldClusterAddress;
-                }
-
-                set
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-
-                    _worldClusterAddress = value;
-                }
-            }
-
-            public int ServerPlayerLimit
-            {
-                get
-                {
-                    return _serverPlayerLimit;
-                }
-
-                set
-                {
-                    _serverPlayerLimit = value;
-                }
-            }
-
-            public string AccountDatabase
-            {
-                get
-                {
-                    return _accountDatabase;
-                }
-
-                set
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-
-                    _accountDatabase = value;
-                }
-            }
-
-            public string CharacterDatabase
-            {
-                get
-                {
-                    return _characterDatabase;
-                }
-
-                set
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-
-                    _characterDatabase = value;
-                }
-            }
-
-            public string WorldDatabase
-            {
-                get
-                {
-                    return _worldDatabase;
-                }
-
-                set
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-
-                    _worldDatabase = value;
-                }
-            }
-
-            public string ClusterListenAddress
-            {
-                get
-                {
-                    return _clusterListenAddress;
-                }
-
-                set
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-
-                    _clusterListenAddress = value;
-                }
-            }
-
-            public int ClusterListenPort
-            {
-                get
-                {
-                    return _clusterListenPort;
-                }
-
-                set
-                {
-                    _clusterListenPort = value;
-                }
-            }
-
-            public bool StatsEnabled
-            {
-                get
-                {
-                    return _statsEnabled;
-                }
-
-                set
-                {
-                    _statsEnabled = value;
-                }
-            }
-
-            public int StatsTimer
-            {
-                get
-                {
-                    return _statsTimer;
-                }
-
-                set
-                {
-                    _statsTimer = value;
-                }
-            }
-
-            public string StatsLocation
-            {
-                get
-                {
-                    return _statsLocation;
-                }
-
-                set
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-
-                    _statsLocation = value;
-                }
-            }
-
-            public string LogType
-            {
-                get
-                {
-                    return _logType;
-                }
-
-                set
-                {
-                    if (value is null)
-                    {
-                        throw new ArgumentNullException(nameof(value));
-                    }
-
-                    _logType = value;
-                }
-            }
-
-            public LogType LogLevel
-            {
-                get
-                {
-                    return _logLevel;
-                }
-
-                set
-                {
-                    _logLevel = value;
-                }
-            }
-
-            public string LogConfig
-            {
-                get
-                {
-                    return _logConfig;
-                }
-
-                set
-                {
-                    _logConfig = value;
-                }
-            }
-
-            public bool PacketLogging
-            {
-                get
-                {
-                    return _packetLogging;
-                }
-
-                set
-                {
-                    _packetLogging = value;
-                }
-            }
-
-            public bool GMLogging
-            {
-                get
-                {
-                    return _gMLogging;
-                }
-
-                set
-                {
-                    _gMLogging = value;
-                }
-            }
-        }
 
         public void LoadConfig()
         {
@@ -359,66 +70,66 @@ namespace Mangos.Cluster
 
                 Console.Write("[{0}] Loading Configuration...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
                 var xmlConfigFile = new XMLConfigFile();
-                Config = xmlConfigFile;
+                SetConfig(xmlConfigFile);
                 Console.Write("...");
                 StreamReader ostream;
                 ostream = new StreamReader(ClusterPath);
-                Config = (XMLConfigFile)new XmlSerializer(typeof(XMLConfigFile)).Deserialize(ostream);
+                SetConfig((XMLConfigFile)new XmlSerializer(typeof(XMLConfigFile)).Deserialize(ostream));
                 ostream.Close();
                 Console.WriteLine(".[done]");
 
                 // DONE: Setting SQL Connections
-                var AccountDBSettings = Strings.Split(Config.AccountDatabase, ";");
+                var AccountDBSettings = Strings.Split(GetConfig().AccountDatabase, ";");
                 if (AccountDBSettings.Length != 6)
                 {
                     Console.WriteLine("Invalid connect string for the account database!");
                 }
                 else
                 {
-                    AccountDatabase.SQLDBName = AccountDBSettings[4];
-                    AccountDatabase.SQLHost = AccountDBSettings[2];
-                    AccountDatabase.SQLPort = AccountDBSettings[3];
-                    AccountDatabase.SQLUser = AccountDBSettings[0];
-                    AccountDatabase.SQLPass = AccountDBSettings[1];
-                    AccountDatabase.SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), AccountDBSettings[5]);
+                    GetAccountDatabase().SQLDBName = AccountDBSettings[4];
+                    GetAccountDatabase().SQLHost = AccountDBSettings[2];
+                    GetAccountDatabase().SQLPort = AccountDBSettings[3];
+                    GetAccountDatabase().SQLUser = AccountDBSettings[0];
+                    GetAccountDatabase().SQLPass = AccountDBSettings[1];
+                    GetAccountDatabase().SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), AccountDBSettings[5]);
                 }
 
-                var CharacterDBSettings = Strings.Split(Config.CharacterDatabase, ";");
+                var CharacterDBSettings = Strings.Split(GetConfig().CharacterDatabase, ";");
                 if (CharacterDBSettings.Length != 6)
                 {
                     Console.WriteLine("Invalid connect string for the character database!");
                 }
                 else
                 {
-                    CharacterDatabase.SQLDBName = CharacterDBSettings[4];
-                    CharacterDatabase.SQLHost = CharacterDBSettings[2];
-                    CharacterDatabase.SQLPort = CharacterDBSettings[3];
-                    CharacterDatabase.SQLUser = CharacterDBSettings[0];
-                    CharacterDatabase.SQLPass = CharacterDBSettings[1];
-                    CharacterDatabase.SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), CharacterDBSettings[5]);
+                    GetCharacterDatabase().SQLDBName = CharacterDBSettings[4];
+                    GetCharacterDatabase().SQLHost = CharacterDBSettings[2];
+                    GetCharacterDatabase().SQLPort = CharacterDBSettings[3];
+                    GetCharacterDatabase().SQLUser = CharacterDBSettings[0];
+                    GetCharacterDatabase().SQLPass = CharacterDBSettings[1];
+                    GetCharacterDatabase().SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), CharacterDBSettings[5]);
                 }
 
-                var WorldDBSettings = Strings.Split(Config.WorldDatabase, ";");
+                var WorldDBSettings = Strings.Split(GetConfig().WorldDatabase, ";");
                 if (WorldDBSettings.Length != 6)
                 {
                     Console.WriteLine("Invalid connect string for the world database!");
                 }
                 else
                 {
-                    WorldDatabase.SQLDBName = WorldDBSettings[4];
-                    WorldDatabase.SQLHost = WorldDBSettings[2];
-                    WorldDatabase.SQLPort = WorldDBSettings[3];
-                    WorldDatabase.SQLUser = WorldDBSettings[0];
-                    WorldDatabase.SQLPass = WorldDBSettings[1];
-                    WorldDatabase.SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), WorldDBSettings[5]);
+                    GetWorldDatabase().SQLDBName = WorldDBSettings[4];
+                    GetWorldDatabase().SQLHost = WorldDBSettings[2];
+                    GetWorldDatabase().SQLPort = WorldDBSettings[3];
+                    GetWorldDatabase().SQLUser = WorldDBSettings[0];
+                    GetWorldDatabase().SQLPass = WorldDBSettings[1];
+                    GetWorldDatabase().SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), WorldDBSettings[5]);
                 }
 
                 // DONE: Creating logger
-                Log = BaseWriter.CreateLog(Config.LogType, Config.LogConfig);
-                Log.LogLevel = Config.LogLevel;
+                Log = BaseWriter.CreateLog(GetConfig().LogType, GetConfig().LogConfig);
+                Log.LogLevel = GetConfig().LogLevel;
 
                 // DONE: Cleaning up the packet log
-                if (Config.PacketLogging)
+                if (GetConfig().PacketLogging)
                 {
                     File.Delete("packets.log");
                 }
@@ -429,12 +140,65 @@ namespace Mangos.Cluster
             }
         }
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        public Dictionary<Opcodes, HandlePacket> PacketHandlers { get; set; } = new Dictionary<Opcodes, HandlePacket>();
-        public XMLConfigFile Config { get; set; }
-        public SQL AccountDatabase { get; set; } = new SQL();
-        public SQL CharacterDatabase { get; set; } = new SQL();
-        public SQL WorldDatabase { get; set; } = new SQL();
+        private Dictionary<Opcodes, HandlePacket> packetHandlers = new Dictionary<Opcodes, HandlePacket>();
+
+        public Dictionary<Opcodes, HandlePacket> GetPacketHandlers()
+        {
+            return packetHandlers;
+        }
+
+        public void SetPacketHandlers(Dictionary<Opcodes, HandlePacket> value)
+        {
+            packetHandlers = value;
+        }
+
+        private XMLConfigFile config;
+
+        public XMLConfigFile GetConfig()
+        {
+            return config;
+        }
+
+        public void SetConfig(XMLConfigFile value)
+        {
+            config = value;
+        }
+
+        private SQL accountDatabase = new SQL();
+
+        public SQL GetAccountDatabase()
+        {
+            return accountDatabase;
+        }
+
+        public void SetAccountDatabase(SQL value)
+        {
+            accountDatabase = value;
+        }
+
+        private SQL characterDatabase = new SQL();
+
+        public SQL GetCharacterDatabase()
+        {
+            return characterDatabase;
+        }
+
+        public void SetCharacterDatabase(SQL value)
+        {
+            characterDatabase = value;
+        }
+
+        private SQL worldDatabase = new SQL();
+
+        public SQL GetWorldDatabase()
+        {
+            return worldDatabase;
+        }
+
+        public void SetWorldDatabase(SQL value)
+        {
+            worldDatabase = value;
+        }
 
         public void AccountSQLEventHandler(SQL.EMessages messageId, string outBuf)
         {
@@ -504,7 +268,7 @@ namespace Mangos.Cluster
                     }
             }
         }
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
+
         [MTAThread()]
         public void Main()
         {
@@ -537,11 +301,11 @@ namespace Mangos.Cluster
             AppDomain.CurrentDomain.UnhandledException += GenericExceptionHandler;
             LoadConfig();
             Console.ForegroundColor = ConsoleColor.Gray;
-            AccountDatabase.SQLMessage += AccountSQLEventHandler;
-            CharacterDatabase.SQLMessage += CharacterSQLEventHandler;
-            WorldDatabase.SQLMessage += WorldSQLEventHandler;
+            GetAccountDatabase().SQLMessage += AccountSQLEventHandler;
+            GetCharacterDatabase().SQLMessage += CharacterSQLEventHandler;
+            GetWorldDatabase().SQLMessage += WorldSQLEventHandler;
             int ReturnValues;
-            ReturnValues = AccountDatabase.Connect();
+            ReturnValues = GetAccountDatabase().Connect();
             if (ReturnValues > (int)SQL.ReturnState.Success)   // Ok, An error occurred
             {
                 Console.WriteLine("[{0}] An SQL Error has occurred", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
@@ -552,8 +316,8 @@ namespace Mangos.Cluster
                 Environment.Exit(0);
             }
 
-            AccountDatabase.Update("SET NAMES 'utf8';");
-            ReturnValues = CharacterDatabase.Connect();
+            GetAccountDatabase().Update("SET NAMES 'utf8';");
+            ReturnValues = GetCharacterDatabase().Connect();
             if (ReturnValues > (int)SQL.ReturnState.Success)   // Ok, An error occurred
             {
                 Console.WriteLine("[{0}] An SQL Error has occurred", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
@@ -564,8 +328,8 @@ namespace Mangos.Cluster
                 Environment.Exit(0);
             }
 
-            CharacterDatabase.Update("SET NAMES 'utf8';");
-            ReturnValues = WorldDatabase.Connect();
+            GetCharacterDatabase().Update("SET NAMES 'utf8';");
+            ReturnValues = GetWorldDatabase().Connect();
             if (ReturnValues > (int)SQL.ReturnState.Success)   // Ok, An error occurred
             {
                 Console.WriteLine("[{0}] An SQL Error has occurred", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
@@ -576,10 +340,10 @@ namespace Mangos.Cluster
                 Environment.Exit(0);
             }
 
-            WorldDatabase.Update("SET NAMES 'utf8';");
+            GetWorldDatabase().Update("SET NAMES 'utf8';");
             ClusterServiceLocator._WS_DBCLoad.InitializeInternalDatabase();
             ClusterServiceLocator._WC_Handlers.IntializePacketHandlers();
-            if (ClusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(AccountDatabase, ServerDb.Realm) == false)         // Check the Database version, exit if its wrong
+            if (ClusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(GetAccountDatabase(), ServerDb.Realm) == false)         // Check the Database version, exit if its wrong
             {
                 if (true)
                 {
@@ -591,7 +355,7 @@ namespace Mangos.Cluster
                 }
             }
 
-            if (ClusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(CharacterDatabase, ServerDb.Character) == false)         // Check the Database version, exit if its wrong
+            if (ClusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(GetCharacterDatabase(), ServerDb.Character) == false)         // Check the Database version, exit if its wrong
             {
                 if (true)
                 {
@@ -603,7 +367,7 @@ namespace Mangos.Cluster
                 }
             }
 
-            if (ClusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(WorldDatabase, ServerDb.World) == false)         // Check the Database version, exit if its wrong
+            if (ClusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(GetWorldDatabase(), ServerDb.World) == false)         // Check the Database version, exit if its wrong
             {
                 if (true)
                 {
@@ -616,8 +380,8 @@ namespace Mangos.Cluster
             }
 
             ClusterServiceLocator._WC_Network.WorldServer = new WC_Network.WorldServerClass();
-            var server = new ProxyServer<WC_Network.WorldServerClass>(IPAddress.Parse(Config.ClusterListenAddress), Config.ClusterListenPort, ClusterServiceLocator._WC_Network.WorldServer);
-            Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}:{1}", Config.ClusterListenAddress, Config.ClusterListenPort);
+            var server = new ProxyServer<WC_Network.WorldServerClass>(IPAddress.Parse(GetConfig().ClusterListenAddress), GetConfig().ClusterListenPort, ClusterServiceLocator._WC_Network.WorldServer);
+            Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}:{1}", GetConfig().ClusterListenAddress, GetConfig().ClusterListenPort);
             GC.Collect();
             if (Process.GetCurrentProcess().PriorityClass != ProcessPriorityClass.High)
             {

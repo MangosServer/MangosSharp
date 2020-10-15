@@ -16,17 +16,24 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
-
-namespace Mangos.World.Battlegrounds
+namespace Mangos.World.Server
 {
-    public partial class WS_Battlegrounds
+    public partial class WS_Network
 	{
-		public Dictionary<int, Battlefield> BATTLEFIELDs;
 
-		public WS_Battlegrounds()
+		private int LastPing;
+
+		public int WC_MsTime;
+
+		public WS_Network()
 		{
-			BATTLEFIELDs = new Dictionary<int, Battlefield>();
+			LastPing = 0;
+			WC_MsTime = 0;
+		}
+
+		public int MsTime()
+		{
+			return checked(WC_MsTime + (WorldServiceLocator._NativeMethods.timeGetTime("") - LastPing));
 		}
 	}
 }

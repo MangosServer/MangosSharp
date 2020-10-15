@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013-2020 getMaNGOS <https:\\getmangos.eu>
 //  
 //  This program is free software. You can redistribute it and/or modify
@@ -24,9 +24,9 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Gossip
 {
-	public class WS_GuardGossip
+    public partial class WS_GuardGossip
 	{
-		public class TGuardTalk : TBaseTalk
+        public class TGuardTalk : TBaseTalk
 		{
 			public override void OnGossipHello(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
 			{

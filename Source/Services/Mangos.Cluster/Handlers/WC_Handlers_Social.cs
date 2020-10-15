@@ -38,7 +38,7 @@ namespace Mangos.Cluster.Handlers
 		{
 			// DONE: Query DB
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND flags = {1};", objCharacter.Guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND flags = {1};", objCharacter.Guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
 
 			// DONE: Add to list
 			foreach (DataRow row in q.Rows)
@@ -49,7 +49,7 @@ namespace Mangos.Cluster.Handlers
 		{
 			// DONE: Query DB
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND (flags & {1}) > 0;", character.Guid, Conversions.ToInteger(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND (flags & {1}) > 0;", character.Guid, Conversions.ToInteger(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
 
 			// DONE: Make the packet
 			var smsgFriendList = new Packets.PacketClass(Opcodes.SMSG_FRIEND_LIST);
@@ -99,7 +99,7 @@ namespace Mangos.Cluster.Handlers
 		{
 			// DONE: Query DB
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND (flags & {1}) > 0;", character.Guid, Conversions.ToInteger(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND (flags & {1}) > 0;", character.Guid, Conversions.ToInteger(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
 
 			// DONE: Make the packet
 			var smsgIgnoreList = new Packets.PacketClass(Opcodes.SMSG_IGNORE_LIST);
@@ -122,7 +122,7 @@ namespace Mangos.Cluster.Handlers
 		public void NotifyFriendStatus(WcHandlerCharacter.CharacterObject objCharacter, FriendStatus s)
 		{
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT guid FROM character_social WHERE friend = {0} AND (flags & {1}) > 0;", objCharacter.Guid, Conversions.ToInteger(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT guid FROM character_social WHERE friend = {0} AND (flags & {1}) > 0;", objCharacter.Guid, Conversions.ToInteger(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
 
 			// DONE: Send "Friend offline/online"
 			var friendpacket = new Packets.PacketClass(Opcodes.SMSG_FRIEND_STATUS);
@@ -250,16 +250,16 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Get GUID from DB
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT char_guid, char_race FROM characters WHERE char_name = \"{0}\";", name), ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid, char_race FROM characters WHERE char_name = \"{0}\";", name), ref q);
 			if (q.Rows.Count > 0)
 			{
 				guid = (ulong)Conversions.ToLong(q.Rows[0]["char_guid"]);
 				bool FriendSide = ClusterServiceLocator._Functions.GetCharacterSide(Conversions.ToByte(q.Rows[0]["char_race"]));
 				q.Clear();
-				ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT flags FROM character_social WHERE flags = {0}", Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
+				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE flags = {0}", Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
 				int NumberOfFriends = q.Rows.Count;
 				q.Clear();
-				ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1} AND flags = {2};", client.Character.Guid, guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
+				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1} AND flags = {2};", client.Character.Guid, guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
 				if (guid == client.Character.Guid)
 				{
 					response.AddInt8((byte)FriendResult.FRIEND_SELF);
@@ -301,14 +301,14 @@ namespace Mangos.Cluster.Handlers
 					response.AddInt32((int)ClusterServiceLocator._WorldCluster.CHARACTERs[guid].Zone);
 					response.AddInt32(ClusterServiceLocator._WorldCluster.CHARACTERs[guid].Level);
 					response.AddInt32((int)ClusterServiceLocator._WorldCluster.CHARACTERs[guid].Classe);
-					ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("INSERT INTO character_social (guid, friend, flags) VALUES ({0}, {1}, {2});", client.Character.Guid, guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)));
+					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("INSERT INTO character_social (guid, friend, flags) VALUES ({0}, {1}, {2});", client.Character.Guid, guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)));
 				}
 				else
 				{
 					response.AddInt8((byte)FriendResult.FRIEND_ADDED_OFFLINE);
 					response.AddUInt64(guid);
 					response.AddString(name);
-					ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("INSERT INTO character_social (guid, friend, flags) VALUES ({0}, {1}, {2});", client.Character.Guid, guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)));
+					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("INSERT INTO character_social (guid, friend, flags) VALUES ({0}, {1}, {2});", client.Character.Guid, guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)));
 				}
 			}
 			else
@@ -335,15 +335,15 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Get GUID from DB
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", name), ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", name), ref q);
 			if (q.Rows.Count > 0)
 			{
 				GUID = (ulong)Conversions.ToLong(q.Rows[0]["char_guid"]);
 				q.Clear();
-				ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT flags FROM character_social WHERE flags = {0}", Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
+				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE flags = {0}", Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
 				int NumberOfFriends = q.Rows.Count;
 				q.Clear();
-				ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND friend = {1} AND flags = {2};", client.Character.Guid, GUID, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
+				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND friend = {1} AND flags = {2};", client.Character.Guid, GUID, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
 				if (GUID == client.Character.Guid)
 				{
 					response.AddInt8((byte)FriendResult.FRIEND_IGNORE_SELF);
@@ -363,7 +363,7 @@ namespace Mangos.Cluster.Handlers
 				{
 					response.AddInt8((byte)FriendResult.FRIEND_IGNORE_ADDED);
 					response.AddUInt64(GUID);
-					ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("INSERT INTO character_social (guid, friend, flags) VALUES ({0}, {1}, {2});", client.Character.Guid, GUID, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)));
+					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("INSERT INTO character_social (guid, friend, flags) VALUES ({0}, {1}, {2});", client.Character.Guid, GUID, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)));
 					client.Character.IgnoreList.Add(GUID);
 				}
 			}
@@ -390,18 +390,18 @@ namespace Mangos.Cluster.Handlers
 			try
 			{
 				var q = new DataTable();
-				ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1};", client.Character.Guid, GUID), ref q);
+				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1};", client.Character.Guid, GUID), ref q);
 				if (q.Rows.Count > 0)
 				{
 					int flags = Conversions.ToInteger(q.Rows[0]["flags"]);
 					var newFlags = (SocialFlag)flags ^ SocialFlag.SOCIAL_FLAG_FRIEND;
 					if ((newFlags & (SocialFlag.SOCIAL_FLAG_FRIEND | SocialFlag.SOCIAL_FLAG_IGNORED)) == 0)
 					{
-						ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM character_social WHERE friend = {1} AND guid = {0};", client.Character.Guid, GUID));
+						ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM character_social WHERE friend = {1} AND guid = {0};", client.Character.Guid, GUID));
 					}
 					else
 					{
-						ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE character_social SET flags = {2} WHERE friend = {1} AND guid = {0};", client.Character.Guid, GUID, newFlags));
+						ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE character_social SET flags = {2} WHERE friend = {1} AND guid = {0};", client.Character.Guid, GUID, newFlags));
 					}
 
 					response.AddInt8((byte)FriendResult.FRIEND_REMOVED);
@@ -433,18 +433,18 @@ namespace Mangos.Cluster.Handlers
 			try
 			{
 				var q = new DataTable();
-				ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1};", client.Character.Guid, GUID), ref q);
+				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1};", client.Character.Guid, GUID), ref q);
 				if (q.Rows.Count > 0)
 				{
 					int flags = Conversions.ToInteger(q.Rows[0]["flags"]);
 					SocialFlag newFlags = (SocialFlag)flags ^ SocialFlag.SOCIAL_FLAG_IGNORED;
 					if ((newFlags & (SocialFlag.SOCIAL_FLAG_FRIEND | SocialFlag.SOCIAL_FLAG_IGNORED)) == 0)
 					{
-						ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("DELETE FROM character_social WHERE friend = {1} AND guid = {0};", client.Character.Guid, GUID));
+						ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM character_social WHERE friend = {1} AND guid = {0};", client.Character.Guid, GUID));
 					}
 					else
 					{
-						ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE character_social SET flags = {2} WHERE friend = {1} AND guid = {0};", client.Character.Guid, GUID, newFlags));
+						ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE character_social SET flags = {2} WHERE friend = {1} AND guid = {0};", client.Character.Guid, GUID, newFlags));
 					}
 
 					response.AddInt8((byte)FriendResult.FRIEND_IGNORE_REMOVED);

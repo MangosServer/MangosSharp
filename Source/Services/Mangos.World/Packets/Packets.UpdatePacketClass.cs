@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013-2020 getMaNGOS <https:\\getmangos.eu>
 //  
 //  This program is free software. You can redistribute it and/or modify
@@ -16,17 +16,39 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
+using System;
+using Mangos.Common.Globals;
 
-namespace Mangos.World.Battlegrounds
+namespace Mangos.World.Globals
 {
-    public partial class WS_Battlegrounds
+    public partial class Packets
 	{
-		public Dictionary<int, Battlefield> BATTLEFIELDs;
-
-		public WS_Battlegrounds()
+        public class UpdatePacketClass : PacketClass
 		{
-			BATTLEFIELDs = new Dictionary<int, Battlefield>();
+			public int UpdatesCount
+			{
+				get
+				{
+					return BitConverter.ToInt32(Data, 4);
+				}
+				set
+				{
+					checked
+					{
+						Data[4] = (byte)(value & 0xFF);
+						Data[5] = (byte)((value >> 8) & 0xFF);
+						Data[6] = (byte)((value >> 16) & 0xFF);
+						Data[7] = (byte)((value >> 24) & 0xFF);
+					}
+				}
+			}
+
+			public UpdatePacketClass()
+				: base(Opcodes.SMSG_UPDATE_OBJECT)
+			{
+				AddInt32(0);
+				AddInt8(0);
+			}
 		}
 	}
 }

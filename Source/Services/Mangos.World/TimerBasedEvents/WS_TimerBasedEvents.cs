@@ -16,17 +16,18 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
-
-namespace Mangos.World.Battlegrounds
+namespace Mangos.World.Server
 {
-    public partial class WS_Battlegrounds
+    public partial class WS_TimerBasedEvents
 	{
-		public Dictionary<int, Battlefield> BATTLEFIELDs;
+		public TRegenerator Regenerator;
 
-		public WS_Battlegrounds()
-		{
-			BATTLEFIELDs = new Dictionary<int, Battlefield>();
-		}
-	}
+		public TAIManager AIManager;
+
+		public TSpellManager SpellManager;
+
+		public TCharacterSaver CharacterSaver;
+
+		public TWeatherChanger WeatherChanger;
+    }
 }

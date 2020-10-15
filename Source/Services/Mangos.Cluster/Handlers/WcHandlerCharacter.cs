@@ -172,7 +172,7 @@ namespace Mangos.Cluster.Handlers
             {
                 // DONE: Get character info from DB
                 var MySQLQuery = new DataTable();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters WHERE char_guid = {0};", Guid), ref MySQLQuery);
+                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters WHERE char_guid = {0};", Guid), ref MySQLQuery);
                 if (MySQLQuery.Rows.Count > 0)
                 {
                     Race = (Races)Conversions.ToByte(MySQLQuery.Rows[0]["char_race"]);
@@ -223,7 +223,7 @@ namespace Mangos.Cluster.Handlers
                     Client = null;
 
                     // DONE: Update character status in database
-                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_online = 0, char_logouttime = '{1}' WHERE char_guid = '{0}';", Guid, ClusterServiceLocator._Functions.GetTimestamp(DateAndTime.Now)));
+                    ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_online = 0, char_logouttime = '{1}' WHERE char_guid = '{0}';", Guid, ClusterServiceLocator._Functions.GetTimestamp(DateAndTime.Now)));
 
                     // NOTE: Don't leave group on normal disconnect, only on logout
                     if (IsInGroup)
@@ -289,7 +289,7 @@ namespace Mangos.Cluster.Handlers
                 // Actions Here
                 IsInWorld = false;
                 GetWorld.ClientDisconnect(Client.Index);
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_positionX = {0}, char_positionY = {1}, char_positionZ = {2}, char_orientation = {3}, char_map_id = {4} WHERE char_guid = {5};", Strings.Trim(Conversion.Str(posX)), Strings.Trim(Conversion.Str(posY)), Strings.Trim(Conversion.Str(posZ)), Strings.Trim(Conversion.Str(ori)), thisMap, Guid));
+                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_positionX = {0}, char_positionY = {1}, char_positionZ = {2}, char_orientation = {3}, char_map_id = {4} WHERE char_guid = {5};", Strings.Trim(Conversion.Str(posX)), Strings.Trim(Conversion.Str(posY)), Strings.Trim(Conversion.Str(posZ)), Strings.Trim(Conversion.Str(ori)), thisMap, Guid));
 
                 // Do global transfer
                 ClusterServiceLocator._WC_Network.WorldServer.ClientTransfer(Client.Index, posX, posY, posZ, ori, (uint)thisMap);
@@ -305,7 +305,7 @@ namespace Mangos.Cluster.Handlers
                 // Actions Here
                 IsInWorld = false;
                 GetWorld.ClientDisconnect(Client.Index);
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_positionX = {0}, char_positionY = {1}, char_positionZ = {2}, char_orientation = {3}, char_map_id = {4} WHERE char_guid = {5};", Strings.Trim(Conversion.Str(posX)), Strings.Trim(Conversion.Str(posY)), Strings.Trim(Conversion.Str(posZ)), Strings.Trim(Conversion.Str(ori)), Map, Guid));
+                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_positionX = {0}, char_positionY = {1}, char_positionZ = {2}, char_orientation = {3}, char_map_id = {4} WHERE char_guid = {5};", Strings.Trim(Conversion.Str(posX)), Strings.Trim(Conversion.Str(posY)), Strings.Trim(Conversion.Str(posZ)), Strings.Trim(Conversion.Str(ori)), Map, Guid));
 
                 // Do global transfer
                 ClusterServiceLocator._WC_Network.WorldServer.ClientTransfer(Client.Index, posX, posY, posZ, ori, Map);
@@ -314,7 +314,7 @@ namespace Mangos.Cluster.Handlers
             public void OnLogin()
             {
                 // DONE: Update character status in database
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Update("UPDATE characters SET char_online = 1 WHERE char_guid = " + Guid + ";");
+                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_online = 1 WHERE char_guid = " + Guid + ";");
 
                 // DONE: SMSG_ACCOUNT_DATA_MD5
                 var argcharacter = this;
@@ -322,10 +322,10 @@ namespace Mangos.Cluster.Handlers
 
                 // DONE: SMSG_TRIGGER_CINEMATIC
                 var q = new DataTable();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT char_moviePlayed FROM characters WHERE char_guid = {0} AND char_moviePlayed = 0;", Guid), ref q);
+                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_moviePlayed FROM characters WHERE char_guid = {0} AND char_moviePlayed = 0;", Guid), ref q);
                 if (q.Rows.Count > 0)
                 {
-                    ClusterServiceLocator._WorldCluster.CharacterDatabase.Update("UPDATE characters SET char_moviePlayed = 1 WHERE char_guid = " + Guid + ";");
+                    ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_moviePlayed = 1 WHERE char_guid = " + Guid + ";");
                     var argcharacter1 = this;
                     ClusterServiceLocator._Functions.SendTriggerCinematic(Client, argcharacter1);
                 }
@@ -441,7 +441,7 @@ namespace Mangos.Cluster.Handlers
             if (GUID == 0m)
             {
                 var q = new DataTable();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", ClusterServiceLocator._Functions.EscapeString(Name)), ref q);
+                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", ClusterServiceLocator._Functions.EscapeString(Name)), ref q);
                 if (q.Rows.Count > 0)
                 {
                     return Conversions.ToULong(q.Rows[0]["char_guid"]);
@@ -466,7 +466,7 @@ namespace Mangos.Cluster.Handlers
             else
             {
                 var q = new DataTable();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT char_name FROM characters WHERE char_guid = \"{0}\";", GUID), ref q);
+                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_guid = \"{0}\";", GUID), ref q);
                 if (q.Rows.Count > 0)
                 {
                     return Conversions.ToString(q.Rows[0]["char_name"]);

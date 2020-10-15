@@ -255,19 +255,19 @@ namespace Mangos.Cluster.Globals
         {
             var account = new DataTable();
             var bannedAccount = new DataTable();
-            ClusterServiceLocator._WorldCluster.AccountDatabase.Query(string.Format("SELECT id, username FROM account WHERE username = {0};", name), ref account);
+            ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, username FROM account WHERE username = {0};", name), ref account);
             if (account.Rows.Count > 0)
             {
                 int accId = Conversions.ToInteger(account.Rows[0]["id"]);
-                ClusterServiceLocator._WorldCluster.AccountDatabase.Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", accId), ref bannedAccount);
+                ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", accId), ref bannedAccount);
                 if (bannedAccount.Rows.Count > 0)
                 {
-                    ClusterServiceLocator._WorldCluster.AccountDatabase.Update("UPDATE account_banned SET active = 1 WHERE id = '" + accId + "';");
+                    ClusterServiceLocator._WorldCluster.GetAccountDatabase().Update("UPDATE account_banned SET active = 1 WHERE id = '" + accId + "';");
                 }
                 else
                 {
                     string tempBanDate = Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongDate) + " " + Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongTime);
-                    ClusterServiceLocator._WorldCluster.AccountDatabase.Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP('{1}'), UNIX_TIMESTAMP('{2}'), '{3}', '{4}', active = 1);", accId, tempBanDate, "0000-00-00 00:00:00", name, reason));
+                    ClusterServiceLocator._WorldCluster.GetAccountDatabase().Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP('{1}'), UNIX_TIMESTAMP('{2}'), '{3}', '{4}', active = 1);", accId, tempBanDate, "0000-00-00 00:00:00", name, reason));
                 }
 
                 ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "Account [{0}] banned by server. Reason: [{1}].", name, reason);

@@ -150,7 +150,7 @@ namespace Mangos.Cluster.DataStores
 		{
 			byte Entry;
 			var MySQLQuery = new DataTable();
-			ClusterServiceLocator._WorldCluster.WorldDatabase.Query(string.Format("SELECT * FROM battleground_template"), ref MySQLQuery);
+			ClusterServiceLocator._WorldCluster.GetWorldDatabase().Query(string.Format("SELECT * FROM battleground_template"), ref MySQLQuery);
 			foreach (DataRow row in MySQLQuery.Rows)
 			{
 				Entry = row.As<byte>("id");

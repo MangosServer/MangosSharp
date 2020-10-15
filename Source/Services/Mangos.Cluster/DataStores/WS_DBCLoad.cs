@@ -30,7 +30,7 @@ namespace Mangos.Cluster.DataStores
             try
             {
                 // Set all characters offline
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Update("UPDATE characters SET char_online = 0;");
+                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_online = 0;");
             }
             catch (Exception e)
             {

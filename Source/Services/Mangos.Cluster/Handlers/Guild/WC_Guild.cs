@@ -16,7 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.InteropServices;
@@ -32,94 +31,14 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Cluster
 {
-    public class WC_Guild
+    public partial class WC_Guild
     {
-
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public Dictionary<uint, Guild> GUILDs = new Dictionary<uint, Guild>();
 
-        public class Guild : IDisposable
-        {
-            public uint ID;
-            public string Name;
-            public ulong Leader;
-            public string Motd;
-            public string Info;
-            public List<ulong> Members = new List<ulong>();
-            public string[] Ranks = new string[10];
-            public uint[] RankRights = new uint[10];
-            public byte EmblemStyle;
-            public byte EmblemColor;
-            public byte BorderStyle;
-            public byte BorderColor;
-            public byte BackgroundColor;
-            public short cYear;
-            public byte cMonth;
-            public byte cDay;
-
-            public Guild(uint guildId)
-            {
-                ID = guildId;
-                var mySqlQuery = new DataTable();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT * FROM guilds WHERE guild_id = " + ID + ";", ref mySqlQuery);
-                if (mySqlQuery.Rows.Count == 0)
-                    throw new ApplicationException("GuildID " + ID + " not found in database.");
-                var guildInfo = mySqlQuery.Rows[0];
-                Name = Conversions.ToString(guildInfo["guild_name"]);
-                Leader = Conversions.ToULong(guildInfo["guild_leader"]);
-                Motd = Conversions.ToString(guildInfo["guild_MOTD"]);
-                EmblemStyle = Conversions.ToByte(guildInfo["guild_tEmblemStyle"]);
-                EmblemColor = Conversions.ToByte(guildInfo["guild_tEmblemColor"]);
-                BorderStyle = Conversions.ToByte(guildInfo["guild_tBorderStyle"]);
-                BorderColor = Conversions.ToByte(guildInfo["guild_tBorderColor"]);
-                BackgroundColor = Conversions.ToByte(guildInfo["guild_tBackgroundColor"]);
-                cYear = Conversions.ToShort(guildInfo["guild_cYear"]);
-                cMonth = Conversions.ToByte(guildInfo["guild_cMonth"]);
-                cDay = Conversions.ToByte(guildInfo["guild_cDay"]);
-                for (int i = 0; i <= 9; i++)
-                {
-                    Ranks[i] = Conversions.ToString(guildInfo["guild_rank" + i]);
-                    RankRights[i] = Conversions.ToUInteger(guildInfo["guild_rank" + i + "_Rights"]);
-                }
-
-                mySqlQuery.Clear();
-                ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_guid FROM characters WHERE char_guildId = " + ID + ";", ref mySqlQuery);
-                foreach (DataRow memberInfo in mySqlQuery.Rows)
-                    Members.Add(Conversions.ToULong(memberInfo["char_guid"]));
-                ClusterServiceLocator._WC_Guild.GUILDs.Add(ID, this);
-            }
-
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
-            private bool _disposedValue; // To detect redundant calls
-
-            // IDisposable
-            protected virtual void Dispose(bool disposing)
-            {
-                if (!_disposedValue)
-                {
-                    // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                    // TODO: set large fields to null.
-                    ClusterServiceLocator._WC_Guild.GUILDs.Remove(ID);
-                }
-
-                _disposedValue = true;
-            }
-
-            // This code added by Visual Basic to correctly implement the disposable pattern.
-            public void Dispose()
-            {
-                // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
         // Basic Guild Framework
         public void AddCharacterToGuild(WcHandlerCharacter.CharacterObject objCharacter, int guildId, int guildRank = 4)
         {
-            ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = {2}, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", guildId, objCharacter.Guid, guildRank));
+            ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = {2}, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", guildId, objCharacter.Guid, guildRank));
             if (GUILDs.ContainsKey((uint)guildId) == false)
             {
                 var tmpGuild = new Guild((uint)guildId);
@@ -134,12 +53,12 @@ namespace Mangos.Cluster
 
         public void AddCharacterToGuild(ulong guid, int guildId, int guildRank = 4)
         {
-            ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = {2}, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", guildId, guid, guildRank));
+            ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = {2}, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", guildId, guid, guildRank));
         }
 
         public void RemoveCharacterFromGuild(WcHandlerCharacter.CharacterObject objCharacter)
         {
-            ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = 0, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", 0, objCharacter.Guid));
+            ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = 0, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", 0, objCharacter.Guid));
             objCharacter.Guild.Members.Remove(objCharacter.Guid);
             objCharacter.Guild = null;
             objCharacter.GuildRank = 0;
@@ -148,7 +67,7 @@ namespace Mangos.Cluster
 
         public void RemoveCharacterFromGuild(ulong guid)
         {
-            ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = 0, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", 0, guid));
+            ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = 0, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", 0, guid));
         }
 
         public void BroadcastChatMessageGuild(WcHandlerCharacter.CharacterObject sender, string message, LANGUAGES language, int guildId)
@@ -264,7 +183,7 @@ namespace Mangos.Cluster
 
             // DONE: Count the members
             var Members = new DataTable();
-            ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_online, char_guid, char_name, char_class, char_level, char_zone_id, char_logouttime, char_guildRank, char_guildPNote, char_guildOffNote FROM characters WHERE char_guildId = " + objCharacter.Guild.ID + ";", ref Members);
+            ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT char_online, char_guid, char_name, char_class, char_level, char_zone_id, char_logouttime, char_guildRank, char_guildPNote, char_guildOffNote FROM characters WHERE char_guildId = " + objCharacter.Guild.ID + ";", ref Members);
             var response = new Packets.PacketClass(Opcodes.SMSG_GUILD_ROSTER);
             response.AddInt32(Members.Rows.Count);
             response.AddString(objCharacter.Guild.Motd);

@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013-2020 getMaNGOS <https:\\getmangos.eu>
 //  
 //  This program is free software. You can redistribute it and/or modify
@@ -16,17 +16,19 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
+using System;
+using Microsoft.VisualBasic;
 
-namespace Mangos.World.Battlegrounds
+namespace Mangos.Cluster.Server
 {
-    public partial class WS_Battlegrounds
-	{
-		public Dictionary<int, Battlefield> BATTLEFIELDs;
-
-		public WS_Battlegrounds()
-		{
-			BATTLEFIELDs = new Dictionary<int, Battlefield>();
-		}
-	}
+    public partial class WC_Network
+    {
+        public class WorldInfo
+        {
+            public int Latency;
+            public DateTime Started = DateAndTime.Now;
+            public float CPUUsage;
+            public ulong MemoryUsage;
+        }
+    }
 }

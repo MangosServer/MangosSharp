@@ -428,7 +428,7 @@ namespace Mangos.Cluster.Handlers
 			var q = new DataTable();
 			if (client.Character is object)
 			{
-				ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("SELECT * FROM characters_instances WHERE char_guid = {0};", client.Character.Guid), ref q);
+				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters_instances WHERE char_guid = {0};", client.Character.Guid), ref q);
 			}
 
 			var response = new Packets.PacketClass(Opcodes.SMSG_RAID_INSTANCE_INFO);

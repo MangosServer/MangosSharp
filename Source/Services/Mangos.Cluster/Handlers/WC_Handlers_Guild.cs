@@ -63,7 +63,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Create guild data
 			var MySQLQuery = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES (\"{0}\", {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = \"{0}\";", guildName, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref MySQLQuery);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES (\"{0}\", {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = \"{0}\";", guildName, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref MySQLQuery);
 			ClusterServiceLocator._WC_Guild.AddCharacterToGuild(client.Character, Conversions.ToInteger(MySQLQuery.Rows[0]["guild_id"]), 0);
 		}
 
@@ -112,7 +112,7 @@ namespace Mangos.Cluster.Handlers
 
 			client.Character.Guild.Ranks[rankID] = rankName;
 			client.Character.Guild.RankRights[rankID] = rankRights;
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE guilds SET guild_rank{1} = \"{2}\", guild_rank{1}_Rights = {3} WHERE guild_id = {0};", client.Character.Guild.ID, rankID, rankName, rankRights));
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_rank{1} = \"{2}\", guild_rank{1}_Rights = {3} WHERE guild_id = {0};", client.Character.Guild.ID, rankID, rankName, rankRights));
 			ClusterServiceLocator._WC_Guild.SendGuildQuery(client, client.Character.Guild.ID);
 			ClusterServiceLocator._WC_Guild.SendGuildRoster(client.Character);
 		}
@@ -146,7 +146,7 @@ namespace Mangos.Cluster.Handlers
 				{
 					client.Character.Guild.Ranks[i] = NewRankName;
 					client.Character.Guild.RankRights[i] = (uint)(GuildRankRights.GR_RIGHT_GCHATLISTEN | GuildRankRights.GR_RIGHT_GCHATSPEAK);
-					ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE guilds SET guild_rank{1} = '{2}', guild_rank{1}_Rights = '{3}' WHERE guild_id = {0};", client.Character.Guild.ID, i, NewRankName, client.Character.Guild.RankRights[i]));
+					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_rank{1} = '{2}', guild_rank{1}_Rights = '{3}' WHERE guild_id = {0};", client.Character.Guild.ID, i, NewRankName, client.Character.Guild.RankRights[i]));
 					ClusterServiceLocator._WC_Guild.SendGuildQuery(client, client.Character.Guild.ID);
 					ClusterServiceLocator._WC_Guild.SendGuildRoster(client.Character);
 					return;
@@ -177,7 +177,7 @@ namespace Mangos.Cluster.Handlers
 			{
 				if (!string.IsNullOrEmpty(client.Character.Guild.Ranks[i]))
 				{
-					ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE guilds SET guild_rank{1} = '{2}', guild_rank{1}_Rights = '{3}' WHERE guild_id = {0};", client.Character.Guild.ID, i, "", 0));
+					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_rank{1} = '{2}', guild_rank{1}_Rights = '{3}' WHERE guild_id = {0};", client.Character.Guild.ID, i, "", 0));
 					ClusterServiceLocator._WC_Guild.SendGuildQuery(client, client.Character.Guild.ID);
 					ClusterServiceLocator._WC_Guild.SendGuildRoster(client.Character);
 					return;
@@ -210,7 +210,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Find new leader's GUID
 			var MySQLQuery = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_guid, char_guildId, char_guildrank FROM characters WHERE char_name = '" + playerName + "';", ref MySQLQuery);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT char_guid, char_guildId, char_guildrank FROM characters WHERE char_name = '" + playerName + "';", ref MySQLQuery);
 			if (MySQLQuery.Rows.Count == 0)
 			{
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
@@ -232,9 +232,9 @@ namespace Mangos.Cluster.Handlers
 			}
 
 			client.Character.Guild.Leader = PlayerGUID;
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE guilds SET guild_leader = \"{1}\" WHERE guild_id = {0};", client.Character.Guild.ID, PlayerGUID));
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", 0, PlayerGUID));
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", client.Character.GuildRank, client.Character.Guid));
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_leader = \"{1}\" WHERE guild_id = {0};", client.Character.Guild.ID, PlayerGUID));
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", 0, PlayerGUID));
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", client.Character.GuildRank, client.Character.Guid));
 
 			// DONE: Send notify message
 			var response = new Packets.PacketClass(Opcodes.SMSG_GUILD_EVENT);
@@ -281,7 +281,7 @@ namespace Mangos.Cluster.Handlers
 			client.Character.Guild.BorderStyle = (byte)tBorderStyle;
 			client.Character.Guild.BorderColor = (byte)tBorderColor;
 			client.Character.Guild.BackgroundColor = (byte)tBackgroundColor;
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE guilds SET guild_tEmblemStyle = {1}, guild_tEmblemColor = {2}, guild_tBorderStyle = {3}, guild_tBorderColor = {4}, guild_tBackgroundColor = {5} WHERE guild_id = {0};", client.Character.Guild.ID, tEmblemStyle, tEmblemColor, tBorderStyle, tBorderColor, tBackgroundColor));
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_tEmblemStyle = {1}, guild_tEmblemColor = {2}, guild_tBorderStyle = {3}, guild_tBorderColor = {4}, guild_tBackgroundColor = {5} WHERE guild_id = {0};", client.Character.Guild.ID, tEmblemStyle, tEmblemColor, tBorderStyle, tBorderColor, tBackgroundColor));
 			ClusterServiceLocator._WC_Guild.SendGuildQuery(client, client.Character.Guild.ID);
 			var packet_event = new Packets.PacketClass(Opcodes.SMSG_GUILD_EVENT);
 			packet_event.AddInt8((byte)GuildEvent.TABARDCHANGE);
@@ -338,7 +338,7 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 
 			// DONE: Delete guild information
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update("DELETE FROM guilds WHERE guild_id = " + GuildID + ";");
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("DELETE FROM guilds WHERE guild_id = " + GuildID + ";");
 		}
 
 		public void On_CMSG_GUILD_MOTD(Packets.PacketClass packet, WC_Network.ClientClass client)
@@ -363,7 +363,7 @@ namespace Mangos.Cluster.Handlers
 			}
 
 			client.Character.Guild.Motd = Motd;
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE guilds SET guild_MOTD = '{1}' WHERE guild_id = '{0}';", client.Character.Guild.ID, Motd));
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_MOTD = '{1}' WHERE guild_id = '{0}';", client.Character.Guild.ID, Motd));
 			var response = new Packets.PacketClass(Opcodes.SMSG_GUILD_EVENT);
 			response.AddInt8((byte)GuildEvent.MOTD);
 			response.AddInt8(1);
@@ -396,7 +396,7 @@ namespace Mangos.Cluster.Handlers
 				return;
 			}
 
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildOffNote = \"{1}\" WHERE char_name = \"{0}\";", playerName, Note.Replace("\"", "_").Replace("'", "_")));
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildOffNote = \"{1}\" WHERE char_name = \"{0}\";", playerName, Note.Replace("\"", "_").Replace("'", "_")));
 			ClusterServiceLocator._WC_Guild.SendGuildRoster(client.Character);
 		}
 
@@ -421,7 +421,7 @@ namespace Mangos.Cluster.Handlers
 				return;
 			}
 
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildPNote = \"{1}\" WHERE char_name = \"{0}\";", playerName, Note.Replace("\"", "_").Replace("'", "_")));
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildPNote = \"{1}\" WHERE char_name = \"{0}\";", playerName, Note.Replace("\"", "_").Replace("'", "_")));
 			ClusterServiceLocator._WC_Guild.SendGuildRoster(client.Character);
 		}
 
@@ -450,7 +450,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Find player2's guid
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName + "';", ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName + "';", ref q);
 
 			// DONE: Removed checks
 			if (q.Rows.Count == 0)
@@ -503,7 +503,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Find promoted player's guid
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
 
 			// DONE: Promoted checks
 			if (q.Rows.Count == 0)
@@ -536,7 +536,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Do the real update
 			objCharacter.GuildRank = (byte)(objCharacter.GuildRank - 1);
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", objCharacter.GuildRank, objCharacter.Guid));
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", objCharacter.GuildRank, objCharacter.Guid));
 			objCharacter.SendGuildUpdate();
 
 			// DONE: Send event to guild
@@ -571,7 +571,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Find demoted player's guid
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
 
 			// DONE: Demoted checks
 			if (q.Rows.Count == 0)
@@ -611,7 +611,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Do the real update
 			objCharacter.GuildRank = (byte)(objCharacter.GuildRank + 1);
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Update(string.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", objCharacter.GuildRank, objCharacter.Guid));
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", objCharacter.GuildRank, objCharacter.Guid));
 			objCharacter.SendGuildUpdate();
 
 			// DONE: Send event to guild
@@ -649,7 +649,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Find invited player's guid
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
 
 			// DONE: Invited checks
 			if (q.Rows.Count == 0)
@@ -757,7 +757,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Get info
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query("SELECT * FROM petitions WHERE petition_itemGuid = " + (itemGuid - ClusterServiceLocator._Global_Constants.GUID_ITEM) + " LIMIT 1;", ref q);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT * FROM petitions WHERE petition_itemGuid = " + (itemGuid - ClusterServiceLocator._Global_Constants.GUID_ITEM) + " LIMIT 1;", ref q);
 			if (q.Rows.Count == 0)
 				return;
 			byte Type = Conversions.ToByte(q.Rows[0]["petition_type"]);
@@ -787,7 +787,7 @@ namespace Mangos.Cluster.Handlers
 			var q2 = new DataTable();
 
 			// DONE: Create guild and add members
-			ClusterServiceLocator._WorldCluster.CharacterDatabase.Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES ('{0}', {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = '{0}';", Name, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref q2);
+			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES ('{0}', {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = '{0}';", Name, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref q2);
 			ClusterServiceLocator._WC_Guild.AddCharacterToGuild(client.Character, Conversions.ToInteger(q2.Rows[0]["guild_id"]), 0);
 
 			// DONE: Adding 9 more signed _WorldCluster.CHARACTERs

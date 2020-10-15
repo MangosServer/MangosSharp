@@ -137,7 +137,7 @@ namespace Mangos.Cluster.Server
 		{
 			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "Generating stats");
 			PrepareStats();
-			var f = XmlWriter.Create(ClusterServiceLocator._WorldCluster.Config.StatsLocation);
+			var f = XmlWriter.Create(ClusterServiceLocator._WorldCluster.GetConfig().StatsLocation);
 			f.WriteStartDocument(true);
 			f.WriteComment("generated at " + DateTime.Now.ToString("hh:mm:ss"));
 			// <?xml-stylesheet type="text/xsl" href="stats.xsl"?>

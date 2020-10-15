@@ -1,4 +1,4 @@
-//
+﻿//
 //  Copyright (C) 2013-2020 getMaNGOS <https:\\getmangos.eu>
 //  
 //  This program is free software. You can redistribute it and/or modify
@@ -16,17 +16,24 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
-
-namespace Mangos.World.Battlegrounds
+namespace Mangos.World.Weather
 {
-    public partial class WS_Battlegrounds
+    public partial class WS_Weather
 	{
-		public Dictionary<int, Battlefield> BATTLEFIELDs;
-
-		public WS_Battlegrounds()
+        public class WeatherSeasonChances
 		{
-			BATTLEFIELDs = new Dictionary<int, Battlefield>();
+			public int RainChance;
+
+			public int SnowChance;
+
+			public int StormChance;
+
+			public WeatherSeasonChances(int RainChance, int SnowChance, int StormChance)
+			{
+				this.RainChance = RainChance;
+				this.SnowChance = SnowChance;
+				this.StormChance = StormChance;
+			}
 		}
 	}
 }
