@@ -22,6 +22,7 @@ using System.Data;
 using System.Text.RegularExpressions;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Server;
+using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
@@ -258,7 +259,7 @@ namespace Mangos.Cluster.Globals
             ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, username FROM account WHERE username = {0};", name), ref account);
             if (account.Rows.Count > 0)
             {
-                int accId = Conversions.ToInteger(account.Rows[0]["id"]);
+                int accId = account.Rows[0].As<int>("id");
                 ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", accId), ref bannedAccount);
                 if (bannedAccount.Rows.Count > 0)
                 {

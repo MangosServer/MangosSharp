@@ -19,6 +19,7 @@
 using System;
 using System.Data;
 using System.Runtime.CompilerServices;
+using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Social;
@@ -149,31 +150,31 @@ namespace Mangos.World.Social
 						byte i = 0;
 						while (unchecked(i <= (uint)b2))
 						{
-							response.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[i]["mail_id"]));
-							response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["mail_type"]));
+							response.AddInt32(MySQLQuery.Rows[i].As<int>("mail_id"));
+							response.AddInt8(MySQLQuery.Rows[i].As<byte>("mail_type"));
 							object left = MySQLQuery.Rows[i]["mail_type"];
 							if (Operators.ConditionalCompareObjectEqual(left, MailTypeInfo.NORMAL, TextCompare: false))
 							{
-								response.AddUInt64(Conversions.ToULong(MySQLQuery.Rows[i]["mail_sender"]));
+								response.AddUInt64(MySQLQuery.Rows[i].As<ulong>("mail_sender"));
 							}
 							else if (Operators.ConditionalCompareObjectEqual(left, MailTypeInfo.AUCTION, TextCompare: false))
 							{
-								response.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[i]["mail_sender"]));
+								response.AddInt32(MySQLQuery.Rows[i].As<int>("mail_sender"));
 							}
-							response.AddString(Conversions.ToString(MySQLQuery.Rows[i]["mail_subject"]));
+							response.AddString(MySQLQuery.Rows[i].As<string>("mail_subject"));
 							if (Operators.ConditionalCompareObjectNotEqual(MySQLQuery.Rows[i]["mail_body"], "", TextCompare: false))
 							{
-								response.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[i]["mail_id"]));
+								response.AddInt32(MySQLQuery.Rows[i].As<int>("mail_id"));
 							}
 							else
 							{
 								response.AddInt32(0);
 							}
 							response.AddInt32(0);
-							response.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[i]["mail_stationary"]));
-							if (decimal.Compare(new decimal(Conversions.ToULong(MySQLQuery.Rows[i]["item_guid"])), 0m) > 0)
+							response.AddInt32(MySQLQuery.Rows[i].As<int>("mail_stationary"));
+							if (decimal.Compare(new decimal(MySQLQuery.Rows[i].As<ulong>("item_guid")), 0m) > 0)
 							{
-								ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(Conversions.ToULong(MySQLQuery.Rows[i]["item_guid"]));
+								ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(MySQLQuery.Rows[i].As<ulong>("item_guid"));
 								response.AddInt32(tmpItem.ItemEntry);
 								if (tmpItem.Enchantments.ContainsKey(0))
 								{
@@ -201,10 +202,10 @@ namespace Mangos.World.Social
 								response.AddInt32(0);
 								response.AddInt32(0);
 							}
-							response.AddUInt32(Conversions.ToUInteger(MySQLQuery.Rows[i]["mail_money"]));
-							response.AddUInt32(Conversions.ToUInteger(MySQLQuery.Rows[i]["mail_COD"]));
-							response.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[i]["mail_read"]));
-							response.AddSingle((float)((Conversions.ToUInteger(MySQLQuery.Rows[i]["mail_time"]) - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) / 86400.0));
+							response.AddUInt32(MySQLQuery.Rows[i].As<uint>("mail_money"));
+							response.AddUInt32(MySQLQuery.Rows[i].As<uint>("mail_COD"));
+							response.AddInt32(MySQLQuery.Rows[i].As<int>("mail_read"));
+							response.AddSingle((float)((MySQLQuery.Rows[i].As<uint>("mail_time") - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) / 86400.0));
 							response.AddInt32(0);
 							i = (byte)unchecked((uint)(i + 1));
 						}
@@ -279,7 +280,7 @@ namespace Mangos.World.Social
 						response3.Dispose();
 						return;
 					}
-					ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(Conversions.ToULong(MySQLQuery.Rows[0]["item_guid"]));
+					ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(MySQLQuery.Rows[0].As<ulong>("item_guid"));
 					tmpItem.OwnerGUID = client.Character.GUID;
 					tmpItem.Save();
 					if (client.Character.ItemADD(ref tmpItem))
@@ -361,7 +362,7 @@ namespace Mangos.World.Social
 				{
 					Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_ITEM_TEXT_QUERY_RESPONSE);
 					response.AddInt32(MailID);
-					response.AddString(Conversions.ToString(MySQLQuery.Rows[0]["mail_body"]));
+					response.AddString(MySQLQuery.Rows[0].As<string>("mail_body"));
 					client.Send(ref response);
 					response.Dispose();
 				}
@@ -442,8 +443,8 @@ namespace Mangos.World.Social
 						response6.Dispose();
 						return;
 					}
-					ulong ReceiverGUID = Conversions.ToULong(MySQLQuery.Rows[0]["char_guid"]);
-					bool ReceiverSide = WorldServiceLocator._Functions.GetCharacterSide(Conversions.ToByte(MySQLQuery.Rows[0]["char_race"]));
+					ulong ReceiverGUID = MySQLQuery.Rows[0].As<ulong>("char_guid");
+					bool ReceiverSide = WorldServiceLocator._Functions.GetCharacterSide(MySQLQuery.Rows[0].As<byte>("char_race"));
 					if (client.Character.GUID == ReceiverGUID)
 					{
 						Packets.PacketClass response5 = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);

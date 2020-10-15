@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
+using Mangos.Common;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
@@ -387,12 +388,12 @@ namespace Mangos.World.Handlers
 				byte reqLevel;
 				if (q.Rows.Count > 0)
 				{
-					posX = Conversions.ToSingle(q.Rows[0]["target_position_x"]);
-					posY = Conversions.ToSingle(q.Rows[0]["target_position_y"]);
-					posZ = Conversions.ToSingle(q.Rows[0]["target_position_z"]);
-					ori = Conversions.ToSingle(q.Rows[0]["target_orientation"]);
-					tMap = Conversions.ToInteger(q.Rows[0]["target_map"]);
-					reqLevel = Conversions.ToByte(q.Rows[0]["required_level"]);
+					posX = q.Rows[0].As<float>("target_position_x");
+					posY = q.Rows[0].As<float>("target_position_y");
+					posZ = q.Rows[0].As<float>("target_position_z");
+					ori = q.Rows[0].As<float>("target_orientation");
+					tMap = q.Rows[0].As<int>("target_map");
+					reqLevel = q.Rows[0].As<byte>("required_level");
 					if (!client.Character.DEAD)
 					{
 						goto IL_029d;

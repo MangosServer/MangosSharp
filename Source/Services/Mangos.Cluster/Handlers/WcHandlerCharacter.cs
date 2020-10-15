@@ -175,19 +175,19 @@ namespace Mangos.Cluster.Handlers
                 ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters WHERE char_guid = {0};", Guid), ref MySQLQuery);
                 if (MySQLQuery.Rows.Count > 0)
                 {
-                    Race = (Races)Conversions.ToByte(MySQLQuery.Rows[0]["char_race"]);
-                    Classe = (Classes)Conversions.ToByte(MySQLQuery.Rows[0]["char_class"]);
-                    Gender = Conversions.ToByte(MySQLQuery.Rows[0]["char_gender"]);
-                    Name = Conversions.ToString(MySQLQuery.Rows[0]["char_name"]);
-                    Level = Conversions.ToByte(MySQLQuery.Rows[0]["char_level"]);
-                    Zone = Conversions.ToUInteger(MySQLQuery.Rows[0]["char_zone_id"]);
-                    Map = Conversions.ToUInteger(MySQLQuery.Rows[0]["char_map_id"]);
-                    PositionX = Conversions.ToSingle(MySQLQuery.Rows[0]["char_positionX"]);
-                    PositionY = Conversions.ToSingle(MySQLQuery.Rows[0]["char_positionY"]);
-                    PositionZ = Conversions.ToSingle(MySQLQuery.Rows[0]["char_positionZ"]);
+                    Race = (Races)MySQLQuery.Rows[0].As<byte>("char_race");
+                    Classe = (Classes)MySQLQuery.Rows[0].As<byte>("char_class");
+                    Gender = MySQLQuery.Rows[0].As<byte>("char_gender");
+                    Name = MySQLQuery.Rows[0].As<string>("char_name");
+                    Level = MySQLQuery.Rows[0].As<byte>("char_level");
+                    Zone = MySQLQuery.Rows[0].As<uint>("char_zone_id");
+                    Map = MySQLQuery.Rows[0].As<uint>("char_map_id");
+                    PositionX = MySQLQuery.Rows[0].As<float>("char_positionX");
+                    PositionY = MySQLQuery.Rows[0].As<float>("char_positionY");
+                    PositionZ = MySQLQuery.Rows[0].As<float>("char_positionZ");
 
                     // DONE: Get guild info
-                    uint GuildID = Conversions.ToUInteger(MySQLQuery.Rows[0]["char_guildId"]);
+                    uint GuildID = MySQLQuery.Rows[0].As<uint>("char_guildId");
                     if (GuildID > 0L)
                     {
                         if (ClusterServiceLocator._WC_Guild.GUILDs.ContainsKey(GuildID) == false)
@@ -200,7 +200,7 @@ namespace Mangos.Cluster.Handlers
                             Guild = ClusterServiceLocator._WC_Guild.GUILDs[GuildID];
                         }
 
-                        GuildRank = Conversions.ToByte(MySQLQuery.Rows[0]["char_guildRank"]);
+                        GuildRank = MySQLQuery.Rows[0].As<byte>("char_guildRank");
                     }
                 }
                 else
@@ -444,7 +444,7 @@ namespace Mangos.Cluster.Handlers
                 ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", ClusterServiceLocator._Functions.EscapeString(Name)), ref q);
                 if (q.Rows.Count > 0)
                 {
-                    return Conversions.ToULong(q.Rows[0]["char_guid"]);
+                    return q.Rows[0].As<ulong>("char_guid");
                 }
                 else
                 {
@@ -469,7 +469,7 @@ namespace Mangos.Cluster.Handlers
                 ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_guid = \"{0}\";", GUID), ref q);
                 if (q.Rows.Count > 0)
                 {
-                    return Conversions.ToString(q.Rows[0]["char_name"]);
+                    return q.Rows[0].As<string>("char_name");
                 }
                 else
                 {

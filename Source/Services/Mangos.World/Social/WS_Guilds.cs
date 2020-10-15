@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Data;
+using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Guild;
 using Mangos.Common.Globals;
@@ -166,14 +167,14 @@ namespace Mangos.World.Social
 				{
 					Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_PETITION_SHOW_SIGNATURES);
 					response.AddUInt64(iGUID);
-					response.AddUInt64(Conversions.ToULong(MySQLQuery.Rows[0]["petition_owner"]));
-					response.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[0]["petition_id"]));
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[0]["petition_signedMembers"]));
-					byte b = Conversions.ToByte(MySQLQuery.Rows[0]["petition_signedMembers"]);
+					response.AddUInt64(MySQLQuery.Rows[0].As<ulong>("petition_owner"));
+					response.AddInt32(MySQLQuery.Rows[0].As<int>("petition_id"));
+					response.AddInt8(MySQLQuery.Rows[0].As<byte>("petition_signedMembers"));
+					byte b = MySQLQuery.Rows[0].As<byte>("petition_signedMembers");
 					byte i = 1;
 					while (unchecked(i <= (uint)b))
 					{
-						response.AddUInt64(Conversions.ToULong(MySQLQuery.Rows[0]["petition_signedMember" + Conversions.ToString(i)]));
+						response.AddUInt64(MySQLQuery.Rows[0].As<ulong>("petition_signedMember" + Conversions.ToString(i)));
 						response.AddInt32(0);
 						i = (byte)unchecked((uint)(i + 1));
 					}
@@ -211,11 +212,11 @@ namespace Mangos.World.Social
 				if (MySQLQuery.Rows.Count != 0)
 				{
 					Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_PETITION_QUERY_RESPONSE);
-					response.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[0]["petition_id"]));
-					response.AddUInt64(Conversions.ToULong(MySQLQuery.Rows[0]["petition_owner"]));
-					response.AddString(Conversions.ToString(MySQLQuery.Rows[0]["petition_name"]));
+					response.AddInt32(MySQLQuery.Rows[0].As<int>("petition_id"));
+					response.AddUInt64(MySQLQuery.Rows[0].As<ulong>("petition_owner"));
+					response.AddString(MySQLQuery.Rows[0].As<string>("petition_name"));
 					response.AddInt8(0);
-					if (Conversions.ToByte(MySQLQuery.Rows[0]["petition_type"]) == 9)
+					if (MySQLQuery.Rows[0].As<byte>("petition_type") == 9)
 					{
 						response.AddInt32(9);
 						response.AddInt32(9);
@@ -223,9 +224,9 @@ namespace Mangos.World.Social
 					}
 					else
 					{
-						response.AddInt32(unchecked(Conversions.ToByte(MySQLQuery.Rows[0]["petition_type"])) - 1);
-						response.AddInt32(unchecked(Conversions.ToByte(MySQLQuery.Rows[0]["petition_type"])) - 1);
-						response.AddInt32(Conversions.ToByte(MySQLQuery.Rows[0]["petition_type"]));
+						response.AddInt32(unchecked(MySQLQuery.Rows[0].As<byte>("petition_type")) - 1);
+						response.AddInt32(unchecked(MySQLQuery.Rows[0].As<byte>("petition_type")) - 1);
+						response.AddInt32(MySQLQuery.Rows[0].As<byte>("petition_type"));
 					}
 					response.AddInt32(0);
 					response.AddInt32(0);
@@ -236,7 +237,7 @@ namespace Mangos.World.Social
 					response.AddInt32(0);
 					response.AddInt32(0);
 					response.AddInt32(0);
-					if (Conversions.ToByte(MySQLQuery.Rows[0]["petition_type"]) == 9)
+					if (MySQLQuery.Rows[0].As<byte>("petition_type") == 9)
 					{
 						response.AddInt32(0);
 					}
@@ -313,9 +314,9 @@ namespace Mangos.World.Social
 					response.AddUInt64(client.Character.GUID);
 					response.AddInt32(0);
 					client.SendMultiplyPackets(ref response);
-					if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Conversions.ToULong(MySQLQuery.Rows[0]["petition_owner"])))
+					if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(MySQLQuery.Rows[0].As<ulong>("petition_owner")))
 					{
-						WorldServiceLocator._WorldServer.CHARACTERs[Conversions.ToULong(MySQLQuery.Rows[0]["petition_owner"])].client.SendMultiplyPackets(ref response);
+						WorldServiceLocator._WorldServer.CHARACTERs[MySQLQuery.Rows[0].As<ulong>("petition_owner")].client.SendMultiplyPackets(ref response);
 					}
 					response.Dispose();
 				}
@@ -335,9 +336,9 @@ namespace Mangos.World.Social
 					WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT petition_owner FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM) + " LIMIT 1;", ref q);
 					Packets.PacketClass response = new Packets.PacketClass(Opcodes.MSG_PETITION_DECLINE);
 					response.AddUInt64(client.Character.GUID);
-					if (q.Rows.Count > 0 && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Conversions.ToULong(q.Rows[0]["petition_owner"])))
+					if (q.Rows.Count > 0 && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("petition_owner")))
 					{
-						WorldServiceLocator._WorldServer.CHARACTERs[Conversions.ToULong(q.Rows[0]["petition_owner"])].client.SendMultiplyPackets(ref response);
+						WorldServiceLocator._WorldServer.CHARACTERs[q.Rows[0].As<ulong>("petition_owner")].client.SendMultiplyPackets(ref response);
 					}
 					response.Dispose();
 				}

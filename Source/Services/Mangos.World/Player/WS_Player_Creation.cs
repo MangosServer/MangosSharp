@@ -45,8 +45,8 @@ namespace Mangos.World.Player
 			Character.HairColor = HairColor;
 			Character.FacialHair = FacialHair;
 			WorldServiceLocator._WorldServer.AccountDatabase.Query($"SELECT id, gmlevel FROM account WHERE username = \"{Account}\";", ref MySQLQuery);
-			int Account_ID = Conversions.ToInteger(MySQLQuery.Rows[0]["id"]);
-			AccessLevel Account_Access = (Character.Access = (AccessLevel)Conversions.ToByte(MySQLQuery.Rows[0]["gmlevel"]));
+			int Account_ID = MySQLQuery.Rows[0].As<int>("id");
+			AccessLevel Account_Access = (Character.Access = (AccessLevel)MySQLQuery.Rows[0].As<byte>("gmlevel"));
 			if (!WorldServiceLocator._Functions.ValidateName(Character.Name))
 			{
 				return 70;
@@ -77,7 +77,7 @@ namespace Mangos.World.Player
 				{
 					MySQLQuery.Clear();
 					WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT char_race FROM characters WHERE account_id = \"{Account_ID}\" LIMIT 1;", ref MySQLQuery);
-					if (MySQLQuery.Rows.Count > 0 && Character.IsHorde != WorldServiceLocator._Functions.GetCharacterSide(Conversions.ToByte(MySQLQuery.Rows[0]["char_race"])))
+					if (MySQLQuery.Rows.Count > 0 && Character.IsHorde != WorldServiceLocator._Functions.GetCharacterSide(MySQLQuery.Rows[0].As<byte>("char_race")))
 					{
 						return 51;
 					}

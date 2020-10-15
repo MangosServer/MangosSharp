@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
@@ -88,10 +89,10 @@ namespace Mangos.World.Handlers
 						try
 						{
 							SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
-							SMSG_NAME_QUERY_RESPONSE.AddString(Conversions.ToString(MySQLQuery.Rows[0]["char_name"]));
-							SMSG_NAME_QUERY_RESPONSE.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[0]["char_race"]));
-							SMSG_NAME_QUERY_RESPONSE.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[0]["char_gender"]));
-							SMSG_NAME_QUERY_RESPONSE.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[0]["char_class"]));
+							SMSG_NAME_QUERY_RESPONSE.AddString(MySQLQuery.Rows[0].As<string>("char_name"));
+							SMSG_NAME_QUERY_RESPONSE.AddInt32(MySQLQuery.Rows[0].As<int>("char_race"));
+							SMSG_NAME_QUERY_RESPONSE.AddInt32(MySQLQuery.Rows[0].As<int>("char_gender"));
+							SMSG_NAME_QUERY_RESPONSE.AddInt32(MySQLQuery.Rows[0].As<int>("char_class"));
 							client.Send(ref SMSG_NAME_QUERY_RESPONSE);
 						}
 						finally

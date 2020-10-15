@@ -419,18 +419,18 @@ namespace Mangos.World.Objects
 				{
 					spellInfo = WorldServiceLocator._WS_Spells.SPELLs[spellInfo.SpellEffects[0].TriggerSpell];
 				}
-				byte reqLevel = Conversions.ToByte(mySqlQuery.Rows[0]["reqlevel"]);
+				byte reqLevel = mySqlQuery.Rows[0].As<byte>("reqlevel");
 				if (reqLevel == 0)
 				{
 					reqLevel = (byte)spellInfo.spellLevel;
 				}
-				uint spellCost = Conversions.ToUInteger(mySqlQuery.Rows[0]["spellcost"]);
+				uint spellCost = mySqlQuery.Rows[0].As<uint>("spellcost");
 				int reqSpell = 0;
 				if (WorldServiceLocator._WS_Spells.SpellChains.ContainsKey(spellInfo.ID))
 				{
 					reqSpell = WorldServiceLocator._WS_Spells.SpellChains[spellInfo.ID];
 				}
-				if (!client.Character.HaveSpell(spellInfo.ID) && client.Character.Copper >= spellCost && unchecked(client.Character.Level >= (uint)reqLevel) && (reqSpell <= 0 || client.Character.HaveSpell(reqSpell)) && (Conversions.ToInteger(mySqlQuery.Rows[0]["reqskill"]) <= 0 || client.Character.HaveSkill(Conversions.ToInteger(mySqlQuery.Rows[0]["reqskill"]), Conversions.ToInteger(mySqlQuery.Rows[0]["reqskillvalue"]))))
+				if (!client.Character.HaveSpell(spellInfo.ID) && client.Character.Copper >= spellCost && unchecked(client.Character.Level >= (uint)reqLevel) && (reqSpell <= 0 || client.Character.HaveSpell(reqSpell)) && ((mySqlQuery.Rows[0].As<int>("reqskill") <= 0 || client.Character.HaveSkill(mySqlQuery.Rows[0].As<int>("reqskill"), mySqlQuery.Rows[0].As<int>("reqskillvalue")))))
 				{
 					try
 					{

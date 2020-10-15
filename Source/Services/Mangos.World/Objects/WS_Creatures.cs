@@ -1949,42 +1949,42 @@ namespace Mangos.World.Objects
 						int i = 0;
 						do
 						{
-							Probability[i] = Conversions.ToSingle(MySQLQuery.Rows[0][("prob" + Conversions.ToString(i)) ?? ""]);
+							Probability[i] = MySQLQuery.Rows[0].As<float>(("prob" + Conversions.ToString(i)) ?? "");
 							if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["text" + Conversions.ToString(i) + "_0"])))
 							{
-								TextLine1[i] = Conversions.ToString(MySQLQuery.Rows[0]["text" + Conversions.ToString(i) + "_0"]);
+								TextLine1[i] = MySQLQuery.Rows[0].As<string>("text" + Conversions.ToString(i) + "_0");
 							}
 							if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["text" + Conversions.ToString(i) + "_1"])))
 							{
-								TextLine2[i] = Conversions.ToString(MySQLQuery.Rows[0]["text" + Conversions.ToString(i) + "_1"]);
+								TextLine2[i] = MySQLQuery.Rows[0].As<string>("text" + Conversions.ToString(i) + "_1");
 							}
 							if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0][("lang" + Conversions.ToString(i)) ?? ""])))
 							{
-								Language[i] = Conversions.ToInteger(MySQLQuery.Rows[0][("lang" + Conversions.ToString(i)) ?? ""]);
+								Language[i] = MySQLQuery.Rows[0].As<int>(("lang" + Conversions.ToString(i)) ?? "");
 							}
 							if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_0_delay"])))
 							{
-								EmoteDelay1[i] = Conversions.ToInteger(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_0_delay"]);
+								EmoteDelay1[i] = MySQLQuery.Rows[0].As<int>("em" + Conversions.ToString(i) + "_0_delay");
 							}
 							if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_0"])))
 							{
-								Emote1[i] = Conversions.ToInteger(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_0"]);
+								Emote1[i] = MySQLQuery.Rows[0].As<int>("em" + Conversions.ToString(i) + "_0");
 							}
 							if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_1_delay"])))
 							{
-								EmoteDelay2[i] = Conversions.ToInteger(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_1_delay"]);
+								EmoteDelay2[i] = MySQLQuery.Rows[0].As<int>("em" + Conversions.ToString(i) + "_1_delay");
 							}
 							if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_1"])))
 							{
-								Emote2[i] = Conversions.ToInteger(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_1"]);
+								Emote2[i] = MySQLQuery.Rows[0].As<int>("em" + Conversions.ToString(i) + "_1");
 							}
 							if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_2_delay"])))
 							{
-								EmoteDelay3[i] = Conversions.ToInteger(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_2_delay"]);
+								EmoteDelay3[i] = MySQLQuery.Rows[0].As<int>("em" + Conversions.ToString(i) + "_2_delay");
 							}
 							if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_2"])))
 							{
-								Emote3[i] = Conversions.ToInteger(MySQLQuery.Rows[0]["em" + Conversions.ToString(i) + "_2"]);
+								Emote3[i] = MySQLQuery.Rows[0].As<int>("em" + Conversions.ToString(i) + "_2");
 							}
 							if (Operators.CompareString(TextLine1[i], "", TextCompare: false) != 0)
 							{

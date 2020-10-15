@@ -288,9 +288,9 @@ namespace Mangos.Common.Globals
                 // For Each row As DataRow In mySqlQuery.Rows
                 // dtVersion = row.Item("column_name").ToString
                 // Next
-                int dbVersion = Convert.ToInt32(mySqlQuery.Rows[0]["version"].ToString());
-                int dbStructure = Convert.ToInt32(mySqlQuery.Rows[0]["structure"].ToString());
-                int dbContent = Convert.ToInt32(mySqlQuery.Rows[0]["content"].ToString());
+                int dbVersion = mySqlQuery.Rows[0].As<int>("version");
+                int dbStructure = mySqlQuery.Rows[0].As<int>("structure");
+                int dbContent = mySqlQuery.Rows[0].As<int>("content");
 
                 // NOTES: Version or Structure mismatch is a hard error, Content mismatch as a warning
 

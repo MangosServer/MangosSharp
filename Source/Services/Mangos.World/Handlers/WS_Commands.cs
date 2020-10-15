@@ -25,6 +25,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
@@ -1350,11 +1351,11 @@ namespace Mangos.World.Handlers
 					objCharacter.CommandResponse(cmdList2);
 					return true;
 				}
-				float posX = Conversions.ToSingle(mySqlQuery.Rows[0]["position_x"]);
-				float posY = Conversions.ToSingle(mySqlQuery.Rows[0]["position_y"]);
-				float posZ = Conversions.ToSingle(mySqlQuery.Rows[0]["position_z"]);
-				float posO = Conversions.ToSingle(mySqlQuery.Rows[0]["orientation"]);
-				int posMap = Conversions.ToInteger(mySqlQuery.Rows[0]["map"]);
+				float posX = mySqlQuery.Rows[0].As<float>("position_x");
+				float posY = mySqlQuery.Rows[0].As<float>("position_y");
+				float posZ = mySqlQuery.Rows[0].As<float>("position_z");
+				float posO = mySqlQuery.Rows[0].As<float>("orientation");
+				int posMap = mySqlQuery.Rows[0].As<int>("map");
 				objCharacter.Teleport(posX, posY, posZ, posO, posMap);
 			}
 			else
@@ -1869,7 +1870,7 @@ namespace Mangos.World.Handlers
 			WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT char_guid FROM characters WHERE char_name = \"{Name}\";", ref MySQLQuery);
 			if (MySQLQuery.Rows.Count > 0)
 			{
-				return Conversions.ToULong(MySQLQuery.Rows[0]["char_guid"]);
+				return MySQLQuery.Rows[0].As<ulong>("char_guid");
 			}
 			return 0uL;
 		}

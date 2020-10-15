@@ -66,7 +66,7 @@ namespace Mangos.World.Handlers
 			WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT MAX(instance) FROM characters_instances WHERE map = {Map};", ref q);
 			if (q.Rows[0][0] != DBNull.Value)
 			{
-				return checked((uint)(Conversions.ToInteger(q.Rows[0][0]) + 1));
+				return checked((uint)(q.Rows[0].As<int>(0) + 1));
 			}
 			return 0u;
 		}

@@ -368,17 +368,17 @@ namespace Mangos.World.Objects
 				Information.Err().Raise(1, "ItemObject.New", $"itemGuid {guidVal} not found in SQL database!");
 			}
 			GUID = Conversions.ToULong(Operators.AddObject(mySqlQuery.Rows[0]["item_guid"], WorldServiceLocator._Global_Constants.GUID_ITEM));
-			CreatorGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_creator"]);
-			OwnerGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_owner"]);
-			GiftCreatorGUID = Conversions.ToULong(mySqlQuery.Rows[0]["item_giftCreator"]);
-			StackCount = Conversions.ToInteger(mySqlQuery.Rows[0]["item_stackCount"]);
-			Durability = Conversions.ToInteger(mySqlQuery.Rows[0]["item_durability"]);
-			ChargesLeft = Conversions.ToInteger(mySqlQuery.Rows[0]["item_chargesLeft"]);
-			RandomProperties = Conversions.ToInteger(mySqlQuery.Rows[0]["item_random_properties"]);
-			ItemEntry = Conversions.ToInteger(mySqlQuery.Rows[0]["item_id"]);
-			_flags = Conversions.ToInteger(mySqlQuery.Rows[0]["item_flags"]);
-			ItemText = Conversions.ToInteger(mySqlQuery.Rows[0]["item_textId"]);
-			string[] tmp = Strings.Split(Conversions.ToString(mySqlQuery.Rows[0]["item_enchantment"]));
+			CreatorGUID = mySqlQuery.Rows[0].As<ulong>("item_creator");
+			OwnerGUID = mySqlQuery.Rows[0].As<ulong>("item_owner");
+			GiftCreatorGUID = mySqlQuery.Rows[0].As<ulong>("item_giftCreator");
+			StackCount = mySqlQuery.Rows[0].As<int>("item_stackCount");
+			Durability = mySqlQuery.Rows[0].As<int>("item_durability");
+			ChargesLeft = mySqlQuery.Rows[0].As<int>("item_chargesLeft");
+			RandomProperties = mySqlQuery.Rows[0].As<int>("item_random_properties");
+			ItemEntry = mySqlQuery.Rows[0].As<int>("item_id");
+			_flags = mySqlQuery.Rows[0].As<int>("item_flags");
+			ItemText = mySqlQuery.Rows[0].As<int>("item_textId");
+			string[] tmp = Strings.Split(mySqlQuery.Rows[0].As<string>("item_enchantment"));
 			checked
 			{
 				if (tmp.Length > 0)

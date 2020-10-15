@@ -380,7 +380,7 @@ namespace Mangos.World.Auction
 				WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT auction_id FROM auctionhouse WHERE auction_itemGuid = " + Conversions.ToString(iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";", ref MySQLQuery);
 				if (MySQLQuery.Rows.Count != 0)
 				{
-					SendAuctionCommandResult(ref client, Conversions.ToInteger(MySQLQuery.Rows[0]["auction_id"]), AuctionAction.AUCTION_SELL_ITEM, AuctionError.AUCTION_OK, 0);
+					SendAuctionCommandResult(ref client, MySQLQuery.Rows[0].As<int>("auction_id"), AuctionAction.AUCTION_SELL_ITEM, AuctionError.AUCTION_OK, 0);
 				}
 			}
 		}
@@ -479,7 +479,7 @@ namespace Mangos.World.Auction
                     copper = (uint)(unchecked(copper) - unchecked(Bid));
                     client.Character.SetUpdateFlag(1176, client.Character.Copper);
                     client.Character.SendCharacterUpdate(toNear: false);
-                    SendAuctionCommandResult(ref client, Conversions.ToInteger(MySQLQuery.Rows[0]["auction_id"]), AuctionAction.AUCTION_PLACE_BID, AuctionError.AUCTION_OK, 0);
+                    SendAuctionCommandResult(ref client, MySQLQuery.Rows[0].As<int>("auction_id"), AuctionAction.AUCTION_PLACE_BID, AuctionError.AUCTION_OK, 0);
                 }
             }
         }

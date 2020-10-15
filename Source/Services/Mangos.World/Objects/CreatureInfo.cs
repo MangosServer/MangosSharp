@@ -20,6 +20,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Runtime.CompilerServices;
+using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.World.Globals;
 using Mangos.World.Gossip;
@@ -215,14 +216,14 @@ namespace Mangos.World.Objects
 				return;
 			}
 			found_ = true;
-			ModelA1 = Conversions.ToInteger(MySQLQuery.Rows[0]["modelid1"]);
-			ModelA2 = Conversions.ToInteger(MySQLQuery.Rows[0]["Modelid2"]);
-			ModelH1 = Conversions.ToInteger(MySQLQuery.Rows[0]["modelid3"]);
-			ModelH2 = Conversions.ToInteger(MySQLQuery.Rows[0]["modelid4"]);
-			Name = Conversions.ToString(MySQLQuery.Rows[0]["name"]);
+			ModelA1 = MySQLQuery.Rows[0].As<int>("modelid1");
+			ModelA2 = MySQLQuery.Rows[0].As<int>("Modelid2");
+			ModelH1 = MySQLQuery.Rows[0].As<int>("modelid3");
+			ModelH2 = MySQLQuery.Rows[0].As<int>("modelid4");
+			Name = MySQLQuery.Rows[0].As<string>("name");
 			try
 			{
-				SubName = Conversions.ToString(MySQLQuery.Rows[0]["subname"]);
+				SubName = MySQLQuery.Rows[0].As<string>("subname");
 			}
 			catch (Exception projectError)
 			{
@@ -230,40 +231,41 @@ namespace Mangos.World.Objects
 				SubName = "";
 				ProjectData.ClearProjectError();
 			}
-			Size = Conversions.ToSingle(MySQLQuery.Rows[0]["scale"]);
-			MinLife = Conversions.ToInteger(MySQLQuery.Rows[0]["MinLevelHealth"]);
-			MaxLife = Conversions.ToInteger(MySQLQuery.Rows[0]["MaxLevelHealth"]);
-			MinMana = Conversions.ToInteger(MySQLQuery.Rows[0]["MinLevelMana"]);
-			MaxMana = Conversions.ToInteger(MySQLQuery.Rows[0]["MaxLevelMana"]);
+			Size = MySQLQuery.Rows[0].As<float>("scale");
+			MinLife = MySQLQuery.Rows[0].As<int>("MinLevelHealth");
+			MaxLife = MySQLQuery.Rows[0].As<int>("MaxLevelHealth");
+			MinMana = MySQLQuery.Rows[0].As<int>("MinLevelMana");
+			MaxMana = MySQLQuery.Rows[0].As<int>("MaxLevelMana");
 			ManaType = 0;
-			Faction = Conversions.ToShort(MySQLQuery.Rows[0]["factionAlliance"]);
-			Elite = Conversions.ToByte(MySQLQuery.Rows[0]["rank"]);
-			Damage.Maximum = Conversions.ToSingle(MySQLQuery.Rows[0]["MaxMeleeDmg"]);
-			RangedDamage.Maximum = Conversions.ToSingle(MySQLQuery.Rows[0]["MaxRangedDmg"]);
-			Damage.Minimum = Conversions.ToSingle(MySQLQuery.Rows[0]["MinMeleeDmg"]);
-			RangedDamage.Minimum = Conversions.ToSingle(MySQLQuery.Rows[0]["MinRangedDmg"]);
-			AttackPower = Conversions.ToInteger(MySQLQuery.Rows[0]["MeleeAttackPower"]);
-			RangedAttackPower = Conversions.ToInteger(MySQLQuery.Rows[0]["RangedAttackPower"]);
-			WalkSpeed = Conversions.ToSingle(MySQLQuery.Rows[0]["SpeedWalk"]);
-			RunSpeed = Conversions.ToSingle(MySQLQuery.Rows[0]["SpeedRun"]);
-			BaseAttackTime = Conversions.ToShort(MySQLQuery.Rows[0]["MeleeBaseAttackTime"]);
-			BaseRangedAttackTime = Conversions.ToShort(MySQLQuery.Rows[0]["RangedBaseAttackTime"]);
-			cNpcFlags = Conversions.ToInteger(MySQLQuery.Rows[0]["NpcFlags"]);
-			DynFlags = Conversions.ToInteger(MySQLQuery.Rows[0]["DynamicFlags"]);
-			cFlags = Conversions.ToInteger(MySQLQuery.Rows[0]["UnitFlags"]);
-			TypeFlags = Conversions.ToUInteger(MySQLQuery.Rows[0]["CreatureTypeFlags"]);
-			CreatureType = Conversions.ToByte(MySQLQuery.Rows[0]["CreatureType"]);
-			CreatureFamily = Conversions.ToByte(MySQLQuery.Rows[0]["Family"]);
-			LevelMin = Conversions.ToByte(MySQLQuery.Rows[0]["MinLevel"]);
-			LevelMax = Conversions.ToByte(MySQLQuery.Rows[0]["MaxLevel"]);
-			TrainerType = Conversions.ToInteger(MySQLQuery.Rows[0]["TrainerType"]);
-			TrainerSpell = Conversions.ToInteger(MySQLQuery.Rows[0]["TrainerSpell"]);
-			Classe = Conversions.ToByte(MySQLQuery.Rows[0]["TrainerClass"]);
-			Race = Conversions.ToByte(MySQLQuery.Rows[0]["TrainerRace"]);
-			Leader = Conversions.ToByte(MySQLQuery.Rows[0]["RacialLeader"]);
+			Faction = MySQLQuery.Rows[0].As<short>("factionAlliance");
+			Elite = MySQLQuery.Rows[0].As<byte>("rank");
+			Damage.Maximum = MySQLQuery.Rows[0].As<float>("MaxMeleeDmg");
+			RangedDamage.Maximum = MySQLQuery.Rows[0].As<float>("MaxRangedDmg");
+			Damage.Minimum = MySQLQuery.Rows[0].As<float>("MinMeleeDmg");
+			RangedDamage.Minimum = MySQLQuery.Rows[0].As<float>("MinRangedDmg");
+			AttackPower = MySQLQuery.Rows[0].As<int>("MeleeAttackPower");
+			RangedAttackPower = MySQLQuery.Rows[0].As<int>("RangedAttackPower");
+			WalkSpeed = MySQLQuery.Rows[0].As<float>("SpeedWalk");
+			RunSpeed = MySQLQuery.Rows[0].As<float>("SpeedRun");
+			BaseAttackTime = MySQLQuery.Rows[0].As<short>("MeleeBaseAttackTime");
+			BaseRangedAttackTime = MySQLQuery.Rows[0].As<short>("RangedBaseAttackTime");
+			cNpcFlags = MySQLQuery.Rows[0].As<int>("NpcFlags");
+			DynFlags = MySQLQuery.Rows[0].As<int>("DynamicFlags");
+			cFlags = MySQLQuery.Rows[0].As<int>("UnitFlags");
+			TypeFlags = MySQLQuery.Rows[0].As<uint>("CreatureTypeFlags");
+			CreatureType = MySQLQuery.Rows[0].As<byte>("CreatureType");
+			CreatureFamily = MySQLQuery.Rows[0].As<byte>("Family");
+			LevelMin = MySQLQuery.Rows[0].As<byte>("MinLevel");
+			LevelMax = MySQLQuery.Rows[0].As<byte>("MaxLevel");
+			TrainerType = MySQLQuery.Rows[0].As<int>("TrainerType");
+			TrainerSpell = MySQLQuery.Rows[0].As<int>("TrainerSpell");
+			Classe = MySQLQuery.Rows[0].As<byte>("TrainerClass");
+			Race = MySQLQuery.Rows[0].As<byte>("TrainerRace");
+			Leader = MySQLQuery.Rows[0].As<byte>("RacialLeader");
+
 			if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell1"])))
 			{
-				Spells[0] = Conversions.ToInteger(MySQLQuery.Rows[0]["spell1"]);
+				Spells[0] = MySQLQuery.Rows[0].As<int>("spell1");
 			}
 			else
 			{
@@ -271,7 +273,7 @@ namespace Mangos.World.Objects
 			}
 			if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell2"])))
 			{
-				Spells[1] = Conversions.ToInteger(MySQLQuery.Rows[0]["spell2"]);
+				Spells[1] = MySQLQuery.Rows[0].As<int>("spell2");
 			}
 			else
 			{
@@ -279,7 +281,7 @@ namespace Mangos.World.Objects
 			}
 			if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell3"])))
 			{
-				Spells[2] = Conversions.ToInteger(MySQLQuery.Rows[0]["spell3"]);
+				Spells[2] = MySQLQuery.Rows[0].As<int>("spell3");
 			}
 			else
 			{
@@ -287,27 +289,27 @@ namespace Mangos.World.Objects
 			}
 			if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell4"])))
 			{
-				Spells[3] = Conversions.ToInteger(MySQLQuery.Rows[0]["spell4"]);
+				Spells[3] = MySQLQuery.Rows[0].As<int>("spell4");
 			}
 			else
 			{
 				Spells[3] = 0;
 			}
-			PetSpellDataID = Conversions.ToInteger(MySQLQuery.Rows[0]["PetSpellDataId"]);
-			LootID = Conversions.ToInteger(MySQLQuery.Rows[0]["LootId"]);
-			SkinLootID = Conversions.ToInteger(MySQLQuery.Rows[0]["SkinningLootId"]);
-			PocketLootID = Conversions.ToInteger(MySQLQuery.Rows[0]["PickpocketLootId"]);
-			MinGold = Conversions.ToUInteger(MySQLQuery.Rows[0]["MinLootGold"]);
-			MaxGold = Conversions.ToUInteger(MySQLQuery.Rows[0]["MaxLootGold"]);
-			Resistances[0] = Conversions.ToInteger(MySQLQuery.Rows[0]["Armor"]);
-			Resistances[1] = Conversions.ToInteger(MySQLQuery.Rows[0]["ResistanceHoly"]);
-			Resistances[2] = Conversions.ToInteger(MySQLQuery.Rows[0]["ResistanceFire"]);
-			Resistances[3] = Conversions.ToInteger(MySQLQuery.Rows[0]["ResistanceNature"]);
-			Resistances[4] = Conversions.ToInteger(MySQLQuery.Rows[0]["ResistanceFrost"]);
-			Resistances[5] = Conversions.ToInteger(MySQLQuery.Rows[0]["ResistanceShadow"]);
-			Resistances[6] = Conversions.ToInteger(MySQLQuery.Rows[0]["ResistanceArcane"]);
-			EquipmentID = Conversions.ToInteger(MySQLQuery.Rows[0]["EquipmentTemplateId"]);
-			MechanicImmune = Conversions.ToUInteger(MySQLQuery.Rows[0]["SchoolImmuneMask"]);
+			PetSpellDataID = MySQLQuery.Rows[0].As<int>("PetSpellDataId");
+			LootID = MySQLQuery.Rows[0].As<int>("LootId");
+			SkinLootID = MySQLQuery.Rows[0].As<int>("SkinningLootId");
+			PocketLootID = MySQLQuery.Rows[0].As<int>("PickpocketLootId");
+			MinGold = MySQLQuery.Rows[0].As<uint>("MinLootGold");
+			MaxGold = MySQLQuery.Rows[0].As<uint>("MaxLootGold");
+			Resistances[0] = MySQLQuery.Rows[0].As<int>("Armor");
+			Resistances[1] = MySQLQuery.Rows[0].As<int>("ResistanceHoly");
+			Resistances[2] = MySQLQuery.Rows[0].As<int>("ResistanceFire");
+			Resistances[3] = MySQLQuery.Rows[0].As<int>("ResistanceNature");
+			Resistances[4] = MySQLQuery.Rows[0].As<int>("ResistanceFrost");
+			Resistances[5] = MySQLQuery.Rows[0].As<int>("ResistanceShadow");
+			Resistances[6] = MySQLQuery.Rows[0].As<int>("ResistanceArcane");
+			EquipmentID = MySQLQuery.Rows[0].As<int>("EquipmentTemplateId");
+			MechanicImmune = MySQLQuery.Rows[0].As<uint>("SchoolImmuneMask");
 			if (File.Exists("scripts\\gossip\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb"))
 			{
 				ScriptedObject tmpScript = new ScriptedObject("scripts\\gossip\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb", "", InMemory: true);

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using Mangos.Common;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Spell;
@@ -84,16 +85,16 @@ namespace Mangos.World.Objects
 					return;
 				}
 				found_ = true;
-				Model = Conversions.ToInteger(MySQLQuery.Rows[0]["displayId"]);
-				Type = (GameObjectType)Conversions.ToByte(MySQLQuery.Rows[0]["type"]);
-				Name = Conversions.ToString(MySQLQuery.Rows[0]["name"]);
-				Faction = Conversions.ToShort(MySQLQuery.Rows[0]["faction"]);
-				Flags = Conversions.ToInteger(MySQLQuery.Rows[0]["flags"]);
-				Size = Conversions.ToSingle(MySQLQuery.Rows[0]["size"]);
+				Model = MySQLQuery.Rows[0].As<int>("displayId");
+				Type = (GameObjectType)MySQLQuery.Rows[0].As<byte>("type");
+				Name = MySQLQuery.Rows[0].As<string>("name");
+				Faction = MySQLQuery.Rows[0].As<short>("faction");
+				Flags = MySQLQuery.Rows[0].As<int>("flags");
+				Size = MySQLQuery.Rows[0].As<float>("size");
 				byte i = 0;
 				do
 				{
-					Fields[i] = Conversions.ToUInteger(MySQLQuery.Rows[0]["data" + Conversions.ToString(i)]);
+					Fields[i] = MySQLQuery.Rows[0].As<uint>("data" + Conversions.ToString(i));
 					checked
 					{
 						i = (byte)unchecked((uint)(i + 1));
@@ -1119,7 +1120,7 @@ namespace Mangos.World.Objects
 						int zoneSkill = 0;
 						if (MySQLQuery.Rows.Count > 0)
 						{
-							zoneSkill = Conversions.ToInteger(MySQLQuery.Rows[0]["skill"]);
+							zoneSkill = MySQLQuery.Rows[0].As<int>("skill");
 						}
 						else
 						{

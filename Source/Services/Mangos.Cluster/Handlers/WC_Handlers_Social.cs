@@ -253,8 +253,8 @@ namespace Mangos.Cluster.Handlers
 			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid, char_race FROM characters WHERE char_name = \"{0}\";", name), ref q);
 			if (q.Rows.Count > 0)
 			{
-				guid = (ulong)Conversions.ToLong(q.Rows[0]["char_guid"]);
-				bool FriendSide = ClusterServiceLocator._Functions.GetCharacterSide(Conversions.ToByte(q.Rows[0]["char_race"]));
+				guid = (ulong)q.Rows[0].As<long>("char_guid");
+				bool FriendSide = ClusterServiceLocator._Functions.GetCharacterSide(q.Rows[0].As<byte>("char_race"));
 				q.Clear();
 				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE flags = {0}", Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
 				int NumberOfFriends = q.Rows.Count;
@@ -338,7 +338,7 @@ namespace Mangos.Cluster.Handlers
 			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", name), ref q);
 			if (q.Rows.Count > 0)
 			{
-				GUID = (ulong)Conversions.ToLong(q.Rows[0]["char_guid"]);
+				GUID = (ulong)q.Rows[0].As<long>("char_guid");
 				q.Clear();
 				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE flags = {0}", Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
 				int NumberOfFriends = q.Rows.Count;
@@ -393,7 +393,7 @@ namespace Mangos.Cluster.Handlers
 				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1};", client.Character.Guid, GUID), ref q);
 				if (q.Rows.Count > 0)
 				{
-					int flags = Conversions.ToInteger(q.Rows[0]["flags"]);
+					int flags = q.Rows[0].As<int>("flags");
 					var newFlags = (SocialFlag)flags ^ SocialFlag.SOCIAL_FLAG_FRIEND;
 					if ((newFlags & (SocialFlag.SOCIAL_FLAG_FRIEND | SocialFlag.SOCIAL_FLAG_IGNORED)) == 0)
 					{
@@ -436,7 +436,7 @@ namespace Mangos.Cluster.Handlers
 				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1};", client.Character.Guid, GUID), ref q);
 				if (q.Rows.Count > 0)
 				{
-					int flags = Conversions.ToInteger(q.Rows[0]["flags"]);
+					int flags = q.Rows[0].As<int>("flags");
 					SocialFlag newFlags = (SocialFlag)flags ^ SocialFlag.SOCIAL_FLAG_IGNORED;
 					if ((newFlags & (SocialFlag.SOCIAL_FLAG_FRIEND | SocialFlag.SOCIAL_FLAG_IGNORED)) == 0)
 					{

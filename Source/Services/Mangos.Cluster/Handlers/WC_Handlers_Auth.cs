@@ -103,7 +103,7 @@ namespace Mangos.Cluster.Handlers
 			ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(query, ref result);
 			if (result.Rows.Count > 0)
 			{
-				tmp = Conversions.ToString(result.Rows[0]["sessionkey"]);
+				tmp = result.Rows[0].As<string>("sessionkey");
 				client.Access = (AccessLevel)result.Rows[0]["gmlevel"];
 			}
 			else
@@ -341,7 +341,7 @@ namespace Mangos.Cluster.Handlers
 			try
 			{
 				ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id FROM account WHERE username = '{0}';", client.Account), ref MySQLQuery);
-				Account_ID = Conversions.ToInteger(MySQLQuery.Rows[0]["id"]);
+				Account_ID = MySQLQuery.Rows[0].As<int>("id");
 				MySQLQuery.Clear();
 				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters WHERE account_id = '{0}' ORDER BY char_guid;", Account_ID), ref MySQLQuery);
 
@@ -352,29 +352,29 @@ namespace Mangos.Cluster.Handlers
 					bool DEAD = false;
 					var DeadMySQLQuery = new DataTable();
 					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT COUNT(*) FROM corpse WHERE player = {0};", MySQLQuery.Rows[i]["char_guid"]), ref DeadMySQLQuery);
-					if (Conversions.ToInteger(DeadMySQLQuery.Rows[0][0]) > 0)
+					if (DeadMySQLQuery.Rows[0].As<int>(0) > 0)
 						DEAD = true;
 					var PetQuery = new DataTable();
 					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT modelid, level, entry FROM character_pet WHERE owner = '{0}';", MySQLQuery.Rows[i]["char_guid"]), ref PetQuery);
-					response.AddInt64(Conversions.ToLong(MySQLQuery.Rows[i]["char_guid"]));
-					response.AddString(Conversions.ToString(MySQLQuery.Rows[i]["char_name"]));
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["char_race"]));
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["char_class"]));
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["char_gender"]));
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["char_skin"]));
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["char_face"]));
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["char_hairStyle"]));
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["char_hairColor"]));
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["char_facialHair"]));
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["char_level"]));
-					response.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[i]["char_zone_id"]));
-					response.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[i]["char_map_id"]));
-					response.AddSingle(Conversions.ToSingle(MySQLQuery.Rows[i]["char_positionX"]));
-					response.AddSingle(Conversions.ToSingle(MySQLQuery.Rows[i]["char_positionY"]));
-					response.AddSingle(Conversions.ToSingle(MySQLQuery.Rows[i]["char_positionZ"]));
-					response.AddInt32(Conversions.ToInteger(MySQLQuery.Rows[i]["char_guildId"]));
+					response.AddInt64(MySQLQuery.Rows[i].As<long>("char_guid"));
+					response.AddString(MySQLQuery.Rows[i].As<string>("char_name"));
+					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_race"));
+					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_class"));
+					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_gender"));
+					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_skin"));
+					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_face"));
+					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_hairStyle"));
+					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_hairColor"));
+					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_facialHair"));
+					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_level"));
+					response.AddInt32(MySQLQuery.Rows[i].As<int>("char_zone_id"));
+					response.AddInt32(MySQLQuery.Rows[i].As<int>("char_map_id"));
+					response.AddSingle(MySQLQuery.Rows[i].As<float>("char_positionX"));
+					response.AddSingle(MySQLQuery.Rows[i].As<float>("char_positionY"));
+					response.AddSingle(MySQLQuery.Rows[i].As<float>("char_positionZ"));
+					response.AddInt32(MySQLQuery.Rows[i].As<int>("char_guildId"));
 					uint playerState = (uint)CharacterFlagState.CHARACTER_FLAG_NONE;
-					uint ForceRestrictions = Conversions.ToUInteger(MySQLQuery.Rows[i]["force_restrictions"]);
+					uint ForceRestrictions = MySQLQuery.Rows[i].As<uint>("force_restrictions");
 					if ((ForceRestrictions & (uint)ForceRestrictionFlags.RESTRICT_TRANSFER) != 0)
 					{
 						playerState += (uint)CharacterFlagState.CHARACTER_FLAG_LOCKED_FOR_TRANSFER;
@@ -396,17 +396,17 @@ namespace Mangos.Cluster.Handlers
 					}
 
 					response.AddUInt32(playerState);
-					response.AddInt8(Conversions.ToByte(MySQLQuery.Rows[i]["char_restState"]));
+					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_restState"));
 					int PetModel = 0;
 					int PetLevel = 0;
 					int PetFamily = 0;
 					if (PetQuery.Rows.Count > 0)
 					{
-						PetModel = Conversions.ToInteger(PetQuery.Rows[0]["modelid"]);
-						PetLevel = Conversions.ToInteger(PetQuery.Rows[0]["level"]);
+						PetModel = PetQuery.Rows[0].As<int>("modelid");
+						PetLevel = PetQuery.Rows[0].As<int>("level");
 						var PetFamilyQuery = new DataTable();
 						ClusterServiceLocator._WorldCluster.GetWorldDatabase().Query(string.Format("SELECT family FROM creature_template WHERE entry = '{0}'", PetQuery.Rows[0]["entry"]), ref PetFamilyQuery);
-						PetFamily = Conversions.ToInteger(PetFamilyQuery.Rows[0]["family"]);
+						PetFamily = PetFamilyQuery.Rows[0].As<int>("family");
 					}
 
 					response.AddInt32(PetModel);
@@ -414,7 +414,7 @@ namespace Mangos.Cluster.Handlers
 					response.AddInt32(PetFamily);
 
 					// DONE: Get items
-					long GUID = Conversions.ToLong(MySQLQuery.Rows[i]["char_guid"]);
+					long GUID = MySQLQuery.Rows[i].As<long>("char_guid");
 					var ItemsMySQLQuery = new DataTable();
 					string characterDB = ClusterServiceLocator._WorldCluster.GetCharacterDatabase().SQLDBName;
 					string worldDB = ClusterServiceLocator._WorldCluster.GetWorldDatabase().SQLDBName;

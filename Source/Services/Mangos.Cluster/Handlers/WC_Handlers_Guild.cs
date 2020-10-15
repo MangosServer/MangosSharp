@@ -20,6 +20,7 @@ using System;
 using System.Data;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Server;
+using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Guild;
 using Mangos.Common.Globals;
@@ -64,7 +65,7 @@ namespace Mangos.Cluster.Handlers
 			// DONE: Create guild data
 			var MySQLQuery = new DataTable();
 			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES (\"{0}\", {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = \"{0}\";", guildName, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref MySQLQuery);
-			ClusterServiceLocator._WC_Guild.AddCharacterToGuild(client.Character, Conversions.ToInteger(MySQLQuery.Rows[0]["guild_id"]), 0);
+			ClusterServiceLocator._WC_Guild.AddCharacterToGuild(client.Character, MySQLQuery.Rows[0].As<int>("guild_id"), 0);
 		}
 
 		public void On_CMSG_GUILD_INFO(Packets.PacketClass packet, WC_Network.ClientClass client)
@@ -216,13 +217,13 @@ namespace Mangos.Cluster.Handlers
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
 				return;
 			}
-			else if (Conversions.ToUInteger(MySQLQuery.Rows[0]["char_guildId"]) != client.Character.Guild.ID)
+			else if (MySQLQuery.Rows[0].As<uint>("char_guildId") != client.Character.Guild.ID)
 			{
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
 				return;
 			}
 
-			ulong PlayerGUID = Conversions.ToULong(MySQLQuery.Rows[0]["char_guid"]);
+			ulong PlayerGUID = MySQLQuery.Rows[0].As<ulong>("char_guid");
 			client.Character.GuildRank = 1; // Officer
 			client.Character.SendGuildUpdate();
 			if (ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(PlayerGUID))
@@ -458,13 +459,13 @@ namespace Mangos.Cluster.Handlers
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
 				return;
 			}
-			else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(Conversions.ToULong(q.Rows[0]["char_guid"])))
+			else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
 			{
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
 				return;
 			}
 
-			var objCharacter = ClusterServiceLocator._WorldCluster.CHARACTERs[Conversions.ToULong(q.Rows[0]["char_guid"])];
+			var objCharacter = ClusterServiceLocator._WorldCluster.CHARACTERs[q.Rows[0].As<ulong>("char_guid")];
 			if (objCharacter.IsGuildLeader)
 			{
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_LEADER_LEAVE);
@@ -511,13 +512,13 @@ namespace Mangos.Cluster.Handlers
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
 				return;
 			}
-			else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(Conversions.ToULong(q.Rows[0]["char_guid"])))
+			else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
 			{
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
 				return;
 			}
 
-			var objCharacter = ClusterServiceLocator._WorldCluster.CHARACTERs[Conversions.ToULong(q.Rows[0]["char_guid"])];
+			var objCharacter = ClusterServiceLocator._WorldCluster.CHARACTERs[q.Rows[0].As<ulong>("char_guid")];
 			if (objCharacter.Guild.ID != client.Character.Guild.ID)
 			{
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
@@ -579,13 +580,13 @@ namespace Mangos.Cluster.Handlers
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
 				return;
 			}
-			else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(Conversions.ToULong(q.Rows[0]["char_guid"])))
+			else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
 			{
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
 				return;
 			}
 
-			var objCharacter = ClusterServiceLocator._WorldCluster.CHARACTERs[Conversions.ToULong(q.Rows[0]["char_guid"])];
+			var objCharacter = ClusterServiceLocator._WorldCluster.CHARACTERs[q.Rows[0].As<ulong>("char_guid")];
 			if (objCharacter.Guild.ID != client.Character.Guild.ID)
 			{
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
@@ -657,13 +658,13 @@ namespace Mangos.Cluster.Handlers
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
 				return;
 			}
-			else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(Conversions.ToULong(q.Rows[0]["char_guid"])))
+			else if (!ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
 			{
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
 				return;
 			}
 
-			var objCharacter = ClusterServiceLocator._WorldCluster.CHARACTERs[Conversions.ToULong(q.Rows[0]["char_guid"])];
+			var objCharacter = ClusterServiceLocator._WorldCluster.CHARACTERs[q.Rows[0].As<ulong>("char_guid")];
 			if (objCharacter.IsInGuild)
 			{
 				ClusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.ALREADY_IN_GUILD, playerName);
@@ -760,8 +761,8 @@ namespace Mangos.Cluster.Handlers
 			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT * FROM petitions WHERE petition_itemGuid = " + (itemGuid - ClusterServiceLocator._Global_Constants.GUID_ITEM) + " LIMIT 1;", ref q);
 			if (q.Rows.Count == 0)
 				return;
-			byte Type = Conversions.ToByte(q.Rows[0]["petition_type"]);
-			string Name = Conversions.ToString(q.Rows[0]["petition_name"]);
+			byte Type = q.Rows[0].As<byte>("petition_type");
+			string Name = q.Rows[0].As<string>("petition_name");
 
 			// DONE: Check if already in guild
 			if (Type == 9 && client.Character.IsInGuild)
@@ -775,7 +776,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Check required signs
 			byte RequiredSigns = 9;
-			if (Conversions.ToInteger(q.Rows[0]["petition_signedMembers"]) < RequiredSigns)
+			if (q.Rows[0].As<int>("petition_signedMembers") < RequiredSigns)
 			{
 				var response = new Packets.PacketClass(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
 				response.AddInt32((int)PetitionTurnInError.PETITIONTURNIN_NEED_MORE_SIGNATURES);
@@ -788,21 +789,21 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Create guild and add members
 			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES ('{0}', {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = '{0}';", Name, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref q2);
-			ClusterServiceLocator._WC_Guild.AddCharacterToGuild(client.Character, Conversions.ToInteger(q2.Rows[0]["guild_id"]), 0);
+			ClusterServiceLocator._WC_Guild.AddCharacterToGuild(client.Character, q2.Rows[0].As<int>("guild_id"), 0);
 
 			// DONE: Adding 9 more signed _WorldCluster.CHARACTERs
 			for (byte i = 1; i <= 9; i++)
 			{
-				if (ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(Conversions.ToULong(q.Rows[0]["petition_signedMember" + i])))
+				if (ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("petition_signedMember" + i)))
 				{
 					var tmp = ClusterServiceLocator._WorldCluster.CHARACTERs;
-					var argobjCharacter = tmp[Conversions.ToULong(q.Rows[0]["petition_signedMember" + i])];
-					ClusterServiceLocator._WC_Guild.AddCharacterToGuild(argobjCharacter, Conversions.ToInteger(q2.Rows[0]["guild_id"]));
-					tmp[Conversions.ToULong(q.Rows[0]["petition_signedMember" + i])] = argobjCharacter;
+					var argobjCharacter = tmp[q.Rows[0].As<ulong>("petition_signedMember") + i];
+					ClusterServiceLocator._WC_Guild.AddCharacterToGuild(argobjCharacter, q2.Rows[0].As<int>("guild_id"));
+					tmp[q.Rows[0].As<ulong>("petition_signedMember") + i] = argobjCharacter;
 				}
 				else
 				{
-					ClusterServiceLocator._WC_Guild.AddCharacterToGuild(Conversions.ToULong(q.Rows[0]["petition_signedMember" + i]), Conversions.ToInteger(q2.Rows[0]["guild_id"]));
+					ClusterServiceLocator._WC_Guild.AddCharacterToGuild(q.Rows[0].As<ulong>("petition_signedMember" + i), q2.Rows[0].As<int>("guild_id"));
 				}
 			}
 

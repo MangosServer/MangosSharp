@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Server;
+using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Guild;
 using Mangos.Common.Enums.Misc;
@@ -200,19 +201,19 @@ namespace Mangos.Cluster
             bool Officer = objCharacter.IsGuildRightSet(GuildRankRights.GR_RIGHT_VIEWOFFNOTE);
             for (int i = 0, loopTo = Members.Rows.Count - 1; i <= loopTo; i++)
             {
-                if (Conversions.ToByte(Members.Rows[i]["char_online"]) == 1)
+                if (Members.Rows[i].As<byte>("char_online") == 1)
                 {
-                    response.AddUInt64(Conversions.ToULong(Members.Rows[i]["char_guid"]));
+                    response.AddUInt64(Members.Rows[i].As<ulong>("char_guid"));
                     response.AddInt8(1);                         // OnlineFlag
-                    response.AddString(Conversions.ToString(Members.Rows[i]["char_name"]));
-                    response.AddInt32(Conversions.ToInteger(Members.Rows[i]["char_guildRank"]));
-                    response.AddInt8(Conversions.ToByte(Members.Rows[i]["char_level"]));
-                    response.AddInt8(Conversions.ToByte(Members.Rows[i]["char_class"]));
-                    response.AddInt32(Conversions.ToInteger(Members.Rows[i]["char_zone_id"]));
-                    response.AddString(Conversions.ToString(Members.Rows[i]["char_guildPNote"]));
+                    response.AddString(Members.Rows[i].As<string>("char_name"));
+                    response.AddInt32(Members.Rows[i].As<int>("char_guildRank"));
+                    response.AddInt8(Members.Rows[i].As<byte>("char_level"));
+                    response.AddInt8(Members.Rows[i].As<byte>("char_class"));
+                    response.AddInt32(Members.Rows[i].As<int>("char_zone_id"));
+                    response.AddString(Members.Rows[i].As<string>("char_guildPNote"));
                     if (Officer)
                     {
-                        response.AddString(Conversions.ToString(Members.Rows[i]["char_guildOffNote"]));
+                        response.AddString(Members.Rows[i].As<string>("char_guildOffNote"));
                     }
                     else
                     {
@@ -221,21 +222,21 @@ namespace Mangos.Cluster
                 }
                 else
                 {
-                    response.AddUInt64(Conversions.ToULong(Members.Rows[i]["char_guid"]));
+                    response.AddUInt64(Members.Rows[i].As<ulong>("char_guid"));
                     response.AddInt8(0);                         // OfflineFlag
-                    response.AddString(Conversions.ToString(Members.Rows[i]["char_name"]));
-                    response.AddInt32(Conversions.ToInteger(Members.Rows[i]["char_guildRank"]));
-                    response.AddInt8(Conversions.ToByte(Members.Rows[i]["char_level"]));
-                    response.AddInt8(Conversions.ToByte(Members.Rows[i]["char_class"]));
-                    response.AddInt32(Conversions.ToInteger(Members.Rows[i]["char_zone_id"]));
+                    response.AddString(Members.Rows[i].As<string>("char_name"));
+                    response.AddInt32(Members.Rows[i].As<int>("char_guildRank"));
+                    response.AddInt8(Members.Rows[i].As<byte>("char_level"));
+                    response.AddInt8(Members.Rows[i].As<byte>("char_class"));
+                    response.AddInt32(Members.Rows[i].As<int>("char_zone_id"));
                     // 0 = < 1 hour / 0.1 = 2.4 hours / 1 = 24 hours (1 day)
                     // (Time logged out / 86400) = Days offline
-                    float DaysOffline = (float)((ClusterServiceLocator._Functions.GetTimestamp(DateAndTime.Now) - Conversions.ToUInteger(Members.Rows[i]["char_logouttime"])) / (double)DateInterval.Day);
+                    float DaysOffline = (float)((ClusterServiceLocator._Functions.GetTimestamp(DateAndTime.Now) - Members.Rows[i].As<uint>("char_logouttime")) / (double)DateInterval.Day);
                     response.AddSingle(DaysOffline); // Days offline
-                    response.AddString(Conversions.ToString(Members.Rows[i]["char_guildPNote"]));
+                    response.AddString(Members.Rows[i].As<string>("char_guildPNote"));
                     if (Officer)
                     {
-                        response.AddString(Conversions.ToString(Members.Rows[i]["char_guildOffNote"]));
+                        response.AddString(Members.Rows[i].As<string>("char_guildOffNote"));
                     }
                     else
                     {
