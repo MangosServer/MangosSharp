@@ -16,9 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
@@ -39,10 +36,13 @@ using Mangos.World.Quests;
 using Mangos.World.Server;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Mangos.World.Spells
 {
-	public class WS_Spells
+    public class WS_Spells
 	{
 		public class SpellInfo
 		{
@@ -3661,19 +3661,16 @@ namespace Mangos.World.Spells
 			return SpellFailedReason.SPELL_NO_ERROR;
 		}
 
-		public SpellFailedReason SPELL_EFFECT_WEAPON_DAMAGE_NOSCHOOL(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+		public SpellFailedReason SPELL_EFFECT_WEAPON_DAMAGE_NOSCHOOL(ref SpellTargets target, ref WS_Base.BaseObject caster, ref SpellEffect spellInfo, int spellId, ref List<WS_Base.BaseObject> infected, ref ItemObject item)
 		{
-			foreach (WS_Base.BaseUnit Unit in Infected)
+			foreach (WS_Base.BaseUnit unit in infected)
 			{
-				if (Caster is WS_PlayerData.CharacterObject)
+				if (caster is WS_PlayerData.CharacterObject character && unit is WS_Base.BaseObject victim && caster is WS_Base.BaseUnit casterUnit)
 				{
-					WS_Combat.TAttackTimer attackState = ((WS_PlayerData.CharacterObject)Caster).attackState;
-					WS_PlayerData.CharacterObject Character = (WS_PlayerData.CharacterObject)Caster;
-					WS_Base.BaseObject Victim = null;
-					attackState.DoMeleeDamageBySpell(ref Character, ref Victim, SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0), SpellID);
-					Caster = Character;
+					character.attackState.DoMeleeDamageBySpell(ref character, ref victim, spellInfo.GetValue(casterUnit.Level, 0), spellId);
 				}
 			}
+
 			return SpellFailedReason.SPELL_NO_ERROR;
 		}
 
