@@ -121,13 +121,7 @@ namespace Mangos.Common.DataStores
         }
 
         [Description("Return formated DBC header information.")]
-        public string GetFileInformation
-        {
-            get
-            {
-                return string.Format("DBC: {0}:{1}x{2}:{3}:{4}", FType, Rows, Columns, RowLength, StringPartLength);
-            }
-        }
+        public string GetFileInformation => string.Format("DBC: {0}:{1}x{2}:{3}:{4}", FType, Rows, Columns, RowLength, StringPartLength);
 
         [Description("Close file and dispose the dbc reader.")]
         public virtual void Dispose()

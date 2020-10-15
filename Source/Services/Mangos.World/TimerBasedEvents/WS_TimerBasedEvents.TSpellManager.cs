@@ -165,9 +165,9 @@ namespace Mangos.World.Server
 
 			private void UpdateSpells(ref WS_Base.BaseUnit objCharacter)
 			{
-                if (objCharacter is WS_Totems.TotemObject)
+                if (objCharacter is WS_Totems.TotemObject @object)
 				{
-					((WS_Totems.TotemObject)objCharacter).Update();
+					@object.Update();
 					return;
 				}
 				checked
@@ -208,23 +208,29 @@ namespace Mangos.World.Server
 								if (objCharacter.ActiveSpells[i].SpellCaster == objCharacter)
 								{
 									List<WS_Base.BaseUnit> Targets = new List<WS_Base.BaseUnit>();
-									if (objCharacter is WS_PlayerData.CharacterObject)
-									{
-										WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
-										WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)objCharacter;
-										Targets = wS_Spells.GetPartyMembersAroundMe(ref objCharacter2, objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius);
-									}
-									else if (objCharacter is WS_Totems.TotemObject && ((WS_Totems.TotemObject)objCharacter).Caster != null && ((WS_Totems.TotemObject)objCharacter).Caster is WS_PlayerData.CharacterObject)
-									{
-										WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
-										ref WS_Base.BaseUnit caster2 = ref ((WS_Totems.TotemObject)objCharacter).Caster;
-										ref WS_Base.BaseUnit reference = ref caster2;
-										WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)caster2;
-										List<WS_Base.BaseUnit> partyMembersAtPoint = wS_Spells2.GetPartyMembersAtPoint(ref objCharacter2, objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius, objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ);
-										reference = objCharacter2;
-										Targets = partyMembersAtPoint;
-									}
-									foreach (WS_Base.BaseUnit item in Targets)
+                                    switch (objCharacter)
+                                    {
+                                        case WS_PlayerData.CharacterObject _:
+                                            {
+                                                WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
+                                                WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)objCharacter;
+                                                Targets = wS_Spells.GetPartyMembersAroundMe(ref objCharacter2, objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius);
+                                                break;
+                                            }
+
+                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter).Caster != null && ((WS_Totems.TotemObject)objCharacter).Caster is WS_PlayerData.CharacterObject:
+                                            {
+                                                WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
+                                                ref WS_Base.BaseUnit caster2 = ref ((WS_Totems.TotemObject)objCharacter).Caster;
+                                                ref WS_Base.BaseUnit reference = ref caster2;
+                                                WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)caster2;
+                                                List<WS_Base.BaseUnit> partyMembersAtPoint = wS_Spells2.GetPartyMembersAtPoint(ref objCharacter2, objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius, objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ);
+                                                reference = objCharacter2;
+                                                Targets = partyMembersAtPoint;
+                                                break;
+                                            }
+                                    }
+                                    foreach (WS_Base.BaseUnit item in Targets)
 									{
 										WS_Base.BaseUnit Unit = item;
 										if (!Unit.HaveAura(objCharacter.ActiveSpells[i].SpellID))
@@ -244,8 +250,8 @@ namespace Mangos.World.Server
                                         case WS_PlayerData.CharacterObject _:
                                             caster = (WS_PlayerData.CharacterObject)objCharacter.ActiveSpells[i].SpellCaster;
                                             break;
-                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster != null && ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster is WS_PlayerData.CharacterObject:
-                                            caster = (WS_PlayerData.CharacterObject)((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster;
+                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster != null && ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster is WS_PlayerData.CharacterObject object1:
+                                            caster = object1;
                                             break;
                                     }
                                     if (caster == null || caster.Group == null || !caster.Group.LocalMembers.Contains(objCharacter.GUID))

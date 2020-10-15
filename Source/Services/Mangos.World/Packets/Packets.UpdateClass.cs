@@ -160,9 +160,9 @@ namespace Mangos.World.Globals
 						}
 						UpdateMask.SetAll(value: false);
 					}
-					if (packet is UpdatePacketClass)
+					if (packet is UpdatePacketClass @class)
 					{
-						((UpdatePacketClass)packet).UpdatesCount++;
+						@class.UpdatesCount++;
 					}
 				}
 			}
@@ -242,9 +242,9 @@ namespace Mangos.World.Globals
 						}
 						UpdateMask.SetAll(value: false);
 					}
-					if (packet is UpdatePacketClass)
+					if (packet is UpdatePacketClass @class)
 					{
-						((UpdatePacketClass)packet).UpdatesCount++;
+						@class.UpdatesCount++;
 					}
 				}
 			}
@@ -302,9 +302,9 @@ namespace Mangos.World.Globals
 						}
 						UpdateMask.SetAll(value: false);
 					}
-					if (packet is UpdatePacketClass)
+					if (packet is UpdatePacketClass @class)
 					{
-						((UpdatePacketClass)packet).UpdatesCount++;
+						@class.UpdatesCount++;
 					}
 				}
 			}
@@ -389,9 +389,9 @@ namespace Mangos.World.Globals
 						}
 						UpdateMask.SetAll(value: false);
 					}
-					if (packet is UpdatePacketClass)
+					if (packet is UpdatePacketClass @class)
 					{
-						((UpdatePacketClass)packet).UpdatesCount++;
+						@class.UpdatesCount++;
 					}
 				}
 			}
@@ -446,9 +446,9 @@ namespace Mangos.World.Globals
 						}
 						UpdateMask.SetAll(value: false);
 					}
-					if (packet is UpdatePacketClass)
+					if (packet is UpdatePacketClass @class)
 					{
-						((UpdatePacketClass)packet).UpdatesCount++;
+						@class.UpdatesCount++;
 					}
 				}
 			}
@@ -503,9 +503,9 @@ namespace Mangos.World.Globals
 						}
 						UpdateMask.SetAll(value: false);
 					}
-					if (packet is UpdatePacketClass)
+					if (packet is UpdatePacketClass @class)
 					{
-						((UpdatePacketClass)packet).UpdatesCount++;
+						@class.UpdatesCount++;
 					}
 				}
 			}

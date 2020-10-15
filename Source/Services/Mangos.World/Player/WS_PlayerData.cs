@@ -1081,7 +1081,7 @@ namespace Mangos.World.Player
                         return false;
                 }
                 float distance = WorldServiceLocator._WS_Combat.GetDistance(this, objCharacter);
-                if (Group != null && objCharacter is CharacterObject && ((CharacterObject)objCharacter).Group == Group)
+                if (Group != null && objCharacter is CharacterObject @object && @object.Group == Group)
                 {
                     if (distance > objCharacter.VisibleDistance)
                     {
@@ -5521,7 +5521,7 @@ namespace Mangos.World.Player
                         @object.inCombatWith.Add(GUID);
                         if ((@object.cUnitFlags & 0x80000) == 0)
                         {
-                            @object.cUnitFlags = @object.cUnitFlags | 0x80000;
+                            @object.cUnitFlags |= 0x80000;
                             @object.SetUpdateFlag(46, @object.cUnitFlags);
                             @object.SendCharacterUpdate();
                         }

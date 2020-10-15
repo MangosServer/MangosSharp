@@ -464,79 +464,87 @@ namespace Mangos.World.Objects
 					{
 						continue;
 					}
-					if (tmpUnit is WS_PlayerData.CharacterObject)
-					{
-						WS_PlayerData.CharacterObject obj = Character;
-						WS_Base.BaseObject objCharacter = tmpUnit;
-						bool flag = obj.CanSee(ref objCharacter);
-						tmpUnit = (WS_Base.BaseUnit)objCharacter;
-						if (flag)
-						{
-							Packets.PacketClass myPacket2 = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
-							try
-							{
-								myPacket2.AddInt32(1);
-								myPacket2.AddInt8(0);
-								Packets.UpdateClass myTmpUpdate2 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-								((WS_PlayerData.CharacterObject)tmpUnit).FillAllUpdateFlags(ref myTmpUpdate2);
-								Packets.UpdateClass updateClass = myTmpUpdate2;
-								WS_PlayerData.CharacterObject updateObject = (WS_PlayerData.CharacterObject)tmpUnit;
-								updateClass.AddToPacket(ref myPacket2, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject);
-								myTmpUpdate2.Dispose();
-								Character.client.Send(ref myPacket2);
-							}
-							finally
-							{
-								myPacket2.Dispose();
-							}
-							((WS_PlayerData.CharacterObject)tmpUnit).SeenBy.Add(Character.GUID);
-							Character.playersNear.Add(tmpUnit.GUID);
-						}
-						WS_PlayerData.CharacterObject obj2 = (WS_PlayerData.CharacterObject)tmpUnit;
-						objCharacter = Character;
-						flag = obj2.CanSee(ref objCharacter);
-						Character = (WS_PlayerData.CharacterObject)objCharacter;
-						if (flag)
-						{
-							((WS_PlayerData.CharacterObject)tmpUnit).client.SendMultiplyPackets(ref mePacket);
-							Character.SeenBy.Add(tmpUnit.GUID);
-							((WS_PlayerData.CharacterObject)tmpUnit).playersNear.Add(Character.GUID);
-						}
-					}
-					else
-					{
-						if (!(tmpUnit is WS_Creatures.CreatureObject))
-						{
-							continue;
-						}
-						WS_PlayerData.CharacterObject obj3 = Character;
-						WS_Base.BaseObject objCharacter = tmpUnit;
-						bool flag = obj3.CanSee(ref objCharacter);
-						tmpUnit = (WS_Base.BaseUnit)objCharacter;
-						if (flag)
-						{
-							Packets.PacketClass myPacket = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
-							try
-							{
-								myPacket.AddInt32(1);
-								myPacket.AddInt8(0);
-								Packets.UpdateClass myTmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
-								((WS_Creatures.CreatureObject)tmpUnit).FillAllUpdateFlags(ref myTmpUpdate);
-								Packets.UpdateClass updateClass2 = myTmpUpdate;
-								WS_Creatures.CreatureObject updateObject2 = (WS_Creatures.CreatureObject)tmpUnit;
-								updateClass2.AddToPacket(ref myPacket, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject2);
-								myTmpUpdate.Dispose();
-								Character.client.Send(ref myPacket);
-							}
-							finally
-							{
-								myPacket.Dispose();
-							}
-							((WS_PlayerData.CharacterObject)tmpUnit).SeenBy.Add(Character.GUID);
-							Character.creaturesNear.Add(tmpUnit.GUID);
-						}
-					}
-				}
+                    switch (tmpUnit)
+                    {
+                        case WS_PlayerData.CharacterObject _:
+                            {
+                                WS_PlayerData.CharacterObject obj = Character;
+                                WS_Base.BaseObject objCharacter = tmpUnit;
+                                bool flag = obj.CanSee(ref objCharacter);
+                                tmpUnit = (WS_Base.BaseUnit)objCharacter;
+                                if (flag)
+                                {
+                                    Packets.PacketClass myPacket2 = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                                    try
+                                    {
+                                        myPacket2.AddInt32(1);
+                                        myPacket2.AddInt8(0);
+                                        Packets.UpdateClass myTmpUpdate2 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                                        ((WS_PlayerData.CharacterObject)tmpUnit).FillAllUpdateFlags(ref myTmpUpdate2);
+                                        Packets.UpdateClass updateClass = myTmpUpdate2;
+                                        WS_PlayerData.CharacterObject updateObject = (WS_PlayerData.CharacterObject)tmpUnit;
+                                        updateClass.AddToPacket(ref myPacket2, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject);
+                                        myTmpUpdate2.Dispose();
+                                        Character.client.Send(ref myPacket2);
+                                    }
+                                    finally
+                                    {
+                                        myPacket2.Dispose();
+                                    }
+                                    ((WS_PlayerData.CharacterObject)tmpUnit).SeenBy.Add(Character.GUID);
+                                    Character.playersNear.Add(tmpUnit.GUID);
+                                }
+                                WS_PlayerData.CharacterObject obj2 = (WS_PlayerData.CharacterObject)tmpUnit;
+                                objCharacter = Character;
+                                flag = obj2.CanSee(ref objCharacter);
+                                Character = (WS_PlayerData.CharacterObject)objCharacter;
+                                if (flag)
+                                {
+                                    ((WS_PlayerData.CharacterObject)tmpUnit).client.SendMultiplyPackets(ref mePacket);
+                                    Character.SeenBy.Add(tmpUnit.GUID);
+                                    ((WS_PlayerData.CharacterObject)tmpUnit).playersNear.Add(Character.GUID);
+                                }
+
+                                break;
+                            }
+
+                        default:
+                            {
+                                if (!(tmpUnit is WS_Creatures.CreatureObject))
+                                {
+                                    continue;
+                                }
+                                WS_PlayerData.CharacterObject obj3 = Character;
+                                WS_Base.BaseObject objCharacter = tmpUnit;
+                                bool flag = obj3.CanSee(ref objCharacter);
+                                tmpUnit = (WS_Base.BaseUnit)objCharacter;
+                                if (flag)
+                                {
+                                    Packets.PacketClass myPacket = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                                    try
+                                    {
+                                        myPacket.AddInt32(1);
+                                        myPacket.AddInt8(0);
+                                        Packets.UpdateClass myTmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
+                                        ((WS_Creatures.CreatureObject)tmpUnit).FillAllUpdateFlags(ref myTmpUpdate);
+                                        Packets.UpdateClass updateClass2 = myTmpUpdate;
+                                        WS_Creatures.CreatureObject updateObject2 = (WS_Creatures.CreatureObject)tmpUnit;
+                                        updateClass2.AddToPacket(ref myPacket, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject2);
+                                        myTmpUpdate.Dispose();
+                                        Character.client.Send(ref myPacket);
+                                    }
+                                    finally
+                                    {
+                                        myPacket.Dispose();
+                                    }
+                                    ((WS_PlayerData.CharacterObject)tmpUnit).SeenBy.Add(Character.GUID);
+                                    Character.creaturesNear.Add(tmpUnit.GUID);
+                                }
+
+                                break;
+                            }
+                    }
+                }
 				mePacket.Dispose();
 			}
 
@@ -685,36 +693,46 @@ namespace Mangos.World.Objects
 						}
 						if (tmpUnit.IsDead)
 						{
-							if (tmpUnit is WS_PlayerData.CharacterObject)
-							{
-								WS_Handlers_Misc wS_Handlers_Misc = WorldServiceLocator._WS_Handlers_Misc;
-								WS_PlayerData.CharacterObject Character = (WS_PlayerData.CharacterObject)tmpUnit;
-								wS_Handlers_Misc.CharacterResurrect(ref Character);
-							}
-							else if (!(tmpUnit is WS_Creatures.CreatureObject))
-							{
-							}
-						}
-						if (tmpUnit is WS_PlayerData.CharacterObject)
-						{
-							if (((WS_PlayerData.CharacterObject)tmpUnit).OnTransport != null && ((WS_PlayerData.CharacterObject)tmpUnit).OnTransport == this)
-							{
-								((WS_PlayerData.CharacterObject)tmpUnit).Teleport(PosX, PosY, PosZ, ((WS_PlayerData.CharacterObject)tmpUnit).orientation, checked((int)NewMap));
-								continue;
-							}
-							lock (Passengers)
-							{
-								Passengers.Remove(tmpUnit);
-							}
-						}
-						else if (tmpUnit is WS_Creatures.CreatureObject)
-						{
-							((WS_Creatures.CreatureObject)tmpUnit).positionX = PosX;
-							((WS_Creatures.CreatureObject)tmpUnit).positionY = PosY;
-							((WS_Creatures.CreatureObject)tmpUnit).positionZ = PosZ;
-							((WS_Creatures.CreatureObject)tmpUnit).MapID = MapID;
-						}
-					}
+                            switch (tmpUnit)
+                            {
+                                case WS_PlayerData.CharacterObject _:
+                                    {
+                                        WS_Handlers_Misc wS_Handlers_Misc = WorldServiceLocator._WS_Handlers_Misc;
+                                        WS_PlayerData.CharacterObject Character = (WS_PlayerData.CharacterObject)tmpUnit;
+                                        wS_Handlers_Misc.CharacterResurrect(ref Character);
+                                        break;
+                                    }
+
+                                default:
+                                    if (!(tmpUnit is WS_Creatures.CreatureObject))
+                                    {
+                                    }
+
+                                    break;
+                            }
+                        }
+                        switch (tmpUnit)
+                        {
+                            case WS_PlayerData.CharacterObject _:
+                                if (((WS_PlayerData.CharacterObject)tmpUnit).OnTransport != null && ((WS_PlayerData.CharacterObject)tmpUnit).OnTransport == this)
+                                {
+                                    ((WS_PlayerData.CharacterObject)tmpUnit).Teleport(PosX, PosY, PosZ, ((WS_PlayerData.CharacterObject)tmpUnit).orientation, checked((int)NewMap));
+                                    continue;
+                                }
+                                lock (Passengers)
+                                {
+                                    Passengers.Remove(tmpUnit);
+                                }
+
+                                break;
+                            case WS_Creatures.CreatureObject _:
+                                ((WS_Creatures.CreatureObject)tmpUnit).positionX = PosX;
+                                ((WS_Creatures.CreatureObject)tmpUnit).positionY = PosY;
+                                ((WS_Creatures.CreatureObject)tmpUnit).positionZ = PosZ;
+                                ((WS_Creatures.CreatureObject)tmpUnit).MapID = MapID;
+                                break;
+                        }
+                    }
 					catch (Exception ex2)
 					{
 						ProjectData.SetProjectError(ex2);

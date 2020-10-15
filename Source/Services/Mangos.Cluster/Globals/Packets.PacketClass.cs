@@ -31,13 +31,7 @@ namespace Mangos.Cluster.Globals
             public byte[] Data;
             public int Offset = 4;
 
-            public int Length
-            {
-                get
-                {
-                    return Data[1] + Data[0] * 256;
-                }
-            }
+            public int Length => Data[1] + Data[0] * 256;
 
             public Opcodes OpCode
             {

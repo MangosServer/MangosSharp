@@ -146,9 +146,9 @@ namespace Mangos.World.Objects
 				{
 					packet.AddInt32(SoundID);
 					packet.AddUInt64(GUID);
-					if (OnlyToSelf && this is WS_PlayerData.CharacterObject)
+					if (OnlyToSelf && this is WS_PlayerData.CharacterObject @object)
 					{
-						((WS_PlayerData.CharacterObject)this).client.Send(ref packet);
+						@object.client.Send(ref packet);
 					}
 					else
 					{
@@ -163,9 +163,9 @@ namespace Mangos.World.Objects
 
 			public void SendToNearPlayers(ref Packets.PacketClass packet, ulong NotTo = 0uL, bool ToSelf = true)
 			{
-				if (ToSelf && this is WS_PlayerData.CharacterObject && ((WS_PlayerData.CharacterObject)this).client != null)
+				if (ToSelf && this is WS_PlayerData.CharacterObject @object && @object.client != null)
 				{
-					((WS_PlayerData.CharacterObject)this).client.SendMultiplyPackets(ref packet);
+					@object.client.SendMultiplyPackets(ref packet);
 				}
 				ulong[] array = SeenBy.ToArray();
 				foreach (ulong objCharacter in array)
@@ -310,23 +310,14 @@ namespace Mangos.World.Objects
 				}
 			}
 
-			public string UnitName
-			{
-				get
-				{
-					if (this is WS_PlayerData.CharacterObject)
-					{
-						return ((WS_PlayerData.CharacterObject)this).Name;
-					}
-					if (this is WS_Creatures.CreatureObject)
-					{
-						return ((WS_Creatures.CreatureObject)this).Name;
-					}
-					return "";
-				}
-			}
+            public string UnitName => this switch
+            {
+                WS_PlayerData.CharacterObject _ => ((WS_PlayerData.CharacterObject)this).Name,
+                WS_Creatures.CreatureObject _ => ((WS_Creatures.CreatureObject)this).Name,
+                _ => ""
+            };
 
-			public virtual byte StandState
+            public virtual byte StandState
 			{
 				get
 				{
@@ -446,19 +437,19 @@ namespace Mangos.World.Objects
 					{
 						return;
 					}
-					if (this is WS_PlayerData.CharacterObject)
+					if (this is WS_PlayerData.CharacterObject @object)
 					{
-						((WS_PlayerData.CharacterObject)this).SetUpdateFlag(47 + Slot, SpellID);
-						((WS_PlayerData.CharacterObject)this).SetUpdateFlag(95 + AuraFlag_Slot, ActiveSpells_Flags[AuraFlag_Slot]);
-						((WS_PlayerData.CharacterObject)this).SetUpdateFlag(113 + AuraLevel_Slot, ActiveSpells_Count[AuraLevel_Slot]);
-						((WS_PlayerData.CharacterObject)this).SetUpdateFlag(101 + AuraLevel_Slot, ActiveSpells_Level[AuraLevel_Slot]);
-						((WS_PlayerData.CharacterObject)this).SendCharacterUpdate();
+						@object.SetUpdateFlag(47 + Slot, SpellID);
+						@object.SetUpdateFlag(95 + AuraFlag_Slot, ActiveSpells_Flags[AuraFlag_Slot]);
+						@object.SetUpdateFlag(113 + AuraLevel_Slot, ActiveSpells_Count[AuraLevel_Slot]);
+						@object.SetUpdateFlag(101 + AuraLevel_Slot, ActiveSpells_Level[AuraLevel_Slot]);
+						@object.SendCharacterUpdate();
 						Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(Opcodes.SMSG_UPDATE_AURA_DURATION);
 						try
 						{
 							SMSG_UPDATE_AURA_DURATION.AddInt8((byte)Slot);
 							SMSG_UPDATE_AURA_DURATION.AddInt32(Duration);
-							((WS_PlayerData.CharacterObject)this).client.Send(ref SMSG_UPDATE_AURA_DURATION);
+							@object.client.Send(ref SMSG_UPDATE_AURA_DURATION);
 						}
 						finally
 						{
@@ -637,10 +628,10 @@ namespace Mangos.World.Objects
 						if (ActiveSpells[i] != null && ActiveSpells[i].SpellID == SpellID)
 						{
 							RemoveAura(i, ref ActiveSpells[i].SpellCaster);
-							if (this is WS_PlayerData.CharacterObject && decimal.Compare(new decimal(((WS_PlayerData.CharacterObject)this).DuelArbiter), 0m) != 0 && ((WS_PlayerData.CharacterObject)this).DuelPartner == null)
+							if (this is WS_PlayerData.CharacterObject @object && decimal.Compare(new decimal(@object.DuelArbiter), 0m) != 0 && @object.DuelPartner == null)
 							{
-								WorldServiceLocator._WorldServer.WORLD_CREATUREs[((WS_PlayerData.CharacterObject)this).DuelArbiter].RemoveAuraBySpell(SpellID);
-								((WS_PlayerData.CharacterObject)this).DuelArbiter = 0uL;
+								WorldServiceLocator._WorldServer.WORLD_CREATUREs[@object.DuelArbiter].RemoveAuraBySpell(SpellID);
+								@object.DuelArbiter = 0uL;
 							}
 							break;
 						}
@@ -847,15 +838,16 @@ namespace Mangos.World.Objects
 							break;
 						}
 					}
-					if (this is WS_PlayerData.CharacterObject)
-					{
-						((WS_PlayerData.CharacterObject)this).GroupUpdateFlag = ((WS_PlayerData.CharacterObject)this).GroupUpdateFlag | 0x200u;
-					}
-					else if (this is WS_Pets.PetObject && ((WS_Pets.PetObject)this).Owner is WS_PlayerData.CharacterObject)
-					{
-						((WS_PlayerData.CharacterObject)((WS_Pets.PetObject)this).Owner).GroupUpdateFlag = ((WS_PlayerData.CharacterObject)((WS_Pets.PetObject)this).Owner).GroupUpdateFlag | 0x40000u;
-					}
-				}
+                    switch (this)
+                    {
+                        case WS_PlayerData.CharacterObject _:
+                            ((WS_PlayerData.CharacterObject)this).GroupUpdateFlag = ((WS_PlayerData.CharacterObject)this).GroupUpdateFlag | 0x200u;
+                            break;
+                        case WS_Pets.PetObject _ when ((WS_Pets.PetObject)this).Owner is WS_PlayerData.CharacterObject @object:
+                            @object.GroupUpdateFlag |= 0x40000u;
+                            break;
+                    }
+                }
 			}
 
 			public void UpdateAura(int Slot)
@@ -869,16 +861,16 @@ namespace Mangos.World.Objects
 				{
 					int AuraFlag_SubSlot = unchecked(Slot % 4) * 8;
 					SetAuraStackCount(Slot, (byte)ActiveSpells[Slot].StackCount);
-					if (this is WS_PlayerData.CharacterObject)
+					if (this is WS_PlayerData.CharacterObject @object)
 					{
-						((WS_PlayerData.CharacterObject)this).SetUpdateFlag(113 + AuraFlag_Slot, ActiveSpells_Count[AuraFlag_Slot]);
-						((WS_PlayerData.CharacterObject)this).SendCharacterUpdate();
+						@object.SetUpdateFlag(113 + AuraFlag_Slot, ActiveSpells_Count[AuraFlag_Slot]);
+						@object.SendCharacterUpdate();
 						Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(Opcodes.SMSG_UPDATE_AURA_DURATION);
 						try
 						{
 							SMSG_UPDATE_AURA_DURATION.AddInt8((byte)Slot);
 							SMSG_UPDATE_AURA_DURATION.AddInt32(ActiveSpells[Slot].SpellDuration);
-							((WS_PlayerData.CharacterObject)this).client.Send(ref SMSG_UPDATE_AURA_DURATION);
+							@object.client.Send(ref SMSG_UPDATE_AURA_DURATION);
 						}
 						finally
 						{
@@ -945,7 +937,7 @@ namespace Mangos.World.Objects
                 int Absorb;
                 checked
 				{
-					if (Caster is WS_PlayerData.CharacterObject)
+					if (Caster is WS_PlayerData.CharacterObject @object)
 					{
                         int PenaltyFactor = 0;
 						int EffectCount = 0;
@@ -963,7 +955,7 @@ namespace Mangos.World.Objects
 						{
 							PenaltyFactor = 5;
 						}
-                        int SpellDamage = ((!IsHeal) ? ((WS_PlayerData.CharacterObject)Caster).spellDamage[unchecked((uint)DamageType)].Value : ((WS_PlayerData.CharacterObject)Caster).healing.Value);
+                        int SpellDamage = ((!IsHeal) ? @object.spellDamage[unchecked((uint)DamageType)].Value : @object.healing.Value);
                         if (IsDot)
 						{
 							int TickAmount = (int)Math.Round(WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration / (double)EffectInfo.Amplitude);
@@ -993,7 +985,7 @@ namespace Mangos.World.Objects
                     }
                     Damage += SpellDamageBenefit;
 					IsCrit = false;
-					if (!IsDot && Caster is WS_PlayerData.CharacterObject && WorldServiceLocator._Functions.RollChance(((WS_PlayerData.CharacterObject)Caster).GetCriticalWithSpells))
+					if (!IsDot && Caster is WS_PlayerData.CharacterObject object1 && WorldServiceLocator._Functions.RollChance(object1.GetCriticalWithSpells))
 					{
 						Damage = (int)(1.5f * Damage);
 						IsCrit = true;

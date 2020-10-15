@@ -64,9 +64,9 @@ namespace Mangos.World.Objects
 			public void Spawn()
 			{
 				AddToWorld();
-				if (Owner is WS_PlayerData.CharacterObject)
+				if (Owner is WS_PlayerData.CharacterObject @object)
 				{
-					((WS_PlayerData.CharacterObject)Owner).GroupUpdateFlag = ((WS_PlayerData.CharacterObject)Owner).GroupUpdateFlag | 0x7FC00u;
+					@object.GroupUpdateFlag |= 0x7FC00u;
 				}
 				WS_Pets wS_Pets = WorldServiceLocator._WS_Pets;
 				ref WS_Base.BaseUnit owner = ref Owner;
@@ -79,12 +79,12 @@ namespace Mangos.World.Objects
 			public void Hide()
 			{
 				RemoveFromWorld();
-				if (Owner is WS_PlayerData.CharacterObject)
+				if (Owner is WS_PlayerData.CharacterObject @object)
 				{
-					((WS_PlayerData.CharacterObject)Owner).GroupUpdateFlag = ((WS_PlayerData.CharacterObject)Owner).GroupUpdateFlag | 0x7FC00u;
+					@object.GroupUpdateFlag |= 0x7FC00u;
 					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PET_SPELLS);
 					packet.AddUInt64(0uL);
-					((WS_PlayerData.CharacterObject)Owner).client.Send(ref packet);
+					@object.client.Send(ref packet);
 					packet.Dispose();
 				}
 			}
@@ -207,11 +207,11 @@ namespace Mangos.World.Objects
 
 		public void SendPetNameQuery(ref WS_Network.ClientClass client, ulong PetGUID, int PetNumber)
 		{
-			if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(PetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[PetGUID] is PetObject)
+			if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(PetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[PetGUID] is PetObject @object)
 			{
 				Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_PET_NAME_QUERY_RESPONSE);
 				response.AddInt32(PetNumber);
-				response.AddString(((PetObject)WorldServiceLocator._WorldServer.WORLD_CREATUREs[PetGUID]).PetName);
+				response.AddString(@object.PetName);
 				response.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
 				client.Send(ref response);
 				response.Dispose();
@@ -263,10 +263,10 @@ namespace Mangos.World.Objects
 			ushort Command = 7;
 			ushort State = 6;
 			byte AddList = 0;
-			if (Pet is PetObject)
+			if (Pet is PetObject @object)
 			{
-				Command = ((PetObject)Pet).Command;
-				State = ((PetObject)Pet).State;
+				Command = @object.Command;
+				State = @object.State;
 			}
 			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PET_SPELLS);
 			packet.AddUInt64(Pet.GUID);

@@ -621,9 +621,9 @@ namespace Mangos.World.Objects
 				{
 					aiScript.OnDeath();
 				}
-				if (Attacker != null && Attacker is CreatureObject && ((CreatureObject)Attacker).aiScript != null)
+				if (Attacker != null && Attacker is CreatureObject @object && @object.aiScript != null)
 				{
-					WS_Creatures_AI.TBaseAI tBaseAI = ((CreatureObject)Attacker).aiScript;
+					WS_Creatures_AI.TBaseAI tBaseAI = @object.aiScript;
 					WS_Base.BaseUnit Victim = this;
 					tBaseAI.OnKill(ref Victim);
 				}
@@ -652,19 +652,19 @@ namespace Mangos.World.Objects
 				packetForNear = (Packets.UpdatePacketClass)packet;
 				packetForNear.Dispose();
 				UpdateData.Dispose();
-				if (Attacker is WS_PlayerData.CharacterObject)
+				if (Attacker is WS_PlayerData.CharacterObject object1)
 				{
-					((WS_PlayerData.CharacterObject)Attacker).RemoveFromCombat(this);
+					object1.RemoveFromCombat(this);
 					WS_PlayerData.CharacterObject Character;
 					if (!isCritter && !isGuard && CreatureInfo.cNpcFlags == 0)
 					{
-						Character = (WS_PlayerData.CharacterObject)Attacker;
+						Character = object1;
 						GiveXP(ref Character);
-						Character = (WS_PlayerData.CharacterObject)Attacker;
+						Character = object1;
 						LootCorpse(ref Character);
 					}
 					WS_Quests aLLQUESTS = WorldServiceLocator._WorldServer.ALLQUESTS;
-					Character = (WS_PlayerData.CharacterObject)Attacker;
+					Character = object1;
 					updateObject = this;
 					aLLQUESTS.OnQuestKill(ref Character, ref updateObject);
 					Attacker = Character;

@@ -1055,27 +1055,30 @@ namespace Mangos.World.Quests
 			{
 				if (objCharacter.TalkQuests[i] != null && ((uint)objCharacter.TalkQuests[i].ObjectiveFlags & (true ? 1u : 0u)) != 0 && (objCharacter.TalkQuests[i].ObjectiveFlags & 0x10) == 0)
 				{
-					if (objCharacter.TalkQuests[i] is WS_QuestsBaseScripted)
-					{
-						((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestKill(ref objCharacter, ref creature);
-					}
-					else
-					{
-						WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
-						byte j = 0;
-						do
-						{
-							if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesObject[j] == creature.ID && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
-							{
-								wS_QuestsBase.AddKill(objCharacter, j, creature.GUID);
-								return;
-							}
-							checked
-							{
-								j = (byte)unchecked((uint)(j + 1));
-							}
-						}
-						while (j <= 3u);
+                    switch (objCharacter.TalkQuests[i])
+                    {
+                        case WS_QuestsBaseScripted _:
+                            ((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestKill(ref objCharacter, ref creature);
+                            break;
+                        default:
+                            {
+                                WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
+                                byte j = 0;
+                                do
+                                {
+                                    if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesObject[j] == creature.ID && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
+                                    {
+                                        wS_QuestsBase.AddKill(objCharacter, j, creature.GUID);
+                                        return;
+                                    }
+                                    checked
+                                    {
+                                        j = (byte)unchecked((uint)(j + 1));
+                                    }
+                                }
+                                while (j <= 3u);
+                                break;
+                            }
                     }
                 }
 				i = checked(i + 1);
@@ -1090,27 +1093,30 @@ namespace Mangos.World.Quests
 			{
 				if (objCharacter.TalkQuests[i] != null && ((uint)objCharacter.TalkQuests[i].ObjectiveFlags & 0x10u) != 0)
 				{
-					if (objCharacter.TalkQuests[i] is WS_QuestsBaseScripted)
-					{
-						((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestCastSpell(ref objCharacter, ref creature, spellID);
-					}
-					else
-					{
-						WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
-						byte j = 0;
-						do
-						{
-							if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesSpell[j] == spellID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == creature.ID) && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
-							{
-								wS_QuestsBase.AddCast(objCharacter, j, creature.GUID);
-								return;
-							}
-							checked
-							{
-								j = (byte)unchecked((uint)(j + 1));
-							}
-						}
-						while (j <= 3u);
+                    switch (objCharacter.TalkQuests[i])
+                    {
+                        case WS_QuestsBaseScripted _:
+                            ((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestCastSpell(ref objCharacter, ref creature, spellID);
+                            break;
+                        default:
+                            {
+                                WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
+                                byte j = 0;
+                                do
+                                {
+                                    if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesSpell[j] == spellID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == creature.ID) && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
+                                    {
+                                        wS_QuestsBase.AddCast(objCharacter, j, creature.GUID);
+                                        return;
+                                    }
+                                    checked
+                                    {
+                                        j = (byte)unchecked((uint)(j + 1));
+                                    }
+                                }
+                                while (j <= 3u);
+                                break;
+                            }
                     }
                 }
 				i = checked(i + 1);
@@ -1125,27 +1131,30 @@ namespace Mangos.World.Quests
 			{
 				if (objCharacter.TalkQuests[i] != null && ((uint)objCharacter.TalkQuests[i].ObjectiveFlags & 0x10u) != 0)
 				{
-					if (objCharacter.TalkQuests[i] is WS_QuestsBaseScripted)
-					{
-						((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestCastSpell(ref objCharacter, ref gameObject, spellID);
-					}
-					else
-					{
-						WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
-						byte j = 0;
-						do
-						{
-							if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesSpell[j] == spellID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == checked(-gameObject.ID)) && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
-							{
-								wS_QuestsBase.AddCast(objCharacter, j, gameObject.GUID);
-								return;
-							}
-							checked
-							{
-								j = (byte)unchecked((uint)(j + 1));
-							}
-						}
-						while (j <= 3u);
+                    switch (objCharacter.TalkQuests[i])
+                    {
+                        case WS_QuestsBaseScripted _:
+                            ((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestCastSpell(ref objCharacter, ref gameObject, spellID);
+                            break;
+                        default:
+                            {
+                                WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
+                                byte j = 0;
+                                do
+                                {
+                                    if (wS_QuestsBase.ObjectivesType[j] == 1 && wS_QuestsBase.ObjectivesSpell[j] == spellID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == checked(-gameObject.ID)) && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
+                                    {
+                                        wS_QuestsBase.AddCast(objCharacter, j, gameObject.GUID);
+                                        return;
+                                    }
+                                    checked
+                                    {
+                                        j = (byte)unchecked((uint)(j + 1));
+                                    }
+                                }
+                                while (j <= 3u);
+                                break;
+                            }
                     }
                 }
 				i = checked(i + 1);
@@ -1160,27 +1169,30 @@ namespace Mangos.World.Quests
 			{
 				if (objCharacter.TalkQuests[i] != null && ((uint)objCharacter.TalkQuests[i].ObjectiveFlags & 0x40u) != 0)
 				{
-					if (objCharacter.TalkQuests[i] is WS_QuestsBaseScripted)
-					{
-						((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestEmote(ref objCharacter, ref creature, emoteID);
-					}
-					else
-					{
-						WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
-						byte j = 0;
-						do
-						{
-							if (wS_QuestsBase.ObjectivesType[j] == 64 && wS_QuestsBase.ObjectivesSpell[j] == emoteID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == creature.ID) && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
-							{
-								wS_QuestsBase.AddEmote(objCharacter, j);
-								return;
-							}
-							checked
-							{
-								j = (byte)unchecked((uint)(j + 1));
-							}
-						}
-						while (j <= 3u);
+                    switch (objCharacter.TalkQuests[i])
+                    {
+                        case WS_QuestsBaseScripted _:
+                            ((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestEmote(ref objCharacter, ref creature, emoteID);
+                            break;
+                        default:
+                            {
+                                WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
+                                byte j = 0;
+                                do
+                                {
+                                    if (wS_QuestsBase.ObjectivesType[j] == 64 && wS_QuestsBase.ObjectivesSpell[j] == emoteID && (wS_QuestsBase.ObjectivesObject[j] == 0 || wS_QuestsBase.ObjectivesObject[j] == creature.ID) && wS_QuestsBase.Progress[j] < (uint)wS_QuestsBase.ObjectivesCount[j])
+                                    {
+                                        wS_QuestsBase.AddEmote(objCharacter, j);
+                                        return;
+                                    }
+                                    checked
+                                    {
+                                        j = (byte)unchecked((uint)(j + 1));
+                                    }
+                                }
+                                while (j <= 3u);
+                                break;
+                            }
                     }
                 }
 				i = checked(i + 1);
@@ -1307,24 +1319,27 @@ namespace Mangos.World.Quests
 			{
 				if (objCharacter.TalkQuests[i] != null && ((uint)objCharacter.TalkQuests[i].ObjectiveFlags & 0x20u) != 0)
 				{
-					if (objCharacter.TalkQuests[i] is WS_QuestsBaseScripted)
-					{
-						((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestItem(ref objCharacter, itemID, count);
-					}
-					else
-					{
-						WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
-						int j = 0;
-						do
-						{
-							if (wS_QuestsBase.ObjectivesItem[j] == itemID && wS_QuestsBase.ProgressItem[j] < (uint)wS_QuestsBase.ObjectivesItemCount[j])
-							{
-								wS_QuestsBase.AddItem(objCharacter, checked((byte)j), count);
-								return;
-							}
-							j = checked(j + 1);
-						}
-						while (j <= 3);
+                    switch (objCharacter.TalkQuests[i])
+                    {
+                        case WS_QuestsBaseScripted _:
+                            ((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestItem(ref objCharacter, itemID, count);
+                            break;
+                        default:
+                            {
+                                WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
+                                int j = 0;
+                                do
+                                {
+                                    if (wS_QuestsBase.ObjectivesItem[j] == itemID && wS_QuestsBase.ProgressItem[j] < (uint)wS_QuestsBase.ObjectivesItemCount[j])
+                                    {
+                                        wS_QuestsBase.AddItem(objCharacter, checked((byte)j), count);
+                                        return;
+                                    }
+                                    j = checked(j + 1);
+                                }
+                                while (j <= 3);
+                                break;
+                            }
                     }
                 }
 				i = checked(i + 1);
@@ -1345,24 +1360,27 @@ namespace Mangos.World.Quests
 				{
 					if (objCharacter.TalkQuests[i] != null && (unchecked((uint)objCharacter.TalkQuests[i].ObjectiveFlags) & 0x20u) != 0)
 					{
-						if (objCharacter.TalkQuests[i] is WS_QuestsBaseScripted)
-						{
-							((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestItem(ref objCharacter, itemID, (short)unchecked(-count));
-						}
-						else
-						{
-							WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
-							byte j = 0;
-							do
-							{
-								if (wS_QuestsBase.ObjectivesItem[j] == itemID && wS_QuestsBase.ProgressItem[j] > 0)
-								{
-									wS_QuestsBase.RemoveItem(objCharacter, j, count);
-									return;
-								}
-								j = (byte)unchecked((uint)(j + 1));
-							}
-							while (unchecked(j) <= 3u);
+                        switch (objCharacter.TalkQuests[i])
+                        {
+                            case WS_QuestsBaseScripted _:
+                                ((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestItem(ref objCharacter, itemID, (short)unchecked(-count));
+                                break;
+                            default:
+                                {
+                                    WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
+                                    byte j = 0;
+                                    do
+                                    {
+                                        if (wS_QuestsBase.ObjectivesItem[j] == itemID && wS_QuestsBase.ProgressItem[j] > 0)
+                                        {
+                                            wS_QuestsBase.RemoveItem(objCharacter, j, count);
+                                            return;
+                                        }
+                                        j = (byte)unchecked((uint)(j + 1));
+                                    }
+                                    while (unchecked(j) <= 3u);
+                                    break;
+                                }
                         }
                     }
 					i++;
@@ -1378,27 +1396,30 @@ namespace Mangos.World.Quests
 			{
 				if (objCharacter.TalkQuests[i] != null && ((uint)objCharacter.TalkQuests[i].ObjectiveFlags & 2u) != 0)
 				{
-					if (objCharacter.TalkQuests[i] is WS_QuestsBaseScripted)
-					{
-						((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestExplore(ref objCharacter, areaID);
-					}
-					else
-					{
-						WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
-						byte j = 0;
-						do
-						{
-							if (wS_QuestsBase.ObjectivesExplore[j] == areaID && !wS_QuestsBase.Explored)
-							{
-								wS_QuestsBase.AddExplore(objCharacter);
-								return;
-							}
-							checked
-							{
-								j = (byte)unchecked((uint)(j + 1));
-							}
-						}
-						while (j <= 3u);
+                    switch (objCharacter.TalkQuests[i])
+                    {
+                        case WS_QuestsBaseScripted _:
+                            ((WS_QuestsBaseScripted)objCharacter.TalkQuests[i]).OnQuestExplore(ref objCharacter, areaID);
+                            break;
+                        default:
+                            {
+                                WS_QuestsBase wS_QuestsBase = objCharacter.TalkQuests[i];
+                                byte j = 0;
+                                do
+                                {
+                                    if (wS_QuestsBase.ObjectivesExplore[j] == areaID && !wS_QuestsBase.Explored)
+                                    {
+                                        wS_QuestsBase.AddExplore(objCharacter);
+                                        return;
+                                    }
+                                    checked
+                                    {
+                                        j = (byte)unchecked((uint)(j + 1));
+                                    }
+                                }
+                                while (j <= 3u);
+                                break;
+                            }
                     }
                 }
 				i = checked(i + 1);

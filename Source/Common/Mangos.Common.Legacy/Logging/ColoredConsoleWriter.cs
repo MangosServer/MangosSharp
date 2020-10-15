@@ -19,7 +19,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using Mangos.Common.Enums.Global;
-using Microsoft.VisualBasic;
+//using Microsoft.VisualBasic;
 
 // Using this logging type, all logs are displayed in console.
 // Writting commands is done trought console.
@@ -165,9 +165,9 @@ namespace Mangos.Common.Logging
             }
 
             if (arg is null)
-                Console.WriteLine($"[{DateAndTime.TimeOfDay.ToString("hh:mm:ss")}] {formatStr}");
+                Console.WriteLine($"[{DateTime.Now:hh:mm:ss}] {formatStr}");
             else
-                Console.WriteLine($"[{DateAndTime.TimeOfDay.ToString("hh:mm:ss")}] {String.Format(formatStr, arg)}");
+                Console.WriteLine($"[{DateTime.Now:hh:mm:ss}] {string.Format(formatStr, arg)}");
 
             Console.ForegroundColor = ConsoleColor.Gray;
         }

@@ -135,9 +135,9 @@ namespace Mangos.World.AI
 			{
 				foreach (KeyValuePair<WS_Base.BaseUnit, int> Victim in aiHateTable)
 				{
-					if (Victim.Key is WS_PlayerData.CharacterObject)
+					if (Victim.Key is WS_PlayerData.CharacterObject @object)
 					{
-						((WS_PlayerData.CharacterObject)Victim.Key).RemoveFromCombat(aiCreature);
+						@object.RemoveFromCombat(aiCreature);
 					}
 				}
 				if (aiCreature.DestroyAtNoCombat)
@@ -182,9 +182,9 @@ namespace Mangos.World.AI
 						LastHitX = aiCreature.positionX;
 						LastHitY = aiCreature.positionY;
 						LastHitZ = aiCreature.positionZ;
-						if (Attacker is WS_PlayerData.CharacterObject)
+						if (Attacker is WS_PlayerData.CharacterObject @object)
 						{
-							((WS_PlayerData.CharacterObject)Attacker).AddToCombat(aiCreature);
+							@object.AddToCombat(aiCreature);
 						}
 						if (!InCombat())
 						{
@@ -233,9 +233,9 @@ namespace Mangos.World.AI
 						if (Victim.Key.IsDead)
 						{
 							aiHateTableRemove.Add(Victim.Key);
-							if (Victim.Key is WS_PlayerData.CharacterObject)
+							if (Victim.Key is WS_PlayerData.CharacterObject @object)
 							{
-								((WS_PlayerData.CharacterObject)Victim.Key).RemoveFromCombat(aiCreature);
+								@object.RemoveFromCombat(aiCreature);
 							}
 						}
 						else if (Victim.Value > max)
@@ -578,9 +578,9 @@ namespace Mangos.World.AI
 					return;
 				}
 				aiCreature.SetToRealPosition();
-				if (aiTarget is WS_Creatures.CreatureObject)
+				if (aiTarget is WS_Creatures.CreatureObject object1)
 				{
-					((WS_Creatures.CreatureObject)aiTarget).SetToRealPosition();
+					object1.SetToRealPosition();
 				}
 				float distance = 1000f * aiCreature.CreatureInfo.RunSpeed;
 				float distanceToTarget = WorldServiceLocator._WS_Combat.GetDistance(aiCreature, aiTarget);
@@ -609,9 +609,9 @@ namespace Mangos.World.AI
 						return;
 					}
 					aiHateTable.Remove(aiTarget);
-					if (aiTarget is WS_PlayerData.CharacterObject)
+					if (aiTarget is WS_PlayerData.CharacterObject @object2)
 					{
-						((WS_PlayerData.CharacterObject)aiTarget).RemoveFromCombat(aiCreature);
+						@object2.RemoveFromCombat(aiCreature);
 					}
 					SelectTarget();
 					CheckTarget();
@@ -629,9 +629,9 @@ namespace Mangos.World.AI
 					return;
 				}
 				aiHateTable.Remove(aiTarget);
-				if (aiTarget is WS_PlayerData.CharacterObject)
+				if (aiTarget is WS_PlayerData.CharacterObject @object)
 				{
-					((WS_PlayerData.CharacterObject)aiTarget).RemoveFromCombat(aiCreature);
+					@object.RemoveFromCombat(aiCreature);
 				}
 				SelectTarget();
 				CheckTarget();

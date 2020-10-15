@@ -266,9 +266,9 @@ namespace Mangos.World.Handlers
 							AttackStop();
 							return;
 						}
-						if (Victim is WS_Creatures.CreatureObject)
+						if (Victim is WS_Creatures.CreatureObject @object)
 						{
-							((WS_Creatures.CreatureObject)Victim).SetToRealPosition();
+							@object.SetToRealPosition();
 						}
 						float tmpPosX = Victim.positionX;
 						float tmpPosY = Victim.positionY;
@@ -381,9 +381,9 @@ namespace Mangos.World.Handlers
 
 			public void DoRangedAttack(object Status)
 			{
-				if (Victim is WS_Creatures.CreatureObject)
+				if (Victim is WS_Creatures.CreatureObject @object)
 				{
-					((WS_Creatures.CreatureObject)Victim).SetToRealPosition();
+					@object.SetToRealPosition();
 				}
 				float tmpPosX = Victim.positionX;
 				float tmpPosY = Victim.positionY;
@@ -826,7 +826,7 @@ namespace Mangos.World.Handlers
             {
                 result.DamageType = DamageTypes.DMG_PHYSICAL;
             }
-            if (Victim is WS_Creatures.CreatureObject && ((WS_Creatures.CreatureObject)Victim).aiScript != null && ((WS_Creatures.CreatureObject)Victim).aiScript.State == AIState.AI_MOVING_TO_SPAWN)
+            if (Victim is WS_Creatures.CreatureObject @object && @object.aiScript != null && @object.aiScript.State == AIState.AI_MOVING_TO_SPAWN)
 			{
 				result.HitInfo |= 16;
 				return result;
@@ -835,9 +835,9 @@ namespace Mangos.World.Handlers
 			checked
 			{
 				skillDiference -= GetSkillDefence(ref Victim);
-				if (Victim is WS_PlayerData.CharacterObject)
+				if (Victim is WS_PlayerData.CharacterObject object1)
 				{
-					((WS_PlayerData.CharacterObject)Victim).UpdateSkill(95);
+					object1.UpdateSkill(95);
 				}
 				float chanceToMiss = GetBasePercentMiss(ref Attacker, skillDiference);
 				float chanceToCrit = GetBasePercentCrit(ref Attacker, skillDiference);
@@ -890,7 +890,7 @@ namespace Mangos.World.Handlers
 				{
 					chanceToCrushingBlow = 0;
 				}
-				if (Victim is WS_PlayerData.CharacterObject && ((WS_PlayerData.CharacterObject)Victim).StandState != 0)
+				if (Victim is WS_PlayerData.CharacterObject object2 && object2.StandState != 0)
 				{
 					chanceToCrit = 100f;
 					chanceToCrushingBlow = 0;
@@ -922,10 +922,10 @@ namespace Mangos.World.Handlers
 					DoEmote(39, ref Unit);
 					Victim = (WS_Base.BaseUnit)Unit;
 					Victim.AuraState |= 1;
-					if (Victim is WS_PlayerData.CharacterObject)
+					if (Victim is WS_PlayerData.CharacterObject object3)
 					{
-						((WS_PlayerData.CharacterObject)Victim).SetUpdateFlag(125, Victim.AuraState);
-						((WS_PlayerData.CharacterObject)Victim).SendCharacterUpdate();
+						object3.SetUpdateFlag(125, Victim.AuraState);
+						object3.SendCharacterUpdate();
 					}
 				}
 				else if (num < chanceToMiss + chanceToDodge + chanceToParry)
@@ -936,10 +936,10 @@ namespace Mangos.World.Handlers
 					DoEmote(39, ref Unit);
 					Victim = (WS_Base.BaseUnit)Unit;
 					Victim.AuraState |= 0x40;
-					if (Victim is WS_PlayerData.CharacterObject)
+					if (Victim is WS_PlayerData.CharacterObject object3)
 					{
-						((WS_PlayerData.CharacterObject)Victim).SetUpdateFlag(125, Victim.AuraState);
-						((WS_PlayerData.CharacterObject)Victim).SendCharacterUpdate();
+						object3.SetUpdateFlag(125, Victim.AuraState);
+						object3.SendCharacterUpdate();
 					}
 				}
 				else if (num < chanceToMiss + chanceToDodge + chanceToParry + chanceToGlancingBlow)
@@ -951,10 +951,10 @@ namespace Mangos.World.Handlers
 				}
 				else if (num < chanceToMiss + chanceToDodge + chanceToParry + chanceToGlancingBlow + chanceToBlock)
 				{
-					if (Victim is WS_PlayerData.CharacterObject)
+					if (Victim is WS_PlayerData.CharacterObject object3)
 					{
-						result.Blocked = (int)Math.Round(((WS_PlayerData.CharacterObject)Victim).combatBlockValue + ((WS_PlayerData.CharacterObject)Victim).Strength.Base / 20.0);
-						if (((WS_PlayerData.CharacterObject)Victim).combatBlockValue != 0)
+						result.Blocked = (int)Math.Round(object3.combatBlockValue + object3.Strength.Base / 20.0);
+						if (object3.combatBlockValue != 0)
 						{
 							WS_Base.BaseObject Unit = Victim;
 							DoEmote(43, ref Unit);
@@ -1015,7 +1015,7 @@ namespace Mangos.World.Handlers
 
 		public float GetBasePercentDodge(ref WS_Base.BaseUnit objCharacter, int skillDiference)
 		{
-			if (objCharacter is WS_PlayerData.CharacterObject)
+			if (objCharacter is WS_PlayerData.CharacterObject @object)
 			{
 				if (((uint)objCharacter.cUnitFlags & 0x40000u) != 0)
 				{
@@ -1023,27 +1023,27 @@ namespace Mangos.World.Handlers
 				}
 				checked
 				{
-					if (((WS_PlayerData.CharacterObject)objCharacter).combatDodge > 0)
+					if (@object.combatDodge > 0)
 					{
 						int combatDodgeAgilityBonus;
-						switch (((WS_PlayerData.CharacterObject)objCharacter).Classe)
+						switch (@object.Classe)
 						{
 						case Classes.CLASS_HUNTER:
-							combatDodgeAgilityBonus = (int)(((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 26.5f);
+							combatDodgeAgilityBonus = (int)(@object.Agility.Base / 26.5f);
 							break;
 						case Classes.CLASS_ROGUE:
-							combatDodgeAgilityBonus = (int)(((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 14.5f);
+							combatDodgeAgilityBonus = (int)(@object.Agility.Base / 14.5f);
 							break;
 						case Classes.CLASS_PALADIN:
 						case Classes.CLASS_MAGE:
 						case Classes.CLASS_WARLOCK:
-							combatDodgeAgilityBonus = (int)(((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.5f);
+							combatDodgeAgilityBonus = (int)(@object.Agility.Base / 19.5f);
 							break;
 						default:
-							combatDodgeAgilityBonus = (int)(((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+							combatDodgeAgilityBonus = (int)(@object.Agility.Base / 20.0);
 							break;
 						}
-						return ((WS_PlayerData.CharacterObject)objCharacter).combatDodge + combatDodgeAgilityBonus - skillDiference * 0.04f;
+						return @object.combatDodge + combatDodgeAgilityBonus - skillDiference * 0.04f;
 					}
 				}
 			}
@@ -1052,21 +1052,21 @@ namespace Mangos.World.Handlers
 
 		public float GetBasePercentParry(ref WS_Base.BaseUnit objCharacter, int skillDiference)
 		{
-			if (objCharacter is WS_PlayerData.CharacterObject && ((WS_PlayerData.CharacterObject)objCharacter).combatParry > 0)
-			{
-				return ((WS_PlayerData.CharacterObject)objCharacter).combatParry - skillDiference * 0.04f;
-			}
-			return 0f;
-		}
+            return objCharacter switch
+            {
+                WS_PlayerData.CharacterObject _ when ((WS_PlayerData.CharacterObject)objCharacter).combatParry > 0 => ((WS_PlayerData.CharacterObject)objCharacter).combatParry - skillDiference * 0.04f,
+                _ => 0f
+            };
+        }
 
 		public float GetBasePercentBlock(ref WS_Base.BaseUnit objCharacter, int skillDiference)
 		{
-			if (objCharacter is WS_PlayerData.CharacterObject && ((WS_PlayerData.CharacterObject)objCharacter).combatBlock > 0)
-			{
-				return ((WS_PlayerData.CharacterObject)objCharacter).combatBlock - skillDiference * 0.04f;
-			}
-			return 0f;
-		}
+            return objCharacter switch
+            {
+                WS_PlayerData.CharacterObject _ when ((WS_PlayerData.CharacterObject)objCharacter).combatBlock > 0 => ((WS_PlayerData.CharacterObject)objCharacter).combatBlock - skillDiference * 0.04f,
+                _ => 0f
+            };
+        }
 
 		public float GetBasePercentMiss(ref WS_Base.BaseUnit objCharacter, int skillDiference)
 		{
@@ -1094,43 +1094,48 @@ namespace Mangos.World.Handlers
 
 		public float GetBasePercentCrit(ref WS_Base.BaseUnit objCharacter, int skillDiference)
 		{
-			if (objCharacter is WS_PlayerData.CharacterObject)
-			{
-				float baseCrit = 0f;
-				switch (((WS_PlayerData.CharacterObject)objCharacter).Classe)
-				{
-				case Classes.CLASS_ROGUE:
-					baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 29.0);
-					break;
-				case Classes.CLASS_DRUID:
-					baseCrit = (float)(0.92000001668930054 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
-					break;
-				case Classes.CLASS_HUNTER:
-					baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 33.0);
-					break;
-				case Classes.CLASS_MAGE:
-					baseCrit = (float)(3.2000000476837158 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.44);
-					break;
-				case Classes.CLASS_PALADIN:
-					baseCrit = (float)(0.699999988079071 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.77);
-					break;
-				case Classes.CLASS_PRIEST:
-					baseCrit = (float)(3.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
-					break;
-				case Classes.CLASS_SHAMAN:
-					baseCrit = (float)(1.7000000476837158 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.7);
-					break;
-				case Classes.CLASS_WARLOCK:
-					baseCrit = (float)(2.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
-					break;
-				case Classes.CLASS_WARRIOR:
-					baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
-					break;
-				}
-				return baseCrit + ((WS_PlayerData.CharacterObject)objCharacter).combatCrit + skillDiference * 0.2f;
-			}
-			return 5f + skillDiference * 0.2f;
-		}
+            switch (objCharacter)
+            {
+                case WS_PlayerData.CharacterObject _:
+                    {
+                        float baseCrit = 0f;
+                        switch (((WS_PlayerData.CharacterObject)objCharacter).Classe)
+                        {
+                            case Classes.CLASS_ROGUE:
+                                baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 29.0);
+                                break;
+                            case Classes.CLASS_DRUID:
+                                baseCrit = (float)(0.92000001668930054 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+                                break;
+                            case Classes.CLASS_HUNTER:
+                                baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 33.0);
+                                break;
+                            case Classes.CLASS_MAGE:
+                                baseCrit = (float)(3.2000000476837158 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.44);
+                                break;
+                            case Classes.CLASS_PALADIN:
+                                baseCrit = (float)(0.699999988079071 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.77);
+                                break;
+                            case Classes.CLASS_PRIEST:
+                                baseCrit = (float)(3.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+                                break;
+                            case Classes.CLASS_SHAMAN:
+                                baseCrit = (float)(1.7000000476837158 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.7);
+                                break;
+                            case Classes.CLASS_WARLOCK:
+                                baseCrit = (float)(2.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+                                break;
+                            case Classes.CLASS_WARRIOR:
+                                baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+                                break;
+                        }
+                        return baseCrit + ((WS_PlayerData.CharacterObject)objCharacter).combatCrit + skillDiference * 0.2f;
+                    }
+
+                default:
+                    return 5f + skillDiference * 0.2f;
+            }
+        }
 
 		public float GetDistance(WS_Base.BaseObject Object1, WS_Base.BaseObject Object2)
 		{
@@ -1238,10 +1243,10 @@ namespace Mangos.World.Handlers
 
 		public int GetSkillDefence(ref WS_Base.BaseUnit objCharacter)
 		{
-			if (objCharacter is WS_PlayerData.CharacterObject)
+			if (objCharacter is WS_PlayerData.CharacterObject @object)
 			{
-				((WS_PlayerData.CharacterObject)objCharacter).UpdateSkill(95, 0.01f);
-				return ((WS_PlayerData.CharacterObject)objCharacter).Skills[95].CurrentWithBonus;
+				@object.UpdateSkill(95, 0.01f);
+				return @object.Skills[95].CurrentWithBonus;
 			}
 			checked
 			{

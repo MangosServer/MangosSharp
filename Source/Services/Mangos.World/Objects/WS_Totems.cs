@@ -97,19 +97,25 @@ namespace Mangos.World.Objects
 							if (ActiveSpells[i] != null && ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ID == SpellEffects_Names.SPELL_EFFECT_APPLY_AREA_AURA)
 							{
 								List<WS_Base.BaseUnit> Targets = new List<WS_Base.BaseUnit>();
-								if (Caster is WS_PlayerData.CharacterObject)
-								{
-									WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
-									WS_PlayerData.CharacterObject objCharacter = (WS_PlayerData.CharacterObject)Caster;
-									Targets = wS_Spells.GetPartyMembersAtPoint(ref objCharacter, ActiveSpells[i].Aura_Info[j].GetRadius, positionX, positionY, positionZ);
-								}
-								else
-								{
-									WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
-									WS_Base.BaseUnit Target = this;
-									Targets = wS_Spells2.GetFriendAroundMe(ref Target, ActiveSpells[i].Aura_Info[j].GetRadius);
-								}
-								foreach (WS_Base.BaseUnit item in new List<WS_Base.BaseUnit>())
+                                switch (Caster)
+                                {
+                                    case WS_PlayerData.CharacterObject _:
+                                        {
+                                            WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
+                                            WS_PlayerData.CharacterObject objCharacter = (WS_PlayerData.CharacterObject)Caster;
+                                            Targets = wS_Spells.GetPartyMembersAtPoint(ref objCharacter, ActiveSpells[i].Aura_Info[j].GetRadius, positionX, positionY, positionZ);
+                                            break;
+                                        }
+
+                                    default:
+                                        {
+                                            WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
+                                            WS_Base.BaseUnit Target = this;
+                                            Targets = wS_Spells2.GetFriendAroundMe(ref Target, ActiveSpells[i].Aura_Info[j].GetRadius);
+                                            break;
+                                        }
+                                }
+                                foreach (WS_Base.BaseUnit item in new List<WS_Base.BaseUnit>())
 								{
 									WS_Base.BaseUnit Unit = item;
 									if (!Unit.HaveAura(ActiveSpells[i].SpellID))

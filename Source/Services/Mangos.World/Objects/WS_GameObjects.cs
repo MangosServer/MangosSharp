@@ -884,9 +884,9 @@ namespace Mangos.World.Objects
 		{
 			float minDistance = float.MaxValue;
 			GameObjectObject targetGameobject = null;
-			if (unit is WS_PlayerData.CharacterObject)
+			if (unit is WS_PlayerData.CharacterObject @object)
 			{
-				ulong[] array = ((WS_PlayerData.CharacterObject)unit).gameObjectsNear.ToArray();
+				ulong[] array = @object.gameObjectsNear.ToArray();
 				foreach (ulong GUID2 in array)
 				{
 					if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID2) && (GameObjectEntry == 0 || WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2].ID == GameObjectEntry))

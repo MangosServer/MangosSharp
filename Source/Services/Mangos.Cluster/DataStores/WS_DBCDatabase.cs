@@ -70,38 +70,14 @@ namespace Mangos.Cluster.DataStores
 			public int ParentMap = -1;
 			public int ResetTime = 0;
 
-			public bool IsDungeon
-			{
-				get
-				{
-					return Type == MapTypes.MAP_INSTANCE || Type == MapTypes.MAP_RAID;
-				}
-			}
+            public bool IsDungeon => Type == MapTypes.MAP_INSTANCE || Type == MapTypes.MAP_RAID;
 
-			public bool IsRaid
-			{
-				get
-				{
-					return Type == MapTypes.MAP_RAID;
-				}
-			}
+            public bool IsRaid => Type == MapTypes.MAP_RAID;
 
-			public bool IsBattleGround
-			{
-				get
-				{
-					return Type == MapTypes.MAP_BATTLEGROUND;
-				}
-			}
+            public bool IsBattleGround => Type == MapTypes.MAP_BATTLEGROUND;
 
-			public bool HasResetTime
-			{
-				get
-				{
-					return ResetTime != 0;
-				}
-			}
-		}
+            public bool HasResetTime => ResetTime != 0;
+        }
 
 		private readonly string WorldSafeLocsDBC = "dbc" + Path.DirectorySeparatorChar + "WorldSafeLocs.dbc";
 		public Dictionary<int, TWorldSafeLoc> WorldSafeLocs = new Dictionary<int, TWorldSafeLoc>();

@@ -239,12 +239,12 @@ namespace Mangos.World.Handlers
 		{
 			if (objCharacter.MindControl != null)
 			{
-				if (objCharacter.MindControl is WS_PlayerData.CharacterObject)
+				if (objCharacter.MindControl is WS_PlayerData.CharacterObject @object)
 				{
 					Packets.PacketClass packet1 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
 					packet1.AddPackGUID(objCharacter.MindControl.GUID);
 					packet1.AddInt8(1);
-					((WS_PlayerData.CharacterObject)objCharacter.MindControl).client.Send(ref packet1);
+					@object.client.Send(ref packet1);
 					packet1.Dispose();
 				}
 				Packets.PacketClass packet4 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
@@ -641,32 +641,36 @@ namespace Mangos.World.Handlers
 			{
 				objCharacter.CommandResponse("Listing cooldowns for [" + targetUnit.UnitName + "]:");
 			}
-			if (targetUnit is WS_PlayerData.CharacterObject)
-			{
-				string sCooldowns = "";
-				uint timeNow = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
-				foreach (KeyValuePair<int, WS_Spells.CharacterSpell> Spell in ((WS_PlayerData.CharacterObject)targetUnit).Spells)
-				{
-					if (Spell.Value.Cooldown != 0)
-					{
-						uint timeLeft = 0u;
-						if (timeNow < Spell.Value.Cooldown)
-						{
-							timeLeft = checked(Spell.Value.Cooldown - timeNow);
-						}
-						if (timeLeft > 0L)
-						{
-							sCooldowns = sCooldowns + "* Spell: " + Conversions.ToString(Spell.Key) + " - TimeLeft: " + WorldServiceLocator._Functions.GetTimeLeftString(timeLeft) + " sec - Item: " + Conversions.ToString(Spell.Value.CooldownItem) + Environment.NewLine;
-						}
-					}
-				}
-				objCharacter.CommandResponse(sCooldowns);
-			}
-			else
-			{
-				objCharacter.CommandResponse("*Cooldowns not supported for creatures yet*");
-			}
-			return true;
+            switch (targetUnit)
+            {
+                case WS_PlayerData.CharacterObject _:
+                    {
+                        string sCooldowns = "";
+                        uint timeNow = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+                        foreach (KeyValuePair<int, WS_Spells.CharacterSpell> Spell in ((WS_PlayerData.CharacterObject)targetUnit).Spells)
+                        {
+                            if (Spell.Value.Cooldown != 0)
+                            {
+                                uint timeLeft = 0u;
+                                if (timeNow < Spell.Value.Cooldown)
+                                {
+                                    timeLeft = checked(Spell.Value.Cooldown - timeNow);
+                                }
+                                if (timeLeft > 0L)
+                                {
+                                    sCooldowns = sCooldowns + "* Spell: " + Conversions.ToString(Spell.Key) + " - TimeLeft: " + WorldServiceLocator._Functions.GetTimeLeftString(timeLeft) + " sec - Item: " + Conversions.ToString(Spell.Value.CooldownItem) + Environment.NewLine;
+                                }
+                            }
+                        }
+                        objCharacter.CommandResponse(sCooldowns);
+                        break;
+                    }
+
+                default:
+                    objCharacter.CommandResponse("*Cooldowns not supported for creatures yet*");
+                    break;
+            }
+            return true;
 		}
 
 		[ChatCommand("clearcooldowns", "clearcooldowns - Clears all cooldowns of your target.", AccessLevel.Developer)]
@@ -688,34 +692,39 @@ namespace Mangos.World.Handlers
 			{
 				targetUnit = objCharacter;
 			}
-			if (targetUnit is WS_PlayerData.CharacterObject)
-			{
-				uint timeNow = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
-				List<int> cooldownSpells = new List<int>();
-				foreach (KeyValuePair<int, WS_Spells.CharacterSpell> Spell in ((WS_PlayerData.CharacterObject)targetUnit).Spells)
-				{
-					if (Spell.Value.Cooldown != 0)
-					{
-						Spell.Value.Cooldown = 0u;
-						Spell.Value.CooldownItem = 0;
-						WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_spells SET cooldown={2}, cooldownitem={3} WHERE guid = {0} AND spellid = {1};", objCharacter.GUID, Spell.Key, 0, 0));
-						cooldownSpells.Add(Spell.Key);
-					}
-				}
-				foreach (int SpellID in cooldownSpells)
-				{
-					Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_CLEAR_COOLDOWN);
-					packet.AddInt32(SpellID);
-					packet.AddUInt64(targetUnit.GUID);
-					((WS_PlayerData.CharacterObject)targetUnit).client.Send(ref packet);
-					packet.Dispose();
-				}
-			}
-			else
-			{
-				objCharacter.CommandResponse("Cooldowns are not supported for creatures yet.");
-			}
-			return true;
+            switch (targetUnit)
+            {
+                case WS_PlayerData.CharacterObject _:
+                    {
+                        uint timeNow = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+                        List<int> cooldownSpells = new List<int>();
+                        foreach (KeyValuePair<int, WS_Spells.CharacterSpell> Spell in ((WS_PlayerData.CharacterObject)targetUnit).Spells)
+                        {
+                            if (Spell.Value.Cooldown != 0)
+                            {
+                                Spell.Value.Cooldown = 0u;
+                                Spell.Value.CooldownItem = 0;
+                                WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_spells SET cooldown={2}, cooldownitem={3} WHERE guid = {0} AND spellid = {1};", objCharacter.GUID, Spell.Key, 0, 0));
+                                cooldownSpells.Add(Spell.Key);
+                            }
+                        }
+                        foreach (int SpellID in cooldownSpells)
+                        {
+                            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_CLEAR_COOLDOWN);
+                            packet.AddInt32(SpellID);
+                            packet.AddUInt64(targetUnit.GUID);
+                            ((WS_PlayerData.CharacterObject)targetUnit).client.Send(ref packet);
+                            packet.Dispose();
+                        }
+
+                        break;
+                    }
+
+                default:
+                    objCharacter.CommandResponse("Cooldowns are not supported for creatures yet.");
+                    break;
+            }
+            return true;
 		}
 
 		[ChatCommand("additem", "additem #itemid #count (optional) - Add chosen items with item amount to selected character.", AccessLevel.GameMaster)]

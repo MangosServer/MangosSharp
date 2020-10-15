@@ -91,13 +91,7 @@ namespace Mangos.Cluster.Handlers
             public bool GroupAssistant = false;
             public bool GroupInvitedFlag = false;
 
-            public bool IsInGroup
-            {
-                get
-                {
-                    return Group is object && GroupInvitedFlag == false;
-                }
-            }
+            public bool IsInGroup => Group is object && GroupInvitedFlag == false;
 
             public bool IsGroupLeader
             {
@@ -109,29 +103,11 @@ namespace Mangos.Cluster.Handlers
                 }
             }
 
-            public bool IsInRaid
-            {
-                get
-                {
-                    return Group is object && Group.Type == GroupType.RAID;
-                }
-            }
+            public bool IsInRaid => Group is object && Group.Type == GroupType.RAID;
 
-            public bool IsInGuild
-            {
-                get
-                {
-                    return Guild is object;
-                }
-            }
+            public bool IsInGuild => Guild is object;
 
-            public bool IsGuildLeader
-            {
-                get
-                {
-                    return Guild is object && Guild.Leader == Guid;
-                }
-            }
+            public bool IsGuildLeader => Guild is object && Guild.Leader == Guid;
 
             public bool IsGuildRightSet(GuildRankRights rights)
             {
@@ -160,13 +136,7 @@ namespace Mangos.Cluster.Handlers
                 }
             }
 
-            public IWorld GetWorld
-            {
-                get
-                {
-                    return ClusterServiceLocator._WC_Network.WorldServer.Worlds[Map];
-                }
-            }
+            public IWorld GetWorld => ClusterServiceLocator._WC_Network.WorldServer.Worlds[Map];
 
             public void ReLoad()
             {

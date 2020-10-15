@@ -142,11 +142,11 @@ namespace Mangos.World.Server
 						if (!Information.IsNothing(Cluster))
 						{
 							WorldServerConfiguration configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
-							if (Cluster.Connect(LocalURI, configuration.Maps.Select((_Closure_0024__._0024I13_002D0 != null) ? _Closure_0024__._0024I13_002D0 : (_Closure_0024__._0024I13_002D0 = (string x) => Conversions.ToUInteger(x))).ToList()))
+							if (Cluster.Connect(LocalURI, configuration.Maps.Select(_Closure_0024__._0024I13_002D0 ??= (string x) => Conversions.ToUInteger(x)).ToList()))
 							{
 								break;
 							}
-							Cluster.Disconnect(LocalURI, configuration.Maps.Select((_Closure_0024__._0024I13_002D1 != null) ? _Closure_0024__._0024I13_002D1 : (_Closure_0024__._0024I13_002D1 = (string x) => Conversions.ToUInteger(x))).ToList());
+							Cluster.Disconnect(LocalURI, configuration.Maps.Select(_Closure_0024__._0024I13_002D1 ??= (string x) => Conversions.ToUInteger(x)).ToList());
 						}
 					}
 					catch (Exception ex)
@@ -166,7 +166,7 @@ namespace Mangos.World.Server
 			{
 				try
 				{
-					Cluster.Disconnect(LocalURI, WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Select((_Closure_0024__._0024I14_002D0 != null) ? _Closure_0024__._0024I14_002D0 : (_Closure_0024__._0024I14_002D0 = (string x) => Conversions.ToUInteger(x))).ToList());
+					Cluster.Disconnect(LocalURI, WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Select(_Closure_0024__._0024I14_002D0 ??= (string x) => Conversions.ToUInteger(x)).ToList());
 				}
 				catch (Exception projectError)
 				{
