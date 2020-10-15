@@ -33,12 +33,6 @@ namespace Mangos.Common.DataStores
             BStream = new BufferedStream(FileStream);
         }
 
-        [Description("Open filename for reading and initialize internals.")]
-        public BufferedDbc(Stream stream) : base(stream)
-        {
-            BStream = new BufferedStream(FileStream);
-        }
-
         public override T Read<T>(long row, int column)
         {
             if (row >= Rows)

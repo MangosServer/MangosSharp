@@ -26,14 +26,19 @@ namespace Mangos.Common.DataStores
     public class BaseDbc : IDisposable
     {
         protected Stream FileStream;
+        
         [Description("Header information: File type.")]
         public string FType = "";
+        
         [Description("Header information: Rows contained in the file.")]
         public int Rows = 0;
+        
         [Description("Header information: Columns for each row.")]
         public int Columns = 0;
+        
         [Description("Header information: Bytes ocupied by each row.")]
         public int RowLength = 0;
+        
         [Description("Header information: Strings data block length.")]
         public int StringPartLength = 0;
         protected byte[] Buffer = new byte[4];
@@ -43,13 +48,6 @@ namespace Mangos.Common.DataStores
         public BaseDbc(string fileName)
         {
             FileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-            ReadHeader();
-        }
-
-        [Description("Open filename for reading and initialize internals.")]
-        public BaseDbc(Stream Stream)
-        {
-            FileStream = Stream;
             ReadHeader();
         }
 
@@ -119,9 +117,6 @@ namespace Mangos.Common.DataStores
                     return (T)Convert.ChangeType(BitConverter.ToInt32(Buffer, 0), typeof(T));
             }
         }
-
-        [Description("Return formated DBC header information.")]
-        public string GetFileInformation => string.Format("DBC: {0}:{1}x{2}:{3}:{4}", FType, Rows, Columns, RowLength, StringPartLength);
 
         [Description("Close file and dispose the dbc reader.")]
         public virtual void Dispose()
