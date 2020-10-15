@@ -34,11 +34,14 @@ namespace Mangos.Common.Zip
 
         public byte[] DeCompress(byte[] data)
         {
-            using var memoryStream = new MemoryStream(data);
-            using var decopressorStream = new InflaterInputStream(memoryStream);
-            var result = new byte[decopressorStream.Length];            
-            int bytesRead = decopressorStream.Read(result, 0, result.Length);
-            return result;
+            using (var outputStream = new MemoryStream())
+            using (var compressedStream = new MemoryStream(data))
+            using (var inputStream = new InflaterInputStream(compressedStream))
+            {
+                inputStream.CopyTo(outputStream);
+                outputStream.Position = 0;
+                return outputStream.ToArray();
+            }
         }
     }
 }
