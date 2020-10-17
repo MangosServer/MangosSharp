@@ -21,13 +21,15 @@ using global;
 using Mangos.Cluster.DataStores;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
-using Mangos.Cluster.Server;
 using Mangos.Common;
 using Mangos.DataStores;
 using Mangos.Loggers;
 using Mangos.Loggers.Console;
 using Mangos.Zip;
 using System.Threading.Tasks;
+using Mangos.Cluster.Handlers.Guild;
+using Mangos.Cluster.Network;
+using Mangos.Cluster.Stats;
 
 namespace Mangos.Cluster
 {

@@ -19,16 +19,13 @@
 using System;
 using Microsoft.VisualBasic;
 
-namespace Mangos.Cluster.Server
+namespace Mangos.Cluster.Network
 {
-    public partial class WC_Network
+    public class WorldInfo
     {
-        public class WorldInfo
-        {
-            public int Latency;
-            public DateTime Started = DateAndTime.Now;
-            public float CPUUsage;
-            public ulong MemoryUsage;
-        }
+        public int Latency;
+        public DateTime Started = DateAndTime.Now;
+        public float CPUUsage;
+        public ulong MemoryUsage;
     }
 }

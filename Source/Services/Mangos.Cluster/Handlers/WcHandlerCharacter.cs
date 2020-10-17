@@ -21,7 +21,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using Mangos.Cluster.Globals;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Handlers.Guild;
+using Mangos.Cluster.Network;
 using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
@@ -49,7 +50,7 @@ namespace Mangos.Cluster.Handlers
         {
             private readonly ClusterServiceLocator clusterServiceLocator;
 
-            public CharacterObject(ulong g, WC_Network.ClientClass objCharacter, ClusterServiceLocator clusterServiceLocator)
+            public CharacterObject(ulong g, ClientClass objCharacter, ClusterServiceLocator clusterServiceLocator)
             {
                 this.clusterServiceLocator = clusterServiceLocator;
                 ChatFlag = ChatFlag.FLAGS_NONE;
@@ -65,7 +66,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             public ulong Guid;
-            public WC_Network.ClientClass Client;
+            public ClientClass Client;
             public bool IsInWorld = false;
             public uint Map;
             public uint Zone;

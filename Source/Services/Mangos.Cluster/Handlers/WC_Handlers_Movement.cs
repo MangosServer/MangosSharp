@@ -18,7 +18,7 @@
 
 using System.Collections.Generic;
 using Mangos.Cluster.Globals;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 
@@ -33,7 +33,7 @@ namespace Mangos.Cluster.Handlers
             this.clusterServiceLocator = clusterServiceLocator;
         }
 
-        public void On_MSG_MOVE_HEARTBEAT(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_HEARTBEAT(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_START_BACKWARD(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_START_BACKWARD(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_START_FORWARD(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_START_FORWARD(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_START_PITCH_DOWN(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_START_PITCH_DOWN(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -145,7 +145,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_START_PITCH_UP(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_START_PITCH_UP(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -173,7 +173,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_STRAFE_LEFT(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_STRAFE_LEFT(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -201,7 +201,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_START_STRAFE_RIGHT(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_START_STRAFE_RIGHT(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -229,7 +229,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_START_SWIM(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_START_SWIM(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -257,7 +257,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_START_TURN_LEFT(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_START_TURN_LEFT(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -286,7 +286,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_START_TURN_RIGHT(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_START_TURN_RIGHT(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -315,7 +315,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_STOP(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_STOP(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -343,7 +343,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_STOP_PITCH(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_STOP_PITCH(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -371,7 +371,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_STOP_STRAFE(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_STOP_STRAFE(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -399,7 +399,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_STOP_SWIM(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_STOP_SWIM(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -427,7 +427,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_STOP_TURN(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_STOP_TURN(Packets.PacketClass packet, ClientClass client)
         {
             try
             {
@@ -456,7 +456,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_MOVE_SET_FACING(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_MOVE_SET_FACING(Packets.PacketClass packet, ClientClass client)
         {
             try
             {

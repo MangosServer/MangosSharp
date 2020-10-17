@@ -19,7 +19,7 @@
 using System;
 using System.Data;
 using Mangos.Cluster.Globals;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Network;
 using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Guild;
@@ -38,7 +38,7 @@ namespace Mangos.Cluster.Handlers
             this.clusterServiceLocator = clusterServiceLocator;
         }
 
-        public void On_CMSG_GUILD_QUERY(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_GUILD_QUERY(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 9)
 				return;
@@ -48,7 +48,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Guild.SendGuildQuery(client, guildId);
 		}
 
-		public void On_CMSG_GUILD_ROSTER(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_ROSTER(Packets.PacketClass packet, ClientClass client)
 		{
 			// packet.GetInt16()
 
@@ -56,7 +56,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Guild.SendGuildRoster(client.Character);
 		}
 
-		public void On_CMSG_GUILD_CREATE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_CREATE(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -75,7 +75,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Guild.AddCharacterToGuild(client.Character, MySQLQuery.Rows[0].As<int>("guild_id"), 0);
 		}
 
-		public void On_CMSG_GUILD_INFO(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_INFO(Packets.PacketClass packet, ClientClass client)
 		{
 			packet.GetInt16();
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_INFO", client.IP, client.Port);
@@ -96,7 +96,7 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 		}
 
-		public void On_CMSG_GUILD_RANK(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_RANK(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 14)
 				return;
@@ -125,7 +125,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Guild.SendGuildRoster(client.Character);
 		}
 
-		public void On_CMSG_GUILD_ADD_RANK(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_ADD_RANK(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -164,7 +164,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
 		}
 
-		public void On_CMSG_GUILD_DEL_RANK(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_DEL_RANK(Packets.PacketClass packet, ClientClass client)
 		{
 			packet.GetInt16();
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_DEL_RANK", client.IP, client.Port);
@@ -195,7 +195,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
 		}
 
-		public void On_CMSG_GUILD_LEADER(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_LEADER(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -255,7 +255,7 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 		}
 
-		public void On_MSG_SAVE_GUILD_EMBLEM(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_MSG_SAVE_GUILD_EMBLEM(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length < 34)
 				return;
@@ -304,7 +304,7 @@ namespace Mangos.Cluster.Handlers
 			// Client.Character.SendCharacterUpdate(False)
 		}
 
-		public void On_CMSG_GUILD_DISBAND(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_DISBAND(Packets.PacketClass packet, ClientClass client)
 		{
 			// packet.GetInt16()
 
@@ -349,7 +349,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("DELETE FROM guilds WHERE guild_id = " + GuildID + ";");
 		}
 
-		public void On_CMSG_GUILD_MOTD(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_MOTD(Packets.PacketClass packet, ClientClass client)
 		{
 			// Isn't the client even sending a null terminator for the motd if it's empty?
 			if (packet.Data.Length - 1 < 6)
@@ -383,7 +383,7 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 		}
 
-		public void On_CMSG_GUILD_SET_OFFICER_NOTE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_SET_OFFICER_NOTE(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -408,7 +408,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Guild.SendGuildRoster(client.Character);
 		}
 
-		public void On_CMSG_GUILD_SET_PUBLIC_NOTE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_SET_PUBLIC_NOTE(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -433,7 +433,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Guild.SendGuildRoster(client.Character);
 		}
 
-		public void On_CMSG_GUILD_REMOVE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_REMOVE(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -491,7 +491,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Guild.RemoveCharacterFromGuild(objCharacter);
 		}
 
-		public void On_CMSG_GUILD_PROMOTE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_PROMOTE(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -559,7 +559,7 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 		}
 
-		public void On_CMSG_GUILD_DEMOTE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_DEMOTE(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -635,7 +635,7 @@ namespace Mangos.Cluster.Handlers
 		}
 
 		// User Options
-		public void On_CMSG_GUILD_INVITE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_INVITE(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -697,7 +697,7 @@ namespace Mangos.Cluster.Handlers
 			objCharacter.GuildInvitedBy = client.Character.Guid;
 		}
 
-		public void On_CMSG_GUILD_ACCEPT(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_ACCEPT(Packets.PacketClass packet, ClientClass client)
 		{
 			if (client.Character.GuildInvited == 0L)
 				throw new ApplicationException("Character accepting guild invitation whihtout being invited.");
@@ -714,7 +714,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Guild.SendGuildMOTD(client.Character);
 		}
 
-		public void On_CMSG_GUILD_DECLINE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_DECLINE(Packets.PacketClass packet, ClientClass client)
 		{
 			client.Character.GuildInvited = 0U;
 			if (clusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey((ulong)Conversions.ToLong(client.Character.GuildInvitedBy)))
@@ -726,7 +726,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_GUILD_LEAVE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_GUILD_LEAVE(Packets.PacketClass packet, ClientClass client)
 		{
 			// packet.GetInt16()
 
@@ -755,7 +755,7 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 		}
 
-		public void On_CMSG_TURN_IN_PETITION(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_TURN_IN_PETITION(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 13)
 				return;

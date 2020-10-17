@@ -17,7 +17,7 @@
 //
 
 using Mangos.Cluster.Globals;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Microsoft.VisualBasic;
@@ -160,12 +160,12 @@ namespace Mangos.Cluster.Handlers
 
         }
 
-        public void OnUnhandledPacket(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void OnUnhandledPacket(Packets.PacketClass packet, ClientClass client)
         {
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] {2} [Unhandled Packet]", client.IP, client.Port, packet.OpCode);
         }
 
-        public void OnClusterPacket(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void OnClusterPacket(Packets.PacketClass packet, ClientClass client)
         {
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] {2} [Redirected Packet]", client.IP, client.Port, packet.OpCode);
             if (client.Character is null || client.Character.IsInWorld == false)

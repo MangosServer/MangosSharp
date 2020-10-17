@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text.RegularExpressions;
 using Mangos.Cluster.Handlers;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Network;
 using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
@@ -525,13 +525,13 @@ namespace Mangos.Cluster.Globals
             return false;
         }
 
-        public void SendMessageMOTD(WC_Network.ClientClass client, string message)
+        public void SendMessageMOTD(ClientClass client, string message)
         {
             var packet = BuildChatMessage(0, message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL);
             client.Send(packet);
         }
 
-        public void SendMessageNotification(WC_Network.ClientClass client, string message)
+        public void SendMessageNotification(ClientClass client, string message)
         {
             var packet = new Packets.PacketClass(Opcodes.SMSG_NOTIFICATION);
             try
@@ -545,7 +545,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        public void SendMessageSystem(WC_Network.ClientClass objCharacter, string message)
+        public void SendMessageSystem(ClientClass objCharacter, string message)
         {
             var packet = BuildChatMessage(0, message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL, 0, "");
             try
@@ -570,7 +570,7 @@ namespace Mangos.Cluster.Globals
             clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
         }
 
-        public void SendAccountMD5(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
+        public void SendAccountMD5(ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
             bool FoundData = false;
 
@@ -624,7 +624,7 @@ namespace Mangos.Cluster.Globals
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_ACCOUNT_DATA_MD5", client.IP, client.Port);
         }
 
-        public void SendTriggerCinematic(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
+        public void SendTriggerCinematic(ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
             var packet = new Packets.PacketClass(Opcodes.SMSG_TRIGGER_CINEMATIC);
             try
@@ -650,14 +650,14 @@ namespace Mangos.Cluster.Globals
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC", client.IP, client.Port);
         }
 
-        public void SendTimeSyncReq(WC_Network.ClientClass client)
+        public void SendTimeSyncReq(ClientClass client)
         {
             // Dim packet As New PacketClass(OPCODES.SMSG_TIME_SYNC_REQ)
             // packet.AddInt32(0)
             // Client.Send(packet)
         }
 
-        public void SendGameTime(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
+        public void SendGameTime(ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
             var smsgLoginSettimespeed = new Packets.PacketClass(Opcodes.SMSG_LOGIN_SETTIMESPEED);
             try
@@ -683,7 +683,7 @@ namespace Mangos.Cluster.Globals
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGIN_SETTIMESPEED", client.IP, client.Port);
         }
 
-        public void SendProficiency(WC_Network.ClientClass client, byte proficiencyType, int proficiencyFlags)
+        public void SendProficiency(ClientClass client, byte proficiencyType, int proficiencyFlags)
         {
             var packet = new Packets.PacketClass(Opcodes.SMSG_SET_PROFICIENCY);
             try
@@ -700,7 +700,7 @@ namespace Mangos.Cluster.Globals
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_SET_PROFICIENCY", client.IP, client.Port);
         }
 
-        public void SendCorpseReclaimDelay(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character, int seconds = 30)
+        public void SendCorpseReclaimDelay(ClientClass client, WcHandlerCharacter.CharacterObject character, int seconds = 30)
         {
             var packet = new Packets.PacketClass(Opcodes.SMSG_CORPSE_RECLAIM_DELAY);
             try

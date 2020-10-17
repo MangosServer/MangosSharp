@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Data;
 using Mangos.Common;
 
-namespace Mangos.Cluster
+namespace Mangos.Cluster.Handlers.Guild
 {
     public partial class WC_Guild
     {

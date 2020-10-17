@@ -19,7 +19,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Microsoft.VisualBasic;
@@ -36,7 +36,7 @@ namespace Mangos.Cluster.Globals
             this.clusterServiceLocator = clusterServiceLocator;
         }
 
-        public void DumpPacket(byte[] data, [Optional, DefaultParameterValue(null)] WC_Network.ClientClass client)
+        public void DumpPacket(byte[] data, [Optional, DefaultParameterValue(null)] ClientClass client)
         {
             // #If DEBUG Then
             int j;
@@ -78,7 +78,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        public void LogPacket(byte[] data, bool Server, [Optional, DefaultParameterValue(null)] WC_Network.ClientClass client)
+        public void LogPacket(byte[] data, bool Server, [Optional, DefaultParameterValue(null)] ClientClass client)
         {
             int j;
             string buffer = "";

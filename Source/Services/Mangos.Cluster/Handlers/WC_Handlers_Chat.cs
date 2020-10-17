@@ -18,7 +18,7 @@
 
 using System.Collections.Generic;
 using Mangos.Cluster.Globals;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
@@ -35,7 +35,7 @@ namespace Mangos.Cluster.Handlers
             this.clusterServiceLocator = clusterServiceLocator;
         }
 
-        public void On_CMSG_CHAT_IGNORED(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHAT_IGNORED(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             ulong guid = packet.GetUInt64();
@@ -48,7 +48,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_MESSAGECHAT(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_MESSAGECHAT(Packets.PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 14)
                 return;
@@ -260,7 +260,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_JOIN_CHANNEL(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_JOIN_CHANNEL(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string channelName = packet.GetString();
@@ -275,7 +275,7 @@ namespace Mangos.Cluster.Handlers
             clusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[channelName].Join(client.Character, password);
         }
 
-        public void On_CMSG_LEAVE_CHANNEL(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_LEAVE_CHANNEL(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -286,7 +286,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_LIST(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_LIST(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -299,7 +299,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_PASSWORD(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_PASSWORD(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -313,7 +313,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_SET_OWNER(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_SET_OWNER(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -340,7 +340,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_OWNER(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_OWNER(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -353,7 +353,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_MODERATOR(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_MODERATOR(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -367,7 +367,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_UNMODERATOR(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_UNMODERATOR(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -381,7 +381,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_MUTE(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_MUTE(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -395,7 +395,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_UNMUTE(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_UNMUTE(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -409,7 +409,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_INVITE(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_INVITE(Packets.PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
                 return;
@@ -427,7 +427,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_KICK(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_KICK(Packets.PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
                 return;
@@ -445,7 +445,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_ANNOUNCEMENTS(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_ANNOUNCEMENTS(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();
@@ -458,7 +458,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_BAN(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_BAN(Packets.PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
                 return;
@@ -476,7 +476,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_UNBAN(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_UNBAN(Packets.PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
                 return;
@@ -494,7 +494,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_CHANNEL_MODERATE(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_CHANNEL_MODERATE(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string ChannelName = packet.GetString();

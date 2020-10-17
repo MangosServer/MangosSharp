@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Network;
 using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
@@ -50,7 +50,7 @@ namespace Mangos.Cluster
 
         // Players' containers
         public long CLIETNIDs = 0L;
-        public Dictionary<uint, WC_Network.ClientClass> CLIENTs = new Dictionary<uint, WC_Network.ClientClass>();
+        public Dictionary<uint, ClientClass> CLIENTs = new Dictionary<uint, ClientClass>();
         public ReaderWriterLock CHARACTERs_Lock = new ReaderWriterLock();
         public Dictionary<ulong, WcHandlerCharacter.CharacterObject> CHARACTERs = new Dictionary<ulong, WcHandlerCharacter.CharacterObject>();
         // Public CHARACTER_NAMEs As New Hashtable
@@ -59,7 +59,7 @@ namespace Mangos.Cluster
         public BaseWriter Log = new BaseWriter();
         public Random Rnd = new Random();
 
-        public delegate void HandlePacket(Packets.PacketClass packet, WC_Network.ClientClass client);
+        public delegate void HandlePacket(Packets.PacketClass packet, ClientClass client);
 
         public void LoadConfig()
         {
@@ -386,8 +386,8 @@ namespace Mangos.Cluster
                 }
             }
 
-            clusterServiceLocator._WC_Network.WorldServer = new WC_Network.WorldServerClass(clusterServiceLocator);
-            var server = new ProxyServer<WC_Network.WorldServerClass>(IPAddress.Parse(GetConfig().ClusterListenAddress), GetConfig().ClusterListenPort, clusterServiceLocator._WC_Network.WorldServer);
+            clusterServiceLocator._WC_Network.WorldServer = new WorldServerClass(clusterServiceLocator);
+            var server = new ProxyServer<WorldServerClass>(IPAddress.Parse(GetConfig().ClusterListenAddress), GetConfig().ClusterListenPort, clusterServiceLocator._WC_Network.WorldServer);
             Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}:{1}", GetConfig().ClusterListenAddress, GetConfig().ClusterListenPort);
             GC.Collect();
             if (Process.GetCurrentProcess().PriorityClass != ProcessPriorityClass.High)

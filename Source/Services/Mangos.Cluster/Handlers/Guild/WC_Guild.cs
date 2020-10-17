@@ -20,8 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Runtime.InteropServices;
 using Mangos.Cluster.Globals;
-using Mangos.Cluster.Handlers;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Network;
 using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Guild;
@@ -29,7 +28,7 @@ using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
 using Microsoft.VisualBasic;
 
-namespace Mangos.Cluster
+namespace Mangos.Cluster.Handlers.Guild
 {
     public partial class WC_Guild
     {
@@ -147,7 +146,7 @@ namespace Mangos.Cluster
             packet.Dispose();
         }
 
-        public void SendGuildQuery(WC_Network.ClientClass client, uint guildId)
+        public void SendGuildQuery(ClientClass client, uint guildId)
         {
             if (guildId == 0L)
                 return;
@@ -255,7 +254,7 @@ namespace Mangos.Cluster
             response.Dispose();
         }
 
-        public void SendGuildResult(WC_Network.ClientClass client, GuildCommand command, GuildError result, string text = "")
+        public void SendGuildResult(ClientClass client, GuildCommand command, GuildError result, string text = "")
         {
             var response = new Packets.PacketClass(Opcodes.SMSG_GUILD_COMMAND_RESULT);
             response.AddInt32((int)command);

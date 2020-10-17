@@ -20,9 +20,9 @@ using System;
 using System.Collections.Generic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Mangos.Cluster.Server
+namespace Mangos.Cluster.Network
 {
-    public partial class WC_Network
+    public class WC_Network
     {
         private readonly ClusterServiceLocator clusterServiceLocator;
 
@@ -42,7 +42,7 @@ namespace Mangos.Cluster.Server
 
         public Dictionary<uint, DateTime> LastConnections = new Dictionary<uint, DateTime>();
 
-        private uint Ip2Int(string ip)
+        public uint Ip2Int(string ip)
         {
             if (ip.Split(".").Length != 4)
                 return 0U;

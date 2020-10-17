@@ -22,7 +22,7 @@ using System.Data;
 using System.Net.Sockets;
 using System.Threading;
 using Mangos.Cluster.Globals;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Network;
 using Mangos.Common;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Character;
@@ -46,7 +46,7 @@ namespace Mangos.Cluster.Handlers
         private const int REQUIRED_BUILD_LOW = 5875; // 1.12.1
 		private const int REQUIRED_BUILD_HIGH = 6141;
 
-		public void SendLoginOk(WC_Network.ClientClass client)
+		public void SendLoginOk(ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTH_SESSION [{2}]", client.IP, client.Port, client.Account);
 			Thread.Sleep(500);
@@ -58,7 +58,7 @@ namespace Mangos.Cluster.Handlers
 			client.Send(response);
 		}
 
-		public void On_CMSG_AUTH_SESSION(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_AUTH_SESSION(Packets.PacketClass packet, ClientClass client)
 		{
 			// _WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}] [{1}:{2}] CMSG_AUTH_SESSION", Format(TimeOfDay, "hh:mm:ss"), client.IP, client.Port)
 
@@ -76,7 +76,7 @@ namespace Mangos.Cluster.Handlers
 			string tmp = clientAccount;
 
 			// DONE: Kick if existing
-			foreach (KeyValuePair<uint, WC_Network.ClientClass> tmpClientEntry in clusterServiceLocator._WorldCluster.CLIENTs)
+			foreach (KeyValuePair<uint, ClientClass> tmpClientEntry in clusterServiceLocator._WorldCluster.CLIENTs)
 			{
 				if (tmpClientEntry.Value is object)
 				{
@@ -218,7 +218,7 @@ namespace Mangos.Cluster.Handlers
 			addOnsEnable.Dispose();
 		}
 
-		public void On_CMSG_PING(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_PING(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 9)
 				return;
@@ -234,7 +234,7 @@ namespace Mangos.Cluster.Handlers
 			// _WorldCluster.Log.WriteLine(LogType.NETWORK, "[{0}:{1}] SMSG_PONG [{2}]", client.IP, client.Port, client.Character.Latency)
 		}
 
-		public void On_CMSG_UPDATE_ACCOUNT_DATA(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_UPDATE_ACCOUNT_DATA(Packets.PacketClass packet, ClientClass client)
 		{
 			try
 			{
@@ -291,7 +291,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_REQUEST_ACCOUNT_DATA(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_REQUEST_ACCOUNT_DATA(Packets.PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 9)
 				return;
@@ -336,7 +336,7 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 		}
 
-		public void On_CMSG_CHAR_ENUM(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_CHAR_ENUM(Packets.PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_ENUM", client.IP, client.Port);
 
@@ -471,7 +471,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CHAR_ENUM", client.IP, client.Port);
 		}
 
-		public void On_CMSG_CHAR_DELETE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_CHAR_DELETE(Packets.PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_DELETE", client.IP, client.Port);
 			var response = new Packets.PacketClass(Opcodes.SMSG_CHAR_DELETE);
@@ -548,7 +548,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CHAR_DELETE [{2:X}]", client.IP, client.Port, guid);
 		}
 
-		public void On_CMSG_CHAR_RENAME(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_CHAR_RENAME(Packets.PacketClass packet, ClientClass client)
 		{
 			packet.GetInt16();
 			long GUID = packet.GetInt64();
@@ -577,7 +577,7 @@ namespace Mangos.Cluster.Handlers
 			On_CMSG_CHAR_ENUM(argpacket, client);
 		}
 
-		public void On_CMSG_CHAR_CREATE(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_CHAR_CREATE(Packets.PacketClass packet, ClientClass client)
 		{
 			packet.GetInt16();
 			string Name = packet.GetString();
@@ -616,7 +616,7 @@ namespace Mangos.Cluster.Handlers
 			client.Send(response);
 		}
 
-		public void On_CMSG_PLAYER_LOGIN(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_PLAYER_LOGIN(Packets.PacketClass packet, ClientClass client)
 		{
 			packet.GetInt16();               // int16 unknown
 			ulong GUID = packet.GetUInt64();
@@ -674,7 +674,7 @@ namespace Mangos.Cluster.Handlers
 
 		// Leak is with in this code. Needs a rewrite to correct the leak. This only effects the CPU Usage.
 		// Happens when the client disconnects from the server.
-		public void On_CMSG_PLAYER_LOGOUT(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_CMSG_PLAYER_LOGOUT(Packets.PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PLAYER_LOGOUT", client.IP, client.Port);
 			client.Character.OnLogout();
@@ -683,7 +683,7 @@ namespace Mangos.Cluster.Handlers
 			client.Character = null;
 		}
 
-		public void On_MSG_MOVE_WORLDPORT_ACK(Packets.PacketClass packet, WC_Network.ClientClass client)
+		public void On_MSG_MOVE_WORLDPORT_ACK(Packets.PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_WORLDPORT_ACK", client.IP, client.Port);
 			try

@@ -23,12 +23,13 @@ using System.Reflection;
 using System.Threading;
 using System.Xml;
 using Mangos.Cluster.Handlers;
+using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Microsoft.VisualBasic;
 
-namespace Mangos.Cluster.Server
+namespace Mangos.Cluster.Stats
 {
 	public class WC_Stats
 	{
@@ -73,7 +74,7 @@ namespace Mangos.Cluster.Server
 		private int CountPlayersAlliance = 0;
 		private int CountPlayersHorde = 0;
 		private int CountGMs = 0;
-		private readonly Dictionary<WC_Network.WorldInfo, List<string>> w = new Dictionary<WC_Network.WorldInfo, List<string>>();
+		private readonly Dictionary<WorldInfo, List<string>> w = new Dictionary<WorldInfo, List<string>>();
 
 		private string FormatUptime(TimeSpan time)
 		{
@@ -125,7 +126,7 @@ namespace Mangos.Cluster.Server
 				Latency /= CountPlayers;
 			}
 
-			foreach (KeyValuePair<uint, WC_Network.WorldInfo> objCharacter in clusterServiceLocator._WC_Network.WorldServer.WorldsInfo)
+			foreach (KeyValuePair<uint, WorldInfo> objCharacter in clusterServiceLocator._WC_Network.WorldServer.WorldsInfo)
 			{
 				if (!Information.IsNothing(objCharacter.Value))
 				{
@@ -212,7 +213,7 @@ namespace Mangos.Cluster.Server
 			f.WriteStartElement("world");
 			try
 			{
-				foreach (KeyValuePair<WC_Network.WorldInfo, List<string>> objCharacter in w)
+				foreach (KeyValuePair<WorldInfo, List<string>> objCharacter in w)
 				{
 					f.WriteStartElement("instance");
 					f.WriteStartElement("uptime");

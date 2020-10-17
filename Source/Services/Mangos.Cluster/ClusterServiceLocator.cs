@@ -20,7 +20,9 @@ using global;
 using Mangos.Cluster.DataStores;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Handlers.Guild;
+using Mangos.Cluster.Network;
+using Mangos.Cluster.Stats;
 using Mangos.Common;
 using Mangos.Zip;
 

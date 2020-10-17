@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Mangos.Cluster.Globals;
-using Mangos.Cluster.Server;
+using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 
@@ -35,7 +35,7 @@ namespace Mangos.Cluster.Handlers
             this.clusterServiceLocator = clusterServiceLocator;
         }
 
-        public void On_CMSG_BATTLEFIELD_PORT(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_BATTLEFIELD_PORT(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
 
@@ -58,7 +58,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_LEAVE_BATTLEFIELD(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_LEAVE_BATTLEFIELD(Packets.PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             byte Unk1 = packet.GetInt8();
@@ -69,7 +69,7 @@ namespace Mangos.Cluster.Handlers
             BATTLEFIELDs[(int)ID].Leave(client.Character);
         }
 
-        public void On_CMSG_BATTLEMASTER_JOIN(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_CMSG_BATTLEMASTER_JOIN(Packets.PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 16)
                 return;
@@ -456,7 +456,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(Packets.PacketClass packet, WC_Network.ClientClass client)
+        public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(Packets.PacketClass packet, ClientClass client)
         {
             var p = new Packets.PacketClass(Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS);
             try
