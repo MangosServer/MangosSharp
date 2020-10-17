@@ -38,7 +38,7 @@ namespace Mangos.World.Globals
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		public ScriptedObject()
 		{
-			string AssemblyFile = "Mangos.Scripts.dll";
+			string AssemblyFile = "Mangos.World.Scripts.dll";
 			string[] AssemblySources = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "\\Scripts\\", "*.vb", SearchOption.AllDirectories);
 			string[] array = AssemblySources;
 			DateTime LastDate = default;

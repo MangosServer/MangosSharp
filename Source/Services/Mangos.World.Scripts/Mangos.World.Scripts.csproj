@@ -4,6 +4,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Services\Mangos.World\Mangos.World.csproj" />
+    <ProjectReference Include="..\Mangos.World\Mangos.World.csproj" />
   </ItemGroup>
 </Project>
