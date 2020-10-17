@@ -60,8 +60,9 @@ namespace Mangos.Cluster.Handlers
 			public ulong[] TargetIcons = new ulong[8];
 
             public Group(WcHandlerCharacter.CharacterObject objCharacter, ClusterServiceLocator clusterServiceLocator)
-            {
-                Members = new WcHandlerCharacter.CharacterObject[this.clusterServiceLocator._Global_Constants.GROUP_SIZE + 1];
+			{
+				this.clusterServiceLocator = clusterServiceLocator;
+				Members = new WcHandlerCharacter.CharacterObject[this.clusterServiceLocator._Global_Constants.GROUP_SIZE + 1];
                 Id = Interlocked.Increment(ref this.clusterServiceLocator._WC_Handlers_Group.GroupCounter);
                 this.clusterServiceLocator._WC_Handlers_Group.GROUPs.Add(Id, this);
                 Members[0] = objCharacter;
@@ -74,7 +75,6 @@ namespace Mangos.Cluster.Handlers
                 objCharacter.Group = this;
                 objCharacter.GroupAssistant = false;
                 objCharacter.GetWorld.ClientSetGroup(objCharacter.Client.Index, Id);
-                this.clusterServiceLocator = clusterServiceLocator;
             }
 
             /* TODO ERROR: Skipped RegionDirectiveTrivia */

@@ -49,16 +49,9 @@ namespace Mangos.Cluster.Handlers
         {
             private readonly ClusterServiceLocator clusterServiceLocator;
 
-            public CharacterObject(ClusterServiceLocator clusterServiceLocator)
-            {
-
-                // Chat
-                ChatFlag = ChatFlag.FLAGS_NONE;
-                this.clusterServiceLocator = clusterServiceLocator;
-            }
-
             public CharacterObject(ulong g, WC_Network.ClientClass objCharacter, ClusterServiceLocator clusterServiceLocator)
             {
+                this.clusterServiceLocator = clusterServiceLocator;
                 ChatFlag = ChatFlag.FLAGS_NONE;
                 Guid = g;
                 Client = objCharacter;
@@ -68,8 +61,7 @@ namespace Mangos.Cluster.Handlers
                 this.clusterServiceLocator._WC_Handlers_Social.LoadIgnoreList(argobjCharacter);
                 this.clusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireWriterLock(this.clusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                 this.clusterServiceLocator._WorldCluster.CHARACTERs.Add(Guid, this);
-                this.clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseWriterLock();
-                this.clusterServiceLocator = clusterServiceLocator;
+                this.clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseWriterLock();                
             }
 
             public ulong Guid;

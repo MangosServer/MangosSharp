@@ -108,6 +108,7 @@ namespace Mangos.Cluster.Handlers
 
             public Battlefield(BattlefieldMapType rMapType, byte rLevel, uint rMap, ClusterServiceLocator clusterServiceLocator)
             {
+                this.clusterServiceLocator = clusterServiceLocator;
                 ID = Interlocked.Increment(ref this.clusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs_Counter);
                 LevelMin = 0;
                 LevelMax = 60;
@@ -119,7 +120,6 @@ namespace Mangos.Cluster.Handlers
                 this.clusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs.Add(ID, this);
                 this.clusterServiceLocator._WC_Handlers_Battleground.BATTLEFIELDs_Lock.ReleaseWriterLock();
                 _bfTimer = new Timer(Update, null, 20000, 20000);
-                this.clusterServiceLocator = clusterServiceLocator;
             }
 
             /* TODO ERROR: Skipped RegionDirectiveTrivia */

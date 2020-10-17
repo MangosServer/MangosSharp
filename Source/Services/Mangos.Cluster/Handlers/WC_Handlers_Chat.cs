@@ -269,7 +269,7 @@ namespace Mangos.Cluster.Handlers
             if (!clusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(channelName))
             {
                 // The New does a an add to the .Containskey collection above
-                var newChannel = new WS_Handler_Channels.ChatChannelClass(channelName);
+                var newChannel = new WS_Handler_Channels.ChatChannelClass(channelName, clusterServiceLocator);
             }
 
             clusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[channelName].Join(client.Character, password);

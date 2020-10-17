@@ -44,11 +44,6 @@ namespace Mangos.Cluster.Handlers
         {
             private readonly ClusterServiceLocator clusterServiceLocator;
 
-            public ChatChannelClass(ClusterServiceLocator clusterServiceLocator)
-            {
-                this.clusterServiceLocator = clusterServiceLocator;
-            }
-
             // This is server-side ID
             public long ID = 0L;
 
@@ -90,7 +85,7 @@ namespace Mangos.Cluster.Handlers
                 GC.SuppressFinalize(this);
             }
             /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-            public ChatChannelClass(string name)
+            public ChatChannelClass(string name, ClusterServiceLocator clusterServiceLocator)
             {
                 ID = clusterServiceLocator._WS_Handler_Channels.GetNexyChatChannelID();
                 ChannelIndex = 0;
@@ -110,7 +105,7 @@ namespace Mangos.Cluster.Handlers
                 if (clusterServiceLocator._WS_DBCDatabase.ChatChannelsInfo.ContainsKey(ChannelIndex))
                 {
                     // Default channel
-                    ChannelFlags = (byte) (ChannelFlags | (byte)CHANNEL_FLAG.CHANNEL_FLAG_GENERAL);
+                    ChannelFlags = (byte)(ChannelFlags | (byte)CHANNEL_FLAG.CHANNEL_FLAG_GENERAL);
                     Announce = false;
                     Moderate = false;
                     {
@@ -140,6 +135,8 @@ namespace Mangos.Cluster.Handlers
                     // Custom channel
                     ChannelFlags = (byte)((CHANNEL_FLAG)ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM);
                 }
+
+                this.clusterServiceLocator = clusterServiceLocator;
             }
 
             public void Say(string message, int msgLang, WcHandlerCharacter.CharacterObject character)
