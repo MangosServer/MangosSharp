@@ -27,6 +27,7 @@ using Mangos.Loggers;
 using Mangos.Loggers.Console;
 using Mangos.Zip;
 using System.Threading.Tasks;
+using Mangos.Cluster.Factories;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
 using Mangos.Cluster.Stats;
@@ -77,6 +78,7 @@ namespace Mangos.Cluster
         private static void RegisterTcpServer(ContainerBuilder builder)
         {
             builder.RegisterType<TcpServer>().AsSelf().SingleInstance();
+            builder.RegisterType<ClientClassFactory>().As<ITcpClientFactory>().SingleInstance();
         }
 
         private static void RegisterDataStoreProvider(ContainerBuilder builder)
@@ -92,6 +94,7 @@ namespace Mangos.Cluster
             builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
             builder.RegisterType<NativeMethods>().As<NativeMethods>().SingleInstance();
             builder.RegisterType<WorldCluster>().As<WorldCluster>().SingleInstance();
+            builder.RegisterType<WorldServerClass>().As<WorldServerClass>().SingleInstance();
             builder.RegisterType<WS_DBCDatabase>().As<WS_DBCDatabase>().SingleInstance();
             builder.RegisterType<WS_DBCLoad>().As<WS_DBCLoad>().SingleInstance();
             builder.RegisterType<Globals.Functions>().As<Globals.Functions>().SingleInstance();

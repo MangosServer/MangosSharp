@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace Mangos.Network.Tcp.Extensions
 {
@@ -28,6 +29,14 @@ namespace Mangos.Network.Tcp.Extensions
             for(int i = 0; i < count; i++)
             {
                 yield return await reader.ReadAsync();
+            }
+        }
+
+        public static async ValueTask ReadAsync(this ChannelReader<byte> reader, byte[] buffer, int offset, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                buffer[offset + i] = await reader.ReadAsync();
             }
         }
     }

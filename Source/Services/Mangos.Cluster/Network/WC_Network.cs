@@ -31,7 +31,8 @@ namespace Mangos.Cluster.Network
             this.clusterServiceLocator = clusterServiceLocator;
         }
 
-        public WorldServerClass WorldServer;
+        public WorldServerClass WorldServer => clusterServiceLocator._WorldServerClass;
+
         private readonly int LastPing = 0;
 
         public int MsTime()

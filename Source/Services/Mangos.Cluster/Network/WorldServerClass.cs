@@ -19,8 +19,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
 using System.Threading;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
@@ -33,71 +31,35 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Mangos.Cluster.Network
 {
-    public class WorldServerClass : Hub, ICluster, IDisposable
+    public class WorldServerClass : Hub, ICluster
     {
         private readonly ClusterServiceLocator clusterServiceLocator;
 
-
         public bool m_flagStopListen = false;
-        private readonly Timer m_TimerPing;
-        private readonly Timer m_TimerStats;
-        private readonly Timer m_TimerCPU;
-        private readonly Socket m_Socket;
+        private Timer m_TimerPing;
+        private Timer m_TimerStats;
+        private Timer m_TimerCPU;
 
         public WorldServerClass(ClusterServiceLocator clusterServiceLocator)
         {
             this.clusterServiceLocator = clusterServiceLocator;
-            try
-            {
-                m_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                m_Socket.Bind(new IPEndPoint(IPAddress.Parse(this.clusterServiceLocator._WorldCluster.GetConfig().WorldClusterAddress), this.clusterServiceLocator._WorldCluster.GetConfig().WorldClusterPort));
-                m_Socket.Listen(5);
-                m_Socket.BeginAccept(AcceptConnection, null);
-                this.clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.SUCCESS, "Listening on {0} on port {1}", IPAddress.Parse(this.clusterServiceLocator._WorldCluster.GetConfig().WorldClusterAddress), this.clusterServiceLocator._WorldCluster.GetConfig().WorldClusterPort);
-
-                // Creating ping timer
-                m_TimerPing = new Timer(Ping, null, 0, 15000);
-
-                // Creating stats timer
-                if (this.clusterServiceLocator._WorldCluster.GetConfig().StatsEnabled)
-                {
-                    m_TimerStats = new Timer(this.clusterServiceLocator._WC_Stats.GenerateStats, null, this.clusterServiceLocator._WorldCluster.GetConfig().StatsTimer, this.clusterServiceLocator._WorldCluster.GetConfig().StatsTimer);
-                }
-
-                // Creating CPU check timer
-                m_TimerCPU = new Timer(this.clusterServiceLocator._WC_Stats.CheckCpu, null, 1000, 1000);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine();
-                this.clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error in {1}: {0}.", e.Message, e.Source);
-            }
         }
 
-        protected void AcceptConnection(IAsyncResult ar)
+        public void Start()
         {
-            if (m_flagStopListen)
-                return;
-            var m_Client = new ClientClass(clusterServiceLocator) { Socket = m_Socket.EndAccept(ar) };
-            m_Client.Socket.NoDelay = true;
-            m_Socket.BeginAccept(AcceptConnection, null);
-            ThreadPool.QueueUserWorkItem(new WaitCallback(m_Client.OnConnect));
+            // Creating ping timer
+            m_TimerPing = new Timer(Ping, null, 0, 15000);
+
+            // Creating stats timer
+            if (this.clusterServiceLocator._WorldCluster.GetConfig().StatsEnabled)
+            {
+                m_TimerStats = new Timer(this.clusterServiceLocator._WC_Stats.GenerateStats, null, this.clusterServiceLocator._WorldCluster.GetConfig().StatsTimer, this.clusterServiceLocator._WorldCluster.GetConfig().StatsTimer);
+            }
+
+            // Creating CPU check timer
+            m_TimerCPU = new Timer(this.clusterServiceLocator._WC_Stats.CheckCpu, null, 1000, 1000);
         }
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        private readonly bool _disposedValue; // To detect redundant calls
-
-        // This code added by Visual Basic to correctly implement the disposable pattern.
-        public new void Dispose()
-        {
-            m_flagStopListen = true;
-            m_Socket.Close();
-            m_TimerPing.Dispose();
-            m_TimerStats.Dispose();
-            m_TimerCPU.Dispose();
-            GC.SuppressFinalize(this);
-        }
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
         public Dictionary<uint, IWorld> Worlds = new Dictionary<uint, IWorld>();
         public Dictionary<uint, WorldInfo> WorldsInfo = new Dictionary<uint, WorldInfo>();
 

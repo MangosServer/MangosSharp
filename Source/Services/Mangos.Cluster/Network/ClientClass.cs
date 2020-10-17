@@ -21,39 +21,36 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Common;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
+using Mangos.Network.Tcp;
+using Mangos.Network.Tcp.Extensions;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Cluster.Network
 {
-    public class ClientClass : ClientInfo, IDisposable
+    public class ClientClass : ClientInfo, ITcpClient
     {
         private readonly ClusterServiceLocator clusterServiceLocator;
 
-        public ClientClass(ClusterServiceLocator clusterServiceLocator)
+        public ClientClass(ClusterServiceLocator clusterServiceLocator, Socket socket)
         {
             this.clusterServiceLocator = clusterServiceLocator;
+            this.socket = socket;
         }
 
-        public Socket Socket = null;
-        public Queue Queue = new Queue();
-        public WcHandlerCharacter.CharacterObject Character = null;
+        private readonly Socket socket;
+        public WcHandlerCharacter.CharacterObject Character;
         public byte[] SS_Hash;
         public bool Encryption = false;
-        protected byte[] SocketBuffer = new byte[8193];
-        protected int SocketBytes;
-        protected byte[] SavedBytes = Array.Empty<byte>();
-        public bool DEBUG_CONNECTION = false;
-        private readonly byte[] Key = new byte[] { 0, 0, 0, 0 };
-        private bool HandingPackets = false;
+        private readonly byte[] Key = { 0, 0, 0, 0 };
 
         public ClientInfo GetClientInfo()
         {
@@ -68,13 +65,13 @@ namespace Mangos.Cluster.Network
             return ci;
         }
 
-        public void OnConnect(object state)
+        public async Task OnConnectAsync()
         {
-            if (Socket is null)
+            if (socket is null)
                 throw new ApplicationException("socket doesn't exist!");
             if (clusterServiceLocator._WorldCluster.CLIENTs is null)
                 throw new ApplicationException("Clients doesn't exist!");
-            IPEndPoint remoteEndPoint = (IPEndPoint)Socket.RemoteEndPoint;
+            IPEndPoint remoteEndPoint = (IPEndPoint)socket.RemoteEndPoint;
             IP = remoteEndPoint.Address.ToString();
             Port = (uint)remoteEndPoint.Port;
 
@@ -87,7 +84,7 @@ namespace Mangos.Cluster.Network
                 }
                 else
                 {
-                    Socket.Close();
+                    socket.Close();
                     Dispose();
                     return;
                 }
@@ -98,7 +95,6 @@ namespace Mangos.Cluster.Network
             }
 
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "Incoming connection from [{0}:{1}]", IP, Port);
-            Socket.BeginReceive(SocketBuffer, 0, SocketBuffer.Length, SocketFlags.None, OnData, null);
 
             // Send Auth Challenge
             var p = new PacketClass(Opcodes.SMSG_AUTH_CHALLENGE);
@@ -110,201 +106,78 @@ namespace Mangos.Cluster.Network
             clusterServiceLocator._WC_Stats.ConnectionsIncrement();
         }
 
-        public void OnData(IAsyncResult ar)
+        public async void HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, CancellationToken cancellationToken)
         {
-            if (!Socket.Connected)
-                return;
-            if (clusterServiceLocator._WC_Network.WorldServer.m_flagStopListen)
-                return;
-            if (ar is null)
-                throw new ApplicationException("Value ar is empty!");
-            if (SocketBuffer is null)
-                throw new ApplicationException("SocketBuffer is empty!");
-            if (Socket is null)
-                throw new ApplicationException("Socket is Null!");
-            if (clusterServiceLocator._WorldCluster.CLIENTs is null)
-                throw new ApplicationException("Clients doesn't exist!");
-            if (Queue is null)
-                throw new ApplicationException("Queue is Null!");
-            if (SavedBytes is null)
-                throw new ApplicationException("SavedBytes is empty!");
-            try
+            var buffer = new byte[8192];
+            while (!cancellationToken.IsCancellationRequested)
             {
-                SocketBytes = Socket.EndReceive(ar);
-                if (SocketBytes == 0)
+                await reader.ReadAsync(buffer, 0, 6);
+                if (Encryption)
                 {
-                    Dispose(Conversions.ToBoolean(SocketBytes));
+                    Decode(buffer);
                 }
-                else
-                {
-                    Interlocked.Add(ref clusterServiceLocator._WC_Stats.DataTransferIn, SocketBytes);
-                    while (SocketBytes > 0)
-                    {
-                        if (SavedBytes.Length == 0)
-                        {
-                            if (Encryption)
-                                Decode(SocketBuffer);
-                        }
-                        else
-                        {
-                            SocketBuffer = clusterServiceLocator._Functions.Concat(SavedBytes, SocketBuffer);
-                            SavedBytes = (new byte[] { });
-                        }
+                var length = buffer[1] + buffer[0] * 256 + 2;
+                await reader.ReadAsync(buffer, 6, length - 6);
 
-                        // Calculate Length from packet
-                        int PacketLen = SocketBuffer[1] + SocketBuffer[0] * 256 + 2;
-                        if (SocketBytes < PacketLen)
-                        {
-                            SavedBytes = new byte[SocketBytes];
-                            try
-                            {
-                                Array.Copy(SocketBuffer, 0, SavedBytes, 0, SocketBytes);
-                            }
-                            catch (Exception)
-                            {
-                                Dispose(Conversions.ToBoolean(SocketBytes));
-                                Socket.Dispose();
-                                Socket.Close();
-                                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.CRITICAL, "[{0}:{1}] BAD PACKET {2}({3}) bytes, ", IP, Port, SocketBytes, PacketLen);
-                            }
-
-                            break;
-                        }
-
-                        // Move packet to Data
-                        var data = new byte[PacketLen];
-                        Array.Copy(SocketBuffer, data, PacketLen);
-
-                        // Create packet and add it to queue
-                        var p = new PacketClass(data);
-                        lock (Queue.SyncRoot)
-                            Queue.Enqueue(p);
-                        try
-                        {
-                            // Delete packet from buffer
-                            SocketBytes -= PacketLen;
-                            Array.Copy(SocketBuffer, PacketLen, SocketBuffer, 0, SocketBytes);
-                        }
-                        catch (Exception)
-                        {
-                            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.CRITICAL, "[{0}:{1}] Could not delete packet from buffer! {2}({3}{4}) bytes, ", IP, Port, SocketBuffer, PacketLen, SocketBytes);
-                        }
-                    }
-
-                    if (SocketBuffer.Length > 0)
-                    {
-                        try
-                        {
-                            SocketError argerrorCode = (SocketError)SocketFlags.None;
-                            Socket.BeginReceive(SocketBuffer, 0, SocketBuffer.Length, (SocketFlags)SocketBytes, out argerrorCode, OnData, null);
-                            if (HandingPackets == false)
-                                ThreadPool.QueueUserWorkItem(OnPacket);
-                        }
-                        catch (Exception)
-                        {
-                            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Packet Disconnect from [{0}:{1}] caused an error {2}{3}", IP, Port, Information.Err().ToString(), Constants.vbCrLf);
-                        }
-                    }
-                }
-            }
-            catch (Exception Err)
-            {
-                // NOTE: If it's a error here it means the connection is closed?
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Connection from [{0}:{1}] caused an error {2}{3}", IP, Port, Err.ToString(), Constants.vbCrLf);
-                Dispose(Conversions.ToBoolean(SocketBuffer.Length));
-                Dispose(HandingPackets);
+                var packet = new PacketClass(buffer);
+                OnPacket(packet);
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public void OnPacket(object state)
+        public void OnPacket(PacketClass p)
         {
-            if (SocketBuffer is null)
-                throw new ApplicationException("SocketBuffer is empty!");
-            if (Socket is null)
-                throw new ApplicationException("Socket is Null!");
+            if (socket is null)
+                throw new ApplicationException("socket is Null!");
             if (clusterServiceLocator._WorldCluster.CLIENTs is null)
                 throw new ApplicationException("Clients doesn't exist!");
-            if (Queue is null)
-                throw new ApplicationException("Queue is Null!");
-            if (SavedBytes is null)
-                throw new ApplicationException("SavedBytes is empty!");
             if (clusterServiceLocator._WorldCluster.GetPacketHandlers() is null)
                 throw new ApplicationException("PacketHandler is empty!");
-            try
+
+            if (clusterServiceLocator._WorldCluster.GetConfig().PacketLogging)
             {
-            }
-            catch (Exception)
-            {
-                HandingPackets = true;
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Handing Packets Failed: {0}", HandingPackets);
+                var argclient = this;
+                clusterServiceLocator._Packets.LogPacket(p.Data, false, argclient);
             }
 
-            while (Queue.Count > 0)
+            if (clusterServiceLocator._WorldCluster.GetPacketHandlers().ContainsKey(p.OpCode) != true)
             {
-                PacketClass p;
-                lock (Queue.SyncRoot)
-                    p = (PacketClass)Queue.Dequeue();
-                if (clusterServiceLocator._WorldCluster.GetConfig().PacketLogging)
+                if (Character is null || Character.IsInWorld == false)
                 {
-                    var argclient = this;
-                    clusterServiceLocator._Packets.LogPacket(p.Data, false, argclient);
-                }
-
-                if (clusterServiceLocator._WorldCluster.GetPacketHandlers().ContainsKey(p.OpCode) != true)
-                {
-                    if (Character is null || Character.IsInWorld == false)
-                    {
-                        Socket.Dispose();
-                        Socket.Close();
-                        clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Unknown Opcode 0x{2:X} [{2}], DataLen={4}", IP, Port, p.OpCode, Constants.vbCrLf, p.Length);
-                        var argclient1 = this;
-                        clusterServiceLocator._Packets.DumpPacket(p.Data, argclient1);
-                    }
-                    else
-                    {
-                        try
-                        {
-                            Character.GetWorld.ClientPacket(Index, p.Data);
-                        }
-                        catch
-                        {
-                            clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { Character.Map });
-                        }
-                    }
+                    socket.Dispose();
+                    socket.Close();
+                    clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Unknown Opcode 0x{2:X} [{2}], DataLen={4}", IP, Port, p.OpCode, Constants.vbCrLf, p.Length);
+                    var argclient1 = this;
+                    clusterServiceLocator._Packets.DumpPacket(p.Data, argclient1);
                 }
                 else
                 {
                     try
                     {
-                        var argclient2 = this;
-                        clusterServiceLocator._WorldCluster.GetPacketHandlers()[p.OpCode].Invoke(p, argclient2);
+                        Character.GetWorld.ClientPacket(Index, p.Data);
                     }
-                    catch (Exception e)
+                    catch
                     {
-                        clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Opcode handler {2}:{2:X} caused an error: {1}{0}", e.ToString(), Constants.vbCrLf, p.OpCode);
+                        clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { Character.Map });
                     }
-                }
-
-                try
-                {
-                }
-                catch (Exception)
-                {
-                    if (Queue.Count == 0)
-                        p.Dispose();
-                    clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Unable to dispose of packet: {0}", p.OpCode);
-                    var argclient = this;
-                    clusterServiceLocator._Packets.DumpPacket(p.Data, argclient);
                 }
             }
-
-            HandingPackets = false;
+            else
+            {
+                try
+                {
+                    var argclient2 = this;
+                    clusterServiceLocator._WorldCluster.GetPacketHandlers()[p.OpCode].Invoke(p, argclient2);
+                }
+                catch (Exception e)
+                {
+                    clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Opcode handler {2}:{2:X} caused an error: {1}{0}", e.ToString(), Constants.vbCrLf, p.OpCode);
+                }
+            }
         }
 
         public void Send(byte[] data)
         {
-            if (!Socket.Connected)
+            if (!socket.Connected)
                 return;
             try
             {
@@ -316,7 +189,7 @@ namespace Mangos.Cluster.Network
 
                 if (Encryption)
                     Encode(data);
-                Socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
+                socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
             }
             catch (Exception Err)
             {
@@ -330,7 +203,7 @@ namespace Mangos.Cluster.Network
         {
             if (Information.IsNothing(packet))
                 throw new ApplicationException("Packet doesn't contain data!");
-            if (Information.IsNothing(Socket) | Socket.Connected == false)
+            if (Information.IsNothing(socket) | socket.Connected == false)
                 return;
             try
             {
@@ -343,7 +216,7 @@ namespace Mangos.Cluster.Network
 
                 if (Encryption)
                     Encode(data);
-                Socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
+                socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
             }
             catch (Exception err)
             {
@@ -361,7 +234,7 @@ namespace Mangos.Cluster.Network
         {
             if (packet is null)
                 throw new ApplicationException("Packet doesn't contain data!");
-            if (!Socket.Connected)
+            if (!socket.Connected)
                 return;
             try
             {
@@ -374,7 +247,7 @@ namespace Mangos.Cluster.Network
 
                 if (Encryption)
                     Encode(data);
-                Socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
+                socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
             }
             catch (Exception Err)
             {
@@ -388,9 +261,9 @@ namespace Mangos.Cluster.Network
 
         public void OnSendComplete(IAsyncResult ar)
         {
-            if (Socket is object)
+            if (socket is object)
             {
-                int bytesSent = Socket.EndSend(ar);
+                int bytesSent = socket.EndSend(ar);
                 Interlocked.Add(ref clusterServiceLocator._WC_Stats.DataTransferOut, bytesSent);
             }
         }
@@ -409,9 +282,8 @@ namespace Mangos.Cluster.Network
                 // On Error Resume Next
                 // May have to trap and use exception handler rather than the on error resume next rubbish
 
-                if (Socket is object)
-                    Socket.Close();
-                Socket = null;
+                if (socket is object)
+                    socket.Close();
                 lock (((ICollection)clusterServiceLocator._WorldCluster.CLIENTs).SyncRoot)
                     clusterServiceLocator._WorldCluster.CLIENTs.Remove(Index);
                 if (Character is object)
@@ -442,25 +314,24 @@ namespace Mangos.Cluster.Network
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
         public void Delete()
         {
-            Socket.Close();
+            socket.Close();
             Dispose();
         }
 
         public void Decode(byte[] data)
         {
-            int tmp;
-            for (int i = 0; i <= 6 - 1; i++)
+            for (int i = 0; i < 6; i++)
             {
-                tmp = data[i];
+                var tmp =data[i];
                 data[i] = (byte)(SS_Hash[Key[1]] ^ (256 + data[i] - Key[0]) % 256);
-                Key[0] = (byte)tmp;
+                Key[0] = tmp;
                 Key[1] = (byte)((Key[1] + 1) % 40);
             }
         }
 
         public void Encode(byte[] data)
         {
-            for (int i = 0; i <= 4 - 1; i++)
+            for (int i = 0; i < 4; i++)
             {
                 data[i] = (byte)(((SS_Hash[Key[3]] ^ data[i]) + Key[2]) % 256);
                 Key[2] = data[i];
@@ -472,7 +343,7 @@ namespace Mangos.Cluster.Network
         {
             while (clusterServiceLocator._WorldCluster.CHARACTERs.Count > clusterServiceLocator._WorldCluster.GetConfig().ServerPlayerLimit)
             {
-                if (!Socket.Connected)
+                if (!socket.Connected)
                     return;
                 new PacketClass(Opcodes.SMSG_AUTH_RESPONSE).AddInt8((byte)LoginResponse.LOGIN_WAIT_QUEUE);
                 new PacketClass(Opcodes.SMSG_AUTH_RESPONSE).AddInt32(clusterServiceLocator._WorldCluster.CLIENTs.Count - clusterServiceLocator._WorldCluster.CHARACTERs.Count);            // amount of players in queue

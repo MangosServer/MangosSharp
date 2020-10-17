@@ -24,8 +24,7 @@ namespace Mangos.Cluster
     [XmlRoot(ElementName = "WorldCluster")]
     public class ClusterConfiguration
     {
-        public int WorldClusterPort { get; set; } = 8085;
-        public string WorldClusterAddress { get; set; } = "127.0.0.1";
+        public string WorldClusterEndpoint { get; set; } = "127.0.0.1:8085";
         public int ServerPlayerLimit { get; set; } = 10;
 
         // Database Settings

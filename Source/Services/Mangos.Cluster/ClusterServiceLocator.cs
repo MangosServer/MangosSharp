@@ -36,6 +36,7 @@ namespace Mangos.Cluster
         public ZipService _GlobalZip { get; set; }
         public NativeMethods _NativeMethods { get; set; } 
         public WorldCluster _WorldCluster { get; set; } 
+        public WorldServerClass _WorldServerClass { get; set; }
         public WS_DBCDatabase _WS_DBCDatabase { get; set; } 
         public  WS_DBCLoad _WS_DBCLoad { get; set; } 
         public Globals.Functions _Functions { get; set; }

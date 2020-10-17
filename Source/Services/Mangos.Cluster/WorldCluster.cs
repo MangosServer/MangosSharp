@@ -32,6 +32,7 @@ using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Logging;
+using Mangos.Network.Tcp;
 using Mangos.SignalR;
 using Microsoft.VisualBasic;
 
@@ -40,10 +41,14 @@ namespace Mangos.Cluster
     public class WorldCluster
     {
         private readonly ClusterServiceLocator clusterServiceLocator;
+        private readonly TcpServer tcpServer;
 
-        public WorldCluster(ClusterServiceLocator clusterServiceLocator)
+        public WorldCluster(
+            ClusterServiceLocator clusterServiceLocator, 
+            TcpServer tcpServer)
         {
             this.clusterServiceLocator = clusterServiceLocator;
+            this.tcpServer = tcpServer;
         }
 
         private const string ClusterPath = "configs/WorldCluster.ini";
@@ -386,7 +391,8 @@ namespace Mangos.Cluster
                 }
             }
 
-            clusterServiceLocator._WC_Network.WorldServer = new WorldServerClass(clusterServiceLocator);
+            tcpServer.Start(IPEndPoint.Parse(GetConfig().WorldClusterEndpoint), 10);
+            clusterServiceLocator._WorldServerClass.Start();
             var server = new ProxyServer<WorldServerClass>(IPAddress.Parse(GetConfig().ClusterListenAddress), GetConfig().ClusterListenPort, clusterServiceLocator._WC_Network.WorldServer);
             Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}:{1}", GetConfig().ClusterListenAddress, GetConfig().ClusterListenPort);
             GC.Collect();

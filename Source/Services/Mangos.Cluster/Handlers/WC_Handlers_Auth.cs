@@ -88,14 +88,7 @@ namespace Mangos.Cluster.Handlers
 							tmpClientEntry.Value.Character = null;
 						}
 
-						try
-						{
-							tmpClientEntry.Value.Socket.Shutdown(SocketShutdown.Both);
-						}
-						catch
-						{
-							tmpClientEntry.Value.Socket.Close();
-						}
+                        tmpClientEntry.Value.Dispose();
 					}
 				}
 			}
