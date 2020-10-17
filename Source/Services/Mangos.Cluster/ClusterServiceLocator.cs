@@ -23,7 +23,7 @@ using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Server;
 using Mangos.Common;
-using Mangos.Common.Zip;
+using Mangos.Zip;
 
 namespace Mangos.Cluster
 {

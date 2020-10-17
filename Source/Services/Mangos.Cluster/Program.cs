@@ -23,10 +23,10 @@ using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Server;
 using Mangos.Common;
-using Mangos.Common.DataStores;
-using Mangos.Common.Zip;
+using Mangos.DataStores;
 using Mangos.Loggers;
 using Mangos.Loggers.Console;
+using Mangos.Zip;
 using System.Threading.Tasks;
 
 namespace Mangos.Cluster

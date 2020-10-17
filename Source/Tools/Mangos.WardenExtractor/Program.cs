@@ -17,8 +17,6 @@
 //
 
 using System;
-using System.IO;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -130,54 +128,6 @@ namespace Mangos.WardenExtractor
 
             return bBytes;
         }
-
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        public static byte[] Compress(byte[] b, int offset, int len)
-        {
-            byte[] buffer2;
-            try
-            {
-                var outputStream = new MemoryStream();
-                var compressordStream = new DeflaterOutputStream(outputStream);
-                compressordStream.Write(b, offset, len);
-                compressordStream.Flush();
-                compressordStream.Close();
-                buffer2 = outputStream.ToArray();
-            }
-            catch (Exception)
-            {
-                buffer2 = null;
-            }
-
-            return buffer2;
-        }
-
-        public static byte[] DeCompress(byte[] b)
-        {
-            byte[] buffer2 = null;
-            var writeBuffer = new byte[(short.MaxValue + 1)];
-            var decopressorStream = new InflaterInputStream(new MemoryStream(b));
-            try
-            {
-                int bytesRead = decopressorStream.Read(writeBuffer, 0, writeBuffer.Length);
-                if (bytesRead > 0)
-                {
-                    buffer2 = new byte[bytesRead];
-                    Buffer.BlockCopy(writeBuffer, 0, buffer2, 0, bytesRead);
-                }
-
-                decopressorStream.Flush();
-                decopressorStream.Close();
-            }
-            catch (Exception)
-            {
-                buffer2 = null;
-            }
-
-            return buffer2;
-        }
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         public class RC4
         {

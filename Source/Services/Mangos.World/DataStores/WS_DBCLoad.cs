@@ -23,9 +23,9 @@ using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using Mangos.Common;
-using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Spell;
+using Mangos.DataStores;
 using Mangos.World.Loots;
 using Mangos.World.Maps;
 using Mangos.World.Spells;
@@ -34,7 +34,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.DataStores
 {
-	public class WS_DBCLoad
+    public class WS_DBCLoad
 	{
 		private readonly DataStoreProvider dataStoreProvider;
 

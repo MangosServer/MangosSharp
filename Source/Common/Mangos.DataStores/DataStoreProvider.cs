@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Mangos.Common.DataStores
+namespace Mangos.DataStores
 {
     public class DataStoreProvider
     {
@@ -35,7 +35,7 @@ namespace Mangos.Common.DataStores
 
         public async ValueTask<DataStore> GetDataStoreAsync(string dbcFileName)
         {
-            if(dataStores.ContainsKey(dbcFileName))
+            if (dataStores.ContainsKey(dbcFileName))
             {
                 return dataStores[dbcFileName];
             }

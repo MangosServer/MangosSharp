@@ -18,9 +18,8 @@
 
 using Autofac;
 using global;
-using Mangos.Common.DataStores;
-using Mangos.Common.Zip;
 using Mangos.Configuration;
+using Mangos.DataStores;
 using Mangos.World.AI;
 using Mangos.World.AntiCheat;
 using Mangos.World.Auction;
@@ -38,6 +37,7 @@ using Mangos.World.Social;
 using Mangos.World.Spells;
 using Mangos.World.Warden;
 using Mangos.World.Weather;
+using Mangos.Zip;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World

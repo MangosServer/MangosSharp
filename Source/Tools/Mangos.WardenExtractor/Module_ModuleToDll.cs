@@ -20,7 +20,7 @@ using System;
 using System.IO;
 using System.Numerics;
 using System.Security.Cryptography;
-using Mangos.Common.Zip;
+using Mangos.Zip;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 

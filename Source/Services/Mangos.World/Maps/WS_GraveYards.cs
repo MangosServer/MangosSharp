@@ -23,15 +23,15 @@ using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using Mangos.Common;
-using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
+using Mangos.DataStores;
 using Mangos.World.Player;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Maps
 {
-	public class WS_GraveYards : IDisposable
+    public class WS_GraveYards : IDisposable
 	{
 		private readonly DataStoreProvider dataStoreProvider;
 

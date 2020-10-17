@@ -22,7 +22,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mangos.Common.DataStores
+namespace Mangos.DataStores
 {
     public class DataStore
     {

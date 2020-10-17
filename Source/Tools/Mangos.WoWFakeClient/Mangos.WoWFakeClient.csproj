@@ -6,6 +6,6 @@
     <AssemblyName>WoWFakeClient</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Mangos.Common.Zip\Mangos.Common.Zip.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Zip\Mangos.Zip.csproj" />
   </ItemGroup>
 </Project>

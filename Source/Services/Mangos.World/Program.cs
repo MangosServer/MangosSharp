@@ -18,11 +18,10 @@
 
 using Autofac;
 using global;
-using Mangos.Common.DataStores;
-using Mangos.Common.Zip;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
+using Mangos.DataStores;
 using Mangos.Loggers;
 using Mangos.Loggers.Console;
 using Mangos.World.AI;
@@ -42,6 +41,7 @@ using Mangos.World.Social;
 using Mangos.World.Spells;
 using Mangos.World.Warden;
 using Mangos.World.Weather;
+using Mangos.Zip;
 using Microsoft.VisualBasic.CompilerServices;
 using System.Threading.Tasks;
 

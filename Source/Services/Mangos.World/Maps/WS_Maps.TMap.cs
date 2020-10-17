@@ -18,9 +18,9 @@
 
 using System;
 using System.IO;
-using Mangos.Common.DataStores;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
+using Mangos.DataStores;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 

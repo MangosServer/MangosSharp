@@ -19,7 +19,7 @@
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
-namespace Mangos.Common.Zip
+namespace Mangos.Zip
 {
     public class ZipService
     {
