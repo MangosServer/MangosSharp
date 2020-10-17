@@ -27,7 +27,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Cluster.Globals
 {
-    public partial class Packets
+    public class Packets
     {
         private readonly ClusterServiceLocator clusterServiceLocator;
 

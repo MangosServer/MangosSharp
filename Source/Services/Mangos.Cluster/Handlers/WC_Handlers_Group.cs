@@ -87,16 +87,16 @@ namespace Mangos.Cluster.Handlers
 				{
 					// TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
 					// TODO: set large fields to null.
-					Packets.PacketClass packet;
+					PacketClass packet;
 					if (Type == GroupType.RAID)
 					{
-						packet = new Packets.PacketClass(Opcodes.SMSG_GROUP_LIST);
+						packet = new PacketClass(Opcodes.SMSG_GROUP_LIST);
 						packet.AddInt16(0);          // GroupType 0:Party 1:Raid
 						packet.AddInt32(0);          // GroupCount
 					}
 					else
 					{
-						packet = new Packets.PacketClass(Opcodes.SMSG_GROUP_DESTROYED);
+						packet = new PacketClass(Opcodes.SMSG_GROUP_DESTROYED);
 					}
 
 					for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
@@ -174,7 +174,7 @@ namespace Mangos.Cluster.Handlers
 							LootMaster = Leader;
 						if (objCharacter.Client is object)
 						{
-							var packet = new Packets.PacketClass(Opcodes.SMSG_GROUP_UNINVITE);
+							var packet = new PacketClass(Opcodes.SMSG_GROUP_UNINVITE);
 							objCharacter.Client.Send(packet);
 							packet.Dispose();
 						}
@@ -227,7 +227,7 @@ namespace Mangos.Cluster.Handlers
 					Leader = ChosenMember;
 					if (NewLootMaster)
 						LootMaster = Leader;
-					var response = new Packets.PacketClass(Opcodes.SMSG_GROUP_SET_LEADER);
+					var response = new PacketClass(Opcodes.SMSG_GROUP_SET_LEADER);
 					response.AddString(Members[Leader].Name);
 					Broadcast(response);
 					response.Dispose();
@@ -268,7 +268,7 @@ namespace Mangos.Cluster.Handlers
 					}
 				}
 
-				var packet = new Packets.PacketClass(Opcodes.SMSG_GROUP_SET_LEADER);
+				var packet = new PacketClass(Opcodes.SMSG_GROUP_SET_LEADER);
 				packet.AddString(objCharacter.Name);
 				Broadcast(packet);
 				packet.Dispose();
@@ -340,7 +340,7 @@ namespace Mangos.Cluster.Handlers
 				return list.ToArray();
 			}
 
-			public void Broadcast(Packets.PacketClass packet)
+			public void Broadcast(PacketClass packet)
 			{
 				for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
 				{
@@ -349,7 +349,7 @@ namespace Mangos.Cluster.Handlers
 				}
 			}
 
-			public void BroadcastToOther(Packets.PacketClass packet, WcHandlerCharacter.CharacterObject objCharacter)
+			public void BroadcastToOther(PacketClass packet, WcHandlerCharacter.CharacterObject objCharacter)
 			{
 				for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
 				{
@@ -358,7 +358,7 @@ namespace Mangos.Cluster.Handlers
 				}
 			}
 
-			public void BroadcastToOutOfRange(Packets.PacketClass packet, WcHandlerCharacter.CharacterObject objCharacter)
+			public void BroadcastToOutOfRange(PacketClass packet, WcHandlerCharacter.CharacterObject objCharacter)
 			{
 				for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
 				{
@@ -379,7 +379,7 @@ namespace Mangos.Cluster.Handlers
 				{
 					if (Members[i] is object)
 					{
-						var packet = new Packets.PacketClass(Opcodes.SMSG_GROUP_LIST);
+						var packet = new PacketClass(Opcodes.SMSG_GROUP_LIST);
 						packet.AddInt8((byte)Type);                                    // GroupType 0:Party 1:Raid
 						byte MemberFlags = (byte)(i / clusterServiceLocator._Global_Constants.GROUP_SUBGROUPSIZE);
 						// If Members(i).GroupAssistant Then MemberFlags = MemberFlags Or &H1
@@ -432,7 +432,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_REQUEST_RAID_INFO(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_REQUEST_RAID_INFO(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_REQUEST_RAID_INFO", client.IP, client.Port);
 			var q = new DataTable();
@@ -441,7 +441,7 @@ namespace Mangos.Cluster.Handlers
 				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters_instances WHERE char_guid = {0};", client.Character.Guid), ref q);
 			}
 
-			var response = new Packets.PacketClass(Opcodes.SMSG_RAID_INSTANCE_INFO);
+			var response = new PacketClass(Opcodes.SMSG_RAID_INSTANCE_INFO);
 			response.AddInt32(q.Rows.Count);                                 // Instances Counts
 			int i = 0;
 			foreach (DataRow r in q.Rows)
@@ -459,7 +459,7 @@ namespace Mangos.Cluster.Handlers
 
 		public void SendPartyResult(ClientClass objCharacter, string Name, PartyCommand operation, PartyCommandResult result)
 		{
-			var response = new Packets.PacketClass(Opcodes.SMSG_PARTY_COMMAND_RESULT);
+			var response = new PacketClass(Opcodes.SMSG_PARTY_COMMAND_RESULT);
 			response.AddInt32((byte)operation);
 			response.AddString(Name);
 			response.AddInt32((byte)result);
@@ -467,7 +467,7 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 		}
 
-		public void On_CMSG_GROUP_INVITE(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_INVITE(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -503,7 +503,7 @@ namespace Mangos.Cluster.Handlers
 			else if (clusterServiceLocator._WorldCluster.CHARACTERs[GUID].IsInGroup)
 			{
 				errCode = PartyCommandResult.INVITE_ALREADY_IN_GROUP;
-				var denied = new Packets.PacketClass(Opcodes.SMSG_GROUP_INVITE);
+				var denied = new PacketClass(Opcodes.SMSG_GROUP_INVITE);
 				denied.AddInt8(0);
 				denied.AddString(client.Character.Name);
 				clusterServiceLocator._WorldCluster.CHARACTERs[GUID].Client.Send(denied);
@@ -537,7 +537,7 @@ namespace Mangos.Cluster.Handlers
 			SendPartyResult(client, Name, PartyCommand.PARTY_OP_INVITE, errCode);
 			if (errCode == PartyCommandResult.INVITE_OK)
 			{
-				var invited = new Packets.PacketClass(Opcodes.SMSG_GROUP_INVITE);
+				var invited = new PacketClass(Opcodes.SMSG_GROUP_INVITE);
 				invited.AddInt8(1);
 				invited.AddString(client.Character.Name);
 				clusterServiceLocator._WorldCluster.CHARACTERs[GUID].Client.Send(invited);
@@ -545,12 +545,12 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_GROUP_CANCEL(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_CANCEL(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_CANCEL", client.IP, client.Port);
 		}
 
-		public void On_CMSG_GROUP_ACCEPT(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_ACCEPT(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_ACCEPT", client.IP, client.Port);
 			if (client.Character.GroupInvitedFlag && !client.Character.Group.IsFull)
@@ -566,12 +566,12 @@ namespace Mangos.Cluster.Handlers
 			client.Character.GroupInvitedFlag = false;
 		}
 
-		public void On_CMSG_GROUP_DECLINE(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_DECLINE(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_DECLINE", client.IP, client.Port);
 			if (client.Character.GroupInvitedFlag)
 			{
-				var response = new Packets.PacketClass(Opcodes.SMSG_GROUP_DECLINE);
+				var response = new PacketClass(Opcodes.SMSG_GROUP_DECLINE);
 				response.AddString(client.Character.Name);
 				client.Character.Group.GetLeader().Client.Send(response);
 				response.Dispose();
@@ -581,7 +581,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_GROUP_DISBAND(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_DISBAND(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_DISBAND", client.IP, client.Port);
 			if (client.Character.IsInGroup)
@@ -598,7 +598,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_GROUP_UNINVITE(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_UNINVITE(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -636,7 +636,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_GROUP_UNINVITE_GUID(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_UNINVITE_GUID(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 13)
 				return;
@@ -666,7 +666,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_GROUP_SET_LEADER(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_SET_LEADER(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -695,7 +695,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_GROUP_RAID_CONVERT(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_RAID_CONVERT(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_RAID_CONVERT", client.IP, client.Port);
 			if (client.Character.IsInGroup)
@@ -707,7 +707,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_GROUP_CHANGE_SUB_GROUP(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_CHANGE_SUB_GROUP(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -744,7 +744,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_GROUP_SWAP_SUB_GROUP(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_GROUP_SWAP_SUB_GROUP(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
@@ -789,7 +789,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_LOOT_METHOD(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_LOOT_METHOD(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 21)
 				return;
@@ -810,7 +810,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WC_Network.WorldServer.GroupSendUpdateLoot(client.Character.Group.Id);
 		}
 
-		public void On_MSG_MINIMAP_PING(Packets.PacketClass packet, ClientClass client)
+		public void On_MSG_MINIMAP_PING(PacketClass packet, ClientClass client)
 		{
 			packet.GetInt16();
 			float x = packet.GetFloat();
@@ -818,7 +818,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MINIMAP_PING [{2}:{3}]", client.IP, client.Port, x, y);
 			if (client.Character.IsInGroup)
 			{
-				var response = new Packets.PacketClass(Opcodes.MSG_MINIMAP_PING);
+				var response = new PacketClass(Opcodes.MSG_MINIMAP_PING);
 				response.AddUInt64(client.Character.Guid);
 				response.AddSingle(x);
 				response.AddSingle(y);
@@ -827,7 +827,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_MSG_RANDOM_ROLL(Packets.PacketClass packet, ClientClass client)
+		public void On_MSG_RANDOM_ROLL(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 13)
 				return;
@@ -835,7 +835,7 @@ namespace Mangos.Cluster.Handlers
 			int minRoll = packet.GetInt32();
 			int maxRoll = packet.GetInt32();
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_RANDOM_ROLL [min={2} max={3}]", client.IP, client.Port, minRoll, maxRoll);
-			var response = new Packets.PacketClass(Opcodes.MSG_RANDOM_ROLL);
+			var response = new PacketClass(Opcodes.MSG_RANDOM_ROLL);
 			response.AddInt32(minRoll);
 			response.AddInt32(maxRoll);
 			response.AddInt32(clusterServiceLocator._WorldCluster.Rnd.Next(minRoll, maxRoll));
@@ -852,7 +852,7 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 		}
 
-		public void On_MSG_RAID_READY_CHECK(Packets.PacketClass packet, ClientClass client)
+		public void On_MSG_RAID_READY_CHECK(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_RAID_READY_CHECK", client.IP, client.Port);
 			if (client.Character.IsGroupLeader)
@@ -873,7 +873,7 @@ namespace Mangos.Cluster.Handlers
 				else
 				{
 					// DONE: Ready
-					var response = new Packets.PacketClass(Opcodes.MSG_RAID_READY_CHECK);
+					var response = new PacketClass(Opcodes.MSG_RAID_READY_CHECK);
 					response.AddUInt64(client.Character.Guid);
 					client.Character.Group.GetLeader().Client.Send(response);
 					response.Dispose();
@@ -881,7 +881,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_MSG_RAID_ICON_TARGET(Packets.PacketClass packet, ClientClass client)
+		public void On_MSG_RAID_ICON_TARGET(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length < 7)
 				return; // Too short packet
@@ -892,7 +892,7 @@ namespace Mangos.Cluster.Handlers
 			if (icon == 255)
 			{
 				// DONE: Send icon target list
-				var response = new Packets.PacketClass(Opcodes.MSG_RAID_ICON_TARGET);
+				var response = new PacketClass(Opcodes.MSG_RAID_ICON_TARGET);
 				response.AddInt8(1); // Target list
 				for (byte i = 0; i <= 7; i++)
 				{
@@ -915,7 +915,7 @@ namespace Mangos.Cluster.Handlers
 
 				// DONE: Set the raid icon target
 				client.Character.Group.TargetIcons[icon] = GUID;
-				var response = new Packets.PacketClass(Opcodes.MSG_RAID_ICON_TARGET);
+				var response = new PacketClass(Opcodes.MSG_RAID_ICON_TARGET);
 				response.AddInt8(0); // Set target
 				response.AddInt8(icon);
 				response.AddUInt64(GUID);
@@ -924,7 +924,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_REQUEST_PARTY_MEMBER_STATS(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_REQUEST_PARTY_MEMBER_STATS(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 13)
 				return;
@@ -948,7 +948,7 @@ namespace Mangos.Cluster.Handlers
 			else
 			{
 				// Request information from WorldServer
-				var response = new Packets.PacketClass(0) { Data = clusterServiceLocator._WorldCluster.CHARACTERs[GUID].GetWorld.GroupMemberStats(GUID, 0) };
+				var response = new PacketClass(0) { Data = clusterServiceLocator._WorldCluster.CHARACTERs[GUID].GetWorld.GroupMemberStats(GUID, 0) };
 				client.Send(response);
 				response.Dispose();
 			}

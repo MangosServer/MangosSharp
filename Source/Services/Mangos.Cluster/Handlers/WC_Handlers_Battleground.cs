@@ -35,7 +35,7 @@ namespace Mangos.Cluster.Handlers
             this.clusterServiceLocator = clusterServiceLocator;
         }
 
-        public void On_CMSG_BATTLEFIELD_PORT(Packets.PacketClass packet, ClientClass client)
+        public void On_CMSG_BATTLEFIELD_PORT(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
 
@@ -58,7 +58,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_CMSG_LEAVE_BATTLEFIELD(Packets.PacketClass packet, ClientClass client)
+        public void On_CMSG_LEAVE_BATTLEFIELD(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             byte Unk1 = packet.GetInt8();
@@ -69,7 +69,7 @@ namespace Mangos.Cluster.Handlers
             BATTLEFIELDs[(int)ID].Leave(client.Character);
         }
 
-        public void On_CMSG_BATTLEMASTER_JOIN(Packets.PacketClass packet, ClientClass client)
+        public void On_CMSG_BATTLEMASTER_JOIN(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 16)
                 return;
@@ -289,7 +289,7 @@ namespace Mangos.Cluster.Handlers
                     // Do nothing
                 }
 
-                var p = new Packets.PacketClass(Opcodes.SMSG_BATTLEFIELD_STATUS);
+                var p = new PacketClass(Opcodes.SMSG_BATTLEFIELD_STATUS);
                 try
                 {
                     p.AddUInt32(slot);               // Slot (0, 1 or 2)
@@ -444,7 +444,7 @@ namespace Mangos.Cluster.Handlers
             // 3 - Your group has joined the queue for AB
 
 
-            var p = new Packets.PacketClass(Opcodes.SMSG_GROUP_JOINED_BATTLEGROUND);
+            var p = new PacketClass(Opcodes.SMSG_GROUP_JOINED_BATTLEGROUND);
             try
             {
                 p.AddUInt32(0xFFFFFFFEU);
@@ -456,9 +456,9 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(Packets.PacketClass packet, ClientClass client)
+        public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(PacketClass packet, ClientClass client)
         {
-            var p = new Packets.PacketClass(Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS);
+            var p = new PacketClass(Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS);
             try
             {
                 p.AddUInt32(0U);

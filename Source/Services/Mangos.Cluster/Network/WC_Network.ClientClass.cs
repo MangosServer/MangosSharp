@@ -101,7 +101,7 @@ namespace Mangos.Cluster.Network
             Socket.BeginReceive(SocketBuffer, 0, SocketBuffer.Length, SocketFlags.None, OnData, null);
 
             // Send Auth Challenge
-            var p = new Packets.PacketClass(Opcodes.SMSG_AUTH_CHALLENGE);
+            var p = new PacketClass(Opcodes.SMSG_AUTH_CHALLENGE);
             p.AddInt32((int)Index);
             Send(p);
             Index = (uint)Interlocked.Increment(ref clusterServiceLocator._WorldCluster.CLIETNIDs);
@@ -176,7 +176,7 @@ namespace Mangos.Cluster.Network
                         Array.Copy(SocketBuffer, data, PacketLen);
 
                         // Create packet and add it to queue
-                        var p = new Packets.PacketClass(data);
+                        var p = new PacketClass(data);
                         lock (Queue.SyncRoot)
                             Queue.Enqueue(p);
                         try
@@ -242,9 +242,9 @@ namespace Mangos.Cluster.Network
 
             while (Queue.Count > 0)
             {
-                Packets.PacketClass p;
+                PacketClass p;
                 lock (Queue.SyncRoot)
-                    p = (Packets.PacketClass)Queue.Dequeue();
+                    p = (PacketClass)Queue.Dequeue();
                 if (clusterServiceLocator._WorldCluster.GetConfig().PacketLogging)
                 {
                     var argclient = this;
@@ -326,7 +326,7 @@ namespace Mangos.Cluster.Network
             }
         }
 
-        public void Send(Packets.PacketClass packet)
+        public void Send(PacketClass packet)
         {
             if (Information.IsNothing(packet))
                 throw new ApplicationException("Packet doesn't contain data!");
@@ -357,7 +357,7 @@ namespace Mangos.Cluster.Network
                 packet.Dispose();
         }
 
-        public void SendMultiplyPackets(Packets.PacketClass packet)
+        public void SendMultiplyPackets(PacketClass packet)
         {
             if (packet is null)
                 throw new ApplicationException("Packet doesn't contain data!");
@@ -474,9 +474,9 @@ namespace Mangos.Cluster.Network
             {
                 if (!Socket.Connected)
                     return;
-                new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE).AddInt8((byte)LoginResponse.LOGIN_WAIT_QUEUE);
-                new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE).AddInt32(clusterServiceLocator._WorldCluster.CLIENTs.Count - clusterServiceLocator._WorldCluster.CHARACTERs.Count);            // amount of players in queue
-                Send(new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE));
+                new PacketClass(Opcodes.SMSG_AUTH_RESPONSE).AddInt8((byte)LoginResponse.LOGIN_WAIT_QUEUE);
+                new PacketClass(Opcodes.SMSG_AUTH_RESPONSE).AddInt32(clusterServiceLocator._WorldCluster.CLIENTs.Count - clusterServiceLocator._WorldCluster.CHARACTERs.Count);            // amount of players in queue
+                Send(new PacketClass(Opcodes.SMSG_AUTH_RESPONSE));
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "[{1}:{2}] AUTH_WAIT_QUEUE: Server player limit reached!", IP, Port);
                 Thread.Sleep(6000);
             }

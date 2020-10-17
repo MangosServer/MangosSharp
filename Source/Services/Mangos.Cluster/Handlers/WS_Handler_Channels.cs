@@ -450,7 +450,7 @@ namespace Mangos.Cluster.Handlers
                 }
                 else
                 {
-                    var packet = new Packets.PacketClass(Opcodes.SMSG_CHANNEL_LIST);
+                    var packet = new PacketClass(Opcodes.SMSG_CHANNEL_LIST);
                     packet.AddInt8(0);                   // ChannelType
                     packet.AddString(ChannelName);       // ChannelName
                     packet.AddInt8(ChannelFlags);        // ChannelFlags
@@ -551,7 +551,7 @@ namespace Mangos.Cluster.Handlers
 
             public void GetOwner(WcHandlerCharacter.CharacterObject Character)
             {
-                Packets.PacketClass p;
+                PacketClass p;
                 if (!Joined.Contains(Character.Guid))
                 {
                     p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, Character.Guid, default, default);
@@ -580,7 +580,7 @@ namespace Mangos.Cluster.Handlers
                 Owner = Character.Guid;
                 if (!Moderators.Contains(Owner))
                     Moderators.Add(Owner);
-                Packets.PacketClass p;
+                PacketClass p;
                 p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_CHANGE_OWNER, Character.Guid, default, default);
                 Broadcast(p);
                 p.Dispose();
@@ -603,7 +603,7 @@ namespace Mangos.Cluster.Handlers
                 else
                 {
                     Announce = !Announce;
-                    Packets.PacketClass packet;
+                    PacketClass packet;
                     if (Announce)
                     {
                         packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_ENABLE_ANNOUNCE, Character.Guid, default, default);
@@ -635,7 +635,7 @@ namespace Mangos.Cluster.Handlers
                 else
                 {
                     Moderate = !Moderate;
-                    Packets.PacketClass packet;
+                    PacketClass packet;
                     if (Announce)
                     {
                         packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_MODERATED, Character.Guid, default, default);
@@ -819,7 +819,7 @@ namespace Mangos.Cluster.Handlers
                 }
             }
 
-            public void Broadcast(Packets.PacketClass p)
+            public void Broadcast(PacketClass p)
             {
                 foreach (ulong GUID in Joined.ToArray())
                     clusterServiceLocator._WorldCluster.CHARACTERs[GUID].Client.SendMultiplyPackets(p);
@@ -835,9 +835,9 @@ namespace Mangos.Cluster.Handlers
                 // TODO: Loading from database
             }
 
-            protected Packets.PacketClass BuildChannelNotify(CHANNEL_NOTIFY_FLAGS Notify, ulong GUID1, ulong GUID2, string Name)
+            protected PacketClass BuildChannelNotify(CHANNEL_NOTIFY_FLAGS Notify, ulong GUID1, ulong GUID2, string Name)
             {
-                var response = new Packets.PacketClass(Opcodes.SMSG_CHANNEL_NOTIFY);
+                var response = new PacketClass(Opcodes.SMSG_CHANNEL_NOTIFY);
                 response.AddInt8((byte)Notify);
                 response.AddString(ChannelName);
                 switch (Notify)

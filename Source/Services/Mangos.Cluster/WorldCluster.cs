@@ -59,7 +59,7 @@ namespace Mangos.Cluster
         public BaseWriter Log = new BaseWriter();
         public Random Rnd = new Random();
 
-        public delegate void HandlePacket(Packets.PacketClass packet, ClientClass client);
+        public delegate void HandlePacket(PacketClass packet, ClientClass client);
 
         public void LoadConfig()
         {

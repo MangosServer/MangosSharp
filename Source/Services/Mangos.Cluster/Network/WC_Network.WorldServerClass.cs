@@ -144,8 +144,8 @@ namespace Mangos.Cluster.Network
                     {
                         if (objCharacter.Value.Character is object && objCharacter.Value.Character.IsInWorld && objCharacter.Value.Character.Map == map)
                         {
-                            objCharacter.Value.Send(new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));
-                            new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE).Dispose();
+                            objCharacter.Value.Send(new PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));
+                            new PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE).Dispose();
                             objCharacter.Value.Character.Dispose();
                             objCharacter.Value.Character = null;
                         }
@@ -255,7 +255,7 @@ namespace Mangos.Cluster.Network
         public void ClientTransfer(uint ID, float posX, float posY, float posZ, float ori, uint map)
         {
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "[{0:000000}] Client has transferred from map {1:000} to map {2:000}", ID, clusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Map, map);
-            var p = new Packets.PacketClass(Opcodes.SMSG_NEW_WORLD);
+            var p = new PacketClass(Opcodes.SMSG_NEW_WORLD);
             p.AddUInt32(map);
             p.AddSingle(posX);
             p.AddSingle(posY);
@@ -350,8 +350,8 @@ namespace Mangos.Cluster.Network
                 if (clusterServiceLocator._Functions.IsContinentMap((int)MapID))
                 {
                     clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0:000000}] Requested Instance Map [{1}] is a continent", client.Index, MapID);
-                    client.Send(new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));
-                    new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE).Dispose();
+                    client.Send(new PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));
+                    new PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE).Dispose();
                     client.Character.IsInWorld = false;
                     return false;
                 }
@@ -380,8 +380,8 @@ namespace Mangos.Cluster.Network
                 if (ParentMap is null)
                 {
                     clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0:000000}] Requested Instance Map [{1}] can't be loaded", client.Index, MapID);
-                    client.Send(new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));
-                    new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE).Dispose();
+                    client.Send(new PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));
+                    new PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE).Dispose();
                     client.Character.IsInWorld = false;
                     return false;
                 }

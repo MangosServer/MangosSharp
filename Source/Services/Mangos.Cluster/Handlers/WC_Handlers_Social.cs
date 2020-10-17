@@ -59,7 +59,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND (flags & {1}) > 0;", character.Guid, Conversions.ToInteger(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
 
 			// DONE: Make the packet
-			var smsgFriendList = new Packets.PacketClass(Opcodes.SMSG_FRIEND_LIST);
+			var smsgFriendList = new PacketClass(Opcodes.SMSG_FRIEND_LIST);
 			if (q.Rows.Count > 0)
 			{
 				smsgFriendList.AddInt8((byte)q.Rows.Count);
@@ -109,7 +109,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND (flags & {1}) > 0;", character.Guid, Conversions.ToInteger(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
 
 			// DONE: Make the packet
-			var smsgIgnoreList = new Packets.PacketClass(Opcodes.SMSG_IGNORE_LIST);
+			var smsgIgnoreList = new PacketClass(Opcodes.SMSG_IGNORE_LIST);
 			if (q.Rows.Count > 0)
 			{
 				smsgIgnoreList.AddInt8((byte)q.Rows.Count);
@@ -132,7 +132,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT guid FROM character_social WHERE friend = {0} AND (flags & {1}) > 0;", objCharacter.Guid, Conversions.ToInteger(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
 
 			// DONE: Send "Friend offline/online"
-			var friendpacket = new Packets.PacketClass(Opcodes.SMSG_FRIEND_STATUS);
+			var friendpacket = new PacketClass(Opcodes.SMSG_FRIEND_STATUS);
 			friendpacket.AddInt8((byte)s);
 			friendpacket.AddUInt64(objCharacter.Guid);
 			foreach (DataRow row in q.Rows)
@@ -149,7 +149,7 @@ namespace Mangos.Cluster.Handlers
 
 		/* TODO ERROR: Skipped EndRegionDirectiveTrivia */
 		/* TODO ERROR: Skipped RegionDirectiveTrivia */
-		public void On_CMSG_WHO(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_WHO(PacketClass packet, ClientClass client)
 		{
 			packet.GetInt16();
 			uint levelMinimum = packet.GetUInt32();       // 0
@@ -219,7 +219,7 @@ namespace Mangos.Cluster.Handlers
 				results.Add(objCharacter.Value.Guid);
 			}
 
-			var response = new Packets.PacketClass(Opcodes.SMSG_WHO);
+			var response = new PacketClass(Opcodes.SMSG_WHO);
 			response.AddInt32(results.Count);
 			response.AddInt32(results.Count);
 			foreach (ulong guid in results)
@@ -245,12 +245,12 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 		}
 
-		public void On_CMSG_ADD_FRIEND(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_ADD_FRIEND(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
 			packet.GetInt16();
-			var response = new Packets.PacketClass(Opcodes.SMSG_FRIEND_STATUS);
+			var response = new PacketClass(Opcodes.SMSG_FRIEND_STATUS);
 			string name = packet.GetString();
 			ulong guid = 0UL;
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ADD_FRIEND [{2}]", client.IP, client.Port, name);
@@ -330,12 +330,12 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_FRIEND_STATUS", client.IP, client.Port);
 		}
 
-		public void On_CMSG_ADD_IGNORE(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_ADD_IGNORE(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 6)
 				return;
 			packet.GetInt16();
-			var response = new Packets.PacketClass(Opcodes.SMSG_FRIEND_STATUS);
+			var response = new PacketClass(Opcodes.SMSG_FRIEND_STATUS);
 			string name = packet.GetString();
 			ulong GUID = 0UL;
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ADD_IGNORE [{2}]", client.IP, client.Port, name);
@@ -386,13 +386,13 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_FRIEND_STATUS", client.IP, client.Port);
 		}
 
-		public void On_CMSG_DEL_FRIEND(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_DEL_FRIEND(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_DEL_FRIEND", client.IP, client.Port);
 			if (packet.Data.Length - 1 < 13)
 				return;
 			packet.GetInt16();
-			var response = new Packets.PacketClass(Opcodes.SMSG_FRIEND_STATUS);
+			var response = new PacketClass(Opcodes.SMSG_FRIEND_STATUS);
 			ulong GUID = packet.GetUInt64();
 			try
 			{
@@ -429,13 +429,13 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_FRIEND_STATUS", client.IP, client.Port);
 		}
 
-		public void On_CMSG_DEL_IGNORE(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_DEL_IGNORE(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_DEL_IGNORE", client.IP, client.Port);
 			if (packet.Data.Length - 1 < 13)
 				return;
 			packet.GetInt16();
-			var response = new Packets.PacketClass(Opcodes.SMSG_FRIEND_STATUS);
+			var response = new PacketClass(Opcodes.SMSG_FRIEND_STATUS);
 			ulong GUID = packet.GetUInt64();
 			try
 			{
@@ -472,7 +472,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_FRIEND_STATUS", client.IP, client.Port);
 		}
 
-		public void On_CMSG_FRIEND_LIST(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_FRIEND_LIST(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_FRIEND_LIST", client.IP, client.Port);
 			SendFriendList(client, client.Character);

@@ -35,7 +35,7 @@ namespace Mangos.Cluster.Handlers
             this.clusterServiceLocator = clusterServiceLocator;
         }
 
-        public void On_CMSG_BUG(Packets.PacketClass packet, ClientClass client)
+        public void On_CMSG_BUG(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 14)
                 return;
@@ -63,10 +63,10 @@ namespace Mangos.Cluster.Handlers
             GMTICKET_NOTICKET = 10
         }
 
-        public void On_CMSG_GMTICKET_GETTICKET(Packets.PacketClass packet, ClientClass client)
+        public void On_CMSG_GMTICKET_GETTICKET(PacketClass packet, ClientClass client)
         {
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GMTICKET_GETTICKET", client.IP, client.Port);
-            var SMSG_GMTICKET_GETTICKET = new Packets.PacketClass(Opcodes.SMSG_GMTICKET_GETTICKET);
+            var SMSG_GMTICKET_GETTICKET = new PacketClass(Opcodes.SMSG_GMTICKET_GETTICKET);
             var MySQLResult = new DataTable();
             clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters_tickets WHERE char_guid = {0};", client.Character.Guid), ref MySQLResult);
             if (MySQLResult.Rows.Count > 0)
@@ -81,7 +81,7 @@ namespace Mangos.Cluster.Handlers
 
             client.Send(SMSG_GMTICKET_GETTICKET);
             SMSG_GMTICKET_GETTICKET.Dispose();
-            var SMSG_QUERY_TIME_RESPONSE = new Packets.PacketClass(Opcodes.SMSG_QUERY_TIME_RESPONSE);
+            var SMSG_QUERY_TIME_RESPONSE = new PacketClass(Opcodes.SMSG_QUERY_TIME_RESPONSE);
             SMSG_QUERY_TIME_RESPONSE.AddInt32(clusterServiceLocator._NativeMethods.timeGetTime("")); // GetTimestamp(Now))
             client.Send(SMSG_QUERY_TIME_RESPONSE);
             SMSG_QUERY_TIME_RESPONSE.Dispose();
@@ -93,7 +93,7 @@ namespace Mangos.Cluster.Handlers
             GMTICKET_CREATE_OK = 2
         }
 
-        public void On_CMSG_GMTICKET_CREATE(Packets.PacketClass packet, ClientClass client)
+        public void On_CMSG_GMTICKET_CREATE(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             uint ticket_map = packet.GetUInt32();
@@ -103,7 +103,7 @@ namespace Mangos.Cluster.Handlers
             string ticket_text = clusterServiceLocator._Functions.EscapeString(packet.GetString());
             var MySQLResult = new DataTable();
             clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters_tickets WHERE char_guid = {0};", client.Character.Guid), ref MySQLResult);
-            var SMSG_GMTICKET_CREATE = new Packets.PacketClass(Opcodes.SMSG_GMTICKET_CREATE);
+            var SMSG_GMTICKET_CREATE = new PacketClass(Opcodes.SMSG_GMTICKET_CREATE);
             if (MySQLResult.Rows.Count > 0)
             {
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GMTICKET_CREATE", client.IP, client.Port);
@@ -127,10 +127,10 @@ namespace Mangos.Cluster.Handlers
             GMTICKET_SYSTEMSTATUS_SURVEY = 3
         }
 
-        public void On_CMSG_GMTICKET_SYSTEMSTATUS(Packets.PacketClass packet, ClientClass client)
+        public void On_CMSG_GMTICKET_SYSTEMSTATUS(PacketClass packet, ClientClass client)
         {
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GMTICKET_SYSTEMSTATUS", client.IP, client.Port);
-            var SMSG_GMTICKET_SYSTEMSTATUS = new Packets.PacketClass(Opcodes.SMSG_GMTICKET_SYSTEMSTATUS);
+            var SMSG_GMTICKET_SYSTEMSTATUS = new PacketClass(Opcodes.SMSG_GMTICKET_SYSTEMSTATUS);
             SMSG_GMTICKET_SYSTEMSTATUS.AddInt32((int)GMTicketSystemStatus.GMTICKET_SYSTEMSTATUS_SURVEY);
             client.Send(SMSG_GMTICKET_SYSTEMSTATUS);
             SMSG_GMTICKET_SYSTEMSTATUS.Dispose();
@@ -141,17 +141,17 @@ namespace Mangos.Cluster.Handlers
             GMTICKET_DELETE_SUCCESS = 9
         }
 
-        public void On_CMSG_GMTICKET_DELETETICKET(Packets.PacketClass packet, ClientClass client)
+        public void On_CMSG_GMTICKET_DELETETICKET(PacketClass packet, ClientClass client)
         {
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GMTICKET_DELETETICKET", client.IP, client.Port);
             clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_tickets WHERE char_guid = {0};", client.Character.Guid));
-            var SMSG_GMTICKET_DELETETICKET = new Packets.PacketClass(Opcodes.SMSG_GMTICKET_DELETETICKET);
+            var SMSG_GMTICKET_DELETETICKET = new PacketClass(Opcodes.SMSG_GMTICKET_DELETETICKET);
             SMSG_GMTICKET_DELETETICKET.AddInt32((int)GMTicketDeleteResult.GMTICKET_DELETE_SUCCESS);
             client.Send(SMSG_GMTICKET_DELETETICKET);
             SMSG_GMTICKET_DELETETICKET.Dispose();
         }
 
-        public void On_CMSG_GMTICKET_UPDATETEXT(Packets.PacketClass packet, ClientClass client)
+        public void On_CMSG_GMTICKET_UPDATETEXT(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 7)
                 return;
@@ -161,12 +161,12 @@ namespace Mangos.Cluster.Handlers
             clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters_tickets SET char_guid={0}, ticket_text=\"{1}\";", client.Character.Guid, ticket_text));
         }
 
-        public void On_CMSG_WHOIS(Packets.PacketClass packet, ClientClass client)
+        public void On_CMSG_WHOIS(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
             string Name = packet.GetString();
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_WHOIS [{2}]", client.IP, client.Port, Name);
-            var response = new Packets.PacketClass(Opcodes.SMSG_WHOIS);
+            var response = new PacketClass(Opcodes.SMSG_WHOIS);
             response.AddString("This feature is not available yet.");
             client.Send(response);
             response.Dispose();

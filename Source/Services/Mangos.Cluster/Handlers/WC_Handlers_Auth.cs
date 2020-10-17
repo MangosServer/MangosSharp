@@ -50,7 +50,7 @@ namespace Mangos.Cluster.Handlers
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTH_SESSION [{2}]", client.IP, client.Port, client.Account);
 			Thread.Sleep(500);
-			var response = new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
+			var response = new PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
 			response.AddInt8((byte)LoginResponse.LOGIN_OK);
 			response.AddInt32(0);
 			response.AddInt8(2); // BillingPlanFlags
@@ -58,7 +58,7 @@ namespace Mangos.Cluster.Handlers
 			client.Send(response);
 		}
 
-		public void On_CMSG_AUTH_SESSION(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_AUTH_SESSION(PacketClass packet, ClientClass client)
 		{
 			// _WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}] [{1}:{2}] CMSG_AUTH_SESSION", Format(TimeOfDay, "hh:mm:ss"), client.IP, client.Port)
 
@@ -115,7 +115,7 @@ namespace Mangos.Cluster.Handlers
 			else
 			{
 				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.USER, "[{0}:{1}] AUTH_UNKNOWN_ACCOUNT: Account not in DB!", client.IP, client.Port);
-				var response_unk_acc = new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
+				var response_unk_acc = new PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
 				response_unk_acc.AddInt8((byte)AuthResult.WOW_FAIL_UNKNOWN_ACCOUNT);
 				client.Send(response_unk_acc);
 				return;
@@ -129,7 +129,7 @@ namespace Mangos.Cluster.Handlers
 			// DONE: Disconnect clients trying to enter with an invalid build
 			if (clientVersion < REQUIRED_BUILD_LOW || clientVersion > REQUIRED_BUILD_HIGH)
 			{
-				var invalid_version = new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
+				var invalid_version = new PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
 				invalid_version.AddInt8((byte)AuthResult.WOW_FAIL_VERSION_INVALID);
 				client.Send(invalid_version);
 				return;
@@ -187,7 +187,7 @@ namespace Mangos.Cluster.Handlers
 			// Not needed already - in 1.11 addons list is removed.
 
 			// DONE: Send packet
-			var addOnsEnable = new Packets.PacketClass(Opcodes.SMSG_ADDON_INFO);
+			var addOnsEnable = new PacketClass(Opcodes.SMSG_ADDON_INFO);
 			for (int i = 0, loopTo1 = AddOnsNames.Count - 1; i <= loopTo1; i++)
 			{
 				if (System.IO.File.Exists(string.Format(@"interface\{0}.pub", AddOnsNames[i])) && AddOnsHashes[i] != 0x1C776D01U)
@@ -218,12 +218,12 @@ namespace Mangos.Cluster.Handlers
 			addOnsEnable.Dispose();
 		}
 
-		public void On_CMSG_PING(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_PING(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 9)
 				return;
 			packet.GetInt16();
-			var response = new Packets.PacketClass(Opcodes.SMSG_PONG);
+			var response = new PacketClass(Opcodes.SMSG_PONG);
 			response.AddInt32(packet.GetInt32());
 			client.Send(response);
 			if (client.Character is object)
@@ -234,7 +234,7 @@ namespace Mangos.Cluster.Handlers
 			// _WorldCluster.Log.WriteLine(LogType.NETWORK, "[{0}:{1}] SMSG_PONG [{2}]", client.IP, client.Port, client.Character.Latency)
 		}
 
-		public void On_CMSG_UPDATE_ACCOUNT_DATA(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_UPDATE_ACCOUNT_DATA(PacketClass packet, ClientClass client)
 		{
 			try
 			{
@@ -291,7 +291,7 @@ namespace Mangos.Cluster.Handlers
 			}
 		}
 
-		public void On_CMSG_REQUEST_ACCOUNT_DATA(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_REQUEST_ACCOUNT_DATA(PacketClass packet, ClientClass client)
 		{
 			if (packet.Data.Length - 1 < 9)
 				return;
@@ -311,7 +311,7 @@ namespace Mangos.Cluster.Handlers
 			// If AccData.Rows.Count > 0 Then FoundData = True
 			// End If
 
-			var response = new Packets.PacketClass(Opcodes.SMSG_UPDATE_ACCOUNT_DATA);
+			var response = new PacketClass(Opcodes.SMSG_UPDATE_ACCOUNT_DATA);
 			response.AddUInt32(DataID);
 
 			// If FoundData = False Then
@@ -336,12 +336,12 @@ namespace Mangos.Cluster.Handlers
 			response.Dispose();
 		}
 
-		public void On_CMSG_CHAR_ENUM(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_CHAR_ENUM(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_ENUM", client.IP, client.Port);
 
 			// DONE: Query _WorldCluster.CHARACTERs DB
-			var response = new Packets.PacketClass(Opcodes.SMSG_CHAR_ENUM);
+			var response = new PacketClass(Opcodes.SMSG_CHAR_ENUM);
 			var MySQLQuery = new DataTable();
 			int Account_ID;
 			try
@@ -463,7 +463,7 @@ namespace Mangos.Cluster.Handlers
 			{
 				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Unable to enum characters. [{2}]", client.IP, client.Port, e.Message);
 				// TODO: Find what opcode officials use
-				response = new Packets.PacketClass(Opcodes.SMSG_CHAR_CREATE);
+				response = new PacketClass(Opcodes.SMSG_CHAR_CREATE);
 				response.AddInt8((byte)CharResponse.CHAR_LIST_FAILED);
 			}
 
@@ -471,10 +471,10 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CHAR_ENUM", client.IP, client.Port);
 		}
 
-		public void On_CMSG_CHAR_DELETE(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_CHAR_DELETE(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_DELETE", client.IP, client.Port);
-			var response = new Packets.PacketClass(Opcodes.SMSG_CHAR_DELETE);
+			var response = new PacketClass(Opcodes.SMSG_CHAR_DELETE);
 			packet.GetInt16();
 			ulong guid = packet.GetUInt64();
 			try
@@ -548,7 +548,7 @@ namespace Mangos.Cluster.Handlers
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CHAR_DELETE [{2:X}]", client.IP, client.Port, guid);
 		}
 
-		public void On_CMSG_CHAR_RENAME(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_CHAR_RENAME(PacketClass packet, ClientClass client)
 		{
 			packet.GetInt16();
 			long GUID = packet.GetInt64();
@@ -569,15 +569,15 @@ namespace Mangos.Cluster.Handlers
 				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_name = \"{1}\", force_restrictions = 0 WHERE char_guid = {0};", GUID, Name));
 
 			// DONE: Send response
-			var response = new Packets.PacketClass(Opcodes.SMSG_CHAR_RENAME);
+			var response = new PacketClass(Opcodes.SMSG_CHAR_RENAME);
 			response.AddInt8(ErrCode);
 			client.Send(response);
 			response.Dispose();
-			Packets.PacketClass argpacket = null;
+			PacketClass argpacket = null;
 			On_CMSG_CHAR_ENUM(argpacket, client);
 		}
 
-		public void On_CMSG_CHAR_CREATE(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_CHAR_CREATE(PacketClass packet, ClientClass client)
 		{
 			packet.GetInt16();
 			string Name = packet.GetString();
@@ -611,12 +611,12 @@ namespace Mangos.Cluster.Handlers
 				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Character creation failed!{2}{3}", client.IP, client.Port, Constants.vbCrLf, ex.ToString());
 			}
 
-			var response = new Packets.PacketClass(Opcodes.SMSG_CHAR_CREATE);
+			var response = new PacketClass(Opcodes.SMSG_CHAR_CREATE);
 			response.AddInt8((byte)result);
 			client.Send(response);
 		}
 
-		public void On_CMSG_PLAYER_LOGIN(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_PLAYER_LOGIN(PacketClass packet, ClientClass client)
 		{
 			packet.GetInt16();               // int16 unknown
 			ulong GUID = packet.GetUInt64();
@@ -647,7 +647,7 @@ namespace Mangos.Cluster.Handlers
 				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0:000000}] Unable to login: WORLD SERVER DOWN", client.Index);
 				client.Character.Dispose();
 				client.Character = null;
-				var r = new Packets.PacketClass(Opcodes.SMSG_CHARACTER_LOGIN_FAILED);
+				var r = new PacketClass(Opcodes.SMSG_CHARACTER_LOGIN_FAILED);
 				try
 				{
 					r.AddInt8((byte)CharResponse.CHAR_LOGIN_NO_WORLD);
@@ -658,7 +658,7 @@ namespace Mangos.Cluster.Handlers
 					clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0:000000}] Unable to login: {1}", client.Index, ex.ToString());
 					client.Character.Dispose();
 					client.Character = null;
-					var a = new Packets.PacketClass(Opcodes.SMSG_CHARACTER_LOGIN_FAILED);
+					var a = new PacketClass(Opcodes.SMSG_CHARACTER_LOGIN_FAILED);
 					try
 					{
 						a.AddInt8((byte)CharResponse.CHAR_LOGIN_FAILED);
@@ -674,7 +674,7 @@ namespace Mangos.Cluster.Handlers
 
 		// Leak is with in this code. Needs a rewrite to correct the leak. This only effects the CPU Usage.
 		// Happens when the client disconnects from the server.
-		public void On_CMSG_PLAYER_LOGOUT(Packets.PacketClass packet, ClientClass client)
+		public void On_CMSG_PLAYER_LOGOUT(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PLAYER_LOGOUT", client.IP, client.Port);
 			client.Character.OnLogout();
@@ -683,7 +683,7 @@ namespace Mangos.Cluster.Handlers
 			client.Character = null;
 		}
 
-		public void On_MSG_MOVE_WORLDPORT_ACK(Packets.PacketClass packet, ClientClass client)
+		public void On_MSG_MOVE_WORLDPORT_ACK(PacketClass packet, ClientClass client)
 		{
 			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_WORLDPORT_ACK", client.IP, client.Port);
 			try
