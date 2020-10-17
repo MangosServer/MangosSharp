@@ -35,13 +35,16 @@ namespace Mangos.Cluster
     {
         public static async Task Main()
         {
-            await ClusterServiceLocator._WorldCluster.StartAsync();
+            var container = CreateContainer();
+            var worldCluster = container.Resolve<WorldCluster>();
+            await worldCluster.StartAsync();
         }
 
         public static IContainer CreateContainer()
         {
             var builder = new ContainerBuilder();
 			RegisterLoggers(builder);
+
 			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
             builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>().SingleInstance();
             builder.RegisterType<Common.Functions>().As<Common.Functions>().SingleInstance();
@@ -67,6 +70,11 @@ namespace Mangos.Cluster
             builder.RegisterType<WC_Handlers_Tickets>().As<WC_Handlers_Tickets>().SingleInstance();
             builder.RegisterType<WS_Handler_Channels>().As<WS_Handler_Channels>().SingleInstance();
             builder.RegisterType<WcHandlerCharacter>().As<WcHandlerCharacter>().SingleInstance();
+
+            builder.RegisterType<ClusterServiceLocator>().As<ClusterServiceLocator>()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+                .SingleInstance();
+
             builder.RegisterType<DataStoreProvider>().As<DataStoreProvider>().SingleInstance();
             return builder.Build();
 		}

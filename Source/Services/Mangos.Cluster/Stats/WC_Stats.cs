@@ -32,10 +32,16 @@ namespace Mangos.Cluster.Server
 {
 	public class WC_Stats
 	{
+		private readonly ClusterServiceLocator clusterServiceLocator;
 
-		// http://www.15seconds.com/issue/050615.htm
+        public WC_Stats(ClusterServiceLocator clusterServiceLocator)
+        {
+            this.clusterServiceLocator = clusterServiceLocator;
+        }
 
-		private int ConnectionsHandled = 0;
+        // http://www.15seconds.com/issue/050615.htm
+
+        private int ConnectionsHandled = 0;
 		private int ConnectionsPeak = 0;
 		private int ConnectionsCurrent = 0;
 
@@ -92,8 +98,8 @@ namespace Mangos.Cluster.Server
 			CountPlayersAlliance = 0;
 			CountGMs = 0;
 			Latency = 0L;
-			ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireReaderLock(ClusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-			foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in ClusterServiceLocator._WorldCluster.CHARACTERs)
+			clusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireReaderLock(clusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+			foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in clusterServiceLocator._WorldCluster.CHARACTERs)
 			{
 				if (objCharacter.Value.IsInWorld)
 				{
@@ -113,13 +119,13 @@ namespace Mangos.Cluster.Server
 				}
 			}
 
-			ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
+			clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
 			if (CountPlayers > 1)
 			{
 				Latency /= CountPlayers;
 			}
 
-			foreach (KeyValuePair<uint, WC_Network.WorldInfo> objCharacter in ClusterServiceLocator._WC_Network.WorldServer.WorldsInfo)
+			foreach (KeyValuePair<uint, WC_Network.WorldInfo> objCharacter in clusterServiceLocator._WC_Network.WorldServer.WorldsInfo)
 			{
 				if (!Information.IsNothing(objCharacter.Value))
 				{
@@ -135,9 +141,9 @@ namespace Mangos.Cluster.Server
 
 		public void GenerateStats(object state)
 		{
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "Generating stats");
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "Generating stats");
 			PrepareStats();
-			var f = XmlWriter.Create(ClusterServiceLocator._WorldCluster.GetConfig().StatsLocation);
+			var f = XmlWriter.Create(clusterServiceLocator._WorldCluster.GetConfig().StatsLocation);
 			f.WriteStartDocument(true);
 			f.WriteComment("generated at " + DateTime.Now.ToString("hh:mm:ss"));
 			// <?xml-stylesheet type="text/xsl" href="stats.xsl"?>
@@ -232,13 +238,13 @@ namespace Mangos.Cluster.Server
 			}
 			catch (Exception ex)
 			{
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error while generating stats file: {0}", ex.ToString());
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error while generating stats file: {0}", ex.ToString());
 			}
 			// </world>
 			f.WriteEndElement();
-			ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireReaderLock(ClusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+			clusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireReaderLock(clusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
 			f.WriteStartElement("users");
-			foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in ClusterServiceLocator._WorldCluster.CHARACTERs)
+			foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in clusterServiceLocator._WorldCluster.CHARACTERs)
 			{
 				if (objCharacter.Value.IsInWorld && objCharacter.Value.Access >= AccessLevel.GameMaster)
 				{
@@ -255,7 +261,7 @@ namespace Mangos.Cluster.Server
 
 			f.WriteEndElement();
 			f.WriteStartElement("sessions");
-			foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in ClusterServiceLocator._WorldCluster.CHARACTERs)
+			foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in clusterServiceLocator._WorldCluster.CHARACTERs)
 			{
 				if (objCharacter.Value.IsInWorld)
 				{
@@ -289,7 +295,7 @@ namespace Mangos.Cluster.Server
 			}
 
 			f.WriteEndElement();
-			ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
+			clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
 
 			// </server>
 			f.WriteEndElement();

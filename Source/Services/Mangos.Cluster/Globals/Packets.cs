@@ -29,6 +29,13 @@ namespace Mangos.Cluster.Globals
 {
     public partial class Packets
     {
+        private readonly ClusterServiceLocator clusterServiceLocator;
+
+        public Packets(ClusterServiceLocator clusterServiceLocator)
+        {
+            this.clusterServiceLocator = clusterServiceLocator;
+        }
+
         public void DumpPacket(byte[] data, [Optional, DefaultParameterValue(null)] WC_Network.ClientClass client)
         {
             // #If DEBUG Then
@@ -62,12 +69,12 @@ namespace Mangos.Cluster.Globals
                     buffer += " |" + Constants.vbCrLf;
                 }
 
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, buffer, default);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, buffer, default);
             }
             // #End If
             catch (Exception e)
             {
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error dumping packet: {0}{1}", Constants.vbCrLf, e.ToString());
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error dumping packet: {0}{1}", Constants.vbCrLf, e.ToString());
             }
         }
 

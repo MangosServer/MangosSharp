@@ -26,17 +26,24 @@ namespace Mangos.Cluster.Handlers
 {
     public class WC_Handlers_Movement
     {
+        private readonly ClusterServiceLocator clusterServiceLocator;
+
+        public WC_Handlers_Movement(ClusterServiceLocator clusterServiceLocator)
+        {
+            this.clusterServiceLocator = clusterServiceLocator;
+        }
+
         public void On_MSG_MOVE_HEARTBEAT(Packets.PacketClass packet, WC_Network.ClientClass client)
         {
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_HEARTBEAT [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_HEARTBEAT [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_HEARTBEAT error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_HEARTBEAT error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -59,12 +66,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_START_BACKWARD [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_START_BACKWARD [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
                 // _WC_Network.WorldServer.Disconnect("NULL", New List(Of UInteger)() From {client.Character.Map}) 'There's an error coming from here, uncomment for full runtime error log details!
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_START_BACKWARD error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_START_BACKWARD error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -87,12 +94,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_FOWARD [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_FOWARD [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_FOWARD error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_FOWARD error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -115,12 +122,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_PITCH_DOWN [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_PITCH_DOWN [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_PITCH_DOWN error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_PITCH_DOWN error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -143,12 +150,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_PITCH_UP [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_PITCH_UP [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_PITCH_UP error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_PITCH_UP error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -171,12 +178,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STRAFE_LEFT [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STRAFE_LEFT [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STRAFE_LEFT error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STRAFE_LEFT error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -199,12 +206,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_STRAFE_RIGHT [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_STRAFE_RIGHT [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_STRAFE_RIGHT error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_STRAFE_RIGHT error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -227,12 +234,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_SWIM [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_SWIM [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_SWIM error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_SWIM error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -255,12 +262,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_TURN_LEFT [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_TURN_LEFT [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_TURN_LEFT error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_TURN_LEFT error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -284,12 +291,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_TURN_RIGHT [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_START_TURN_RIGHT [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_TURN_RIGHT error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_TURN_RIGHT error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -313,12 +320,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STOP [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STOP [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -341,12 +348,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STOP_PITCH [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STOP_PITCH [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_PITCH error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_PITCH error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -369,12 +376,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STOP_STRAFE [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STOP_STRAFE [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_STRAFE error occured [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_STRAFE error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -397,12 +404,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STOP_SWIM [{2}]", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STOP_SWIM [{2}]", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_SWIM error occured [{2}", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_SWIM error occured [{2}", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -425,12 +432,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STOP_TURN [{2}", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_STOP_TURN [{2}", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_TURN error occured [{2}", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_TURN error occured [{2}", client.IP, client.Port, client.Character.Map);
                 return;
             }
 
@@ -454,12 +461,12 @@ namespace Mangos.Cluster.Handlers
             try
             {
                 client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_SET_FACING [{2}", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_SET_FACING [{2}", client.IP, client.Port, client.Character.Map);
             }
             catch
             {
-                ClusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_SET_FACING error occured [{2}", client.IP, client.Port, client.Character.Map);
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_SET_FACING error occured [{2}", client.IP, client.Port, client.Character.Map);
                 return;
             }
 

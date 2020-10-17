@@ -35,6 +35,13 @@ namespace Mangos.Cluster.Globals
 {
     public class Functions
     {
+        private readonly ClusterServiceLocator clusterServiceLocator;
+
+        public Functions(ClusterServiceLocator clusterServiceLocator)
+        {
+            this.clusterServiceLocator = clusterServiceLocator;
+        }
+
         public int ToInteger(bool value)
         {
             if (value)
@@ -256,26 +263,26 @@ namespace Mangos.Cluster.Globals
         {
             var account = new DataTable();
             var bannedAccount = new DataTable();
-            ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, username FROM account WHERE username = {0};", name), ref account);
+            clusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, username FROM account WHERE username = {0};", name), ref account);
             if (account.Rows.Count > 0)
             {
                 int accId = account.Rows[0].As<int>("id");
-                ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", accId), ref bannedAccount);
+                clusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", accId), ref bannedAccount);
                 if (bannedAccount.Rows.Count > 0)
                 {
-                    ClusterServiceLocator._WorldCluster.GetAccountDatabase().Update("UPDATE account_banned SET active = 1 WHERE id = '" + accId + "';");
+                    clusterServiceLocator._WorldCluster.GetAccountDatabase().Update("UPDATE account_banned SET active = 1 WHERE id = '" + accId + "';");
                 }
                 else
                 {
                     string tempBanDate = Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongDate) + " " + Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongTime);
-                    ClusterServiceLocator._WorldCluster.GetAccountDatabase().Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP('{1}'), UNIX_TIMESTAMP('{2}'), '{3}', '{4}', active = 1);", accId, tempBanDate, "0000-00-00 00:00:00", name, reason));
+                    clusterServiceLocator._WorldCluster.GetAccountDatabase().Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP('{1}'), UNIX_TIMESTAMP('{2}'), '{3}', '{4}', active = 1);", accId, tempBanDate, "0000-00-00 00:00:00", name, reason));
                 }
 
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "Account [{0}] banned by server. Reason: [{1}].", name, reason);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "Account [{0}] banned by server. Reason: [{1}].", name, reason);
             }
             else
             {
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "Account [{0}] NOT Found in Database.", name);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "Account [{0}] NOT Found in Database.", name);
             }
         }
 
@@ -513,7 +520,7 @@ namespace Mangos.Cluster.Globals
         public bool RollChance(float chance)
         {
             int nChance = (int)(chance * 100f);
-            if (ClusterServiceLocator._WorldCluster.Rnd.Next(1, 10001) <= nChance)
+            if (clusterServiceLocator._WorldCluster.Rnd.Next(1, 10001) <= nChance)
                 return true;
             return false;
         }
@@ -553,14 +560,14 @@ namespace Mangos.Cluster.Globals
 
         public void Broadcast(string message)
         {
-            ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireReaderLock(ClusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> character in ClusterServiceLocator._WorldCluster.CHARACTERs)
+            clusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireReaderLock(clusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> character in clusterServiceLocator._WorldCluster.CHARACTERs)
             {
                 if (character.Value.Client is object)
                     SendMessageSystem(character.Value.Client, "System Message: " + SetColor(message, 255, 0, 0));
             }
 
-            ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
+            clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
         }
 
         public void SendAccountMD5(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
@@ -614,7 +621,7 @@ namespace Mangos.Cluster.Globals
                 smsgAccountDataTimes.Dispose();
             }
 
-            ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_ACCOUNT_DATA_MD5", client.IP, client.Port);
+            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_ACCOUNT_DATA_MD5", client.IP, client.Port);
         }
 
         public void SendTriggerCinematic(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character)
@@ -622,14 +629,14 @@ namespace Mangos.Cluster.Globals
             var packet = new Packets.PacketClass(Opcodes.SMSG_TRIGGER_CINEMATIC);
             try
             {
-                if (ClusterServiceLocator._WS_DBCDatabase.CharRaces.ContainsKey((int)character.Race))
+                if (clusterServiceLocator._WS_DBCDatabase.CharRaces.ContainsKey((int)character.Race))
                 {
                     
-                    packet.AddInt32(ClusterServiceLocator._WS_DBCDatabase.CharRaces[(int)character.Race].CinematicID);
+                    packet.AddInt32(clusterServiceLocator._WS_DBCDatabase.CharRaces[(int)character.Race].CinematicID);
                 }
                 else
                 {
-                    ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC [Error: RACE={2} CLASS={3}]", client.IP, client.Port, character.Race, character.Classe);
+                    clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC [Error: RACE={2} CLASS={3}]", client.IP, client.Port, character.Race, character.Classe);
                     return;
                 }
 
@@ -640,7 +647,7 @@ namespace Mangos.Cluster.Globals
                 packet.Dispose();
             }
 
-            ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC", client.IP, client.Port);
+            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC", client.IP, client.Port);
         }
 
         public void SendTimeSyncReq(WC_Network.ClientClass client)
@@ -673,7 +680,7 @@ namespace Mangos.Cluster.Globals
                 smsgLoginSettimespeed.Dispose();
             }
 
-            ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGIN_SETTIMESPEED", client.IP, client.Port);
+            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGIN_SETTIMESPEED", client.IP, client.Port);
         }
 
         public void SendProficiency(WC_Network.ClientClass client, byte proficiencyType, int proficiencyFlags)
@@ -690,7 +697,7 @@ namespace Mangos.Cluster.Globals
                 packet.Dispose();
             }
 
-            ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_SET_PROFICIENCY", client.IP, client.Port);
+            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_SET_PROFICIENCY", client.IP, client.Port);
         }
 
         public void SendCorpseReclaimDelay(WC_Network.ClientClass client, WcHandlerCharacter.CharacterObject character, int seconds = 30)
@@ -706,7 +713,7 @@ namespace Mangos.Cluster.Globals
                 packet.Dispose();
             }
 
-            ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CORPSE_RECLAIM_DELAY [{2}s]", client.IP, client.Port, seconds);
+            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CORPSE_RECLAIM_DELAY [{2}s]", client.IP, client.Port, seconds);
         }
 
         public Packets.PacketClass BuildChatMessage(ulong senderGuid, string message, ChatMsg msgType, LANGUAGES msgLanguage, byte flag = 0, string msgChannel = "Global")
@@ -758,13 +765,13 @@ namespace Mangos.Cluster.Globals
                     case var case19 when case19 == ChatMsg.CHAT_MSG_MONSTER_EMOTE:
                     case var case20 when case20 == ChatMsg.CHAT_MSG_MONSTER_YELL:
                         {
-                            ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Use Creature.SendChatMessage() for this message type - {0}!", msgType);
+                            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Use Creature.SendChatMessage() for this message type - {0}!", msgType);
                             break;
                         }
 
                     default:
                         {
-                            ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Unknown chat message type - {0}!", msgType);
+                            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Unknown chat message type - {0}!", msgType);
                             break;
                         }
                 }
@@ -775,7 +782,7 @@ namespace Mangos.Cluster.Globals
             }
             catch (Exception)
             {
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "failed chat message type - {0}!", msgType);
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "failed chat message type - {0}!", msgType);
             }
 
             return packet;

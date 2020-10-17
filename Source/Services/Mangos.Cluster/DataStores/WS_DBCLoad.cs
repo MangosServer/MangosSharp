@@ -25,29 +25,36 @@ namespace Mangos.Cluster.DataStores
 {
     public class WS_DBCLoad
     {
+        private readonly ClusterServiceLocator clusterServiceLocator;
+
+        public WS_DBCLoad(ClusterServiceLocator clusterServiceLocator)
+        {
+            this.clusterServiceLocator = clusterServiceLocator;
+        }
+
         public async Task InitializeInternalDatabaseAsync()
         {
             await InitializeLoadDataStoresAsync();
             try
             {
                 // Set all characters offline
-                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_online = 0;");
+                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_online = 0;");
             }
             catch (Exception e)
             {
-                ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Internal database initialization failed! [{0}]{1}{2}", e.Message, Constants.vbCrLf, e.ToString());
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Internal database initialization failed! [{0}]{1}{2}", e.Message, Constants.vbCrLf, e.ToString());
             }
         }
 
         private async Task InitializeLoadDataStoresAsync()
         {
-            ClusterServiceLocator._WS_DBCDatabase.InitializeBattlegrounds();
+            clusterServiceLocator._WS_DBCDatabase.InitializeBattlegrounds();
             await Task.WhenAll(
-                ClusterServiceLocator._WS_DBCDatabase.InitializeMapsAsync(),
-                ClusterServiceLocator._WS_DBCDatabase.InitializeChatChannelsAsync(),
-                ClusterServiceLocator._WS_DBCDatabase.InitializeWorldSafeLocsAsync(),
-                ClusterServiceLocator._WS_DBCDatabase.InitializeCharRacesAsync(),
-                ClusterServiceLocator._WS_DBCDatabase.InitializeCharClassesAsync());
+                clusterServiceLocator._WS_DBCDatabase.InitializeMapsAsync(),
+                clusterServiceLocator._WS_DBCDatabase.InitializeChatChannelsAsync(),
+                clusterServiceLocator._WS_DBCDatabase.InitializeWorldSafeLocsAsync(),
+                clusterServiceLocator._WS_DBCDatabase.InitializeCharRacesAsync(),
+                clusterServiceLocator._WS_DBCDatabase.InitializeCharClassesAsync());
         }
     }
 }

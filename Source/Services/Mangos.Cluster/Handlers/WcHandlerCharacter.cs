@@ -38,16 +38,26 @@ namespace Mangos.Cluster.Handlers
 {
     public class WcHandlerCharacter
     {
+        private readonly ClusterServiceLocator clusterServiceLocator;
+
+        public WcHandlerCharacter(ClusterServiceLocator clusterServiceLocator)
+        {
+            this.clusterServiceLocator = clusterServiceLocator;
+        }
+
         public class CharacterObject : IDisposable
         {
-            public CharacterObject()
+            private readonly ClusterServiceLocator clusterServiceLocator;
+
+            public CharacterObject(ClusterServiceLocator clusterServiceLocator)
             {
 
                 // Chat
                 ChatFlag = ChatFlag.FLAGS_NONE;
+                this.clusterServiceLocator = clusterServiceLocator;
             }
 
-            public CharacterObject(ulong g, WC_Network.ClientClass objCharacter)
+            public CharacterObject(ulong g, WC_Network.ClientClass objCharacter, ClusterServiceLocator clusterServiceLocator)
             {
                 ChatFlag = ChatFlag.FLAGS_NONE;
                 Guid = g;
@@ -55,10 +65,11 @@ namespace Mangos.Cluster.Handlers
                 ReLoad();
                 Access = Client.Access;
                 var argobjCharacter = this;
-                ClusterServiceLocator._WC_Handlers_Social.LoadIgnoreList(argobjCharacter);
-                ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireWriterLock(ClusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                ClusterServiceLocator._WorldCluster.CHARACTERs.Add(Guid, this);
-                ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseWriterLock();
+                this.clusterServiceLocator._WC_Handlers_Social.LoadIgnoreList(argobjCharacter);
+                this.clusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireWriterLock(this.clusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+                this.clusterServiceLocator._WorldCluster.CHARACTERs.Add(Guid, this);
+                this.clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseWriterLock();
+                this.clusterServiceLocator = clusterServiceLocator;
             }
 
             public ulong Guid;
@@ -136,13 +147,13 @@ namespace Mangos.Cluster.Handlers
                 }
             }
 
-            public IWorld GetWorld => ClusterServiceLocator._WC_Network.WorldServer.Worlds[Map];
+            public IWorld GetWorld => clusterServiceLocator._WC_Network.WorldServer.Worlds[Map];
 
             public void ReLoad()
             {
                 // DONE: Get character info from DB
                 var MySQLQuery = new DataTable();
-                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters WHERE char_guid = {0};", Guid), ref MySQLQuery);
+                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters WHERE char_guid = {0};", Guid), ref MySQLQuery);
                 if (MySQLQuery.Rows.Count > 0)
                 {
                     Race = (Races)MySQLQuery.Rows[0].As<byte>("char_race");
@@ -160,14 +171,14 @@ namespace Mangos.Cluster.Handlers
                     uint GuildID = MySQLQuery.Rows[0].As<uint>("char_guildId");
                     if (GuildID > 0L)
                     {
-                        if (ClusterServiceLocator._WC_Guild.GUILDs.ContainsKey(GuildID) == false)
+                        if (clusterServiceLocator._WC_Guild.GUILDs.ContainsKey(GuildID) == false)
                         {
                             var tmpGuild = new WC_Guild.Guild(GuildID);
                             Guild = tmpGuild;
                         }
                         else
                         {
-                            Guild = ClusterServiceLocator._WC_Guild.GUILDs[GuildID];
+                            Guild = clusterServiceLocator._WC_Guild.GUILDs[GuildID];
                         }
 
                         GuildRank = MySQLQuery.Rows[0].As<byte>("char_guildRank");
@@ -175,8 +186,8 @@ namespace Mangos.Cluster.Handlers
                 }
                 else
                 {
-                    ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DATABASE, "Failed to load expected results from:");
-                    ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DATABASE, string.Format("SELECT * FROM characters WHERE char_guid = {0};", Guid));
+                    clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DATABASE, "Failed to load expected results from:");
+                    clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DATABASE, string.Format("SELECT * FROM characters WHERE char_guid = {0};", Guid));
                 }
             }
 
@@ -193,13 +204,13 @@ namespace Mangos.Cluster.Handlers
                     Client = null;
 
                     // DONE: Update character status in database
-                    ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_online = 0, char_logouttime = '{1}' WHERE char_guid = '{0}';", Guid, ClusterServiceLocator._Functions.GetTimestamp(DateAndTime.Now)));
+                    clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_online = 0, char_logouttime = '{1}' WHERE char_guid = '{0}';", Guid, clusterServiceLocator._Functions.GetTimestamp(DateAndTime.Now)));
 
                     // NOTE: Don't leave group on normal disconnect, only on logout
                     if (IsInGroup)
                     {
                         // DONE: Tell the group the member is offline
-                        var response = ClusterServiceLocator._Functions.BuildPartyMemberStatsOffline(Guid);
+                        var response = clusterServiceLocator._Functions.BuildPartyMemberStatsOffline(Guid);
                         Group.Broadcast(response);
                         response.Dispose();
 
@@ -210,22 +221,22 @@ namespace Mangos.Cluster.Handlers
 
                     // DONE: Notify friends for logout
                     var argobjCharacter = this;
-                    ClusterServiceLocator._WC_Handlers_Social.NotifyFriendStatus(argobjCharacter, (FriendStatus)FriendResult.FRIEND_OFFLINE);
+                    clusterServiceLocator._WC_Handlers_Social.NotifyFriendStatus(argobjCharacter, (FriendStatus)FriendResult.FRIEND_OFFLINE);
 
                     // DONE: Notify guild for logout
                     if (IsInGuild)
                     {
                         var argobjCharacter1 = this;
-                        ClusterServiceLocator._WC_Guild.NotifyGuildStatus(argobjCharacter1, GuildEvent.SIGNED_OFF);
+                        clusterServiceLocator._WC_Guild.NotifyGuildStatus(argobjCharacter1, GuildEvent.SIGNED_OFF);
                     }
 
                     // DONE: Leave chat
                     while (JoinedChannels.Count > 0)
                     {
-                        if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(JoinedChannels[0]))
+                        if (clusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(JoinedChannels[0]))
                         {
                             var argCharacter = this;
-                            ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[JoinedChannels[0]].Part(argCharacter);
+                            clusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[JoinedChannels[0]].Part(argCharacter);
                         }
                         else
                         {
@@ -233,9 +244,9 @@ namespace Mangos.Cluster.Handlers
                         }
                     }
 
-                    ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireWriterLock(ClusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                    ClusterServiceLocator._WorldCluster.CHARACTERs.Remove(Guid);
-                    ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseWriterLock();
+                    clusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireWriterLock(clusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+                    clusterServiceLocator._WorldCluster.CHARACTERs.Remove(Guid);
+                    clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseWriterLock();
                 }
 
                 _disposedValue = true;
@@ -259,10 +270,10 @@ namespace Mangos.Cluster.Handlers
                 // Actions Here
                 IsInWorld = false;
                 GetWorld.ClientDisconnect(Client.Index);
-                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_positionX = {0}, char_positionY = {1}, char_positionZ = {2}, char_orientation = {3}, char_map_id = {4} WHERE char_guid = {5};", Strings.Trim(Conversion.Str(posX)), Strings.Trim(Conversion.Str(posY)), Strings.Trim(Conversion.Str(posZ)), Strings.Trim(Conversion.Str(ori)), thisMap, Guid));
+                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_positionX = {0}, char_positionY = {1}, char_positionZ = {2}, char_orientation = {3}, char_map_id = {4} WHERE char_guid = {5};", Strings.Trim(Conversion.Str(posX)), Strings.Trim(Conversion.Str(posY)), Strings.Trim(Conversion.Str(posZ)), Strings.Trim(Conversion.Str(ori)), thisMap, Guid));
 
                 // Do global transfer
-                ClusterServiceLocator._WC_Network.WorldServer.ClientTransfer(Client.Index, posX, posY, posZ, ori, (uint)thisMap);
+                clusterServiceLocator._WC_Network.WorldServer.ClientTransfer(Client.Index, posX, posY, posZ, ori, (uint)thisMap);
             }
 
             public void Transfer(float posX, float posY, float posZ, float ori)
@@ -275,59 +286,59 @@ namespace Mangos.Cluster.Handlers
                 // Actions Here
                 IsInWorld = false;
                 GetWorld.ClientDisconnect(Client.Index);
-                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_positionX = {0}, char_positionY = {1}, char_positionZ = {2}, char_orientation = {3}, char_map_id = {4} WHERE char_guid = {5};", Strings.Trim(Conversion.Str(posX)), Strings.Trim(Conversion.Str(posY)), Strings.Trim(Conversion.Str(posZ)), Strings.Trim(Conversion.Str(ori)), Map, Guid));
+                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_positionX = {0}, char_positionY = {1}, char_positionZ = {2}, char_orientation = {3}, char_map_id = {4} WHERE char_guid = {5};", Strings.Trim(Conversion.Str(posX)), Strings.Trim(Conversion.Str(posY)), Strings.Trim(Conversion.Str(posZ)), Strings.Trim(Conversion.Str(ori)), Map, Guid));
 
                 // Do global transfer
-                ClusterServiceLocator._WC_Network.WorldServer.ClientTransfer(Client.Index, posX, posY, posZ, ori, Map);
+                clusterServiceLocator._WC_Network.WorldServer.ClientTransfer(Client.Index, posX, posY, posZ, ori, Map);
             }
             // Login
             public void OnLogin()
             {
                 // DONE: Update character status in database
-                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_online = 1 WHERE char_guid = " + Guid + ";");
+                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_online = 1 WHERE char_guid = " + Guid + ";");
 
                 // DONE: SMSG_ACCOUNT_DATA_MD5
                 var argcharacter = this;
-                ClusterServiceLocator._Functions.SendAccountMD5(Client, argcharacter);
+                clusterServiceLocator._Functions.SendAccountMD5(Client, argcharacter);
 
                 // DONE: SMSG_TRIGGER_CINEMATIC
                 var q = new DataTable();
-                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_moviePlayed FROM characters WHERE char_guid = {0} AND char_moviePlayed = 0;", Guid), ref q);
+                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_moviePlayed FROM characters WHERE char_guid = {0} AND char_moviePlayed = 0;", Guid), ref q);
                 if (q.Rows.Count > 0)
                 {
-                    ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_moviePlayed = 1 WHERE char_guid = " + Guid + ";");
+                    clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_moviePlayed = 1 WHERE char_guid = " + Guid + ";");
                     var argcharacter1 = this;
-                    ClusterServiceLocator._Functions.SendTriggerCinematic(Client, argcharacter1);
+                    clusterServiceLocator._Functions.SendTriggerCinematic(Client, argcharacter1);
                 }
 
                 // DONE: SMSG_LOGIN_SETTIMESPEED
                 var argcharacter2 = this;
-                ClusterServiceLocator._Functions.SendGameTime(Client, argcharacter2);
+                clusterServiceLocator._Functions.SendGameTime(Client, argcharacter2);
 
                 // DONE: Server Message Of The Day
-                ClusterServiceLocator._Functions.SendMessageMOTD(Client, "Welcome to World of Warcraft.");
-                ClusterServiceLocator._Functions.SendMessageMOTD(Client, string.Format("This server is using {0} v.{1}", ClusterServiceLocator._Functions.SetColor("[mangosVB]", 255, 0, 0), Assembly.GetExecutingAssembly().GetName().Version));
+                clusterServiceLocator._Functions.SendMessageMOTD(Client, "Welcome to World of Warcraft.");
+                clusterServiceLocator._Functions.SendMessageMOTD(Client, string.Format("This server is using {0} v.{1}", clusterServiceLocator._Functions.SetColor("[mangosVB]", 255, 0, 0), Assembly.GetExecutingAssembly().GetName().Version));
 
                 // DONE: Guild Message Of The Day
                 var argobjCharacter = this;
-                ClusterServiceLocator._WC_Guild.SendGuildMOTD(argobjCharacter);
+                clusterServiceLocator._WC_Guild.SendGuildMOTD(argobjCharacter);
 
                 // DONE: Social lists
                 var argcharacter3 = this;
-                ClusterServiceLocator._WC_Handlers_Social.SendFriendList(Client, argcharacter3);
+                clusterServiceLocator._WC_Handlers_Social.SendFriendList(Client, argcharacter3);
                 var argcharacter4 = this;
-                ClusterServiceLocator._WC_Handlers_Social.SendIgnoreList(Client, argcharacter4);
+                clusterServiceLocator._WC_Handlers_Social.SendIgnoreList(Client, argcharacter4);
 
                 // DONE: Send "Friend online"
                 var argobjCharacter1 = this;
-                ClusterServiceLocator._WC_Handlers_Social.NotifyFriendStatus(argobjCharacter1, (FriendStatus)FriendResult.FRIEND_ONLINE);
+                clusterServiceLocator._WC_Handlers_Social.NotifyFriendStatus(argobjCharacter1, (FriendStatus)FriendResult.FRIEND_ONLINE);
 
                 // DONE: Send online notify for guild
                 var argobjCharacter2 = this;
-                ClusterServiceLocator._WC_Guild.NotifyGuildStatus(argobjCharacter2, GuildEvent.SIGNED_ON);
+                clusterServiceLocator._WC_Guild.NotifyGuildStatus(argobjCharacter2, GuildEvent.SIGNED_ON);
 
                 // DONE: Put back character in group if disconnected
-                foreach (KeyValuePair<long, WC_Handlers_Group.Group> tmpGroup in ClusterServiceLocator._WC_Handlers_Group.GROUPs)
+                foreach (KeyValuePair<long, WC_Handlers_Group.Group> tmpGroup in clusterServiceLocator._WC_Handlers_Group.GROUPs)
                 {
                     for (byte i = 0, loopTo = (byte)(tmpGroup.Value.Members.Length - 1); i <= loopTo; i++)
                     {
@@ -357,10 +368,10 @@ namespace Mangos.Cluster.Handlers
                 // DONE: Leave chat
                 while (JoinedChannels.Count > 0)
                 {
-                    if (ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(JoinedChannels[0]))
+                    if (clusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs.ContainsKey(JoinedChannels[0]))
                     {
                         var argCharacter = this;
-                        ClusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[JoinedChannels[0]].Part(argCharacter);
+                        clusterServiceLocator._WS_Handler_Channels.CHAT_CHANNELs[JoinedChannels[0]].Part(argCharacter);
                     }
                     else
                     {
@@ -387,8 +398,8 @@ namespace Mangos.Cluster.Handlers
                     channelName = "Global";
                 var msgChatFlag = ChatFlag;
                 if (msgType == ChatMsg.CHAT_MSG_WHISPER_INFORM || msgType == ChatMsg.CHAT_MSG_WHISPER)
-                    msgChatFlag = ClusterServiceLocator._WorldCluster.CHARACTERs[thisguid].ChatFlag;
-                var packet = ClusterServiceLocator._Functions.BuildChatMessage(thisguid, message, msgType, (LANGUAGES)msgLanguage, (byte)msgChatFlag, channelName);
+                    msgChatFlag = clusterServiceLocator._WorldCluster.CHARACTERs[thisguid].ChatFlag;
+                var packet = clusterServiceLocator._Functions.BuildChatMessage(thisguid, message, msgType, (LANGUAGES)msgLanguage, (byte)msgChatFlag, channelName);
                 Client.Send(packet);
                 packet.Dispose();
             }
@@ -397,21 +408,21 @@ namespace Mangos.Cluster.Handlers
         public ulong GetCharacterGUIDByName(string Name)
         {
             ulong GUID = 0UL;
-            ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireReaderLock(ClusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-            foreach (KeyValuePair<ulong, CharacterObject> objCharacter in ClusterServiceLocator._WorldCluster.CHARACTERs)
+            clusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireReaderLock(clusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+            foreach (KeyValuePair<ulong, CharacterObject> objCharacter in clusterServiceLocator._WorldCluster.CHARACTERs)
             {
-                if (ClusterServiceLocator._CommonFunctions.UppercaseFirstLetter(objCharacter.Value.Name) == ClusterServiceLocator._CommonFunctions.UppercaseFirstLetter(Name))
+                if (clusterServiceLocator._CommonFunctions.UppercaseFirstLetter(objCharacter.Value.Name) == clusterServiceLocator._CommonFunctions.UppercaseFirstLetter(Name))
                 {
                     GUID = objCharacter.Value.Guid;
                     break;
                 }
             }
 
-            ClusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
+            clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
             if (GUID == 0m)
             {
                 var q = new DataTable();
-                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", ClusterServiceLocator._Functions.EscapeString(Name)), ref q);
+                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", clusterServiceLocator._Functions.EscapeString(Name)), ref q);
                 if (q.Rows.Count > 0)
                 {
                     return q.Rows[0].As<ulong>("char_guid");
@@ -429,14 +440,14 @@ namespace Mangos.Cluster.Handlers
 
         public string GetCharacterNameByGUID(string GUID)
         {
-            if (ClusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(Conversions.ToULong(GUID)))
+            if (clusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(Conversions.ToULong(GUID)))
             {
-                return ClusterServiceLocator._WorldCluster.CHARACTERs[Conversions.ToULong(GUID)].Name;
+                return clusterServiceLocator._WorldCluster.CHARACTERs[Conversions.ToULong(GUID)].Name;
             }
             else
             {
                 var q = new DataTable();
-                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_guid = \"{0}\";", GUID), ref q);
+                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_guid = \"{0}\";", GUID), ref q);
                 if (q.Rows.Count > 0)
                 {
                     return q.Rows[0].As<string>("char_name");

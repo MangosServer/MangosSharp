@@ -24,13 +24,20 @@ namespace Mangos.Cluster.Server
 {
     public partial class WC_Network
     {
+        private readonly ClusterServiceLocator clusterServiceLocator;
+
+        public WC_Network(ClusterServiceLocator clusterServiceLocator)
+        {
+            this.clusterServiceLocator = clusterServiceLocator;
+        }
+
         public WorldServerClass WorldServer;
         private readonly int LastPing = 0;
 
         public int MsTime()
         {
             // DONE: Calculate the clusters timeGetTime("")
-            return ClusterServiceLocator._NativeMethods.timeGetTime("") - LastPing;
+            return clusterServiceLocator._NativeMethods.timeGetTime("") - LastPing;
         }
 
         public Dictionary<uint, DateTime> LastConnections = new Dictionary<uint, DateTime>();

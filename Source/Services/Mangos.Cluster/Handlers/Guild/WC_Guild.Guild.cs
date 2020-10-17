@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Mangos.Common;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Cluster
 {
@@ -28,6 +27,13 @@ namespace Mangos.Cluster
     {
         public class Guild : IDisposable
         {
+            private readonly ClusterServiceLocator clusterServiceLocator;
+
+            public Guild(ClusterServiceLocator clusterServiceLocator)
+            {
+                this.clusterServiceLocator = clusterServiceLocator;
+            }
+
             public uint ID;
             public string Name;
             public ulong Leader;
@@ -49,7 +55,7 @@ namespace Mangos.Cluster
             {
                 ID = guildId;
                 var mySqlQuery = new DataTable();
-                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT * FROM guilds WHERE guild_id = " + ID + ";", ref mySqlQuery);
+                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT * FROM guilds WHERE guild_id = " + ID + ";", ref mySqlQuery);
                 if (mySqlQuery.Rows.Count == 0)
                     throw new ApplicationException("GuildID " + ID + " not found in database.");
                 var guildInfo = mySqlQuery.Rows[0];
@@ -71,10 +77,10 @@ namespace Mangos.Cluster
                 }
 
                 mySqlQuery.Clear();
-                ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_guildId = " + ID + ";", ref mySqlQuery);
+                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_guildId = " + ID + ";", ref mySqlQuery);
                 foreach (DataRow memberInfo in mySqlQuery.Rows)
                     Members.Add(guildInfo.As<ulong>("char_guid"));
-                ClusterServiceLocator._WC_Guild.GUILDs.Add(ID, this);
+                clusterServiceLocator._WC_Guild.GUILDs.Add(ID, this);
             }
 
             /* TODO ERROR: Skipped RegionDirectiveTrivia */
@@ -87,7 +93,7 @@ namespace Mangos.Cluster
                 {
                     // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
                     // TODO: set large fields to null.
-                    ClusterServiceLocator._WC_Guild.GUILDs.Remove(ID);
+                    clusterServiceLocator._WC_Guild.GUILDs.Remove(ID);
                 }
 
                 _disposedValue = true;

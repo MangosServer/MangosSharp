@@ -16,7 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Autofac;
 using global;
 using Mangos.Cluster.DataStores;
 using Mangos.Cluster.Globals;
@@ -27,33 +26,32 @@ using Mangos.Zip;
 
 namespace Mangos.Cluster
 {
-    public static class ClusterServiceLocator
+    public class ClusterServiceLocator
     {
-        public static IContainer _Container { get; set; } = Program.CreateContainer();
-        public static MangosGlobalConstants _Global_Constants { get; set; } = _Container.Resolve<MangosGlobalConstants>();
-        public static Common.Globals.Functions _CommonGlobalFunctions { get; set; } = _Container.Resolve<Common.Globals.Functions>();
-        public static Common.Functions _CommonFunctions { get; set; } = _Container.Resolve<Common.Functions>();
-        public static ZipService _GlobalZip { get; set; } = _Container.Resolve<ZipService>();
-        public static NativeMethods _NativeMethods { get; set; } = _Container.Resolve<NativeMethods>();
-        public static WorldCluster _WorldCluster { get; set; } = _Container.Resolve<WorldCluster>();
-        public static WS_DBCDatabase _WS_DBCDatabase { get; set; } = _Container.Resolve<WS_DBCDatabase>();
-        public static WS_DBCLoad _WS_DBCLoad { get; set; } = _Container.Resolve<WS_DBCLoad>();
-        public static Globals.Functions _Functions { get; set; } = _Container.Resolve<Globals.Functions>();
-        public static Packets _Packets { get; set; } = _Container.Resolve<Packets>();
-        public static WC_Guild _WC_Guild { get; set; } = _Container.Resolve<WC_Guild>();
-        public static WC_Stats _WC_Stats { get; set; } = _Container.Resolve<WC_Stats>();
-        public static WC_Network _WC_Network { get; set; } = _Container.Resolve<WC_Network>();
-        public static WC_Handlers _WC_Handlers { get; set; } = _Container.Resolve<WC_Handlers>();
-        public static WC_Handlers_Auth _WC_Handlers_Auth { get; set; } = _Container.Resolve<WC_Handlers_Auth>();
-        public static WC_Handlers_Battleground _WC_Handlers_Battleground { get; set; } = _Container.Resolve<WC_Handlers_Battleground>();
-        public static WC_Handlers_Chat _WC_Handlers_Chat { get; set; } = _Container.Resolve<WC_Handlers_Chat>();
-        public static WC_Handlers_Group _WC_Handlers_Group { get; set; } = _Container.Resolve<WC_Handlers_Group>();
-        public static WC_Handlers_Guild _WC_Handlers_Guild { get; set; } = _Container.Resolve<WC_Handlers_Guild>();
-        public static WC_Handlers_Misc _WC_Handlers_Misc { get; set; } = _Container.Resolve<WC_Handlers_Misc>();
-        public static WC_Handlers_Movement _WC_Handlers_Movement { get; set; } = _Container.Resolve<WC_Handlers_Movement>();
-        public static WC_Handlers_Social _WC_Handlers_Social { get; set; } = _Container.Resolve<WC_Handlers_Social>();
-        public static WC_Handlers_Tickets _WC_Handlers_Tickets { get; set; } = _Container.Resolve<WC_Handlers_Tickets>();
-        public static WS_Handler_Channels _WS_Handler_Channels { get; set; } = _Container.Resolve<WS_Handler_Channels>();
-        public static WcHandlerCharacter _WcHandlerCharacter { get; set; } = _Container.Resolve<WcHandlerCharacter>();
+        public MangosGlobalConstants _Global_Constants { get; set; }
+        public Common.Globals.Functions _CommonGlobalFunctions { get; set; }
+        public Common.Functions _CommonFunctions { get; set; }
+        public ZipService _GlobalZip { get; set; }
+        public NativeMethods _NativeMethods { get; set; } 
+        public WorldCluster _WorldCluster { get; set; } 
+        public WS_DBCDatabase _WS_DBCDatabase { get; set; } 
+        public  WS_DBCLoad _WS_DBCLoad { get; set; } 
+        public Globals.Functions _Functions { get; set; }
+        public Packets _Packets { get; set; } 
+        public  WC_Guild _WC_Guild { get; set; }
+        public WC_Stats _WC_Stats { get; set; } 
+        public WC_Network _WC_Network { get; set; } 
+        public WC_Handlers _WC_Handlers { get; set; } 
+        public WC_Handlers_Auth _WC_Handlers_Auth { get; set; } 
+        public WC_Handlers_Battleground _WC_Handlers_Battleground { get; set; } 
+        public WC_Handlers_Chat _WC_Handlers_Chat { get; set; }
+        public WC_Handlers_Group _WC_Handlers_Group { get; set; } 
+        public WC_Handlers_Guild _WC_Handlers_Guild { get; set; }
+        public WC_Handlers_Misc _WC_Handlers_Misc { get; set; }
+        public WC_Handlers_Movement _WC_Handlers_Movement { get; set; }
+        public WC_Handlers_Social _WC_Handlers_Social { get; set; }
+        public WC_Handlers_Tickets _WC_Handlers_Tickets { get; set; }
+        public WS_Handler_Channels _WS_Handler_Channels { get; set; } 
+        public WcHandlerCharacter _WcHandlerCharacter { get; set; } 
     }
 }

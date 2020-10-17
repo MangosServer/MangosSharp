@@ -30,11 +30,13 @@ namespace Mangos.Cluster.DataStores
 {
     public class WS_DBCDatabase
 	{
+		private readonly ClusterServiceLocator clusterServiceLocator;
 		private readonly DataStoreProvider dataStoreProvider;
 
-        public WS_DBCDatabase(DataStoreProvider dataStoreProvider)
+        public WS_DBCDatabase(DataStoreProvider dataStoreProvider, ClusterServiceLocator clusterServiceLocator)
         {
             this.dataStoreProvider = dataStoreProvider;
+            this.clusterServiceLocator = clusterServiceLocator;
         }
 
         private readonly string MapDBC = "Map.dbc";
@@ -58,7 +60,7 @@ namespace Mangos.Cluster.DataStores
 					Maps.Add(m.ID, m);
 				}
 
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Maps Initialized.", data.Rows - 1);
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Maps Initialized.", data.Rows - 1);
 			}
 			catch (DirectoryNotFoundException)
 			{
@@ -106,7 +108,7 @@ namespace Mangos.Cluster.DataStores
 					WorldSafeLocs.Add(WorldSafeLoc.ID, WorldSafeLoc);
 				}
 
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} WorldSafeLocs Initialized.", data.Rows - 1);
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} WorldSafeLocs Initialized.", data.Rows - 1);
 			}
 			catch (DirectoryNotFoundException)
 			{
@@ -131,7 +133,7 @@ namespace Mangos.Cluster.DataStores
 		{
 			byte Entry;
 			var MySQLQuery = new DataTable();
-			ClusterServiceLocator._WorldCluster.GetWorldDatabase().Query(string.Format("SELECT * FROM battleground_template"), ref MySQLQuery);
+			clusterServiceLocator._WorldCluster.GetWorldDatabase().Query(string.Format("SELECT * FROM battleground_template"), ref MySQLQuery);
 			foreach (DataRow row in MySQLQuery.Rows)
 			{
 				Entry = row.As<byte>("id");
@@ -150,7 +152,7 @@ namespace Mangos.Cluster.DataStores
 				Battlegrounds[Entry].HordeStartO = row.As<float>("HordeStartO");
 			}
 
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "World: {0} Battlegrounds Initialized.", MySQLQuery.Rows.Count);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "World: {0} Battlegrounds Initialized.", MySQLQuery.Rows.Count);
 		}
 
 		public class TBattleground
@@ -185,7 +187,7 @@ namespace Mangos.Cluster.DataStores
 					ChatChannelsInfo.Add(ChatChannels.Index, ChatChannels);
 				}
 
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChatChannels Initialized.", data.Rows - 1);
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChatChannels Initialized.", data.Rows - 1);
 			}
 			catch (DirectoryNotFoundException)
 			{
@@ -227,7 +229,7 @@ namespace Mangos.Cluster.DataStores
 					CharRaces[(byte)raceID] = new TCharRace((short)factionID, modelM, modelF, (byte)teamID, cinematicID);
 				}
 
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrRace Loaded.", data.Rows - 1);
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrRace Loaded.", data.Rows - 1);
 			}
 			catch (DirectoryNotFoundException)
 			{
@@ -254,7 +256,7 @@ namespace Mangos.Cluster.DataStores
 					CharClasses[(byte)classID] = new TCharClass(cinematicID);
 				}
 
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrClasses Loaded.", dataStore.Rows - 1);
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrClasses Loaded.", dataStore.Rows - 1);
 			}
 			catch (DirectoryNotFoundException)
 			{

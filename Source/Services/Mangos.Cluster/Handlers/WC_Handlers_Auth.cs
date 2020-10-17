@@ -31,18 +31,24 @@ using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Cluster.Handlers
 {
-	public class WC_Handlers_Auth
+    public class WC_Handlers_Auth
 	{
-		private const int REQUIRED_BUILD_LOW = 5875; // 1.12.1
+		private readonly ClusterServiceLocator clusterServiceLocator;
+
+        public WC_Handlers_Auth(ClusterServiceLocator clusterServiceLocator)
+        {
+            this.clusterServiceLocator = clusterServiceLocator;
+        }
+
+        private const int REQUIRED_BUILD_LOW = 5875; // 1.12.1
 		private const int REQUIRED_BUILD_HIGH = 6141;
 
 		public void SendLoginOk(WC_Network.ClientClass client)
 		{
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTH_SESSION [{2}]", client.IP, client.Port, client.Account);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTH_SESSION [{2}]", client.IP, client.Port, client.Account);
 			Thread.Sleep(500);
 			var response = new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
 			response.AddInt8((byte)LoginResponse.LOGIN_OK);
@@ -70,7 +76,7 @@ namespace Mangos.Cluster.Handlers
 			string tmp = clientAccount;
 
 			// DONE: Kick if existing
-			foreach (KeyValuePair<uint, WC_Network.ClientClass> tmpClientEntry in ClusterServiceLocator._WorldCluster.CLIENTs)
+			foreach (KeyValuePair<uint, WC_Network.ClientClass> tmpClientEntry in clusterServiceLocator._WorldCluster.CLIENTs)
 			{
 				if (tmpClientEntry.Value is object)
 				{
@@ -100,7 +106,7 @@ namespace Mangos.Cluster.Handlers
 			var result = new DataTable();
 			string query;
 			query = "SELECT sessionkey, gmlevel FROM account WHERE username = '" + client.Account + "';";
-			ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(query, ref result);
+			clusterServiceLocator._WorldCluster.GetAccountDatabase().Query(query, ref result);
 			if (result.Rows.Count > 0)
 			{
 				tmp = result.Rows[0].As<string>("sessionkey");
@@ -108,7 +114,7 @@ namespace Mangos.Cluster.Handlers
 			}
 			else
 			{
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.USER, "[{0}:{1}] AUTH_UNKNOWN_ACCOUNT: Account not in DB!", client.IP, client.Port);
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.USER, "[{0}:{1}] AUTH_UNKNOWN_ACCOUNT: Account not in DB!", client.IP, client.Port);
 				var response_unk_acc = new Packets.PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
 				response_unk_acc.AddInt8((byte)AuthResult.WOW_FAIL_UNKNOWN_ACCOUNT);
 				client.Send(response_unk_acc);
@@ -148,7 +154,7 @@ namespace Mangos.Cluster.Handlers
 			// Next
 
 			// DONE: If server full then queue, If GM/Admin let in
-			if (ClusterServiceLocator._WorldCluster.CLIENTs.Count > ClusterServiceLocator._WorldCluster.GetConfig().ServerPlayerLimit & client.Access <= AccessLevel.Player)
+			if (clusterServiceLocator._WorldCluster.CLIENTs.Count > clusterServiceLocator._WorldCluster.GetConfig().ServerPlayerLimit & client.Access <= AccessLevel.Player)
 			{
 				ThreadPool.QueueUserWorkItem(new WaitCallback(client.EnQueue));
 			}
@@ -160,7 +166,7 @@ namespace Mangos.Cluster.Handlers
 			// DONE: Addons info reading
 			var decompressBuffer = new byte[packet.Data.Length - packet.Offset + 1];
 			Array.Copy(packet.Data, packet.Offset, decompressBuffer, 0, packet.Data.Length - packet.Offset);
-			packet.Data = ClusterServiceLocator._GlobalZip.DeCompress(decompressBuffer);
+			packet.Data = clusterServiceLocator._GlobalZip.DeCompress(decompressBuffer);
 			packet.Offset = 0;
 			// DumpPacket(packet.Data)
 
@@ -237,7 +243,7 @@ namespace Mangos.Cluster.Handlers
 				packet.GetInt16();
 				uint DataID = packet.GetUInt32();
 				uint UncompressedSize = packet.GetUInt32();
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_UPDATE_ACCOUNT_DATA [ID={2} Size={3}]", client.IP, client.Port, DataID, UncompressedSize);
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_UPDATE_ACCOUNT_DATA [ID={2} Size={3}]", client.IP, client.Port, DataID, UncompressedSize);
 				if (DataID > 7L)
 					return;
 
@@ -281,7 +287,7 @@ namespace Mangos.Cluster.Handlers
 
 			catch (Exception e)
 			{
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error while updating account data.{0}", Constants.vbCrLf + e.ToString());
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error while updating account data.{0}", Constants.vbCrLf + e.ToString());
 			}
 		}
 
@@ -291,7 +297,7 @@ namespace Mangos.Cluster.Handlers
 				return;
 			packet.GetInt16();
 			uint DataID = packet.GetUInt32();
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_REQUEST_ACCOUNT_DATA [ID={2}]", client.IP, client.Port, DataID);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_REQUEST_ACCOUNT_DATA [ID={2}]", client.IP, client.Port, DataID);
 			if (DataID > 7L)
 				return;
 
@@ -332,7 +338,7 @@ namespace Mangos.Cluster.Handlers
 
 		public void On_CMSG_CHAR_ENUM(Packets.PacketClass packet, WC_Network.ClientClass client)
 		{
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_ENUM", client.IP, client.Port);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_ENUM", client.IP, client.Port);
 
 			// DONE: Query _WorldCluster.CHARACTERs DB
 			var response = new Packets.PacketClass(Opcodes.SMSG_CHAR_ENUM);
@@ -340,10 +346,10 @@ namespace Mangos.Cluster.Handlers
 			int Account_ID;
 			try
 			{
-				ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id FROM account WHERE username = '{0}';", client.Account), ref MySQLQuery);
+				clusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id FROM account WHERE username = '{0}';", client.Account), ref MySQLQuery);
 				Account_ID = MySQLQuery.Rows[0].As<int>("id");
 				MySQLQuery.Clear();
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters WHERE account_id = '{0}' ORDER BY char_guid;", Account_ID), ref MySQLQuery);
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters WHERE account_id = '{0}' ORDER BY char_guid;", Account_ID), ref MySQLQuery);
 
 				// DONE: Make The Packet
 				response.AddInt8((byte)MySQLQuery.Rows.Count);
@@ -351,11 +357,11 @@ namespace Mangos.Cluster.Handlers
 				{
 					bool DEAD = false;
 					var DeadMySQLQuery = new DataTable();
-					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT COUNT(*) FROM corpse WHERE player = {0};", MySQLQuery.Rows[i]["char_guid"]), ref DeadMySQLQuery);
+					clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT COUNT(*) FROM corpse WHERE player = {0};", MySQLQuery.Rows[i]["char_guid"]), ref DeadMySQLQuery);
 					if (DeadMySQLQuery.Rows[0].As<int>(0) > 0)
 						DEAD = true;
 					var PetQuery = new DataTable();
-					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT modelid, level, entry FROM character_pet WHERE owner = '{0}';", MySQLQuery.Rows[i]["char_guid"]), ref PetQuery);
+					clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT modelid, level, entry FROM character_pet WHERE owner = '{0}';", MySQLQuery.Rows[i]["char_guid"]), ref PetQuery);
 					response.AddInt64(MySQLQuery.Rows[i].As<long>("char_guid"));
 					response.AddString(MySQLQuery.Rows[i].As<string>("char_name"));
 					response.AddInt8(MySQLQuery.Rows[i].As<byte>("char_race"));
@@ -405,7 +411,7 @@ namespace Mangos.Cluster.Handlers
 						PetModel = PetQuery.Rows[0].As<int>("modelid");
 						PetLevel = PetQuery.Rows[0].As<int>("level");
 						var PetFamilyQuery = new DataTable();
-						ClusterServiceLocator._WorldCluster.GetWorldDatabase().Query(string.Format("SELECT family FROM creature_template WHERE entry = '{0}'", PetQuery.Rows[0]["entry"]), ref PetFamilyQuery);
+						clusterServiceLocator._WorldCluster.GetWorldDatabase().Query(string.Format("SELECT family FROM creature_template WHERE entry = '{0}'", PetQuery.Rows[0]["entry"]), ref PetFamilyQuery);
 						PetFamily = PetFamilyQuery.Rows[0].As<int>("family");
 					}
 
@@ -416,9 +422,9 @@ namespace Mangos.Cluster.Handlers
 					// DONE: Get items
 					long GUID = MySQLQuery.Rows[i].As<long>("char_guid");
 					var ItemsMySQLQuery = new DataTable();
-					string characterDB = ClusterServiceLocator._WorldCluster.GetCharacterDatabase().SQLDBName;
-					string worldDB = ClusterServiceLocator._WorldCluster.GetWorldDatabase().SQLDBName;
-					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT item_slot, displayid, inventorytype FROM " + characterDB + ".characters_inventory, " + worldDB + ".item_template WHERE item_bag = {0} AND item_slot <> 255 AND entry = item_id  ORDER BY item_slot;", GUID), ref ItemsMySQLQuery);
+					string characterDB = clusterServiceLocator._WorldCluster.GetCharacterDatabase().SQLDBName;
+					string worldDB = clusterServiceLocator._WorldCluster.GetWorldDatabase().SQLDBName;
+					clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT item_slot, displayid, inventorytype FROM " + characterDB + ".characters_inventory, " + worldDB + ".item_template WHERE item_bag = {0} AND item_slot <> 255 AND entry = item_id  ORDER BY item_slot;", GUID), ref ItemsMySQLQuery);
 					var e = ItemsMySQLQuery.Rows.GetEnumerator();
 					e.Reset();
 					e.MoveNext();
@@ -455,19 +461,19 @@ namespace Mangos.Cluster.Handlers
 			}
 			catch (Exception e)
 			{
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Unable to enum characters. [{2}]", client.IP, client.Port, e.Message);
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Unable to enum characters. [{2}]", client.IP, client.Port, e.Message);
 				// TODO: Find what opcode officials use
 				response = new Packets.PacketClass(Opcodes.SMSG_CHAR_CREATE);
 				response.AddInt8((byte)CharResponse.CHAR_LIST_FAILED);
 			}
 
 			client.Send(response);
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CHAR_ENUM", client.IP, client.Port);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CHAR_ENUM", client.IP, client.Port);
 		}
 
 		public void On_CMSG_CHAR_DELETE(Packets.PacketClass packet, WC_Network.ClientClass client)
 		{
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_DELETE", client.IP, client.Port);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_DELETE", client.IP, client.Port);
 			var response = new Packets.PacketClass(Opcodes.SMSG_CHAR_DELETE);
 			packet.GetInt16();
 			ulong guid = packet.GetUInt64();
@@ -476,59 +482,59 @@ namespace Mangos.Cluster.Handlers
 				var q = new DataTable();
 
 				// Done: Fixed packet manipulation protection
-				ClusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id FROM account WHERE username = \"{0}\";", client.Account), ref q);
+				clusterServiceLocator._WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id FROM account WHERE username = \"{0}\";", client.Account), ref q);
 				if (q.Rows.Count == 0)
 				{
 					return;
 				}
 
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE account_id = \"{0}\" AND char_guid = \"{1}\";", q.Rows[0]["id"], guid), ref q);
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE account_id = \"{0}\" AND char_guid = \"{1}\";", q.Rows[0]["id"], guid), ref q);
 				if (q.Rows.Count == 0)
 				{
 					response.AddInt8((byte)AuthResult.WOW_FAIL_BANNED);
 					client.Send(response);
-					ClusterServiceLocator._Functions.Ban_Account(client.Account, "Packet Manipulation/Character Deletion");
+					clusterServiceLocator._Functions.Ban_Account(client.Account, "Packet Manipulation/Character Deletion");
 					client.Delete();
 					return;
 				}
 
 				q.Clear();
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT item_guid FROM characters_inventory WHERE item_bag = {0};", guid), ref q);
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT item_guid FROM characters_inventory WHERE item_bag = {0};", guid), ref q);
 				foreach (DataRow row in q.Rows)
 				{
 					// DONE: Delete items
-					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_inventory WHERE item_guid = \"{0}\";", row.As<string>("item_guid")));
+					clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_inventory WHERE item_guid = \"{0}\";", row.As<string>("item_guid")));
 					// DONE: Delete items in bags
-					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_inventory WHERE item_bag = \"{0}\";", row.As<ulong>("item_guid") + ClusterServiceLocator._Global_Constants.GUID_ITEM));
+					clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_inventory WHERE item_bag = \"{0}\";", row.As<ulong>("item_guid") + clusterServiceLocator._Global_Constants.GUID_ITEM));
 				}
 
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT item_guid FROM characters_inventory WHERE item_owner = {0};", guid), ref q);
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT item_guid FROM characters_inventory WHERE item_owner = {0};", guid), ref q);
 				q.Clear();
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT mail_id FROM characters_mail WHERE mail_receiver = \"{0}\";", guid), ref q);
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT mail_id FROM characters_mail WHERE mail_receiver = \"{0}\";", guid), ref q);
 				foreach (DataRow row in q.Rows)
 				{
 					// TODO: Return mails?
 					// DONE: Delete mails
-					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_mail WHERE mail_id = \"{0}\";", row.As<string>("mail_id")));
+					clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_mail WHERE mail_id = \"{0}\";", row.As<string>("mail_id")));
 					// DONE: Delete mail items
-					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM mail_items WHERE mail_id = \"{0}\";", row.As<string>("mail_id")));
+					clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM mail_items WHERE mail_id = \"{0}\";", row.As<string>("mail_id")));
 				}
 
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters WHERE char_guid = \"{0}\";", guid));
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_honor WHERE char_guid = \"{0}\";", guid));
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_quests WHERE char_guid = \"{0}\";", guid));
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM character_social WHERE guid = '{0}' OR friend = '{0}';", guid));
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_spells WHERE guid = \"{0}\";", guid));
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM petitions WHERE petition_owner = \"{0}\";", guid));
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM auctionhouse WHERE auction_owner = \"{0}\";", guid));
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_tickets WHERE char_guid = \"{0}\";", guid));
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM corpse WHERE guid = \"{0}\";", guid));
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters WHERE char_guid = \"{0}\";", guid));
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_honor WHERE char_guid = \"{0}\";", guid));
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_quests WHERE char_guid = \"{0}\";", guid));
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM character_social WHERE guid = '{0}' OR friend = '{0}';", guid));
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_spells WHERE guid = \"{0}\";", guid));
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM petitions WHERE petition_owner = \"{0}\";", guid));
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM auctionhouse WHERE auction_owner = \"{0}\";", guid));
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM characters_tickets WHERE char_guid = \"{0}\";", guid));
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM corpse WHERE guid = \"{0}\";", guid));
 				q.Clear();
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT guild_id FROM guilds WHERE guild_leader = \"{0}\";", guid), ref q);
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT guild_id FROM guilds WHERE guild_leader = \"{0}\";", guid), ref q);
 				if (q.Rows.Count > 0)
 				{
-					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildid = 0, char_guildrank = 0, char_guildpnote = '', charguildoffnote = '' WHERE char_guildid = \"{0}\";", q.Rows[0]["guild_id"]));
-					ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM guild WHERE guild_id = \"{0}\";", q.Rows[0]["guild_id"]));
+					clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildid = 0, char_guildrank = 0, char_guildpnote = '', charguildoffnote = '' WHERE char_guildid = \"{0}\";", q.Rows[0]["guild_id"]));
+					clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM guild WHERE guild_id = \"{0}\";", q.Rows[0]["guild_id"]));
 				}
 
 				response.AddInt8((byte)CharResponse.CHAR_DELETE_SUCCESS); // Changed in 1.12.x client branch?
@@ -539,7 +545,7 @@ namespace Mangos.Cluster.Handlers
 			}
 
 			client.Send(response);
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CHAR_DELETE [{2:X}]", client.IP, client.Port, guid);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CHAR_DELETE [{2:X}]", client.IP, client.Port, guid);
 		}
 
 		public void On_CMSG_CHAR_RENAME(Packets.PacketClass packet, WC_Network.ClientClass client)
@@ -547,12 +553,12 @@ namespace Mangos.Cluster.Handlers
 			packet.GetInt16();
 			long GUID = packet.GetInt64();
 			string Name = packet.GetString();
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_RENAME [{2}:{3}]", client.IP, client.Port, GUID, Name);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_RENAME [{2}:{3}]", client.IP, client.Port, GUID, Name);
 			byte ErrCode = (byte)ATLoginFlags.AT_LOGIN_RENAME;
 
 			// DONE: Check for existing name
 			var q = new DataTable();
-			ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_name LIKE \"{0}\";", Name), ref q);
+			clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_name LIKE \"{0}\";", Name), ref q);
 			if (q.Rows.Count > 0)
 			{
 				ErrCode = (byte)CharResponse.CHAR_CREATE_NAME_IN_USE;
@@ -560,7 +566,7 @@ namespace Mangos.Cluster.Handlers
 
 			// DONE: Do the rename
 			if (ErrCode == (byte)ATLoginFlags.AT_LOGIN_RENAME)
-				ClusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_name = \"{1}\", force_restrictions = 0 WHERE char_guid = {0};", GUID, Name));
+				clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_name = \"{1}\", force_restrictions = 0 WHERE char_guid = {0};", GUID, Name));
 
 			// DONE: Send response
 			var response = new Packets.PacketClass(Opcodes.SMSG_CHAR_RENAME);
@@ -575,7 +581,7 @@ namespace Mangos.Cluster.Handlers
 		{
 			packet.GetInt16();
 			string Name = packet.GetString();
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_CREATE [{2}]", client.IP, client.Port, Name);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_CREATE [{2}]", client.IP, client.Port, Name);
 			byte Race = packet.GetInt8();
 			byte Classe = packet.GetInt8();
 			byte Gender = packet.GetInt8();
@@ -590,19 +596,19 @@ namespace Mangos.Cluster.Handlers
 			// Try to pass the packet to one of World Servers
 			try
 			{
-				if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(0U))
+				if (clusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(0U))
 				{
-					result = ClusterServiceLocator._WC_Network.WorldServer.Worlds[0U].ClientCreateCharacter(client.Account, Name, Race, Classe, Gender, Skin, Face, HairStyle, HairColor, FacialHair, OutfitId);
+					result = clusterServiceLocator._WC_Network.WorldServer.Worlds[0U].ClientCreateCharacter(client.Account, Name, Race, Classe, Gender, Skin, Face, HairStyle, HairColor, FacialHair, OutfitId);
 				}
-				else if (ClusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(1U))
+				else if (clusterServiceLocator._WC_Network.WorldServer.Worlds.ContainsKey(1U))
 				{
-					result = ClusterServiceLocator._WC_Network.WorldServer.Worlds[1U].ClientCreateCharacter(client.Account, Name, Race, Classe, Gender, Skin, Face, HairStyle, HairColor, FacialHair, OutfitId);
+					result = clusterServiceLocator._WC_Network.WorldServer.Worlds[1U].ClientCreateCharacter(client.Account, Name, Race, Classe, Gender, Skin, Face, HairStyle, HairColor, FacialHair, OutfitId);
 				}
 			}
 			catch (Exception ex)
 			{
 				result = (int)CharResponse.CHAR_CREATE_ERROR;
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Character creation failed!{2}{3}", client.IP, client.Port, Constants.vbCrLf, ex.ToString());
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Character creation failed!{2}{3}", client.IP, client.Port, Constants.vbCrLf, ex.ToString());
 			}
 
 			var response = new Packets.PacketClass(Opcodes.SMSG_CHAR_CREATE);
@@ -614,22 +620,22 @@ namespace Mangos.Cluster.Handlers
 		{
 			packet.GetInt16();               // int16 unknown
 			ulong GUID = packet.GetUInt64();
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PLAYER_LOGIN [0x{2:X}]", client.IP, client.Port, GUID);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PLAYER_LOGIN [0x{2:X}]", client.IP, client.Port, GUID);
 			if (client.Character is null)
 			{
-				client.Character = new WcHandlerCharacter.CharacterObject(GUID, client);
+				client.Character = new WcHandlerCharacter.CharacterObject(GUID, client, clusterServiceLocator);
 			}
 			else if (client.Character.Guid != GUID)
 			{
 				client.Character.Dispose();
-				client.Character = new WcHandlerCharacter.CharacterObject(GUID, client);
+				client.Character = new WcHandlerCharacter.CharacterObject(GUID, client, clusterServiceLocator);
 			}
 			else
 			{
 				client.Character.ReLoad();
 			}
 
-			if (ClusterServiceLocator._WC_Network.WorldServer.InstanceCheck(client, client.Character.Map))
+			if (clusterServiceLocator._WC_Network.WorldServer.InstanceCheck(client, client.Character.Map))
 			{
 				client.Character.GetWorld.ClientConnect(client.Index, client.GetClientInfo());
 				client.Character.IsInWorld = true;
@@ -638,7 +644,7 @@ namespace Mangos.Cluster.Handlers
 			}
 			else
 			{
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0:000000}] Unable to login: WORLD SERVER DOWN", client.Index);
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0:000000}] Unable to login: WORLD SERVER DOWN", client.Index);
 				client.Character.Dispose();
 				client.Character = null;
 				var r = new Packets.PacketClass(Opcodes.SMSG_CHARACTER_LOGIN_FAILED);
@@ -649,7 +655,7 @@ namespace Mangos.Cluster.Handlers
 				}
 				catch (Exception ex)
 				{
-					ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0:000000}] Unable to login: {1}", client.Index, ex.ToString());
+					clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "[{0:000000}] Unable to login: {1}", client.Index, ex.ToString());
 					client.Character.Dispose();
 					client.Character = null;
 					var a = new Packets.PacketClass(Opcodes.SMSG_CHARACTER_LOGIN_FAILED);
@@ -670,7 +676,7 @@ namespace Mangos.Cluster.Handlers
 		// Happens when the client disconnects from the server.
 		public void On_CMSG_PLAYER_LOGOUT(Packets.PacketClass packet, WC_Network.ClientClass client)
 		{
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PLAYER_LOGOUT", client.IP, client.Port);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PLAYER_LOGOUT", client.IP, client.Port);
 			client.Character.OnLogout();
 			client.Character.GetWorld.ClientDisconnect(client.Index); // Likely the cause of it
 			client.Character.Dispose();
@@ -679,10 +685,10 @@ namespace Mangos.Cluster.Handlers
 
 		public void On_MSG_MOVE_WORLDPORT_ACK(Packets.PacketClass packet, WC_Network.ClientClass client)
 		{
-			ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_WORLDPORT_ACK", client.IP, client.Port);
+			clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MOVE_WORLDPORT_ACK", client.IP, client.Port);
 			try
 			{
-				if (!ClusterServiceLocator._WC_Network.WorldServer.InstanceCheck(client, client.Character.Map))
+				if (!clusterServiceLocator._WC_Network.WorldServer.InstanceCheck(client, client.Character.Map))
 					return;
 				if (client.Character.IsInWorld)
 				{
@@ -700,7 +706,7 @@ namespace Mangos.Cluster.Handlers
 			}
 			catch (Exception ex)
 			{
-				ClusterServiceLocator._WorldCluster.Log.WriteLine(LogType.CRITICAL, "{0}", ex.ToString());
+				clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.CRITICAL, "{0}", ex.ToString());
 			}
 		}
 	}

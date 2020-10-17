@@ -39,6 +39,13 @@ namespace Mangos.Cluster
 {
     public partial class WorldCluster
     {
+        private readonly ClusterServiceLocator clusterServiceLocator;
+
+        public WorldCluster(ClusterServiceLocator clusterServiceLocator)
+        {
+            this.clusterServiceLocator = clusterServiceLocator;
+        }
+
         private const string ClusterPath = "configs/WorldCluster.ini";
 
         // Players' containers
@@ -341,9 +348,9 @@ namespace Mangos.Cluster
             }
 
             GetWorldDatabase().Update("SET NAMES 'utf8';");
-            await ClusterServiceLocator._WS_DBCLoad.InitializeInternalDatabaseAsync();
-            ClusterServiceLocator._WC_Handlers.IntializePacketHandlers();
-            if (ClusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(GetAccountDatabase(), ServerDb.Realm) == false)         // Check the Database version, exit if its wrong
+            await clusterServiceLocator._WS_DBCLoad.InitializeInternalDatabaseAsync();
+            clusterServiceLocator._WC_Handlers.IntializePacketHandlers();
+            if (clusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(GetAccountDatabase(), ServerDb.Realm) == false)         // Check the Database version, exit if its wrong
             {
                 if (true)
                 {
@@ -355,7 +362,7 @@ namespace Mangos.Cluster
                 }
             }
 
-            if (ClusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(GetCharacterDatabase(), ServerDb.Character) == false)         // Check the Database version, exit if its wrong
+            if (clusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(GetCharacterDatabase(), ServerDb.Character) == false)         // Check the Database version, exit if its wrong
             {
                 if (true)
                 {
@@ -367,7 +374,7 @@ namespace Mangos.Cluster
                 }
             }
 
-            if (ClusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(GetWorldDatabase(), ServerDb.World) == false)         // Check the Database version, exit if its wrong
+            if (clusterServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(GetWorldDatabase(), ServerDb.World) == false)         // Check the Database version, exit if its wrong
             {
                 if (true)
                 {
@@ -379,8 +386,8 @@ namespace Mangos.Cluster
                 }
             }
 
-            ClusterServiceLocator._WC_Network.WorldServer = new WC_Network.WorldServerClass();
-            var server = new ProxyServer<WC_Network.WorldServerClass>(IPAddress.Parse(GetConfig().ClusterListenAddress), GetConfig().ClusterListenPort, ClusterServiceLocator._WC_Network.WorldServer);
+            clusterServiceLocator._WC_Network.WorldServer = new WC_Network.WorldServerClass(clusterServiceLocator);
+            var server = new ProxyServer<WC_Network.WorldServerClass>(IPAddress.Parse(GetConfig().ClusterListenAddress), GetConfig().ClusterListenPort, clusterServiceLocator._WC_Network.WorldServer);
             Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}:{1}", GetConfig().ClusterListenAddress, GetConfig().ClusterListenPort);
             GC.Collect();
             if (Process.GetCurrentProcess().PriorityClass != ProcessPriorityClass.High)
@@ -404,7 +411,7 @@ namespace Mangos.Cluster
             string[] cmds;
             var cmd = Array.Empty<string>();
             int varList;
-            while (!ClusterServiceLocator._WC_Network.WorldServer.m_flagStopListen)
+            while (!clusterServiceLocator._WC_Network.WorldServer.m_flagStopListen)
             {
                 try
                 {
@@ -422,7 +429,7 @@ namespace Mangos.Cluster
                                 case "shutdown":
                                     {
                                         Log.WriteLine(LogType.WARNING, "Server shutting down...");
-                                        ClusterServiceLocator._WC_Network.WorldServer.m_flagStopListen = true;
+                                        clusterServiceLocator._WC_Network.WorldServer.m_flagStopListen = true;
                                         break;
                                     }
 
