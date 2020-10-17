@@ -67,6 +67,11 @@ namespace Mangos.Realm.Async
 			builder.RegisterType<ConsoleLogger>().As<ILogger>().SingleInstance();
 		}
 
+        private static void RegisterTcpServer(ContainerBuilder builder)
+        {
+            builder.RegisterType<TcpServer>().AsSelf().SingleInstance();
+        }
+
 		public static void RegisterStorages(ContainerBuilder builder)
 		{
 			builder.RegisterType<MySqlAccountStorage>()
@@ -75,13 +80,7 @@ namespace Mangos.Realm.Async
 				.SingleInstance();
 		}
 
-		private static void RegisterTcpServer(ContainerBuilder builder)
-		{
-			builder.RegisterType<TcpServer>().AsSelf().SingleInstance();
-
-		}
-
-		public static void RegisterServices(ContainerBuilder builder)
+        public static void RegisterServices(ContainerBuilder builder)
 		{
 			builder.RegisterType<Converter>().As<Converter>().SingleInstance();
 			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();

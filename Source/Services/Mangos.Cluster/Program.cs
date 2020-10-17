@@ -30,6 +30,10 @@ using System.Threading.Tasks;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
 using Mangos.Cluster.Stats;
+using Mangos.Configuration;
+using Mangos.Configuration.Store;
+using Mangos.Configuration.Xml;
+using Mangos.Network.Tcp;
 
 namespace Mangos.Cluster
 {
@@ -45,9 +49,44 @@ namespace Mangos.Cluster
         public static IContainer CreateContainer()
         {
             var builder = new ContainerBuilder();
-			RegisterLoggers(builder);
+            RegisterConfiguration(builder);
+            RegisterLoggers(builder);
 
-			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
+            RegisterTcpServer(builder);
+            RegisterDataStoreProvider(builder);
+
+            RegisterServices(builder);
+            return builder.Build();
+		}
+
+        public static void RegisterConfiguration(ContainerBuilder builder)
+        {
+            builder.Register(x => new XmlFileConfigurationProvider<ClusterConfiguration>(
+                    x.Resolve<ILogger>(), "configs/WorldCluster.ini"))
+                .As<IConfigurationProvider<ClusterConfiguration>>()
+                .SingleInstance();
+            builder.RegisterDecorator<StoredConfigurationProvider<ClusterConfiguration>,
+                IConfigurationProvider<ClusterConfiguration>>();
+        }
+
+        public static void RegisterLoggers(ContainerBuilder builder)
+        {
+            builder.RegisterType<ConsoleLogger>().As<ILogger>().SingleInstance();
+        }
+
+        private static void RegisterTcpServer(ContainerBuilder builder)
+        {
+            builder.RegisterType<TcpServer>().AsSelf().SingleInstance();
+        }
+
+        private static void RegisterDataStoreProvider(ContainerBuilder builder)
+        {
+            builder.RegisterType<DataStoreProvider>().As<DataStoreProvider>().SingleInstance();
+        }
+
+        private static void RegisterServices(ContainerBuilder builder)
+        {
+            builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
             builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>().SingleInstance();
             builder.RegisterType<Common.Functions>().As<Common.Functions>().SingleInstance();
             builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
@@ -76,14 +115,6 @@ namespace Mangos.Cluster
             builder.RegisterType<ClusterServiceLocator>().As<ClusterServiceLocator>()
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
                 .SingleInstance();
-
-            builder.RegisterType<DataStoreProvider>().As<DataStoreProvider>().SingleInstance();
-            return builder.Build();
-		}
-
-		public static void RegisterLoggers(ContainerBuilder builder)
-		{
-			builder.RegisterType<ConsoleLogger>().As<ILogger>().SingleInstance();
         }
-	}
+    }
 }

@@ -37,7 +37,7 @@ using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster
 {
-    public partial class WorldCluster
+    public class WorldCluster
     {
         private readonly ClusterServiceLocator clusterServiceLocator;
 
@@ -77,12 +77,12 @@ namespace Mangos.Cluster
                 }
 
                 Console.Write("[{0}] Loading Configuration...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
-                var xmlConfigFile = new XMLConfigFile();
+                var xmlConfigFile = new ClusterConfiguration();
                 SetConfig(xmlConfigFile);
                 Console.Write("...");
                 StreamReader ostream;
                 ostream = new StreamReader(ClusterPath);
-                SetConfig((XMLConfigFile)new XmlSerializer(typeof(XMLConfigFile)).Deserialize(ostream));
+                SetConfig((ClusterConfiguration)new XmlSerializer(typeof(ClusterConfiguration)).Deserialize(ostream));
                 ostream.Close();
                 Console.WriteLine(".[done]");
 
@@ -160,14 +160,14 @@ namespace Mangos.Cluster
             packetHandlers = value;
         }
 
-        private XMLConfigFile config;
+        private ClusterConfiguration config;
 
-        public XMLConfigFile GetConfig()
+        public ClusterConfiguration GetConfig()
         {
             return config;
         }
 
-        public void SetConfig(XMLConfigFile value)
+        public void SetConfig(ClusterConfiguration value)
         {
             config = value;
         }
