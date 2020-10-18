@@ -79,8 +79,8 @@ namespace Mangos.Realm
         {
 			while(!cancellationToken.IsCancellationRequested)
             {
-				var header = await reader.ReadAsync(1).ToListAsync();
-				var opcode = (AuthCMD)header[0];
+                List<byte> header = await reader.ReadAsync(1).ToListAsync();
+                AuthCMD opcode = (AuthCMD)header[0];
 
 				await packetHandlers[opcode](reader, writer);
 			}
@@ -102,21 +102,21 @@ namespace Mangos.Realm
 
 		public async Task On_RS_LOGON_CHALLENGE(ChannelReader<byte> reader, ChannelWriter<byte> writer)
 		{
-			var header = await reader.ReadAsync(3).ToListAsync();			
-			var length = BitConverter.ToInt16(new[] { header[1], header[2] });
-			var body = await reader.ReadAsync(length).ToListAsync();
-			var data = new byte[1].Concat(header).Concat(body).ToArray();
-
-			int iUpper = data[33] - 1;
-			string packetAccount;
-			string packetIp;
+            List<byte> header = await reader.ReadAsync(3).ToListAsync();
+            short length = BitConverter.ToInt16(new[] { header[1], header[2] });
+            List<byte> body = await reader.ReadAsync(length).ToListAsync();
+            byte[] data = new byte[1].Concat(header).Concat(body).ToArray();
+            string packetAccount;
+            string packetIp;
 			AccountState accState; // = AccountState.LOGIN_DBBUSY
 
 			// Read account name from packet
 			packetAccount = "";
-			for (int i = 0, loopTo = iUpper; i <= loopTo; i++)
-				packetAccount += Conversions.ToString((char)data[34 + i]);
-			Account = packetAccount;
+
+            int iUpper = data[33] - 1;
+            for (int i = 0, loopTo = iUpper; i <= loopTo; i++)
+                packetAccount += Conversions.ToString((char)data[34 + i]);
+            Account = packetAccount;
 
 			// Read users ip from packet
 			packetIp = ((int)data[29]).ToString() + "." + ((int)data[30]).ToString() + "." + ((int)data[31]).ToString() + "." + ((int)data[32]).ToString();
@@ -134,29 +134,24 @@ namespace Mangos.Realm
 			// clientBuild >= RequiredBuildLow AndAlso clientBuild <= RequiredBuildHigh Then
 			if (bMajor == 0 & bMinor == 0 & bRevision == 0)
 			{
-				var dataResponse = new byte[2];
+                byte[] dataResponse = new byte[2];
 				dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 				dataResponse[1] = (byte)AccountState.LOGIN_BADVERSION;
 				await writer.WriteAsync(dataResponse);
 			}
 			else if (clientBuild == mangosGlobalConstants.Required_Build_1_12_1 | clientBuild == mangosGlobalConstants.Required_Build_1_12_2 | clientBuild == mangosGlobalConstants.Required_Build_1_12_3)
 			{
-				// TODO: in the far future should check if the account is expired too
-				var accountInfo = await accountStorage.GetAccountInfoAsync(packetAccount);
+                // TODO: in the far future should check if the account is expired too
+                Storage.Account.Results.AccountInfo accountInfo = await accountStorage.GetAccountInfoAsync(packetAccount);
 				try
 				{
 					// Check Account state
-					if (accountInfo != null)
-					{
-						accState =  await accountStorage.IsBannedAccountAsync(accountInfo.id)
-							? AccountState.LOGIN_BANNED
-							: AccountState.LOGIN_OK;
-					}
-					else
-					{
-						accState = AccountState.LOGIN_UNKNOWN_ACCOUNT;
-					}
-				}
+					accState = accountInfo != null
+                        ? await accountStorage.IsBannedAccountAsync(accountInfo.id)
+                            ? AccountState.LOGIN_BANNED
+                            : AccountState.LOGIN_OK
+                        : AccountState.LOGIN_UNKNOWN_ACCOUNT;
+                }
 				catch
 				{
 					accState = AccountState.LOGIN_DBBUSY;
@@ -167,11 +162,11 @@ namespace Mangos.Realm
 				{
 					case var @case when @case == AccountState.LOGIN_OK:
 						{
-							var account = new byte[(data[33])];
+                            byte[] account = new byte[(data[33])];
 							Array.Copy(data, 34, account, 0, data[33]);
 							if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(accountInfo.sha_pass_hash.Length, 40, false))) // Invalid password type, should always be 40 characters
 							{
-								var dataResponse = new byte[2];
+                                byte[] dataResponse = new byte[2];
 								dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 								dataResponse[1] = (byte)AccountState.LOGIN_BAD_PASS;
 								await writer.WriteAsync(dataResponse);
@@ -179,21 +174,23 @@ namespace Mangos.Realm
 							else // Bail out with something meaningful
 							{
 								Access = (AccessLevel)Enum.Parse(typeof(AccessLevel), accountInfo.gmlevel);
-								var hash = new byte[20];
+                                byte[] hash = new byte[20];
 								for (int i = 0; i <= 39; i += 2)
-									hash[i / 2] = (byte)Conversions.ToInteger(Operators.ConcatenateObject("&H", accountInfo.sha_pass_hash.Substring(i, 2)));
+                                {
+                                    hash[i / 2] = (byte)Conversions.ToInteger(Operators.ConcatenateObject("&H", accountInfo.sha_pass_hash.Substring(i, 2)));
+                                }
 
-								// Language = clientLanguage
-								// If Not IsDBNull(result.Rows(0).Item("expansion")) Then
-								// Expansion = result.Rows(0).Item("expansion")
-								// Else
-								// Expansion = ExpansionLevel.NORMAL
-								// End If
+                                // Language = clientLanguage
+                                // If Not IsDBNull(result.Rows(0).Item("expansion")) Then
+                                // Expansion = result.Rows(0).Item("expansion")
+                                // Else
+                                // Expansion = ExpansionLevel.NORMAL
+                                // End If
 
-								try
+                                try
 								{
 									authEngineClass.CalculateX(account, hash);
-									var dataResponse = new byte[119];
+                                    byte[] dataResponse = new byte[119];
 									dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_CHALLENGE;
 									dataResponse[1] = (byte)AccountState.LOGIN_OK;
 									dataResponse[2] = (byte)Conversion.Val("&H00");
@@ -218,7 +215,7 @@ namespace Mangos.Realm
 
 					case var case1 when case1 == AccountState.LOGIN_UNKNOWN_ACCOUNT:
 						{
-							var dataResponse = new byte[2];
+                            byte[] dataResponse = new byte[2];
 							dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 							dataResponse[1] = (byte)AccountState.LOGIN_UNKNOWN_ACCOUNT;
 							await writer.WriteAsync(dataResponse);
@@ -227,7 +224,7 @@ namespace Mangos.Realm
 
 					case var case2 when case2 == AccountState.LOGIN_BANNED:
 						{
-							var dataResponse = new byte[2];
+                            byte[] dataResponse = new byte[2];
 							dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 							dataResponse[1] = (byte)AccountState.LOGIN_BANNED;
 							await writer.WriteAsync(dataResponse);
@@ -236,7 +233,7 @@ namespace Mangos.Realm
 
 					case var case3 when case3 == AccountState.LOGIN_NOTIME:
 						{
-							var dataResponse = new byte[2];
+                            byte[] dataResponse = new byte[2];
 							dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 							dataResponse[1] = (byte)AccountState.LOGIN_NOTIME;
 							await writer.WriteAsync(dataResponse);
@@ -245,7 +242,7 @@ namespace Mangos.Realm
 
 					case var case4 when case4 == AccountState.LOGIN_ALREADYONLINE:
 						{
-							var dataResponse = new byte[2];
+                            byte[] dataResponse = new byte[2];
 							dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 							dataResponse[1] = (byte)AccountState.LOGIN_ALREADYONLINE;
 							await writer.WriteAsync(dataResponse);
@@ -289,7 +286,7 @@ namespace Mangos.Realm
 
 					default:
 						{
-							var dataResponse = new byte[2];
+                            byte[] dataResponse = new byte[2];
 							dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 							dataResponse[1] = (byte)AccountState.LOGIN_FAILED;
 							await writer.WriteAsync(dataResponse);
@@ -301,7 +298,7 @@ namespace Mangos.Realm
 			{
 				// Send UPDATE_MPQ
 				UpdateFile = "Updates/wow-patch-" + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + "-" + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + ".mpq";
-				var dataResponse = new byte[31];
+                byte[] dataResponse = new byte[31];
 				dataResponse[0] = (byte)AuthCMD.CMD_XFER_INITIATE;
 				// Name Len 0x05 -> sizeof(Patch)
 				int i = 1;
@@ -312,15 +309,15 @@ namespace Mangos.Realm
 				converter.ToBytes(Conversions.ToInteger(FileSystem.FileLen(UpdateFile)), dataResponse, ref i);
 				// Unknown 0x0 always
 				converter.ToBytes(0, dataResponse, ref i);
-				// MD5 CheckSum
-				var md5 = new MD5CryptoServiceProvider();
+                // MD5 CheckSum
+                MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
 				byte[] buffer;
-				var fs = new FileStream(UpdateFile, FileMode.Open);
-				var r = new BinaryReader(fs);
+                FileStream fs = new FileStream(UpdateFile, FileMode.Open);
+                BinaryReader r = new BinaryReader(fs);
 				buffer = r.ReadBytes((int)FileSystem.FileLen(UpdateFile));
 				r.Close();
-				// fs.Close()
-				var result = md5.ComputeHash(buffer);
+                // fs.Close()
+                byte[] result = md5.ComputeHash(buffer);
 				Array.Copy(result, 0, dataResponse, 15, 16);
 				await writer.WriteAsync(dataResponse);
 			}
@@ -328,7 +325,7 @@ namespace Mangos.Realm
 			{
 				// Send BAD_VERSION
 				logger.Warning("WRONG_VERSION [" + (char)data[6] + (char)data[5] + (char)data[4] + " " + data[8] + "." + data[9] + "." + data[10] + "." + Conversion.Val("&H" + Conversion.Hex(data[12]) + Conversion.Hex(data[11])) + " " + (char)data[15] + (char)data[14] + (char)data[13] + " " + (char)data[19] + (char)data[18] + (char)data[17] + " " + (char)data[24] + (char)data[23] + (char)data[22] + (char)data[21] + "]");
-				var dataResponse = new byte[2];
+                byte[] dataResponse = new byte[2];
 				dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 				dataResponse[1] = (byte)AccountState.LOGIN_BADVERSION;
 				await writer.WriteAsync(dataResponse);
@@ -337,12 +334,12 @@ namespace Mangos.Realm
 
 		public async Task On_RS_LOGON_PROOF(ChannelReader<byte> reader, ChannelWriter<byte> writer)
 		{
-			var body = await reader.ReadAsync(74).ToListAsync();
-			var data = new byte[1].Concat(body).ToArray();
+            List<byte> body = await reader.ReadAsync(74).ToListAsync();
+            byte[] data = new byte[1].Concat(body).ToArray();
 
-			var a = new byte[32];
+            byte[] a = new byte[32];
 			Array.Copy(data, 1, a, 0, 32);
-			var m1 = new byte[20];
+            byte[] m1 = new byte[20];
 			Array.Copy(data, 33, m1, 0, 20);
 			// Dim CRC_Hash(19) As Byte
 			// Array.Copy(data, 53, CRC_Hash, 0, 20)
@@ -369,7 +366,7 @@ namespace Mangos.Realm
 			{
 				// Wrong pass
 				logger.Debug("Wrong password for user {0}.", Account);
-				var dataResponse = new byte[2];
+                byte[] dataResponse = new byte[2];
 				dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 				dataResponse[1] = (byte)AccountState.LOGIN_BAD_PASS;
 				await writer.WriteAsync(dataResponse);
@@ -377,7 +374,7 @@ namespace Mangos.Realm
 			else
 			{
 				authEngineClass.CalculateM2(m1);
-				var dataResponse = new byte[26];
+                byte[] dataResponse = new byte[26];
 				dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
 				dataResponse[1] = (byte)AccountState.LOGIN_OK;
 				Array.Copy(authEngineClass.M2, 0, dataResponse, 2, 20);
@@ -392,22 +389,25 @@ namespace Mangos.Realm
 
 				// For i as Integer = 0 To AuthEngine.SS_Hash.Length - 1
 				for (int i = 0; i <= 40 - 1; i++)
-					sshash = authEngineClass.SsHash[i] < 16 ? sshash + "0" + Conversion.Hex(authEngineClass.SsHash[i]) : sshash + Conversion.Hex(authEngineClass.SsHash[i]);
-				await accountStorage.UpdateAccountAsync(sshash, remoteEnpoint.Address.ToString(), Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), Account);
+                {
+                    sshash = authEngineClass.SsHash[i] < 16 ? sshash + "0" + Conversion.Hex(authEngineClass.SsHash[i]) : sshash + Conversion.Hex(authEngineClass.SsHash[i]);
+                }
+
+                await accountStorage.UpdateAccountAsync(sshash, remoteEnpoint.Address.ToString(), Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), Account);
 				logger.Debug("Auth success for user {0} [{1}]", Account, sshash);
 			}
 		}
 
 		public async Task On_RS_REALMLIST(ChannelReader<byte> reader, ChannelWriter<byte> writer)
 		{
-			var body = await reader.ReadAsync(4).ToListAsync();
-			var data = new byte[1].Concat(body).ToArray();
+            List<byte> body = await reader.ReadAsync(4).ToListAsync();
+            byte[] data = new byte[1].Concat(body).ToArray();
 
 			int packetLen = 0;
 
-			// Fetch RealmList Data
-			var realmList = await accountStorage.GetRealmListAsync();
-			foreach (var row in realmList)
+            // Fetch RealmList Data
+            List<Storage.Account.Responses.RealmListItem> realmList = await accountStorage.GetRealmListAsync();
+			foreach (Storage.Account.Responses.RealmListItem row in realmList)
 			{
 				packetLen = packetLen 
 					+ Strings.Len(row.address) 
@@ -417,7 +417,7 @@ namespace Mangos.Realm
 					+ 14;
 			}
 
-			var dataResponse = new byte[packetLen + 9 + 1];
+            byte[] dataResponse = new byte[packetLen + 9 + 1];
 
 			// (byte) Opcode
 			dataResponse[0] = (byte)AuthCMD.CMD_AUTH_REALMLIST;
@@ -436,17 +436,14 @@ namespace Mangos.Realm
 			dataResponse[7] = (byte)realmList.Count();
 			dataResponse[8] = 0;
 			int tmp = 8;
-			foreach (var realmListItem in realmList)
+			foreach (Storage.Account.Responses.RealmListItem realmListItem in realmList)
 			{
-				// Get Number of Characters for the Realm
-				var characterCount = await accountStorage.GetNumcharsAsync(realmListItem.id);
-
-				// (uint8) Realm Icon
-				// 0 -> Normal; 1 -> PvP; 6 -> RP; 8 -> RPPvP;
-				converter.ToBytes(Conversions.ToByte(realmListItem.icon), dataResponse, ref tmp);
-				// (uint8) IsLocked
-				// 0 -> none; 1 -> locked
-				converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
+                // (uint8) Realm Icon
+                // 0 -> Normal; 1 -> PvP; 6 -> RP; 8 -> RPPvP;
+                converter.ToBytes(Conversions.ToByte(realmListItem.icon), dataResponse, ref tmp);
+                // (uint8) IsLocked
+                // 0 -> none; 1 -> locked
+                converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
 				// (uint8) unk
 				converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
 				// (uint8) unk
@@ -467,40 +464,42 @@ namespace Mangos.Realm
 																				  // 9C C4 C0 3F -> Low
 																				  // BC 74 B3 3F -> Low
 				converter.ToBytes(Conversions.ToSingle(realmListItem.population), dataResponse, ref tmp);
-				// (byte) Number of character at this realm for this account
-				converter.ToBytes(Conversions.ToByte(characterCount), dataResponse, ref tmp);
-				// (byte) Timezone
-				// 0x01 - Development
-				// 0x02 - USA
-				// 0x03 - Oceania
-				// 0x04 - LatinAmerica
-				// 0x05 - Tournament
-				// 0x06 - Korea
-				// 0x07 - Tournament
-				// 0x08 - UnitedKingdom
-				// 0x09 - Germany
-				// 0x0A - France
-				// 0x0B - Spain
-				// 0x0C - Russian
-				// 0x0D - Tournament
-				// 0x0E - Taiwan
-				// 0x0F - Tournament
-				// 0x10 - China
-				// 0x11 - CN1
-				// 0x12 - CN2
-				// 0x13 - CN3
-				// 0x14 - CN4
-				// 0x15 - CN5
-				// 0x16 - CN6
-				// 0x17 - CN7
-				// 0x18 - CN8
-				// 0x19 - Tournament
-				// 0x1A - Test Server
-				// 0x1B - Tournament
-				// 0x1C - QA Server
-				// 0x1D - CN9
-				// 0x1E - Test Server 2
-				converter.ToBytes(Conversions.ToByte(realmListItem.timezone), dataResponse, ref tmp);
+                // Get Number of Characters for the Realm
+                int characterCount = await accountStorage.GetNumcharsAsync(realmListItem.id);
+                // (byte) Number of character at this realm for this account
+                converter.ToBytes(Conversions.ToByte(characterCount), dataResponse, ref tmp);
+                // (byte) Timezone
+                // 0x01 - Development
+                // 0x02 - USA
+                // 0x03 - Oceania
+                // 0x04 - LatinAmerica
+                // 0x05 - Tournament
+                // 0x06 - Korea
+                // 0x07 - Tournament
+                // 0x08 - UnitedKingdom
+                // 0x09 - Germany
+                // 0x0A - France
+                // 0x0B - Spain
+                // 0x0C - Russian
+                // 0x0D - Tournament
+                // 0x0E - Taiwan
+                // 0x0F - Tournament
+                // 0x10 - China
+                // 0x11 - CN1
+                // 0x12 - CN2
+                // 0x13 - CN3
+                // 0x14 - CN4
+                // 0x15 - CN5
+                // 0x16 - CN6
+                // 0x17 - CN7
+                // 0x18 - CN8
+                // 0x19 - Tournament
+                // 0x1A - Test Server
+                // 0x1B - Tournament
+                // 0x1C - QA Server
+                // 0x1D - CN9
+                // 0x1E - Test Server 2
+                converter.ToBytes(Conversions.ToByte(realmListItem.timezone), dataResponse, ref tmp);
 				// (byte) Unknown (may be 2 -> TestRealm, / 6 -> ?)
 				converter.ToBytes(Conversions.ToByte(0), dataResponse, ref tmp);
 			}
