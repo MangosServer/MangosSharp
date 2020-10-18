@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Exe</OutputType>
     <AssemblyName>WorldServer</AssemblyName>
-    <ApplicationIcon>mvb0___vanilla_256x256.ico</ApplicationIcon>
+    <ApplicationIcon>MangosCS.ico</ApplicationIcon>
     <OutputPath>..\..\..\Bin\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
