@@ -16,9 +16,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Threading.Tasks;
 using Autofac;
 using global;
-using Mangos.Common.Globals;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
@@ -28,9 +28,8 @@ using Mangos.Network.Tcp;
 using Mangos.Realm.Factories;
 using Mangos.Storage;
 using Mangos.Storage.MySql;
-using System.Threading.Tasks;
 
-namespace Mangos.Realm.Async
+namespace Mangos.Realm
 {
     public class Program
 	{

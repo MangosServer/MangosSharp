@@ -19,7 +19,7 @@
 using System;
 using Microsoft.VisualBasic;
 
-namespace Mangos.Common.Globals
+namespace Mangos.Realm
 {
     public class Converter
     {

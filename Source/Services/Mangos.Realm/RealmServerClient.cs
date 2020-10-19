@@ -20,7 +20,6 @@ using global;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
-using Mangos.Common.Globals;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
 using Mangos.Network.Tcp.Extensions;

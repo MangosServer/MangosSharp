@@ -17,7 +17,6 @@
 //
 
 using global;
-using Mangos.Common.Globals;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
 using Mangos.Storage;
