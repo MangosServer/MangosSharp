@@ -6,8 +6,6 @@
 <a href='https://www.getmangos.eu/github-activity/' target='getmangos.activity'><img src='/icons/ACTIVITY.gif' border=0></a>
 <a href='https://www.getmangos.eu/bug-tracker/others/mangos-sharpe//' target='getmangos.tracker'><img src='/icons/TRACKER.gif' border=0></a>
 <br />Build Status: <br/>Coming soon
-<a href='https://ci.appveyor.com/project/MaNGOS/server-9fytl/history' target='MangosZero'><img src='https://ci.appveyor.com/api/projects/status/github/mangoszero/server?branch=develop21&svg=true' border=0></a>
-  Codacy Status <a href="https://www.codacy.com/app/MaNGOS/MangosZero?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mangoszero/server&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/895a7434531a456ba12410ac585717c8"/></a>
 </td></tr></table>
 
 VANILLA WOW BRANCH
