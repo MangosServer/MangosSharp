@@ -18,7 +18,6 @@
 
 using System.Threading;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 
 namespace Mangos.Network.Tcp
 {
@@ -28,7 +27,5 @@ namespace Mangos.Network.Tcp
 			ChannelReader<byte> reader, 
 			ChannelWriter<byte> writer, 
 			CancellationToken cancellationToken);
-        Task On_RS_LOGON_CHALLENGE(ChannelReader<byte> reader, ChannelWriter<byte> writer);
-        Task On_RS_LOGON_PROOF(ChannelReader<byte> reader, ChannelWriter<byte> writer);
-    }
+	}
 }

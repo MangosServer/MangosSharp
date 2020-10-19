@@ -23,6 +23,8 @@ namespace Mangos.Common.Globals
 {
     public class Converter
     {
+
+        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public byte ToByte(byte[] d, ref int offset)
         {
             return d[offset + 1];
@@ -100,21 +102,24 @@ namespace Mangos.Common.Globals
                 t += 1;
             }
         }
-
+        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
+        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public double ToDouble(byte[] d, ref int offset)
         {
             double num1 = BitConverter.ToDouble(d, offset);
             offset += 8;
             return num1;
         }
-
+        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
+        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public float ToFloat(byte[] d, ref int offset)
         {
             float single1 = BitConverter.ToSingle(d, offset);
             offset += 4;
             return single1;
         }
-
+        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
+        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public short ToInt16(byte[] d, ref int offset)
         {
             short num1 = BitConverter.ToInt16(d, offset);
@@ -128,7 +133,8 @@ namespace Mangos.Common.Globals
             offset += 2;
             return num1;
         }
-
+        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
+        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public int ToInt32(byte[] d, ref int offset)
         {
             int num1 = BitConverter.ToInt32(d, offset);
@@ -142,7 +148,8 @@ namespace Mangos.Common.Globals
             offset += 4;
             return num1;
         }
-
+        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
+        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public long ToInt64(byte[] d, ref int offset)
         {
             long num1 = BitConverter.ToInt64(d, offset);
@@ -156,5 +163,6 @@ namespace Mangos.Common.Globals
             offset += 8;
             return num1;
         }
+        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
     }
 }

@@ -64,11 +64,11 @@ namespace Mangos.Realm
 
         public AuthEngineClass()
         {
-            byte[] buffer1 = new byte[] { 7 };
+            var buffer1 = new byte[] { 7 };
             g = buffer1;
             N = new byte[] { 137, 75, 100, 94, 137, 225, 83, 91, 189, 173, 91, 139, 41, 6, 80, 83, 8, 1, 177, 142, 191, 191, 94, 143, 171, 60, 130, 135, 42, 62, 155, 183 };
             Salt = new byte[] { 173, 208, 58, 49, 210, 113, 20, 70, 117, 242, 112, 126, 80, 38, 182, 210, 241, 134, 89, 153, 118, 2, 80, 170, 185, 69, 224, 158, 221, 42, 163, 69 };
-            byte[] buffer2 = new byte[] { 3 };
+            var buffer2 = new byte[] { 3 };
             _k = buffer2;
             PublicB = new byte[32];
             _b = new byte[20];
@@ -78,9 +78,9 @@ namespace Mangos.Realm
         {
             // Dim encoding1 As New UTF7Encoding
             _random.NextBytes(_b);
-            BigInteger ptr1 = new BigInteger();
-            BigInteger ptr2 = new BigInteger();
-            BigInteger ptr3 = new BigInteger();
+            var ptr1 = new BigInteger();
+            var ptr2 = new BigInteger();
+            var ptr3 = new BigInteger();
             // Dim ptr4 As IntPtr = BN_new("")
             Array.Reverse(_b);
             _bNb = new BigInteger(_b, isUnsigned: true, isBigEndian: true);
@@ -95,8 +95,8 @@ namespace Mangos.Realm
 
         private void CalculateK()
         {
-            SHA1Managed algorithm1 = new SHA1Managed();
-            ArrayList list1 = new ArrayList();
+            var algorithm1 = new SHA1Managed();
+            var list1 = new ArrayList();
             list1 = Split(_s);
             list1[0] = algorithm1.ComputeHash((byte[])list1[0]);
             list1[1] = algorithm1.ComputeHash((byte[])list1[1]);
@@ -105,8 +105,8 @@ namespace Mangos.Realm
 
         public void CalculateM2(byte[] m1Loc)
         {
-            SHA1Managed algorithm1 = new SHA1Managed();
-            byte[] buffer1 = new byte[(_a.Length + m1Loc.Length + SsHash.Length)];
+            var algorithm1 = new SHA1Managed();
+            var buffer1 = new byte[(_a.Length + m1Loc.Length + SsHash.Length)];
             Buffer.BlockCopy(_a, 0, buffer1, 0, _a.Length);
             Buffer.BlockCopy(m1Loc, 0, buffer1, _a.Length, m1Loc.Length);
             Buffer.BlockCopy(SsHash, 0, buffer1, _a.Length + m1Loc.Length, SsHash.Length);
@@ -115,8 +115,8 @@ namespace Mangos.Realm
 
         private void CalculateS()
         {
-            BigInteger ptr1 = new BigInteger();
-            BigInteger ptr2 = new BigInteger();
+            var ptr1 = new BigInteger();
+            var ptr2 = new BigInteger();
             // Dim ptr3 As IntPtr = BN_new("")
             // Dim ptr4 As IntPtr = BN_new("")
             _bns = new BigInteger();
@@ -132,8 +132,8 @@ namespace Mangos.Realm
         public void CalculateU(byte[] a)
         {
             _a = a;
-            SHA1Managed algorithm1 = new SHA1Managed();
-            byte[] buffer1 = new byte[(a.Length + PublicB.Length)];
+            var algorithm1 = new SHA1Managed();
+            var buffer1 = new byte[(a.Length + PublicB.Length)];
             Buffer.BlockCopy(a, 0, buffer1, 0, a.Length);
             Buffer.BlockCopy(PublicB, 0, buffer1, a.Length, PublicB.Length);
             _u = algorithm1.ComputeHash(buffer1);
@@ -155,7 +155,7 @@ namespace Mangos.Realm
         public void CalculateX(byte[] username, byte[] pwHash)
         {
             _username = username;
-            SHA1Managed algorithm1 = new SHA1Managed();
+            var algorithm1 = new SHA1Managed();
             // Dim encoding1 As New UTF7Encoding
             byte[] buffer3;
             buffer3 = new byte[20];
@@ -180,7 +180,7 @@ namespace Mangos.Realm
 
         public void CalculateM1()
         {
-            SHA1Managed algorithm1 = new SHA1Managed();
+            var algorithm1 = new SHA1Managed();
             byte[] nHash;
             nHash = new byte[20];
             byte[] gHash;
@@ -193,11 +193,8 @@ namespace Mangos.Realm
             gHash = algorithm1.ComputeHash(g);
             userHash = algorithm1.ComputeHash(_username);
             for (int i = 0; i <= 19; i++)
-            {
                 ngHash[i] = (byte)(nHash[i] ^ gHash[i]);
-            }
-
-            byte[] temp = Concat(ngHash, userHash);
+            var temp = Concat(ngHash, userHash);
             temp = Concat(temp, Salt);
             temp = Concat(temp, _a);
             temp = Concat(temp, PublicB);
@@ -260,11 +257,8 @@ namespace Mangos.Realm
         private byte[] Combine(byte[] Bytes1, byte[] Bytes2)
         {
             if (Bytes1.Length != Bytes2.Length)
-            {
                 return null;
-            }
-
-            byte[] CombineBuffer = new byte[(Bytes1.Length + Bytes2.Length)];
+            var CombineBuffer = new byte[(Bytes1.Length + Bytes2.Length)];
             int Counter = 0;
             for (int i = 0, loopTo = CombineBuffer.Length - 1; i <= loopTo; i += 2)
             {
@@ -284,7 +278,7 @@ namespace Mangos.Realm
 
         public byte[] Concat(byte[] Buffer1, byte[] Buffer2)
         {
-            byte[] ConcatBuffer = new byte[(Buffer1.Length + Buffer2.Length)];
+            var ConcatBuffer = new byte[(Buffer1.Length + Buffer2.Length)];
             Array.Copy(Buffer1, ConcatBuffer, Buffer1.Length);
             Array.Copy(Buffer2, 0, ConcatBuffer, Buffer1.Length, Buffer2.Length);
             return ConcatBuffer;
@@ -292,9 +286,9 @@ namespace Mangos.Realm
 
         private ArrayList Split(byte[] ByteBuffer)
         {
-            byte[] SplitBuffer1 = new byte[(int)(ByteBuffer.Length / 2d - 1d + 1)];
-            byte[] SplitBuffer2 = new byte[(int)(ByteBuffer.Length / 2d - 1d + 1)];
-            ArrayList ReturnList = new ArrayList();
+            var SplitBuffer1 = new byte[(int)(ByteBuffer.Length / 2d - 1d + 1)];
+            var SplitBuffer2 = new byte[(int)(ByteBuffer.Length / 2d - 1d + 1)];
+            var ReturnList = new ArrayList();
             int Counter = 0;
             for (int i = 0, loopTo = SplitBuffer1.Length - 1; i <= loopTo; i++)
             {
