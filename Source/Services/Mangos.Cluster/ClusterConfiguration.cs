@@ -42,7 +42,7 @@ namespace Mangos.Cluster
         public string StatsLocation { get; set; } = "stats.xml";
 
         // Logging Settings
-        public string LogType { get; set; }= "FILE";
+        public string LogType { get; set; } = "FILE";
         public LogType LogLevel { get; set; } = Common.Enums.Global.LogType.NETWORK;
         public string LogConfig { get; set; } = string.Empty;
         public bool PacketLogging { get; set; }

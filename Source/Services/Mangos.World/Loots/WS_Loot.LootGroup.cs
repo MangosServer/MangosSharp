@@ -21,68 +21,68 @@ using System.Collections.Generic;
 namespace Mangos.World.Loots
 {
     public partial class WS_Loot
-	{
+    {
         public class LootGroup
-		{
-			public List<LootStoreItem> ExplicitlyChanced;
+        {
+            public List<LootStoreItem> ExplicitlyChanced;
 
-			public List<LootStoreItem> EqualChanced;
+            public List<LootStoreItem> EqualChanced;
 
-			public LootGroup()
-			{
-				ExplicitlyChanced = new List<LootStoreItem>();
-				EqualChanced = new List<LootStoreItem>();
-			}
+            public LootGroup()
+            {
+                ExplicitlyChanced = new List<LootStoreItem>();
+                EqualChanced = new List<LootStoreItem>();
+            }
 
-			public void AddItem(ref LootStoreItem Item)
-			{
-				if (Item.Chance != 0f)
-				{
-					ExplicitlyChanced.Add(Item);
-				}
-				else
-				{
-					EqualChanced.Add(Item);
-				}
-			}
+            public void AddItem(ref LootStoreItem Item)
+            {
+                if (Item.Chance != 0f)
+                {
+                    ExplicitlyChanced.Add(Item);
+                }
+                else
+                {
+                    EqualChanced.Add(Item);
+                }
+            }
 
-			public LootStoreItem Roll()
-			{
-				checked
-				{
-					if (ExplicitlyChanced.Count > 0)
-					{
-						float rollChance = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 100.0);
-						int num = ExplicitlyChanced.Count - 1;
-						for (int i = 0; i <= num; i++)
-						{
-							if (ExplicitlyChanced[i].Chance >= 100f)
-							{
-								return ExplicitlyChanced[i];
-							}
-							rollChance -= ExplicitlyChanced[i].Chance;
-							if (rollChance <= 0f)
-							{
-								return ExplicitlyChanced[i];
-							}
-						}
-					}
-					if (EqualChanced.Count > 0)
-					{
-						return EqualChanced[WorldServiceLocator._WorldServer.Rnd.Next(0, EqualChanced.Count)];
-					}
-					return null;
-				}
-			}
+            public LootStoreItem Roll()
+            {
+                checked
+                {
+                    if (ExplicitlyChanced.Count > 0)
+                    {
+                        float rollChance = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 100.0);
+                        int num = ExplicitlyChanced.Count - 1;
+                        for (int i = 0; i <= num; i++)
+                        {
+                            if (ExplicitlyChanced[i].Chance >= 100f)
+                            {
+                                return ExplicitlyChanced[i];
+                            }
+                            rollChance -= ExplicitlyChanced[i].Chance;
+                            if (rollChance <= 0f)
+                            {
+                                return ExplicitlyChanced[i];
+                            }
+                        }
+                    }
+                    if (EqualChanced.Count > 0)
+                    {
+                        return EqualChanced[WorldServiceLocator._WorldServer.Rnd.Next(0, EqualChanced.Count)];
+                    }
+                    return null;
+                }
+            }
 
-			public void Process(ref LootObject Loot)
-			{
-				LootStoreItem Item = Roll();
-				if (Item != null)
-				{
-					Loot.Items.Add(new LootItem(ref Item));
-				}
-			}
-		}
-	}
+            public void Process(ref LootObject Loot)
+            {
+                LootStoreItem Item = Roll();
+                if (Item != null)
+                {
+                    Loot.Items.Add(new LootItem(ref Item));
+                }
+            }
+        }
+    }
 }

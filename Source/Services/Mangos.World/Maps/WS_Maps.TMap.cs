@@ -27,151 +27,151 @@ using Microsoft.VisualBasic.CompilerServices;
 namespace Mangos.World.Maps
 {
     public partial class WS_Maps
-	{
+    {
         public class TMap : IDisposable
-		{
-			public int ID;
+        {
+            public int ID;
 
-			public MapTypes Type;
+            public MapTypes Type;
 
-			public string Name;
+            public string Name;
 
-			public bool[,] TileUsed;
+            public bool[,] TileUsed;
 
-			public TMapTile[,] Tiles;
+            public TMapTile[,] Tiles;
 
-			private bool _disposedValue;
+            private bool _disposedValue;
 
-			public bool IsDungeon => Type == MapTypes.MAP_INSTANCE || Type == MapTypes.MAP_RAID;
+            public bool IsDungeon => Type == MapTypes.MAP_INSTANCE || Type == MapTypes.MAP_RAID;
 
-			public bool IsRaid => Type == MapTypes.MAP_RAID;
+            public bool IsRaid => Type == MapTypes.MAP_RAID;
 
-			public bool IsBattleGround => Type == MapTypes.MAP_BATTLEGROUND;
+            public bool IsBattleGround => Type == MapTypes.MAP_BATTLEGROUND;
 
-			public int ResetTime
-			{
-				get
-				{
-					checked
-					{
-						switch (Type)
-						{
-							case MapTypes.MAP_BATTLEGROUND:
-								return WorldServiceLocator._Global_Constants.DEFAULT_BATTLEFIELD_EXPIRE_TIME;
-							case MapTypes.MAP_INSTANCE:
-							case MapTypes.MAP_RAID:
-								switch (ID)
-								{
-									case 249:
-										return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(5, 3).Subtract(DateAndTime.Now).TotalSeconds);
-									case 309:
-									case 509:
-										return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(3, 3).Subtract(DateAndTime.Now).TotalSeconds);
-									case 409:
-									case 469:
-									case 531:
-									case 533:
-										return (int)Math.Round(WorldServiceLocator._Functions.GetNextDay(DayOfWeek.Tuesday, 3).Subtract(DateAndTime.Now).TotalSeconds);
-								}
-								break;
-						}
-						return WorldServiceLocator._Global_Constants.DEFAULT_INSTANCE_EXPIRE_TIME;
-					}
-				}
-			}
+            public int ResetTime
+            {
+                get
+                {
+                    checked
+                    {
+                        switch (Type)
+                        {
+                            case MapTypes.MAP_BATTLEGROUND:
+                                return WorldServiceLocator._Global_Constants.DEFAULT_BATTLEFIELD_EXPIRE_TIME;
+                            case MapTypes.MAP_INSTANCE:
+                            case MapTypes.MAP_RAID:
+                                switch (ID)
+                                {
+                                    case 249:
+                                        return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(5, 3).Subtract(DateAndTime.Now).TotalSeconds);
+                                    case 309:
+                                    case 509:
+                                        return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(3, 3).Subtract(DateAndTime.Now).TotalSeconds);
+                                    case 409:
+                                    case 469:
+                                    case 531:
+                                    case 533:
+                                        return (int)Math.Round(WorldServiceLocator._Functions.GetNextDay(DayOfWeek.Tuesday, 3).Subtract(DateAndTime.Now).TotalSeconds);
+                                }
+                                break;
+                        }
+                        return WorldServiceLocator._Global_Constants.DEFAULT_INSTANCE_EXPIRE_TIME;
+                    }
+                }
+            }
 
-			public TMap(int Map, DataStore mapDataStore)
-			{
-				Type = MapTypes.MAP_COMMON;
-				Name = "";
-				TileUsed = new bool[64, 64];
-				Tiles = new TMapTile[64, 64];
-				checked
-				{
-					if (WorldServiceLocator._WS_Maps.Maps.ContainsKey((uint)Map))
-					{
-						return;
-					}
-					WorldServiceLocator._WS_Maps.Maps.Add((uint)Map, this);
-					int x = 0;
-					do
-					{
-						int y = 0;
-						do
-						{
-							TileUsed[x, y] = false;
-							y++;
-						}
-						while (y <= 63);
-						x++;
-					}
-					while (x <= 63);
-					try
-					{
-						int num = mapDataStore.Rows - 1;
-						for (int i = 0; i <= num; i++)
-						{
-							int tmpMap = mapDataStore.ReadInt(i, 0);
-							if (tmpMap == Map)
-							{
-								ID = Map;
-								Type = unchecked((MapTypes)mapDataStore.ReadInt(i, 2));
-								Name = mapDataStore.ReadString(i, 4);
-								break;
-							}
-						}
-						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: 1 Map initialized.", mapDataStore.Rows - 1);
-					}
-					catch (DirectoryNotFoundException ex)
-					{
-						ProjectData.SetProjectError(ex);
+            public TMap(int Map, DataStore mapDataStore)
+            {
+                Type = MapTypes.MAP_COMMON;
+                Name = "";
+                TileUsed = new bool[64, 64];
+                Tiles = new TMapTile[64, 64];
+                checked
+                {
+                    if (WorldServiceLocator._WS_Maps.Maps.ContainsKey((uint)Map))
+                    {
+                        return;
+                    }
+                    WorldServiceLocator._WS_Maps.Maps.Add((uint)Map, this);
+                    int x = 0;
+                    do
+                    {
+                        int y = 0;
+                        do
+                        {
+                            TileUsed[x, y] = false;
+                            y++;
+                        }
+                        while (y <= 63);
+                        x++;
+                    }
+                    while (x <= 63);
+                    try
+                    {
+                        int num = mapDataStore.Rows - 1;
+                        for (int i = 0; i <= num; i++)
+                        {
+                            int tmpMap = mapDataStore.ReadInt(i, 0);
+                            if (tmpMap == Map)
+                            {
+                                ID = Map;
+                                Type = unchecked((MapTypes)mapDataStore.ReadInt(i, 2));
+                                Name = mapDataStore.ReadString(i, 4);
+                                break;
+                            }
+                        }
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: 1 Map initialized.", mapDataStore.Rows - 1);
+                    }
+                    catch (DirectoryNotFoundException ex)
+                    {
+                        ProjectData.SetProjectError(ex);
                         Console.ForegroundColor = ConsoleColor.Red;
-						Console.WriteLine("DBC File : Map missing.");
-						Console.ForegroundColor = ConsoleColor.Gray;
-						ProjectData.ClearProjectError();
-					}
-				}
-			}
+                        Console.WriteLine("DBC File : Map missing.");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        ProjectData.ClearProjectError();
+                    }
+                }
+            }
 
-			protected virtual void Dispose(bool disposing)
-			{
-				checked
-				{
-					if (!_disposedValue)
-					{
-						int i = 0;
-						do
-						{
-							int j = 0;
-							do
-							{
-								if (Tiles[i, j] != null)
-								{
-									Tiles[i, j].Dispose();
-								}
-								j++;
-							}
-							while (j <= 63);
-							i++;
-						}
-						while (i <= 63);
-						WorldServiceLocator._WS_Maps.Maps.Remove((uint)ID);
-					}
-					_disposedValue = true;
-				}
-			}
+            protected virtual void Dispose(bool disposing)
+            {
+                checked
+                {
+                    if (!_disposedValue)
+                    {
+                        int i = 0;
+                        do
+                        {
+                            int j = 0;
+                            do
+                            {
+                                if (Tiles[i, j] != null)
+                                {
+                                    Tiles[i, j].Dispose();
+                                }
+                                j++;
+                            }
+                            while (j <= 63);
+                            i++;
+                        }
+                        while (i <= 63);
+                        WorldServiceLocator._WS_Maps.Maps.Remove((uint)ID);
+                    }
+                    _disposedValue = true;
+                }
+            }
 
-			public void Dispose()
-			{
-				Dispose(disposing: true);
-				GC.SuppressFinalize(this);
-			}
+            public void Dispose()
+            {
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
 
-			void IDisposable.Dispose()
-			{
-				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				Dispose();
-			}
-		}
-	}
+            void IDisposable.Dispose()
+            {
+                //ILSpy generated this explicit interface implementation from .override directive in Dispose
+                Dispose();
+            }
+        }
+    }
 }

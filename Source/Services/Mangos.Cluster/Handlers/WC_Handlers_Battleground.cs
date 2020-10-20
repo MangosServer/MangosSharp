@@ -79,7 +79,7 @@ namespace Mangos.Cluster.Handlers
             uint instance = (uint)packet.GetInt32();
             byte asGroup = packet.GetInt8();
             clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEMASTER_JOIN [MapType: {2}, Instance: {3}, Group: {4}, GUID: {5}]", client.IP, client.Port, mapType, instance, asGroup, guid);
-            GetBattlefield((BattlefieldMapType) mapType, (byte)client.Character.Level).Enqueue(client.Character);
+            GetBattlefield((BattlefieldMapType)mapType, (byte)client.Character.Level).Enqueue(client.Character);
         }
 
         public Dictionary<int, Battlefield> BATTLEFIELDs = new Dictionary<int, Battlefield>();

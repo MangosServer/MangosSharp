@@ -631,7 +631,7 @@ namespace Mangos.Cluster.Globals
             {
                 if (clusterServiceLocator._WS_DBCDatabase.CharRaces.ContainsKey((int)character.Race))
                 {
-                    
+
                     packet.AddInt32(clusterServiceLocator._WS_DBCDatabase.CharRaces[(int)character.Race].CinematicID);
                 }
                 else

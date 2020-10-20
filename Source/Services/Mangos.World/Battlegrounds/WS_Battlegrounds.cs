@@ -21,12 +21,12 @@ using System.Collections.Generic;
 namespace Mangos.World.Battlegrounds
 {
     public partial class WS_Battlegrounds
-	{
-		public Dictionary<int, Battlefield> BATTLEFIELDs;
+    {
+        public Dictionary<int, Battlefield> BATTLEFIELDs;
 
-		public WS_Battlegrounds()
-		{
-			BATTLEFIELDs = new Dictionary<int, Battlefield>();
-		}
-	}
+        public WS_Battlegrounds()
+        {
+            BATTLEFIELDs = new Dictionary<int, Battlefield>();
+        }
+    }
 }

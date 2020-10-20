@@ -19,21 +19,21 @@
 namespace Mangos.World.Weather
 {
     public partial class WS_Weather
-	{
+    {
         public class WeatherSeasonChances
-		{
-			public int RainChance;
+        {
+            public int RainChance;
 
-			public int SnowChance;
+            public int SnowChance;
 
-			public int StormChance;
+            public int StormChance;
 
-			public WeatherSeasonChances(int RainChance, int SnowChance, int StormChance)
-			{
-				this.RainChance = RainChance;
-				this.SnowChance = SnowChance;
-				this.StormChance = StormChance;
-			}
-		}
-	}
+            public WeatherSeasonChances(int RainChance, int SnowChance, int StormChance)
+            {
+                this.RainChance = RainChance;
+                this.SnowChance = SnowChance;
+                this.StormChance = StormChance;
+            }
+        }
+    }
 }

@@ -23,96 +23,96 @@ using Microsoft.VisualBasic.CompilerServices;
 namespace Mangos.World.Warden
 {
     public partial class WS_Warden
-	{
+    {
         public class CheatCheck
-		{
-			public CheckTypes Type;
+        {
+            public CheckTypes Type;
 
-			public string Str;
+            public string Str;
 
-			public string Str2;
+            public string Str2;
 
-			public int Addr;
+            public int Addr;
 
-			public byte[] Hash;
+            public byte[] Hash;
 
-			public int Seed;
+            public int Seed;
 
-			public byte Length;
+            public byte Length;
 
-			public CheatCheck(CheckTypes Type_)
-			{
-				Str = "";
-				Str2 = "";
-				Addr = 0;
-				Hash = new byte[0];
-				Seed = 0;
-				Length = 0;
-				Type = Type_;
-			}
+            public CheatCheck(CheckTypes Type_)
+            {
+                Str = "";
+                Str2 = "";
+                Addr = 0;
+                Hash = new byte[0];
+                Seed = 0;
+                Length = 0;
+                Type = Type_;
+            }
 
-			public byte[] ToData(byte XorCheck, ref byte index)
-			{
-				MemoryStream ms = new MemoryStream();
-				BinaryWriter bw = new BinaryWriter(ms);
-				bw.Write(XorCheck);
-				checked
-				{
-					switch (Type)
-					{
-					case CheckTypes.MEM_CHECK:
-						if (Operators.CompareString(Str, "", TextCompare: false) == 0)
-						{
-							bw.Write((byte)0);
-						}
-						else
-						{
-							bw.Write(index);
-							index++;
-						}
-						bw.Write(Addr);
-						bw.Write(Length);
-						break;
-					case CheckTypes.PAGE_CHECK_A_B:
-						bw.Write(Seed);
-						bw.Write(Hash, 0, Hash.Length);
-						bw.Write(Addr);
-						bw.Write(Length);
-						break;
-					case CheckTypes.MPQ_CHECK:
-						bw.Write(index);
-						index++;
-						break;
-					case CheckTypes.LUA_STR_CHECK:
-						bw.Write(index);
-						index++;
-						break;
-					case CheckTypes.DRIVER_CHECK:
-						bw.Write(Seed);
-						bw.Write(Hash, 0, Hash.Length);
-						bw.Write(index);
-						index++;
-						break;
-					case CheckTypes.PROC_CHECK:
-						bw.Write(Seed);
-						bw.Write(Hash, 0, Hash.Length);
-						bw.Write(index);
-						index++;
-						bw.Write(index);
-						index++;
-						bw.Write(Addr);
-						bw.Write(Length);
-						break;
-					case CheckTypes.MODULE_CHECK:
-						bw.Write(Seed);
-						bw.Write(Hash, 0, Hash.Length);
-						break;
-					}
-					byte[] tmpData = ms.ToArray();
-					ms.Close();
-					return tmpData;
-				}
-			}
-		}
-	}
+            public byte[] ToData(byte XorCheck, ref byte index)
+            {
+                MemoryStream ms = new MemoryStream();
+                BinaryWriter bw = new BinaryWriter(ms);
+                bw.Write(XorCheck);
+                checked
+                {
+                    switch (Type)
+                    {
+                        case CheckTypes.MEM_CHECK:
+                            if (Operators.CompareString(Str, "", TextCompare: false) == 0)
+                            {
+                                bw.Write((byte)0);
+                            }
+                            else
+                            {
+                                bw.Write(index);
+                                index++;
+                            }
+                            bw.Write(Addr);
+                            bw.Write(Length);
+                            break;
+                        case CheckTypes.PAGE_CHECK_A_B:
+                            bw.Write(Seed);
+                            bw.Write(Hash, 0, Hash.Length);
+                            bw.Write(Addr);
+                            bw.Write(Length);
+                            break;
+                        case CheckTypes.MPQ_CHECK:
+                            bw.Write(index);
+                            index++;
+                            break;
+                        case CheckTypes.LUA_STR_CHECK:
+                            bw.Write(index);
+                            index++;
+                            break;
+                        case CheckTypes.DRIVER_CHECK:
+                            bw.Write(Seed);
+                            bw.Write(Hash, 0, Hash.Length);
+                            bw.Write(index);
+                            index++;
+                            break;
+                        case CheckTypes.PROC_CHECK:
+                            bw.Write(Seed);
+                            bw.Write(Hash, 0, Hash.Length);
+                            bw.Write(index);
+                            index++;
+                            bw.Write(index);
+                            index++;
+                            bw.Write(Addr);
+                            bw.Write(Length);
+                            break;
+                        case CheckTypes.MODULE_CHECK:
+                            bw.Write(Seed);
+                            bw.Write(Hash, 0, Hash.Length);
+                            break;
+                    }
+                    byte[] tmpData = ms.ToArray();
+                    ms.Close();
+                    return tmpData;
+                }
+            }
+        }
+    }
 }

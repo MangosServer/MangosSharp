@@ -22,33 +22,33 @@ using Mangos.Common.Globals;
 namespace Mangos.World.Globals
 {
     public partial class Packets
-	{
+    {
         public class UpdatePacketClass : PacketClass
-		{
-			public int UpdatesCount
-			{
-				get
-				{
-					return BitConverter.ToInt32(Data, 4);
-				}
-				set
-				{
-					checked
-					{
-						Data[4] = (byte)(value & 0xFF);
-						Data[5] = (byte)((value >> 8) & 0xFF);
-						Data[6] = (byte)((value >> 16) & 0xFF);
-						Data[7] = (byte)((value >> 24) & 0xFF);
-					}
-				}
-			}
+        {
+            public int UpdatesCount
+            {
+                get
+                {
+                    return BitConverter.ToInt32(Data, 4);
+                }
+                set
+                {
+                    checked
+                    {
+                        Data[4] = (byte)(value & 0xFF);
+                        Data[5] = (byte)((value >> 8) & 0xFF);
+                        Data[6] = (byte)((value >> 16) & 0xFF);
+                        Data[7] = (byte)((value >> 24) & 0xFF);
+                    }
+                }
+            }
 
-			public UpdatePacketClass()
-				: base(Opcodes.SMSG_UPDATE_OBJECT)
-			{
-				AddInt32(0);
-				AddInt8(0);
-			}
-		}
-	}
+            public UpdatePacketClass()
+                : base(Opcodes.SMSG_UPDATE_OBJECT)
+            {
+                AddInt32(0);
+                AddInt8(0);
+            }
+        }
+    }
 }

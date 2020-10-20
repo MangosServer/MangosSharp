@@ -32,60 +32,60 @@ using Mangos.Storage.MySql;
 namespace Mangos.Realm
 {
     public class Program
-	{
-		public async static Task Main(string[] args)
-		{
-			var container = CreateContainer();
-			var realmServer = container.Resolve<RealmServer>();
-			await realmServer.StartAsync();
-		}
+    {
+        public async static Task Main(string[] args)
+        {
+            var container = CreateContainer();
+            var realmServer = container.Resolve<RealmServer>();
+            await realmServer.StartAsync();
+        }
 
-		public static IContainer CreateContainer()
-		{
-			var builder = new ContainerBuilder();
-			RegisterLoggers(builder);
-			RegisterConfiguration(builder);
-			RegisterStorages(builder);
-			RegisterTcpServer(builder);
-			RegisterServices(builder);
-			return builder.Build();
-		}
+        public static IContainer CreateContainer()
+        {
+            var builder = new ContainerBuilder();
+            RegisterLoggers(builder);
+            RegisterConfiguration(builder);
+            RegisterStorages(builder);
+            RegisterTcpServer(builder);
+            RegisterServices(builder);
+            return builder.Build();
+        }
 
-		public static void RegisterConfiguration(ContainerBuilder builder)
-		{
-			builder.Register(x => new XmlFileConfigurationProvider<RealmServerConfiguration>(
-					x.Resolve<ILogger>(), "configs/RealmServer.ini"))
-				.As<IConfigurationProvider<RealmServerConfiguration>>()
-				.SingleInstance();
-			builder.RegisterDecorator<StoredConfigurationProvider<RealmServerConfiguration>,
-				IConfigurationProvider<RealmServerConfiguration>>();
-		}
+        public static void RegisterConfiguration(ContainerBuilder builder)
+        {
+            builder.Register(x => new XmlFileConfigurationProvider<RealmServerConfiguration>(
+                    x.Resolve<ILogger>(), "configs/RealmServer.ini"))
+                .As<IConfigurationProvider<RealmServerConfiguration>>()
+                .SingleInstance();
+            builder.RegisterDecorator<StoredConfigurationProvider<RealmServerConfiguration>,
+                IConfigurationProvider<RealmServerConfiguration>>();
+        }
 
-		public static void RegisterLoggers(ContainerBuilder builder)
-		{
-			builder.RegisterType<ConsoleLogger>().As<ILogger>().SingleInstance();
-		}
+        public static void RegisterLoggers(ContainerBuilder builder)
+        {
+            builder.RegisterType<ConsoleLogger>().As<ILogger>().SingleInstance();
+        }
 
         private static void RegisterTcpServer(ContainerBuilder builder)
         {
             builder.RegisterType<TcpServer>().AsSelf().SingleInstance();
         }
 
-		public static void RegisterStorages(ContainerBuilder builder)
-		{
-			builder.RegisterType<MySqlAccountStorage>()
-				.AsSelf()
-				.As<IAccountStorage>()
-				.SingleInstance();
-		}
+        public static void RegisterStorages(ContainerBuilder builder)
+        {
+            builder.RegisterType<MySqlAccountStorage>()
+                .AsSelf()
+                .As<IAccountStorage>()
+                .SingleInstance();
+        }
 
         public static void RegisterServices(ContainerBuilder builder)
-		{
-			builder.RegisterType<Converter>().As<Converter>().SingleInstance();
-			builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
+        {
+            builder.RegisterType<Converter>().As<Converter>().SingleInstance();
+            builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
 
-			builder.RegisterType<RealmServer>().As<RealmServer>().SingleInstance();
-			builder.RegisterType<RealmServerClientFactory>().As<ITcpClientFactory>().SingleInstance();
-		}
-	}
+            builder.RegisterType<RealmServer>().As<RealmServer>().SingleInstance();
+            builder.RegisterType<RealmServerClientFactory>().As<ITcpClientFactory>().SingleInstance();
+        }
+    }
 }

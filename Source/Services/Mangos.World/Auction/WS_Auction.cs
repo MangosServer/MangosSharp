@@ -33,159 +33,129 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Auction
 {
-	public class WS_Auction
-	{
+    public class WS_Auction
+    {
         private const IEnumerator Enumerator = default;
         public int AuctionID;
 
-		public int AuctionFee;
+        public int AuctionFee;
 
-		public int AuctionTax;
+        public int AuctionTax;
 
-		public AuctionHouses GetAuctionSide(ulong GUID)
-		{
-			if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().GlobalAuction)
-			{
-				return AuctionHouses.AUCTION_UNDEFINED;
-			}
-			switch (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.Faction)
-			{
-				case 29:
-				case 68:
-				case 104:
-					return AuctionHouses.AUCTION_HORDE;
-				case 12:
-				case 55:
-				case 79:
-					return AuctionHouses.AUCTION_ALLIANCE;
-				default:
-					return AuctionHouses.AUCTION_NEUTRAL;
-			}
-		}
-
-		public int GetAuctionDeposit(ulong GUID, int Price, int ItemCount, int Time)
-		{
-			if (ItemCount == 0)
-			{
-				ItemCount = 1;
-			}
-			return checked(GetAuctionSide(GUID) switch
-			{
-				AuctionHouses.AUCTION_NEUTRAL => (int)(0.25f * Price * ItemCount * (Time / 120.0)),
-				AuctionHouses.AUCTION_UNDEFINED => 0,
-				_ => (int)(0.05f * Price * ItemCount * (Time / 120.0)),
-			});
-		}
-
-		public void AuctionCreateMail(MailAuctionAction MailAction, AuctionHouses AuctionLocation, ulong ReceiverGUID, int ItemID, ref Packets.PacketClass packet)
-		{
-            if (packet is null)
+        public AuctionHouses GetAuctionSide(ulong GUID)
+        {
+            if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().GlobalAuction)
             {
-                throw new ArgumentNullException(nameof(packet));
+                return AuctionHouses.AUCTION_UNDEFINED;
             }
+            switch (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.Faction)
+            {
+                case 29:
+                case 68:
+                case 104:
+                    return AuctionHouses.AUCTION_HORDE;
+                case 12:
+                case 55:
+                case 79:
+                    return AuctionHouses.AUCTION_ALLIANCE;
+                default:
+                    return AuctionHouses.AUCTION_NEUTRAL;
+            }
+        }
 
+        public int GetAuctionDeposit(ulong GUID, int Price, int ItemCount, int Time)
+        {
+            if (ItemCount == 0)
+            {
+                ItemCount = 1;
+            }
+            return checked(GetAuctionSide(GUID) switch
+            {
+                AuctionHouses.AUCTION_NEUTRAL => (int)(0.25f * Price * ItemCount * (Time / 120.0)),
+                AuctionHouses.AUCTION_UNDEFINED => 0,
+                _ => (int)(0.05f * Price * ItemCount * (Time / 120.0)),
+            });
+        }
+
+        public void AuctionCreateMail(MailAuctionAction MailAction, AuctionHouses AuctionLocation, ulong ReceiverGUID, int ItemID, ref Packets.PacketClass packet)
+        {
             string queryString = "INSERT INTO characters_mail (";
-			string valuesString = ") VALUES (";
-			int MailID = packet.GetInt32();
-			queryString += "mail_sender,";
-			string str = valuesString;
-			int num = (int)AuctionLocation;
-			valuesString = str + num;
-			queryString += "mail_receiver,";
-			valuesString += ReceiverGUID;
-			queryString += "mail_type,";
-			valuesString += "2";
-			queryString += "mail_stationary,";
-			valuesString += "62";
-			queryString += "mail_subject,";
-			string str2 = valuesString;
-			string str3 = ItemID.ToString();
-			num = (int)MailAction;
-			valuesString = str2 + str3 + ":0:" + num;
-			queryString += "mail_body,";
-			valuesString ??= "";
-			queryString += "mail_money,";
-			valuesString ??= "";
-			queryString += "mail_COD,";
-			valuesString += "0";
-			queryString += "mail_time,";
-			valuesString += "30";
-			queryString += "mail_read,";
-			valuesString += "0";
-			queryString += "item_guid,";
-			valuesString += ");";
-			WorldServiceLocator._WorldServer.CharacterDatabase.Update($"{queryString}{valuesString}");
-		}
+            string valuesString = ") VALUES (";
+            int MailID = packet.GetInt32();
+            queryString += "mail_sender,";
+            string str = valuesString;
+            int num = (int)AuctionLocation;
+            valuesString = str + num;
+            queryString += "mail_receiver,";
+            valuesString += ReceiverGUID;
+            queryString += "mail_type,";
+            valuesString += "2";
+            queryString += "mail_stationary,";
+            valuesString += "62";
+            queryString += "mail_subject,";
+            string str2 = valuesString;
+            string str3 = ItemID.ToString();
+            num = (int)MailAction;
+            valuesString = str2 + str3 + ":0:" + num;
+            queryString += "mail_body,";
+            valuesString ??= "";
+            queryString += "mail_money,";
+            valuesString ??= "";
+            queryString += "mail_COD,";
+            valuesString += "0";
+            queryString += "mail_time,";
+            valuesString += "30";
+            queryString += "mail_read,";
+            valuesString += "0";
+            queryString += "item_guid,";
+            valuesString += ");";
+            WorldServiceLocator._WorldServer.CharacterDatabase.Update($"{queryString}{valuesString}");
+        }
 
-		public void SendShowAuction(ref WS_PlayerData.CharacterObject objCharacter, ulong GUID)
-		{
-            if (objCharacter is null)
-            {
-                throw new ArgumentNullException(nameof(objCharacter));
-            }
-
+        public void SendShowAuction(ref WS_PlayerData.CharacterObject objCharacter, ulong GUID)
+        {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO);
             new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).AddUInt64(GUID);
-            new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).AddInt32((int)GetAuctionSide(GUID));
-			objCharacter.client.Send(ref packet);
+            new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).AddUInt64((ulong)GetAuctionSide(GUID));
+            objCharacter.client.Send(ref packet);
             new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).Dispose();
-		}
+        }
 
-		public void AuctionListAddItem(ref Packets.PacketClass packet, ref DataRow row)
-		{
-            if (packet is null)
-            {
-                throw new ArgumentNullException(nameof(packet));
-            }
-
-            if (row is null)
-            {
-                throw new ArgumentNullException(nameof(row));
-            }
-
+        public void AuctionListAddItem(ref Packets.PacketClass packet, ref DataRow row)
+        {
             packet.AddUInt32(row.As<uint>("auction_id"));
-			uint itemId = row.As<uint>("auction_itemId");
-			packet.AddUInt32(itemId);
-			checked
-			{
-                packet.AddUInt32(0u);
-				packet.AddUInt32((uint)((!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey((int)itemId)) ? new WS_Items.ItemInfo((int)itemId) : WorldServiceLocator._WorldServer.ITEMDatabase[(int)itemId]).RandomProp);
-				packet.AddUInt32((uint)((!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey((int)itemId)) ? new WS_Items.ItemInfo((int)itemId) : WorldServiceLocator._WorldServer.ITEMDatabase[(int)itemId]).RandomSuffix);
-				packet.AddUInt32(row.As<uint>("auction_itemCount"));
-				packet.AddInt32(((!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey((int)itemId)) ? new WS_Items.ItemInfo((int)itemId) : WorldServiceLocator._WorldServer.ITEMDatabase[(int)itemId]).Spells[0].SpellCharges);
-				packet.AddUInt64(row.As<ulong>("auction_owner"));
-				packet.AddUInt32(row.As<uint>("auction_bid"));
-				packet.AddUInt32(Conversions.ToUInteger(Operators.AddObject(Conversion.Fix(Operators.MultiplyObject(row["auction_bid"], 0.1f)), 1)));
-				packet.AddUInt32(row.As<uint>("auction_buyout"));
-				packet.AddUInt32(Conversions.ToUInteger(Operators.MultiplyObject(row["auction_timeleft"], 1000)));
-				packet.AddUInt64(row.As<ulong>("auction_bidder"));
-				packet.AddUInt32(row.As<uint>("auction_bid"));
-			}
-		}
-
-		public void SendAuctionCommandResult(ref WS_Network.ClientClass client, int AuctionID, AuctionAction AuctionAction, AuctionError AuctionError, int BidError)
-		{
-            if (client is null)
+            uint itemId = row.As<uint>("auction_itemId");
+            packet.AddUInt32(itemId);
+            checked
             {
-                throw new ArgumentNullException(nameof(client));
+                packet.AddUInt32(0u);
+                packet.AddUInt32((uint)((!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey((int)itemId)) ? new WS_Items.ItemInfo((int)itemId) : WorldServiceLocator._WorldServer.ITEMDatabase[(int)itemId]).RandomProp);
+                packet.AddUInt32((uint)((!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey((int)itemId)) ? new WS_Items.ItemInfo((int)itemId) : WorldServiceLocator._WorldServer.ITEMDatabase[(int)itemId]).RandomSuffix);
+                packet.AddUInt32(row.As<uint>("auction_itemCount"));
+                packet.AddInt32(((!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey((int)itemId)) ? new WS_Items.ItemInfo((int)itemId) : WorldServiceLocator._WorldServer.ITEMDatabase[(int)itemId]).Spells[0].SpellCharges);
+                packet.AddUInt64(row.As<ulong>("auction_owner"));
+                packet.AddUInt32(row.As<uint>("auction_bid"));
+                packet.AddUInt32(Conversions.ToUInteger(Operators.AddObject(Conversion.Fix(Operators.MultiplyObject(row["auction_bid"], 0.1f)), 1)));
+                packet.AddUInt32(row.As<uint>("auction_buyout"));
+                packet.AddUInt32(Conversions.ToUInteger(Operators.MultiplyObject(row["auction_timeleft"], 1000)));
+                packet.AddUInt64(row.As<ulong>("auction_bidder"));
+                packet.AddUInt32(row.As<uint>("auction_bid"));
             }
+        }
 
+        public void SendAuctionCommandResult(ref WS_Network.ClientClass client, int AuctionID, AuctionAction AuctionAction, AuctionError AuctionError, int BidError)
+        {
             Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32(AuctionID);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32((int)AuctionAction);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32((int)AuctionError);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32(BidError);
-			client.Send(ref response);
+            client.Send(ref response);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).Dispose();
-		}
+        }
 
-		public void SendAuctionBidderNotification(ref WS_PlayerData.CharacterObject objCharacter)
-		{
-            if (objCharacter is null)
-            {
-                throw new ArgumentNullException(nameof(objCharacter));
-            }
-
+        public void SendAuctionBidderNotification(ref WS_PlayerData.CharacterObject objCharacter)
+        {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
@@ -194,17 +164,12 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
-			objCharacter.client.Send(ref packet);
+            objCharacter.client.Send(ref packet);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).Dispose();
-		}
+        }
 
-		public void SendAuctionOwnerNotification(ref WS_PlayerData.CharacterObject objCharacter)
-		{
-            if (objCharacter is null)
-            {
-                throw new ArgumentNullException(nameof(objCharacter));
-            }
-
+        public void SendAuctionOwnerNotification(ref WS_PlayerData.CharacterObject objCharacter)
+        {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
@@ -213,192 +178,157 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
-			objCharacter.client.Send(ref packet);
+            objCharacter.client.Send(ref packet);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).Dispose();
-		}
+        }
 
-		public void SendAuctionRemovedNotification(ref WS_PlayerData.CharacterObject objCharacter)
-		{
-			Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION);
+        public void SendAuctionRemovedNotification(ref WS_PlayerData.CharacterObject objCharacter)
+        {
+            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
-			objCharacter.client.Send(ref packet);
+            objCharacter.client.Send(ref packet);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).Dispose();
-		}
+        }
 
-		public void SendAuctionListOwnerItems(ref WS_Network.ClientClass client)
-		{
-            if (client is null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
+        public void SendAuctionListOwnerItems(ref WS_Network.ClientClass client)
+        {
             Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT);
-			DataTable MySQLQuery = new DataTable();
-			WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM auctionhouse WHERE auction_owner = " + Conversions.ToString(client.Character.GUID) + ";", ref MySQLQuery);
-			if (MySQLQuery.Rows.Count > 50)
-			{
+            DataTable MySQLQuery = new DataTable();
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM auctionhouse WHERE auction_owner = " + Conversions.ToString(client.Character.GUID) + ";", ref MySQLQuery);
+            if (MySQLQuery.Rows.Count > 50)
+            {
                 new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT).AddInt32(50);
-			}
-			else
-			{
+            }
+            else
+            {
                 new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT).AddInt32(MySQLQuery.Rows.Count);
-			}
-			int count = 0;
-			IEnumerator enumerator = Enumerator;
-			try
-			{
-				enumerator = MySQLQuery.Rows.GetEnumerator();
-				while (enumerator.MoveNext())
-				{
-					DataRow row = (DataRow)enumerator.Current;
-					AuctionListAddItem(ref response, ref row);
-					count = checked(count + 1);
-					if (count == 50)
-					{
-						break;
-					}
-				}
-			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
+            }
+            int count = 0;
+            IEnumerator enumerator = Enumerator;
+            try
+            {
+                enumerator = MySQLQuery.Rows.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    DataRow row = (DataRow)enumerator.Current;
+                    AuctionListAddItem(ref response, ref row);
+                    count = checked(count + 1);
+                    if (count == 50)
+                    {
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                if (enumerator is IDisposable)
+                {
+                    (enumerator as IDisposable).Dispose();
+                }
+            }
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT).AddInt32(MySQLQuery.Rows.Count);
-			client.Send(ref response);
+            client.Send(ref response);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT).Dispose();
-			WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_AUCTION_OWNER_LIST_RESULT", client.IP, client.Port);
-		}
+            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_AUCTION_OWNER_LIST_RESULT", client.IP, client.Port);
+        }
 
-		public void SendAuctionListBidderItems(ref WS_Network.ClientClass client)
-		{
-			Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_LIST_RESULT);
-			DataTable MySQLQuery = new DataTable();
-			WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM auctionhouse WHERE auction_bidder = " + Conversions.ToString(client.Character.GUID) + ";", ref MySQLQuery);
-			if (MySQLQuery.Rows.Count > 50)
-			{
-				response.AddInt32(50);
-			}
-			else
-			{
-				response.AddInt32(MySQLQuery.Rows.Count);
-			}
-			int count = 0;
-			IEnumerator enumerator = Enumerator;
-			try
-			{
-				enumerator = MySQLQuery.Rows.GetEnumerator();
-				while (enumerator.MoveNext())
-				{
-					DataRow row = (DataRow)enumerator.Current;
-					AuctionListAddItem(ref response, ref row);
-					count = checked(count + 1);
-					if (count == 50)
-					{
-						break;
-					}
-				}
-			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
-			response.AddInt32(MySQLQuery.Rows.Count);
-			client.Send(ref response);
-			response.Dispose();
-			WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_AUCTION_BIDDER_LIST_RESULT", client.IP, client.Port);
-		}
-
-		public void On_MSG_AUCTION_HELLO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
-		{
-            if (packet is null)
+        public void SendAuctionListBidderItems(ref WS_Network.ClientClass client)
+        {
+            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_LIST_RESULT);
+            DataTable MySQLQuery = new DataTable();
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM auctionhouse WHERE auction_bidder = " + Conversions.ToString(client.Character.GUID) + ";", ref MySQLQuery);
+            if (MySQLQuery.Rows.Count > 50)
             {
-                throw new ArgumentNullException(nameof(packet));
+                response.AddInt32(50);
             }
-
-            if (client is null)
+            else
             {
-                throw new ArgumentNullException(nameof(client));
+                response.AddInt32(MySQLQuery.Rows.Count);
             }
+            int count = 0;
+            IEnumerator enumerator = Enumerator;
+            try
+            {
+                enumerator = MySQLQuery.Rows.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    DataRow row = (DataRow)enumerator.Current;
+                    AuctionListAddItem(ref response, ref row);
+                    count = checked(count + 1);
+                    if (count == 50)
+                    {
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                if (enumerator is IDisposable)
+                {
+                    (enumerator as IDisposable).Dispose();
+                }
+            }
+            response.AddInt32(MySQLQuery.Rows.Count);
+            client.Send(ref response);
+            response.Dispose();
+            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_AUCTION_BIDDER_LIST_RESULT", client.IP, client.Port);
+        }
 
+        public void On_MSG_AUCTION_HELLO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        {
             if (checked(packet.Data.Length - 1) >= 13)
-			{
-				packet.GetInt16();
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_AUCTION_HELLO [GUID={2}]", client.IP, client.Port, packet.GetUInt64());
-                SendShowAuction(ref client.Character, packet.GetUInt64());
-			}
-		}
-
-		public void On_CMSG_AUCTION_SELL_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
-		{
-            if (packet is null)
             {
-                throw new ArgumentNullException(nameof(packet));
+                packet.GetInt16();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_AUCTION_HELLO [GUID={2}]", client.IP, client.Port, packet.GetUInt32());
+                SendShowAuction(ref client.Character, packet.GetUInt32());
             }
+        }
 
-            if (client is null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
+        public void On_CMSG_AUCTION_SELL_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        {
             checked
-			{
-				if (packet.Data.Length - 1 < 33)
-				{
-					return;
-				}
-				packet.GetInt16();
-				ulong cGUID = packet.GetUInt64();
-				ulong iGUID = packet.GetUInt64();
-				int Bid = packet.GetInt32();
-				int Buyout = packet.GetInt32();
-				int Time = packet.GetInt32();
+            {
+                if (packet.Data.Length - 1 < 33)
+                {
+                    return;
+                }
+                packet.GetInt16();
+                ulong cGUID = packet.GetUInt64();
+                ulong iGUID = packet.GetUInt64();
+                int Bid = packet.GetInt32();
+                int Buyout = packet.GetInt32();
+                int Time = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_SELL_ITEM [Bid={2} BuyOut={3} Time={4}]", client.IP, client.Port, Bid, Buyout, Time);
                 Time *= 60;
-				if (WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemInfo.IsContainer && !WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].IsFree)
-				{
-					SendAuctionCommandResult(ref client, 0, AuctionAction.AUCTION_SELL_ITEM, AuctionError.CANNOT_BID_YOUR_AUCTION_ERROR, 0);
-					return;
-				}
+                if (WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemInfo.IsContainer && !WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].IsFree)
+                {
+                    SendAuctionCommandResult(ref client, 0, AuctionAction.AUCTION_SELL_ITEM, AuctionError.CANNOT_BID_YOUR_AUCTION_ERROR, 0);
+                    return;
+                }
                 if (client.Character.Copper < GetAuctionDeposit(cGUID, WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemInfo.SellPrice, WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].StackCount, Time))
                 {
                     SendAuctionCommandResult(ref client, 0, AuctionAction.AUCTION_SELL_ITEM, AuctionError.AUCTION_NOT_ENOUGHT_MONEY, 0);
                     return;
                 }
                 ref uint copper = ref client.Character.Copper;
-				copper = (uint)(unchecked(copper) - unchecked(GetAuctionDeposit(cGUID, WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemInfo.SellPrice, WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].StackCount, Time)));
-				client.Character.ItemREMOVE(iGUID, Destroy: false, Update: true);
-				WorldServiceLocator._WorldServer.CharacterDatabase.Update($"INSERT INTO auctionhouse (auction_bid, auction_buyout, auction_timeleft, auction_bidder, auction_owner, auction_itemId, auction_itemGuid, auction_itemCount) VALUES \r\n            ({Bid},{Buyout},{Time},{0},{client.Character.GUID},{WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemEntry},{iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM},{WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].StackCount});");
-				DataTable MySQLQuery = new DataTable();
-				WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT auction_id FROM auctionhouse WHERE auction_itemGuid = " + Conversions.ToString(iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";", ref MySQLQuery);
-				if (MySQLQuery.Rows.Count != 0)
-				{
-					SendAuctionCommandResult(ref client, MySQLQuery.Rows[0].As<int>("auction_id"), AuctionAction.AUCTION_SELL_ITEM, AuctionError.AUCTION_OK, 0);
-				}
-			}
-		}
-
-		public void On_CMSG_AUCTION_REMOVE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
-		{
-            if (packet is null)
-            {
-                throw new ArgumentNullException(nameof(packet));
+                copper = (uint)(unchecked(copper) - unchecked(GetAuctionDeposit(cGUID, WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemInfo.SellPrice, WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].StackCount, Time)));
+                client.Character.ItemREMOVE(iGUID, Destroy: false, Update: true);
+                WorldServiceLocator._WorldServer.CharacterDatabase.Update($"INSERT INTO auctionhouse (auction_bid, auction_buyout, auction_timeleft, auction_bidder, auction_owner, auction_itemId, auction_itemGuid, auction_itemCount) VALUES \r\n            ({Bid},{Buyout},{Time},{0},{client.Character.GUID},{WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemEntry},{iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM},{WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].StackCount});");
+                DataTable MySQLQuery = new DataTable();
+                WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT auction_id FROM auctionhouse WHERE auction_itemGuid = " + Conversions.ToString(iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";", ref MySQLQuery);
+                if (MySQLQuery.Rows.Count != 0)
+                {
+                    SendAuctionCommandResult(ref client, MySQLQuery.Rows[0].As<int>("auction_id"), AuctionAction.AUCTION_SELL_ITEM, AuctionError.AUCTION_OK, 0);
+                }
             }
+        }
 
-            if (client is null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
+        public void On_CMSG_AUCTION_REMOVE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        {
             packet.GetInt16();
-			ulong GUID = packet.GetUInt64();
+            ulong GUID = packet.GetUInt64();
             checked
             {
                 int MailTime = (int)(unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + 2592000L);
@@ -423,20 +353,10 @@ namespace Mangos.World.Auction
             }
         }
 
-		public void On_CMSG_AUCTION_PLACE_BID(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
-		{
-            if (packet is null)
-            {
-                throw new ArgumentNullException(nameof(packet));
-            }
-
-            if (client is null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
+        public void On_CMSG_AUCTION_PLACE_BID(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        {
             packet.GetInt16();
-			ulong cGUID = packet.GetUInt64();
+            ulong cGUID = packet.GetUInt64();
             checked
             {
                 int MailTime = (int)(unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + 2592000L);
@@ -484,150 +404,120 @@ namespace Mangos.World.Auction
             }
         }
 
-		public void On_CMSG_AUCTION_LIST_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
-		{
-            if (packet is null)
-            {
-                throw new ArgumentNullException(nameof(packet));
-            }
-
-            if (client is null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
+        public void On_CMSG_AUCTION_LIST_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        {
             checked
-			{
-				if (packet.Data.Length - 1 < 18)
-				{
-					return;
-				}
-				packet.GetInt16();
-				ulong GUID = packet.GetUInt64();
-				int Unk1 = packet.GetInt32();
-				string Name = packet.GetString();
-				if (packet.Data.Length - 1 < 18 + Name.Length + 1 + 1 + 4 + 4 + 4 + 4 + 1)
-				{
-					return;
-				}
-				byte LevelMIN = packet.GetInt8();
-				byte LevelMAX = packet.GetInt8();
-				int itemSlot = packet.GetInt32();
-				int itemClass = packet.GetInt32();
-				int itemSubClass = packet.GetInt32();
-				int itemQuality = packet.GetInt32();
-				int mustBeUsable = packet.GetInt8();
-				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_LIST_ITEMS [{2} ({3}-{4})]", client.IP, client.Port, Name, LevelMIN, LevelMAX);
-				Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_LIST_RESULT);
-				string QueryString = "SELECT auctionhouse.* FROM " + WorldServiceLocator._WorldServer.CharacterDatabase.SQLDBName + ".auctionhouse, " + WorldServiceLocator._WorldServer.WorldDatabase.SQLDBName + ".item_template WHERE item_template.entry = auctionhouse.auction_itemId";
-				if (Operators.CompareString(Name, "", TextCompare: false) != 0)
-				{
-					QueryString = QueryString + " AND item_template.name LIKE '%" + Name + "%'";
-				}
-				if (LevelMIN != 0)
-				{
-					QueryString = QueryString + " AND item_template.itemlevel > " + Conversions.ToString(unchecked(LevelMIN) - 1);
-				}
-				if (LevelMAX != 0)
-				{
-					QueryString = QueryString + " AND item_template.itemlevel < " + Conversions.ToString(unchecked(LevelMAX) + 1);
-				}
-				if (itemSlot != -1)
-				{
-					QueryString = QueryString + " AND item_template.inventoryType = " + Conversions.ToString(itemSlot);
-				}
-				if (itemClass != -1)
-				{
-					QueryString = QueryString + " AND item_template.class = " + Conversions.ToString(itemClass);
-				}
-				if (itemSubClass != -1)
-				{
-					QueryString = QueryString + " AND item_template.subclass = " + Conversions.ToString(itemSubClass);
-				}
-				if (itemQuality != -1)
-				{
-					QueryString = QueryString + " AND item_template.quality = " + Conversions.ToString(itemQuality);
-				}
-				DataTable MySQLQuery = new DataTable();
-				WorldServiceLocator._WorldServer.CharacterDatabase.Query(QueryString + ";", ref MySQLQuery);
-				if (MySQLQuery.Rows.Count > 32)
-				{
-					response.AddInt32(32);
-				}
-				else
-				{
-					response.AddInt32(MySQLQuery.Rows.Count);
-				}
-				int count = 0;
-				IEnumerator enumerator = Enumerator;
-				try
-				{
-					enumerator = MySQLQuery.Rows.GetEnumerator();
-					while (enumerator.MoveNext())
-					{
-						DataRow row = (DataRow)enumerator.Current;
-						AuctionListAddItem(ref response, ref row);
-						count++;
-						if (count == 32)
-						{
-							break;
-						}
-					}
-				}
-				finally
-				{
-					if (enumerator is IDisposable)
-					{
-						(enumerator as IDisposable).Dispose();
-					}
-				}
-				response.AddInt32(MySQLQuery.Rows.Count);
-				client.Send(ref response);
-				response.Dispose();
-			}
-		}
-
-		public void On_CMSG_AUCTION_LIST_OWNER_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
-		{
-            if (packet is null)
             {
-                throw new ArgumentNullException(nameof(packet));
+                if (packet.Data.Length - 1 < 18)
+                {
+                    return;
+                }
+                packet.GetInt16();
+                ulong GUID = packet.GetUInt64();
+                int Unk1 = packet.GetInt32();
+                string Name = packet.GetString();
+                if (packet.Data.Length - 1 < 18 + Name.Length + 1 + 1 + 4 + 4 + 4 + 4 + 1)
+                {
+                    return;
+                }
+                byte LevelMIN = packet.GetInt8();
+                byte LevelMAX = packet.GetInt8();
+                int itemSlot = packet.GetInt32();
+                int itemClass = packet.GetInt32();
+                int itemSubClass = packet.GetInt32();
+                int itemQuality = packet.GetInt32();
+                int mustBeUsable = packet.GetInt8();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_LIST_ITEMS [{2} ({3}-{4})]", client.IP, client.Port, Name, LevelMIN, LevelMAX);
+                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_LIST_RESULT);
+                string QueryString = "SELECT auctionhouse.* FROM " + WorldServiceLocator._WorldServer.CharacterDatabase.SQLDBName + ".auctionhouse, " + WorldServiceLocator._WorldServer.WorldDatabase.SQLDBName + ".item_template WHERE item_template.entry = auctionhouse.auction_itemId";
+                if (Operators.CompareString(Name, "", TextCompare: false) != 0)
+                {
+                    QueryString = QueryString + " AND item_template.name LIKE '%" + Name + "%'";
+                }
+                if (LevelMIN != 0)
+                {
+                    QueryString = QueryString + " AND item_template.itemlevel > " + Conversions.ToString(unchecked(LevelMIN) - 1);
+                }
+                if (LevelMAX != 0)
+                {
+                    QueryString = QueryString + " AND item_template.itemlevel < " + Conversions.ToString(unchecked(LevelMAX) + 1);
+                }
+                if (itemSlot != -1)
+                {
+                    QueryString = QueryString + " AND item_template.inventoryType = " + Conversions.ToString(itemSlot);
+                }
+                if (itemClass != -1)
+                {
+                    QueryString = QueryString + " AND item_template.class = " + Conversions.ToString(itemClass);
+                }
+                if (itemSubClass != -1)
+                {
+                    QueryString = QueryString + " AND item_template.subclass = " + Conversions.ToString(itemSubClass);
+                }
+                if (itemQuality != -1)
+                {
+                    QueryString = QueryString + " AND item_template.quality = " + Conversions.ToString(itemQuality);
+                }
+                DataTable MySQLQuery = new DataTable();
+                WorldServiceLocator._WorldServer.CharacterDatabase.Query(QueryString + ";", ref MySQLQuery);
+                if (MySQLQuery.Rows.Count > 32)
+                {
+                    response.AddInt32(32);
+                }
+                else
+                {
+                    response.AddInt32(MySQLQuery.Rows.Count);
+                }
+                int count = 0;
+                IEnumerator enumerator = Enumerator;
+                try
+                {
+                    enumerator = MySQLQuery.Rows.GetEnumerator();
+                    while (enumerator.MoveNext())
+                    {
+                        DataRow row = (DataRow)enumerator.Current;
+                        AuctionListAddItem(ref response, ref row);
+                        count++;
+                        if (count == 32)
+                        {
+                            break;
+                        }
+                    }
+                }
+                finally
+                {
+                    if (enumerator is IDisposable)
+                    {
+                        (enumerator as IDisposable).Dispose();
+                    }
+                }
+                response.AddInt32(MySQLQuery.Rows.Count);
+                client.Send(ref response);
+                response.Dispose();
             }
+        }
 
-            if (client is null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
+        public void On_CMSG_AUCTION_LIST_OWNER_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        {
             if (checked(packet.Data.Length - 1) >= 13)
-			{
-				packet.GetInt16();
-				ulong GUID = packet.GetUInt64();
-				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_LIST_OWNER_ITEMS [GUID={2:X}]", client.IP, client.Port, GUID);
-				SendAuctionListOwnerItems(ref client);
-			}
-		}
-
-		public void On_CMSG_AUCTION_LIST_BIDDER_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
-		{
-            if (packet is null)
             {
-                throw new ArgumentNullException(nameof(packet));
+                packet.GetInt16();
+                ulong GUID = packet.GetUInt64();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_LIST_OWNER_ITEMS [GUID={2:X}]", client.IP, client.Port, GUID);
+                SendAuctionListOwnerItems(ref client);
             }
+        }
 
-            if (client is null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
+        public void On_CMSG_AUCTION_LIST_BIDDER_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        {
             if (checked(packet.Data.Length - 1) >= 21)
-			{
-				packet.GetInt16();
-				ulong GUID = packet.GetUInt64();
-				long Unk = packet.GetInt64();
-				WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_LIST_BIDDER_ITEMS [GUID={2:X} UNK={3}]", client.IP, client.Port, GUID, Unk);
-				SendAuctionListBidderItems(ref client);
-			}
-		}
-	}
+            {
+                packet.GetInt16();
+                ulong GUID = packet.GetUInt64();
+                long Unk = packet.GetInt64();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_LIST_BIDDER_ITEMS [GUID={2:X} UNK={3}]", client.IP, client.Port, GUID, Unk);
+                SendAuctionListBidderItems(ref client);
+            }
+        }
+    }
 }

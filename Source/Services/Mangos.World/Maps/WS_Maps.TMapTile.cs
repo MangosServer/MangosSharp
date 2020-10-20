@@ -26,125 +26,125 @@ using Microsoft.VisualBasic;
 namespace Mangos.World.Maps
 {
     public partial class WS_Maps
-	{
+    {
         public class TMapTile : IDisposable
-		{
-			public ushort[,] AreaFlag;
+        {
+            public ushort[,] AreaFlag;
 
-			public byte[,] AreaTerrain;
+            public byte[,] AreaTerrain;
 
-			public float[,] WaterLevel;
+            public float[,] WaterLevel;
 
-			public float[,] ZCoord;
+            public float[,] ZCoord;
 
-			public List<ulong> PlayersHere;
+            public List<ulong> PlayersHere;
 
-			public List<ulong> CreaturesHere;
+            public List<ulong> CreaturesHere;
 
-			public List<ulong> GameObjectsHere;
+            public List<ulong> GameObjectsHere;
 
-			public List<ulong> CorpseObjectsHere;
+            public List<ulong> CorpseObjectsHere;
 
-			public List<ulong> DynamicObjectsHere;
+            public List<ulong> DynamicObjectsHere;
 
-			private readonly byte CellX;
+            private readonly byte CellX;
 
-			private readonly byte CellY;
+            private readonly byte CellY;
 
-			private readonly uint CellMap;
+            private readonly uint CellMap;
 
-			private bool _disposedValue;
+            private bool _disposedValue;
 
-			public TMapTile(byte tileX, byte tileY, uint tileMap)
-			{
-				checked
-				{
-					AreaFlag = new ushort[WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS + 1, WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS + 1];
-					AreaTerrain = new byte[WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN + 1, WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN + 1];
-					WaterLevel = new float[WorldServiceLocator._Global_Constants.RESOLUTION_WATER + 1, WorldServiceLocator._Global_Constants.RESOLUTION_WATER + 1];
-					PlayersHere = new List<ulong>();
-					CreaturesHere = new List<ulong>();
-					GameObjectsHere = new List<ulong>();
-					CorpseObjectsHere = new List<ulong>();
-					DynamicObjectsHere = new List<ulong>();
-					if (!WorldServiceLocator._WS_Maps.Maps.ContainsKey(tileMap))
-					{
-						return;
-					}
-					ZCoord = new float[WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP + 1, WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP + 1];
-					CellX = tileX;
-					CellY = tileY;
-					CellMap = tileMap;
-					string fileName = string.Format("{0}{1}{2}.map", Strings.Format(tileMap, "000"), Strings.Format(tileX, "00"), Strings.Format(tileY, "00"));
-					if (!File.Exists("maps\\" + fileName))
-					{
-						WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Map file [{0}] not found", fileName);
-						return;
-					}
-					FileStream f = new FileStream("maps\\" + fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 82704, FileOptions.SequentialScan);
-					BinaryReader b = new BinaryReader(f);
-					string fileVersion = Encoding.ASCII.GetString(b.ReadBytes(8), 0, 8);
-					WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading map file [{0}] version [{1}]", fileName, fileVersion);
-					int rESOLUTION_FLAGS = WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS;
-					for (int x = 0; x <= rESOLUTION_FLAGS; x++)
-					{
-						int rESOLUTION_FLAGS2 = WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS;
-						for (int y = 0; y <= rESOLUTION_FLAGS2; y++)
-						{
-							AreaFlag[x, y] = b.ReadUInt16();
-						}
-					}
-					int rESOLUTION_TERRAIN = WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN;
-					for (int x = 0; x <= rESOLUTION_TERRAIN; x++)
-					{
-						int rESOLUTION_TERRAIN2 = WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN;
-						for (int y = 0; y <= rESOLUTION_TERRAIN2; y++)
-						{
-							AreaTerrain[x, y] = b.ReadByte();
-						}
-					}
-					int rESOLUTION_WATER = WorldServiceLocator._Global_Constants.RESOLUTION_WATER;
-					for (int x = 0; x <= rESOLUTION_WATER; x++)
-					{
-						int rESOLUTION_WATER2 = WorldServiceLocator._Global_Constants.RESOLUTION_WATER;
-						for (int y = 0; y <= rESOLUTION_WATER2; y++)
-						{
-							WaterLevel[x, y] = b.ReadSingle();
-						}
-					}
-					int rESOLUTION_ZMAP = WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP;
-					for (int x = 0; x <= rESOLUTION_ZMAP; x++)
-					{
-						int rESOLUTION_ZMAP2 = WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP;
-						for (int y = 0; y <= rESOLUTION_ZMAP2; y++)
-						{
-							ZCoord[x, y] = b.ReadSingle();
-						}
-					}
-					b.Close();
-				}
-			}
+            public TMapTile(byte tileX, byte tileY, uint tileMap)
+            {
+                checked
+                {
+                    AreaFlag = new ushort[WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS + 1, WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS + 1];
+                    AreaTerrain = new byte[WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN + 1, WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN + 1];
+                    WaterLevel = new float[WorldServiceLocator._Global_Constants.RESOLUTION_WATER + 1, WorldServiceLocator._Global_Constants.RESOLUTION_WATER + 1];
+                    PlayersHere = new List<ulong>();
+                    CreaturesHere = new List<ulong>();
+                    GameObjectsHere = new List<ulong>();
+                    CorpseObjectsHere = new List<ulong>();
+                    DynamicObjectsHere = new List<ulong>();
+                    if (!WorldServiceLocator._WS_Maps.Maps.ContainsKey(tileMap))
+                    {
+                        return;
+                    }
+                    ZCoord = new float[WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP + 1, WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP + 1];
+                    CellX = tileX;
+                    CellY = tileY;
+                    CellMap = tileMap;
+                    string fileName = string.Format("{0}{1}{2}.map", Strings.Format(tileMap, "000"), Strings.Format(tileX, "00"), Strings.Format(tileY, "00"));
+                    if (!File.Exists("maps\\" + fileName))
+                    {
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Map file [{0}] not found", fileName);
+                        return;
+                    }
+                    FileStream f = new FileStream("maps\\" + fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 82704, FileOptions.SequentialScan);
+                    BinaryReader b = new BinaryReader(f);
+                    string fileVersion = Encoding.ASCII.GetString(b.ReadBytes(8), 0, 8);
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading map file [{0}] version [{1}]", fileName, fileVersion);
+                    int rESOLUTION_FLAGS = WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS;
+                    for (int x = 0; x <= rESOLUTION_FLAGS; x++)
+                    {
+                        int rESOLUTION_FLAGS2 = WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS;
+                        for (int y = 0; y <= rESOLUTION_FLAGS2; y++)
+                        {
+                            AreaFlag[x, y] = b.ReadUInt16();
+                        }
+                    }
+                    int rESOLUTION_TERRAIN = WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN;
+                    for (int x = 0; x <= rESOLUTION_TERRAIN; x++)
+                    {
+                        int rESOLUTION_TERRAIN2 = WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN;
+                        for (int y = 0; y <= rESOLUTION_TERRAIN2; y++)
+                        {
+                            AreaTerrain[x, y] = b.ReadByte();
+                        }
+                    }
+                    int rESOLUTION_WATER = WorldServiceLocator._Global_Constants.RESOLUTION_WATER;
+                    for (int x = 0; x <= rESOLUTION_WATER; x++)
+                    {
+                        int rESOLUTION_WATER2 = WorldServiceLocator._Global_Constants.RESOLUTION_WATER;
+                        for (int y = 0; y <= rESOLUTION_WATER2; y++)
+                        {
+                            WaterLevel[x, y] = b.ReadSingle();
+                        }
+                    }
+                    int rESOLUTION_ZMAP = WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP;
+                    for (int x = 0; x <= rESOLUTION_ZMAP; x++)
+                    {
+                        int rESOLUTION_ZMAP2 = WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP;
+                        for (int y = 0; y <= rESOLUTION_ZMAP2; y++)
+                        {
+                            ZCoord[x, y] = b.ReadSingle();
+                        }
+                    }
+                    b.Close();
+                }
+            }
 
-			protected virtual void Dispose(bool disposing)
-			{
-				if (!_disposedValue)
-				{
-					WorldServiceLocator._WS_Maps.UnloadSpawns(CellX, CellY, CellMap);
-				}
-				_disposedValue = true;
-			}
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!_disposedValue)
+                {
+                    WorldServiceLocator._WS_Maps.UnloadSpawns(CellX, CellY, CellMap);
+                }
+                _disposedValue = true;
+            }
 
-			public void Dispose()
-			{
-				Dispose(disposing: true);
-				GC.SuppressFinalize(this);
-			}
+            public void Dispose()
+            {
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
 
-			void IDisposable.Dispose()
-			{
-				//ILSpy generated this explicit interface implementation from .override directive in Dispose
-				Dispose();
-			}
-		}
-	}
+            void IDisposable.Dispose()
+            {
+                //ILSpy generated this explicit interface implementation from .override directive in Dispose
+                Dispose();
+            }
+        }
+    }
 }

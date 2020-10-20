@@ -62,7 +62,7 @@ namespace Mangos.Cluster.Handlers
                 this.clusterServiceLocator._WC_Handlers_Social.LoadIgnoreList(argobjCharacter);
                 this.clusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireWriterLock(this.clusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                 this.clusterServiceLocator._WorldCluster.CHARACTERs.Add(Guid, this);
-                this.clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseWriterLock();                
+                this.clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseWriterLock();
             }
 
             public ulong Guid;

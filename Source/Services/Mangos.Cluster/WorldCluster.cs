@@ -44,7 +44,7 @@ namespace Mangos.Cluster
         private readonly TcpServer tcpServer;
 
         public WorldCluster(
-            ClusterServiceLocator clusterServiceLocator, 
+            ClusterServiceLocator clusterServiceLocator,
             TcpServer tcpServer)
         {
             this.clusterServiceLocator = clusterServiceLocator;

@@ -322,7 +322,7 @@ namespace Mangos.Cluster.Network
         {
             for (int i = 0; i < 6; i++)
             {
-                var tmp =data[i];
+                var tmp = data[i];
                 data[i] = (byte)(SS_Hash[Key[1]] ^ (256 + data[i] - Key[0]) % 256);
                 Key[0] = tmp;
                 Key[1] = (byte)((Key[1] + 1) % 40);

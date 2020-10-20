@@ -30,7 +30,7 @@ namespace Mangos.WardenExtractor
             Console.WriteLine("WardenExtractor by UniX");
             Console.WriteLine("");
             Console.WriteLine("");
-        TryAgain:
+            TryAgain:
             ;
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Menu:");

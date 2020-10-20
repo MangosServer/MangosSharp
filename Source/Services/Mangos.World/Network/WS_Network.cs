@@ -19,21 +19,21 @@
 namespace Mangos.World.Server
 {
     public partial class WS_Network
-	{
+    {
 
-		private int LastPing;
+        private int LastPing;
 
-		public int WC_MsTime;
+        public int WC_MsTime;
 
-		public WS_Network()
-		{
-			LastPing = 0;
-			WC_MsTime = 0;
-		}
+        public WS_Network()
+        {
+            LastPing = 0;
+            WC_MsTime = 0;
+        }
 
-		public int MsTime()
-		{
-			return checked(WC_MsTime + (WorldServiceLocator._NativeMethods.timeGetTime("") - LastPing));
-		}
-	}
+        public int MsTime()
+        {
+            return checked(WC_MsTime + (WorldServiceLocator._NativeMethods.timeGetTime("") - LastPing));
+        }
+    }
 }

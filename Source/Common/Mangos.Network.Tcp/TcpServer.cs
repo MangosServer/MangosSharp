@@ -44,7 +44,7 @@ namespace Mangos.Network.Tcp
 
         public void Start(IPEndPoint endPoint, int backlog)
         {
-            if(socket != null)
+            if (socket != null)
             {
                 logger.Error("TcpServer already started");
                 throw new Exception("TcpServer already started");

@@ -19,15 +19,15 @@
 namespace Mangos.World.Server
 {
     public partial class WS_TimerBasedEvents
-	{
-		public TRegenerator Regenerator;
+    {
+        public TRegenerator Regenerator;
 
-		public TAIManager AIManager;
+        public TAIManager AIManager;
 
-		public TSpellManager SpellManager;
+        public TSpellManager SpellManager;
 
-		public TCharacterSaver CharacterSaver;
+        public TCharacterSaver CharacterSaver;
 
-		public TWeatherChanger WeatherChanger;
+        public TWeatherChanger WeatherChanger;
     }
 }

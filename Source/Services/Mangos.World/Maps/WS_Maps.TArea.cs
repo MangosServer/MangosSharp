@@ -22,59 +22,59 @@ using Mangos.World.Player;
 namespace Mangos.World.Maps
 {
     public partial class WS_Maps
-	{
+    {
         public class TArea
-		{
-			public int ID;
+        {
+            public int ID;
 
-			public int mapId;
+            public int mapId;
 
-			public byte Level;
+            public byte Level;
 
-			public int Zone;
+            public int Zone;
 
-			public int ZoneType;
+            public int ZoneType;
 
-			public AreaTeam Team;
+            public AreaTeam Team;
 
-			public string Name;
+            public string Name;
 
-			public bool IsMyLand(ref WS_PlayerData.CharacterObject objCharacter)
-			{
-				if (Team == AreaTeam.AREATEAM_NONE)
-				{
-					return false;
-				}
-				if (!objCharacter.IsHorde)
-				{
-					return Team == AreaTeam.AREATEAM_ALLY;
-				}
-				if (objCharacter.IsHorde)
-				{
-					return Team == AreaTeam.AREATEAM_HORDE;
-				}
-				return false;
-			}
+            public bool IsMyLand(ref WS_PlayerData.CharacterObject objCharacter)
+            {
+                if (Team == AreaTeam.AREATEAM_NONE)
+                {
+                    return false;
+                }
+                if (!objCharacter.IsHorde)
+                {
+                    return Team == AreaTeam.AREATEAM_ALLY;
+                }
+                if (objCharacter.IsHorde)
+                {
+                    return Team == AreaTeam.AREATEAM_HORDE;
+                }
+                return false;
+            }
 
-			public bool IsCity()
-			{
-				return ZoneType == 312;
-			}
+            public bool IsCity()
+            {
+                return ZoneType == 312;
+            }
 
-			public bool NeedFlyingMount()
-			{
-				return (ZoneType & 0x1000) != 0;
-			}
+            public bool NeedFlyingMount()
+            {
+                return (ZoneType & 0x1000) != 0;
+            }
 
-			public bool IsSanctuary()
-			{
-				return (ZoneType & 0x800) != 0;
-			}
+            public bool IsSanctuary()
+            {
+                return (ZoneType & 0x800) != 0;
+            }
 
-			public bool IsArena()
-			{
-				return (ZoneType & 0x80) != 0;
-			}
-		}
-	}
+            public bool IsArena()
+            {
+                return (ZoneType & 0x80) != 0;
+            }
+        }
+    }
 }

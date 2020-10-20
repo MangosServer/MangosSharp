@@ -58,7 +58,7 @@ namespace Mangos.Cluster
 
             RegisterServices(builder);
             return builder.Build();
-		}
+        }
 
         public static void RegisterConfiguration(ContainerBuilder builder)
         {

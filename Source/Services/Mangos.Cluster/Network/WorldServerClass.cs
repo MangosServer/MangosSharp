@@ -148,7 +148,9 @@ namespace Mangos.Cluster.Network
             // Ping WorldServers
             lock (((ICollection)Worlds).SyncRoot)
             {
-                foreach (KeyValuePair<uint, IWorld> w in Worlds)
+                if (Worlds != null)
+                {
+                    foreach (KeyValuePair<uint, IWorld> w in Worlds)
                 {
                     try
                     {
@@ -176,6 +178,7 @@ namespace Mangos.Cluster.Network
                         clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Map {0:000} is currently down!", w.Key);
                         DownedServers.Add(w.Key);
                     }
+                }
                 }
             }
 
@@ -348,7 +351,11 @@ namespace Mangos.Cluster.Network
                     return false;
                 }
 
-                ParentMap.InstanceCreateAsync(MapID).Wait();
+                if (ParentMap.InstanceCreateAsync(MapID) != null)
+                {
+                    ParentMap.InstanceCreateAsync(MapID).Wait();
+                }
+
                 clusterServiceLocator._WC_Network.WorldServer.Worlds.Add(MapID, ParentMap);
                 clusterServiceLocator._WC_Network.WorldServer.WorldsInfo.Add(MapID, ParentMapInfo);
                 return true;

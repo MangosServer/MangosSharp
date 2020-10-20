@@ -33,9 +33,9 @@ namespace Mangos.Realm.Factories
         private readonly Converter converter;
         private readonly MangosGlobalConstants mangosGlobalConstants;
 
-        public RealmServerClientFactory(ILogger logger, 
-            IAccountStorage accountStorage, 
-            Converter converter, 
+        public RealmServerClientFactory(ILogger logger,
+            IAccountStorage accountStorage,
+            Converter converter,
             MangosGlobalConstants mangosGlobalConstants)
         {
             this.logger = logger;

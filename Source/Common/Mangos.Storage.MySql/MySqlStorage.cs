@@ -46,7 +46,7 @@ namespace Mangos.Storage.MySql
 
         public async Task ConnectAsync(string conenctionString)
         {
-            if(connection != null)
+            if (connection != null)
             {
                 logger.Error("MySql connection has already opened");
                 throw new Exception("MySql connection has already opened");
@@ -66,7 +66,7 @@ namespace Mangos.Storage.MySql
 
         public async ValueTask DisposeAsync()
         {
-            if(connection != null)
+            if (connection != null)
             {
                 await connection.DisposeAsync();
             }
@@ -89,7 +89,7 @@ namespace Mangos.Storage.MySql
 
         private string GetSqlScript(string name)
         {
-            if(sql.ContainsKey(name))
+            if (sql.ContainsKey(name))
             {
                 return sql[name];
             }

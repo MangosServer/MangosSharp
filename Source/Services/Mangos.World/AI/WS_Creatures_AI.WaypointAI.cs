@@ -25,64 +25,64 @@ using Microsoft.VisualBasic.CompilerServices;
 namespace Mangos.World.AI
 {
     public partial class WS_Creatures_AI
-	{
+    {
         public class WaypointAI : DefaultAI
-		{
-			public int CurrentWaypoint;
+        {
+            public int CurrentWaypoint;
 
-			public WaypointAI(ref WS_Creatures.CreatureObject Creature)
-				: base(ref Creature)
-			{
-				CurrentWaypoint = -1;
-				IsWaypoint = true;
-			}
+            public WaypointAI(ref WS_Creatures.CreatureObject Creature)
+                : base(ref Creature)
+            {
+                CurrentWaypoint = -1;
+                IsWaypoint = true;
+            }
 
-			public override void Pause(int Time)
-			{
-				checked
-				{
-					CurrentWaypoint--;
-					aiTimer = Time;
-				}
-			}
+            public override void Pause(int Time)
+            {
+                checked
+                {
+                    CurrentWaypoint--;
+                    aiTimer = Time;
+                }
+            }
 
-			public override void DoMove()
-			{
-				float distanceToSpawn = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
-				checked
-				{
-					if (aiTarget == null)
-					{
-						if (!WorldServiceLocator._WS_DBCDatabase.CreatureMovement.ContainsKey(aiCreature.WaypointID))
-						{
-							WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] is missing waypoints.", aiCreature.GUID - WorldServiceLocator._Global_Constants.GUID_UNIT);
-							aiCreature.ResetAI();
-							return;
-						}
-						try
-						{
-							CurrentWaypoint++;
-							if (!WorldServiceLocator._WS_DBCDatabase.CreatureMovement[aiCreature.WaypointID].ContainsKey(CurrentWaypoint))
-							{
-								CurrentWaypoint = 1;
-							}
-							WS_DBCDatabase.CreatureMovePoint MovementPoint = WorldServiceLocator._WS_DBCDatabase.CreatureMovement[aiCreature.WaypointID][CurrentWaypoint];
-							aiTimer = aiCreature.MoveTo(MovementPoint.x, MovementPoint.y, MovementPoint.z) + MovementPoint.waittime;
-						}
-						catch (Exception ex2)
-						{
-							ProjectData.SetProjectError(ex2);
+            public override void DoMove()
+            {
+                float distanceToSpawn = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
+                checked
+                {
+                    if (aiTarget == null)
+                    {
+                        if (!WorldServiceLocator._WS_DBCDatabase.CreatureMovement.ContainsKey(aiCreature.WaypointID))
+                        {
+                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] is missing waypoints.", aiCreature.GUID - WorldServiceLocator._Global_Constants.GUID_UNIT);
+                            aiCreature.ResetAI();
+                            return;
+                        }
+                        try
+                        {
+                            CurrentWaypoint++;
+                            if (!WorldServiceLocator._WS_DBCDatabase.CreatureMovement[aiCreature.WaypointID].ContainsKey(CurrentWaypoint))
+                            {
+                                CurrentWaypoint = 1;
+                            }
+                            WS_DBCDatabase.CreatureMovePoint MovementPoint = WorldServiceLocator._WS_DBCDatabase.CreatureMovement[aiCreature.WaypointID][CurrentWaypoint];
+                            aiTimer = aiCreature.MoveTo(MovementPoint.x, MovementPoint.y, MovementPoint.z) + MovementPoint.waittime;
+                        }
+                        catch (Exception ex2)
+                        {
+                            ProjectData.SetProjectError(ex2);
                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] waypoints are damaged.", aiCreature.GUID - WorldServiceLocator._Global_Constants.GUID_UNIT);
-							aiCreature.ResetAI();
-							ProjectData.ClearProjectError();
-						}
-					}
-					else
-					{
-						base.DoMove();
-					}
-				}
-			}
-		}
+                            aiCreature.ResetAI();
+                            ProjectData.ClearProjectError();
+                        }
+                    }
+                    else
+                    {
+                        base.DoMove();
+                    }
+                }
+            }
+        }
     }
 }

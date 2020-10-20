@@ -24,27 +24,27 @@ using Mangos.World.Server;
 namespace Mangos.World.Weather
 {
     public partial class WS_Weather
-	{
+    {
 
-		public Dictionary<int, WeatherZone> WeatherZones;
+        public Dictionary<int, WeatherZone> WeatherZones;
 
-		public WS_Weather()
-		{
-			WeatherZones = new Dictionary<int, WeatherZone>();
-		}
+        public WS_Weather()
+        {
+            WeatherZones = new Dictionary<int, WeatherZone>();
+        }
 
-		public void SendWeather(int ZoneID, ref WS_Network.ClientClass client)
-		{
-			if (WeatherZones.ContainsKey(ZoneID))
-			{
-				WeatherZone Weather = WeatherZones[ZoneID];
-				Packets.PacketClass SMSG_WEATHER = new Packets.PacketClass(Opcodes.SMSG_WEATHER);
-				SMSG_WEATHER.AddInt32((int)Weather.CurrentWeather);
-				SMSG_WEATHER.AddSingle(Weather.Intensity);
-				SMSG_WEATHER.AddInt32(Weather.GetSound());
-				client.Send(ref SMSG_WEATHER);
-				SMSG_WEATHER.Dispose();
-			}
-		}
-	}
+        public void SendWeather(int ZoneID, ref WS_Network.ClientClass client)
+        {
+            if (WeatherZones.ContainsKey(ZoneID))
+            {
+                WeatherZone Weather = WeatherZones[ZoneID];
+                Packets.PacketClass SMSG_WEATHER = new Packets.PacketClass(Opcodes.SMSG_WEATHER);
+                SMSG_WEATHER.AddInt32((int)Weather.CurrentWeather);
+                SMSG_WEATHER.AddSingle(Weather.Intensity);
+                SMSG_WEATHER.AddInt32(Weather.GetSound());
+                client.Send(ref SMSG_WEATHER);
+                SMSG_WEATHER.Dispose();
+            }
+        }
+    }
 }

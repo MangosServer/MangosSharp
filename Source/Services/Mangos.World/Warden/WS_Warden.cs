@@ -26,52 +26,52 @@ using Mangos.World.Player;
 namespace Mangos.World.Warden
 {
     public partial class WS_Warden
-	{
+    {
 
-		public WardenMaiev Maiev;
+        public WardenMaiev Maiev;
 
-		public WS_Warden()
-		{
-			Maiev = new WardenMaiev();
-		}
+        public WS_Warden()
+        {
+            Maiev = new WardenMaiev();
+        }
 
-		private int VarPtr(ref object obj)
-		{
-			return GCHandle.Alloc(RuntimeHelpers.GetObjectValue(obj), GCHandleType.Pinned).AddrOfPinnedObject().ToInt32();
-		}
+        private int VarPtr(ref object obj)
+        {
+            return GCHandle.Alloc(RuntimeHelpers.GetObjectValue(obj), GCHandleType.Pinned).AddrOfPinnedObject().ToInt32();
+        }
 
-		private int ByteArrPtr(ref byte[] arr)
-		{
-			int pData = Malloc(arr.Length);
-			Marshal.Copy(arr, 0, new IntPtr(pData), arr.Length);
-			return pData;
-		}
+        private int ByteArrPtr(ref byte[] arr)
+        {
+            int pData = Malloc(arr.Length);
+            Marshal.Copy(arr, 0, new IntPtr(pData), arr.Length);
+            return pData;
+        }
 
-		private int Malloc(int length)
-		{
-			checked
-			{
-				int tmpHandle = Marshal.AllocHGlobal(length + 4).ToInt32();
-				int lockedHandle = NativeMethods.GlobalLock(tmpHandle, "") + 4;
-				Marshal.WriteInt32(new IntPtr(lockedHandle - 4), tmpHandle);
-				return lockedHandle;
-			}
-		}
+        private int Malloc(int length)
+        {
+            checked
+            {
+                int tmpHandle = Marshal.AllocHGlobal(length + 4).ToInt32();
+                int lockedHandle = NativeMethods.GlobalLock(tmpHandle, "") + 4;
+                Marshal.WriteInt32(new IntPtr(lockedHandle - 4), tmpHandle);
+                return lockedHandle;
+            }
+        }
 
-		private void Free(int ptr)
-		{
-			int tmpHandle = Marshal.ReadInt32(new IntPtr(checked(ptr - 4)));
-			NativeMethods.GlobalUnlock(tmpHandle, "");
-			Marshal.FreeHGlobal(new IntPtr(tmpHandle));
-		}
+        private void Free(int ptr)
+        {
+            int tmpHandle = Marshal.ReadInt32(new IntPtr(checked(ptr - 4)));
+            NativeMethods.GlobalUnlock(tmpHandle, "");
+            Marshal.FreeHGlobal(new IntPtr(tmpHandle));
+        }
 
-		public void SendWardenPacket(ref WS_PlayerData.CharacterObject objCharacter, ref Packets.PacketClass Packet)
-		{
-			byte[] b = new byte[checked(Packet.Data.Length - 4 - 1 + 1)];
-			Buffer.BlockCopy(Packet.Data, 4, b, 0, b.Length);
-			WS_Handlers_Warden.RC4.Crypt(ref b, objCharacter.WardenData.KeyIn);
-			Buffer.BlockCopy(b, 0, Packet.Data, 4, b.Length);
-			objCharacter.client.Send(ref Packet);
-		}
-	}
+        public void SendWardenPacket(ref WS_PlayerData.CharacterObject objCharacter, ref Packets.PacketClass Packet)
+        {
+            byte[] b = new byte[checked(Packet.Data.Length - 4 - 1 + 1)];
+            Buffer.BlockCopy(Packet.Data, 4, b, 0, b.Length);
+            WS_Handlers_Warden.RC4.Crypt(ref b, objCharacter.WardenData.KeyIn);
+            Buffer.BlockCopy(b, 0, Packet.Data, 4, b.Length);
+            objCharacter.client.Send(ref Packet);
+        }
+    }
 }

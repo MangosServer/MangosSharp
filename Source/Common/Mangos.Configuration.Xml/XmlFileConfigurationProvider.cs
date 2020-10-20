@@ -54,7 +54,7 @@ namespace Mangos.Configuration.Xml
                 logger.Debug("Get XML Configuration for {0}", typeof(T).FullName);
                 return new ValueTask<T>(configuration);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error("Unable to load XML configuration for {0}", ex, typeof(T).FullName);
                 throw;

@@ -34,27 +34,27 @@ namespace Mangos.Cluster
         public Common.Globals.Functions _CommonGlobalFunctions { get; set; }
         public Common.Functions _CommonFunctions { get; set; }
         public ZipService _GlobalZip { get; set; }
-        public NativeMethods _NativeMethods { get; set; } 
-        public WorldCluster _WorldCluster { get; set; } 
+        public NativeMethods _NativeMethods { get; set; }
+        public WorldCluster _WorldCluster { get; set; }
         public WorldServerClass _WorldServerClass { get; set; }
-        public WS_DBCDatabase _WS_DBCDatabase { get; set; } 
-        public  WS_DBCLoad _WS_DBCLoad { get; set; } 
+        public WS_DBCDatabase _WS_DBCDatabase { get; set; }
+        public WS_DBCLoad _WS_DBCLoad { get; set; }
         public Globals.Functions _Functions { get; set; }
-        public Packets _Packets { get; set; } 
-        public  WC_Guild _WC_Guild { get; set; }
-        public WC_Stats _WC_Stats { get; set; } 
-        public WC_Network _WC_Network { get; set; } 
-        public WC_Handlers _WC_Handlers { get; set; } 
-        public WC_Handlers_Auth _WC_Handlers_Auth { get; set; } 
-        public WC_Handlers_Battleground _WC_Handlers_Battleground { get; set; } 
+        public Packets _Packets { get; set; }
+        public WC_Guild _WC_Guild { get; set; }
+        public WC_Stats _WC_Stats { get; set; }
+        public WC_Network _WC_Network { get; set; }
+        public WC_Handlers _WC_Handlers { get; set; }
+        public WC_Handlers_Auth _WC_Handlers_Auth { get; set; }
+        public WC_Handlers_Battleground _WC_Handlers_Battleground { get; set; }
         public WC_Handlers_Chat _WC_Handlers_Chat { get; set; }
-        public WC_Handlers_Group _WC_Handlers_Group { get; set; } 
+        public WC_Handlers_Group _WC_Handlers_Group { get; set; }
         public WC_Handlers_Guild _WC_Handlers_Guild { get; set; }
         public WC_Handlers_Misc _WC_Handlers_Misc { get; set; }
         public WC_Handlers_Movement _WC_Handlers_Movement { get; set; }
         public WC_Handlers_Social _WC_Handlers_Social { get; set; }
         public WC_Handlers_Tickets _WC_Handlers_Tickets { get; set; }
-        public WS_Handler_Channels _WS_Handler_Channels { get; set; } 
-        public WcHandlerCharacter _WcHandlerCharacter { get; set; } 
+        public WS_Handler_Channels _WS_Handler_Channels { get; set; }
+        public WcHandlerCharacter _WcHandlerCharacter { get; set; }
     }
 }

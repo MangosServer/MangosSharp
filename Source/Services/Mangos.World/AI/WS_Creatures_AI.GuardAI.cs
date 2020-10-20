@@ -22,22 +22,22 @@ using Mangos.World.Objects;
 namespace Mangos.World.AI
 {
     public partial class WS_Creatures_AI
-	{
+    {
         public class GuardAI : DefaultAI
-		{
-			public GuardAI(ref WS_Creatures.CreatureObject Creature)
-				: base(ref Creature)
-			{
+        {
+            public GuardAI(ref WS_Creatures.CreatureObject Creature)
+                : base(ref Creature)
+            {
                 if (Creature is null)
                 {
                     throw new ArgumentNullException(nameof(Creature));
                 }
 
                 AllowedMove = false;
-			}
+            }
 
-			public void OnEmote(int emote)
-			{
+            public void OnEmote(int emote)
+            {
                 switch (emote)
                 {
                     case 58:
