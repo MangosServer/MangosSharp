@@ -536,7 +536,7 @@ namespace Mangos.World.Quests
             }
         }
 
-        public void SendQuest(ref WS_Network.ClientClass client, ref WS_QuestInfo quest)
+        public void SendQuest(ref WS_Network.ClientClass client, ref WS_QuestInfo quest) //TODO: Figure out the correct packet structure for this
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUEST_QUERY_RESPONSE);
             checked
@@ -546,16 +546,16 @@ namespace Mangos.World.Quests
                     packet.AddUInt32((uint)quest.ID);
                     packet.AddUInt32(quest.Level_Start);
                     packet.AddUInt32((uint)quest.Level_Normal);
-                    packet.AddUInt32((uint)quest.ZoneOrSort);
+                    //packet.AddUInt32((uint)quest.ZoneOrSort);
                     packet.AddUInt32((uint)quest.Type);
                     packet.AddUInt32((uint)quest.ObjectiveRepFaction);
                     packet.AddUInt32((uint)quest.ObjectiveRepStanding);
-                    packet.AddUInt32(0u);
-                    packet.AddUInt32(0u);
+                    //packet.AddUInt32(0u);
+                    //packet.AddUInt32(0u);
                     packet.AddUInt32((uint)quest.NextQuestInChain);
                     packet.AddUInt32((uint)quest.RewardGold);
                     packet.AddUInt32((uint)quest.RewMoneyMaxLevel);
-                    if (quest.RewardSpell > 0)
+                    /*if (quest.RewardSpell > 0)
                     {
                         if (WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(quest.RewardSpell))
                         {
@@ -573,7 +573,7 @@ namespace Mangos.World.Quests
                             packet.AddUInt32(0u);
                         }
                     }
-                    else
+                    else*/
                     {
                         packet.AddUInt32(0u);
                     }

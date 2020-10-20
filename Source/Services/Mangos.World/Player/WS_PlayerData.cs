@@ -5195,7 +5195,10 @@ namespace Mangos.World.Player
                                 underWaterTimer = null;
                             }
                         }
-                        ModifyMirrorTimer(MirrorTimer.DROWNING, 70000, underWaterTimer.DrowningValue, -1);
+                        if (underWaterTimer != null)
+                        {
+                            ModifyMirrorTimer(MirrorTimer.DROWNING, 70000, underWaterTimer.DrowningValue, -1);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -5618,16 +5621,17 @@ namespace Mangos.World.Player
 
             public void Logout(object StateObj = null)
             {
-                try
-                {
-                    LogoutTimer.Dispose();
-                    LogoutTimer = null;
-                }
-                catch (Exception projectError)
-                {
-                    ProjectData.SetProjectError(projectError);
-                    ProjectData.ClearProjectError();
-                }
+                if (LogoutTimer != null)
+                    try
+                    {
+                        LogoutTimer.Dispose();
+                        LogoutTimer = null;
+                    }
+                    catch (Exception projectError)
+                    {
+                        ProjectData.SetProjectError(projectError);
+                        ProjectData.ClearProjectError();
+                    }
                 if (repopTimer != null)
                 {
                     repopTimer.Dispose();

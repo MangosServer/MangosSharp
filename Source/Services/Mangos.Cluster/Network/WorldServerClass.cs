@@ -36,9 +36,9 @@ namespace Mangos.Cluster.Network
         private readonly ClusterServiceLocator clusterServiceLocator;
 
         public bool m_flagStopListen = false;
-        private Timer m_TimerPing;
-        private Timer m_TimerStats;
-        private Timer m_TimerCPU;
+        public Timer m_TimerPing;
+        public Timer m_TimerStats;
+        public Timer m_TimerCPU;
 
         public WorldServerClass(ClusterServiceLocator clusterServiceLocator)
         {
@@ -148,7 +148,7 @@ namespace Mangos.Cluster.Network
             // Ping WorldServers
             lock (((ICollection)Worlds).SyncRoot)
             {
-                if (Worlds != null)
+                if (Worlds != null && WorldsInfo != null)
                 {
                     foreach (KeyValuePair<uint, IWorld> w in Worlds)
                 {

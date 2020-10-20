@@ -1649,7 +1649,10 @@ namespace Mangos.World.Objects
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs.Remove(GUID);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys.Remove(GUID);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.ReleaseWriterLock();
-                        ExpireTimer.Dispose();
+                        if (ExpireTimer != null)
+                        {
+                            ExpireTimer.Dispose();
+                        }
                     }
                     catch (Exception ex2)
                     {
@@ -1840,7 +1843,7 @@ namespace Mangos.World.Objects
                 {
                     if (CellX != WorldServiceLocator._WS_Maps.GetMapTileX(positionX) || CellY != WorldServiceLocator._WS_Maps.GetMapTileY(positionY))
                     {
-                        if (!Information.IsNothing(WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID)))
+                        if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles != null && !Information.IsNothing(WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID)))
                         {
                             WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID);
                         }
