@@ -284,15 +284,16 @@ namespace Mangos.World.Server
                 {
                     throw new ApplicationException("Packet doesn't contain data!");
                 }
-                Packets.PacketClass p = new Packets.PacketClass(ref data);
+                
                 try
                 {
-                    if (!WorldServiceLocator._WorldServer.CLIENTs.ContainsKey(id))
+                    if(WorldServiceLocator._WorldServer.CLIENTs.TryGetValue(id, out ClientClass _client))
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Client ID doesn't contain a key!: {0}", ToString());
+                        Packets.PacketClass p = new Packets.PacketClass(ref data);
+                        _client?.PushPacket(p);
                     }
-                    WorldServiceLocator._WorldServer.CLIENTs[id].Packets.Enqueue(p);
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(WorldServiceLocator._WorldServer.CLIENTs[id].OnPacket));
+                    else
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Client ID doesn't contain a key!: {0}", ToString());
                 }
                 catch (Exception ex2)
                 {
@@ -300,10 +301,6 @@ namespace Mangos.World.Server
                     Exception ex = ex2;
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error on Client OnPacket: {0}", ex.ToString());
                     ProjectData.ClearProjectError();
-                }
-                finally
-                {
-                    p.Dispose();
                 }
             }
 
