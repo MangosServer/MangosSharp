@@ -36,9 +36,9 @@ namespace Mangos.Cluster.Network
         private readonly ClusterServiceLocator clusterServiceLocator;
 
         public bool m_flagStopListen = false;
-        public Timer m_TimerPing;
-        public Timer m_TimerStats;
-        public Timer m_TimerCPU;
+        private Timer m_TimerPing;
+        private Timer m_TimerStats;
+        private Timer m_TimerCPU;
 
         public WorldServerClass(ClusterServiceLocator clusterServiceLocator)
         {
@@ -51,13 +51,13 @@ namespace Mangos.Cluster.Network
             m_TimerPing = new Timer(Ping, null, 0, 15000);
 
             // Creating stats timer
-            if (this.clusterServiceLocator._WorldCluster.GetConfig().StatsEnabled)
+            if (clusterServiceLocator._WorldCluster.GetConfig().StatsEnabled)
             {
-                m_TimerStats = new Timer(this.clusterServiceLocator._WC_Stats.GenerateStats, null, this.clusterServiceLocator._WorldCluster.GetConfig().StatsTimer, this.clusterServiceLocator._WorldCluster.GetConfig().StatsTimer);
+                m_TimerStats = new Timer(clusterServiceLocator._WC_Stats.GenerateStats, null, clusterServiceLocator._WorldCluster.GetConfig().StatsTimer, clusterServiceLocator._WorldCluster.GetConfig().StatsTimer);
             }
 
             // Creating CPU check timer
-            m_TimerCPU = new Timer(this.clusterServiceLocator._WC_Stats.CheckCpu, null, 1000, 1000);
+            m_TimerCPU = new Timer(clusterServiceLocator._WC_Stats.CheckCpu, null, 1000, 1000);
         }
 
         public Dictionary<uint, IWorld> Worlds = new Dictionary<uint, IWorld>();
@@ -151,34 +151,34 @@ namespace Mangos.Cluster.Network
                 if (Worlds != null && WorldsInfo != null)
                 {
                     foreach (KeyValuePair<uint, IWorld> w in Worlds)
-                {
-                    try
                     {
-                        if (!SentPingTo.ContainsKey(WorldsInfo[w.Key]))
+                        try
                         {
-                            MyTime = clusterServiceLocator._NativeMethods.timeGetTime("");
-                            ServerTime = w.Value.Ping(MyTime, WorldsInfo[w.Key].Latency);
-                            Latency = Math.Abs(MyTime - clusterServiceLocator._NativeMethods.timeGetTime(""));
-                            WorldsInfo[w.Key].Latency = Latency;
-                            SentPingTo[WorldsInfo[w.Key]] = Latency;
-                            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.NETWORK, "Map {0:000} ping: {1}ms", w.Key, Latency);
+                            if (!SentPingTo.ContainsKey(WorldsInfo[w.Key]))
+                            {
+                                MyTime = clusterServiceLocator._NativeMethods.timeGetTime("");
+                                ServerTime = w.Value.Ping(MyTime, WorldsInfo[w.Key].Latency);
+                                Latency = Math.Abs(MyTime - clusterServiceLocator._NativeMethods.timeGetTime(""));
+                                WorldsInfo[w.Key].Latency = Latency;
+                                SentPingTo[WorldsInfo[w.Key]] = Latency;
+                                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.NETWORK, "Map {0:000} ping: {1}ms", w.Key, Latency);
 
-                            // Query CPU and Memory usage
-                            var serverInfo = w.Value.GetServerInfo();
-                            WorldsInfo[w.Key].CPUUsage = serverInfo.cpuUsage;
-                            WorldsInfo[w.Key].MemoryUsage = serverInfo.memoryUsage;
+                                // Query CPU and Memory usage
+                                var serverInfo = w.Value.GetServerInfo();
+                                WorldsInfo[w.Key].CPUUsage = serverInfo.cpuUsage;
+                                WorldsInfo[w.Key].MemoryUsage = serverInfo.memoryUsage;
+                            }
+                            else
+                            {
+                                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.NETWORK, "Map {0:000} ping: {1}ms", w.Key, SentPingTo[WorldsInfo[w.Key]]);
+                            }
                         }
-                        else
+                        catch (Exception)
                         {
-                            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.NETWORK, "Map {0:000} ping: {1}ms", w.Key, SentPingTo[WorldsInfo[w.Key]]);
+                            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Map {0:000} is currently down!", w.Key);
+                            DownedServers.Add(w.Key);
                         }
                     }
-                    catch (Exception)
-                    {
-                        clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "Map {0:000} is currently down!", w.Key);
-                        DownedServers.Add(w.Key);
-                    }
-                }
                 }
             }
 

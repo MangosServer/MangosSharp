@@ -742,7 +742,7 @@ namespace Mangos.World.Player
 
             public bool IsInRaid => Group != null && Group.Type == GroupType.RAID;
 
-            public bool IsGroupLeader => Group.Leader == GUID;
+            public bool IsGroupLeader => Group != null && Group.Leader == GUID;
 
             public bool IsInGuild => (ulong)GuildID != 0;
 

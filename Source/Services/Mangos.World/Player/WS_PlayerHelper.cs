@@ -509,7 +509,10 @@ namespace Mangos.World.Player
                 {
                     checked
                     {
-                        packet.AddInt8((byte)Character.Reputation[i].Flags);
+                        if (Character.Reputation != null)
+                        {
+                            packet.AddInt8((byte)Character.Reputation[i].Flags);
+                        }
                         packet.AddInt32(Character.Reputation[i].Value);
                         i = (byte)unchecked((uint)(i + 1));
                     }

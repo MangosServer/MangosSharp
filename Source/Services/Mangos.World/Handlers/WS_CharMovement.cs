@@ -774,9 +774,12 @@ namespace Mangos.World.Handlers
             {
                 MAP_Load(Character.CellX, Character.CellY, Character.MapID);
             }
-            if ((Character.CellX != oldX) | (Character.CellY != oldY))
+            if ((Character.CellX != oldX) | (Character.CellY != oldY) && Character != null)
             {
-                WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[oldX, oldY].PlayersHere.Remove(Character.GUID);
+                if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles != null)
+                {
+                    WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[oldX, oldY].PlayersHere.Remove(Character.GUID);
+                }
                 WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[Character.CellX, Character.CellY].PlayersHere.Add(Character.GUID);
             }
         }
