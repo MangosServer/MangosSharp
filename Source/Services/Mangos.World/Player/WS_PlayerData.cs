@@ -5626,11 +5626,14 @@ namespace Mangos.World.Player
 
                 if (this is CharacterObject _character)
                 {
-                    repopTimer?.Dispose();
-                    repopTimer = null;
-                    WS_Corpses.CorpseObject myCorpse = new WS_Corpses.CorpseObject(ref _character);
-                    myCorpse?.AddToWorld();
-                    myCorpse?.Save();
+                    if (repopTimer != null)
+                    {
+                        repopTimer?.Dispose();
+                        repopTimer = null;
+                        WS_Corpses.CorpseObject myCorpse = new WS_Corpses.CorpseObject(ref _character);
+                        myCorpse?.AddToWorld();
+                        myCorpse?.Save();
+                    }
 
                     if (IsInGroup)
                     {
