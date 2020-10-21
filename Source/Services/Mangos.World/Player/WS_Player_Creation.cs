@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2013-2020 getMaNGOS <https:\\getmangos.eu>
+//  Copyright (C) 2013-2020 getMaNGOS <https://getmangos.eu>
 //  
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
