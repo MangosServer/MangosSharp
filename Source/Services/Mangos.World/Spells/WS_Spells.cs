@@ -39,6 +39,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Mangos.World.Network;
 
 namespace Mangos.World.Spells
 {

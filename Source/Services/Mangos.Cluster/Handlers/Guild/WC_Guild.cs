@@ -21,11 +21,11 @@ using System.Data;
 using System.Runtime.InteropServices;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
-using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Guild;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster.Handlers.Guild

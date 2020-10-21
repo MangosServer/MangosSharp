@@ -22,7 +22,7 @@ using System.Data;
 using System.Threading;
 using MySql.Data.MySqlClient;
 
-namespace Mangos.Common
+namespace Mangos.Common.Legacy
 {
     public class SQL : IDisposable
     {

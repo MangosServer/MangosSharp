@@ -21,9 +21,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading.Tasks;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
+using Mangos.Common.Legacy;
 using Mangos.DataStores;
 
 namespace Mangos.Cluster.DataStores

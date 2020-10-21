@@ -26,8 +26,8 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
+using Mangos.World.Network;
 using Mangos.World.Player;
-using Mangos.World.Server;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 

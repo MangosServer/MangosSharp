@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Mangos.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures
 {
     public class CreatureAI_The_Plains_Vision : World.AI.WS_Creatures_AI.TBaseAI
     {

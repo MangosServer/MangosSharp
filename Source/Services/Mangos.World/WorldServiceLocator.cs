@@ -17,11 +17,10 @@
 //
 
 using Autofac;
-using global;
+using Mangos.Common.Globals;
 using Mangos.Configuration;
 using Mangos.DataStores;
 using Mangos.World.AI;
-using Mangos.World.AntiCheat;
 using Mangos.World.Auction;
 using Mangos.World.Battlegrounds;
 using Mangos.World.DataStores;
@@ -30,6 +29,7 @@ using Mangos.World.Gossip;
 using Mangos.World.Handlers;
 using Mangos.World.Loots;
 using Mangos.World.Maps;
+using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Server;
@@ -39,6 +39,8 @@ using Mangos.World.Warden;
 using Mangos.World.Weather;
 using Mangos.Zip;
 using Microsoft.VisualBasic.CompilerServices;
+using Functions = Mangos.Common.Legacy.Globals.Functions;
+using NativeMethods = Mangos.Common.Legacy.NativeMethods;
 
 namespace Mangos.World
 {
@@ -68,18 +70,18 @@ namespace Mangos.World
         } = _Container.Resolve<MangosGlobalConstants>();
 
 
-        public static Common.Globals.Functions _CommonGlobalFunctions
+        public static Functions _CommonGlobalFunctions
         {
             get;
             set;
-        } = _Container.Resolve<Common.Globals.Functions>();
+        } = _Container.Resolve<Functions>();
 
 
-        public static Common.Functions _CommonFunctions
+        public static Common.Legacy.Functions _CommonFunctions
         {
             get;
             set;
-        } = _Container.Resolve<Common.Functions>();
+        } = _Container.Resolve<Common.Legacy.Functions>();
 
 
         public static ZipService _GlobalZip
@@ -89,11 +91,11 @@ namespace Mangos.World
         } = _Container.Resolve<ZipService>();
 
 
-        public static Common.NativeMethods _NativeMethods
+        public static NativeMethods _NativeMethods
         {
             get;
             set;
-        } = _Container.Resolve<Common.NativeMethods>();
+        } = _Container.Resolve<NativeMethods>();
 
 
         public static WorldServer _WorldServer

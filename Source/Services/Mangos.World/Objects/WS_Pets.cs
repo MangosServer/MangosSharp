@@ -18,14 +18,13 @@
 
 using System.Collections;
 using System.Data;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Mangos.World.AI;
 using Mangos.World.Globals;
+using Mangos.World.Network;
 using Mangos.World.Player;
-using Mangos.World.Server;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Objects
 {

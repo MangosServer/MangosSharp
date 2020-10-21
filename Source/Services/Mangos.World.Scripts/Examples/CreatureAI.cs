@@ -21,7 +21,7 @@ using Mangos.Common.Enums.Misc;
 
 // Example AI for combat. 
 // TODO: Fix AoE spells on AIs and then insert it as an example into this.
-namespace Mangos.Scripts.Examples
+namespace Mangos.World.Scripts.Examples
 {
     public class CreatureAI : World.AI.WS_Creatures_AI.BossAI
     {

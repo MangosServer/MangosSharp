@@ -21,27 +21,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using Mangos.Common;
+using System.Threading.Tasks;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
-using Mangos.Common.Logging;
+using Mangos.Common.Legacy;
+using Mangos.Common.Legacy.Logging;
 using Mangos.SignalR;
 using Mangos.World.Globals;
 using Mangos.World.Maps;
+using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Quests;
-using Mangos.World.Server;
+using Mangos.World.ReaderWriterLock;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Mangos.World.AntiCheat
+namespace Mangos.World
 {
     public class WorldServer
     {
@@ -53,7 +53,7 @@ namespace Mangos.World.AntiCheat
 
         public Dictionary<ulong, WS_PlayerData.CharacterObject> CHARACTERs;
 
-        public ReaderWriterLock CHARACTERs_Lock;
+        public ReaderWriterLock_Debug CHARACTERs_Lock;
 
         public WS_Quests ALLQUESTS;
 
@@ -67,7 +67,7 @@ namespace Mangos.World.AntiCheat
 
         public Dictionary<int, List<int>> GameobjectQuestFinishers;
 
-        public ReaderWriterLock WORLD_CREATUREs_Lock;
+        public ReaderWriterLock_Debug WORLD_CREATUREs_Lock;
 
         public Dictionary<ulong, WS_Creatures.CreatureObject> WORLD_CREATUREs;
 
@@ -77,11 +77,11 @@ namespace Mangos.World.AntiCheat
 
         public Dictionary<ulong, WS_Corpses.CorpseObject> WORLD_CORPSEOBJECTs;
 
-        public ReaderWriterLock WORLD_DYNAMICOBJECTs_Lock;
+        public ReaderWriterLock_Debug WORLD_DYNAMICOBJECTs_Lock;
 
         public Dictionary<ulong, WS_DynamicObjects.DynamicObjectObject> WORLD_DYNAMICOBJECTs;
 
-        public ReaderWriterLock WORLD_TRANSPORTs_Lock;
+        public ReaderWriterLock_Debug WORLD_TRANSPORTs_Lock;
 
         public Dictionary<ulong, WS_Transports.TransportObject> WORLD_TRANSPORTs;
 
@@ -129,21 +129,21 @@ namespace Mangos.World.AntiCheat
         {
             CLIENTs = new Dictionary<uint, WS_Network.ClientClass>();
             CHARACTERs = new Dictionary<ulong, WS_PlayerData.CharacterObject>();
-            CHARACTERs_Lock = new ReaderWriterLock();
+            CHARACTERs_Lock = new ReaderWriterLock_Debug(null);
             ALLQUESTS = new WS_Quests();
             AllGraveYards = new WS_GraveYards(WorldServiceLocator._DataStoreProvider);
             CreatureQuestStarters = new Dictionary<int, List<int>>();
             CreatureQuestFinishers = new Dictionary<int, List<int>>();
             GameobjectQuestStarters = new Dictionary<int, List<int>>();
             GameobjectQuestFinishers = new Dictionary<int, List<int>>();
-            WORLD_CREATUREs_Lock = new ReaderWriterLock();
+            WORLD_CREATUREs_Lock = new ReaderWriterLock_Debug(null);
             WORLD_CREATUREs = new Dictionary<ulong, WS_Creatures.CreatureObject>();
             WORLD_CREATUREsKeys = new ArrayList();
             WORLD_GAMEOBJECTs = new Dictionary<ulong, WS_GameObjects.GameObjectObject>();
             WORLD_CORPSEOBJECTs = new Dictionary<ulong, WS_Corpses.CorpseObject>();
-            WORLD_DYNAMICOBJECTs_Lock = new ReaderWriterLock();
+            WORLD_DYNAMICOBJECTs_Lock = new ReaderWriterLock_Debug(null);
             WORLD_DYNAMICOBJECTs = new Dictionary<ulong, WS_DynamicObjects.DynamicObjectObject>();
-            WORLD_TRANSPORTs_Lock = new ReaderWriterLock();
+            WORLD_TRANSPORTs_Lock = new ReaderWriterLock_Debug(null);
             WORLD_TRANSPORTs = new Dictionary<ulong, WS_Transports.TransportObject>();
             WORLD_ITEMs = new Dictionary<ulong, ItemObject>();
             ITEMDatabase = new Dictionary<int, WS_Items.ItemInfo>();

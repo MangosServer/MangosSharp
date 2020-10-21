@@ -19,7 +19,7 @@
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 
-namespace Mangos.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures
 {
     public class CreatureAI_Onyxia : World.AI.WS_Creatures_AI.BossAI
     {

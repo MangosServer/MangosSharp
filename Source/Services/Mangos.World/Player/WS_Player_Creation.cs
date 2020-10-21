@@ -20,10 +20,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
+using Mangos.Common.Legacy;
 using Mangos.World.Objects;
 using Microsoft.VisualBasic.CompilerServices;
 

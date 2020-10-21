@@ -8,8 +8,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="frmMain.cs" />
-    <Compile Include="frmMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="frmMain.cs" />
   </ItemGroup>
 </Project>

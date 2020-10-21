@@ -21,7 +21,7 @@ using Mangos.Common.Enums.Global;
 
 // Summon implementation isn't yet supported.
 // Sand trap not implemented into script, need to make a gameobject I assume.
-namespace Mangos.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures
 {
     public class CreatureAI_Kurinnax : World.AI.WS_Creatures_AI.BossAI
     {
@@ -91,7 +91,7 @@ namespace Mangos.Scripts.Creatures
                 }
                 catch (Exception)
                 {
-                    World.WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Mortal Wound failed to cast!");
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Mortal Wound failed to cast!");
                 }
             }
 

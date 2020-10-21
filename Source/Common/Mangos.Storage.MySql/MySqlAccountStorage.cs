@@ -17,11 +17,11 @@
 //
 
 using Mangos.Loggers;
-using Mangos.Storage.Account.Responses;
 using Mangos.Storage.Account.Results;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mangos.Storage.Account;
 
 namespace Mangos.Storage.MySql
 {

@@ -108,7 +108,7 @@ namespace Mangos.World.Server
                     }
                     finally
                     {
-                        WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseLock();
+                        WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                     }
                     List<WS_DynamicObjects.DynamicObjectObject> DynamicObjectsToDelete = new List<WS_DynamicObjects.DynamicObjectObject>();
                     try

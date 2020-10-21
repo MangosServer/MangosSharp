@@ -16,14 +16,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using global;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
 using Mangos.Network.Tcp.Extensions;
-using Mangos.Storage;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using System;
@@ -35,6 +33,8 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Mangos.Common.Globals;
+using Mangos.Storage.Account;
 
 namespace Mangos.Realm
 {

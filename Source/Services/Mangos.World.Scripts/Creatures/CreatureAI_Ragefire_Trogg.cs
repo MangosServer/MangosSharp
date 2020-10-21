@@ -17,7 +17,7 @@
 //
 
 
-namespace Mangos.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures
 {
     public class CreatureAI_Ragefire_Trogg : World.AI.WS_Creatures_AI.BossAI
     {

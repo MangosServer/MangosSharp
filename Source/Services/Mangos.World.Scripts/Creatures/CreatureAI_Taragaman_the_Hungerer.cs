@@ -17,7 +17,7 @@
 //
 
 
-namespace Mangos.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures
 {
     public class CreatureAI_Taragaman_the_Hungerer : World.AI.WS_Creatures_AI.BossAI
     {

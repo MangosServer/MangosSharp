@@ -19,7 +19,7 @@
 using System;
 using Mangos.Common.Enums.Global;
 
-namespace Mangos.Common.Logging
+namespace Mangos.Common.Legacy.Logging
 {
     public class BaseWriter : IDisposable
     {

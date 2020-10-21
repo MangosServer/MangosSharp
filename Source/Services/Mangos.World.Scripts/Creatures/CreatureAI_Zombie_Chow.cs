@@ -19,7 +19,7 @@
 using Microsoft.VisualBasic.CompilerServices;
 
 // Basically, this AI is kitable and if the AI hits Gluth, it heals her for 5% of her HP (50,000 in this case.). Since we can't really do it that way, it has a set waypoint.
-namespace Mangos.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures
 {
     public class CreatureAI_Zombie_Chow : World.AI.WS_Creatures_AI.BossAI
     {

@@ -18,7 +18,7 @@
 
 using Mangos.Common.Enums.Misc;
 
-namespace Mangos.Common
+namespace Mangos.Common.Legacy
 {
     public class ClientInfo
     {

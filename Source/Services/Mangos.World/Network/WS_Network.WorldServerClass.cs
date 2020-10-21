@@ -23,9 +23,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
+using Mangos.Common.Legacy;
 using Mangos.DataStores;
 using Mangos.SignalR;
 using Mangos.World.Globals;
@@ -36,7 +36,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Mangos.World.Server
+namespace Mangos.World.Network
 {
     public partial class WS_Network
     {

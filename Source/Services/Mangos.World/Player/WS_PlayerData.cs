@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
-using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.Global;
@@ -31,13 +30,15 @@ using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Enums.Spell;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Mangos.World.AI;
 using Mangos.World.Globals;
 using Mangos.World.Handlers;
 using Mangos.World.Maps;
+using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Quests;
-using Mangos.World.Server;
+using Mangos.World.ReaderWriterLock;
 using Mangos.World.Social;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
@@ -265,7 +266,7 @@ namespace Mangos.World.Player
 
             public int resurrectMana;
 
-            public ReaderWriterLock guidsForRemoving_Lock;
+            public ReaderWriterLock_Debug guidsForRemoving_Lock;
 
             public List<ulong> guidsForRemoving;
 
@@ -6229,7 +6230,7 @@ namespace Mangos.World.Player
                 resurrectPositionZ = 0f;
                 resurrectHealth = 0;
                 resurrectMana = 0;
-                guidsForRemoving_Lock = new ReaderWriterLock();
+                guidsForRemoving_Lock = new ReaderWriterLock_Debug(null);
                 guidsForRemoving = new List<ulong>();
                 creaturesNear = new List<ulong>();
                 playersNear = new List<ulong>();
@@ -6405,7 +6406,7 @@ namespace Mangos.World.Player
                 resurrectPositionZ = 0f;
                 resurrectHealth = 0;
                 resurrectMana = 0;
-                guidsForRemoving_Lock = new ReaderWriterLock();
+                guidsForRemoving_Lock = new ReaderWriterLock_Debug(null);
                 guidsForRemoving = new List<ulong>();
                 creaturesNear = new List<ulong>();
                 playersNear = new List<ulong>();

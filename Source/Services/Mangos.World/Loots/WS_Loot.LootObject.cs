@@ -22,8 +22,8 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
+using Mangos.World.Network;
 using Mangos.World.Objects;
-using Mangos.World.Server;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Loots

@@ -19,7 +19,7 @@
 using System;
 using System.Data;
 
-namespace Mangos.Common
+namespace Mangos.Common.Legacy
 {
     public static class SqlExtenions
     {

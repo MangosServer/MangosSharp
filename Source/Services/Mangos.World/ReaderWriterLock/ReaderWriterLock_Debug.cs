@@ -24,7 +24,7 @@ using System.Threading;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Mangos.World.Server
+namespace Mangos.World.ReaderWriterLock
 {
     public class ReaderWriterLock_Debug : IDisposable
     {
@@ -34,7 +34,7 @@ namespace Mangos.World.Server
 
         private readonly StreamWriter writer;
 
-        private readonly ReaderWriterLock @lock;
+        private readonly System.Threading.ReaderWriterLock @lock;
 
         private readonly Queue<string> WriteQueue;
 
@@ -47,7 +47,7 @@ namespace Mangos.World.Server
             string path = $"ReaderWriterLock_Debug_{ID}_{DateAndTime.Now.Ticks}.log";
             file = new FileStream(path, FileMode.Create);
             writer = new StreamWriter(file);
-            @lock = new ReaderWriterLock();
+            @lock = new System.Threading.ReaderWriterLock();
             StackTrace st = new StackTrace();
             WriteLine($"NewLock {ID} from:");
             StackFrame[] sf = st.GetFrames();

@@ -17,15 +17,15 @@
 //
 
 // Note: Temp place holder
-using System;
+
 using System.Data;
-using global;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
+using Mangos.Common.Globals;
 using Mangos.Loggers;
 using Microsoft.VisualBasic;
 
-namespace Mangos.Common.Globals
+namespace Mangos.Common.Legacy.Globals
 {
     public class Functions
     {

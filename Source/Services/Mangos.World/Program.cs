@@ -17,7 +17,6 @@
 //
 
 using Autofac;
-using global;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
@@ -25,7 +24,6 @@ using Mangos.DataStores;
 using Mangos.Loggers;
 using Mangos.Loggers.Console;
 using Mangos.World.AI;
-using Mangos.World.AntiCheat;
 using Mangos.World.Auction;
 using Mangos.World.Battlegrounds;
 using Mangos.World.DataStores;
@@ -44,6 +42,10 @@ using Mangos.World.Weather;
 using Mangos.Zip;
 using Microsoft.VisualBasic.CompilerServices;
 using System.Threading.Tasks;
+using Mangos.Common.Globals;
+using Mangos.World.Network;
+using Functions = Mangos.Common.Legacy.Globals.Functions;
+using NativeMethods = Mangos.Common.Legacy.NativeMethods;
 
 namespace Mangos.World
 {
@@ -80,10 +82,10 @@ namespace Mangos.World
         public static void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
-            builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>().SingleInstance();
-            builder.RegisterType<Common.Functions>().As<Common.Functions>().SingleInstance();
+            builder.RegisterType<Functions>().As<Functions>().SingleInstance();
+            builder.RegisterType<Common.Legacy.Functions>().As<Common.Legacy.Functions>().SingleInstance();
             builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
-            builder.RegisterType<Common.NativeMethods>().As<Common.NativeMethods>().SingleInstance();
+            builder.RegisterType<NativeMethods>().As<NativeMethods>().SingleInstance();
             builder.RegisterType<WorldServer>().As<WorldServer>().SingleInstance();
             builder.RegisterType<Globals.Functions>().As<Globals.Functions>().SingleInstance();
             builder.RegisterType<WS_Creatures_AI>().As<WS_Creatures_AI>().SingleInstance();

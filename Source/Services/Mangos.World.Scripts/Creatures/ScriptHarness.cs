@@ -17,7 +17,7 @@
 //
 
 
-namespace Mangos.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures
 {
     static class ScriptHarness
     {

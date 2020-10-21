@@ -19,14 +19,14 @@
 using System;
 using System.Data;
 using System.Runtime.CompilerServices;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Social;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Mangos.World.Globals;
+using Mangos.World.Network;
 using Mangos.World.Objects;
-using Mangos.World.Server;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 

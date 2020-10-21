@@ -17,7 +17,6 @@
 //
 
 using System;
-using System.Collections.Generic;
 using Mangos.World.Objects;
 using Microsoft.VisualBasic.CompilerServices;
 

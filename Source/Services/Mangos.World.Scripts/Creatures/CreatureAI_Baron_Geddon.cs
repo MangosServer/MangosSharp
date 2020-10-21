@@ -21,7 +21,7 @@ using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 
 // AI TODO: Implement a workaround (Or fix, fixes work too!) for Armageddon.
-namespace Mangos.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures
 {
     public class CreatureAI_Baron_Geddon : World.AI.WS_Creatures_AI.BossAI
     {

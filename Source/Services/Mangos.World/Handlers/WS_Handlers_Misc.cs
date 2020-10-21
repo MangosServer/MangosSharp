@@ -19,16 +19,16 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Mangos.World.AI;
 using Mangos.World.Globals;
+using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Quests;
-using Mangos.World.Server;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Handlers

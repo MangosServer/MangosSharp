@@ -17,7 +17,7 @@
 //
 
 
-namespace Mangos.Common
+namespace Mangos.Common.Legacy
 {
     public class ServerInfo
     {

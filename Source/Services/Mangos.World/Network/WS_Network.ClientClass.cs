@@ -19,15 +19,14 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
-using Mangos.World.AntiCheat;
+using Mangos.Common.Legacy;
 using Mangos.World.Globals;
 using Mangos.World.Player;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Mangos.World.Server
+namespace Mangos.World.Network
 {
     public partial class WS_Network
     {

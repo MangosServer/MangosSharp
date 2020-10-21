@@ -17,11 +17,9 @@
 //
 
 using Autofac;
-using global;
 using Mangos.Cluster.DataStores;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
-using Mangos.Common;
 using Mangos.DataStores;
 using Mangos.Loggers;
 using Mangos.Loggers.Console;
@@ -31,10 +29,13 @@ using Mangos.Cluster.Factories;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
 using Mangos.Cluster.Stats;
+using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
 using Mangos.Network.Tcp;
+using Functions = Mangos.Common.Legacy.Globals.Functions;
 
 namespace Mangos.Cluster
 {
@@ -89,8 +90,8 @@ namespace Mangos.Cluster
         private static void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
-            builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>().SingleInstance();
-            builder.RegisterType<Common.Functions>().As<Common.Functions>().SingleInstance();
+            builder.RegisterType<Functions>().As<Functions>().SingleInstance();
+            builder.RegisterType<Common.Legacy.Functions>().As<Common.Legacy.Functions>().SingleInstance();
             builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
             builder.RegisterType<NativeMethods>().As<NativeMethods>().SingleInstance();
             builder.RegisterType<WorldCluster>().As<WorldCluster>().SingleInstance();

@@ -18,9 +18,8 @@
 
 using System;
 using Mangos.Common.Enums.Global;
-using Mangos.Common.Globals;
 
-namespace global
+namespace Mangos.Common.Globals
 {
     public class MangosGlobalConstants
     {

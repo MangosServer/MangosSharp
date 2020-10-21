@@ -20,14 +20,14 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Runtime.CompilerServices;
-using Mangos.Common;
 using Mangos.Common.Enums.AuctionHouse;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Mangos.World.Globals;
+using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
-using Mangos.World.Server;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 

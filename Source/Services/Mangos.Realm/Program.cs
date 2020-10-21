@@ -18,7 +18,7 @@
 
 using System.Threading.Tasks;
 using Autofac;
-using global;
+using Mangos.Common.Globals;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
@@ -26,7 +26,7 @@ using Mangos.Loggers;
 using Mangos.Loggers.Console;
 using Mangos.Network.Tcp;
 using Mangos.Realm.Factories;
-using Mangos.Storage;
+using Mangos.Storage.Account;
 using Mangos.Storage.MySql;
 
 namespace Mangos.Realm

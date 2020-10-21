@@ -16,7 +16,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.World.Server
+namespace Mangos.World.Network
 {
     public partial class WS_Network
     {

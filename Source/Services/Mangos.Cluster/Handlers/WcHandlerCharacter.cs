@@ -23,7 +23,6 @@ using System.Reflection;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
-using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
@@ -32,6 +31,7 @@ using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Enums.Social;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 

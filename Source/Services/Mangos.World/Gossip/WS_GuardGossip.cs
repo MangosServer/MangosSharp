@@ -24,7 +24,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Gossip
 {
-    public partial class WS_GuardGossip
+    public class WS_GuardGossip
     {
         public class TGuardTalk : TBaseTalk
         {

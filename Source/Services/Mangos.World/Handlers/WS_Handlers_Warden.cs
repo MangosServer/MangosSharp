@@ -23,8 +23,8 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Warden;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
+using Mangos.World.Network;
 using Mangos.World.Player;
-using Mangos.World.Server;
 using Mangos.World.Warden;
 
 namespace Mangos.World.Handlers

@@ -21,8 +21,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
+using Mangos.Common.Legacy;
 using Microsoft.VisualBasic;
 
 namespace Mangos.World.Loots

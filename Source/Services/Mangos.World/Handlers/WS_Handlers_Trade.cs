@@ -23,9 +23,9 @@ using Mangos.Common.Enums.Item;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
+using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
-using Mangos.World.Server;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Handlers

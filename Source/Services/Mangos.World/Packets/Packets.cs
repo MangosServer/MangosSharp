@@ -19,7 +19,7 @@
 using System;
 using System.Text;
 using Mangos.Common.Enums.Global;
-using Mangos.World.Server;
+using Mangos.World.Network;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Globals

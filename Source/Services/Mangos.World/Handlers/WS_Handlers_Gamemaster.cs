@@ -19,7 +19,7 @@
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.Globals;
-using Mangos.World.Server;
+using Mangos.World.Network;
 
 namespace Mangos.World.Handlers
 {

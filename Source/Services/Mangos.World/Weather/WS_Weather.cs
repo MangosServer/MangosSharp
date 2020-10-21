@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
-using Mangos.World.Server;
+using Mangos.World.Network;
 
 namespace Mangos.World.Weather
 {

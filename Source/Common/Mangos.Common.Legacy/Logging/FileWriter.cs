@@ -24,7 +24,7 @@ using Microsoft.VisualBasic;
 // Using this logging type, all logs are saved in files numbered by date.
 // Writting commands is done trought console.
 
-namespace Mangos.Common.Logging
+namespace Mangos.Common.Legacy.Logging
 {
     public class FileWriter : BaseWriter
     {

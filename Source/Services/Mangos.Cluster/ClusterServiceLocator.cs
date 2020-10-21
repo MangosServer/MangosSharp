@@ -16,23 +16,24 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using global;
 using Mangos.Cluster.DataStores;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
 using Mangos.Cluster.Stats;
-using Mangos.Common;
+using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Mangos.Zip;
+using Functions = Mangos.Common.Legacy.Globals.Functions;
 
 namespace Mangos.Cluster
 {
     public class ClusterServiceLocator
     {
         public MangosGlobalConstants _Global_Constants { get; set; }
-        public Common.Globals.Functions _CommonGlobalFunctions { get; set; }
-        public Common.Functions _CommonFunctions { get; set; }
+        public Functions _CommonGlobalFunctions { get; set; }
+        public Common.Legacy.Functions _CommonFunctions { get; set; }
         public ZipService _GlobalZip { get; set; }
         public NativeMethods _NativeMethods { get; set; }
         public WorldCluster _WorldCluster { get; set; }

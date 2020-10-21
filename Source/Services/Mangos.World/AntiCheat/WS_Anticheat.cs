@@ -19,8 +19,8 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Mangos.Common.Enums.Global;
+using Mangos.World.Network;
 using Mangos.World.Player;
-using Mangos.World.Server;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.AntiCheat

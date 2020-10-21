@@ -20,10 +20,10 @@ using System;
 using System.Data;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Guild;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 

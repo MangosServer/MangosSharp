@@ -21,7 +21,7 @@ using System.Threading;
 using Mangos.Common.Enums.Global;
 using Microsoft.VisualBasic;
 
-namespace Mangos.Common.Logging
+namespace Mangos.Common.Legacy.Logging
 {
     public class ConsoleWriter : BaseWriter
     {

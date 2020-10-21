@@ -21,14 +21,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Mangos.DataStores;
 using Mangos.World.Globals;
+using Mangos.World.Network;
 using Mangos.World.Objects;
-using Mangos.World.Server;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 

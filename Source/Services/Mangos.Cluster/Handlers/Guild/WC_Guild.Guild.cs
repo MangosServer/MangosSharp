@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Mangos.Common;
+using Mangos.Common.Legacy;
 
 namespace Mangos.Cluster.Handlers.Guild
 {

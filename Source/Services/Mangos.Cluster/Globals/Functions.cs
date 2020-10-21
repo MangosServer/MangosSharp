@@ -22,12 +22,12 @@ using System.Data;
 using System.Text.RegularExpressions;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Network;
-using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 

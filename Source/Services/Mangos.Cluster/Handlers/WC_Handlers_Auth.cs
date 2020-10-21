@@ -19,17 +19,16 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Net.Sockets;
 using System.Threading;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
-using Mangos.Common;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Character;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
 using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster.Handlers
