@@ -5619,7 +5619,7 @@ namespace Mangos.World.Player
                 }
             }
 
-            public void Logout(object StateObj)
+            public void Logout(object StateObj = null)
             {
                 LogoutTimer?.Dispose();
                 LogoutTimer = null;
