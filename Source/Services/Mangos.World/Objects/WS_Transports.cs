@@ -619,36 +619,43 @@ namespace Mangos.World.Objects
                                         continue;
                                     }
                                     Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
-                                    try
+
+                                    using (packet)
                                     {
-                                        packet.AddInt32(1);
-                                        packet.AddInt8(0);
-                                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                                         try
                                         {
-                                            Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
-                                            ulong key;
-                                            WS_PlayerData.CharacterObject Character = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = plGUID];
-                                            FillAllUpdateFlags(ref tmpUpdate, ref Character);
-                                            cHARACTERs[key] = Character;
-                                            Packets.UpdateClass updateClass = tmpUpdate;
-                                            WS_GameObjects.GameObjectObject updateObject = this;
-                                            updateClass.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject);
+                                            packet.AddInt32(1);
+                                            packet.AddInt8(0);
+                                            Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                                            try
+                                            {
+                                                Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
+                                                ulong key;
+                                                WS_PlayerData.CharacterObject Character = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = plGUID];
+                                                FillAllUpdateFlags(ref tmpUpdate, ref Character);
+                                                cHARACTERs[key] = Character;
+                                                Packets.UpdateClass updateClass = tmpUpdate;
+                                                WS_GameObjects.GameObjectObject updateObject = this;
+                                                updateClass.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject);
+                                            }
+                                            finally
+                                            {
+                                                tmpUpdate.Dispose();
+                                            }
+
+                                            if (WorldServiceLocator._WorldServer.CHARACTERs.TryGetValue(plGUID, out WS_PlayerData.CharacterObject _character))
+                                            {
+                                                _character?.client?.SendMultiplyPackets(ref packet);
+                                                _character?.gameObjectsNear?.Add(GUID);
+                                                SeenBy?.Add(plGUID);
+                                            }
+                                            else
+                                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, $"Failed to retrieve character {plGUID}");
                                         }
-                                        finally
+                                        catch (Exception ex)
                                         {
-                                            tmpUpdate.Dispose();
+                                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, $"{ex.Message}{Environment.NewLine}");
                                         }
-                                        if (WorldServiceLocator._WorldServer.CHARACTERs[plGUID].client != null)
-                                        {
-                                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].client.SendMultiplyPackets(ref packet);
-                                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].gameObjectsNear.Add(GUID);
-                                            SeenBy.Add(plGUID);
-                                        }
-                                    }
-                                    finally
-                                    {
-                                        packet.Dispose();
                                     }
                                 }
                             }

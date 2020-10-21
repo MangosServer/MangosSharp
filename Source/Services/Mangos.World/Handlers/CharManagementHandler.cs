@@ -134,7 +134,7 @@ namespace Mangos.World.Handlers
             }
             else
             {
-                client.Character.LogoutTimer = new Timer(new TimerCallback(client.Character.Logout), null, 20000, -1);
+                client.Character.LogoutTimer = new Timer(client.Character.Logout, null, 20000, -1);
             }
         }
 
@@ -145,16 +145,9 @@ namespace Mangos.World.Handlers
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOGOUT_CANCEL", client.IP, client.Port);
                 if (client != null && client.Character != null && client.Character.LogoutTimer != null)
                 {
-                    try
-                    {
-                        client.Character.LogoutTimer.Dispose();
-                        client.Character.LogoutTimer = null;
-                    }
-                    catch (Exception projectError)
-                    {
-                        ProjectData.SetProjectError(projectError);
-                        ProjectData.ClearProjectError();
-                    }
+                    client.Character.LogoutTimer?.Dispose();
+                    client.Character.LogoutTimer = null;
+
                     Packets.UpdateClass UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                     Packets.PacketClass SMSG_UPDATE_OBJECT = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
                     try

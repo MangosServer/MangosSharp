@@ -4179,7 +4179,7 @@ namespace Mangos.World.Player
                             tmp = null;
                             goto IL_0ec5;
                         }
-                        IL_06f5:
+                    IL_06f5:
                         SendItemAndCharacterUpdate(Items[srcBag]);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {GUID} WHERE item_guid = {Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         if (Items[srcBag].Items.ContainsKey(srcSlot))
@@ -4187,7 +4187,7 @@ namespace Mangos.World.Player
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {Items[srcBag].GUID} WHERE item_guid = {Items[srcBag].Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
                         goto end_IL_0080;
-                        IL_0ab8:
+                    IL_0ab8:
                         SendItemAndCharacterUpdate(Items[dstBag]);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {Items[dstBag].GUID} WHERE item_guid = {Items[dstBag].Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         if (Items.ContainsKey(srcSlot))
@@ -4195,7 +4195,7 @@ namespace Mangos.World.Player
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {GUID} WHERE item_guid = {Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
                         goto end_IL_0080;
-                        IL_0ec5:
+                    IL_0ec5:
                         SendItemAndCharacterUpdate(Items[dstSlot]);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {GUID} WHERE item_guid = {Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         if (Items.ContainsKey(srcSlot))
@@ -4203,7 +4203,7 @@ namespace Mangos.World.Player
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {GUID} WHERE item_guid = {Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
                         goto end_IL_0080;
-                        IL_02e9:
+                    IL_02e9:
                         SendItemUpdate(Items[srcBag]);
                         if (dstBag != srcBag)
                         {
@@ -4214,7 +4214,7 @@ namespace Mangos.World.Player
                         {
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {Items[srcBag].GUID} WHERE item_guid = {Items[srcBag].Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
-                        end_IL_0080:;
+                    end_IL_0080:;
                     }
                     catch (Exception ex)
                     {
@@ -5619,71 +5619,63 @@ namespace Mangos.World.Player
                 }
             }
 
-            public void Logout(object StateObj = null)
+            public void Logout(object StateObj)
             {
-                if (LogoutTimer != null)
+                LogoutTimer?.Dispose();
+                LogoutTimer = null;
+
+                if (this is CharacterObject _character)
+                {
+                    repopTimer?.Dispose();
+                    repopTimer = null;
+                    WS_Corpses.CorpseObject myCorpse = new WS_Corpses.CorpseObject(ref _character);
+                    myCorpse?.AddToWorld();
+                    myCorpse?.Save();
+
+                    if (IsInGroup)
+                    {
+                        Group.LocalMembers.Remove(GUID);
+                        if (Group.LocalMembers.Count == 0)
+                        {
+                            Group?.Dispose();
+                            Group = null;
+                        }
+                    }
+
+                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject _transport)
+                    {
+                        WS_Base.BaseUnit Unit = this;
+                        _transport.RemovePassenger(ref Unit);
+                    }
+
+                    if (DuelPartner != null)
+                    {
+                        if (DuelPartner.DuelArbiter == DuelArbiter)
+                        {
+                            WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
+                            ref CharacterObject duelPartner = ref DuelPartner;
+                            wS_Spells.DuelComplete(ref duelPartner, ref _character);
+                        }
+                        else if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(DuelArbiter))
+                        {
+                            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[DuelArbiter].Destroy(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[DuelArbiter]);
+                        }
+                    }
+                    Packets.PacketClass SMSG_LOGOUT_COMPLETE = new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE);
                     try
                     {
-                        LogoutTimer.Dispose();
-                        LogoutTimer = null;
+                        client?.Send(ref SMSG_LOGOUT_COMPLETE);
+                        SMSG_LOGOUT_COMPLETE?.Dispose();
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGOUT_COMPLETE", client.IP, client.Port);
+                        client.Character = null;
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.USER, "Character {0} logged off.", Name);
+                        client?.Delete();
+                        client = null;
                     }
-                    catch (Exception projectError)
+                    finally
                     {
-                        ProjectData.SetProjectError(projectError);
-                        ProjectData.ClearProjectError();
+                        Dispose();
                     }
-                if (repopTimer != null)
-                {
-                    repopTimer.Dispose();
-                    repopTimer = null;
-                    CharacterObject Character = this;
-                    WS_Corpses.CorpseObject myCorpse = new WS_Corpses.CorpseObject(ref Character);
-                    myCorpse.AddToWorld();
-                    myCorpse.Save();
-                }
-                if (IsInGroup)
-                {
-                    Group.LocalMembers.Remove(GUID);
-                    if (Group.LocalMembers.Count == 0)
-                    {
-                        Group.Dispose();
-                        Group = null;
-                    }
-                }
-                if (OnTransport != null && OnTransport is WS_Transports.TransportObject @object)
-                {
-                    WS_Transports.TransportObject obj = @object;
-                    WS_Base.BaseUnit Unit = this;
-                    obj.RemovePassenger(ref Unit);
-                }
-                if (DuelPartner != null)
-                {
-                    if (DuelPartner.DuelArbiter == DuelArbiter)
-                    {
-                        WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
-                        ref CharacterObject duelPartner = ref DuelPartner;
-                        CharacterObject Character = this;
-                        wS_Spells.DuelComplete(ref duelPartner, ref Character);
-                    }
-                    else if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(DuelArbiter))
-                    {
-                        WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[DuelArbiter].Destroy(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[DuelArbiter]);
-                    }
-                }
-                Packets.PacketClass SMSG_LOGOUT_COMPLETE = new Packets.PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE);
-                try
-                {
-                    client.Send(ref SMSG_LOGOUT_COMPLETE);
-                    SMSG_LOGOUT_COMPLETE.Dispose();
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGOUT_COMPLETE", client.IP, client.Port);
-                    client.Character = null;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.USER, "Character {0} logged off.", Name);
-                    client.Delete();
-                    client = null;
-                }
-                finally
-                {
-                    Dispose();
                 }
             }
 

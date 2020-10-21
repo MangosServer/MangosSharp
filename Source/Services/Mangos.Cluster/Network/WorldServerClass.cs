@@ -356,8 +356,11 @@ namespace Mangos.Cluster.Network
                     ParentMap.InstanceCreateAsync(MapID).Wait();
                 }
 
-                clusterServiceLocator._WC_Network.WorldServer.Worlds.Add(MapID, ParentMap);
-                clusterServiceLocator._WC_Network.WorldServer.WorldsInfo.Add(MapID, ParentMapInfo);
+                lock (((ICollection)Worlds).SyncRoot)
+                {
+                    clusterServiceLocator._WC_Network.WorldServer.Worlds.Add(MapID, ParentMap);
+                    clusterServiceLocator._WC_Network.WorldServer.WorldsInfo.Add(MapID, ParentMapInfo);
+                }
                 return true;
             }
             else
@@ -399,8 +402,11 @@ namespace Mangos.Cluster.Network
                 }
 
                 ParentMap.InstanceCreateAsync(MapID).Wait();
-                clusterServiceLocator._WC_Network.WorldServer.Worlds.Add(MapID, ParentMap);
-                clusterServiceLocator._WC_Network.WorldServer.WorldsInfo.Add(MapID, ParentMapInfo);
+                lock (((ICollection)Worlds).SyncRoot)
+                {
+                    clusterServiceLocator._WC_Network.WorldServer.Worlds.Add(MapID, ParentMap);
+                    clusterServiceLocator._WC_Network.WorldServer.WorldsInfo.Add(MapID, ParentMapInfo);
+                }
                 return true;
             }
             else
