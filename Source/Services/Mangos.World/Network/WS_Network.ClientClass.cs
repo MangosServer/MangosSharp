@@ -36,8 +36,8 @@ namespace Mangos.World.Server
             public WS_PlayerData.CharacterObject Character;
             public ConcurrentQueue<Packets.PacketClass> Packets = new ConcurrentQueue<Packets.PacketClass>();
             public bool DEBUG_CONNECTION = false;
-            private Thread PacketProcess;
-            private ManualResetEvent ProcessQueueThread = new ManualResetEvent(false);
+            private Thread ProcessQueueThread;
+            private ManualResetEvent ProcessQueueSempahore = new ManualResetEvent(false);
             private volatile bool IsActive = true;
 
             public ClientClass(ClientInfo ci, bool isDebug = false)
@@ -54,9 +54,9 @@ namespace Mangos.World.Server
                 IP = ci.IP;
                 Port = ci.Port;
 
-                PacketProcess = new Thread(new ThreadStart(QueueProcessor));
-                PacketProcess.IsBackground = true;
-                PacketProcess.Start();
+                ProcessQueueThread = new Thread(new ThreadStart(QueueProcessor));
+                ProcessQueueThread.IsBackground = true;
+                ProcessQueueThread.Start();
             }
 
             public void PushPacket(Packets.PacketClass packet)
@@ -68,7 +68,7 @@ namespace Mangos.World.Server
 
                 lock (_sempahoreLock)
                 {
-                    ProcessQueueThread.Set();
+                    ProcessQueueSempahore.Set();
                 }
             }
 
@@ -81,14 +81,14 @@ namespace Mangos.World.Server
                     {
                         if (Packets.Count == 0)
                         {
-                            ProcessQueueThread.WaitOne();
+                            ProcessQueueSempahore.WaitOne();
 
                             if (!IsActive)
                                 break;
 
                             lock (_sempahoreLock)
                             {
-                                ProcessQueueThread.Reset();
+                                ProcessQueueSempahore.Reset();
                             }
                         }
 
@@ -280,12 +280,12 @@ namespace Mangos.World.Server
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, $"Connection from [{IP}:{Port}] disposed.");
            
                 IsActive = false;
-                ProcessQueueThread.Set(); //Allow thread to exit.
-                ProcessQueueThread?.Dispose();
+                ProcessQueueSempahore.Set(); //Allow thread to exit.
+                ProcessQueueSempahore?.Dispose();
 
-                try { PacketProcess?.Interrupt(); } catch { }
-                try { PacketProcess?.Join(1000); } catch { }
-                PacketProcess = null;
+                try { ProcessQueueThread?.Interrupt(); } catch { }
+                try { ProcessQueueThread?.Join(1000); } catch { }
+                ProcessQueueThread = null;
 
                 Packets?.Clear();
 
