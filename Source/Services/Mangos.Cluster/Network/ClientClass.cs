@@ -133,21 +133,23 @@ namespace Mangos.Cluster.Network
             if (clusterServiceLocator._WorldCluster.GetPacketHandlers() is null)
                 throw new ApplicationException("PacketHandler is empty!");
 
+            ClientClass _client = this;
+
             if (clusterServiceLocator._WorldCluster.GetConfig().PacketLogging)
             {
                 var argclient = this;
-                clusterServiceLocator._Packets.LogPacket(p.Data, false, argclient);
+                clusterServiceLocator._Packets.LogPacket(p.Data, false, _client);
             }
 
-            if (clusterServiceLocator._WorldCluster.GetPacketHandlers().ContainsKey(p.OpCode) != true)
+            if (!clusterServiceLocator._WorldCluster.GetPacketHandlers().ContainsKey(p.OpCode))
             {
-                if (Character is null || Character.IsInWorld == false)
+                if (Character is null || !Character.IsInWorld)
                 {
-                    socket.Dispose();
-                    socket.Close();
+                    socket?.Dispose();
+                    socket?.Close();
+
                     clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Unknown Opcode 0x{2:X} [{2}], DataLen={4}", IP, Port, p.OpCode, Constants.vbCrLf, p.Length);
-                    var argclient1 = this;
-                    clusterServiceLocator._Packets.DumpPacket(p.Data, argclient1);
+                    clusterServiceLocator._Packets.DumpPacket(p.Data, _client);
                 }
                 else
                 {
@@ -165,8 +167,7 @@ namespace Mangos.Cluster.Network
             {
                 try
                 {
-                    var argclient2 = this;
-                    clusterServiceLocator._WorldCluster.GetPacketHandlers()[p.OpCode].Invoke(p, argclient2);
+                    clusterServiceLocator._WorldCluster.GetPacketHandlers()[p.OpCode].Invoke(p, _client);
                 }
                 catch (Exception e)
                 {
@@ -201,33 +202,36 @@ namespace Mangos.Cluster.Network
 
         public void Send(PacketClass packet)
         {
-            if (Information.IsNothing(packet))
+            if (packet == null)
                 throw new ApplicationException("Packet doesn't contain data!");
-            if (Information.IsNothing(socket) | socket.Connected == false)
+            if (socket == null)
                 return;
-            try
+            if (!socket.Connected)
+                return;
+
+            using (packet)
             {
-                var data = packet.Data;
-                if (clusterServiceLocator._WorldCluster.GetConfig().PacketLogging)
+                try
                 {
-                    var argclient = this;
-                    clusterServiceLocator._Packets.LogPacket(data, true, argclient);
+                    var data = packet.Data;
+                    if (clusterServiceLocator._WorldCluster.GetConfig().PacketLogging)
+                    {
+                        var argclient = this;
+                        clusterServiceLocator._Packets.LogPacket(data, true, argclient);
+                    }
+
+                    if (Encryption)
+                        Encode(data);
+
+                    socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
                 }
-
-                if (Encryption)
-                    Encode(data);
-                socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
+                catch (Exception err)
+                {
+                    // NOTE: If it's a error here it means the connection is closed?
+                    clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] caused an error {2}{3}", IP, Port, err.ToString(), Constants.vbCrLf);
+                    Delete();
+                }
             }
-            catch (Exception err)
-            {
-                // NOTE: If it's a error here it means the connection is closed?
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] caused an error {2}{3}", IP, Port, err.ToString(), Constants.vbCrLf);
-                Delete();
-            }
-
-            // Only attempt to dispose of the packet if it actually exists
-            if (!Information.IsNothing(packet))
-                packet.Dispose();
         }
 
         public void SendMultiplyPackets(PacketClass packet)
