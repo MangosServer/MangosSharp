@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Misc
 {
-    public enum WeatherSounds : int
+    public enum WeatherSounds
     {
         WEATHER_SOUND_NOSOUND = 0,
         WEATHER_SOUND_RAINLIGHT = 8533,

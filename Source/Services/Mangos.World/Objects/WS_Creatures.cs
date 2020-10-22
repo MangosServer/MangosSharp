@@ -23,7 +23,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using Mangos.Common;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.Global;
@@ -40,7 +39,6 @@ using Mangos.World.Maps;
 using Mangos.World.Network;
 using Mangos.World.Player;
 using Mangos.World.Quests;
-using Mangos.World.Server;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -277,7 +275,7 @@ namespace Mangos.World.Objects
                 tmpUpdate.AddToPacket(ref packet2, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                 tmpUpdate.Dispose();
                 packet2 = packet;
-                SendToNearPlayers(ref packet2, 0uL);
+                SendToNearPlayers(ref packet2);
                 packet.Dispose();
             }
 
@@ -339,9 +337,9 @@ namespace Mangos.World.Objects
                 Update.SetUpdateFlag(22, Life.Current);
                 checked
                 {
-                    Update.SetUpdateFlag(23 + unchecked(WorldServiceLocator._WorldServer.CREATURESDatabase[ID].ManaType), Mana.Current);
+                    Update.SetUpdateFlag(23 + WorldServiceLocator._WorldServer.CREATURESDatabase[ID].ManaType, Mana.Current);
                     Update.SetUpdateFlag(28, Life.Maximum);
-                    Update.SetUpdateFlag(29 + unchecked(WorldServiceLocator._WorldServer.CREATURESDatabase[ID].ManaType), Mana.Maximum);
+                    Update.SetUpdateFlag(29 + WorldServiceLocator._WorldServer.CREATURESDatabase[ID].ManaType, Mana.Maximum);
                     Update.SetUpdateFlag(34, Level);
                     Update.SetUpdateFlag(35, Faction);
                     Update.SetUpdateFlag(147, WorldServiceLocator._WorldServer.CREATURESDatabase[ID].cNpcFlags);
@@ -422,7 +420,7 @@ namespace Mangos.World.Objects
                     packet.AddSingle(positionZ);
                     packet.AddSingle(orientation);
                     packet.AddInt32(0);
-                    SendToNearPlayers(ref packet, 0uL);
+                    SendToNearPlayers(ref packet);
                     packet.Dispose();
                 }
             }
@@ -528,7 +526,7 @@ namespace Mangos.World.Objects
                         SMSG_MONSTER_MOVE.AddSingle(x);
                         SMSG_MONSTER_MOVE.AddSingle(y);
                         SMSG_MONSTER_MOVE.AddSingle(z);
-                        SendToNearPlayers(ref SMSG_MONSTER_MOVE, 0uL);
+                        SendToNearPlayers(ref SMSG_MONSTER_MOVE);
                     }
                     catch (Exception ex2)
                     {
@@ -595,7 +593,7 @@ namespace Mangos.World.Objects
                         packet.AddSingle(positionZ);
                         packet.AddSingle(orientation);
                         packet.AddInt32(0);
-                        SendToNearPlayers(ref packet, 0uL);
+                        SendToNearPlayers(ref packet);
                     }
                     finally
                     {
@@ -650,7 +648,7 @@ namespace Mangos.World.Objects
                 CreatureObject updateObject = this;
                 UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                 packet = packetForNear;
-                SendToNearPlayers(ref packet, 0uL);
+                SendToNearPlayers(ref packet);
                 packetForNear = (Packets.UpdatePacketClass)packet;
                 packetForNear.Dispose();
                 UpdateData.Dispose();
@@ -712,7 +710,7 @@ namespace Mangos.World.Objects
                     CreatureObject updateObject = this;
                     UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                     packet = packetForNear;
-                    SendToNearPlayers(ref packet, 0uL);
+                    SendToNearPlayers(ref packet);
                     packetForNear.Dispose();
                     UpdateData.Dispose();
                 }
@@ -734,7 +732,7 @@ namespace Mangos.World.Objects
                             CreatureObject updateObject = this;
                             UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                             packet = packetForNear;
-                            SendToNearPlayers(ref packet, 0uL);
+                            SendToNearPlayers(ref packet);
                             packetForNear.Dispose();
                             UpdateData.Dispose();
                         }
@@ -759,7 +757,7 @@ namespace Mangos.World.Objects
                         CreatureObject updateObject = this;
                         UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                         packet = packetForNear;
-                        SendToNearPlayers(ref packet, 0uL);
+                        SendToNearPlayers(ref packet);
                         packetForNear.Dispose();
                         UpdateData.Dispose();
                     }
@@ -791,7 +789,7 @@ namespace Mangos.World.Objects
                 UpdateData.Dispose();
                 if (!WorldServiceLocator._WS_Loot.LootTable.ContainsKey(GUID) && (cUnitFlags & 0x4000000) == 67108864)
                 {
-                    SendToNearPlayers(ref packet, 0uL);
+                    SendToNearPlayers(ref packet);
                 }
                 else if (Character.IsInGroup)
                 {
@@ -855,7 +853,7 @@ namespace Mangos.World.Objects
                 {
                     if (LootType == LootType.LOOTTYPE_CORPSE && CreatureInfo.CreatureType == 7)
                     {
-                        Loot.Money = WorldServiceLocator._WorldServer.Rnd.Next((int)CreatureInfo.MinGold, (int)(unchecked(CreatureInfo.MaxGold) + 1L));
+                        Loot.Money = WorldServiceLocator._WorldServer.Rnd.Next((int)CreatureInfo.MinGold, (int)(CreatureInfo.MaxGold + 1L));
                     }
                     Loot.LootOwner = Character.GUID;
                     return true;
@@ -866,11 +864,11 @@ namespace Mangos.World.Objects
             {
                 checked
                 {
-                    int XP = unchecked(Level) * 5 + 45;
-                    int lvlDifference = unchecked(Character.Level) - unchecked(Level);
+                    int XP = Level * 5 + 45;
+                    int lvlDifference = Character.Level - Level;
                     if (lvlDifference > 0)
                     {
-                        XP = (int)Math.Round(XP * (1.0 + 0.05 * (unchecked(Level) - unchecked(Character.Level))));
+                        XP = (int)Math.Round(XP * (1.0 + 0.05 * (Level - Character.Level)));
                     }
                     else if (lvlDifference < 0)
                     {
@@ -919,7 +917,7 @@ namespace Mangos.World.Objects
                             case 37:
                             case 38:
                             case 39:
-                                GrayLevel = (byte)Math.Round(unchecked(Character.Level - Math.Floor(Character.Level / 10.0)) - 5.0);
+                                GrayLevel = (byte)Math.Round(Character.Level - Math.Floor(Character.Level / 10.0) - 5.0);
                                 break;
                             case 40:
                             case 41:
@@ -941,13 +939,13 @@ namespace Mangos.World.Objects
                             case 57:
                             case 58:
                             case 59:
-                                GrayLevel = (byte)Math.Round(unchecked(Character.Level - Math.Floor(Character.Level / 5.0)) - 1.0);
+                                GrayLevel = (byte)Math.Round(Character.Level - Math.Floor(Character.Level / 5.0) - 1.0);
                                 break;
                             default:
-                                GrayLevel = (byte)(unchecked(Character.Level) - 9);
+                                GrayLevel = (byte)(Character.Level - 9);
                                 break;
                         }
-                        if (unchecked(Level > (uint)GrayLevel))
+                        if (Level > (uint)GrayLevel)
                         {
                             int ZD;
                             switch (Character.Level)
@@ -1038,7 +1036,7 @@ namespace Mangos.World.Objects
                                     ZD = 17;
                                     break;
                             }
-                            XP = (int)Math.Round(XP * (1.0 - (unchecked(Character.Level) - unchecked(Level)) / (double)ZD));
+                            XP = (int)Math.Round(XP * (1.0 - (Character.Level - Level) / (double)ZD));
                         }
                         else
                         {
@@ -1080,7 +1078,7 @@ namespace Mangos.World.Objects
                         WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[Member2];
                         if (!characterObject.DEAD && Math.Sqrt(Math.Pow(positionX - positionX, 2.0) + Math.Pow(positionY - positionY, 2.0)) <= VisibleDistance)
                         {
-                            baseLvl += unchecked(Level);
+                            baseLvl += Level;
                         }
                         characterObject = null;
                     }
@@ -1101,7 +1099,7 @@ namespace Mangos.World.Objects
                                 characterObject2.RestBonus -= RestedXP;
                                 tmpXP += RestedXP;
                             }
-                            tmpXP = (int)(tmpXP * unchecked(Level) / (double)baseLvl);
+                            tmpXP = (int)(tmpXP * Level / (double)baseLvl);
                             characterObject2.AddXP(tmpXP, RestedXP, GUID, LogIt: false);
                             characterObject2.LogXPGain(tmpXP, RestedXP, GUID, (float)((Character.Group.GetMembersCount() - 1) / 10.0));
                         }
@@ -1146,7 +1144,7 @@ namespace Mangos.World.Objects
                 {
                     SpellCasted = tmpSpell;
                 }
-                ThreadPool.QueueUserWorkItem(new WaitCallback(tmpSpell.Cast));
+                ThreadPool.QueueUserWorkItem(tmpSpell.Cast);
                 return WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetCastTime;
             }
 
@@ -1172,7 +1170,7 @@ namespace Mangos.World.Objects
                 {
                     SpellCasted = tmpSpell;
                 }
-                ThreadPool.QueueUserWorkItem(new WaitCallback(tmpSpell.Cast));
+                ThreadPool.QueueUserWorkItem(tmpSpell.Cast);
                 return WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetCastTime;
             }
 
@@ -1194,7 +1192,7 @@ namespace Mangos.World.Objects
                 {
                     SpellCasted = tmpSpell;
                 }
-                ThreadPool.QueueUserWorkItem(new WaitCallback(tmpSpell.Cast));
+                ThreadPool.QueueUserWorkItem(tmpSpell.Cast);
                 return WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetCastTime;
             }
 
@@ -1237,7 +1235,7 @@ namespace Mangos.World.Objects
                 packet.AddInt32(checked(Encoding.UTF8.GetByteCount(Message) + 1));
                 packet.AddString(Message);
                 packet.AddInt8(flag);
-                SendToNearPlayers(ref packet, 0uL);
+                SendToNearPlayers(ref packet);
                 packet.Dispose();
             }
 
@@ -1272,7 +1270,7 @@ namespace Mangos.World.Objects
                         Resistances[i].Base = WorldServiceLocator._WorldServer.CREATURESDatabase[ID].Resistances[i];
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 6u);
+                    while (i <= 6u);
                     if (EquipmentID == 0 && WorldServiceLocator._WorldServer.CREATURESDatabase[ID].EquipmentID > 0)
                     {
                         EquipmentID = WorldServiceLocator._WorldServer.CREATURESDatabase[ID].EquipmentID;
@@ -1283,7 +1281,7 @@ namespace Mangos.World.Objects
                         CombatReach = WorldServiceLocator._WS_DBCDatabase.CreatureModel[Model].CombatReach;
                     }
                     MechanicImmunity = WorldServiceLocator._WorldServer.CREATURESDatabase[ID].MechanicImmune;
-                    CanSeeInvisibility_Stealth = 5 * unchecked(Level);
+                    CanSeeInvisibility_Stealth = 5 * Level;
                     CanSeeInvisibility_Invisibility = 0;
                     if ((WorldServiceLocator._WorldServer.CREATURESDatabase[ID].cNpcFlags & 0x20) == 32)
                     {
@@ -1618,7 +1616,7 @@ namespace Mangos.World.Objects
                 Initialize();
                 if (Duration > 0)
                 {
-                    ExpireTimer = new Timer(new TimerCallback(Destroy), null, Duration, Duration);
+                    ExpireTimer = new Timer(Destroy, null, Duration, Duration);
                 }
                 try
                 {
@@ -1687,7 +1685,7 @@ namespace Mangos.World.Objects
                 }
                 Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_DESTROY_OBJECT);
                 packet.AddUInt64(GUID);
-                SendToNearPlayers(ref packet, 0uL);
+                SendToNearPlayers(ref packet);
                 packet.Dispose();
                 Dispose();
             }
@@ -1740,7 +1738,7 @@ namespace Mangos.World.Objects
                     CreatureObject updateObject = this;
                     UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                     packet = packetForNear;
-                    SendToNearPlayers(ref packet, 0uL);
+                    SendToNearPlayers(ref packet);
                     packetForNear = (Packets.UpdatePacketClass)packet;
                     packetForNear.Dispose();
                     UpdateData.Dispose();
@@ -1991,7 +1989,7 @@ namespace Mangos.World.Objects
                             }
                             if (Operators.CompareString(TextLine1[i], "", TextCompare: false) != 0)
                             {
-                                Count = (byte)(unchecked(checked((byte)i)) + 1);
+                                Count = (byte)(checked((byte)i) + 1);
                             }
                             i++;
                         }
@@ -2240,7 +2238,7 @@ namespace Mangos.World.Objects
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 18u);
+                    while (i <= 18u);
                 }
                 catch (Exception ex2)
                 {

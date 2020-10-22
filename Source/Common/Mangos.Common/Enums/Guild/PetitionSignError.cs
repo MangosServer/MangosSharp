@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Guild
 {
-    public enum PetitionSignError : int
+    public enum PetitionSignError
     {
         PETITIONSIGN_OK = 0,                     // :Closes the window
         PETITIONSIGN_ALREADY_SIGNED = 1,         // You have already signed that guild charter

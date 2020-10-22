@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Item
 {
-    public enum ITEM_BAG : int
+    public enum ITEM_BAG
     {
         NONE = 0,
         ARROW = 1,

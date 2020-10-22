@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum CREATURE_ELITE : int
+    public enum CREATURE_ELITE
     {
         NORMAL = 0,
         ELITE = 1,

@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellAuraStates : int
+    public enum SpellAuraStates
     {
         AURASTATE_FLAG_DODGE_BLOCK = 1,
         AURASTATE_FLAG_HEALTH20 = 2,

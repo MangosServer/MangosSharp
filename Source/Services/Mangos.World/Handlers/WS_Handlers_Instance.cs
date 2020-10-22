@@ -192,8 +192,8 @@ namespace Mangos.World.Handlers
                         while (x3 <= 63);
                         return;
                     }
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked(WorldServiceLocator._WS_Maps.Maps[Map].ResetTime)));
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances_group SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked(WorldServiceLocator._WS_Maps.Maps[Map].ResetTime)));
+                    WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[Map].ResetTime));
+                    WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances_group SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[Map].ResetTime));
                     short x2 = 0;
                     do
                     {
@@ -268,7 +268,7 @@ namespace Mangos.World.Handlers
             checked
             {
                 int instanceNewID = (int)InstanceMapCreate(objCharacter.MapID);
-                int instanceNewResetTime = (int)(unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked(WorldServiceLocator._WS_Maps.Maps[objCharacter.MapID].ResetTime));
+                int instanceNewResetTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[objCharacter.MapID].ResetTime);
                 objCharacter.instance = (uint)instanceNewID;
                 if (objCharacter.IsInGroup)
                 {
@@ -276,7 +276,7 @@ namespace Mangos.World.Handlers
                 }
                 InstanceMapSpawn(objCharacter.MapID, (uint)instanceNewID);
                 objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 0, 0, byte.MaxValue));
-                SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, (int)(unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) - unchecked(instanceNewResetTime)));
+                SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) - instanceNewResetTime));
             }
         }
 

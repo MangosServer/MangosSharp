@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Loggers;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Mangos.Loggers;
 
 namespace Mangos.Configuration.Xml
 {

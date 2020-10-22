@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum MenuIcon : int
+    public enum MenuIcon
     {
         MENUICON_GOSSIP = 0x0,
         MENUICON_VENDOR = 0x1,

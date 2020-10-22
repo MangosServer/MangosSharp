@@ -19,10 +19,12 @@
 using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Lucifron : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Lucifron : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int Impending_Doom_Cooldown = 20000;
@@ -31,14 +33,14 @@ namespace Mangos.World.Scripts.Creatures
         private const int Impending_Doom = 19702;
         private const int Lucifrons_Curse = 19703;
         private const int Shadow_Shock = 19460;
-        public int Phase = 0;
-        public int NextImpendingDoom = 0;
-        public int NextLucifronsCurse = 0;
-        public int NextShadowShock = 0;
-        public int NextWaypoint = 0;
-        public int CurrentWaypoint = 0;
+        public int Phase;
+        public int NextImpendingDoom;
+        public int NextLucifronsCurse;
+        public int NextShadowShock;
+        public int NextWaypoint;
+        public int CurrentWaypoint;
 
-        public CreatureAI_Lucifron(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Lucifron(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             Phase = 0;
             AllowedMove = false;
@@ -64,7 +66,7 @@ namespace Mangos.World.Scripts.Creatures
             Phase = 0;
         }
 
-        public override void OnKill(ref World.Objects.WS_Base.BaseUnit Victim)
+        public override void OnKill(ref WS_Base.BaseUnit Victim)
         {
             // Does he cast a dummy spell on target death?
         }
@@ -116,7 +118,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 2; i++)
             {
-                World.Objects.WS_Base.BaseUnit theTarget = aiCreature;
+                WS_Base.BaseUnit theTarget = aiCreature;
                 if (theTarget is null)
                     return;
                 try
@@ -134,7 +136,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 1; i <= 2; i++)
             {
-                World.Objects.WS_Base.BaseUnit theTarget = aiCreature;
+                WS_Base.BaseUnit theTarget = aiCreature;
                 if (theTarget is null)
                     return;
                 try
@@ -180,7 +182,7 @@ namespace Mangos.World.Scripts.Creatures
                     {
                         NextWaypoint = 10000;
                         // NextSummon = NextWaypoint
-                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f);
                         break;
                     }
 
@@ -193,7 +195,7 @@ namespace Mangos.World.Scripts.Creatures
                 case 3:
                     {
                         NextWaypoint = 10000;
-                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f);
                         break;
                     }
 
@@ -210,28 +212,28 @@ namespace Mangos.World.Scripts.Creatures
                 case 5:
                     {
                         NextWaypoint = 10000;
-                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f);
                         break;
                     }
 
                 case 7:
                     {
                         NextWaypoint = 10000;
-                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f);
                         break;
                     }
 
                 case 9:
                     {
                         NextWaypoint = 10000;
-                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f);
                         break;
                     }
 
                 case 11:
                     {
                         NextWaypoint = 10000;
-                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f);
+                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f);
                         break;
                     }
             }

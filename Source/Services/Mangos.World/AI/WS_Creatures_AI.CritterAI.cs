@@ -176,7 +176,7 @@ namespace Mangos.World.AI
                         case AIState.AI_DO_NOTHING:
                             break;
                         default:
-                            aiCreature.SendChatMessage("Unknown AI mode!", ChatMsg.CHAT_MSG_MONSTER_SAY, LANGUAGES.LANG_GLOBAL, 0uL);
+                            aiCreature.SendChatMessage("Unknown AI mode!", ChatMsg.CHAT_MSG_MONSTER_SAY, LANGUAGES.LANG_GLOBAL);
                             State = AIState.AI_DO_NOTHING;
                             break;
                     }
@@ -225,7 +225,7 @@ namespace Mangos.World.AI
                         selectedX = (float)(aiCreature.positionX + Math.Cos(angle) * distance);
                         selectedY = (float)(aiCreature.positionY + Math.Sin(angle) * distance);
                         selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
-                        MoveTries = (byte)(unchecked(MoveTries) + 1);
+                        MoveTries = (byte)(MoveTries + 1);
                         if (!(Math.Abs(aiCreature.positionZ - selectedZ) > 5f))
                         {
                             WS_Maps wS_Maps = WorldServiceLocator._WS_Maps;

@@ -19,7 +19,7 @@
 
 namespace Mangos.Common.Enums.Unit
 {
-    public enum Guards : int
+    public enum Guards
     {
         Stormwind_Guard = 1423,
         Stormwind_City_Guard = 68,

@@ -81,7 +81,6 @@ namespace Mangos.Cluster.Handlers
                 SMSG_NAME_QUERY_RESPONSE.AddInt8(0);
                 client.Send(SMSG_NAME_QUERY_RESPONSE);
                 SMSG_NAME_QUERY_RESPONSE.Dispose();
-                return;
             }
             else
             {
@@ -92,7 +91,7 @@ namespace Mangos.Cluster.Handlers
                 }
                 catch
                 {
-                    clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                    clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 }
             }
         }
@@ -114,7 +113,7 @@ namespace Mangos.Cluster.Handlers
                 }
                 catch
                 {
-                    clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                    clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 }
             }
             else

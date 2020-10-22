@@ -42,7 +42,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_HEARTBEAT error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -98,7 +98,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_FOWARD error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -126,7 +126,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_PITCH_DOWN error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -154,7 +154,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_PITCH_UP error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -182,7 +182,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STRAFE_LEFT error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -210,7 +210,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_STRAFE_RIGHT error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -238,7 +238,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_SWIM error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -266,7 +266,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_TURN_LEFT error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -295,7 +295,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_START_TURN_RIGHT error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -324,7 +324,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -352,7 +352,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_PITCH error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -380,7 +380,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_STRAFE error occured [{2}]", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -408,7 +408,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_SWIM error occured [{2}", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -436,7 +436,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_STOP_TURN error occured [{2}", client.IP, client.Port, client.Character.Map);
                 return;
             }
@@ -465,7 +465,7 @@ namespace Mangos.Cluster.Handlers
             }
             catch
             {
-                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { client.Character.Map });
+                clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { client.Character.Map });
                 clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] MSG_MOVE_SET_FACING error occured [{2}", client.IP, client.Port, client.Character.Map);
                 return;
             }

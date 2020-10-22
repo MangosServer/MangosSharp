@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellAuraProcFlags : int
+    public enum SpellAuraProcFlags
     {
         AURA_PROC_NULL = 0x0,
         AURA_PROC_ON_ANY_HOSTILE_ACTION = 0x1,

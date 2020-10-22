@@ -16,6 +16,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
+using System.Collections.Generic;
+using System.Threading;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
@@ -30,16 +33,12 @@ using Mangos.World.Globals;
 using Mangos.World.Handlers;
 using Mangos.World.Loots;
 using Mangos.World.Maps;
+using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Quests;
-using Mangos.World.Server;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using Mangos.World.Network;
 
 namespace Mangos.World.Spells
 {
@@ -567,7 +566,7 @@ namespace Mangos.World.Spells
                                         }
                                         byte b = (byte)SpellEffects[Index].ChainTarget;
                                         byte j = 2;
-                                        while (unchecked(j <= (uint)b))
+                                        while (j <= (uint)b)
                                         {
                                             WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
                                             WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
@@ -760,7 +759,7 @@ namespace Mangos.World.Spells
                         {
                             newTargets.Add(Target, SpellMissInfo.SPELL_MISS_EVADE);
                         }
-                        else if (!(Caster is WS_PlayerData.CharacterObject @object4) || !@object4.GM)
+                        else if (!(Caster is WS_PlayerData.CharacterObject object4) || !object4.GM)
                         {
                             switch (DamageType)
                             {
@@ -955,7 +954,7 @@ namespace Mangos.World.Spells
                         WriteAmmoToPacket(ref spellStart, ref Caster2);
                         Caster = Caster2;
                     }
-                    Caster.SendToNearPlayers(ref spellStart, 0uL);
+                    Caster.SendToNearPlayers(ref spellStart);
                     spellStart.Dispose();
                     castParams.State = SpellCastState.SPELL_STATE_PREPARING;
                     castParams.Stopped = false;
@@ -1075,7 +1074,7 @@ namespace Mangos.World.Spells
                                 }
                                 l = (byte)unchecked((uint)(l + 1));
                             }
-                            while (unchecked(l) <= 7u);
+                            while (l <= 7u);
                             if (IsRanged && characterObject.AmmoID > 0)
                             {
                                 characterObject.ItemCONSUME(characterObject.AmmoID, 1);
@@ -1092,7 +1091,7 @@ namespace Mangos.World.Spells
                                         }
                                         else
                                         {
-                                            ManaCost = GetManaCost(unchecked(characterObject.Level), characterObject.Mana.Base);
+                                            ManaCost = GetManaCost(characterObject.Level, characterObject.Mana.Base);
                                             characterObject.Mana.Current -= ManaCost;
                                         }
                                         if (ManaCost > 0)
@@ -1111,7 +1110,7 @@ namespace Mangos.World.Spells
                                     }
                                     else
                                     {
-                                        characterObject.Rage.Current -= GetManaCost(unchecked(characterObject.Level), characterObject.Rage.Base);
+                                        characterObject.Rage.Current -= GetManaCost(characterObject.Level, characterObject.Rage.Base);
                                     }
                                     characterObject.SetUpdateFlag(24, characterObject.Rage.Current);
                                     characterObject.GroupUpdateFlag |= 16u;
@@ -1124,7 +1123,7 @@ namespace Mangos.World.Spells
                                     }
                                     else
                                     {
-                                        characterObject.Life.Current -= GetManaCost(unchecked(characterObject.Level), characterObject.Life.Base);
+                                        characterObject.Life.Current -= GetManaCost(characterObject.Level, characterObject.Life.Base);
                                     }
                                     characterObject.SetUpdateFlag(22, characterObject.Life.Current);
                                     characterObject.GroupUpdateFlag |= 2u;
@@ -1137,7 +1136,7 @@ namespace Mangos.World.Spells
                                     }
                                     else
                                     {
-                                        characterObject.Energy.Current -= GetManaCost(unchecked(characterObject.Level), characterObject.Energy.Base);
+                                        characterObject.Energy.Current -= GetManaCost(characterObject.Level, characterObject.Energy.Base);
                                     }
                                     characterObject.SetUpdateFlag(26, characterObject.Energy.Current);
                                     characterObject.GroupUpdateFlag |= 16u;
@@ -1167,7 +1166,7 @@ namespace Mangos.World.Spells
                             {
                                 case 0:
                                     {
-                                        creatureObject.Mana.Current -= GetManaCost(unchecked(creatureObject.Level), creatureObject.Mana.Base);
+                                        creatureObject.Mana.Current -= GetManaCost(creatureObject.Level, creatureObject.Mana.Base);
                                         Packets.UpdatePacketClass updatePacket2 = new Packets.UpdatePacketClass();
                                         Packets.UpdateClass powerUpdate2 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                                         powerUpdate2.SetUpdateFlag(23, creatureObject.Mana.Current);
@@ -1177,14 +1176,14 @@ namespace Mangos.World.Spells
                                         updatePacket2 = (Packets.UpdatePacketClass)packet;
                                         WS_Creatures.CreatureObject creatureObject3 = creatureObject;
                                         packet = updatePacket2;
-                                        creatureObject3.SendToNearPlayers(ref packet, 0uL);
+                                        creatureObject3.SendToNearPlayers(ref packet);
                                         updatePacket2 = (Packets.UpdatePacketClass)packet;
                                         powerUpdate2.Dispose();
                                         break;
                                     }
                                 case -2:
                                     {
-                                        creatureObject.Life.Current -= GetManaCost(unchecked(creatureObject.Level), creatureObject.Life.Base);
+                                        creatureObject.Life.Current -= GetManaCost(creatureObject.Level, creatureObject.Life.Base);
                                         Packets.UpdatePacketClass updatePacket = new Packets.UpdatePacketClass();
                                         Packets.UpdateClass powerUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                                         powerUpdate.SetUpdateFlag(22, creatureObject.Life.Current);
@@ -1194,7 +1193,7 @@ namespace Mangos.World.Spells
                                         updatePacket = (Packets.UpdatePacketClass)packet;
                                         WS_Creatures.CreatureObject creatureObject2 = creatureObject;
                                         packet = updatePacket;
-                                        creatureObject2.SendToNearPlayers(ref packet, 0uL);
+                                        creatureObject2.SendToNearPlayers(ref packet);
                                         updatePacket = (Packets.UpdatePacketClass)packet;
                                         powerUpdate.Dispose();
                                         break;
@@ -1219,7 +1218,7 @@ namespace Mangos.World.Spells
                             }
                             j = (byte)unchecked((uint)(j + 1));
                         }
-                        while (unchecked(j) <= 2u);
+                        while (j <= 2u);
                         SendSpellGO(ref Caster, ref Targets, ref tmpTargets, ref castParams.Item);
                         if (channelInterruptFlags != 0)
                         {
@@ -1321,7 +1320,7 @@ namespace Mangos.World.Spells
                 {
                     ProjectData.SetProjectError(ex);
                     Exception e = ex;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error when casting spell.{0}", Environment.NewLine + e.ToString());
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error when casting spell.{0}", Environment.NewLine + e);
                     ProjectData.ClearProjectError();
                 }
                 if (castParams != null)
@@ -1431,7 +1430,7 @@ namespace Mangos.World.Spells
                 {
                     if (Character.ShapeshiftForm != 0)
                     {
-                        StanceMask = 1 << unchecked((int)Character.ShapeshiftForm) - 1;
+                        StanceMask = 1 << (int)Character.ShapeshiftForm - 1;
                     }
                     if ((StanceMask & ShapeshiftExclude) != 0)
                     {
@@ -1466,7 +1465,7 @@ namespace Mangos.World.Spells
                         return SpellFailedReason.SPELL_FAILED_ONLY_SHAPESHIFT;
                     }
                 }
-                goto IL_028d;
+
                 IL_028d:
                 if (((uint)Attributes & 0x20000u & (0u - ((Character.Invisibility != InvisibilityLevel.STEALTH) ? 1u : 0u))) != 0)
                 {
@@ -1587,7 +1586,7 @@ namespace Mangos.World.Spells
                             }
                             break;
                         }
-                        goto IL_0721;
+
                         IL_0721:
                         i = checked(i + 1);
                     }
@@ -1732,7 +1731,7 @@ namespace Mangos.World.Spells
                 }
                 WS_Base.BaseUnit obj = Caster;
                 packet2 = updatePacket;
-                obj.SendToNearPlayers(ref packet2, 0uL);
+                obj.SendToNearPlayers(ref packet2);
                 updatePacket = (Packets.UpdatePacketClass)packet2;
                 updatePacket.Dispose();
             }
@@ -1782,7 +1781,7 @@ namespace Mangos.World.Spells
                 Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_SPELL_FAILED_OTHER);
                 packet2.AddUInt64(Caster.GUID);
                 packet2.AddInt32(ID);
-                Caster.SendToNearPlayers(ref packet2, 0uL);
+                Caster.SendToNearPlayers(ref packet2);
                 packet2.Dispose();
             }
 
@@ -1850,7 +1849,7 @@ namespace Mangos.World.Spells
                     WriteAmmoToPacket(ref packet, ref Caster2);
                     Caster = Caster2;
                 }
-                Caster.SendToNearPlayers(ref packet, 0uL);
+                Caster.SendToNearPlayers(ref packet);
                 packet.Dispose();
             }
 
@@ -1863,7 +1862,7 @@ namespace Mangos.World.Spells
                 packet.AddInt32(1);
                 packet.AddUInt64(Target.GUID);
                 packet.AddInt8((byte)MissInfo);
-                Caster.SendToNearPlayers(ref packet, 0uL);
+                Caster.SendToNearPlayers(ref packet);
                 packet.Dispose();
             }
 
@@ -1977,7 +1976,7 @@ namespace Mangos.World.Spells
                             break;
                     }
                 }
-                Caster.SendToNearPlayers(ref packet, 0uL);
+                Caster.SendToNearPlayers(ref packet);
                 packet.Dispose();
             }
 
@@ -2018,7 +2017,7 @@ namespace Mangos.World.Spells
                     {
                         return;
                     }
-                    objCharacter.Spells[ID].Cooldown = (uint)(unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked(Recovery / 1000));
+                    objCharacter.Spells[ID].Cooldown = (uint)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + Recovery / 1000);
                     if (castItem != null)
                     {
                         objCharacter.Spells[ID].CooldownItem = castItem.ItemEntry;
@@ -2591,7 +2590,7 @@ namespace Mangos.World.Spells
                             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SPELL_DELAYED);
                             packet.AddPackGUID(Caster.GUID);
                             packet.AddInt32(delaytime);
-                            Caster.SendToNearPlayers(ref packet, 0uL);
+                            Caster.SendToNearPlayers(ref packet);
                             packet.Dispose();
                         }
                     }
@@ -2730,7 +2729,7 @@ namespace Mangos.World.Spells
                 packet.AddInt8(0);
             }
             packet.AddInt32(0);
-            Caster.SendToNearPlayers(ref packet, 0uL);
+            Caster.SendToNearPlayers(ref packet);
         }
 
         public void SendHealSpellLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int Damage, bool CriticalHit)
@@ -2748,7 +2747,7 @@ namespace Mangos.World.Spells
             {
                 packet.AddInt8(0);
             }
-            Caster.SendToNearPlayers(ref packet, 0uL);
+            Caster.SendToNearPlayers(ref packet);
         }
 
         public void SendEnergizeSpellLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int Damage, int PowerType)
@@ -2766,7 +2765,7 @@ namespace Mangos.World.Spells
             packet.AddInt32(Damage);
             packet.AddInt32(School);
             packet.AddInt32(0);
-            Caster.SendToNearPlayers(ref packet, 0uL);
+            Caster.SendToNearPlayers(ref packet);
             packet.Dispose();
         }
 
@@ -2775,7 +2774,7 @@ namespace Mangos.World.Spells
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PLAY_SPELL_VISUAL);
             packet.AddUInt64(Caster.GUID);
             packet.AddInt32(SpellId);
-            Caster.SendToNearPlayers(ref packet, 0uL);
+            Caster.SendToNearPlayers(ref packet);
             packet.Dispose();
         }
 
@@ -3084,7 +3083,7 @@ namespace Mangos.World.Spells
             {
             }
             CastSpellParameters castParams = new CastSpellParameters(ref Target, ref Caster, SpellInfo.TriggerSpell);
-            ThreadPool.QueueUserWorkItem(new WaitCallback(castParams.Cast));
+            ThreadPool.QueueUserWorkItem(castParams.Cast);
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
@@ -3118,10 +3117,10 @@ namespace Mangos.World.Spells
             {
                 foreach (WS_Base.BaseUnit Unit in Infected)
                 {
-                    int Damage = SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                    int Damage = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                     if (Caster is WS_PlayerData.CharacterObject @object)
                     {
-                        Damage += SpellInfo.valuePerLevel * unchecked(@object.Level);
+                        Damage += SpellInfo.valuePerLevel * @object.Level;
                     }
                     int TargetPower = 0;
                     switch (SpellInfo.MiscValue)
@@ -3177,7 +3176,7 @@ namespace Mangos.World.Spells
                                 myTmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                                 myPacket = (Packets.UpdatePacketClass)packet;
                                 packet = myPacket;
-                                Unit.SendToNearPlayers(ref packet, 0uL);
+                                Unit.SendToNearPlayers(ref packet);
                                 myPacket = (Packets.UpdatePacketClass)packet;
                                 myPacket.Dispose();
                                 myTmpUpdate.Dispose();
@@ -3225,7 +3224,7 @@ namespace Mangos.World.Spells
                             Packet = (Packets.UpdatePacketClass)packet;
                             WS_Base.BaseUnit unitTarget = Target.unitTarget;
                             packet = Packet;
-                            unitTarget.SendToNearPlayers(ref packet, 0uL);
+                            unitTarget.SendToNearPlayers(ref packet);
                             Packet = (Packets.UpdatePacketClass)packet;
                             Packet.Dispose();
                             TmpUpdate.Dispose();
@@ -3305,7 +3304,7 @@ namespace Mangos.World.Spells
                 {
                     if (SpellInfo.MiscValue == 0)
                     {
-                        Damage = (int)Math.Round(SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) / 100.0 * Unit.Mana.Maximum);
+                        Damage = (int)Math.Round(SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 * Unit.Mana.Maximum);
                     }
                     Caster2 = (WS_Base.BaseUnit)Caster;
                     SendEnergizeSpellLog(ref Caster2, ref Target.unitTarget, SpellID, Damage, SpellInfo.MiscValue);
@@ -3431,7 +3430,7 @@ namespace Mangos.World.Spells
                     {
                         if (!creatureObject.IsDead)
                         {
-                            int chance = 10 + unchecked(((WS_Base.BaseUnit)Caster).Level) - unchecked(creatureObject.Level);
+                            int chance = 10 + ((WS_Base.BaseUnit)Caster).Level - creatureObject.Level;
                             if (chance > WorldServiceLocator._WorldServer.Rnd.Next(0, 20))
                             {
                                 if (creatureObject.CreatureInfo.PocketLootID > 0)
@@ -3504,7 +3503,7 @@ namespace Mangos.World.Spells
                                 Packet = (Packets.UpdatePacketClass)packet;
                                 WS_Base.BaseUnit unitTarget = Target.unitTarget;
                                 packet = Packet;
-                                unitTarget.SendToNearPlayers(ref packet, 0uL);
+                                unitTarget.SendToNearPlayers(ref packet);
                                 Packet = (Packets.UpdatePacketClass)packet;
                                 Packet.Dispose();
                                 TmpUpdate.Dispose();
@@ -3598,7 +3597,7 @@ namespace Mangos.World.Spells
                 {
                     if (Unit is WS_PlayerData.CharacterObject @object)
                     {
-                        @object.combatDodge += SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        @object.combatDodge += SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                     }
                 }
                 return SpellFailedReason.SPELL_NO_ERROR;
@@ -3613,7 +3612,7 @@ namespace Mangos.World.Spells
                 {
                     if (Unit is WS_PlayerData.CharacterObject @object)
                     {
-                        @object.combatParry += SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        @object.combatParry += SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                     }
                 }
                 return SpellFailedReason.SPELL_NO_ERROR;
@@ -3628,7 +3627,7 @@ namespace Mangos.World.Spells
                 {
                     if (Unit is WS_PlayerData.CharacterObject @object)
                     {
-                        @object.combatBlock += SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        @object.combatBlock += SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                     }
                 }
                 return SpellFailedReason.SPELL_NO_ERROR;
@@ -3744,7 +3743,7 @@ namespace Mangos.World.Spells
                 {
                     if (Unit is WS_PlayerData.CharacterObject @object)
                     {
-                        @object.HonorPoints += SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        @object.HonorPoints += SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         if (@object.HonorPoints > 75000)
                         {
                             @object.HonorPoints = 75000;
@@ -3802,7 +3801,7 @@ namespace Mangos.World.Spells
                                 case 17:
                                 case 18:
                                 case 19:
-                                    Duration = (unchecked(auraTarget.Level) - 10) * 60 * 1000;
+                                    Duration = (auraTarget.Level - 10) * 60 * 1000;
                                     break;
                             }
                         }
@@ -3892,7 +3891,7 @@ namespace Mangos.World.Spells
                 {
                     ProjectData.SetProjectError(ex);
                     Exception e = ex;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while applying aura for spell {0}:{1}", SpellID, Environment.NewLine + e.ToString());
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while applying aura for spell {0}:{1}", SpellID, Environment.NewLine + e);
                     ProjectData.ClearProjectError();
                 }
                 return SpellFailedReason.SPELL_NO_ERROR;
@@ -3981,7 +3980,7 @@ namespace Mangos.World.Spells
             }
             checked
             {
-                int Amount = SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level) - SPELLs[SpellID].spellLevel, 0);
+                int Amount = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level - SPELLs[SpellID].spellLevel, 0);
                 if (Amount < 0)
                 {
                     return SpellFailedReason.SPELL_FAILED_ERROR;
@@ -4043,7 +4042,7 @@ namespace Mangos.World.Spells
                             ((WS_PlayerData.CharacterObject)Unit).resurrectPositionX = Caster.positionX;
                             ((WS_PlayerData.CharacterObject)Unit).resurrectPositionY = Caster.positionY;
                             ((WS_PlayerData.CharacterObject)Unit).resurrectPositionZ = Caster.positionZ;
-                            ((WS_PlayerData.CharacterObject)Unit).resurrectHealth = checked(((WS_PlayerData.CharacterObject)Unit).Life.Maximum * SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0)) / 100;
+                            ((WS_PlayerData.CharacterObject)Unit).resurrectHealth = checked(((WS_PlayerData.CharacterObject)Unit).Life.Maximum * SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0)) / 100;
                             ((WS_PlayerData.CharacterObject)Unit).resurrectMana = checked(((WS_PlayerData.CharacterObject)Unit).Mana.Maximum * SpellInfo.MiscValue) / 100;
                             Packets.PacketClass RessurectRequest2 = new Packets.PacketClass(Opcodes.SMSG_RESURRECT_REQUEST);
                             RessurectRequest2.AddUInt64(Caster.GUID);
@@ -4069,7 +4068,7 @@ namespace Mangos.World.Spells
                             packetForNear = (Packets.UpdatePacketClass)packet;
                             WS_Creatures.CreatureObject obj = (WS_Creatures.CreatureObject)Unit;
                             packet = packetForNear;
-                            obj.SendToNearPlayers(ref packet, 0uL);
+                            obj.SendToNearPlayers(ref packet);
                             packetForNear = (Packets.UpdatePacketClass)packet;
                             packetForNear.Dispose();
                             UpdateData.Dispose();
@@ -4148,7 +4147,7 @@ namespace Mangos.World.Spells
                             packetForNear = (Packets.UpdatePacketClass)packet;
                             WS_Creatures.CreatureObject obj = (WS_Creatures.CreatureObject)Unit;
                             packet = packetForNear;
-                            obj.SendToNearPlayers(ref packet, 0uL);
+                            obj.SendToNearPlayers(ref packet);
                             packetForNear = (Packets.UpdatePacketClass)packet;
                             packetForNear.Dispose();
                             UpdateData.Dispose();
@@ -4218,7 +4217,7 @@ namespace Mangos.World.Spells
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
-                Globals.Functions functions = WorldServiceLocator._Functions;
+                Functions functions = WorldServiceLocator._Functions;
                 ref int cBytes = ref Unit.cBytes1;
                 checked
                 {
@@ -4368,13 +4367,13 @@ namespace Mangos.World.Spells
                         angle = 0f;
                         if (Slot < 4)
                         {
-                            angle = (float)(Math.PI / 4.0 - unchecked(Slot) * 2 * Math.PI / 4.0);
+                            angle = (float)(Math.PI / 4.0 - Slot * 2 * Math.PI / 4.0);
                         }
                         selectedX = (float)(Caster.positionX + Math.Cos(Caster.orientation) * 2.0);
                         selectedY = (float)(Caster.positionY + Math.Sin(Caster.orientation) * 2.0);
                         selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID);
                         NewTotem = new WS_Totems.TotemObject(SpellInfo.MiscValue, selectedX, selectedY, selectedZ, angle, (int)Caster.MapID, SPELLs[SpellID].GetDuration);
-                        NewTotem.Life.Base = SpellInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        NewTotem.Life.Base = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         NewTotem.Life.Current = NewTotem.Life.Maximum;
                         NewTotem.Caster = (WS_Base.BaseUnit)Caster;
                         NewTotem.Level = ((WS_Base.BaseUnit)Caster).Level;
@@ -4440,7 +4439,7 @@ namespace Mangos.World.Spells
             tmpGO.AddToWorld();
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
             packet.AddUInt64(tmpGO.GUID);
-            tmpGO.SendToNearPlayers(ref packet, 0uL);
+            tmpGO.SendToNearPlayers(ref packet);
             packet.Dispose();
             if (GameobjectInfo.Type == GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE)
             {
@@ -4570,7 +4569,7 @@ namespace Mangos.World.Spells
             SMSG_MONSTER_MOVE.AddSingle(NearX);
             SMSG_MONSTER_MOVE.AddSingle(NearY);
             SMSG_MONSTER_MOVE.AddSingle(NearZ);
-            Caster.SendToNearPlayers(ref SMSG_MONSTER_MOVE, 0uL);
+            Caster.SendToNearPlayers(ref SMSG_MONSTER_MOVE);
             SMSG_MONSTER_MOVE.Dispose();
             if (Caster is WS_PlayerData.CharacterObject object1)
             {
@@ -4592,7 +4591,7 @@ namespace Mangos.World.Spells
                 packet.AddSingle((float)Math.Sin(Direction));
                 packet.AddSingle(SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 10f);
                 packet.AddSingle(SpellInfo.MiscValue / -10f);
-                Unit.SendToNearPlayers(ref packet, 0uL);
+                Unit.SendToNearPlayers(ref packet);
                 packet.Dispose();
                 if (!(Unit is WS_Creatures.CreatureObject))
                 {
@@ -4632,7 +4631,7 @@ namespace Mangos.World.Spells
                             return SpellFailedReason.SPELL_FAILED_UNKNOWN;
                         }
                         CastSpellParameters castParams = new CastSpellParameters(ref Target, ref Caster, SpellID2);
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(castParams.Cast));
+                        ThreadPool.QueueUserWorkItem(castParams.Cast);
                     }
                 }
             }
@@ -5172,7 +5171,7 @@ namespace Mangos.World.Spells
             packet = (Packets.UpdatePacketClass)packet2;
             WS_Base.BaseUnit obj = Target;
             packet2 = packet;
-            obj.SendToNearPlayers(ref packet2, 0uL);
+            obj.SendToNearPlayers(ref packet2);
             packet = (Packets.UpdatePacketClass)packet2;
             tmpUpdate.Dispose();
             packet.Dispose();
@@ -5191,7 +5190,7 @@ namespace Mangos.World.Spells
                         {
                             WS_PlayerData.CharacterObject characterObject2 = @object;
                             ref short bonus2 = ref characterObject2.Skills[EffectInfo.MiscValue].Bonus;
-                            bonus2 = (short)(bonus2 + EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0));
+                            bonus2 = (short)(bonus2 + EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0));
                             characterObject2.SetUpdateFlag(718 + characterObject2.SkillsPositions[EffectInfo.MiscValue] * 3 + 2, characterObject2.Skills[EffectInfo.MiscValue].Bonus);
                             characterObject2.SendCharacterUpdate();
                         }
@@ -5202,7 +5201,7 @@ namespace Mangos.World.Spells
                         {
                             WS_PlayerData.CharacterObject characterObject = object1;
                             ref short bonus = ref characterObject.Skills[EffectInfo.MiscValue].Bonus;
-                            bonus = (short)(bonus - EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0));
+                            bonus = (short)(bonus - EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0));
                             characterObject.SetUpdateFlag(718 + characterObject.SkillsPositions[EffectInfo.MiscValue] * 3 + 2, characterObject.Skills[EffectInfo.MiscValue].Bonus);
                             characterObject.SendCharacterUpdate();
                         }
@@ -5235,7 +5234,7 @@ namespace Mangos.World.Spells
                                 case 43706:
                                 case 46755:
                                     {
-                                        int Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                                        int Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                                         @object.ManaRegenBonus += Damage;
                                         @object.UpdateManaRegen();
                                         break;
@@ -5262,7 +5261,7 @@ namespace Mangos.World.Spells
                                 case 43706:
                                 case 46755:
                                     {
-                                        int Damage2 = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                                        int Damage2 = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                                         ((WS_PlayerData.CharacterObject)Target).ManaRegenBonus -= Damage2;
                                         ((WS_PlayerData.CharacterObject)Target).UpdateManaRegen();
                                         break;
@@ -5276,11 +5275,11 @@ namespace Mangos.World.Spells
                             int Damage3;
                             if (Caster is WS_DynamicObjects.DynamicObjectObject object1)
                             {
-                                Damage3 = EffectInfo.GetValue(unchecked(object1.Caster.Level), 0) * StackCount;
+                                Damage3 = EffectInfo.GetValue(object1.Caster.Level, 0) * StackCount;
                                 Target.DealDamage(Damage3, object1.Caster);
                                 break;
                             }
-                            Damage3 = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                            Damage3 = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                             WS_Base.BaseUnit obj = Target;
                             int damage = Damage3;
                             WS_Base.BaseUnit Attacker = (WS_Base.BaseUnit)Caster;
@@ -5307,7 +5306,7 @@ namespace Mangos.World.Spells
                             int Damage2;
                             checked
                             {
-                                Damage2 = EffectInfo.GetValue(unchecked(@object.Caster.Level), 0) * StackCount;
+                                Damage2 = EffectInfo.GetValue(@object.Caster.Level, 0) * StackCount;
                             }
                             Target.DealSpellDamage(ref @object.Caster, ref EffectInfo, SpellID, Damage2, (DamageTypes)checked((byte)SPELLs[SpellID].School), SpellType.SPELL_TYPE_DOT);
                             break;
@@ -5317,7 +5316,7 @@ namespace Mangos.World.Spells
                         WS_Base.BaseUnit Caster2;
                         checked
                         {
-                            Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                            Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                             obj = Target;
                             Caster2 = (WS_Base.BaseUnit)Caster;
                         }
@@ -5344,7 +5343,7 @@ namespace Mangos.World.Spells
                         WS_Base.BaseUnit Caster2;
                         checked
                         {
-                            Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                            Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                             obj = Target;
                             Caster2 = (WS_Base.BaseUnit)Caster;
                         }
@@ -5371,7 +5370,7 @@ namespace Mangos.World.Spells
                         WS_Base.BaseUnit Caster2;
                         checked
                         {
-                            Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                            Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                             Caster2 = (WS_Base.BaseUnit)Caster;
                         }
                         SendPeriodicAuraLog(ref Caster2, ref Target, SpellID, (int)Power, Damage, EffectInfo.ApplyAuraIndex);
@@ -5398,7 +5397,7 @@ namespace Mangos.World.Spells
                         break;
                     case AuraAction.AURA_UPDATE:
                         {
-                            int Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                            int Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                             WS_Base.BaseUnit Caster2 = (WS_Base.BaseUnit)Caster;
                             SendPeriodicAuraLog(ref Caster2, ref Target, SpellID, SPELLs[SpellID].School, Damage, EffectInfo.ApplyAuraIndex);
                             Caster = Caster2;
@@ -5430,9 +5429,9 @@ namespace Mangos.World.Spells
                         ManaTypes Power = (ManaTypes)EffectInfo.MiscValue;
                         checked
                         {
-                            int Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                            int Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                             WS_Base.BaseUnit Target2 = (WS_Base.BaseUnit)Caster;
-                            SendPeriodicAuraLog(ref Target, ref Target2, SpellID, unchecked((int)Power), Damage, EffectInfo.ApplyAuraIndex);
+                            SendPeriodicAuraLog(ref Target, ref Target2, SpellID, (int)Power, Damage, EffectInfo.ApplyAuraIndex);
                             Caster = Target2;
                             WS_Base.BaseUnit obj = Target;
                             int damage = -Damage;
@@ -5460,7 +5459,7 @@ namespace Mangos.World.Spells
                         SpellTargets Targets = new SpellTargets();
                         Targets.SetTarget_UNIT(ref Target);
                         CastSpellParameters castParams = new CastSpellParameters(ref Targets, ref Caster, EffectInfo.TriggerSpell);
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(castParams.Cast));
+                        ThreadPool.QueueUserWorkItem(castParams.Cast);
                         if (Caster is WS_Base.BaseUnit Caster2)
                         {
                             SendPeriodicAuraLog(ref Caster2, ref Target, SpellID, SPELLs[SpellID].School, 0, EffectInfo.ApplyAuraIndex);
@@ -5487,7 +5486,7 @@ namespace Mangos.World.Spells
                         WS_Base.BaseUnit Caster2;
                         checked
                         {
-                            Damage = (int)Math.Round(Target.Life.Maximum * EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) / 100.0 * StackCount);
+                            Damage = (int)Math.Round(Target.Life.Maximum * EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 * StackCount);
                             obj = Target;
                             Caster2 = (WS_Base.BaseUnit)Caster;
                         }
@@ -5509,7 +5508,7 @@ namespace Mangos.World.Spells
                         WS_Base.BaseUnit Caster2;
                         checked
                         {
-                            Damage = (int)Math.Round(Target.Life.Maximum * EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) / 100.0 * StackCount);
+                            Damage = (int)Math.Round(Target.Life.Maximum * EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 * StackCount);
                             obj = Target;
                             Caster2 = (WS_Base.BaseUnit)Caster;
                         }
@@ -5536,7 +5535,7 @@ namespace Mangos.World.Spells
                         WS_Base.BaseUnit Caster2;
                         checked
                         {
-                            Damage = (int)Math.Round(Target.Mana.Maximum * EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) / 100.0 * StackCount);
+                            Damage = (int)Math.Round(Target.Mana.Maximum * EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 * StackCount);
                             Caster2 = (WS_Base.BaseUnit)Caster;
                         }
                         SendPeriodicAuraLog(ref Caster2, ref Target, SpellID, (int)Power, Damage, EffectInfo.ApplyAuraIndex);
@@ -5569,7 +5568,7 @@ namespace Mangos.World.Spells
                         break;
                     case AuraAction.AURA_ADD:
                         {
-                            int Damage2 = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                            int Damage2 = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                             ((WS_PlayerData.CharacterObject)Target).LifeRegenBonus += Damage2;
                             if ((unchecked((uint)SPELLs[SpellID].auraInterruptFlags) & 0x40000u) != 0)
                             {
@@ -5584,7 +5583,7 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         {
-                            int Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                            int Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                             ((WS_PlayerData.CharacterObject)Target).LifeRegenBonus -= Damage;
                             break;
                         }
@@ -5606,7 +5605,7 @@ namespace Mangos.World.Spells
                         break;
                     case AuraAction.AURA_ADD:
                         {
-                            int Damage = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                            int Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                             if (EffectInfo.MiscValue == 0)
                             {
                                 ((WS_PlayerData.CharacterObject)Target).ManaRegenBonus += Damage;
@@ -5630,7 +5629,7 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         {
-                            int Damage2 = EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                            int Damage2 = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                             if (EffectInfo.MiscValue == 0)
                             {
                                 ((WS_PlayerData.CharacterObject)Target).ManaRegenBonus -= Damage2;
@@ -5662,7 +5661,7 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_ADD:
                         if (EffectInfo.MiscValue == 0)
                         {
-                            int Damage2 = (int)Math.Round(EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount / 100.0);
+                            int Damage2 = (int)Math.Round(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount / 100.0);
                             ((WS_PlayerData.CharacterObject)Target).ManaRegenerationModifier += Damage2;
                             ((WS_PlayerData.CharacterObject)Target).UpdateManaRegen();
                         }
@@ -5670,7 +5669,7 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         {
-                            int Damage = (int)Math.Round(EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount / 100.0);
+                            int Damage = (int)Math.Round(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount / 100.0);
                             ((WS_PlayerData.CharacterObject)Target).ManaRegenerationModifier -= Damage;
                             ((WS_PlayerData.CharacterObject)Target).UpdateManaRegen();
                             break;
@@ -5705,10 +5704,10 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_UPDATE:
                     return;
             }
-            if (Target is WS_PlayerData.CharacterObject @object1)
+            if (Target is WS_PlayerData.CharacterObject object1)
             {
-                @object1.SetUpdateFlag(131, Target.Model);
-                @object1.SendCharacterUpdate();
+                object1.SetUpdateFlag(131, Target.Model);
+                object1.SendCharacterUpdate();
                 return;
             }
             Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
@@ -5720,7 +5719,7 @@ namespace Mangos.World.Spells
             packet = (Packets.UpdatePacketClass)packet2;
             WS_Base.BaseUnit obj = Target;
             packet2 = packet;
-            obj.SendToNearPlayers(ref packet2, 0uL);
+            obj.SendToNearPlayers(ref packet2);
             packet = (Packets.UpdatePacketClass)packet2;
             tmpUpdate.Dispose();
             packet.Dispose();
@@ -5770,13 +5769,13 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_ADD:
                         ((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 = ((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 | 0x4000;
                         Target.Invisibility = InvisibilityLevel.INIVISIBILITY;
-                        Target.Invisibility_Value += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.Invisibility_Value += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         ((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 = ((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 & -16385;
                         Target.Invisibility = InvisibilityLevel.VISIBLE;
-                        Target.Invisibility_Value -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.Invisibility_Value -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                 }
                 if (Target is WS_PlayerData.CharacterObject @object)
@@ -5800,12 +5799,12 @@ namespace Mangos.World.Spells
                         return;
                     case AuraAction.AURA_ADD:
                         Target.Invisibility = InvisibilityLevel.STEALTH;
-                        Target.Invisibility_Value += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.Invisibility_Value += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.Invisibility = InvisibilityLevel.VISIBLE;
-                        Target.Invisibility_Value -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.Invisibility_Value -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                 }
                 WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
@@ -5823,11 +5822,11 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_UPDATE:
                         break;
                     case AuraAction.AURA_ADD:
-                        Target.Invisibility_Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.Invisibility_Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
-                        Target.Invisibility_Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.Invisibility_Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                 }
             }
@@ -5842,11 +5841,11 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_UPDATE:
                         return;
                     case AuraAction.AURA_ADD:
-                        Target.CanSeeInvisibility_Invisibility += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.CanSeeInvisibility_Invisibility += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
-                        Target.CanSeeInvisibility_Invisibility -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.CanSeeInvisibility_Invisibility -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                 }
                 if (Target is WS_PlayerData.CharacterObject @object)
@@ -5867,11 +5866,11 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_UPDATE:
                         return;
                     case AuraAction.AURA_ADD:
-                        Target.CanSeeInvisibility_Stealth += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.CanSeeInvisibility_Stealth += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
-                        Target.CanSeeInvisibility_Stealth -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.CanSeeInvisibility_Stealth -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                 }
                 if (Target is WS_PlayerData.CharacterObject @object)
@@ -5952,7 +5951,7 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_ADD:
                         if (!Target.AbsorbSpellLeft.ContainsKey(SpellID))
                         {
-                            Target.AbsorbSpellLeft.Add(SpellID, (uint)EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) + ((uint)EffectInfo.MiscValue << 23));
+                            Target.AbsorbSpellLeft.Add(SpellID, (uint)EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) + ((uint)EffectInfo.MiscValue << 23));
                         }
                         break;
                     case AuraAction.AURA_REMOVE:
@@ -6054,7 +6053,7 @@ namespace Mangos.World.Spells
                 packet = (Packets.UpdatePacketClass)packet2;
                 WS_Base.BaseUnit obj4 = Target;
                 packet2 = packet;
-                obj4.SendToNearPlayers(ref packet2, 0uL);
+                obj4.SendToNearPlayers(ref packet2);
                 packet = (Packets.UpdatePacketClass)packet2;
                 tmpUpdate.Dispose();
                 packet.Dispose();
@@ -6438,7 +6437,7 @@ namespace Mangos.World.Spells
             packet = (Packets.UpdatePacketClass)packet2;
             WS_Base.BaseUnit obj2 = Target;
             packet2 = packet;
-            obj2.SendToNearPlayers(ref packet2, 0uL);
+            obj2.SendToNearPlayers(ref packet2);
             packet = (Packets.UpdatePacketClass)packet2;
             tmpUpdate.Dispose();
             packet.Dispose();
@@ -6570,10 +6569,10 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_UPDATE:
                     return;
             }
-            if (Target is WS_PlayerData.CharacterObject @object4)
+            if (Target is WS_PlayerData.CharacterObject object4)
             {
-                @object4.SetUpdateFlag(46, Target.cUnitFlags);
-                @object4.SendCharacterUpdate();
+                object4.SetUpdateFlag(46, Target.cUnitFlags);
+                object4.SendCharacterUpdate();
                 return;
             }
             Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
@@ -6585,7 +6584,7 @@ namespace Mangos.World.Spells
             packet = (Packets.UpdatePacketClass)packet2;
             WS_Base.BaseUnit obj = Target;
             packet2 = packet;
-            obj.SendToNearPlayers(ref packet2, 0uL);
+            obj.SendToNearPlayers(ref packet2);
             packet = (Packets.UpdatePacketClass)packet2;
             tmpUpdate.Dispose();
             packet.Dispose();
@@ -6624,10 +6623,10 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_UPDATE:
                     return;
             }
-            if (Target is WS_PlayerData.CharacterObject @object3)
+            if (Target is WS_PlayerData.CharacterObject object3)
             {
-                @object3.SetUpdateFlag(46, Target.cUnitFlags);
-                @object3.SendCharacterUpdate();
+                object3.SetUpdateFlag(46, Target.cUnitFlags);
+                object3.SendCharacterUpdate();
                 return;
             }
             Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
@@ -6639,7 +6638,7 @@ namespace Mangos.World.Spells
             packet = (Packets.UpdatePacketClass)packet2;
             WS_Base.BaseUnit obj = Target;
             packet2 = packet;
-            obj.SendToNearPlayers(ref packet2, 0uL);
+            obj.SendToNearPlayers(ref packet2);
             packet = (Packets.UpdatePacketClass)packet2;
             tmpUpdate.Dispose();
             packet.Dispose();
@@ -6680,7 +6679,7 @@ namespace Mangos.World.Spells
                         tmpUpdate.AddToPacket(ref packet2, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                         WS_Base.BaseUnit obj = Target;
                         packet2 = packet;
-                        obj.SendToNearPlayers(ref packet2, 0uL);
+                        obj.SendToNearPlayers(ref packet2);
                         packet = (Packets.UpdatePacketClass)packet2;
                         tmpUpdate.Dispose();
                         packet.Dispose();
@@ -6700,7 +6699,7 @@ namespace Mangos.World.Spells
                     {
                         Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_FEATHER_FALL);
                         packet.AddPackGUID(Target.GUID);
-                        Target.SendToNearPlayers(ref packet, 0uL);
+                        Target.SendToNearPlayers(ref packet);
                         packet.Dispose();
                         break;
                     }
@@ -6709,7 +6708,7 @@ namespace Mangos.World.Spells
                     {
                         Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_MOVE_NORMAL_FALL);
                         packet2.AddPackGUID(Target.GUID);
-                        Target.SendToNearPlayers(ref packet2, 0uL);
+                        Target.SendToNearPlayers(ref packet2);
                         packet2.Dispose();
                         break;
                     }
@@ -6726,7 +6725,7 @@ namespace Mangos.World.Spells
                     {
                         Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_FEATHER_FALL);
                         packet.AddPackGUID(Target.GUID);
-                        Target.SendToNearPlayers(ref packet, 0uL);
+                        Target.SendToNearPlayers(ref packet);
                         packet.Dispose();
                         break;
                     }
@@ -6735,7 +6734,7 @@ namespace Mangos.World.Spells
                     {
                         Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_MOVE_NORMAL_FALL);
                         packet2.AddPackGUID(Target.GUID);
-                        Target.SendToNearPlayers(ref packet2, 0uL);
+                        Target.SendToNearPlayers(ref packet2);
                         packet2.Dispose();
                         break;
                     }
@@ -6752,7 +6751,7 @@ namespace Mangos.World.Spells
                     {
                         Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_WATER_WALK);
                         packet.AddPackGUID(Target.GUID);
-                        Target.SendToNearPlayers(ref packet, 0uL);
+                        Target.SendToNearPlayers(ref packet);
                         packet.Dispose();
                         break;
                     }
@@ -6761,7 +6760,7 @@ namespace Mangos.World.Spells
                     {
                         Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_MOVE_LAND_WALK);
                         packet2.AddPackGUID(Target.GUID);
-                        Target.SendToNearPlayers(ref packet2, 0uL);
+                        Target.SendToNearPlayers(ref packet2);
                         packet2.Dispose();
                         break;
                     }
@@ -6778,7 +6777,7 @@ namespace Mangos.World.Spells
                     {
                         Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_SET_HOVER);
                         packet.AddPackGUID(Target.GUID);
-                        Target.SendToNearPlayers(ref packet, 0uL);
+                        Target.SendToNearPlayers(ref packet);
                         packet.Dispose();
                         break;
                     }
@@ -6787,7 +6786,7 @@ namespace Mangos.World.Spells
                     {
                         Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_MOVE_UNSET_HOVER);
                         packet2.AddPackGUID(Target.GUID);
-                        Target.SendToNearPlayers(ref packet2, 0uL);
+                        Target.SendToNearPlayers(ref packet2);
                         packet2.Dispose();
                         break;
                     }
@@ -7452,11 +7451,11 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_UPDATE:
                         return;
                     case AuraAction.AURA_ADD:
-                        Target.Life.Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.Life.Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
-                        Target.Life.Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                        Target.Life.Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                 }
                 if (Target is WS_PlayerData.CharacterObject @object)
@@ -7475,7 +7474,7 @@ namespace Mangos.World.Spells
                 packet = (Packets.UpdatePacketClass)packet2;
                 WS_Creatures.CreatureObject obj = (WS_Creatures.CreatureObject)Target;
                 packet2 = packet;
-                obj.SendToNearPlayers(ref packet2, 0uL);
+                obj.SendToNearPlayers(ref packet2);
                 packet = (Packets.UpdatePacketClass)packet2;
                 packet.Dispose();
                 UpdateData.Dispose();
@@ -7518,7 +7517,7 @@ namespace Mangos.World.Spells
             packet = (Packets.UpdatePacketClass)packet2;
             WS_Creatures.CreatureObject obj = (WS_Creatures.CreatureObject)Target;
             packet2 = packet;
-            obj.SendToNearPlayers(ref packet2, 0uL);
+            obj.SendToNearPlayers(ref packet2);
             packet = (Packets.UpdatePacketClass)packet2;
             packet.Dispose();
             UpdateData.Dispose();
@@ -7539,19 +7538,19 @@ namespace Mangos.World.Spells
                     {
                         if (!(Target is WS_PlayerData.CharacterObject))
                         {
-                            Target.Mana.Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                            Target.Mana.Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                             break;
                         }
                         switch (Target.ManaType)
                         {
                             case ManaTypes.TYPE_ENERGY:
-                                ((WS_PlayerData.CharacterObject)Target).Energy.Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                                ((WS_PlayerData.CharacterObject)Target).Energy.Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
                             case ManaTypes.TYPE_MANA:
-                                ((WS_PlayerData.CharacterObject)Target).Mana.Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                                ((WS_PlayerData.CharacterObject)Target).Mana.Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
                             case ManaTypes.TYPE_RAGE:
-                                ((WS_PlayerData.CharacterObject)Target).Rage.Bonus += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                                ((WS_PlayerData.CharacterObject)Target).Rage.Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
                         }
                         break;
@@ -7566,19 +7565,19 @@ namespace Mangos.World.Spells
                     {
                         if (!(Target is WS_PlayerData.CharacterObject))
                         {
-                            Target.Mana.Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                            Target.Mana.Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                             break;
                         }
                         switch (Target.ManaType)
                         {
                             case ManaTypes.TYPE_ENERGY:
-                                ((WS_PlayerData.CharacterObject)Target).Energy.Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                                ((WS_PlayerData.CharacterObject)Target).Energy.Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
                             case ManaTypes.TYPE_MANA:
-                                ((WS_PlayerData.CharacterObject)Target).Mana.Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                                ((WS_PlayerData.CharacterObject)Target).Mana.Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
                             case ManaTypes.TYPE_RAGE:
-                                ((WS_PlayerData.CharacterObject)Target).Rage.Bonus -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0);
+                                ((WS_PlayerData.CharacterObject)Target).Rage.Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
                         }
                         break;
@@ -7600,7 +7599,7 @@ namespace Mangos.World.Spells
             packet = (Packets.UpdatePacketClass)packet2;
             WS_Creatures.CreatureObject obj = (WS_Creatures.CreatureObject)Target;
             packet2 = packet;
-            obj.SendToNearPlayers(ref packet2, 0uL);
+            obj.SendToNearPlayers(ref packet2);
             packet = (Packets.UpdatePacketClass)packet2;
             packet.Dispose();
             UpdateData.Dispose();
@@ -7626,11 +7625,11 @@ namespace Mangos.World.Spells
                                 ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)i].Base;
                                 checked
                                 {
-                                    base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Modifier);
-                                    ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Base += EffectInfo.GetValue(unchecked(Target.Level), 0);
-                                    ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Base;
-                                    base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Modifier);
-                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)i)].Base);
+                                    base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)i].Modifier);
+                                    ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)i].Base += EffectInfo.GetValue(Target.Level, 0);
+                                    ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)i].Base;
+                                    base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)i].Modifier);
+                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + (int)i, ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)i].Base);
                                 }
                             }
                             i++;
@@ -7649,11 +7648,11 @@ namespace Mangos.World.Spells
                                 ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)j].Base;
                                 checked
                                 {
-                                    @base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Modifier);
-                                    ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Base -= EffectInfo.GetValue(unchecked(Target.Level), 0);
-                                    ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Base;
-                                    base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Modifier);
-                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).Resistances[unchecked((uint)j)].Base);
+                                    @base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)j].Modifier);
+                                    ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)j].Base -= EffectInfo.GetValue(Target.Level, 0);
+                                    ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)j].Base;
+                                    base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)j].Modifier);
+                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + (int)j, ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)j].Base);
                                 }
                             }
                             j++;
@@ -7686,10 +7685,10 @@ namespace Mangos.World.Spells
                                     ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                     base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
                                     ref float modifier2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier;
-                                    modifier2 = (float)(modifier2 + EffectInfo.GetValue(unchecked(Target.Level), 0) / 100.0);
+                                    modifier2 = (float)(modifier2 + EffectInfo.GetValue(Target.Level, 0) / 100.0);
                                     ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                     base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
+                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + i, ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
                                 }
                                 i = (byte)unchecked((uint)(i + 1));
                             }
@@ -7710,10 +7709,10 @@ namespace Mangos.World.Spells
                                     ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                     @base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
                                     ref float modifier = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier;
-                                    modifier = (float)(modifier - EffectInfo.GetValue(unchecked(Target.Level), 0) / 100.0);
+                                    modifier = (float)(modifier - EffectInfo.GetValue(Target.Level, 0) / 100.0);
                                     ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                     base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
+                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + j, ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
                                 }
                                 j = (byte)unchecked((uint)(j + 1));
                             }
@@ -7743,27 +7742,27 @@ namespace Mangos.World.Spells
                             {
                                 if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                                 {
-                                    if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
+                                    if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
                                         ref int base5 = ref Target.Resistances[i].Base;
                                         base5 = (int)Math.Round(base5 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-                                        Target.Resistances[i].Base += EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        Target.Resistances[i].Base += EffectInfo.GetValue(Target.Level, 0);
                                         ref int base6 = ref Target.Resistances[i].Base;
                                         base6 = (int)Math.Round(base6 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
                                         ref short positiveBonus2 = ref Target.Resistances[i].PositiveBonus;
-                                        positiveBonus2 = (short)(positiveBonus2 + EffectInfo.GetValue(unchecked(Target.Level), 0));
+                                        positiveBonus2 = (short)(positiveBonus2 + EffectInfo.GetValue(Target.Level, 0));
                                     }
                                     else
                                     {
                                         ref int base7 = ref Target.Resistances[i].Base;
                                         base7 = (int)Math.Round(base7 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-                                        Target.Resistances[i].Base += EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        Target.Resistances[i].Base += EffectInfo.GetValue(Target.Level, 0);
                                         ref int base8 = ref Target.Resistances[i].Base;
                                         base8 = (int)Math.Round(base8 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
                                         ref short negativeBonus2 = ref Target.Resistances[i].NegativeBonus;
-                                        negativeBonus2 = (short)(negativeBonus2 - EffectInfo.GetValue(unchecked(Target.Level), 0));
+                                        negativeBonus2 = (short)(negativeBonus2 - EffectInfo.GetValue(Target.Level, 0));
                                     }
-                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
+                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + i, ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
                                 }
                                 i = (byte)unchecked((uint)(i + 1));
                             }
@@ -7781,27 +7780,27 @@ namespace Mangos.World.Spells
                             {
                                 if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                                 {
-                                    if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
+                                    if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
                                         ref int @base = ref Target.Resistances[j].Base;
                                         @base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-                                        Target.Resistances[j].Base -= EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        Target.Resistances[j].Base -= EffectInfo.GetValue(Target.Level, 0);
                                         ref int base2 = ref Target.Resistances[j].Base;
                                         base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
                                         ref short positiveBonus = ref Target.Resistances[j].PositiveBonus;
-                                        positiveBonus = (short)(positiveBonus - EffectInfo.GetValue(unchecked(Target.Level), 0));
+                                        positiveBonus = (short)(positiveBonus - EffectInfo.GetValue(Target.Level, 0));
                                     }
                                     else
                                     {
                                         ref int base3 = ref Target.Resistances[j].Base;
                                         base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-                                        Target.Resistances[j].Base -= EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        Target.Resistances[j].Base -= EffectInfo.GetValue(Target.Level, 0);
                                         ref int base4 = ref Target.Resistances[j].Base;
                                         base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
                                         ref short negativeBonus = ref Target.Resistances[j].NegativeBonus;
-                                        negativeBonus = (short)(negativeBonus + EffectInfo.GetValue(unchecked(Target.Level), 0));
+                                        negativeBonus = (short)(negativeBonus + EffectInfo.GetValue(Target.Level, 0));
                                     }
-                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
+                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + j, ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
                                 }
                                 j = (byte)unchecked((uint)(j + 1));
                             }
@@ -7833,11 +7832,11 @@ namespace Mangos.World.Spells
                                 if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                                 {
                                     short OldBase = (short)((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
-                                    if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
+                                    if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
                                         ref int base5 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                         base5 = (int)Math.Round(base5 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-                                        ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier += EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier += EffectInfo.GetValue(Target.Level, 0);
                                         ref int base6 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                         base6 = (int)Math.Round(base6 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
                                         ref short positiveBonus2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].PositiveBonus;
@@ -7847,13 +7846,13 @@ namespace Mangos.World.Spells
                                     {
                                         ref int base7 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                         base7 = (int)Math.Round(base7 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-                                        ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier -= EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier -= EffectInfo.GetValue(Target.Level, 0);
                                         ref int base8 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                         base8 = (int)Math.Round(base8 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
                                         ref short positiveBonus3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].PositiveBonus;
                                         positiveBonus3 = (short)(positiveBonus3 + (((WS_PlayerData.CharacterObject)Target).Resistances[i].Base - OldBase));
                                     }
-                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
+                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + i, ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
                                 }
                                 i = (byte)unchecked((uint)(i + 1));
                             }
@@ -7872,11 +7871,11 @@ namespace Mangos.World.Spells
                                 if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                                 {
                                     short OldBase2 = (short)((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
-                                    if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
+                                    if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
                                         ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                         @base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-                                        ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier -= EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier -= EffectInfo.GetValue(Target.Level, 0);
                                         ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                         base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
                                         ref short positiveBonus = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].PositiveBonus;
@@ -7886,13 +7885,13 @@ namespace Mangos.World.Spells
                                     {
                                         ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                         base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-                                        ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier += EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier += EffectInfo.GetValue(Target.Level, 0);
                                         ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                         base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
                                         ref short negativeBonus = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].NegativeBonus;
                                         negativeBonus = (short)(negativeBonus - (((WS_PlayerData.CharacterObject)Target).Resistances[j].Base - OldBase2));
                                     }
-                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
+                                    ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + j, ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
                                 }
                                 j = (byte)unchecked((uint)(j + 1));
                             }
@@ -7923,27 +7922,27 @@ namespace Mangos.World.Spells
                             {
                                 if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                                 {
-                                    if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
+                                    if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
                                         ref int base5 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                         base5 = (int)Math.Round(base5 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-                                        ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base += EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base += EffectInfo.GetValue(Target.Level, 0);
                                         ref int base6 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                         base6 = (int)Math.Round(base6 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
                                         ref short positiveBonus3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].PositiveBonus;
-                                        positiveBonus3 = (short)(positiveBonus3 + EffectInfo.GetValue(unchecked(Target.Level), 0));
-                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
+                                        positiveBonus3 = (short)(positiveBonus3 + EffectInfo.GetValue(Target.Level, 0));
+                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + i, ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
                                     }
                                     else
                                     {
                                         ref int base7 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                         base7 = (int)Math.Round(base7 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
-                                        ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base -= EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base -= EffectInfo.GetValue(Target.Level, 0);
                                         ref int base8 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                         base8 = (int)Math.Round(base8 * ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
                                         ref short negativeBonus = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].NegativeBonus;
-                                        negativeBonus = (short)(negativeBonus - EffectInfo.GetValue(unchecked(Target.Level), 0));
-                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(i), ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
+                                        negativeBonus = (short)(negativeBonus - EffectInfo.GetValue(Target.Level, 0));
+                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + i, ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base);
                                     }
                                 }
                                 i = (byte)unchecked((uint)(i + 1));
@@ -7962,27 +7961,27 @@ namespace Mangos.World.Spells
                             {
                                 if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                                 {
-                                    if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
+                                    if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
                                         ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                         @base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-                                        ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base -= EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base -= EffectInfo.GetValue(Target.Level, 0);
                                         ref int base2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                         base2 = (int)Math.Round(base2 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
                                         ref short positiveBonus = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].PositiveBonus;
-                                        positiveBonus = (short)(positiveBonus - EffectInfo.GetValue(unchecked(Target.Level), 0));
-                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
+                                        positiveBonus = (short)(positiveBonus - EffectInfo.GetValue(Target.Level, 0));
+                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + j, ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
                                     }
                                     else
                                     {
                                         ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                         base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
-                                        ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base += EffectInfo.GetValue(unchecked(Target.Level), 0);
+                                        ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base += EffectInfo.GetValue(Target.Level, 0);
                                         ref int base4 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                         base4 = (int)Math.Round(base4 * ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
                                         ref short positiveBonus2 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].PositiveBonus;
-                                        positiveBonus2 = (short)(positiveBonus2 + EffectInfo.GetValue(unchecked(Target.Level), 0));
-                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + unchecked(j), ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
+                                        positiveBonus2 = (short)(positiveBonus2 + EffectInfo.GetValue(Target.Level, 0));
+                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(155 + j, ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base);
                                     }
                                 }
                                 j = (byte)unchecked((uint)(j + 1));
@@ -8004,11 +8003,11 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_UPDATE:
                         return;
                     case AuraAction.AURA_ADD:
-                        Target.AttackPowerMods += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                        Target.AttackPowerMods += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                         break;
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
-                        Target.AttackPowerMods -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                        Target.AttackPowerMods -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                         break;
                 }
                 if (Target is WS_PlayerData.CharacterObject @object)
@@ -8035,11 +8034,11 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_UPDATE:
                         return;
                     case AuraAction.AURA_ADD:
-                        Target.AttackPowerModsRanged += EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                        Target.AttackPowerModsRanged += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                         break;
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
-                        Target.AttackPowerModsRanged -= EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0) * StackCount;
+                        Target.AttackPowerModsRanged -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                         break;
                 }
                 if (Target is WS_PlayerData.CharacterObject @object)
@@ -8114,17 +8113,17 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, unchecked((byte)i)))
+                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, (byte)i))
                                 {
-                                    if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
+                                    if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
-                                        ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)i)].PositiveBonus += EffectInfo.GetValue(unchecked(Target.Level), 0);
-                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1201 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)i)].PositiveBonus);
+                                        ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)i].PositiveBonus += EffectInfo.GetValue(Target.Level, 0);
+                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1201 + (int)i, ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)i].PositiveBonus);
                                     }
                                     else
                                     {
-                                        ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)i)].NegativeBonus -= EffectInfo.GetValue(unchecked(Target.Level), 0);
-                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1208 + unchecked((int)i), ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)i)].NegativeBonus);
+                                        ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)i].NegativeBonus -= EffectInfo.GetValue(Target.Level, 0);
+                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1208 + (int)i, ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)i].NegativeBonus);
                                     }
                                 }
                             }
@@ -8141,17 +8140,17 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, unchecked((byte)j)))
+                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, (byte)j))
                                 {
-                                    if (EffectInfo.GetValue(unchecked(Target.Level), 0) > 0)
+                                    if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
-                                        ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)j)].PositiveBonus -= EffectInfo.GetValue(unchecked(Target.Level), 0);
-                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1201 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)j)].PositiveBonus);
+                                        ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)j].PositiveBonus -= EffectInfo.GetValue(Target.Level, 0);
+                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1201 + (int)j, ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)j].PositiveBonus);
                                     }
                                     else
                                     {
-                                        ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)j)].NegativeBonus += EffectInfo.GetValue(unchecked(Target.Level), 0);
-                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1208 + unchecked((int)j), ((WS_PlayerData.CharacterObject)Target).spellDamage[unchecked((uint)j)].NegativeBonus);
+                                        ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)j].NegativeBonus += EffectInfo.GetValue(Target.Level, 0);
+                                        ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(1208 + (int)j, ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)j].NegativeBonus);
                                     }
                                 }
                             }
@@ -8183,7 +8182,7 @@ namespace Mangos.World.Spells
                             {
                                 ref float modifier2 = ref ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)i].Modifier;
                                 modifier2 = (float)(modifier2 + EffectInfo.GetValue(Target.Level, 0) / 100.0);
-                                ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(checked(1215 + unchecked((int)i)), ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)i].Modifier);
+                                ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(checked(1215 + (int)i), ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)i].Modifier);
                             }
                             i++;
                         }
@@ -8200,7 +8199,7 @@ namespace Mangos.World.Spells
                             {
                                 ref float modifier = ref ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)j].Modifier;
                                 modifier = (float)(modifier - EffectInfo.GetValue(Target.Level, 0) / 100.0);
-                                ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(checked(1215 + unchecked((int)j)), ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)j].Modifier);
+                                ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(checked(1215 + (int)j), ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)j].Modifier);
                             }
                             j++;
                         }
@@ -8352,7 +8351,7 @@ namespace Mangos.World.Spells
                         }
                         WS_Base.BaseUnit obj3 = Target;
                         packet8 = packet;
-                        obj3.SendToNearPlayers(ref packet8, 0uL);
+                        obj3.SendToNearPlayers(ref packet8);
                         packet = (Packets.UpdatePacketClass)packet8;
                         packet.Dispose();
                         tmpUpdate.Dispose();
@@ -8383,7 +8382,7 @@ namespace Mangos.World.Spells
                         }
                         WS_Base.BaseObject obj4 = Caster;
                         packet8 = packet;
-                        obj4.SendToNearPlayers(ref packet8, 0uL);
+                        obj4.SendToNearPlayers(ref packet8);
                         packet = (Packets.UpdatePacketClass)packet8;
                         packet.Dispose();
                         tmpUpdate.Dispose();
@@ -8454,7 +8453,7 @@ namespace Mangos.World.Spells
                         }
                         WS_Base.BaseUnit obj = Target;
                         packet8 = packet2;
-                        obj.SendToNearPlayers(ref packet8, 0uL);
+                        obj.SendToNearPlayers(ref packet8);
                         packet2 = (Packets.UpdatePacketClass)packet8;
                         packet2.Dispose();
                         tmpUpdate2.Dispose();
@@ -8483,7 +8482,7 @@ namespace Mangos.World.Spells
                         }
                         WS_Base.BaseObject obj2 = Caster;
                         packet8 = packet2;
-                        obj2.SendToNearPlayers(ref packet8, 0uL);
+                        obj2.SendToNearPlayers(ref packet8);
                         packet2 = (Packets.UpdatePacketClass)packet8;
                         packet2.Dispose();
                         tmpUpdate2.Dispose();
@@ -8552,7 +8551,7 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_REMOVEBYDURATION:
                     checked
                     {
-                        Value = ((!(Target is WS_PlayerData.CharacterObject)) ? (-EffectInfo.GetValue(unchecked(((WS_Base.BaseUnit)Caster).Level), 0)) : (-EffectInfo.GetValue(unchecked(Target.Level), 0)));
+                        Value = ((!(Target is WS_PlayerData.CharacterObject)) ? (-EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0)) : (-EffectInfo.GetValue(Target.Level, 0)));
                         break;
                     }
             }
@@ -8698,12 +8697,12 @@ namespace Mangos.World.Spells
                 packet.AddString(Winner.Name);
                 packet.AddInt8(1);
                 packet.AddString(Loser.Name);
-                Winner.SendToNearPlayers(ref packet, 0uL);
+                Winner.SendToNearPlayers(ref packet);
                 packet.Dispose();
                 Packets.PacketClass SMSG_EMOTE = new Packets.PacketClass(Opcodes.SMSG_EMOTE);
                 SMSG_EMOTE.AddInt32(20);
                 SMSG_EMOTE.AddUInt64(Loser.GUID);
-                Loser.SendToNearPlayers(ref SMSG_EMOTE, 0uL);
+                Loser.SendToNearPlayers(ref SMSG_EMOTE);
                 SMSG_EMOTE.Dispose();
                 WS_PlayerData.CharacterObject tmpCharacter = Winner;
                 Loser.DuelPartner = null;
@@ -8733,7 +8732,7 @@ namespace Mangos.World.Spells
                     c1.client.SendMultiplyPackets(ref response);
                     c2.client.SendMultiplyPackets(ref response);
                     response.Dispose();
-                    Thread StartDuel = new Thread(new ThreadStart(c2.StartDuel))
+                    Thread StartDuel = new Thread(c2.StartDuel)
                     {
                         Name = "Duel timer"
                     };
@@ -8847,7 +8846,7 @@ namespace Mangos.World.Spells
                     {
                         ProjectData.SetProjectError(ex);
                         Exception e2 = ex;
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error casting auto-shoot {0}.{1}", spellID, Environment.NewLine + e2.ToString());
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error casting auto-shoot {0}.{1}", spellID, Environment.NewLine + e2);
                         ProjectData.ClearProjectError();
                     }
                 }
@@ -8881,7 +8880,7 @@ namespace Mangos.World.Spells
                     character = (WS_PlayerData.CharacterObject)Caster;
                     CastSpellParameters tmpSpell = castSpellParameters;
                     client.Character.spellCasted[(int)SpellType] = tmpSpell;
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(tmpSpell.Cast));
+                    ThreadPool.QueueUserWorkItem(tmpSpell.Cast);
                 }
                 else
                 {
@@ -8892,7 +8891,7 @@ namespace Mangos.World.Spells
             {
                 ProjectData.SetProjectError(ex2);
                 Exception e = ex2;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error casting spell {0}.{1}", spellID, Environment.NewLine + e.ToString());
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error casting spell {0}.{1}", spellID, Environment.NewLine + e);
                 SendCastResult(castResult, ref client, spellID);
                 ProjectData.ClearProjectError();
             }

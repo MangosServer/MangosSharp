@@ -19,10 +19,12 @@
 using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Lord_Serpentis : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Lord_Serpentis : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int SLUMBER_CD = 10000;
@@ -32,12 +34,12 @@ namespace Mangos.World.Scripts.Creatures
         private const int Spell_Serpent_Form = 8041; // Not sure how this will work. 
         private const int Spell_Lightning_Bolt = 9532;
         public int NextWaypoint = 0;
-        public int NextLightningBolt = 0;
-        public int NextSlumber = 0;
+        public int NextLightningBolt;
+        public int NextSlumber;
         // Public NextSerpentForm As Integer = 0 'This should never be re-casted.
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Lord_Serpentis(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Lord_Serpentis(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             AllowedMove = false;
             Creature.Flying = false;
@@ -71,7 +73,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
@@ -82,7 +84,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 1; i <= 3; i++)
             {
-                World.Objects.WS_Base.BaseUnit target = aiCreature;
+                WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
                     return;
             }

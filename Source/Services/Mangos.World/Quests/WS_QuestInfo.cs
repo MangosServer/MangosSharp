@@ -427,7 +427,7 @@ namespace Mangos.World.Quests
             bool retValue = true;
             checked
             {
-                if (unchecked(objCharacter.Level) + 6 < Level_Start)
+                if (objCharacter.Level + 6 < Level_Start)
                 {
                     retValue = false;
                 }

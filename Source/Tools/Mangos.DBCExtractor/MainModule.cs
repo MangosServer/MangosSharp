@@ -46,7 +46,7 @@ namespace Mangos.DBCExtractor
                 goto ExitNow;
             }
 
-            var MPQFilesToOpen = new List<string>() { "terrain.MPQ", "dbc.MPQ", "misc.MPQ", "patch.MPQ", "patch-2.MPQ" };
+            var MPQFilesToOpen = new List<string> { "terrain.MPQ", "dbc.MPQ", "misc.MPQ", "patch.MPQ", "patch-2.MPQ" };
             foreach (string mpq in MPQFilesToOpen)
             {
                 if (File.Exists(@"Data\" + mpq) == false)
@@ -92,7 +92,6 @@ namespace Mangos.DBCExtractor
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Unable to extract DBC Files. Error: " + ex.Message);
-                goto ExitNow;
             }
 
             // Try

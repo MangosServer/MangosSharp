@@ -339,7 +339,7 @@ namespace Mangos.World
             DateTime dateTimeStarted = DateAndTime.Now;
             Log.WriteLine(LogType.INFORMATION, "[{0}] World Server Starting...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
             AppDomain currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(GenericExceptionHandler);
+            currentDomain.UnhandledException += GenericExceptionHandler;
             LoadConfig();
             Console.ForegroundColor = ConsoleColor.Gray;
             AccountDatabase.SQLMessage += AccountSQLEventHandler;
@@ -505,7 +505,7 @@ namespace Mangos.World
             }
 
             Exception EX = (Exception)e.ExceptionObject;
-            Log.WriteLine(LogType.CRITICAL, EX.ToString() + Environment.NewLine);
+            Log.WriteLine(LogType.CRITICAL, EX + Environment.NewLine);
             Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'WorldServer-Error-yyyy-mmm-d-h-mm.log' file has been created. Check your log folder for more information.");
             new StreamWriter(new FileStream(string.Format("WorldServer-Error-{0}.log", Strings.Format(DateAndTime.Now, "yyyy-MMM-d-H-mm")), FileMode.Create)).Write(EX.ToString());
             new StreamWriter(new FileStream(string.Format("WorldServer-Error-{0}.log", Strings.Format(DateAndTime.Now, "yyyy-MMM-d-H-mm")), FileMode.Create)).Close();

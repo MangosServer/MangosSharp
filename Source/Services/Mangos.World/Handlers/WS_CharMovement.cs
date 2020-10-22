@@ -160,20 +160,20 @@ namespace Mangos.World.Handlers
                     int exploreFlag = WorldServiceLocator._WS_Maps.GetAreaFlag(client.Character.positionX, client.Character.positionY, (int)client.Character.MapID);
                     if (exploreFlag != 65535)
                     {
-                        int areaFlag = unchecked(exploreFlag % 32);
-                        byte areaFlagOffset = (byte)unchecked(exploreFlag / 32);
+                        int areaFlag = exploreFlag % 32;
+                        byte areaFlagOffset = (byte)(exploreFlag / 32);
                         if (!WorldServiceLocator._Functions.HaveFlag(client.Character.ZonesExplored[areaFlagOffset], (byte)areaFlag))
                         {
                             WorldServiceLocator._Functions.SetFlag(ref client.Character.ZonesExplored[areaFlagOffset], (byte)areaFlag, flagValue: true);
-                            int GainedXP = unchecked(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level) * 10;
-                            GainedXP = unchecked(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level) * 10;
+                            int GainedXP = WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level * 10;
+                            GainedXP = WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level * 10;
                             Packets.PacketClass SMSG_EXPLORATION_EXPERIENCE = new Packets.PacketClass(Opcodes.SMSG_EXPLORATION_EXPERIENCE);
                             SMSG_EXPLORATION_EXPERIENCE.AddInt32(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].ID);
                             SMSG_EXPLORATION_EXPERIENCE.AddInt32(GainedXP);
                             client.Send(ref SMSG_EXPLORATION_EXPERIENCE);
                             SMSG_EXPLORATION_EXPERIENCE.Dispose();
-                            client.Character.SetUpdateFlag(1111 + unchecked(areaFlagOffset), client.Character.ZonesExplored[areaFlagOffset]);
-                            client.Character.AddXP(GainedXP, 0, 0uL);
+                            client.Character.SetUpdateFlag(1111 + areaFlagOffset, client.Character.ZonesExplored[areaFlagOffset]);
+                            client.Character.AddXP(GainedXP, 0);
                             WorldServiceLocator._WorldServer.ALLQUESTS.OnQuestExplore(ref client.Character, exploreFlag);
                         }
                     }
@@ -201,8 +201,8 @@ namespace Mangos.World.Handlers
                     client.Character.RemoveAurasByInterruptFlag(16);
                 }
                 int MsTime = WorldServiceLocator._WS_Network.MsTime();
-                int ClientTimeDelay = (int)(unchecked(MsTime) - unchecked(Time));
-                int MoveTime = (int)(unchecked(Time) - unchecked(checked(MsTime - ClientTimeDelay)) + 500 + MsTime);
+                int ClientTimeDelay = (int)(MsTime - Time);
+                int MoveTime = (int)(Time - checked(MsTime - ClientTimeDelay) + 500 + MsTime);
                 packet.AddInt32(MoveTime, 10);
                 Packets.PacketClass response = new Packets.PacketClass(packet.OpCode);
                 response.AddPackGUID(client.Character.GUID);
@@ -248,8 +248,8 @@ namespace Mangos.World.Handlers
             int MsTime = WorldServiceLocator._WS_Network.MsTime();
             checked
             {
-                int ClientTimeDelay = (int)(unchecked(MsTime) - unchecked(Time));
-                int MoveTime = (int)(unchecked(Time) - unchecked(checked(MsTime - ClientTimeDelay)) + 500 + MsTime);
+                int ClientTimeDelay = (int)(MsTime - Time);
+                int MoveTime = (int)(Time - checked(MsTime - ClientTimeDelay) + 500 + MsTime);
                 packet.AddInt32(MoveTime, 10);
                 Packets.PacketClass response = new Packets.PacketClass(packet.OpCode);
                 response.AddPackGUID(Controlled.GUID);
@@ -439,7 +439,7 @@ namespace Mangos.World.Handlers
             {
                 ProjectData.SetProjectError(ex);
                 Exception e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when entering areatrigger.{0}", Environment.NewLine + e.ToString());
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when entering areatrigger.{0}", Environment.NewLine + e);
                 ProjectData.ClearProjectError();
             }
         }
@@ -542,7 +542,7 @@ namespace Mangos.World.Handlers
             {
                 ProjectData.SetProjectError(ex);
                 Exception e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error when falling.{0}", Environment.NewLine + e.ToString());
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error when falling.{0}", Environment.NewLine + e);
                 ProjectData.ClearProjectError();
             }
         }

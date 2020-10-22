@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -212,7 +213,6 @@ namespace Mangos.DBCReader
                     if (Conversions.ToBoolean(Operators.ConditionalCompareObjectLess(foundStrings[i].Count, Interaction.IIf(Rows < 10, 2, 5), false)))
                     {
                         IsString.Remove(i);
-                        continue;
                     }
                 }
             }
@@ -301,7 +301,7 @@ namespace Mangos.DBCReader
             if (DBCData.Items.Count == 0)
                 return;
             A_Float = IsFloat.Contains(e.Column);
-            A_String = A_Float == false && IsString.Contains(e.Column) == true;
+            A_String = A_Float == false && IsString.Contains(e.Column);
             var loopTo = DBCData.Items.Count - 1;
             for (i = 0; i <= loopTo; i++)
             {
@@ -351,7 +351,7 @@ namespace Mangos.DBCReader
                 ProgressBar.Value = (int)((i + 1) / (double)DBCData.Items.Count * 100d);
             }
 
-            if (FailString == true)
+            if (FailString)
             {
                 A_Float = false;
                 A_String = true;
@@ -386,7 +386,7 @@ namespace Mangos.DBCReader
 
             if (i == Index)
                 return "";
-            return System.Text.Encoding.ASCII.GetString(Data, Index, i - Index);
+            return Encoding.ASCII.GetString(Data, Index, i - Index);
         }
 
         private void cmdSearch_Click(object sender, EventArgs e)
@@ -429,7 +429,8 @@ namespace Mangos.DBCReader
                     DBCData.Items[i].EnsureVisible();
                     return;
                 }
-                else if ((sItem ?? "") == (sQuery ?? ""))
+
+                if ((sItem ?? "") == (sQuery ?? ""))
                 {
                     DBCData.SelectedItems.Clear();
                     DBCData.Items[i].Selected = true;

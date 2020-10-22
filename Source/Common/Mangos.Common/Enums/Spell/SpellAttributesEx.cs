@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellAttributesEx : int
+    public enum SpellAttributesEx
     {
         SPELL_ATTR_EX_DRAIN_ALL_POWER = 0x2, // use all power (Only paladin Lay of Hands and Bunyanize)
         SPELL_ATTR_EX_CHANNELED_1 = 0x4, // channeled 1

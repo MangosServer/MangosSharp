@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellCastTargetFlags : int
+    public enum SpellCastTargetFlags
     {
         TARGET_FLAG_SELF = 0x0,
         TARGET_FLAG_UNIT = 0x2,

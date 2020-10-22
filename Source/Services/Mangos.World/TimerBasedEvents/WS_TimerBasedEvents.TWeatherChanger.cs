@@ -41,7 +41,7 @@ namespace Mangos.World.Server
                 WeatherTimer = null;
                 WeatherWorking = false;
                 UPDATE_TIMER = WorldServiceLocator._ConfigurationProvider.GetConfiguration().WeatherTimer;
-                WeatherTimer = new Timer(new TimerCallback(Update), null, 10000, UPDATE_TIMER);
+                WeatherTimer = new Timer(Update, null, 10000, UPDATE_TIMER);
             }
 
             private void Update(object state)

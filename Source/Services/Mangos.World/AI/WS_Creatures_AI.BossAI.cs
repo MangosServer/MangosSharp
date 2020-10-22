@@ -61,7 +61,7 @@ namespace Mangos.World.AI
             public override void DoThink()
             {
                 base.DoThink();
-                new Thread(new ThreadStart(OnThink))
+                new Thread(OnThink)
                 {
                     Name = "Boss Thinking"
                 }.Start();

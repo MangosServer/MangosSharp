@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellSchoolMask : int
+    public enum SpellSchoolMask
     {
         SPELL_SCHOOL_MASK_NONE = 0x0,
         SPELL_SCHOOL_MASK_NORMAL = 0x1,

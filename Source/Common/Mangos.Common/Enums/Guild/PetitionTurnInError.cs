@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Guild
 {
-    public enum PetitionTurnInError : int
+    public enum PetitionTurnInError
     {
         PETITIONTURNIN_OK = 0,                   // :Closes the window
         PETITIONTURNIN_ALREADY_IN_GUILD = 2,     // You are already in a guild

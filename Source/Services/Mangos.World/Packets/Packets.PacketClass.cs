@@ -41,7 +41,7 @@ namespace Mangos.World.Globals
                 {
                     checked
                     {
-                        return unchecked(Data[1]) + unchecked(Data[0]) * 256;
+                        return Data[1] + Data[0] * 256;
                     }
                 }
             }
@@ -52,7 +52,7 @@ namespace Mangos.World.Globals
                 {
                     if (Information.UBound(Data) > 2)
                     {
-                        return (Opcodes)checked(unchecked(Data[2]) + unchecked(Data[3]) * 256);
+                        return (Opcodes)checked(Data[2] + Data[3] * 256);
                     }
                     return Opcodes.MSG_NULL_ACTION;
                 }
@@ -66,8 +66,8 @@ namespace Mangos.World.Globals
                 Data[1] = 0;
                 checked
                 {
-                    Data[2] = (byte)unchecked(checked((short)opcode) % 256);
-                    Data[3] = (byte)unchecked(checked((short)opcode) / 256);
+                    Data[2] = (byte)(checked((short)opcode) % 256);
+                    Data[3] = (byte)(checked((short)opcode) / 256);
                 }
             }
 
@@ -104,7 +104,7 @@ namespace Mangos.World.Globals
                 checked
                 {
                     data = (byte[])Utils.CopyArray(data, new byte[Data.Length - 1 + arraryLen + 1]);
-                    byte[] bufferarray = new byte[unchecked(checked((byte)Math.Round((buffer.Length + 8) / 8.0))) + 1];
+                    byte[] bufferarray = new byte[checked((byte)Math.Round((buffer.Length + 8) / 8.0)) + 1];
                     buffer.CopyTo(bufferarray, 0);
                     Array.Copy(bufferarray, 0, Data, Data.Length - arraryLen, arraryLen);
                 }
@@ -253,7 +253,7 @@ namespace Mangos.World.Globals
                         }
                         j = (byte)unchecked((uint)(j + 1));
                     }
-                    while (unchecked(j) <= 7u);
+                    while (j <= 7u);
                     ref byte[] data = ref Data;
                     data = (byte[])Utils.CopyArray(data, new byte[offsetNewSize + 1]);
                     flags.CopyTo(Data, offsetStart);
@@ -268,7 +268,7 @@ namespace Mangos.World.Globals
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 7u);
+                    while (i <= 7u);
                 }
             }
 
@@ -289,10 +289,10 @@ namespace Mangos.World.Globals
                 checked
                 {
                     data = (byte[])Utils.CopyArray(data, new byte[Data.Length + 3 + 1]);
-                    Data[^4] = (byte)(unchecked(buffer) & 0xFFL);
-                    Data[^3] = (byte)(unchecked(buffer >> 8) & 0xFFL);
-                    Data[^2] = (byte)(unchecked(buffer >> 16) & 0xFFL);
-                    Data[^1] = (byte)(unchecked(buffer >> 24) & 0xFFL);
+                    Data[^4] = (byte)(buffer & 0xFFL);
+                    Data[^3] = (byte)(buffer >> 8 & 0xFFL);
+                    Data[^2] = (byte)(buffer >> 16 & 0xFFL);
+                    Data[^1] = (byte)(buffer >> 24 & 0xFFL);
                 }
             }
 
@@ -309,8 +309,8 @@ namespace Mangos.World.Globals
                 {
                     if (!((Data[0] != 0) | (Data[1] != 0)))
                     {
-                        Data[0] = (byte)unchecked(checked(Data.Length - 2) / 256);
-                        Data[1] = (byte)unchecked(checked(Data.Length - 2) % 256);
+                        Data[0] = (byte)(checked(Data.Length - 2) / 256);
+                        Data[1] = (byte)(checked(Data.Length - 2) % 256);
                     }
                 }
             }

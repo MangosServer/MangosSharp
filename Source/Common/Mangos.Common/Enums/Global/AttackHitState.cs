@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum AttackHitState : int
+    public enum AttackHitState
     {
         HIT_UNARMED = HITINFO_NORMALSWING,
         HIT_NORMAL = HITINFO_HITANIMATION,

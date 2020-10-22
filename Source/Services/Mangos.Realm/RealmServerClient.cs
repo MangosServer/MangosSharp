@@ -16,14 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Common.Enums.Authentication;
-using Mangos.Common.Enums.Global;
-using Mangos.Common.Enums.Misc;
-using Mangos.Loggers;
-using Mangos.Network.Tcp;
-using Mangos.Network.Tcp.Extensions;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,8 +25,16 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Mangos.Common.Enums.Authentication;
+using Mangos.Common.Enums.Global;
+using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
+using Mangos.Loggers;
+using Mangos.Network.Tcp;
+using Mangos.Network.Tcp.Extensions;
 using Mangos.Storage.Account;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Realm
 {
@@ -118,13 +118,13 @@ namespace Mangos.Realm
             Account = packetAccount;
 
             // Read users ip from packet
-            packetIp = ((int)data[29]).ToString() + "." + ((int)data[30]).ToString() + "." + ((int)data[31]).ToString() + "." + ((int)data[32]).ToString();
+            packetIp = ((int)data[29]) + "." + ((int)data[30]) + "." + ((int)data[31]) + "." + ((int)data[32]);
 
             // Get the client build from packet.
             int bMajor = data[8];
             int bMinor = data[9];
             int bRevision = data[10];
-            int clientBuild = BitConverter.ToInt16(new byte[] { data[11], data[12] }, 0);
+            int clientBuild = BitConverter.ToInt16(new[] { data[11], data[12] }, 0);
             string clientLanguage = Conversions.ToString((char)data[24]) + (char)data[23] + (char)data[22] + (char)data[21];
 
             // DONE: Check if our build can join the server

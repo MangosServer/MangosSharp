@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum SKILL_IDs : int
+    public enum SKILL_IDs
     {
         SKILL_NONE = 0,
         SKILL_FROST = 6,

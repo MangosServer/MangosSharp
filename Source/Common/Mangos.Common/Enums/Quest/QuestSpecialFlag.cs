@@ -21,7 +21,7 @@ using System;
 namespace Mangos.Common.Enums.Quest
 {
     [Flags]
-    public enum QuestSpecialFlag : int
+    public enum QuestSpecialFlag
     {
         QUEST_SPECIALFLAGS_NONE = 0,
         QUEST_SPECIALFLAGS_DELIVER = 1,

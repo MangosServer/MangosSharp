@@ -109,8 +109,8 @@ namespace Mangos.World.Network
                 LocalURI = $"http://{configuration.LocalConnectHost}:{configuration.LocalConnectPort}";
                 Cluster = null;
                 WorldServiceLocator._WS_Network.LastPing = WorldServiceLocator._NativeMethods.timeGetTime("");
-                m_Connection = new Timer(new TimerCallback(CheckConnection), null, 10000, 10000);
-                m_TimerCPU = new Timer(new TimerCallback(CheckCPU), null, 1000, 1000);
+                m_Connection = new Timer(CheckConnection, null, 10000, 10000);
+                m_TimerCPU = new Timer(CheckCPU, null, 1000, 1000);
                 this.dataStoreProvider = dataStoreProvider;
             }
 
@@ -148,11 +148,11 @@ namespace Mangos.World.Network
                         if (!Information.IsNothing(Cluster))
                         {
                             WorldServerConfiguration configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
-                            if (Cluster.Connect(LocalURI, configuration.Maps.Select(_Closure_0024__._0024I13_002D0 ??= (string x) => Conversions.ToUInteger(x)).ToList()))
+                            if (Cluster.Connect(LocalURI, configuration.Maps.Select(_Closure_0024__._0024I13_002D0 ??= x => Conversions.ToUInteger(x)).ToList()))
                             {
                                 break;
                             }
-                            Cluster.Disconnect(LocalURI, configuration.Maps.Select(_Closure_0024__._0024I13_002D1 ??= (string x) => Conversions.ToUInteger(x)).ToList());
+                            Cluster.Disconnect(LocalURI, configuration.Maps.Select(_Closure_0024__._0024I13_002D1 ??= x => Conversions.ToUInteger(x)).ToList());
                         }
                     }
                     catch (Exception ex)
@@ -172,7 +172,7 @@ namespace Mangos.World.Network
             {
                 try
                 {
-                    Cluster.Disconnect(LocalURI, WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Select(_Closure_0024__._0024I14_002D0 ??= (string x) => Conversions.ToUInteger(x)).ToList());
+                    Cluster.Disconnect(LocalURI, WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Select(_Closure_0024__._0024I14_002D0 ??= x => Conversions.ToUInteger(x)).ToList());
                 }
                 catch (Exception projectError)
                 {

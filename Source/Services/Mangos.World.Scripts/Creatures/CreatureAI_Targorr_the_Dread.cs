@@ -19,22 +19,24 @@
 using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Targorr_the_Dread : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Targorr_the_Dread : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int ThrashCD = 7000;
         private const int FrenzyCD = 90000; // This should never be reused.
         private const int Spell_Frenzy = 8599;
         private const int Spell_Thrash = 3391;
-        public int NextThrash = 0;
+        public int NextThrash;
         public int NextWaypoint = 0;
         public int NextAcid = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Targorr_the_Dread(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Targorr_the_Dread(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             AllowedMove = false;
             Creature.Flying = false;
@@ -55,7 +57,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 0; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try

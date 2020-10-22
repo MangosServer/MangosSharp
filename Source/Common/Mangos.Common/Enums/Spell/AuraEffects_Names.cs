@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum AuraEffects_Names : int
+    public enum AuraEffects_Names
     {
         SPELL_AURA_NONE = 0,
         SPELL_AURA_BIND_SIGHT = 1,

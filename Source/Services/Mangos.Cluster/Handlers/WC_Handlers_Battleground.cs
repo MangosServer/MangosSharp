@@ -84,7 +84,7 @@ namespace Mangos.Cluster.Handlers
 
         public Dictionary<int, Battlefield> BATTLEFIELDs = new Dictionary<int, Battlefield>();
         public ReaderWriterLock BATTLEFIELDs_Lock = new ReaderWriterLock();
-        private int BATTLEFIELDs_Counter = 0;
+        private int BATTLEFIELDs_Counter;
 
         public class Battlefield : IDisposable
         {
@@ -283,10 +283,6 @@ namespace Mangos.Cluster.Handlers
                 else if (_membersTeam1.Contains(objCharacter) | _membersTeam2.Contains(objCharacter))
                 {
                     status = BattlegroundStatus.STATUS_IN_PROGRESS;
-                }
-                else
-                {
-                    // Do nothing
                 }
 
                 var p = new PacketClass(Opcodes.SMSG_BATTLEFIELD_STATUS);

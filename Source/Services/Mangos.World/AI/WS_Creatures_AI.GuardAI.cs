@@ -56,8 +56,6 @@ namespace Mangos.World.AI
                     case 77:
                         aiCreature.DoEmote(25);
                         break;
-                    default:
-                        break;
                 }
             }
         }

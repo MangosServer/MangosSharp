@@ -71,7 +71,7 @@ namespace Mangos.World.Handlers
                         if (Message3.StartsWith(WorldServiceLocator._ConfigurationProvider.GetConfiguration().CommandCharacter) && client.Character.Access > AccessLevel.Player)
                         {
                             Message3 = Message3.Remove(0, 1);
-                            Packets.PacketClass toCommand = WorldServiceLocator._Functions.BuildChatMessage(2147483647uL, Message3, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL, 0);
+                            Packets.PacketClass toCommand = WorldServiceLocator._Functions.BuildChatMessage(2147483647uL, Message3, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
                             try
                             {
                                 client.Send(ref toCommand);

@@ -39,14 +39,12 @@ namespace Mangos.DataStores
             {
                 return dataStores[dbcFileName];
             }
-            else
-            {
-                var path = Path.Combine(dbcDirectory, dbcFileName);
-                var dataStore = new DataStore();
-                await dataStore.LoadFromFileAsync(path);
-                dataStores[dbcFileName] = dataStore;
-                return dataStore;
-            }
+
+            var path = Path.Combine(dbcDirectory, dbcFileName);
+            var dataStore = new DataStore();
+            await dataStore.LoadFromFileAsync(path);
+            dataStores[dbcFileName] = dataStore;
+            return dataStore;
         }
     }
 }

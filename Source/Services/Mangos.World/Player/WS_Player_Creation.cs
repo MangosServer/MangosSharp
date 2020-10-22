@@ -69,7 +69,7 @@ namespace Mangos.World.Player
             }
             checked
             {
-                if (WorldServiceLocator._Global_Constants.SERVER_CONFIG_DISABLED_CLASSES[unchecked((int)Character.Classe) - 1] || (WorldServiceLocator._Global_Constants.SERVER_CONFIG_DISABLED_RACES[unchecked((int)Character.Race) - 1] && Account_Access < AccessLevel.GameMaster))
+                if (WorldServiceLocator._Global_Constants.SERVER_CONFIG_DISABLED_CLASSES[(int)Character.Classe - 1] || (WorldServiceLocator._Global_Constants.SERVER_CONFIG_DISABLED_RACES[(int)Character.Race - 1] && Account_Access < AccessLevel.GameMaster))
                 {
                     return 50;
                 }
@@ -222,7 +222,7 @@ namespace Mangos.World.Player
                 int i = 0;
                 do
                 {
-                    if ((WorldServiceLocator._WS_DBCDatabase.CharRaces[unchecked((int)objCharacter.Race)].TaxiMask & (1 << i)) != 0)
+                    if ((WorldServiceLocator._WS_DBCDatabase.CharRaces[(int)objCharacter.Race].TaxiMask & (1 << i)) != 0)
                     {
                         objCharacter.TaxiZones.Set(i + 1, value: true);
                     }

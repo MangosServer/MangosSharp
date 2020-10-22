@@ -32,10 +32,8 @@ namespace Mangos.SignalR
                 hubConnection.InvokeCoreAsync(targetMethod.Name, args).Wait();
                 return null;
             }
-            else
-            {
-                return hubConnection.InvokeCoreAsync(targetMethod.Name, targetMethod.ReturnType, args).Result;
-            }
+
+            return hubConnection.InvokeCoreAsync(targetMethod.Name, targetMethod.ReturnType, args).Result;
         }
 
         public static T Create<T>(string url)

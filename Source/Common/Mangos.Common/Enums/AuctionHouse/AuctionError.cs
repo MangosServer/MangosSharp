@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.AuctionHouse
 {
-    public enum AuctionError : int
+    public enum AuctionError
     {
         AUCTION_OK = 0,
         AUCTION_INTERNAL_ERROR = 2,

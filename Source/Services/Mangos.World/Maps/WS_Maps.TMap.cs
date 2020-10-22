@@ -115,7 +115,7 @@ namespace Mangos.World.Maps
                             if (tmpMap == Map)
                             {
                                 ID = Map;
-                                Type = unchecked((MapTypes)mapDataStore.ReadInt(i, 2));
+                                Type = (MapTypes)mapDataStore.ReadInt(i, 2);
                                 Name = mapDataStore.ReadString(i, 4);
                                 break;
                             }

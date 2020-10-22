@@ -289,11 +289,11 @@ namespace Mangos.World.Handlers
                     {
                         if (TraderSlots[i] > 0)
                         {
-                            TargetReqItems = (byte)(unchecked(TargetReqItems) + 1);
+                            TargetReqItems = (byte)(TargetReqItems + 1);
                         }
                         if (TargetSlots[i] > 0)
                         {
-                            TraderReqItems = (byte)(unchecked(TraderReqItems) + 1);
+                            TraderReqItems = (byte)(TraderReqItems + 1);
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
@@ -510,12 +510,12 @@ namespace Mangos.World.Handlers
                 {
                     if (client.Character.tradeInfo.Trader == client.Character)
                     {
-                        client.Character.tradeInfo.TraderSlots[slot] = (myBag << 8) + unchecked(mySlot);
+                        client.Character.tradeInfo.TraderSlots[slot] = (myBag << 8) + mySlot;
                         client.Character.tradeInfo.SendTradeUpdateToTarget();
                     }
                     else
                     {
-                        client.Character.tradeInfo.TargetSlots[slot] = (myBag << 8) + unchecked(mySlot);
+                        client.Character.tradeInfo.TargetSlots[slot] = (myBag << 8) + mySlot;
                         client.Character.tradeInfo.SendTradeUpdateToTrader();
                     }
                 }

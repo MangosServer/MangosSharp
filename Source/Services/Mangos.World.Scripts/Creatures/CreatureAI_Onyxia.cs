@@ -18,10 +18,12 @@
 
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Onyxia : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Onyxia : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int BREATH_COOLDOWN = 11000;
@@ -38,17 +40,17 @@ namespace Mangos.World.Scripts.Creatures
         private const int ROAR_SPELL = 18431;
         private const int FIREBALL_SPELL = 18392;
         private const int WHELP_CREATURE = 11262;
-        public int Phase = 0;
-        public int NextWaypoint = 0;
-        public int NextBreathe = 0;
-        public int NextWingBuffet = 0;
-        public int NextCleave = 0;
-        public int NextFireball = 0;
-        public int KnockTimer = 0;
-        public int RoarTimer = 0;
-        public int CurrentWaypoint = 0;
+        public int Phase;
+        public int NextWaypoint;
+        public int NextBreathe;
+        public int NextWingBuffet;
+        public int NextCleave;
+        public int NextFireball;
+        public int KnockTimer;
+        public int RoarTimer;
+        public int CurrentWaypoint;
 
-        public CreatureAI_Onyxia(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Onyxia(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             Phase = 0;
             AllowedMove = false;
@@ -76,7 +78,7 @@ namespace Mangos.World.Scripts.Creatures
             aiCreature.SendChatMessage("LEAVING COMBAT!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
         }
 
-        public override void OnKill(ref World.Objects.WS_Base.BaseUnit Victim)
+        public override void OnKill(ref WS_Base.BaseUnit Victim)
         {
             // TODO: Yell
             // TODO: Send sound (Die mortal?)!

@@ -112,7 +112,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildLeader)
+
+            if (!client.Character.IsGuildLeader)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -137,12 +138,14 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildLeader)
+
+            if (!client.Character.IsGuildLeader)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
-            else if (clusterServiceLocator._Functions.ValidateGuildName(NewRankName) == false)
+
+            if (clusterServiceLocator._Functions.ValidateGuildName(NewRankName) == false)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
                 return;
@@ -173,7 +176,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildLeader)
+
+            if (!client.Character.IsGuildLeader)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -210,7 +214,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildLeader)
+
+            if (!client.Character.IsGuildLeader)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -224,7 +229,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
             }
-            else if (MySQLQuery.Rows[0].As<uint>("char_guildId") != client.Character.Guild.ID)
+
+            if (MySQLQuery.Rows[0].As<uint>("char_guildId") != client.Character.Guild.ID)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
                 return;
@@ -273,7 +279,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildLeader)
+
+            if (!client.Character.IsGuildLeader)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -314,7 +321,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildLeader)
+
+            if (!client.Character.IsGuildLeader)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -364,7 +372,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_SETMOTD))
+
+            if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_SETMOTD))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -398,7 +407,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_EOFFNOTE))
+
+            if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_EOFFNOTE))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -423,7 +433,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_EPNOTE))
+
+            if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_EPNOTE))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -450,7 +461,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_REMOVE))
+
+            if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_REMOVE))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -466,7 +478,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
             }
-            else if (!clusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
+
+            if (!clusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
@@ -503,7 +516,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_PROMOTE))
+
+            if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_PROMOTE))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -519,7 +533,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
                 return;
             }
-            else if (!clusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
+
+            if (!clusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
@@ -531,12 +546,14 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
                 return;
             }
-            else if (objCharacter.GuildRank <= client.Character.GuildRank)
+
+            if (objCharacter.GuildRank <= client.Character.GuildRank)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
-            else if (objCharacter.GuildRank == clusterServiceLocator._Global_Constants.GUILD_RANK_MIN)
+
+            if (objCharacter.GuildRank == clusterServiceLocator._Global_Constants.GUILD_RANK_MIN)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_INTERNAL);
                 return;
@@ -571,7 +588,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_PROMOTE))
+
+            if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_PROMOTE))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -587,7 +605,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
                 return;
             }
-            else if (!clusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
+
+            if (!clusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
@@ -599,12 +618,14 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
                 return;
             }
-            else if (objCharacter.GuildRank <= client.Character.GuildRank)
+
+            if (objCharacter.GuildRank <= client.Character.GuildRank)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
-            else if (objCharacter.GuildRank == clusterServiceLocator._Global_Constants.GUILD_RANK_MAX)
+
+            if (objCharacter.GuildRank == clusterServiceLocator._Global_Constants.GUILD_RANK_MAX)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_INTERNAL);
                 return;
@@ -649,7 +670,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_INVITE))
+
+            if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_INVITE))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
@@ -665,7 +687,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
                 return;
             }
-            else if (!clusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
+
+            if (!clusterServiceLocator._WorldCluster.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
@@ -677,12 +700,14 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.ALREADY_IN_GUILD, playerName);
                 return;
             }
-            else if (objCharacter.Side != client.Character.Side)
+
+            if (objCharacter.Side != client.Character.Side)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NOT_ALLIED, playerName);
                 return;
             }
-            else if (objCharacter.GuildInvited != 0L)
+
+            if (objCharacter.GuildInvited != 0L)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.ALREADY_INVITED_TO_GUILD, playerName);
                 return;
@@ -738,7 +763,8 @@ namespace Mangos.Cluster.Handlers
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
-            else if (client.Character.IsGuildLeader)
+
+            if (client.Character.IsGuildLeader)
             {
                 clusterServiceLocator._WC_Guild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_LEADER_LEAVE);
                 return;

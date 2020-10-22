@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellAttributesEx2 : int
+    public enum SpellAttributesEx2
     {
         SPELL_ATTR_EX2_AUTO_SHOOT = 0x20, // Auto Shoot?
         SPELL_ATTR_EX2_HEALTH_FUNNEL = 0x800, // Health funnel pets?

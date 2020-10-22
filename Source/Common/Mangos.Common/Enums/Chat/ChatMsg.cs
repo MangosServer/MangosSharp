@@ -19,7 +19,7 @@
 
 namespace Mangos.Common.Enums.Chat
 {
-    public enum ChatMsg : int
+    public enum ChatMsg
     {
         CHAT_MSG_SAY = 0x0,
         CHAT_MSG_PARTY = 0x1,

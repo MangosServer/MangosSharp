@@ -50,14 +50,14 @@ namespace Mangos.World.AntiCheat
         {
             WS_PlayerData.CharacterObject character = client.Character;
             SpeedHackViolation sData;
-            if (!SpeedHacks.Exists((obj) => obj.Character.Equals(character.Name)))
+            if (!SpeedHacks.Exists(obj => obj.Character.Equals(character.Name)))
             {
                 sData = new SpeedHackViolation(client.Character.Name, cTime, sTime);
                 SpeedHacks.Add(sData);
             }
             else
             {
-                sData = SpeedHacks.Find((obj) => obj.Character.Equals(character.Name));
+                sData = SpeedHacks.Find(obj => obj.Character.Equals(character.Name));
             }
             sData.TriggerViolation(posX, positionX, posY, positionY, posZ, positionZ, sTime, cTime, RunSpeed);
             checked
@@ -85,8 +85,6 @@ namespace Mangos.World.AntiCheat
                             break;
                         case ViolationType.AC_VIOLATION_SPEEDHACK_MEM:
                             sData.Violations -= 0;
-                            break;
-                        default:
                             break;
                     }
                 }

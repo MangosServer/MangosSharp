@@ -45,7 +45,7 @@ namespace Mangos.World.Quests
         {
             DataTable cQuests = new DataTable();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Loading Quests...");
-            WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT entry FROM quests;", ref cQuests);
+            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT entry FROM quests;", ref cQuests);
             IEnumerator enumerator = default;
             try
             {
@@ -942,7 +942,7 @@ namespace Mangos.World.Quests
                     {
                         if (quest.ObjectivesItem[j] != 0)
                         {
-                            requiredItemsCount = (byte)(unchecked(requiredItemsCount) + 1);
+                            requiredItemsCount = (byte)(requiredItemsCount + 1);
                         }
                     }
                     packet.AddInt32(requiredItemsCount);
@@ -1378,7 +1378,7 @@ namespace Mangos.World.Quests
                                         }
                                         j = (byte)unchecked((uint)(j + 1));
                                     }
-                                    while (unchecked(j) <= 3u);
+                                    while (j <= 3u);
                                     break;
                                 }
                         }
@@ -1570,7 +1570,7 @@ namespace Mangos.World.Quests
                 {
                     ProjectData.SetProjectError(ex);
                     Exception e = ex;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_STATUS_QUERY - Error in questgiver status query.{0}", Environment.NewLine + e.ToString());
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_STATUS_QUERY - Error in questgiver status query.{0}", Environment.NewLine + e);
                     ProjectData.ClearProjectError();
                 }
             }
@@ -1605,7 +1605,7 @@ namespace Mangos.World.Quests
             {
                 ProjectData.SetProjectError(ex);
                 Exception e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_HELLO - Error when sending quest menu.{0}", Environment.NewLine + e.ToString());
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_HELLO - Error when sending quest menu.{0}", Environment.NewLine + e);
                 ProjectData.ClearProjectError();
             }
         }
@@ -1949,7 +1949,7 @@ namespace Mangos.World.Quests
                             if (-client.Character.TalkCurrentQuest.RewardGold <= client.Character.Copper)
                             {
                                 ref uint copper = ref client.Character.Copper;
-                                copper = (uint)(unchecked(copper) + unchecked(client.Character.TalkCurrentQuest.RewardGold));
+                                copper = (uint)(copper + client.Character.TalkCurrentQuest.RewardGold);
                                 goto IL_01d2;
                             }
                             Packets.PacketClass errorPacket = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
@@ -1967,7 +1967,7 @@ namespace Mangos.World.Quests
                                 if (client.Character.TalkCurrentQuest.RewardGold < 0)
                                 {
                                     ref uint copper2 = ref client.Character.Copper;
-                                    copper2 = (uint)(unchecked(copper2) - unchecked(client.Character.TalkCurrentQuest.RewardGold));
+                                    copper2 = (uint)(copper2 - client.Character.TalkCurrentQuest.RewardGold);
                                 }
                                 Packets.PacketClass errorPacket3 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
                                 errorPacket3.AddInt32(21);
@@ -1995,12 +1995,11 @@ namespace Mangos.World.Quests
                             return;
                         }
                         client.Character.LogLootItem(tmpItem2, 1, Recieved: true, Created: false);
-                        goto IL_034e;
                         IL_034e:
                         if (client.Character.TalkCurrentQuest.RewardGold > 0)
                         {
                             ref uint copper3 = ref client.Character.Copper;
-                            copper3 = (uint)(unchecked(copper3) + unchecked(client.Character.TalkCurrentQuest.RewardGold));
+                            copper3 = (uint)(copper3 + client.Character.TalkCurrentQuest.RewardGold);
                         }
                         client.Character.SetUpdateFlag(1176, client.Character.Copper);
                         if (client.Character.TalkCurrentQuest.RewardHonor != 0)
@@ -2022,7 +2021,7 @@ namespace Mangos.World.Quests
                             WS_Spells.CastSpellParameters castSpellParameters = new WS_Spells.CastSpellParameters(ref spellTargets2, ref Caster, client.Character.TalkCurrentQuest.RewardSpell, Instant: true);
                             wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)Caster;
                             WS_Spells.CastSpellParameters castParams2 = castSpellParameters;
-                            ThreadPool.QueueUserWorkItem(new WaitCallback(castParams2.Cast));
+                            ThreadPool.QueueUserWorkItem(castParams2.Cast);
                         }
                         int l = 0;
                         do
@@ -2070,7 +2069,7 @@ namespace Mangos.World.Quests
                                     fullxp2 = reqMoneyMaxLevel2 / 0.6f;
                                 }
                                 xp2 = ((pLevel2 <= qLevel2 + 5) ? ((int)fullxp2) : ((pLevel2 == qLevel2 + 6) ? ((int)(fullxp2 * 0.8f)) : ((pLevel2 == qLevel2 + 7) ? ((int)(fullxp2 * 0.6f)) : ((pLevel2 == qLevel2 + 8) ? ((int)(fullxp2 * 0.4f)) : ((pLevel2 != qLevel2 + 9) ? ((int)(fullxp2 * 0.1f)) : ((int)(fullxp2 * 0.2f)))))));
-                                client.Character.AddXP(xp2, 0, 0uL);
+                                client.Character.AddXP(xp2, 0);
                             }
                             else
                             {
@@ -2084,7 +2083,7 @@ namespace Mangos.World.Quests
                         else
                         {
                             ref uint copper4 = ref client.Character.Copper;
-                            copper4 = (uint)(unchecked(copper4) + unchecked(gold2));
+                            copper4 = (uint)(copper4 + gold2);
                         }
                         client.Character.SetUpdateFlag(1176, client.Character.Copper);
                         client.Character.SendCharacterUpdate();
@@ -2108,7 +2107,7 @@ namespace Mangos.World.Quests
                     {
                         ProjectData.SetProjectError(ex);
                         Exception e2 = ex;
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_CHOOSE_REWARD - Error while choosing reward.{0}", Environment.NewLine + e2.ToString());
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_CHOOSE_REWARD - Error while choosing reward.{0}", Environment.NewLine + e2);
                         ProjectData.ClearProjectError();
                     }
                     return;
@@ -2133,7 +2132,7 @@ namespace Mangos.World.Quests
                         if (-client.Character.TalkCurrentQuest.RewardGold <= client.Character.Copper)
                         {
                             ref uint copper5 = ref client.Character.Copper;
-                            copper5 = (uint)(unchecked(copper5) + unchecked(client.Character.TalkCurrentQuest.RewardGold));
+                            copper5 = (uint)(copper5 + client.Character.TalkCurrentQuest.RewardGold);
                             goto IL_0a03;
                         }
                         Packets.PacketClass errorPacket4 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
@@ -2151,7 +2150,7 @@ namespace Mangos.World.Quests
                             if (client.Character.TalkCurrentQuest.RewardGold < 0)
                             {
                                 ref uint copper6 = ref client.Character.Copper;
-                                copper6 = (uint)(unchecked(copper6) - unchecked(client.Character.TalkCurrentQuest.RewardGold));
+                                copper6 = (uint)(copper6 - client.Character.TalkCurrentQuest.RewardGold);
                             }
                             Packets.PacketClass errorPacket2 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
                             errorPacket2.AddInt32(21);
@@ -2179,12 +2178,11 @@ namespace Mangos.World.Quests
                         return;
                     }
                     client.Character.LogLootItem(tmpItem, 1, Recieved: true, Created: false);
-                    goto IL_0b7f;
                     IL_0b7f:
                     if (client.Character.TalkCurrentQuest.RewardGold > 0)
                     {
                         ref uint copper7 = ref client.Character.Copper;
-                        copper7 = (uint)(unchecked(copper7) + unchecked(client.Character.TalkCurrentQuest.RewardGold));
+                        copper7 = (uint)(copper7 + client.Character.TalkCurrentQuest.RewardGold);
                     }
                     client.Character.SetUpdateFlag(1176, client.Character.Copper);
                     if (client.Character.TalkCurrentQuest.RewardHonor != 0)
@@ -2206,7 +2204,7 @@ namespace Mangos.World.Quests
                         WS_Spells.CastSpellParameters castSpellParameters = new WS_Spells.CastSpellParameters(ref spellTargets, ref Caster, client.Character.TalkCurrentQuest.RewardSpell, Instant: true);
                         wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)Caster;
                         WS_Spells.CastSpellParameters castParams = castSpellParameters;
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(castParams.Cast));
+                        ThreadPool.QueueUserWorkItem(castParams.Cast);
                     }
                     int i = 0;
                     do
@@ -2254,7 +2252,7 @@ namespace Mangos.World.Quests
                                 fullxp = reqMoneyMaxLevel / 0.6f;
                             }
                             xp = ((pLevel <= qLevel + 5) ? ((int)fullxp) : ((pLevel == qLevel + 6) ? ((int)(fullxp * 0.8f)) : ((pLevel == qLevel + 7) ? ((int)(fullxp * 0.6f)) : ((pLevel == qLevel + 8) ? ((int)(fullxp * 0.4f)) : ((pLevel != qLevel + 9) ? ((int)(fullxp * 0.1f)) : ((int)(fullxp * 0.2f)))))));
-                            client.Character.AddXP(xp, 0, 0uL);
+                            client.Character.AddXP(xp, 0);
                         }
                         else
                         {
@@ -2268,7 +2266,7 @@ namespace Mangos.World.Quests
                     else
                     {
                         ref uint copper8 = ref client.Character.Copper;
-                        copper8 = (uint)(unchecked(copper8) + unchecked(gold));
+                        copper8 = (uint)(copper8 + gold);
                     }
                     client.Character.SetUpdateFlag(1176, client.Character.Copper);
                     client.Character.SendCharacterUpdate();
@@ -2292,7 +2290,7 @@ namespace Mangos.World.Quests
                 {
                     ProjectData.SetProjectError(ex2);
                     Exception e = ex2;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_CHOOSE_REWARD - Error while choosing reward.{0}", Environment.NewLine + e.ToString());
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_CHOOSE_REWARD - Error while choosing reward.{0}", Environment.NewLine + e);
                     ProjectData.ClearProjectError();
                 }
             }

@@ -148,11 +148,11 @@ namespace Mangos.World.Globals
             }
             checked
             {
-                int[] bInt = new int[unchecked(checked(bBytes.Length - 1) / 4) + 1];
+                int[] bInt = new int[checked(bBytes.Length - 1) / 4 + 1];
                 int num = bBytes.Length - 1;
                 for (int i = 0; i <= num; i += 4)
                 {
-                    bInt[unchecked(i / 4)] = BitConverter.ToInt32(bBytes, i);
+                    bInt[i / 4] = BitConverter.ToInt32(bBytes, i);
                 }
                 return bInt;
             }
@@ -201,7 +201,7 @@ namespace Mangos.World.Globals
             checked
             {
                 value >>= flagPos;
-                value = (uint)unchecked(value % 2L);
+                value = (uint)(value % 2L);
             }
             if ((ulong)value == 1)
             {
@@ -219,11 +219,11 @@ namespace Mangos.World.Globals
         {
             if (flagValue)
             {
-                value |= (uint)(1 << checked(flagPos));
+                value |= (uint)(1 << flagPos);
             }
             else
             {
-                value &= (uint)((0 << checked(flagPos)) & -1);
+                value &= (uint)((0 << flagPos) & -1);
             }
         }
 
@@ -463,7 +463,7 @@ namespace Mangos.World.Globals
 
         public void SendMessageMOTD(ref WS_Network.ClientClass client, string Message)
         {
-            Packets.PacketClass packet = BuildChatMessage(0uL, Message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL, 0);
+            Packets.PacketClass packet = BuildChatMessage(0uL, Message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
             client.Send(ref packet);
         }
 
@@ -568,7 +568,7 @@ namespace Mangos.World.Globals
                     int Year = time.Year - 2000;
                     int Month = time.Month - 1;
                     int Day = time.Day - 1;
-                    int DayOfWeek = unchecked((int)time.DayOfWeek);
+                    int DayOfWeek = (int)time.DayOfWeek;
                     int Hour = time.Hour;
                     int Minute = time.Minute;
                     SMSG_LOGIN_SETTIMESPEED.AddInt32(Minute + (Hour << 6) + (DayOfWeek << 11) + (Day << 14) + (Month << 20) + (Year << 24));

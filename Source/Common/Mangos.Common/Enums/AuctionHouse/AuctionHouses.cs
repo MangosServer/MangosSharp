@@ -19,7 +19,7 @@
 
 namespace Mangos.Common.Enums.AuctionHouse
 {
-    public enum AuctionHouses : int
+    public enum AuctionHouses
     {
         AUCTION_UNDEFINED = 0,
         AUCTION_ALLIANCE = 2,

@@ -54,7 +54,7 @@ namespace Mangos.Cluster.Network
 
         public ClientInfo GetClientInfo()
         {
-            var ci = new ClientInfo()
+            var ci = new ClientInfo
             {
                 Access = Access,
                 Account = Account,
@@ -159,7 +159,7 @@ namespace Mangos.Cluster.Network
                     }
                     catch
                     {
-                        clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { Character.Map });
+                        clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { Character.Map });
                     }
                 }
             }

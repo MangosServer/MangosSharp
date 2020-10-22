@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Spell;
@@ -25,7 +26,6 @@ using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic.CompilerServices;
-using System.Linq;
 
 namespace Mangos.World.Server
 {
@@ -45,7 +45,7 @@ namespace Mangos.World.Server
             {
                 SpellManagerTimer = null;
                 SpellManagerWorking = false;
-                SpellManagerTimer = new Timer(new TimerCallback(Update), null, 10000, 1000);
+                SpellManagerTimer = new Timer(Update, null, 10000, 1000);
             }
 
             private void Update(object state)
@@ -184,7 +184,7 @@ namespace Mangos.World.Server
                             byte j = 0;
                             do
                             {
-                                if (objCharacter.ActiveSpells[i] != null && objCharacter.ActiveSpells[i].Aura[j] != null && objCharacter.ActiveSpells[i].Aura_Info[j] != null && objCharacter.ActiveSpells[i].Aura_Info[j].Amplitude != 0 && unchecked(checked(objCharacter.ActiveSpells[i].GetSpellInfo.GetDuration - objCharacter.ActiveSpells[i].SpellDuration) % objCharacter.ActiveSpells[i].Aura_Info[j].Amplitude) == 0)
+                                if (objCharacter.ActiveSpells[i] != null && objCharacter.ActiveSpells[i].Aura[j] != null && objCharacter.ActiveSpells[i].Aura_Info[j] != null && objCharacter.ActiveSpells[i].Aura_Info[j].Amplitude != 0 && checked(objCharacter.ActiveSpells[i].GetSpellInfo.GetDuration - objCharacter.ActiveSpells[i].SpellDuration) % objCharacter.ActiveSpells[i].Aura_Info[j].Amplitude == 0)
                                 {
                                     ref WS_Base.BaseUnit spellCaster = ref objCharacter.ActiveSpells[i].SpellCaster;
                                     WS_Base.BaseObject Caster = spellCaster;
@@ -194,7 +194,7 @@ namespace Mangos.World.Server
                                 }
                                 j = (byte)unchecked((uint)(j + 1));
                             }
-                            while (unchecked(j) <= 2u);
+                            while (j <= 2u);
                             if (objCharacter.ActiveSpells[i] != null && objCharacter.ActiveSpells[i].SpellDuration <= 0 && objCharacter.ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
                             {
                                 objCharacter.RemoveAura(i, ref objCharacter.ActiveSpells[i].SpellCaster, RemovedByDuration: true);
@@ -274,7 +274,7 @@ namespace Mangos.World.Server
                             }
                             k = (byte)unchecked((uint)(k + 1));
                         }
-                        while (unchecked(k) <= 2u);
+                        while (k <= 2u);
                     }
                 }
             }

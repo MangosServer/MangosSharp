@@ -17,18 +17,21 @@
 //
 
 
+using Mangos.World.AI;
+using Mangos.World.Objects;
+
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Searing_Blade_Enforcer : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Searing_Blade_Enforcer : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int SLAM_COOLDOWN = 8000;
         private const int SLAM_SPELL = 8242;
         public int NextWaypoint = 0;
-        public int NextSLAM = 0;
+        public int NextSLAM;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Searing_Blade_Enforcer(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Searing_Blade_Enforcer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             AllowedMove = false;
             Creature.Flying = false;
@@ -49,7 +52,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 aiCreature.CastSpell(SLAM_SPELL, aiTarget);

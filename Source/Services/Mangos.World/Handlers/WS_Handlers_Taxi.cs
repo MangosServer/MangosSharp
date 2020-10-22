@@ -236,7 +236,7 @@ namespace Mangos.World.Handlers
                     return;
                 }
                 ref uint copper = ref client.Character.Copper;
-                copper = (uint)(unchecked(copper) - unchecked(totalCost));
+                copper = (uint)(copper - totalCost);
                 client.Character.TaxiNodes.Clear();
                 client.Character.TaxiNodes.Enqueue(srcNode);
                 client.Character.TaxiNodes.Enqueue(dstNode);
@@ -363,7 +363,7 @@ namespace Mangos.World.Handlers
                         return;
                     }
                     ref uint copper = ref client.Character.Copper;
-                    copper = (uint)(unchecked(copper) - unchecked(totalCost));
+                    copper = (uint)(copper - totalCost);
                     client.Character.TaxiNodes.Clear();
                     foreach (int node in nodes)
                     {
@@ -377,7 +377,7 @@ namespace Mangos.World.Handlers
                 {
                     ProjectData.SetProjectError(ex);
                     Exception e = ex;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when taking a long taxi.{0}", Environment.NewLine + e.ToString());
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when taking a long taxi.{0}", Environment.NewLine + e);
                     ProjectData.ClearProjectError();
                 }
             }
@@ -447,7 +447,7 @@ namespace Mangos.World.Handlers
                                 break;
                             }
                             ref uint copper = ref character.Copper;
-                            copper = (uint)(unchecked(copper) - unchecked(price));
+                            copper = (uint)(copper - price);
                             character.SetUpdateFlag(1176, character.Copper);
                             character.SendCharacterUpdate(toNear: false);
                             Console.WriteLine("Paying {0}", price);

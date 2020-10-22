@@ -19,11 +19,13 @@
 using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 // AI TODO: Implement a workaround (Or fix, fixes work too!) for Armageddon.
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Baron_Geddon : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Baron_Geddon : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int Inferno_CD = 45000;
@@ -35,11 +37,11 @@ namespace Mangos.World.Scripts.Creatures
         private const int Spell_Armageddon = 20478; // Cast at 2% to make self invincible, this spell won't work so we'll make a workaround.
         public int NextWaypoint = 0;
         public int CurrentWaypoint = 0;
-        public int NextInferno = 0;
-        public int NextIgnite = 0;
-        public int NextLivingBomb = 0;
+        public int NextInferno;
+        public int NextIgnite;
+        public int NextLivingBomb;
 
-        public CreatureAI_Baron_Geddon(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Baron_Geddon(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             AllowedMove = false;
             Creature.Flying = false;

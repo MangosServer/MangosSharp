@@ -598,7 +598,7 @@ namespace Mangos.World.Objects
                 GameObjectObject updateObject = this;
                 tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                 tmpUpdate.Dispose();
-                SendToNearPlayers(ref packet, 0uL);
+                SendToNearPlayers(ref packet);
                 packet.Dispose();
             }
 
@@ -609,7 +609,7 @@ namespace Mangos.World.Objects
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "AutoCloseTime: {0}", AutoCloseTime);
                 if (AutoCloseTime > 0)
                 {
-                    ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(initialState: false), new WaitOrTimerCallback(CloseDoor), null, AutoCloseTime, executeOnlyOnce: true);
+                    ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(initialState: false), CloseDoor, null, AutoCloseTime, executeOnlyOnce: true);
                 }
                 Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(1);
@@ -620,7 +620,7 @@ namespace Mangos.World.Objects
                 GameObjectObject updateObject = this;
                 tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                 tmpUpdate.Dispose();
-                SendToNearPlayers(ref packet, 0uL);
+                SendToNearPlayers(ref packet);
                 packet.Dispose();
             }
 
@@ -637,7 +637,7 @@ namespace Mangos.World.Objects
                 GameObjectObject updateObject = this;
                 tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                 tmpUpdate.Dispose();
-                SendToNearPlayers(ref packet, 0uL);
+                SendToNearPlayers(ref packet);
                 packet.Dispose();
             }
 
@@ -682,7 +682,7 @@ namespace Mangos.World.Objects
             public void SetupFishingNode()
             {
                 int RandomTime = WorldServiceLocator._WorldServer.Rnd.Next(3000, 17000);
-                ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(initialState: false), new WaitOrTimerCallback(SetFishHooked), null, RandomTime, executeOnlyOnce: true);
+                ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(initialState: false), SetFishHooked, null, RandomTime, executeOnlyOnce: true);
                 State = GameObjectLootState.DOOR_CLOSED;
             }
 
@@ -708,15 +708,15 @@ namespace Mangos.World.Objects
                     GameObjectObject updateObject = this;
                     tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                     tmpUpdate.Dispose();
-                    SendToNearPlayers(ref packet, 0uL);
+                    SendToNearPlayers(ref packet);
                     packet.Dispose();
                     Packets.PacketClass packetAnim = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_CUSTOM_ANIM);
                     packetAnim.AddUInt64(GUID);
                     packetAnim.AddInt32(0);
-                    SendToNearPlayers(ref packetAnim, 0uL);
+                    SendToNearPlayers(ref packetAnim);
                     packetAnim.Dispose();
                     int FishEscapeTime = 2000;
-                    ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(initialState: false), new WaitOrTimerCallback(SetFishEscaped), null, FishEscapeTime, executeOnlyOnce: true);
+                    ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(initialState: false), SetFishEscaped, null, FishEscapeTime, executeOnlyOnce: true);
                 }
             }
 
@@ -755,7 +755,7 @@ namespace Mangos.World.Objects
                         {
                             if (Force || MineRemaining == 0)
                             {
-                                MineRemaining = WorldServiceLocator._WorldServer.Rnd.Next((int)GetSound(4), (int)(unchecked(GetSound(5)) + 1L));
+                                MineRemaining = WorldServiceLocator._WorldServer.Rnd.Next((int)GetSound(4), (int)(GetSound(5) + 1L));
                             }
                             break;
                         }
@@ -769,7 +769,7 @@ namespace Mangos.World.Objects
             {
                 Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
                 packet.AddUInt64(GUID);
-                SendToNearPlayers(ref packet, 0uL);
+                SendToNearPlayers(ref packet);
                 packet.Dispose();
             }
 
@@ -794,7 +794,7 @@ namespace Mangos.World.Objects
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Gameobject {0:X} despawning.", GUID);
                     Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
                     packet.AddUInt64(GUID);
-                    SendToNearPlayers(ref packet, 0uL);
+                    SendToNearPlayers(ref packet);
                     packet.Dispose();
                     Despawned = true;
                     if (Loot != null)
@@ -804,13 +804,13 @@ namespace Mangos.World.Objects
                     RemoveFromWorld();
                     if (SpawnTime > 0)
                     {
-                        RespawnTimer = new Timer(new TimerCallback(Respawn), null, SpawnTime, -1);
+                        RespawnTimer = new Timer(Respawn, null, SpawnTime, -1);
                     }
                 }
                 else
                 {
                     ToDespawn = true;
-                    RespawnTimer = new Timer(new TimerCallback(Destroy), null, Delay, -1);
+                    RespawnTimer = new Timer(Destroy, null, Delay, -1);
                 }
             }
 
@@ -832,12 +832,12 @@ namespace Mangos.World.Objects
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Gameobject {0:X} despawning.", GUID);
                     Packets.PacketClass despawnPacket = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
                     despawnPacket.AddUInt64(GUID);
-                    SendToNearPlayers(ref despawnPacket, 0uL);
+                    SendToNearPlayers(ref despawnPacket);
                     despawnPacket.Dispose();
                 }
                 Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_DESTROY_OBJECT);
                 packet.AddUInt64(GUID);
-                SendToNearPlayers(ref packet, 0uL);
+                SendToNearPlayers(ref packet);
                 packet.Dispose();
                 Dispose();
             }
@@ -866,7 +866,7 @@ namespace Mangos.World.Objects
                     GameObjectObject updateObject = this;
                     tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                     tmpUpdate.Dispose();
-                    SendToNearPlayers(ref packet, 0uL);
+                    SendToNearPlayers(ref packet);
                     packet.Dispose();
                 }
             }
@@ -912,9 +912,9 @@ namespace Mangos.World.Objects
                     int y = -1;
                     do
                     {
-                        if (x + unchecked(cellX) > -1 && x + unchecked(cellX) < 64 && y + unchecked(cellY) > -1 && y + unchecked(cellY) < 64 && WorldServiceLocator._WS_Maps.Maps[unit.MapID].Tiles[x + unchecked(cellX), y + unchecked(cellY)] != null)
+                        if (x + cellX > -1 && x + cellX < 64 && y + cellY > -1 && y + cellY < 64 && WorldServiceLocator._WS_Maps.Maps[unit.MapID].Tiles[x + cellX, y + cellY] != null)
                         {
-                            ulong[] gameobjects = WorldServiceLocator._WS_Maps.Maps[unit.MapID].Tiles[x + unchecked(cellX), y + unchecked(cellY)].GameObjectsHere.ToArray();
+                            ulong[] gameobjects = WorldServiceLocator._WS_Maps.Maps[unit.MapID].Tiles[x + cellX, y + cellY].GameObjectsHere.ToArray();
                             ulong[] array2 = gameobjects;
                             foreach (ulong GUID in array2)
                             {
@@ -963,7 +963,7 @@ namespace Mangos.World.Objects
                     }
                     GameObjectInfo GameObject = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[GameObjectID];
                     response.AddInt32(GameObject.ID);
-                    response.AddInt32(unchecked((int)GameObject.Type));
+                    response.AddInt32((int)GameObject.Type);
                     response.AddInt32(GameObject.Model);
                     response.AddString(GameObject.Name);
                     response.AddInt16(0);
@@ -975,7 +975,7 @@ namespace Mangos.World.Objects
                         response.AddUInt32(GameObject.Fields[i]);
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 23u);
+                    while (i <= 23u);
                     client.Send(ref response);
                     response.Dispose();
                 }
@@ -1025,7 +1025,7 @@ namespace Mangos.World.Objects
                             Packets.PacketClass StandState = new Packets.PacketClass(Opcodes.CMSG_STANDSTATECHANGE);
                             try
                             {
-                                StandState.AddInt8((byte)(4L + unchecked(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound(1))));
+                                StandState.AddInt8((byte)(4L + WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound(1)));
                                 client.Character.Teleport(GO.positionX, GO.positionY, GO.positionZ, GO.orientation, (int)GO.MapID);
                                 client.Send(ref StandState);
                             }
@@ -1036,7 +1036,7 @@ namespace Mangos.World.Objects
                             Packets.PacketClass packetACK = new Packets.PacketClass(Opcodes.SMSG_STANDSTATE_CHANGE_ACK);
                             try
                             {
-                                packetACK.AddInt8((byte)(4L + unchecked(GO.GetSound(1))));
+                                packetACK.AddInt8((byte)(4L + GO.GetSound(1)));
                                 client.Send(ref packetACK);
                             }
                             finally

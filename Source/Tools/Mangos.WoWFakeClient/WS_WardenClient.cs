@@ -60,10 +60,10 @@ namespace Mangos.WoWFakeClient
 
         public class MaievData
         {
-            public int index = 0;
+            public int index;
             public byte[] source1;
             public byte[] source2;
-            public byte[] data = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            public byte[] data = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
             public MaievData(byte[] seed)
             {
@@ -108,7 +108,7 @@ namespace Mangos.WoWFakeClient
 
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        public static int ModuleLength = 0;
+        public static int ModuleLength;
 
         public static void On_SMSG_WARDEN_DATA(ref Packets.PacketClass Packet)
         {
@@ -473,10 +473,6 @@ namespace Mangos.WoWFakeClient
                             bw.BaseStream.Position = proc_offset;
                             bw.Write(addr);
                         }
-                        else
-                        {
-                            // Console.WriteLine("Proc: ord(0x{0:X})", proc)
-                        }
 
                         proc_offset += 4;
                         br2.BaseStream.Position = proc_offset;
@@ -536,27 +532,27 @@ namespace Mangos.WoWFakeClient
             [UnmanagedFunctionPointer(CallingConvention.ThisCall)]
             public delegate void TickDelegate(int ppFncList, int dwTick);
 
-            private SendPacketDelegate SendPacketD = null;
-            private CheckModuleDelegate CheckModuleD = null;
-            private ModuleLoadDelegate ModuleLoadD = null;
-            private AllocateMemDelegate AllocateMemD = null;
-            private FreeMemoryDelegate FreeMemoryD = null;
-            private SetRC4DataDelegate SetRC4DataD = null;
-            private GetRC4DataDelegate GetRC4DataD = null;
-            private GenerateRC4KeysDelegate GenerateRC4Keys = null;
-            private UnloadModuleDelegate UnloadModule = null;
-            private PacketHandlerDelegate PacketHandler = null;
-            private TickDelegate Tick = null;
-            private int m_Mod = 0;
-            private int m_ModMem = 0;
-            private int InitPointer = 0;
-            private InitializeModule init = null;
+            private SendPacketDelegate SendPacketD;
+            private CheckModuleDelegate CheckModuleD;
+            private ModuleLoadDelegate ModuleLoadD;
+            private AllocateMemDelegate AllocateMemD;
+            private FreeMemoryDelegate FreeMemoryD;
+            private SetRC4DataDelegate SetRC4DataD;
+            private GetRC4DataDelegate GetRC4DataD;
+            private GenerateRC4KeysDelegate GenerateRC4Keys;
+            private UnloadModuleDelegate UnloadModule;
+            private PacketHandlerDelegate PacketHandler;
+            private TickDelegate Tick;
+            private int m_Mod;
+            private int m_ModMem;
+            private int InitPointer;
+            private InitializeModule init;
             private IntPtr myFuncList = IntPtr.Zero;
-            private FuncList myFunctionList = default;
-            private int pFuncList = 0;
-            private int ppFuncList = 0;
-            private WardenFuncList myWardenList = default;
-            private int pWardenList = 0;
+            private FuncList myFunctionList;
+            private int pFuncList;
+            private int ppFuncList;
+            private WardenFuncList myWardenList;
+            private int pWardenList;
             private GCHandle gchSendPacket;
             private GCHandle gchCheckModule;
             private GCHandle gchModuleLoad;
@@ -680,7 +676,7 @@ namespace Mangos.WoWFakeClient
                 public int fpTick;
             }
 
-            private int m_RC4 = 0;
+            private int m_RC4;
             private byte[] m_PKT = Array.Empty<byte>();
 
             private void SendPacket(int ptrPacket, int dwSize)

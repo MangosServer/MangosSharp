@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Map
 {
-    public enum AreaFlag : int
+    public enum AreaFlag
     {
         AREA_FLAG_SNOW = 0x1,                // snow (only Dun Morogh, Naxxramas, Razorfen Downs and Winterspring)
         AREA_FLAG_UNK1 = 0x2,                // unknown, (only Naxxramas and Razorfen Downs)

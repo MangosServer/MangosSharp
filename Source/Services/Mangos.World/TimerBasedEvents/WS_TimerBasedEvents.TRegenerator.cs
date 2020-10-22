@@ -61,7 +61,7 @@ namespace Mangos.World.Server
                 RegenerationTimer = null;
                 RegenerationWorking = false;
                 NextGroupUpdate = true;
-                RegenerationTimer = new Timer(new TimerCallback(Regenerate), null, 10000, 2000);
+                RegenerationTimer = new Timer(Regenerate, null, 10000, 2000);
             }
 
             private void Regenerate(object state)
@@ -171,8 +171,6 @@ namespace Mangos.World.Server
                                     case Classes.CLASS_PALADIN:
                                         value.Life.Increment((int)Math.Round(value.Spirit.Base * 0.25 * value.LifeRegenerationModifier) + value.LifeRegenBonus);
                                         break;
-                                    default:
-                                        break;
                                 }
                             }
                             if (BaseMana != value.Mana.Current)
@@ -231,7 +229,7 @@ namespace Mangos.World.Server
                     {
                         ProjectData.SetProjectError(ex2);
                         Exception ex = ex2;
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Error at regenerate.{0}", Environment.NewLine + ex.ToString());
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Error at regenerate.{0}", Environment.NewLine + ex);
                         ProjectData.ClearProjectError();
                     }
                     RegenerationWorking = false;

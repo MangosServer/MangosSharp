@@ -42,8 +42,8 @@ namespace Mangos.SignalR
         private void ConfigureWebHost(IWebHostBuilder webHostBuilder, IPAddress address, int port, T hub)
         {
             webHostBuilder.UseKestrel(x => x.Listen(address, port));
-            webHostBuilder.ConfigureLogging((x) => x.ClearProviders());
-            webHostBuilder.ConfigureServices((x) => ConfigureServices(x, hub));
+            webHostBuilder.ConfigureLogging(x => x.ClearProviders());
+            webHostBuilder.ConfigureServices(x => ConfigureServices(x, hub));
             webHostBuilder.Configure(ConfigureApplication);
         }
 

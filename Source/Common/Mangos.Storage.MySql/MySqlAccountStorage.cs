@@ -16,12 +16,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Loggers;
-using Mangos.Storage.Account.Results;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mangos.Loggers;
 using Mangos.Storage.Account;
+using Mangos.Storage.Account.Results;
 
 namespace Mangos.Storage.MySql
 {

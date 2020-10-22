@@ -16,7 +16,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Threading.Tasks;
 using Autofac;
+using Mangos.Common.Globals;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
@@ -32,6 +34,7 @@ using Mangos.World.Gossip;
 using Mangos.World.Handlers;
 using Mangos.World.Loots;
 using Mangos.World.Maps;
+using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Server;
@@ -41,9 +44,6 @@ using Mangos.World.Warden;
 using Mangos.World.Weather;
 using Mangos.Zip;
 using Microsoft.VisualBasic.CompilerServices;
-using System.Threading.Tasks;
-using Mangos.Common.Globals;
-using Mangos.World.Network;
 using Functions = Mangos.Common.Legacy.Globals.Functions;
 using NativeMethods = Mangos.Common.Legacy.NativeMethods;
 
@@ -75,7 +75,7 @@ namespace Mangos.World
 
         public static void RegisterConfiguration(ContainerBuilder builder)
         {
-            builder.Register((x) => new XmlFileConfigurationProvider<WorldServerConfiguration>(x.Resolve<ILogger>(), "configs/WorldServer.ini")).As<IConfigurationProvider<WorldServerConfiguration>>().SingleInstance();
+            builder.Register(x => new XmlFileConfigurationProvider<WorldServerConfiguration>(x.Resolve<ILogger>(), "configs/WorldServer.ini")).As<IConfigurationProvider<WorldServerConfiguration>>().SingleInstance();
             builder.RegisterDecorator<StoredConfigurationProvider<WorldServerConfiguration>, IConfigurationProvider<WorldServerConfiguration>>();
         }
 

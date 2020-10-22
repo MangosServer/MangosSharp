@@ -228,11 +228,6 @@ namespace Mangos.Cluster
                         Log.WriteLine(LogType.SUCCESS, "[ACCOUNT] " + outBuf);
                         break;
                     }
-
-                default:
-                    {
-                        break;
-                    }
             }
         }
 
@@ -251,11 +246,6 @@ namespace Mangos.Cluster
                         Log.WriteLine(LogType.SUCCESS, "[CHARACTER] " + outBuf);
                         break;
                     }
-
-                default:
-                    {
-                        break;
-                    }
             }
         }
 
@@ -272,11 +262,6 @@ namespace Mangos.Cluster
                 case var case1 when case1 == SQL.EMessages.ID_Message:
                     {
                         Log.WriteLine(LogType.SUCCESS, "[WORLD] " + outBuf);
-                        break;
-                    }
-
-                default:
-                    {
                         break;
                     }
             }
@@ -482,7 +467,7 @@ namespace Mangos.Cluster
         private void GenericExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
             Exception ex = (Exception)e.ExceptionObject;
-            Log.WriteLine(LogType.CRITICAL, ex.ToString() + Constants.vbCrLf);
+            Log.WriteLine(LogType.CRITICAL, ex + Constants.vbCrLf);
             Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'WorldCluster-Error-yyyy-mmm-d-h-mm.log' file has been created. Check your log folder for more information.");
             TextWriter tw;
             tw = new StreamWriter(new FileStream(string.Format("WorldCluster-Error-{0}.log", Strings.Format(DateAndTime.Now, "yyyy-MMM-d-H-mm")), FileMode.Create));

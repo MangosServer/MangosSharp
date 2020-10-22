@@ -19,6 +19,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
@@ -50,7 +51,7 @@ namespace Mangos.Cluster.Globals
                     for (j = 0; j <= loopTo; j += 16)
                     {
                         buffer += "|  " + BitConverter.ToString(data, j, 16).Replace("-", " ");
-                        buffer += " |  " + System.Text.Encoding.ASCII.GetString(data, j, 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?") + " |" + Constants.vbCrLf;
+                        buffer += " |  " + Encoding.ASCII.GetString(data, j, 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?") + " |" + Constants.vbCrLf;
                     }
                 }
                 else
@@ -59,12 +60,12 @@ namespace Mangos.Cluster.Globals
                     for (j = 0; j <= loopTo1; j += 16)
                     {
                         buffer += "|  " + BitConverter.ToString(data, j, 16).Replace("-", " ");
-                        buffer += " |  " + System.Text.Encoding.ASCII.GetString(data, j, 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?") + " |" + Constants.vbCrLf;
+                        buffer += " |  " + Encoding.ASCII.GetString(data, j, 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?") + " |" + Constants.vbCrLf;
                     }
 
                     buffer += "|  " + BitConverter.ToString(data, j, data.Length % 16).Replace("-", " ");
                     buffer += new string(' ', (16 - data.Length % 16) * 3);
-                    buffer += " |  " + System.Text.Encoding.ASCII.GetString(data, j, data.Length % 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?");
+                    buffer += " |  " + Encoding.ASCII.GetString(data, j, data.Length % 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?");
                     buffer += new string(' ', 16 - data.Length % 16);
                     buffer += " |" + Constants.vbCrLf;
                 }
@@ -112,13 +113,13 @@ namespace Mangos.Cluster.Globals
                     {
                         buffer += "|" + BitConverter.ToString(data, j, data.Length - j).Replace("-", " ");
                         buffer += new string(' ', (j + 16 - data.Length) * 3);
-                        buffer += " |" + FormatPacketStr(System.Text.Encoding.ASCII.GetString(data, j, data.Length - j));
+                        buffer += " |" + FormatPacketStr(Encoding.ASCII.GetString(data, j, data.Length - j));
                         buffer += new string(' ', j + 16 - data.Length);
                     }
                     else
                     {
                         buffer += "|" + BitConverter.ToString(data, j, 16).Replace("-", " ");
-                        buffer += " |" + FormatPacketStr(System.Text.Encoding.ASCII.GetString(data, j, 16));
+                        buffer += " |" + FormatPacketStr(Encoding.ASCII.GetString(data, j, 16));
                     }
 
                     buffer += "|" + Constants.vbCrLf;

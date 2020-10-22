@@ -18,22 +18,24 @@
 
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 // Example AI for combat. 
 // TODO: Fix AoE spells on AIs and then insert it as an example into this.
 namespace Mangos.World.Scripts.Examples
 {
-    public class CreatureAI : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int Knockdown_CD = 5000; // Cooldown for spells get listed under a private constant. The timer is followed in milliseconds.
         private const int Spell_Knockdown = 16790; // The spell is defined here. This is the equivilent of a MaNGOS C++ enumerator. This should work for NPCs and healing spells too.
         private const int Frost_Armor = 7302; // Self buff.
         public int NextWaypoint = 0;
-        public int NextKnockdown = 0; // This will be called later, this is only needed along with the CD if you plan to have it recasted.
+        public int NextKnockdown; // This will be called later, this is only needed along with the CD if you plan to have it recasted.
         public int CurrentWaypoint = 0;
 
-        public CreatureAI(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature) // The following under this are very self explanatory, on spawn the creature will not move by itself nor fly. It will be visible from far away. This can be changed.
+        public CreatureAI(ref WS_Creatures.CreatureObject Creature) : base(ref Creature) // The following under this are very self explanatory, on spawn the creature will not move by itself nor fly. It will be visible from far away. This can be changed.
         {
             AllowedMove = false;
             Creature.Flying = false;
@@ -54,7 +56,7 @@ namespace Mangos.World.Scripts.Examples
         {
             for (int i = 0; i <= 3; i++) // I believe this number is capped by the amount of spells from 0-any number. We'll make it 0 to 3 here just to be safe. You should do the same.
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return; // If no player is targetted, don't cast knockdown.
                 aiCreature.CastSpell(Spell_Knockdown, aiTarget); // The casting of the spell. This will be casted on the selected target as defined previously.

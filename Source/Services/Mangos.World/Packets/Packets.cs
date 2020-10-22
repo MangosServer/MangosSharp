@@ -34,7 +34,7 @@ namespace Mangos.World.Globals
                 try
                 {
                     buffer = ((client != null) ? (buffer + $"[{client.IP}:{client.Port}] DEBUG: Packet Dump - Length={data.Length - start}{Environment.NewLine}") : (buffer + $"DEBUG: Packet Dump{Environment.NewLine}"));
-                    if (unchecked(checked(data.Length - start) % 16) == 0)
+                    if (checked(data.Length - start) % 16 == 0)
                     {
                         int num = data.Length - 1;
                         for (int i = start; i <= num; i += 16)
@@ -62,7 +62,7 @@ namespace Mangos.World.Globals
                         {
                             buffer = buffer + "|  " + BitConverter.ToString(data, i, checked(data.Length - start) % 16).Replace("-", " ");
                         }
-                        buffer += new string(' ', (16 - unchecked(checked(data.Length - start) % 16)) * 3);
+                        buffer += new string(' ', (16 - checked(data.Length - start) % 16) * 3);
                         unchecked
                         {
                             buffer = buffer + " |  " + Encoding.ASCII.GetString(data, i, checked(data.Length - start) % 16).Replace("\t", "?").Replace("\b", "?")
@@ -70,7 +70,7 @@ namespace Mangos.World.Globals
                                 .Replace("\f", "?")
                                 .Replace("\n", "?");
                         }
-                        buffer += new string(' ', 16 - unchecked(checked(data.Length - start) % 16));
+                        buffer += new string(' ', 16 - checked(data.Length - start) % 16);
                         buffer = buffer + " |" + Environment.NewLine;
                     }
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, buffer, null);

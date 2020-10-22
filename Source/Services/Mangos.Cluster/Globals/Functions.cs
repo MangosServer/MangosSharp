@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
 using System.Text.RegularExpressions;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Network;
@@ -48,10 +49,8 @@ namespace Mangos.Cluster.Globals
             {
                 return 1;
             }
-            else
-            {
-                return 0;
-            }
+
+            return 0;
         }
 
         public string ToHex(byte[] bBytes, int start = 0)
@@ -124,16 +123,14 @@ namespace Mangos.Cluster.Globals
 
         public bool HaveFlag(uint value, byte flagPos)
         {
-            value >>= (int)(uint)flagPos;
+            value >>= (int)flagPos;
             value = (uint)(value % 2L);
             if (value == 1L)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public bool HaveFlags(int value, int flags)
@@ -145,11 +142,11 @@ namespace Mangos.Cluster.Globals
         {
             if (flagValue)
             {
-                value |= 0x1U << (int)(uint)flagPos;
+                value |= 0x1U << flagPos;
             }
             else
             {
-                value = value & 0x0U << (int)(uint)flagPos & 0xFFFFFFFFU;
+                value = value & 0x0U << flagPos & 0xFFFFFFFFU;
             }
         }
 
@@ -194,18 +191,18 @@ namespace Mangos.Cluster.Globals
             {
                 return seconds + "s";
             }
-            else if (seconds < 3600L)
+
+            if (seconds < 3600L)
             {
                 return seconds / 60L + "m " + seconds % 60L + "s";
             }
-            else if (seconds < 86400L)
+
+            if (seconds < 86400L)
             {
                 return seconds / 3600L + "h " + seconds / 60L % 60L + "m " + seconds % 60L + "s";
             }
-            else
-            {
-                return seconds / 86400L + "d " + seconds / 3600L % 24L + "h " + seconds / 60L % 60L + "m " + seconds % 60L + "s";
-            }
+
+            return seconds / 86400L + "d " + seconds / 3600L % 24L + "h " + seconds / 60L % 60L + "m " + seconds % 60L + "s";
         }
 
         public string EscapeString(string s)
@@ -776,7 +773,7 @@ namespace Mangos.Cluster.Globals
                         }
                 }
 
-                packet.AddUInt32((uint)(System.Text.Encoding.UTF8.GetByteCount(message) + 1));
+                packet.AddUInt32((uint)(Encoding.UTF8.GetByteCount(message) + 1));
                 packet.AddString(message);
                 packet.AddInt8(flag);
             }

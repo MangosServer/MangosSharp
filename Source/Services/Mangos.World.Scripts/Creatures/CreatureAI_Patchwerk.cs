@@ -19,10 +19,12 @@
 using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Patchwerk : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Patchwerk : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int BERSERK_COOLDOWN = 420000; // Heavy enrage, cuts through raid like butter.
@@ -36,14 +38,14 @@ namespace Mangos.World.Scripts.Creatures
         // Private Const HATEFUL_STRIKE As Integer = 28308 - See cooldown for more information.
 
 
-        public int Phase = 0;
-        public int NextWaypoint = 0;
-        public int NextBerserk = 0;
-        public int NextFrenzy = 0;
+        public int Phase;
+        public int NextWaypoint;
+        public int NextBerserk;
+        public int NextFrenzy;
         // Public NextSummon As Integer = 0
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
-        public CreatureAI_Patchwerk(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Patchwerk(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             Phase = 0;
             AllowedMove = false;
@@ -72,7 +74,7 @@ namespace Mangos.World.Scripts.Creatures
             aiCreature.SendChatMessage("LEAVING COMBAT!", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
         }
 
-        public override void OnKill(ref World.Objects.WS_Base.BaseUnit Victim)
+        public override void OnKill(ref WS_Base.BaseUnit Victim)
         {
             aiCreature.SendChatMessage("No more play?", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
             aiCreature.SendPlaySound(8912, true);
@@ -135,7 +137,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 1; i++)
             {
-                World.Objects.WS_Base.BaseUnit Self = aiCreature;
+                WS_Base.BaseUnit Self = aiCreature;
                 if (Self is null)
                     return;
                 try

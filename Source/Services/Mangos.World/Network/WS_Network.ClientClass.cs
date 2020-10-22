@@ -34,7 +34,7 @@ namespace Mangos.World.Network
         {
             public WS_PlayerData.CharacterObject Character;
             public ConcurrentQueue<Packets.PacketClass> Packets = new ConcurrentQueue<Packets.PacketClass>();
-            public bool DEBUG_CONNECTION = false;
+            public bool DEBUG_CONNECTION;
             private Thread ProcessQueueThread;
             private ManualResetEvent ProcessQueueSempahore = new ManualResetEvent(false);
             private volatile bool IsActive = true;
@@ -53,7 +53,7 @@ namespace Mangos.World.Network
                 IP = ci.IP;
                 Port = ci.Port;
 
-                ProcessQueueThread = new Thread(new ThreadStart(QueueProcessor));
+                ProcessQueueThread = new Thread(QueueProcessor);
                 ProcessQueueThread.IsBackground = true;
                 ProcessQueueThread.Start();
             }

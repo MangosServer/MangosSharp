@@ -152,7 +152,7 @@ namespace Mangos.World.Objects
                     }
                     else
                     {
-                        SendToNearPlayers(ref packet, 0uL);
+                        SendToNearPlayers(ref packet);
                     }
                 }
                 finally
@@ -470,7 +470,7 @@ namespace Mangos.World.Objects
                         tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                         tmpPacket = (Packets.UpdatePacketClass)packet;
                         packet = tmpPacket;
-                        SendToNearPlayers(ref packet, 0uL);
+                        SendToNearPlayers(ref packet);
                         tmpPacket = (Packets.UpdatePacketClass)packet;
                     }
                     finally
@@ -486,7 +486,7 @@ namespace Mangos.World.Objects
                 int AuraFlag_Slot = Slot / 4;
                 checked
                 {
-                    int AuraFlag_SubSlot = unchecked(Slot % 4) * 8;
+                    int AuraFlag_SubSlot = Slot % 4 * 8;
                     ActiveSpells_Count[AuraFlag_Slot] &= ~(255 << AuraFlag_SubSlot);
                     ActiveSpells_Count[AuraFlag_Slot] |= Count << AuraFlag_SubSlot;
                 }
@@ -497,7 +497,7 @@ namespace Mangos.World.Objects
                 int AuraFlag_Slot = Slot / 4;
                 checked
                 {
-                    int AuraFlag_SubSlot = unchecked(Slot % 4) * 8;
+                    int AuraFlag_SubSlot = Slot % 4 * 8;
                     ActiveSpells_Level[AuraFlag_Slot] &= ~(255 << AuraFlag_SubSlot);
                     ActiveSpells_Level[AuraFlag_Slot] |= Level << AuraFlag_SubSlot;
                 }
@@ -509,7 +509,7 @@ namespace Mangos.World.Objects
                 {
                     byte b = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1);
                     byte i = 0;
-                    while (unchecked(i <= (uint)b))
+                    while (i <= (uint)b)
                     {
                         if (ActiveSpells[i] != null && ActiveSpells[i].SpellID == SpellID)
                         {
@@ -535,13 +535,13 @@ namespace Mangos.World.Objects
                         byte j = 0;
                         do
                         {
-                            if (ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == unchecked((int)AuraIndex))
+                            if (ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == (int)AuraIndex)
                             {
                                 return true;
                             }
                             j = (byte)unchecked((uint)(j + 1));
                         }
-                        while (unchecked(j) <= 2u);
+                        while (j <= 2u);
                     }
                     return false;
                 }
@@ -553,7 +553,7 @@ namespace Mangos.World.Objects
                 {
                     byte b = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1);
                     byte i = 0;
-                    while (unchecked(i <= (uint)b))
+                    while (i <= (uint)b)
                     {
                         if (ActiveSpells[i] != null && ActiveSpells[i].SpellID == SpellID)
                         {
@@ -572,7 +572,7 @@ namespace Mangos.World.Objects
                     byte b = (byte)WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE;
                     byte b2 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1);
                     byte i = b;
-                    while (unchecked(i <= (uint)b2))
+                    while (i <= (uint)b2)
                     {
                         if (ActiveSpells[i] != null && ActiveSpells[i].SpellID == SpellID)
                         {
@@ -653,14 +653,14 @@ namespace Mangos.World.Objects
                         byte j = 0;
                         do
                         {
-                            if (ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == unchecked((int)AuraIndex))
+                            if (ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == (int)AuraIndex)
                             {
                                 RemoveAura(i, ref ActiveSpells[i].SpellCaster);
                                 break;
                             }
                             j = (byte)unchecked((uint)(j + 1));
                         }
-                        while (unchecked(j) <= 2u);
+                        while (j <= 2u);
                     }
                 }
             }
@@ -744,13 +744,13 @@ namespace Mangos.World.Objects
                         byte j = 0;
                         do
                         {
-                            if (ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == unchecked((int)AuraIndex))
+                            if (ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == (int)AuraIndex)
                             {
-                                Modifier += ActiveSpells[i].Aura_Info[j].GetValue(unchecked(Level), 0);
+                                Modifier += ActiveSpells[i].Aura_Info[j].GetValue(Level, 0);
                             }
                             j = (byte)unchecked((uint)(j + 1));
                         }
-                        while (unchecked(j) <= 2u);
+                        while (j <= 2u);
                     }
                     return Modifier;
                 }
@@ -771,13 +771,13 @@ namespace Mangos.World.Objects
                         byte j = 0;
                         do
                         {
-                            if (ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == unchecked((int)AuraIndex) && (ActiveSpells[i].Aura_Info[j].MiscValue & Mask) == Mask)
+                            if (ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == (int)AuraIndex && (ActiveSpells[i].Aura_Info[j].MiscValue & Mask) == Mask)
                             {
-                                Modifier += ActiveSpells[i].Aura_Info[j].GetValue(unchecked(Level), 0);
+                                Modifier += ActiveSpells[i].Aura_Info[j].GetValue(Level, 0);
                             }
                             j = (byte)unchecked((uint)(j + 1));
                         }
-                        while (unchecked(j) <= 2u);
+                        while (j <= 2u);
                     }
                     return Modifier;
                 }
@@ -859,7 +859,7 @@ namespace Mangos.World.Objects
                 int AuraFlag_Slot = Slot / 4;
                 checked
                 {
-                    int AuraFlag_SubSlot = unchecked(Slot % 4) * 8;
+                    int AuraFlag_SubSlot = Slot % 4 * 8;
                     SetAuraStackCount(Slot, (byte)ActiveSpells[Slot].StackCount);
                     if (this is WS_PlayerData.CharacterObject @object)
                     {
@@ -888,7 +888,7 @@ namespace Mangos.World.Objects
                         tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                         tmpPacket = (Packets.UpdatePacketClass)packet;
                         packet = tmpPacket;
-                        SendToNearPlayers(ref packet, 0uL);
+                        SendToNearPlayers(ref packet);
                         tmpPacket = (Packets.UpdatePacketClass)packet;
                     }
                     finally
@@ -906,7 +906,7 @@ namespace Mangos.World.Objects
                 {
                     packet.AddInt32(EmoteID);
                     packet.AddUInt64(GUID);
-                    SendToNearPlayers(ref packet, 0uL);
+                    SendToNearPlayers(ref packet);
                 }
                 finally
                 {
@@ -955,7 +955,7 @@ namespace Mangos.World.Objects
                         {
                             PenaltyFactor = 5;
                         }
-                        int SpellDamage = ((!IsHeal) ? @object.spellDamage[unchecked((uint)DamageType)].Value : @object.healing.Value);
+                        int SpellDamage = ((!IsHeal) ? @object.spellDamage[(uint)DamageType].Value : @object.healing.Value);
                         if (IsDot)
                         {
                             int TickAmount = (int)Math.Round(WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration / (double)EffectInfo.Amplitude);
@@ -963,7 +963,7 @@ namespace Mangos.World.Objects
                             {
                                 TickAmount = 5;
                             }
-                            SpellDamageBenefit = unchecked(SpellDamage / TickAmount);
+                            SpellDamageBenefit = SpellDamage / TickAmount;
                         }
                         else
                         {
@@ -980,7 +980,7 @@ namespace Mangos.World.Objects
                         }
                         if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].IsAOE)
                         {
-                            SpellDamageBenefit = unchecked(SpellDamageBenefit / 3);
+                            SpellDamageBenefit = SpellDamageBenefit / 3;
                         }
                     }
                     Damage += SpellDamageBenefit;
@@ -1061,10 +1061,10 @@ namespace Mangos.World.Objects
                 int lchance = ((this is WS_PlayerData.CharacterObject) ? 7 : 11);
                 checked
                 {
-                    int leveldiff = unchecked(Level) - unchecked(Caster.Level);
+                    int leveldiff = Level - Caster.Level;
                     int modHitChance = ((leveldiff >= 3) ? (94 - (leveldiff - 2) * lchance) : (96 - leveldiff));
-                    modHitChance += Caster.GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT, unchecked((int)Spell.SchoolMask));
-                    modHitChance += GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, unchecked((int)Spell.SchoolMask));
+                    modHitChance += Caster.GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT, (int)Spell.SchoolMask);
+                    modHitChance += GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, (int)Spell.SchoolMask);
                     if (Spell.IsAOE)
                     {
                         modHitChance -= GetAuraModifier(AuraEffects_Names.SPELL_AURA_MOD_AOE_AVOIDANCE);
@@ -1126,7 +1126,7 @@ namespace Mangos.World.Objects
                 int attackerWeaponSkill = obj.GetWeaponSkill(attType2, ref Victim);
                 checked
                 {
-                    int skillDiff = attackerWeaponSkill - unchecked(Level) * 5;
+                    int skillDiff = attackerWeaponSkill - Level * 5;
                     int fullSkillDiff = attackerWeaponSkill - GetDefenceSkill(ref Caster);
                     int roll = WorldServiceLocator._WorldServer.Rnd.Next(0, 10001);
                     int missChance = 0;
@@ -1176,7 +1176,7 @@ namespace Mangos.World.Objects
                 }
                 checked
                 {
-                    return unchecked(Level) * 5;
+                    return Level * 5;
                 }
             }
 
@@ -1214,13 +1214,13 @@ namespace Mangos.World.Objects
                         }
                         if (IsInFeralForm)
                         {
-                            return unchecked(Level) * 5;
+                            return Level * 5;
                         }
                         int skill = item?.GetSkill ?? 162;
                         int value = ((!Victim.IsPlayer) ? characterObject.Skills[skill].CurrentWithBonus : characterObject.Skills[skill].MaximumWithBonus);
                         return value;
                     }
-                    return unchecked(Level) * 5;
+                    return Level * 5;
                 }
             }
 
@@ -1231,12 +1231,12 @@ namespace Mangos.World.Objects
                     float DamageReduction;
                     if (School == DamageTypes.DMG_PHYSICAL)
                     {
-                        DamageReduction = (float)(Resistances[0].Base / (double)(Resistances[0].Base + 400 + 85 * unchecked(Level)));
+                        DamageReduction = (float)(Resistances[0].Base / (double)(Resistances[0].Base + 400 + 85 * Level));
                     }
                     else
                     {
-                        int effectiveResistanceRating = t.Resistances[unchecked((uint)School)].Base + Math.Max((unchecked(t.Level) - unchecked(Level)) * 5, 0);
-                        DamageReduction = (float)(effectiveResistanceRating / (double)(unchecked(Level) * 5) * 0.75);
+                        int effectiveResistanceRating = t.Resistances[(uint)School].Base + Math.Max((t.Level - Level) * 5, 0);
+                        DamageReduction = (float)(effectiveResistanceRating / (double)(Level * 5) * 0.75);
                     }
                     if (DamageReduction > 0.75f)
                     {
@@ -1321,9 +1321,9 @@ namespace Mangos.World.Objects
                     foreach (KeyValuePair<int, uint> tmpSpell in AbsorbSpellLeft)
                     {
                         int Schools = (int)(tmpSpell.Value >> 23);
-                        int AbsorbDamage = (int)(unchecked(tmpSpell.Value) & 0x7FFFFFL);
+                        int AbsorbDamage = (int)(tmpSpell.Value & 0x7FFFFFL);
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Spell: {0} [{1}]", AbsorbDamage, Schools);
-                        if (WorldServiceLocator._Functions.HaveFlag((uint)Schools, unchecked((byte)School)))
+                        if (WorldServiceLocator._Functions.HaveFlag((uint)Schools, (byte)School))
                         {
                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Apmongo, yes?!");
                             if (Damage == AbsorbDamage)
@@ -1342,7 +1342,7 @@ namespace Mangos.World.Objects
                             ListChange.Add(tmpSpell.Key, 0u);
                             Damage -= AbsorbDamage;
                         }
-                        else if ((Schools & (1 << unchecked((int)School))) != 0)
+                        else if ((Schools & (1 << (int)School)) != 0)
                         {
                             throw new Exception("AHA?!");
                         }
@@ -1420,10 +1420,10 @@ namespace Mangos.World.Objects
                     byte i = 0;
                     do
                     {
-                        Resistances[i] = new WS_PlayerHelper.TStat(0, 0, 0);
+                        Resistances[i] = new WS_PlayerHelper.TStat();
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 6u);
+                    while (i <= 6u);
                 }
             }
         }

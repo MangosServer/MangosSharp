@@ -22,6 +22,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Numerics;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -159,7 +160,7 @@ namespace Mangos.WoWFakeClient
             // Nothing
             catch (Exception ex)
             {
-                Console.WriteLine("Error in realm socket.{0}{1}", Constants.vbCrLf, ex.ToString());
+                Console.WriteLine("Error in realm socket.{0}{1}", Constants.vbCrLf, ex);
             }
 
             Connection.Close();
@@ -368,7 +369,7 @@ namespace Mangos.WoWFakeClient
             Random.NextBytes(A);
             Array.Reverse(A);
             string tempStr = Account.ToUpper() + ":" + Password.ToUpper();
-            var temp = System.Text.Encoding.ASCII.GetBytes(tempStr.ToCharArray());
+            var temp = Encoding.ASCII.GetBytes(tempStr.ToCharArray());
             var algorithm1 = new SHA1Managed();
             temp = algorithm1.ComputeHash(temp);
             var X = algorithm1.ComputeHash(Concat(Salt, temp));
@@ -422,7 +423,7 @@ namespace Mangos.WoWFakeClient
             list1[1] = algorithm1.ComputeHash((byte[])list1[1]);
             SS_Hash = Combine((byte[])list1[0], (byte[])list1[1]);
             tempStr = Strings.UCase(Account.ToUpper());
-            var User_Hash = algorithm1.ComputeHash(System.Text.Encoding.UTF8.GetBytes(tempStr.ToCharArray()));
+            var User_Hash = algorithm1.ComputeHash(Encoding.UTF8.GetBytes(tempStr.ToCharArray()));
             Array.Reverse(N);
             Array.Reverse(ServerB);
             var N_Hash = algorithm1.ComputeHash(N);

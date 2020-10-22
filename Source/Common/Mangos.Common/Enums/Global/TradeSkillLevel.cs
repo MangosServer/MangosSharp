@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum TradeSkillLevel : int
+    public enum TradeSkillLevel
     {
         TRADESKILL_LEVEL_NONE = 0,
         TRADESKILL_LEVEL_APPRENTICE = 1,

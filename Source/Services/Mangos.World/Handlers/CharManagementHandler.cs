@@ -97,7 +97,7 @@ namespace Mangos.World.Handlers
                     UpdateData.SetUpdateFlag(138, client.Character.cBytes1);
                     WS_PlayerData.CharacterObject updateObject = client.Character;
                     UpdateData.AddToPacket(ref SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
-                    client.Character.SendToNearPlayers(ref SMSG_UPDATE_OBJECT, 0uL);
+                    client.Character.SendToNearPlayers(ref SMSG_UPDATE_OBJECT);
                 }
                 finally
                 {
@@ -193,7 +193,7 @@ namespace Mangos.World.Handlers
             {
                 ProjectData.SetProjectError(ex);
                 Exception e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while trying to cancel logout.{0}", Environment.NewLine + e.ToString());
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while trying to cancel logout.{0}", Environment.NewLine + e);
                 ProjectData.ClearProjectError();
             }
         }

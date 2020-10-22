@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum CREATURE_FAMILY : int
+    public enum CREATURE_FAMILY
     {
         NONE = 0,
         WOLF = 1,

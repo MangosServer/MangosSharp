@@ -16,22 +16,24 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.World.AI;
+using Mangos.World.Objects;
 using Microsoft.VisualBasic.CompilerServices;
 
 // Basically, this AI is kitable and if the AI hits Gluth, it heals her for 5% of her HP (50,000 in this case.). Since we can't really do it that way, it has a set waypoint.
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Zombie_Chow : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Zombie_Chow : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int Infected_Wound_CD = 15000;
         private const int NPC_Gluth = 15932;
         private const int Spell_Infected_Wound = 29306; // The target takes 100 extra physical damage. This ability stacks.
-        public int NextInfectedWound = 0;
+        public int NextInfectedWound;
         public int NextWaypoint = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Zombie_Chow(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Zombie_Chow(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             AllowedMove = false;
             Creature.Flying = false;
@@ -52,14 +54,14 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 0; i++)
             {
-                World.Objects.WS_Base.BaseUnit target = aiCreature;
+                WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
                     return;
                 aiCreature.CastSpell(Spell_Infected_Wound, aiTarget);
             }
         }
 
-        public void HealGluth(ref World.Objects.WS_Creatures.CreatureObject NPC_Gluth, ref World.Objects.WS_Creatures.CreatureObject Zombie_Chow)
+        public void HealGluth(ref WS_Creatures.CreatureObject NPC_Gluth, ref WS_Creatures.CreatureObject Zombie_Chow)
         {
             var Waypoint1 = new coords
             {
@@ -71,7 +73,7 @@ namespace Mangos.World.Scripts.Creatures
             aiCreature.MoveTo((float)Waypoint1.X, (float)Waypoint1.Y, (float)Waypoint1.Z, (float)Waypoint1.Orientation);
             if (Conversions.ToBoolean(aiCreature.MoveTo((float)Waypoint1.X, (float)Waypoint1.Y, (float)Waypoint1.Z, (float)Waypoint1.Orientation, true)))
             {
-                World.Objects.WS_Base.BaseUnit argAttacker = null;
+                WS_Base.BaseUnit argAttacker = null;
                 aiCreature.Heal(50000, Attacker: argAttacker);
             }
         }

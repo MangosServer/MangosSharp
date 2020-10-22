@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.AuctionHouse
 {
-    public enum AuctionAction : int
+    public enum AuctionAction
     {
         AUCTION_SELL_ITEM = 0,
         AUCTION_CANCEL = 1,

@@ -262,7 +262,7 @@ namespace Mangos.World.Objects
                 AddToWorld();
                 Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
                 packet.AddUInt64(GUID);
-                SendToNearPlayers(ref packet, 0uL);
+                SendToNearPlayers(ref packet);
                 packet.Dispose();
             }
 
@@ -274,7 +274,7 @@ namespace Mangos.World.Objects
                 }
                 Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
                 packet.AddUInt64(GUID);
-                SendToNearPlayers(ref packet, 0uL);
+                SendToNearPlayers(ref packet);
                 packet.Dispose();
                 RemoveFromWorld();
                 Dispose();

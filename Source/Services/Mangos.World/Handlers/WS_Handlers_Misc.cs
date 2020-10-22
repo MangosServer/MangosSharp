@@ -132,14 +132,13 @@ namespace Mangos.World.Handlers
                     {
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_NAME_QUERY_RESPONSE [Creature GUID={2:X} not found]", client.IP, client.Port, GUID);
                     }
-                    return;
                 }
             }
             catch (Exception ex)
             {
                 ProjectData.SetProjectError(ex);
                 Exception e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at name query.{0}", Environment.NewLine + e.ToString());
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at name query.{0}", Environment.NewLine + e);
                 ProjectData.ClearProjectError();
             }
         }
@@ -153,7 +152,7 @@ namespace Mangos.World.Handlers
                     packet.GetInt16();
                     int Flag = packet.GetInt32();
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TUTORIAL_FLAG [flag={2}]", client.IP, client.Port, Flag);
-                    client.Character.TutorialFlags[unchecked(Flag / 8)] = (byte)(unchecked(client.Character.TutorialFlags[Flag / 8]) + (1 << 7 - unchecked(Flag % 8)));
+                    client.Character.TutorialFlags[Flag / 8] = (byte)(client.Character.TutorialFlags[Flag / 8] + (1 << 7 - Flag % 8));
                     client.Character.SaveCharacter();
                 }
             }
@@ -232,7 +231,7 @@ namespace Mangos.World.Handlers
             try
             {
                 response.AddPackGUID(client.Character.GUID);
-                client.Character.SendToNearPlayers(ref response, 0uL);
+                client.Character.SendToNearPlayers(ref response);
             }
             finally
             {
@@ -252,7 +251,7 @@ namespace Mangos.World.Handlers
                 {
                     response.AddInt32(emoteID);
                     response.AddUInt64(client.Character.GUID);
-                    client.Character.SendToNearPlayers(ref response, 0uL);
+                    client.Character.SendToNearPlayers(ref response);
                 }
                 finally
                 {
@@ -321,7 +320,7 @@ namespace Mangos.World.Handlers
                     SMSG_TEXT_EMOTE.AddInt32(255);
                     SMSG_TEXT_EMOTE.AddInt32(secondName.Length + 1);
                     SMSG_TEXT_EMOTE.AddString(secondName);
-                        client.Character.SendToNearPlayers(ref SMSG_TEXT_EMOTE, 0uL);
+                        client.Character.SendToNearPlayers(ref SMSG_TEXT_EMOTE);
                 }
                 finally
                 {

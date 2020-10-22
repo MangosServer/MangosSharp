@@ -20,7 +20,7 @@
 namespace Mangos.Common.Enums.Gossip
 {
     // TODO: Need to fix this for all to have values
-    public enum Gossips : int
+    public enum Gossips
     {
         Thunderbluff = 0,
         Darnassus,

@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Quest
 {
-    public enum QuestgiverStatusFlag : int
+    public enum QuestgiverStatusFlag
     {
         DIALOG_STATUS_NONE = 0,                  // There aren't any quests available. - No Mark
         DIALOG_STATUS_UNAVAILABLE = 1,           // Quest available and your leve isn't enough. - Gray Quotation ! Mark

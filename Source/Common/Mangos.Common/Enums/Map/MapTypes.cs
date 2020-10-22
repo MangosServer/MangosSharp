@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Map
 {
-    public enum MapTypes : int
+    public enum MapTypes
     {
         MAP_COMMON = 0,
         MAP_INSTANCE = 1,

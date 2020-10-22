@@ -74,7 +74,7 @@ namespace Mangos.World.Objects
                             byte k = 0;
                             do
                             {
-                                if (ActiveSpells[i] != null && ActiveSpells[i].Aura[k] != null && ActiveSpells[i].Aura_Info[k].Amplitude != 0 && unchecked(checked(Duration - ActiveSpells[i].SpellDuration) % ActiveSpells[i].Aura_Info[k].Amplitude) == 0)
+                                if (ActiveSpells[i] != null && ActiveSpells[i].Aura[k] != null && ActiveSpells[i].Aura_Info[k].Amplitude != 0 && checked(Duration - ActiveSpells[i].SpellDuration) % ActiveSpells[i].Aura_Info[k].Amplitude == 0)
                                 {
                                     WS_Spells.ApplyAuraHandler obj = ActiveSpells[i].Aura[k];
                                     WS_Base.BaseUnit Target = this;
@@ -85,7 +85,7 @@ namespace Mangos.World.Objects
                                 }
                                 k = (byte)unchecked((uint)(k + 1));
                             }
-                            while (unchecked(k) <= 2u);
+                            while (k <= 2u);
                             if (ActiveSpells[i] != null && ActiveSpells[i].SpellDuration <= 0 && ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
                             {
                                 RemoveAura(i, ref ActiveSpells[i].SpellCaster, RemovedByDuration: true);
@@ -128,7 +128,7 @@ namespace Mangos.World.Objects
                             }
                             j = (byte)unchecked((uint)(j + 1));
                         }
-                        while (unchecked(j) <= 2u);
+                        while (j <= 2u);
                     }
                 }
             }

@@ -19,10 +19,12 @@
 using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Golemagg_the_Incinerator : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Golemagg_the_Incinerator : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int EARTHQUAKE_COOLDOWN = 10000;
@@ -35,15 +37,15 @@ namespace Mangos.World.Scripts.Creatures
         private const int PYROBLAST_SPELL = 20228;
         // Private Const SUMMONPLAYER_SPELL As Integer = 20477
 
-        public int Phase = 0;
+        public int Phase;
         public int NextWaypoint = 0;
-        public int NextEarthQuake = 0;
-        public int NextMagmaSplash = 0;
-        public int NextPyroBlast = 0;
+        public int NextEarthQuake;
+        public int NextMagmaSplash;
+        public int NextPyroBlast;
         // Public NextSummon As Integer = 0
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Golemagg_the_Incinerator(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Golemagg_the_Incinerator(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             Phase = 0;
             AllowedMove = false;
@@ -69,7 +71,7 @@ namespace Mangos.World.Scripts.Creatures
             Phase = 0;
         }
 
-        public override void OnKill(ref World.Objects.WS_Base.BaseUnit Victim)
+        public override void OnKill(ref WS_Base.BaseUnit Victim)
         {
             // This is only here for if something is needed when a target is killed, Golemagg doesn't have a yell.
         }
@@ -118,7 +120,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 2; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try
@@ -136,7 +138,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 1; i <= 2; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try
@@ -154,7 +156,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 2; i <= 2; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try

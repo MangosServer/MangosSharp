@@ -86,7 +86,7 @@ namespace Mangos.World.Player
                         }
                         if (objCharacter.Level <= 25)
                         {
-                            objCharacter.Mana.Base += 20 + unchecked(objCharacter.Level);
+                            objCharacter.Mana.Base += 20 + objCharacter.Level;
                         }
                         else
                         {
@@ -105,11 +105,11 @@ namespace Mangos.World.Player
                         }
                         else
                         {
-                            objCharacter.Life.Base += unchecked(objCharacter.Level) + 4;
+                            objCharacter.Life.Base += objCharacter.Level + 4;
                         }
                         if (objCharacter.Level <= 27)
                         {
-                            objCharacter.Mana.Base += 18 + unchecked(objCharacter.Level);
+                            objCharacter.Mana.Base += 18 + objCharacter.Level;
                         }
                         else
                         {
@@ -128,11 +128,11 @@ namespace Mangos.World.Player
                         }
                         else
                         {
-                            objCharacter.Life.Base += unchecked(objCharacter.Level) - 8;
+                            objCharacter.Life.Base += objCharacter.Level - 8;
                         }
                         if (objCharacter.Level <= 27)
                         {
-                            objCharacter.Mana.Base += 23 + unchecked(objCharacter.Level);
+                            objCharacter.Mana.Base += 23 + objCharacter.Level;
                         }
                         else
                         {
@@ -151,11 +151,11 @@ namespace Mangos.World.Player
                         }
                         else
                         {
-                            objCharacter.Life.Base += unchecked(objCharacter.Level) + 4;
+                            objCharacter.Life.Base += objCharacter.Level + 4;
                         }
                         if (objCharacter.Level <= 25)
                         {
-                            objCharacter.Mana.Base += 17 + unchecked(objCharacter.Level);
+                            objCharacter.Mana.Base += 17 + objCharacter.Level;
                         }
                         else
                         {
@@ -174,11 +174,11 @@ namespace Mangos.World.Player
                         }
                         else
                         {
-                            objCharacter.Life.Base += unchecked(objCharacter.Level) - 6;
+                            objCharacter.Life.Base += objCharacter.Level - 6;
                         }
                         if (objCharacter.Level <= 33)
                         {
-                            objCharacter.Mana.Base += 22 + unchecked(objCharacter.Level);
+                            objCharacter.Mana.Base += 22 + objCharacter.Level;
                         }
                         else
                         {
@@ -201,7 +201,7 @@ namespace Mangos.World.Player
                         }
                         else
                         {
-                            objCharacter.Life.Base += unchecked(objCharacter.Level) + 2;
+                            objCharacter.Life.Base += objCharacter.Level + 2;
                         }
                         objCharacter.Strength.Base += gainStat(objCharacter.Level, 2.5E-05, 0.00417, 0.654096, -0.601491);
                         objCharacter.Intellect.Base += gainStat(objCharacter.Level, 8E-06, 0.001001, 0.16319, -0.06428);
@@ -216,11 +216,11 @@ namespace Mangos.World.Player
                         }
                         else
                         {
-                            objCharacter.Life.Base += unchecked(objCharacter.Level) + 1;
+                            objCharacter.Life.Base += objCharacter.Level + 1;
                         }
                         if (objCharacter.Level <= 32)
                         {
-                            objCharacter.Mana.Base += 19 + unchecked(objCharacter.Level);
+                            objCharacter.Mana.Base += 19 + objCharacter.Level;
                         }
                         else
                         {
@@ -239,11 +239,11 @@ namespace Mangos.World.Player
                         }
                         else
                         {
-                            objCharacter.Life.Base += unchecked(objCharacter.Level) - 2;
+                            objCharacter.Life.Base += objCharacter.Level - 2;
                         }
                         if (objCharacter.Level <= 30)
                         {
-                            objCharacter.Mana.Base += 21 + unchecked(objCharacter.Level);
+                            objCharacter.Mana.Base += 21 + objCharacter.Level;
                         }
                         else
                         {
@@ -262,7 +262,7 @@ namespace Mangos.World.Player
                         }
                         else
                         {
-                            objCharacter.Life.Base += unchecked(objCharacter.Level) + 10;
+                            objCharacter.Life.Base += objCharacter.Level + 10;
                         }
                         objCharacter.Strength.Base += gainStat(objCharacter.Level, 3.9E-05, 0.006902, 1.0800399999999999, -1.051701);
                         objCharacter.Intellect.Base += gainStat(objCharacter.Level, 2E-06, 0.001003, 0.10089, -0.076055);
@@ -343,7 +343,7 @@ namespace Mangos.World.Player
                         byte j = 0;
                         do
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)tmpFactionInfo.Value.flags[j], (byte)(unchecked((int)objCharacter.Race) - 1)))
+                            if (WorldServiceLocator._Functions.HaveFlag((uint)tmpFactionInfo.Value.flags[j], (byte)((int)objCharacter.Race - 1)))
                             {
                                 objCharacter.Reputation[i].Flags = tmpFactionInfo.Value.rep_flags[j];
                                 objCharacter.Reputation[i].Value = tmpFactionInfo.Value.rep_stats[j];
@@ -351,7 +351,7 @@ namespace Mangos.World.Player
                             }
                             j = (byte)unchecked((uint)(j + 1));
                         }
-                        while (unchecked(j) <= 3u);
+                        while (j <= 3u);
                         break;
                     }
                     i = (byte)unchecked((uint)(i + 1));

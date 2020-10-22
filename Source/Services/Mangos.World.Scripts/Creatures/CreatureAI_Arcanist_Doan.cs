@@ -19,10 +19,12 @@
 using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Arcanist_Doan : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Arcanist_Doan : WS_Creatures_AI.BossAI
     {
         // AI TODO: Fix arcane explosion. Make the AoE silence an AoE instead of random target.
         private const int AI_UPDATE = 1000;
@@ -37,16 +39,16 @@ namespace Mangos.World.Scripts.Creatures
         private const int SPELL_ARCANE_BUBBLE = 9438;
         // Private Const SPELL_ARCANE_EXPLOSION As Integer = 34517 'SPELL UNSUPPORTED, CAUSES CRASHES
 
-        public int NextDetonation = 0; // Again, this should never be reused.
-        public int NextArcaneBubble = 0; // Again, this should never be reused.
-        public int NextPolymorph = 0;
-        public int NextSilence = 0;
+        public int NextDetonation; // Again, this should never be reused.
+        public int NextArcaneBubble; // Again, this should never be reused.
+        public int NextPolymorph;
+        public int NextSilence;
         public int NextWaypoint = 0;
         public int NextAcid = 0;
         public int CurrentWaypoint = 0;
         // Public NextExplosion As Integer = 0
 
-        public CreatureAI_Arcanist_Doan(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Arcanist_Doan(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             AllowedMove = false;
             Creature.Flying = false;

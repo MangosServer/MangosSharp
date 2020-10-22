@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Mangos.Cluster.DataStores;
 using Mangos.Cluster.Globals;
 using Mangos.Common.Enums.Channel;
@@ -37,7 +38,7 @@ namespace Mangos.Cluster.Handlers
 
         private long GetNexyChatChannelID()
         {
-            return System.Threading.Interlocked.Increment(ref CHAT_CHANNELs_Counter);
+            return Interlocked.Increment(ref CHAT_CHANNELs_Counter);
         }
 
         public class ChatChannelClass : IDisposable
@@ -45,7 +46,7 @@ namespace Mangos.Cluster.Handlers
             private readonly ClusterServiceLocator clusterServiceLocator;
 
             // This is server-side ID
-            public long ID = 0L;
+            public long ID;
 
             // These are channel identificators
             public int ChannelIndex;
@@ -59,7 +60,7 @@ namespace Mangos.Cluster.Handlers
             public List<ulong> Banned = new List<ulong>();
             public List<ulong> Moderators = new List<ulong>();
             public List<ulong> Muted = new List<ulong>();
-            public ulong Owner = 0UL;
+            public ulong Owner;
 
             /* TODO ERROR: Skipped RegionDirectiveTrivia */
             private bool _disposedValue; // To detect redundant calls
@@ -146,14 +147,12 @@ namespace Mangos.Cluster.Handlers
                     var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_YOUCANTSPEAK, character.Guid, default, default);
                     character.Client.Send(p);
                     p.Dispose();
-                    return;
                 }
                 else if (!Joined.Contains(character.Guid))
                 {
                     var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, character.Guid, default, default);
                     character.Client.Send(p);
                     p.Dispose();
-                    return;
                 }
                 else
                 {

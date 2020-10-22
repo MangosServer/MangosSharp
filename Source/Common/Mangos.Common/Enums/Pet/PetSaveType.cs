@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Pet
 {
-    public enum PetSaveType : int
+    public enum PetSaveType
     {
         PET_SAVE_DELETED = -1,
         PET_SAVE_CURRENT = 0,

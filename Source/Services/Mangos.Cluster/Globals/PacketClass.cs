@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections;
+using System.Text;
 using Mangos.Common.Globals;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -39,11 +40,9 @@ namespace Mangos.Cluster.Globals
                 {
                     return (Opcodes)(Data[2] + Data[3] * 256);
                 }
-                else
-                {
-                    // If it's a dodgy packet, change it to a null packet
-                    return 0;
-                }
+
+                // If it's a dodgy packet, change it to a null packet
+                return 0;
             }
         }
 
@@ -128,7 +127,7 @@ namespace Mangos.Cluster.Globals
             }
             else
             {
-                var Bytes = System.Text.Encoding.UTF8.GetBytes(buffer.ToCharArray());
+                var Bytes = Encoding.UTF8.GetBytes(buffer.ToCharArray());
                 Array.Resize(ref Data, Data.Length + Bytes.Length + 1);
                 Data[0] = (byte)((Data.Length - 2) / 256);
                 Data[1] = (byte)((Data.Length - 2) % 256);
@@ -326,7 +325,7 @@ namespace Mangos.Cluster.Globals
             }
 
             Offset += 1;
-            return System.Text.Encoding.UTF8.GetString(Data, start, i);
+            return Encoding.UTF8.GetString(Data, start, i);
         }
 
         // Public Function GetString(ByVal Offset As Integer) As String

@@ -129,7 +129,7 @@ namespace Mangos.World.Quests
                             }
                             bytLoop6 = (byte)unchecked((uint)(bytLoop6 + 1));
                         }
-                        while (unchecked(bytLoop6) <= 3u);
+                        while (bytLoop6 <= 3u);
                     }
                     bytLoop4 = (byte)unchecked((uint)(bytLoop4 + 1));
                 }
@@ -195,7 +195,7 @@ namespace Mangos.World.Quests
                         ObjectivesType[bytLoop] = 0;
                         bytLoop = (byte)unchecked((uint)(bytLoop + 1));
                     }
-                    while (unchecked(bytLoop) <= 3u);
+                    while (bytLoop <= 3u);
                     IsCompleted();
                 }
                 Title = Quest.Title;
@@ -204,7 +204,7 @@ namespace Mangos.World.Quests
                 ObjectivesDeliver = Quest.ObjectivesDeliver;
                 if (Quest.TimeLimit > 0)
                 {
-                    TimeEnd = (int)(unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked(Quest.TimeLimit));
+                    TimeEnd = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + Quest.TimeLimit);
                 }
             }
         }
@@ -296,7 +296,7 @@ namespace Mangos.World.Quests
             {
                 if (ForSave)
                 {
-                    tmpProgress += unchecked(Progress[0]);
+                    tmpProgress += Progress[0];
                     tmpProgress += Progress[1] << 6;
                     tmpProgress += Progress[2] << 12;
                     tmpProgress += Progress[3] << 18;
@@ -315,7 +315,7 @@ namespace Mangos.World.Quests
                 }
                 else
                 {
-                    tmpProgress += unchecked(Progress[0]);
+                    tmpProgress += Progress[0];
                     tmpProgress += Progress[1] << 6;
                     tmpProgress += Progress[2] << 12;
                     tmpProgress += Progress[3] << 18;
@@ -402,7 +402,7 @@ namespace Mangos.World.Quests
                 reference = (byte)unchecked((uint)(reference + Count));
                 IsCompleted();
                 objCharacter.TalkUpdateQuest(Slot);
-                int ItemCount = unchecked(Count) - 1;
+                int ItemCount = Count - 1;
                 WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddItem(ref objCharacter.client, ObjectivesItem[index], ItemCount);
             }
         }
@@ -411,7 +411,7 @@ namespace Mangos.World.Quests
         {
             checked
             {
-                if (unchecked(ProgressItem[index]) - unchecked(Count) < 0)
+                if (ProgressItem[index] - Count < 0)
                 {
                     Count = ProgressItem[index];
                 }

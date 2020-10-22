@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum AttackVictimState : int
+    public enum AttackVictimState
     {
         VICTIMSTATE_UNKNOWN1 = 0,
         VICTIMSTATE_NORMAL = 1,

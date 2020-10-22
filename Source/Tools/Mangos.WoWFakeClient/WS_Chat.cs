@@ -22,7 +22,7 @@ namespace Mangos.WoWFakeClient
 {
     public static class WS_Chat
     {
-        public enum LANGUAGES : int
+        public enum LANGUAGES
         {
             LANG_GLOBAL = 0,
             LANG_UNIVERSAL = 0,
@@ -41,7 +41,7 @@ namespace Mangos.WoWFakeClient
             LANG_GUTTERSPEAK = 33
         }
 
-        public enum ChatMsg : int
+        public enum ChatMsg
         {
             CHAT_MSG_SAY = 0x0,
             CHAT_MSG_PARTY = 0x1,

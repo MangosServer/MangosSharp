@@ -837,7 +837,7 @@ namespace Mangos.World.Objects
                     else
                     {
                         response.AddInt32(item.Spells[i].SpellID);
-                        response.AddInt32(unchecked((int)item.Spells[i].SpellTrigger));
+                        response.AddInt32((int)item.Spells[i].SpellTrigger);
                         response.AddInt32(item.Spells[i].SpellCharges);
                         if (item.Spells[i].SpellCooldown > 0 || item.Spells[i].SpellCategoryCooldown > 0)
                         {
@@ -1222,7 +1222,7 @@ namespace Mangos.World.Objects
                         WorldServiceLocator._WorldServer.ALLQUESTS.OnQuestItemRemove(ref client.Character, client.Character.Items[srcSlot].ItemEntry, count);
                         if ((count == 0) | (count >= client.Character.Items[srcSlot].StackCount))
                         {
-                            if (unchecked(srcSlot) < 23u)
+                            if (srcSlot < 23u)
                             {
                                 WS_PlayerData.CharacterObject character = client.Character;
                                 Dictionary<byte, ItemObject> items;
@@ -1258,7 +1258,7 @@ namespace Mangos.World.Objects
                 {
                     ProjectData.SetProjectError(ex);
                     Exception e = ex;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error destroying item.{0}", Environment.NewLine + e.ToString());
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error destroying item.{0}", Environment.NewLine + e);
                     ProjectData.ClearProjectError();
                 }
             }
@@ -1350,7 +1350,7 @@ namespace Mangos.World.Objects
                             castResult = (byte)WorldServiceLocator._WS_Spells.SPELLs[itemInfo.Spells[i].SpellID].CanCast(ref client.Character, targets, FirstCheck: true);
                             if (castResult == byte.MaxValue)
                             {
-                                ThreadPool.QueueUserWorkItem(new WaitCallback(tmpSpell.Cast));
+                                ThreadPool.QueueUserWorkItem(tmpSpell.Cast);
                             }
                             else
                             {
@@ -1361,7 +1361,7 @@ namespace Mangos.World.Objects
                         {
                             ProjectData.SetProjectError(ex2);
                             Exception e = ex2;
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error casting spell {0}.{1}", itemInfo.Spells[i].SpellID, Environment.NewLine + e.ToString());
+                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error casting spell {0}.{1}", itemInfo.Spells[i].SpellID, Environment.NewLine + e);
                             WorldServiceLocator._WS_Spells.SendCastResult((SpellFailedReason)castResult, ref client, itemInfo.Spells[i].SpellID);
                             ProjectData.ClearProjectError();
                         }
@@ -1378,7 +1378,7 @@ namespace Mangos.World.Objects
             {
                 ProjectData.SetProjectError(ex3);
                 Exception ex = ex3;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while using a item.{0}", Environment.NewLine + ex.ToString());
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while using a item.{0}", Environment.NewLine + ex);
                 ProjectData.ClearProjectError();
             }
         }

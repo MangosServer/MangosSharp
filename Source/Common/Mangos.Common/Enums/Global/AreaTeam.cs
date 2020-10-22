@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum AreaTeam : int
+    public enum AreaTeam
     {
         AREATEAM_NONE = 0,
         AREATEAM_ALLY = 2,

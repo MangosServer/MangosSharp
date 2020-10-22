@@ -373,7 +373,7 @@ namespace Mangos.World.Player
                 CharacterGUID = 0uL;
                 CharacterGUID = Character.GUID;
                 Character.StartMirrorTimer(MirrorTimer.DROWNING, 70000);
-                DrowningTimer = new Timer(new TimerCallback(Character.HandleDrowning), null, 2000, 1000);
+                DrowningTimer = new Timer(Character.HandleDrowning, null, 2000, 1000);
             }
 
             protected virtual void Dispose(bool disposing)
@@ -419,7 +419,7 @@ namespace Mangos.World.Player
                 RepopTimer = null;
                 this.Character = null;
                 this.Character = Character;
-                RepopTimer = new Timer(new TimerCallback(Repop), null, 360000, 360000);
+                RepopTimer = new Timer(Repop, null, 360000, 360000);
             }
 
             public void Repop(object Obj)
@@ -713,7 +713,7 @@ namespace Mangos.World.Player
                             int timeLeft = 0;
                             if (Cooldown.Value.Key > WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))
                             {
-                                timeLeft = (int)(unchecked(checked(Cooldown.Value.Key - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))) * 1000L);
+                                timeLeft = (int)(checked(Cooldown.Value.Key - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) * 1000L);
                             }
                             packet.AddUInt16((ushort)Cooldown.Value.Value);
                             packet.AddUInt16((ushort)WorldServiceLocator._WS_Spells.SPELLs[Cooldown.Key].Category);

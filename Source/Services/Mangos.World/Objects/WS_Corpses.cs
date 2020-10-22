@@ -113,7 +113,7 @@ namespace Mangos.World.Objects
                             while (i <= 18);
                             CorpseObject updateObject = this;
                             tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
-                            SendToNearPlayers(ref packet, 0uL);
+                            SendToNearPlayers(ref packet);
                         }
                         finally
                         {
@@ -159,7 +159,7 @@ namespace Mangos.World.Objects
                 try
                 {
                     packet.AddUInt64(GUID);
-                    SendToNearPlayers(ref packet, 0uL);
+                    SendToNearPlayers(ref packet);
                 }
                 finally
                 {
@@ -204,7 +204,7 @@ namespace Mangos.World.Objects
                 checked
                 {
                     Bytes1 = unchecked((int)((uint)Character.Race << 8)) + unchecked((int)((uint)Character.Gender << 16)) + (Character.Skin << 24);
-                    Bytes2 = unchecked(Character.Face) + (Character.HairStyle << 8) + (Character.HairColor << 16) + (Character.FacialHair << 24);
+                    Bytes2 = Character.Face + (Character.HairStyle << 8) + (Character.HairColor << 16) + (Character.FacialHair << 24);
                     Model = Character.Model;
                     positionX = Character.positionX;
                     positionY = Character.positionY;
@@ -239,7 +239,7 @@ namespace Mangos.World.Objects
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 18u);
+                    while (i <= 18u);
                     Flags = 4;
                     WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Add(GUID, this);
                 }

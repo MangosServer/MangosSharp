@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using Mangos.Common;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
@@ -340,7 +339,7 @@ namespace Mangos.World.Objects
                                 }
                                 t -= 100;
                             }
-                            t = ((!(PathPoints[k + 1].tFrom > PathPoints[k + 1].tTo)) ? ((int)(t + unchecked(checked((long)PathPoints[k + 1].tTo) % 100))) : ((int)(t + (100 - unchecked(checked((long)PathPoints[k + 1].tTo) % 100)))));
+                            t = ((!(PathPoints[k + 1].tFrom > PathPoints[k + 1].tTo)) ? ((int)(t + checked((long)PathPoints[k + 1].tTo) % 100)) : ((int)(t + (100 - checked((long)PathPoints[k + 1].tTo) % 100))));
                             teleport = false;
                             if (PathPoints[k + 1].ActionFlag == 1 || PathPoints[k + 1].MapID != PathPoints[k].MapID)
                             {

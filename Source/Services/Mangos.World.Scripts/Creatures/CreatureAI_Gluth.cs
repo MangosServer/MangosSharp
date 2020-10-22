@@ -19,10 +19,12 @@
 using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Gluth : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Gluth : WS_Creatures_AI.BossAI
     {
         // TODO: Implement proper zombie chow summons. Fix decimate. Fix him going underground. Fix mortal wound a debuff instead of dispellable buff. Fix terrifying roar.
         // Reference: https://github.com/mangoszero/scripts/blob/master/scripts/eastern_kingdoms/naxxramas/boss_gluth.cpp
@@ -41,14 +43,14 @@ namespace Mangos.World.Scripts.Creatures
         // Private Const Spell_Call_All_Zombie_Chow As Integer = 29681 - Seems to be removed from DBC..
         // Private Const spell_zombie_chow_search As Integer = 28235 - Seems to be removed from DBC..
 
-        public int NextMortalWound = 0;
-        public int NextDecimate = 0;
-        public int NextFrenzy = 0;
-        public int NextRoar = 0;
+        public int NextMortalWound;
+        public int NextDecimate;
+        public int NextFrenzy;
+        public int NextRoar;
         public int NextWaypoint = 0;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Gluth(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Gluth(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             AllowedMove = false;
             Creature.Flying = false;
@@ -90,7 +92,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try
@@ -108,7 +110,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 1; i <= 3; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 try
@@ -126,7 +128,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 2; i <= 3; i++)
             {
-                World.Objects.WS_Base.BaseUnit target = aiCreature;
+                WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
                     return;
                 try
@@ -144,7 +146,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 3; i <= 3; i++)
             {
-                World.Objects.WS_Base.BaseUnit target = aiCreature;
+                WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
                     return;
                 try

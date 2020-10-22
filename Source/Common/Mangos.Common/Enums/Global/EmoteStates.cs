@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum EmoteStates : int
+    public enum EmoteStates
     {
         ANIM_STAND = 0x0,
         ANIM_DEATH = 0x1,

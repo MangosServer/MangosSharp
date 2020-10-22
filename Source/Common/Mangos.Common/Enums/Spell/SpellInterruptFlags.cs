@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellInterruptFlags : int
+    public enum SpellInterruptFlags
     {
         SPELL_INTERRUPT_FLAG_MOVEMENT = 0x1, // why need this for instant?
         SPELL_INTERRUPT_FLAG_PUSH_BACK = 0x2, // push back

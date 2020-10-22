@@ -313,7 +313,7 @@ namespace Mangos.World.Auction
                     return;
                 }
                 ref uint copper = ref client.Character.Copper;
-                copper = (uint)(unchecked(copper) - unchecked(GetAuctionDeposit(cGUID, WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemInfo.SellPrice, WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].StackCount, Time)));
+                copper = (uint)(copper - GetAuctionDeposit(cGUID, WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemInfo.SellPrice, WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].StackCount, Time));
                 client.Character.ItemREMOVE(iGUID, Destroy: false, Update: true);
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update($"INSERT INTO auctionhouse (auction_bid, auction_buyout, auction_timeleft, auction_bidder, auction_owner, auction_itemId, auction_itemGuid, auction_itemCount) VALUES \r\n            ({Bid},{Buyout},{Time},{0},{client.Character.GUID},{WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemEntry},{iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM},{WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].StackCount});");
                 DataTable MySQLQuery = new DataTable();
@@ -331,7 +331,7 @@ namespace Mangos.World.Auction
             ulong GUID = packet.GetUInt64();
             checked
             {
-                int MailTime = (int)(unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + 2592000L);
+                int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                 int AuctionID = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_REMOVE_ITEM [GUID={2} AuctionID={3}]", client.IP, client.Port, GUID, AuctionID);
                 DataTable MySQLQuery = new DataTable();
@@ -359,7 +359,7 @@ namespace Mangos.World.Auction
             ulong cGUID = packet.GetUInt64();
             checked
             {
-                int MailTime = (int)(unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + 2592000L);
+                int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                 int AuctionID = packet.GetInt32();
                 int Bid = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_PLACE_BID [AuctionID={2} Bid={3}]", client.IP, client.Port, AuctionID, Bid);
@@ -396,7 +396,7 @@ namespace Mangos.World.Auction
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE auctionhouse SET auction_bidder = {1}, auction_bid = {2} WHERE auction_id = {0};", AuctionID, client.Character.GUID, Bid));
                     }
                     ref uint copper = ref client.Character.Copper;
-                    copper = (uint)(unchecked(copper) - unchecked(Bid));
+                    copper = (uint)(copper - Bid);
                     client.Character.SetUpdateFlag(1176, client.Character.Copper);
                     client.Character.SendCharacterUpdate(toNear: false);
                     SendAuctionCommandResult(ref client, MySQLQuery.Rows[0].As<int>("auction_id"), AuctionAction.AUCTION_PLACE_BID, AuctionError.AUCTION_OK, 0);
@@ -436,11 +436,11 @@ namespace Mangos.World.Auction
                 }
                 if (LevelMIN != 0)
                 {
-                    QueryString = QueryString + " AND item_template.itemlevel > " + Conversions.ToString(unchecked(LevelMIN) - 1);
+                    QueryString = QueryString + " AND item_template.itemlevel > " + Conversions.ToString(LevelMIN - 1);
                 }
                 if (LevelMAX != 0)
                 {
-                    QueryString = QueryString + " AND item_template.itemlevel < " + Conversions.ToString(unchecked(LevelMAX) + 1);
+                    QueryString = QueryString + " AND item_template.itemlevel < " + Conversions.ToString(LevelMAX + 1);
                 }
                 if (itemSlot != -1)
                 {

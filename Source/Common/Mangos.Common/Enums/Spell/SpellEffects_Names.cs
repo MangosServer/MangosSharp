@@ -19,7 +19,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellEffects_Names : int
+    public enum SpellEffects_Names
     {
         SPELL_EFFECT_NOTHING = 0,
         SPELL_EFFECT_INSTAKILL = 1,

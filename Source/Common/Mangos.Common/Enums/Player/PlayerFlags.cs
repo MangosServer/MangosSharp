@@ -21,7 +21,7 @@ using System;
 namespace Mangos.Common.Enums.Player
 {
     [Flags]
-    public enum PlayerFlags : int
+    public enum PlayerFlags
     {
         PLAYER_FLAGS_GROUP_LEADER = 0x1,
         PLAYER_FLAGS_AFK = 0x2,

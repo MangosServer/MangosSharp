@@ -19,7 +19,7 @@
 
 namespace Mangos.Common.Enums.Map
 {
-    public enum Axis : int
+    public enum Axis
     {
         X_AXIS = 0,
         Y_AXIS = 1,

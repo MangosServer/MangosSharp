@@ -298,11 +298,9 @@ namespace Mangos.Common.Legacy
                 // Table gathered
                 return true;
             }
-            else
-            {
-                // Table dosent exist
-                return false;
-            }
+
+            // Table dosent exist
+            return false;
         }
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
         [Description("SQLGet. Used after the query to get a section value")]

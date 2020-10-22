@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum Emotes : int
+    public enum Emotes
     {
         // Auto generated from Emotes.dbc
         STATE_WORK_NOSHEATHE_MINING = 233,

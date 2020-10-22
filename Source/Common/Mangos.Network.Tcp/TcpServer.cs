@@ -16,13 +16,13 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Loggers;
-using Mangos.Network.Tcp.Extensions;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Channels;
+using Mangos.Loggers;
+using Mangos.Network.Tcp.Extensions;
 
 namespace Mangos.Network.Tcp
 {

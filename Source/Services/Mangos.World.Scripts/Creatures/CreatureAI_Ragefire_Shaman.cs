@@ -17,9 +17,12 @@
 //
 
 
+using Mangos.World.AI;
+using Mangos.World.Objects;
+
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Ragefire_Shaman : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Ragefire_Shaman : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int HEAL_COOLDOWN = 8000;
@@ -27,11 +30,11 @@ namespace Mangos.World.Scripts.Creatures
         private const int HEAL_SPELL = 11986;
         private const int BOLT_SPELL = 9532;
         public int NextWaypoint = 0;
-        public int NextHeal = 0;
-        public int NextBolt = 0;
+        public int NextHeal;
+        public int NextBolt;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Ragefire_Shaman(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Ragefire_Shaman(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             AllowedMove = false;
             Creature.Flying = false;
@@ -59,7 +62,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 1; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 aiCreature.CastSpell(HEAL_SPELL, aiTarget);
@@ -70,7 +73,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 1; i <= 1; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 aiCreature.CastSpell(BOLT_SPELL, aiTarget);

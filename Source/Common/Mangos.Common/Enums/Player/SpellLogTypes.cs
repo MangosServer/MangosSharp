@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Player
 {
-    public enum SpellLogTypes : int
+    public enum SpellLogTypes
     {
         NON_MELEE = 0
     }

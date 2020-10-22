@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.CompilerServices;
@@ -29,7 +30,7 @@ namespace Mangos.DBCReader
         }
 
         // Required by the Windows Form Designer
-        private System.ComponentModel.IContainer components;
+        private IContainer components;
 
         // NOTE: The following procedure is required by the Windows Form Designer
         // It can be modified using the Windows Form Designer.  
@@ -37,7 +38,7 @@ namespace Mangos.DBCReader
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            components = new Container();
             txtFile = new TextBox();
             _cmdBrowse = new Button();
             _cmdBrowse.Click += new EventHandler(cmdBrowse_Click);
@@ -50,7 +51,7 @@ namespace Mangos.DBCReader
             _txtQuery.KeyDown += new KeyEventHandler(txtQuery_KeyDown);
             _cmdSearch = new Button();
             _cmdSearch.Click += new EventHandler(cmdSearch_Click);
-            ((System.ComponentModel.ISupportInitialize)BindingSource1).BeginInit();
+            ((ISupportInitialize)BindingSource1).BeginInit();
             SuspendLayout();
             // 
             // txtFile
@@ -146,7 +147,7 @@ namespace Mangos.DBCReader
             Margin = new Padding(4, 3, 4, 3);
             Name = "frmMain";
             Text = "DBC (Database Code) Reader";
-            ((System.ComponentModel.ISupportInitialize)BindingSource1).EndInit();
+            ((ISupportInitialize)BindingSource1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }

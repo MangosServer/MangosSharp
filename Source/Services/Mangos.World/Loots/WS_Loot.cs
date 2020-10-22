@@ -90,7 +90,7 @@ namespace Mangos.World.Loots
             {
                 ProjectData.SetProjectError(ex);
                 Exception e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error looting item.{0}", Environment.NewLine + e.ToString());
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error looting item.{0}", Environment.NewLine + e);
                 ProjectData.ClearProjectError();
             }
         }
@@ -107,7 +107,7 @@ namespace Mangos.World.Loots
                 if (client.Character.IsInGroup)
                 {
                     List<WS_Base.BaseUnit> members = WorldServiceLocator._WS_Spells.GetPartyMembersAroundMe(ref client.Character, 100f);
-                    int copper2 = unchecked(LootTable[client.Character.lootGUID].Money / members.Count) + 1;
+                    int copper2 = LootTable[client.Character.lootGUID].Money / members.Count + 1;
                     LootTable[client.Character.lootGUID].Money = 0;
                     Packets.PacketClass sharePcket = new Packets.PacketClass(Opcodes.SMSG_LOOT_MONEY_NOTIFY);
                     sharePcket.AddInt32(copper2);
@@ -115,20 +115,20 @@ namespace Mangos.World.Loots
                     {
                         character.client.SendMultiplyPackets(ref sharePcket);
                         ref uint copper3 = ref character.Copper;
-                        copper3 = (uint)(unchecked(copper3) + unchecked(copper2));
+                        copper3 = (uint)(copper3 + copper2);
                         character.SetUpdateFlag(1176, character.Copper);
                         character.SaveCharacter();
                     }
                     client.SendMultiplyPackets(ref sharePcket);
                     ref uint copper4 = ref client.Character.Copper;
-                    copper4 = (uint)(unchecked(copper4) + unchecked(copper2));
+                    copper4 = (uint)(copper4 + copper2);
                     sharePcket.Dispose();
                 }
                 else
                 {
                     int copper = LootTable[client.Character.lootGUID].Money;
                     ref uint copper5 = ref client.Character.Copper;
-                    copper5 = (uint)(unchecked(copper5) + unchecked(copper));
+                    copper5 = (uint)(copper5 + copper);
                     LootTable[client.Character.lootGUID].Money = 0;
                     Packets.PacketClass lootPacket = new Packets.PacketClass(Opcodes.SMSG_LOOT_MONEY_NOTIFY);
                     lootPacket.AddInt32(copper);
@@ -211,7 +211,7 @@ namespace Mangos.World.Loots
                                     WS_Creatures.CreatureObject updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
                                     UpdateData4.AddToPacket(ref response3, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                                     wORLD_CREATUREs[key] = updateObject;
-                                    WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response3, 0uL);
+                                    WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response3);
                                     response3.Dispose();
                                     UpdateData4.Dispose();
                                     break;
@@ -260,7 +260,7 @@ namespace Mangos.World.Loots
                                 WS_Creatures.CreatureObject updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
                                 UpdateData3.AddToPacket(ref response4, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                                 wORLD_CREATUREs[key] = updateObject;
-                                WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response4, 0uL);
+                                WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response4);
                                 response4.Dispose();
                                 UpdateData3.Dispose();
                                 break;
@@ -289,7 +289,7 @@ namespace Mangos.World.Loots
                         WS_GameObjects.GameObjectObject updateObject2 = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
                         UpdateData2.AddToPacket(ref response2, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject2);
                         wORLD_GAMEOBJECTs[key] = updateObject2;
-                        WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].SendToNearPlayers(ref response2, 0uL);
+                        WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].SendToNearPlayers(ref response2);
                         response2.Dispose();
                         UpdateData2.Dispose();
                     }
@@ -329,7 +329,7 @@ namespace Mangos.World.Loots
                     WS_Creatures.CreatureObject updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
                     UpdateData.AddToPacket(ref response, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                     wORLD_CREATUREs[key] = updateObject;
-                    WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response, 0uL);
+                    WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response);
                     response.Dispose();
                     UpdateData.Dispose();
                 }
@@ -375,7 +375,7 @@ namespace Mangos.World.Loots
             }
             startRoll.Dispose();
             LootTable[LootGUID].GroupLootInfo[Slot].Rolls = rollCharacters;
-            LootTable[LootGUID].GroupLootInfo[Slot].RollTimeoutTimer = new Timer(new TimerCallback(LootTable[LootGUID].GroupLootInfo[Slot].EndRoll), 0, 60000, -1);
+            LootTable[LootGUID].GroupLootInfo[Slot].RollTimeoutTimer = new Timer(LootTable[LootGUID].GroupLootInfo[Slot].EndRoll, 0, 60000, -1);
         }
 
         public void On_CMSG_LOOT_ROLL(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)

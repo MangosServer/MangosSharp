@@ -551,28 +551,28 @@ namespace Mangos.World.Player
                         {
                             case Classes.CLASS_WARRIOR:
                             case Classes.CLASS_PALADIN:
-                                return unchecked(Level) * 3 + Strength.Base * 3 - 20;
+                                return Level * 3 + Strength.Base * 3 - 20;
                             case Classes.CLASS_SHAMAN:
-                                return unchecked(Level) * 2 + Strength.Base * 2 - 20;
+                                return Level * 2 + Strength.Base * 2 - 20;
                             case Classes.CLASS_PRIEST:
                             case Classes.CLASS_MAGE:
                             case Classes.CLASS_WARLOCK:
                                 return Strength.Base - 10;
                             case Classes.CLASS_HUNTER:
                             case Classes.CLASS_ROGUE:
-                                return unchecked(Level) * 2 + Strength.Base + Agility.Base - 20;
+                                return Level * 2 + Strength.Base + Agility.Base - 20;
                             case Classes.CLASS_DRUID:
                                 if (ShapeshiftForm == ShapeshiftForm.FORM_CAT)
                                 {
-                                    return unchecked(Level) * 2 + Strength.Base * 2 + Agility.Base - 20;
+                                    return Level * 2 + Strength.Base * 2 + Agility.Base - 20;
                                 }
                                 if ((ShapeshiftForm == ShapeshiftForm.FORM_BEAR) | (ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR))
                                 {
-                                    return unchecked(Level) * 3 + Strength.Base * 2 - 20;
+                                    return Level * 3 + Strength.Base * 2 - 20;
                                 }
                                 if (ShapeshiftForm == ShapeshiftForm.FORM_MOONKIN)
                                 {
-                                    return (int)Math.Round(unchecked(Level) * 1.5 + Agility.Base + Strength.Base * 2 - 20.0);
+                                    return (int)Math.Round(Level * 1.5 + Agility.Base + Strength.Base * 2 - 20.0);
                                 }
                                 return Strength.Base * 2 - 20;
                             default:
@@ -592,9 +592,9 @@ namespace Mangos.World.Player
                         {
                             case Classes.CLASS_WARRIOR:
                             case Classes.CLASS_ROGUE:
-                                return unchecked(Level) + Agility.Base - 10;
+                                return Level + Agility.Base - 10;
                             case Classes.CLASS_HUNTER:
-                                return unchecked(Level) * 2 + Agility.Base - 10;
+                                return Level * 2 + Agility.Base - 10;
                             case Classes.CLASS_PALADIN:
                             case Classes.CLASS_PRIEST:
                             case Classes.CLASS_SHAMAN:
@@ -619,7 +619,7 @@ namespace Mangos.World.Player
             {
                 checked
                 {
-                    return (short)unchecked(AttackTimeBase[(uint)weaponAttackType] * AttackTimeMods[(uint)weaponAttackType]);
+                    return (short)(AttackTimeBase[(uint)weaponAttackType] * AttackTimeMods[(uint)weaponAttackType]);
                 }
             }
 
@@ -629,7 +629,7 @@ namespace Mangos.World.Player
                 {
                     checked
                     {
-                        return (uint)(1 << unchecked((int)Classe) - 1);
+                        return (uint)(1 << (int)Classe - 1);
                     }
                 }
             }
@@ -640,7 +640,7 @@ namespace Mangos.World.Player
                 {
                     checked
                     {
-                        return (uint)(1 << unchecked((int)Race) - 1);
+                        return (uint)(1 << (int)Race - 1);
                     }
                 }
             }
@@ -826,20 +826,20 @@ namespace Mangos.World.Player
                             {
                                 if (ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == 219)
                                 {
-                                    PowerRegenMP5 += GetStat((byte)ActiveSpells[i].Aura_Info[j].MiscValue) * ActiveSpells[i].Aura_Info[j].GetValue(unchecked(Level), 0) / 500f;
+                                    PowerRegenMP5 += GetStat((byte)ActiveSpells[i].Aura_Info[j].MiscValue) * ActiveSpells[i].Aura_Info[j].GetValue(Level, 0) / 500f;
                                 }
                                 else if (ActiveSpells[i].SpellID == 34074 && ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == 226)
                                 {
-                                    PowerRegenMP5 = (float)(PowerRegenMP5 + (ActiveSpells[i].Aura_Info[j].GetValue(unchecked(Level), 0) * Intellect.Base / 500f + unchecked(Level) * 35 / 100.0));
+                                    PowerRegenMP5 = (float)(PowerRegenMP5 + (ActiveSpells[i].Aura_Info[j].GetValue(Level, 0) * Intellect.Base / 500f + Level * 35 / 100.0));
                                 }
                                 else if (ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == 134)
                                 {
-                                    PowerRegenInterrupt += ActiveSpells[i].Aura_Info[j].GetValue(unchecked(Level), 0);
+                                    PowerRegenInterrupt += ActiveSpells[i].Aura_Info[j].GetValue(Level, 0);
                                 }
                             }
                             j = (byte)unchecked((uint)(j + 1));
                         }
-                        while (unchecked(j) <= 2u);
+                        while (j <= 2u);
                     }
                     if (PowerRegenInterrupt > 100)
                     {
@@ -1344,19 +1344,19 @@ namespace Mangos.World.Player
                         {
                             if (Items.ContainsKey(i))
                             {
-                                SetUpdateFlag(486 + unchecked(i) * 2, Items[i].GUID);
-                                if (unchecked(i) < 19u)
+                                SetUpdateFlag(486 + i * 2, Items[i].GUID);
+                                if (i < 19u)
                                 {
-                                    SetUpdateFlag(260 + unchecked(i) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].ItemEntry);
-                                    SetUpdateFlag(268 + unchecked(i) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                    SetUpdateFlag(260 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].ItemEntry);
+                                    SetUpdateFlag(268 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
                                 }
                             }
                             else
                             {
-                                SetUpdateFlag(486 + unchecked(i) * 2, 0L);
-                                if (unchecked(i) < 19u)
+                                SetUpdateFlag(486 + i * 2, 0L);
+                                if (i < 19u)
                                 {
-                                    SetUpdateFlag(260 + unchecked(i) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                    SetUpdateFlag(260 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
                                 }
                             }
                             i = (byte)unchecked((uint)(i + 1));
@@ -1389,19 +1389,19 @@ namespace Mangos.World.Player
                         {
                             if (Items.ContainsKey(j))
                             {
-                                SetUpdateFlag(486 + unchecked(j) * 2, Items[j].GUID);
-                                if (unchecked(j) < 19u)
+                                SetUpdateFlag(486 + j * 2, Items[j].GUID);
+                                if (j < 19u)
                                 {
-                                    SetUpdateFlag(260 + unchecked(j) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[j].ItemEntry);
-                                    SetUpdateFlag(268 + unchecked(j) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[j].RandomProperties);
+                                    SetUpdateFlag(260 + j * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[j].ItemEntry);
+                                    SetUpdateFlag(268 + j * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[j].RandomProperties);
                                 }
                             }
                             else
                             {
-                                SetUpdateFlag(486 + unchecked(j) * 2, 0uL);
-                                if (unchecked(j) < 19u)
+                                SetUpdateFlag(486 + j * 2, 0uL);
+                                if (j < 19u)
                                 {
-                                    SetUpdateFlag(260 + unchecked(j) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                    SetUpdateFlag(260 + j * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
                                 }
                             }
                             j = (byte)unchecked((uint)(j + 1));
@@ -1423,12 +1423,12 @@ namespace Mangos.World.Player
                     {
                         if (Items.ContainsKey(i))
                         {
-                            SetUpdateFlag(260 + unchecked(i) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].ItemEntry);
-                            SetUpdateFlag(268 + unchecked(i) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].RandomProperties);
+                            SetUpdateFlag(260 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].ItemEntry);
+                            SetUpdateFlag(268 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[i].RandomProperties);
                         }
                         else
                         {
-                            SetUpdateFlag(260 + unchecked(i) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                            SetUpdateFlag(260 + i * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
@@ -1458,7 +1458,7 @@ namespace Mangos.World.Player
                         packetForOthers.AddInt8(0);
                         CharacterObject updateObject = this;
                         forOthers.AddToPacket(ref packetForOthers, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
-                        SendToNearPlayers(ref packetForOthers, 0uL);
+                        SendToNearPlayers(ref packetForOthers);
                     }
                     finally
                     {
@@ -1595,12 +1595,12 @@ namespace Mangos.World.Player
                 {
                     do
                     {
-                        SetUpdateFlag(1201 + unchecked(i2), spellDamage[i2].PositiveBonus);
-                        SetUpdateFlag(1208 + unchecked(i2), spellDamage[i2].NegativeBonus);
-                        SetUpdateFlag(1215 + unchecked(i2), spellDamage[i2].Modifier);
+                        SetUpdateFlag(1201 + i2, spellDamage[i2].PositiveBonus);
+                        SetUpdateFlag(1208 + i2, spellDamage[i2].NegativeBonus);
+                        SetUpdateFlag(1215 + i2, spellDamage[i2].Modifier);
                         i2 = (byte)unchecked((uint)(i2 + 1));
                     }
-                    while (unchecked(i2) <= 6u);
+                    while (i2 <= 6u);
                     SetUpdateFlag(155, Resistances[0].Base);
                     SetUpdateFlag(156, Resistances[1].Base);
                     SetUpdateFlag(157, Resistances[2].Base);
@@ -1634,19 +1634,19 @@ namespace Mangos.World.Player
                     {
                         if (TalkQuests[n] == null)
                         {
-                            SetUpdateFlag(198 + unchecked(n) * 3, 0);
-                            SetUpdateFlag(199 + unchecked(n) * 3, 0);
-                            SetUpdateFlag(199 + unchecked(n) * 3 + 1, 0);
+                            SetUpdateFlag(198 + n * 3, 0);
+                            SetUpdateFlag(199 + n * 3, 0);
+                            SetUpdateFlag(199 + n * 3 + 1, 0);
                         }
                         else
                         {
-                            SetUpdateFlag(198 + unchecked(n) * 3, TalkQuests[n].ID);
-                            SetUpdateFlag(199 + unchecked(n) * 3, TalkQuests[n].GetProgress());
-                            SetUpdateFlag(199 + unchecked(n) * 3 + 1, 0);
+                            SetUpdateFlag(198 + n * 3, TalkQuests[n].ID);
+                            SetUpdateFlag(199 + n * 3, TalkQuests[n].GetProgress());
+                            SetUpdateFlag(199 + n * 3 + 1, 0);
                         }
                         n = (byte)unchecked((uint)(n + 1));
                     }
-                    while (unchecked(n) <= 24u);
+                    while (n <= 24u);
                     WS_Combat wS_Combat3 = WorldServiceLocator._WS_Combat;
                     objCharacter = this;
                     SetUpdateFlag(1106, wS_Combat3.GetBasePercentBlock(ref objCharacter, 0));
@@ -1658,9 +1658,9 @@ namespace Mangos.World.Player
                     SetUpdateFlag(1108, wS_Combat5.GetBasePercentParry(ref objCharacter, 0));
                     byte b = (byte)WorldServiceLocator._Global_Constants.PLAYER_EXPLORED_ZONES_SIZE;
                     byte m = 0;
-                    while (unchecked(m <= (uint)b))
+                    while (m <= (uint)b)
                     {
-                        SetUpdateFlag(1111 + unchecked(m), ZonesExplored[m]);
+                        SetUpdateFlag(1111 + m, ZonesExplored[m]);
                         m = (byte)unchecked((uint)(m + 1));
                     }
                     SetUpdateFlag(1255, HonorKillsLifeTime);
@@ -1678,55 +1678,55 @@ namespace Mangos.World.Player
                     {
                         if (Items.ContainsKey(l))
                         {
-                            if (unchecked(l) < 19u)
+                            if (l < 19u)
                             {
-                                SetUpdateFlag(260 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[l].ItemEntry);
+                                SetUpdateFlag(260 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[l].ItemEntry);
                                 foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> Enchant in Items[l].Enchantments)
                                 {
-                                    SetUpdateFlag(261 + unchecked(Enchant.Key) * 3 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.ID);
-                                    SetUpdateFlag(262 + unchecked(Enchant.Key) * 3 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.Charges);
-                                    SetUpdateFlag(263 + unchecked(Enchant.Key) * 3 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.Duration);
+                                    SetUpdateFlag(261 + Enchant.Key * 3 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.ID);
+                                    SetUpdateFlag(262 + Enchant.Key * 3 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.Charges);
+                                    SetUpdateFlag(263 + Enchant.Key * 3 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Enchant.Value.Duration);
                                 }
-                                SetUpdateFlag(268 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[l].RandomProperties);
+                                SetUpdateFlag(268 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[l].RandomProperties);
                             }
-                            SetUpdateFlag(486 + unchecked(l) * 2, Items[l].GUID);
+                            SetUpdateFlag(486 + l * 2, Items[l].GUID);
                         }
                         else
                         {
-                            if (unchecked(l) < 19u)
+                            if (l < 19u)
                             {
-                                SetUpdateFlag(260 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
-                                SetUpdateFlag(268 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                SetUpdateFlag(260 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                SetUpdateFlag(268 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
                             }
-                            SetUpdateFlag(486 + unchecked(l) * 2, 0);
+                            SetUpdateFlag(486 + l * 2, 0);
                         }
                         l = (byte)unchecked((uint)(l + 1));
                     }
-                    while (unchecked(l) <= 112u);
+                    while (l <= 112u);
                     SetUpdateFlag(1223, AmmoID);
                     byte b2 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1);
                     byte k = 0;
-                    while (unchecked(k <= (uint)b2))
+                    while (k <= (uint)b2)
                     {
                         if (ActiveSpells[k] != null)
                         {
-                            SetUpdateFlag(47 + unchecked(k), ActiveSpells[k].SpellID);
+                            SetUpdateFlag(47 + k, ActiveSpells[k].SpellID);
                         }
                         k = (byte)unchecked((uint)(k + 1));
                     }
                     byte b3 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_FLAGs - 1);
                     byte j = 0;
-                    while (unchecked(j <= (uint)b3))
+                    while (j <= (uint)b3)
                     {
-                        SetUpdateFlag(95 + unchecked(j), ActiveSpells_Flags[j]);
+                        SetUpdateFlag(95 + j, ActiveSpells_Flags[j]);
                         j = (byte)unchecked((uint)(j + 1));
                     }
                     byte b4 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_LEVELSs - 1);
                     byte i = 0;
-                    while (unchecked(i <= (uint)b4))
+                    while (i <= (uint)b4)
                     {
-                        SetUpdateFlag(113 + unchecked(i), ActiveSpells_Count[i]);
-                        SetUpdateFlag(101 + unchecked(i), ActiveSpells_Level[i]);
+                        SetUpdateFlag(113 + i, ActiveSpells_Count[i]);
+                        SetUpdateFlag(101 + i, ActiveSpells_Level[i]);
                         i = (byte)unchecked((uint)(i + 1));
                     }
                 }
@@ -1777,48 +1777,48 @@ namespace Mangos.World.Player
                     {
                         if (Items.ContainsKey(l))
                         {
-                            if (unchecked(l) < 19u)
+                            if (l < 19u)
                             {
-                                Update.SetUpdateFlag(260 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[l].ItemEntry);
-                                Update.SetUpdateFlag(268 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[l].RandomProperties);
+                                Update.SetUpdateFlag(260 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[l].ItemEntry);
+                                Update.SetUpdateFlag(268 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Items[l].RandomProperties);
                             }
-                            Update.SetUpdateFlag(486 + unchecked(l) * 2, Items[l].GUID);
+                            Update.SetUpdateFlag(486 + l * 2, Items[l].GUID);
                         }
                         else
                         {
-                            if (unchecked(l) < 19u)
+                            if (l < 19u)
                             {
-                                Update.SetUpdateFlag(260 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
-                                Update.SetUpdateFlag(268 + unchecked(l) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                Update.SetUpdateFlag(260 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                Update.SetUpdateFlag(268 + l * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
                             }
-                            Update.SetUpdateFlag(486 + unchecked(l) * 2, 0);
+                            Update.SetUpdateFlag(486 + l * 2, 0);
                         }
                         l = (byte)unchecked((uint)(l + 1));
                     }
-                    while (unchecked(l) <= 18u);
+                    while (l <= 18u);
                     byte b = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1);
                     byte k = 0;
-                    while (unchecked(k <= (uint)b))
+                    while (k <= (uint)b)
                     {
                         if (ActiveSpells[k] != null)
                         {
-                            Update.SetUpdateFlag(47 + unchecked(k), ActiveSpells[k].SpellID);
+                            Update.SetUpdateFlag(47 + k, ActiveSpells[k].SpellID);
                         }
                         k = (byte)unchecked((uint)(k + 1));
                     }
                     byte b2 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_FLAGs - 1);
                     byte j = 0;
-                    while (unchecked(j <= (uint)b2))
+                    while (j <= (uint)b2)
                     {
-                        Update.SetUpdateFlag(95 + unchecked(j), ActiveSpells_Flags[j]);
+                        Update.SetUpdateFlag(95 + j, ActiveSpells_Flags[j]);
                         j = (byte)unchecked((uint)(j + 1));
                     }
                     byte b3 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_LEVELSs - 1);
                     byte i = 0;
-                    while (unchecked(i <= (uint)b3))
+                    while (i <= (uint)b3)
                     {
-                        Update.SetUpdateFlag(113 + unchecked(i), ActiveSpells_Count[i]);
-                        Update.SetUpdateFlag(101 + unchecked(i), ActiveSpells_Level[i]);
+                        Update.SetUpdateFlag(113 + i, ActiveSpells_Count[i]);
+                        Update.SetUpdateFlag(101 + i, ActiveSpells_Level[i]);
                         i = (byte)unchecked((uint)(i + 1));
                     }
                 }
@@ -1882,8 +1882,8 @@ namespace Mangos.World.Player
                             UpdateCount = j;
                         }
                     }
-                    packet.AddInt8((byte)unchecked(checked(UpdateCount + 32) / 32));
-                    packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(UpdateCount + 32) / 32))) * 4);
+                    packet.AddInt8((byte)(checked(UpdateCount + 32) / 32));
+                    packet.AddBitArray(UpdateMask, checked((byte)(checked(UpdateCount + 32) / 32)) * 4);
                     int num2 = UpdateMask.Count - 1;
                     for (int i = 0; i <= num2; i++)
                     {
@@ -1930,7 +1930,7 @@ namespace Mangos.World.Player
                 string[] array = Messages;
                 foreach (string Msg in array)
                 {
-                    Packets.PacketClass packet = WorldServiceLocator._Functions.BuildChatMessage(2147483647uL, Msg, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL, 0);
+                    Packets.PacketClass packet = WorldServiceLocator._Functions.BuildChatMessage(2147483647uL, Msg, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
                     client.Send(ref packet);
                     packet.Dispose();
                 }
@@ -1990,7 +1990,7 @@ namespace Mangos.World.Player
                             {
                                 packet.AddInt32(Spell.Key);
                                 packet.AddInt32(Time);
-                                Spell.Value.Cooldown = (uint)(unchecked(curTime) + unchecked(Time));
+                                Spell.Value.Cooldown = (uint)(curTime + Time);
                                 Spell.Value.CooldownItem = 0;
                             }
                         }
@@ -2136,7 +2136,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int maxSkill = ((Level > WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL) ? (WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL * 5) : (unchecked(Level) * 5));
+                    int maxSkill = ((Level > WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL) ? (WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL * 5) : (Level * 5));
                     switch (SpellID)
                     {
                         case 4036:
@@ -2221,22 +2221,22 @@ namespace Mangos.World.Player
                             LearnSkill(228, 1, (short)maxSkill);
                             break;
                         case 9078:
-                            LearnSkill(415, 1, 1);
+                            LearnSkill(415);
                             break;
                         case 9077:
-                            LearnSkill(414, 1, 1);
+                            LearnSkill(414);
                             break;
                         case 8737:
-                            LearnSkill(413, 1, 1);
+                            LearnSkill(413);
                             break;
                         case 750:
-                            LearnSkill(293, 1, 1);
+                            LearnSkill(293);
                             break;
                         case 9116:
-                            LearnSkill(433, 1, 1);
+                            LearnSkill(433);
                             break;
                         case 674:
-                            LearnSkill(118, 1, 1);
+                            LearnSkill(118);
                             break;
                         case 196:
                             LearnSkill(44, 1, (short)maxSkill);
@@ -2391,7 +2391,7 @@ namespace Mangos.World.Player
             {
                 if (SkillID != 0 && Skills[SkillID].Current < Skills[SkillID].Maximum && Skills[SkillID].Current / (double)Skills[SkillID].Maximum - SpeedMod < WorldServiceLocator._WorldServer.Rnd.NextDouble())
                 {
-                    Skills[SkillID].Increment(1);
+                    Skills[SkillID].Increment();
                     SetUpdateFlag(checked(718 + SkillsPositions[SkillID] * 3 + 1), Skills[SkillID].GetSkill);
                     SendCharacterUpdate();
                 }
@@ -2405,7 +2405,7 @@ namespace Mangos.World.Player
                     short level = Level;
                     checked
                     {
-                        short num = (short)(unchecked(SetToLevel) - 1);
+                        short num = (short)(SetToLevel - 1);
                         for (short i = level; i <= num; i = (short)unchecked(i + 1))
                         {
                             TotalXp += WorldServiceLocator._WS_Player_Initializator.XPTable[i];
@@ -2571,11 +2571,11 @@ namespace Mangos.World.Player
                 {
                     if (srcBag == 0)
                     {
-                        if (unchecked(srcSlot) < 23u)
+                        if (srcSlot < 23u)
                         {
-                            if (unchecked(srcSlot) < 19u)
+                            if (srcSlot < 19u)
                             {
-                                SetUpdateFlag(260 + unchecked(srcSlot) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                SetUpdateFlag(260 + srcSlot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
                             }
                             Dictionary<byte, ItemObject> items;
                             byte key;
@@ -2583,7 +2583,7 @@ namespace Mangos.World.Player
                             UpdateRemoveItemStats(ref Item, srcSlot);
                             items[key] = Item;
                         }
-                        SetUpdateFlag(486 + unchecked(srcSlot) * 2, 0);
+                        SetUpdateFlag(486 + srcSlot * 2, 0);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL}, item_bag = {WorldServiceLocator._Global_Constants.ITEM_BAG_NULL} WHERE item_guid = {Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         if (Destroy)
                         {
@@ -2621,11 +2621,11 @@ namespace Mangos.World.Player
                         if (Items.ContainsKey(slot) && Items[slot].GUID == itemGuid)
                         {
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL}, item_bag = {WorldServiceLocator._Global_Constants.ITEM_BAG_NULL} WHERE item_guid = {Items[slot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
-                            if (unchecked(slot) < 23u)
+                            if (slot < 23u)
                             {
-                                if (unchecked(slot) < 19u)
+                                if (slot < 19u)
                                 {
-                                    SetUpdateFlag(260 + unchecked(slot) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
+                                    SetUpdateFlag(260 + slot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, 0);
                                 }
                                 Dictionary<byte, ItemObject> items;
                                 byte key;
@@ -2633,7 +2633,7 @@ namespace Mangos.World.Player
                                 UpdateRemoveItemStats(ref Item, slot);
                                 items[key] = Item;
                             }
-                            SetUpdateFlag(486 + unchecked(slot) * 2, 0);
+                            SetUpdateFlag(486 + slot * 2, 0);
                             if (Destroy)
                             {
                                 Items[slot].Delete();
@@ -2658,7 +2658,7 @@ namespace Mangos.World.Player
                         {
                             byte b = (byte)(Items[bag].ItemInfo.ContainerSlots - 1);
                             byte slot2 = 0;
-                            while (unchecked(slot2 <= (uint)b))
+                            while (slot2 <= (uint)b)
                             {
                                 if (Items[bag].Items.ContainsKey(slot2) && Items[bag].Items[slot2].GUID == itemGuid)
                                 {
@@ -2733,7 +2733,7 @@ namespace Mangos.World.Player
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 80u);
+                    while (i <= 80u);
                     if (Slot == WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL)
                     {
                         if (OldestSlot != WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL)
@@ -2745,8 +2745,8 @@ namespace Mangos.World.Player
                     }
                     byte eSlot = (byte)unchecked((uint)(Slot - 69));
                     BuyBackTimeStamp[eSlot] = (int)WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
-                    SetUpdateFlag(1238 + unchecked(eSlot), BuyBackTimeStamp[eSlot]);
-                    SetUpdateFlag(1226 + unchecked(eSlot), Item.ItemInfo.SellPrice * Item.StackCount);
+                    SetUpdateFlag(1238 + eSlot, BuyBackTimeStamp[eSlot]);
+                    SetUpdateFlag(1226 + eSlot, Item.ItemInfo.SellPrice * Item.StackCount);
                     ItemSETSLOT(ref Item, 0, Slot);
                 }
             }
@@ -2933,7 +2933,7 @@ namespace Mangos.World.Player
                             {
                                 byte b = (byte)(Items[bag3].ItemInfo.ContainerSlots - 1);
                                 byte slot4 = 0;
-                                while (unchecked(slot4 <= (uint)b))
+                                while (slot4 <= (uint)b)
                                 {
                                     if (!Items[bag3].Items.ContainsKey(slot4))
                                     {
@@ -2969,7 +2969,7 @@ namespace Mangos.World.Player
                         {
                             byte b2 = (byte)(Items[bag].ItemInfo.ContainerSlots - 1);
                             byte slot2 = 0;
-                            while (unchecked(slot2 <= (uint)b2))
+                            while (slot2 <= (uint)b2)
                             {
                                 if (!Items[bag].Items.ContainsKey(slot2) && ItemCANEQUIP(Item, bag, slot2) == InventoryChangeFailure.EQUIP_ERR_OK)
                                 {
@@ -3025,7 +3025,7 @@ namespace Mangos.World.Player
                                 }
                                 slot = (byte)unchecked((uint)(slot + 1));
                             }
-                            while (unchecked(slot) <= 38u);
+                            while (slot <= 38u);
                         }
                         if (Item.ItemInfo.BagFamily == ITEM_BAG.KEYRING)
                         {
@@ -3038,7 +3038,7 @@ namespace Mangos.World.Player
                                 }
                                 slot3 = (byte)unchecked((uint)(slot3 + 1));
                             }
-                            while (unchecked(slot3) <= 112u);
+                            while (slot3 <= 112u);
                         }
                         byte slot4 = 23;
                         do
@@ -3049,7 +3049,7 @@ namespace Mangos.World.Player
                             }
                             slot4 = (byte)unchecked((uint)(slot4 + 1));
                         }
-                        while (unchecked(slot4) <= 38u);
+                        while (slot4 <= 38u);
                     }
                     else if (Items.ContainsKey(dstBag))
                     {
@@ -3092,7 +3092,7 @@ namespace Mangos.World.Player
                         }
                         byte b = (byte)(Items[dstBag].ItemInfo.ContainerSlots - 1);
                         byte slot2 = 0;
-                        while (unchecked(slot2 <= (uint)b))
+                        while (slot2 <= (uint)b)
                         {
                             if (!Items[dstBag].Items.ContainsKey(slot2) && ItemCANEQUIP(Item, dstBag, slot2) == InventoryChangeFailure.EQUIP_ERR_OK)
                             {
@@ -3128,11 +3128,11 @@ namespace Mangos.World.Player
                     {
                         Items[dstSlot] = Item;
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {GUID}, item_stackCount = {Item.StackCount} WHERE item_guid = {Item.GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
-                        SetUpdateFlag(486 + unchecked(dstSlot) * 2, Item.GUID);
-                        if (unchecked(dstSlot) < 19u)
+                        SetUpdateFlag(486 + dstSlot * 2, Item.GUID);
+                        if (dstSlot < 19u)
                         {
-                            SetUpdateFlag(260 + unchecked(dstSlot) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Item.ItemEntry);
-                            SetUpdateFlag(268 + unchecked(dstSlot) * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Item.RandomProperties);
+                            SetUpdateFlag(260 + dstSlot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Item.ItemEntry);
+                            SetUpdateFlag(268 + dstSlot * WorldServiceLocator._Global_Constants.PLAYER_VISIBLE_ITEM_SIZE, Item.RandomProperties);
                             if (Item.ItemInfo.Bonding == 2 && !Item.IsSoulBound)
                             {
                                 ItemObject obj3 = Item;
@@ -3168,9 +3168,9 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    byte b = (byte)(unchecked(EndSlot) - 1);
+                    byte b = (byte)(EndSlot - 1);
                     byte slot3 = 0;
-                    while (unchecked(slot3 <= (uint)b))
+                    while (slot3 <= (uint)b)
                     {
                         if (Items.ContainsKey(slot3) && Items[slot3].ItemEntry == ItemEntry)
                         {
@@ -3191,7 +3191,7 @@ namespace Mangos.World.Player
                         }
                         slot2 = (byte)unchecked((uint)(slot2 + 1));
                     }
-                    while (unchecked(slot2) <= 112u);
+                    while (slot2 <= 112u);
                     byte bag = 19;
                     do
                     {
@@ -3199,7 +3199,7 @@ namespace Mangos.World.Player
                         {
                             byte b2 = (byte)(Items[bag].ItemInfo.ContainerSlots - 1);
                             byte slot = 0;
-                            while (unchecked(slot <= (uint)b2))
+                            while (slot <= (uint)b2)
                             {
                                 if (Items[bag].Items.ContainsKey(slot) && Items[bag].Items[slot].ItemEntry == ItemEntry)
                                 {
@@ -3210,7 +3210,7 @@ namespace Mangos.World.Player
                         }
                         bag = (byte)unchecked((uint)(bag + 1));
                     }
-                    while (unchecked(bag) <= 22u);
+                    while (bag <= 22u);
                     return count;
                 }
             }
@@ -3276,7 +3276,7 @@ namespace Mangos.World.Player
                         {
                             byte b = (byte)(Items[bag].ItemInfo.ContainerSlots - 1);
                             byte slot3 = 0;
-                            while (unchecked(slot3 <= (uint)b))
+                            while (slot3 <= (uint)b)
                             {
                                 if (Items[bag].Items.ContainsKey(slot3) && Items[bag].Items[slot3].ItemEntry == ItemEntry)
                                 {
@@ -3329,7 +3329,7 @@ namespace Mangos.World.Player
                         {
                             byte b = (byte)(Items[bag].ItemInfo.ContainerSlots - 1);
                             byte slot = 0;
-                            while (unchecked(slot <= (uint)b))
+                            while (slot <= (uint)b)
                             {
                                 if (!Items[bag].Items.ContainsKey(slot))
                                 {
@@ -3383,11 +3383,11 @@ namespace Mangos.World.Player
                                 }
                                 checked
                                 {
-                                    if (!WorldServiceLocator._Functions.HaveFlag(ItemInfo.AvailableClasses, (byte)(unchecked((int)Classe) - 1)))
+                                    if (!WorldServiceLocator._Functions.HaveFlag(ItemInfo.AvailableClasses, (byte)((int)Classe - 1)))
                                     {
                                         return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
                                     }
-                                    if (!WorldServiceLocator._Functions.HaveFlag(ItemInfo.AvailableRaces, (byte)(unchecked((int)Race) - 1)))
+                                    if (!WorldServiceLocator._Functions.HaveFlag(ItemInfo.AvailableRaces, (byte)((int)Race - 1)))
                                     {
                                         return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM2;
                                     }
@@ -4230,7 +4230,7 @@ namespace Mangos.World.Player
                         {
                             WS_Items wS_Items3 = WorldServiceLocator._WS_Items;
                             CharacterObject objCharacter = this;
-                            wS_Items3.SendInventoryChangeFailure(ref objCharacter, unchecked((InventoryChangeFailure)errCode), ItemGetGUID(srcBag, srcSlot), ItemGetGUID(dstBag, dstSlot));
+                            wS_Items3.SendInventoryChangeFailure(ref objCharacter, (InventoryChangeFailure)errCode, ItemGetGUID(srcBag, srcSlot), ItemGetGUID(dstBag, dstSlot));
                         }
                     }
                 }
@@ -4388,14 +4388,14 @@ namespace Mangos.World.Player
                         }
                         k = (byte)unchecked((uint)(k + 1));
                     }
-                    while (unchecked(k) <= 9u);
+                    while (k <= 9u);
                     byte j = 0;
                     do
                     {
                         Resistances[j].Base += Item.ItemInfo.Resistances[j];
                         j = (byte)unchecked((uint)(j + 1));
                     }
-                    while (unchecked(j) <= 6u);
+                    while (j <= 6u);
                     combatBlockValue += Item.ItemInfo.Block;
                     if (Item.ItemInfo.Delay > 0)
                     {
@@ -4439,7 +4439,7 @@ namespace Mangos.World.Player
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 4u);
+                    while (i <= 4u);
                     if (Item.ItemInfo.Bonding == 2 && !Item.IsSoulBound)
                     {
                         ItemObject obj = Item;
@@ -4528,14 +4528,14 @@ namespace Mangos.World.Player
                         }
                         k = (byte)unchecked((uint)(k + 1));
                     }
-                    while (unchecked(k) <= 9u);
+                    while (k <= 9u);
                     byte j = 0;
                     do
                     {
                         Resistances[j].Base -= Item.ItemInfo.Resistances[j];
                         j = (byte)unchecked((uint)(j + 1));
                     }
-                    while (unchecked(j) <= 6u);
+                    while (j <= 6u);
                     combatBlockValue -= Item.ItemInfo.Block;
                     if (Item.ItemInfo.Delay > 0)
                     {
@@ -4572,7 +4572,7 @@ namespace Mangos.World.Player
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 4u);
+                    while (i <= 4u);
                     foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> Enchant in Item.Enchantments)
                     {
                         Item.RemoveEnchantBonus(Enchant.Key);
@@ -5042,7 +5042,7 @@ namespace Mangos.World.Player
                         packet.AddPackGUID(GUID);
                         packet.AddInt32(antiHackSpeedChanged_);
                         packet.AddSingle(NewSpeed);
-                        client.Character.SendToNearPlayers(ref packet, 0uL);
+                        client.Character.SendToNearPlayers(ref packet);
                     }
                     finally
                     {
@@ -5058,7 +5058,7 @@ namespace Mangos.World.Player
                 {
                     SMSG_MOVE_WATER_WALK.AddPackGUID(GUID);
                     SMSG_MOVE_WATER_WALK.AddInt32(0);
-                    SendToNearPlayers(ref SMSG_MOVE_WATER_WALK, 0uL);
+                    SendToNearPlayers(ref SMSG_MOVE_WATER_WALK);
                 }
                 finally
                 {
@@ -5073,7 +5073,7 @@ namespace Mangos.World.Player
                 {
                     SMSG_MOVE_LAND_WALK.AddPackGUID(GUID);
                     SMSG_MOVE_LAND_WALK.AddInt32(0);
-                    SendToNearPlayers(ref SMSG_MOVE_LAND_WALK, 0uL);
+                    SendToNearPlayers(ref SMSG_MOVE_LAND_WALK);
                 }
                 finally
                 {
@@ -5104,7 +5104,7 @@ namespace Mangos.World.Player
                 {
                     SMSG_FORCE_MOVE_UNROOT.AddPackGUID(GUID);
                     SMSG_FORCE_MOVE_UNROOT.AddInt32(0);
-                    SendToNearPlayers(ref SMSG_FORCE_MOVE_UNROOT, 0uL);
+                    SendToNearPlayers(ref SMSG_FORCE_MOVE_UNROOT);
                 }
                 finally
                 {
@@ -5185,8 +5185,8 @@ namespace Mangos.World.Player
                         if (underWaterTimer.DrowningValue < 0)
                         {
                             underWaterTimer.DrowningValue = 0;
-                            LogEnvironmentalDamage(DamageTypes.DMG_HOLY, (int)(0.1f * Life.Maximum * unchecked(underWaterTimer.DrowningDamage)));
-                            int damage = (int)(0.1f * Life.Maximum * unchecked(underWaterTimer.DrowningDamage));
+                            LogEnvironmentalDamage(DamageTypes.DMG_HOLY, (int)(0.1f * Life.Maximum * underWaterTimer.DrowningDamage));
+                            int damage = (int)(0.1f * Life.Maximum * underWaterTimer.DrowningDamage);
                             WS_Base.BaseUnit Attacker = null;
                             DealDamage(damage, Attacker);
                             underWaterTimer.DrowningDamage *= 2;
@@ -5295,7 +5295,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int points = (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)(unchecked((int)Race) - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)(unchecked((int)Race) - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)(unchecked((int)Race) - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)(unchecked((int)Race) - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0))));
+                    int points = (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0))));
                     if (Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Flags > 0)
                     {
                         points += Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Value;
@@ -5321,7 +5321,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int points = (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)(unchecked((int)Race) - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)(unchecked((int)Race) - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)(unchecked((int)Race) - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)(unchecked((int)Race) - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0))));
+                    int points = (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0))));
                     if (Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Flags > 0)
                     {
                         points += Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Value;
@@ -5458,7 +5458,7 @@ namespace Mangos.World.Player
                             }
                             i = (byte)unchecked((uint)(i + 1));
                         }
-                        while (unchecked(i) <= 18u);
+                        while (i <= 18u);
                         Packets.PacketClass SMSG_DURABILITY_DAMAGE_DEATH = new Packets.PacketClass(Opcodes.SMSG_DURABILITY_DAMAGE_DEATH);
                         try
                         {
@@ -6108,7 +6108,7 @@ namespace Mangos.World.Player
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 22u);
+                    while (i <= 22u);
                 }
             }
 
@@ -6128,11 +6128,11 @@ namespace Mangos.World.Player
                 cPlayerFieldBytes2 = 0;
                 Rage = new WS_PlayerHelper.TStatBar(1, 1, 0);
                 Energy = new WS_PlayerHelper.TStatBar(1, 1, 0);
-                Strength = new WS_PlayerHelper.TStat(0, 0, 0);
-                Agility = new WS_PlayerHelper.TStat(0, 0, 0);
-                Stamina = new WS_PlayerHelper.TStat(0, 0, 0);
-                Intellect = new WS_PlayerHelper.TStat(0, 0, 0);
-                Spirit = new WS_PlayerHelper.TStat(0, 0, 0);
+                Strength = new WS_PlayerHelper.TStat();
+                Agility = new WS_PlayerHelper.TStat();
+                Stamina = new WS_PlayerHelper.TStat();
+                Intellect = new WS_PlayerHelper.TStat();
+                Spirit = new WS_PlayerHelper.TStat();
                 Faction = 0;
                 CharacterObject Character_ = this;
                 attackState = new WS_Combat.TAttackTimer(ref Character_);
@@ -6142,7 +6142,7 @@ namespace Mangos.World.Player
                 spellCasted = new WS_Spells.CastSpellParameters[4];
                 spellCastManaRegeneration = 0;
                 spellCanDualWeild = false;
-                healing = new WS_PlayerHelper.TDamageBonus(0, 0);
+                healing = new WS_PlayerHelper.TDamageBonus();
                 spellDamage = new WS_PlayerHelper.TDamageBonus[7];
                 spellCriticalRating = 0;
                 combatCanDualWield = false;
@@ -6278,8 +6278,8 @@ namespace Mangos.World.Player
                 byte i = 0;
                 do
                 {
-                    spellDamage[i] = new WS_PlayerHelper.TDamageBonus(0, 0);
-                    Resistances[i] = new WS_PlayerHelper.TStat(0, 0, 0);
+                    spellDamage[i] = new WS_PlayerHelper.TDamageBonus();
+                    Resistances[i] = new WS_PlayerHelper.TStat();
                     checked
                     {
                         i = (byte)unchecked((uint)(i + 1));
@@ -6304,11 +6304,11 @@ namespace Mangos.World.Player
                 cPlayerFieldBytes2 = 0;
                 Rage = new WS_PlayerHelper.TStatBar(1, 1, 0);
                 Energy = new WS_PlayerHelper.TStatBar(1, 1, 0);
-                Strength = new WS_PlayerHelper.TStat(0, 0, 0);
-                Agility = new WS_PlayerHelper.TStat(0, 0, 0);
-                Stamina = new WS_PlayerHelper.TStat(0, 0, 0);
-                Intellect = new WS_PlayerHelper.TStat(0, 0, 0);
-                Spirit = new WS_PlayerHelper.TStat(0, 0, 0);
+                Strength = new WS_PlayerHelper.TStat();
+                Agility = new WS_PlayerHelper.TStat();
+                Stamina = new WS_PlayerHelper.TStat();
+                Intellect = new WS_PlayerHelper.TStat();
+                Spirit = new WS_PlayerHelper.TStat();
                 Faction = 0;
                 CharacterObject Character_ = this;
                 attackState = new WS_Combat.TAttackTimer(ref Character_);
@@ -6318,7 +6318,7 @@ namespace Mangos.World.Player
                 spellCasted = new WS_Spells.CastSpellParameters[4];
                 spellCastManaRegeneration = 0;
                 spellCanDualWeild = false;
-                healing = new WS_PlayerHelper.TDamageBonus(0, 0);
+                healing = new WS_PlayerHelper.TDamageBonus();
                 spellDamage = new WS_PlayerHelper.TDamageBonus[7];
                 spellCriticalRating = 0;
                 combatCanDualWield = false;
@@ -6459,8 +6459,8 @@ namespace Mangos.World.Player
                     int m = 0;
                     do
                     {
-                        spellDamage[m] = new WS_PlayerHelper.TDamageBonus(0, 0);
-                        Resistances[m] = new WS_PlayerHelper.TStat(0, 0, 0);
+                        spellDamage[m] = new WS_PlayerHelper.TDamageBonus();
+                        Resistances[m] = new WS_PlayerHelper.TStat();
                         m++;
                     }
                     while (m <= 6);
@@ -6617,7 +6617,7 @@ namespace Mangos.World.Player
                                 {
                                     continue;
                                 }
-                                duration = (int)((AuraExpire - unchecked(currentTimestamp)) * 1000);
+                                duration = (int)((AuraExpire - currentTimestamp) * 1000);
                             }
                             ActiveSpells[AuraSlot] = new WS_Base.BaseActiveSpell(AuraSpellID, duration)
                             {
@@ -6651,13 +6651,13 @@ namespace Mangos.World.Player
                             byte j2 = 0;
                             do
                             {
-                                if ((Conversions.ToLong(tmp[l]) & (1 << unchecked(j2))) != 0)
+                                if ((Conversions.ToLong(tmp[l]) & (1 << j2)) != 0)
                                 {
-                                    TaxiZones.Set(l * 8 + unchecked(j2), value: true);
+                                    TaxiZones.Set(l * 8 + j2, value: true);
                                 }
                                 j2 = (byte)unchecked((uint)(j2 + 1));
                             }
-                            while (unchecked(j2) <= 7u);
+                            while (j2 <= 7u);
                         }
                     }
                     tmp = Strings.Split(MySQLQuery.Rows[0].As<string>("char_mapExplored"));
@@ -6718,9 +6718,9 @@ namespace Mangos.World.Player
                             DataRow row = (DataRow)enumerator2.Current;
                             if (Operators.ConditionalCompareObjectNotEqual(row["item_slot"], WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, TextCompare: false))
                             {
-                                ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(row.As<long, ulong>("item_guid"), this, unchecked(row.As<byte>("item_slot")) < 19u);
+                                ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(row.As<long, ulong>("item_guid"), this, row.As<byte>("item_slot") < 19u);
                                 Items[row.As<byte>("item_slot")] = tmpItem;
-                                if (unchecked(row.As<byte, uint>("item_slot") < 23u))
+                                if (row.As<byte, uint>("item_slot") < 23u)
                                 {
                                     UpdateAddItemStats(ref tmpItem, row.As<byte>("item_slot"));
                                 }
@@ -7001,7 +7001,7 @@ namespace Mangos.World.Player
                             long expire = 0L;
                             if (ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
                             {
-                                expire = unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) + unchecked(ActiveSpells[i].SpellDuration / 1000);
+                                expire = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + ActiveSpells[i].SpellDuration / 1000;
                             }
                             temp.Add($"{i}:{ActiveSpells[i].SpellID}:{expire}");
                         }
@@ -7163,9 +7163,9 @@ namespace Mangos.World.Player
                 int updateDataCount = UpdateData.Count;
                 checked
                 {
-                    SetUpdateFlag(198 + unchecked(QuestSlot) * 3, 0);
-                    SetUpdateFlag(199 + unchecked(QuestSlot) * 3, 0);
-                    SetUpdateFlag(199 + unchecked(QuestSlot) * 3 + 1, 0);
+                    SetUpdateFlag(198 + QuestSlot * 3, 0);
+                    SetUpdateFlag(199 + QuestSlot * 3, 0);
+                    SetUpdateFlag(199 + QuestSlot * 3 + 1, 0);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE  FROM characters_quests WHERE char_guid = {GUID} AND quest_id = {TalkQuests[QuestSlot].ID};");
                     TalkQuests[QuestSlot] = null;
                     SendCharacterUpdate(updateDataCount != 0);
@@ -7187,9 +7187,9 @@ namespace Mangos.World.Player
                 int updateDataCount = UpdateData.Count;
                 checked
                 {
-                    SetUpdateFlag(198 + unchecked(QuestSlot) * 3, 0);
-                    SetUpdateFlag(199 + unchecked(QuestSlot) * 3, 0);
-                    SetUpdateFlag(199 + unchecked(QuestSlot) * 3 + 1, 0);
+                    SetUpdateFlag(198 + QuestSlot * 3, 0);
+                    SetUpdateFlag(199 + QuestSlot * 3, 0);
+                    SetUpdateFlag(199 + QuestSlot * 3 + 1, 0);
                     QuestsCompleted.Add(TalkQuests[QuestSlot].ID);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_quests SET quest_status = -1 WHERE char_guid = {GUID} AND quest_id = {TalkQuests[QuestSlot].ID};");
                     TalkQuests[QuestSlot] = null;
@@ -7210,11 +7210,11 @@ namespace Mangos.World.Player
                 {
                     if (TalkQuests[QuestSlot].TimeEnd > 0)
                     {
-                        int tmpTimer = (int)(unchecked(TalkQuests[QuestSlot].TimeEnd) - unchecked(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)));
+                        int tmpTimer = (int)(TalkQuests[QuestSlot].TimeEnd - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now));
                     }
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_quests SET quest_status = {2} WHERE char_guid = {0} AND quest_id = {1};", GUID, TalkQuests[QuestSlot].ID, tmpProgress));
-                    SetUpdateFlag(199 + unchecked(QuestSlot) * 3, tmpProgress);
-                    SetUpdateFlag(199 + unchecked(QuestSlot) * 3 + 1, 0);
+                    SetUpdateFlag(199 + QuestSlot * 3, tmpProgress);
+                    SetUpdateFlag(199 + QuestSlot * 3 + 1, 0);
                     SendCharacterUpdate(updateDataCount != 0);
                     return true;
                 }
@@ -7257,7 +7257,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    if (Quest.RequiredRace != 0 && (Quest.RequiredRace & (1 << unchecked((int)Race) - 1)) == 0)
+                    if (Quest.RequiredRace != 0 && (Quest.RequiredRace & (1 << (int)Race - 1)) == 0)
                     {
                         Packets.PacketClass packet4 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
                         try
@@ -7271,7 +7271,7 @@ namespace Mangos.World.Player
                         }
                         return false;
                     }
-                    if (Quest.RequiredClass != 0 && (Quest.RequiredClass & (1 << unchecked((int)Classe) - 1)) == 0)
+                    if (Quest.RequiredClass != 0 && (Quest.RequiredClass & (1 << (int)Classe - 1)) == 0)
                     {
                         Packets.PacketClass packet5 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
                         try
@@ -7411,7 +7411,7 @@ namespace Mangos.World.Player
                     SMSG_ENVIRONMENTALDAMAGELOG.AddInt32(Damage);
                     SMSG_ENVIRONMENTALDAMAGELOG.AddInt32(0);
                     SMSG_ENVIRONMENTALDAMAGELOG.AddInt32(0);
-                    SendToNearPlayers(ref SMSG_ENVIRONMENTALDAMAGELOG, 0uL);
+                    SendToNearPlayers(ref SMSG_ENVIRONMENTALDAMAGELOG);
                 }
                 finally
                 {
@@ -7424,7 +7424,7 @@ namespace Mangos.World.Player
                 float VisibleDistance = (float)(10.5 - Invisibility_Value / 100.0);
                 checked
                 {
-                    VisibleDistance += unchecked(objCharacter.Level) - unchecked(Level);
+                    VisibleDistance += objCharacter.Level - Level;
                     return (float)(VisibleDistance + (objCharacter.CanSeeInvisibility_Stealth - Invisibility_Bonus) / 5.0);
                 }
             }

@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Threading;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
@@ -148,7 +149,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: If server full then queue, If GM/Admin let in
             if (clusterServiceLocator._WorldCluster.CLIENTs.Count > clusterServiceLocator._WorldCluster.GetConfig().ServerPlayerLimit & client.Access <= AccessLevel.Player)
             {
-                ThreadPool.QueueUserWorkItem(new WaitCallback(client.EnQueue));
+                ThreadPool.QueueUserWorkItem(client.EnQueue);
             }
             else
             {
@@ -182,12 +183,12 @@ namespace Mangos.Cluster.Handlers
             var addOnsEnable = new PacketClass(Opcodes.SMSG_ADDON_INFO);
             for (int i = 0, loopTo1 = AddOnsNames.Count - 1; i <= loopTo1; i++)
             {
-                if (System.IO.File.Exists(string.Format(@"interface\{0}.pub", AddOnsNames[i])) && AddOnsHashes[i] != 0x1C776D01U)
+                if (File.Exists(string.Format(@"interface\{0}.pub", AddOnsNames[i])) && AddOnsHashes[i] != 0x1C776D01U)
                 {
                     // We have hash data
                     addOnsEnable.AddInt8(2);                    // AddOn Type [1-enabled, 0-banned, 2-blizzard]
                     addOnsEnable.AddInt8(1);                    // Unk
-                    var fs = new System.IO.FileStream(string.Format(@"interface\{0}.pub", AddOnsNames[i]), System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read, 258, System.IO.FileOptions.SequentialScan);
+                    var fs = new FileStream(string.Format(@"interface\{0}.pub", AddOnsNames[i]), FileMode.Open, FileAccess.Read, FileShare.Read, 258, FileOptions.SequentialScan);
                     var fb = new byte[257];
                     fs.Read(fb, 0, 257);
 
@@ -279,7 +280,7 @@ namespace Mangos.Cluster.Handlers
 
             catch (Exception e)
             {
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error while updating account data.{0}", Constants.vbCrLf + e.ToString());
+                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error while updating account data.{0}", Constants.vbCrLf + e);
             }
         }
 

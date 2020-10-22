@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Misc
 {
-    public enum LANGUAGES : int
+    public enum LANGUAGES
     {
         LANG_GLOBAL = 0,
         LANG_UNIVERSAL = 0,

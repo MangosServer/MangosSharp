@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Misc
 {
-    public enum WeatherType : int
+    public enum WeatherType
     {
         WEATHER_FINE = 0,
         WEATHER_RAIN = 1,

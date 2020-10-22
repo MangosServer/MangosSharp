@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellCastFlags : int
+    public enum SpellCastFlags
     {
         CAST_FLAG_RANGED = 0x20,
         CAST_FLAG_ITEM_CASTER = 0x100,

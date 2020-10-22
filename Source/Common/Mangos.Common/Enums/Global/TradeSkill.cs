@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum TradeSkill : int
+    public enum TradeSkill
     {
         TRADESKILL_ALCHEMY = 1,
         TRADESKILL_BLACKSMITHING = 2,

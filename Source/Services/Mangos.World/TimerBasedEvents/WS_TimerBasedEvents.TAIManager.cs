@@ -41,7 +41,7 @@ namespace Mangos.World.Server
             {
                 AIManagerTimer = null;
                 AIManagerWorking = false;
-                AIManagerTimer = new Timer(new TimerCallback(Update), null, 10000, 1000);
+                AIManagerTimer = new Timer(Update, null, 10000, 1000);
             }
 
             private void Update(object state)

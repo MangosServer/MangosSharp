@@ -18,12 +18,14 @@
 
 using System;
 using Mangos.Common.Enums.Global;
+using Mangos.World.AI;
+using Mangos.World.Objects;
 
 // Summon implementation isn't yet supported.
 // Sand trap not implemented into script, need to make a gameobject I assume.
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Kurinnax : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Kurinnax : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int wound_cooldown = 8000;
@@ -38,14 +40,14 @@ namespace Mangos.World.Scripts.Creatures
         // Private Const Spell_Summon_2 As Integer = 26446 'Same as above, unused until more is figured out.
         private const int spell_Thrash = 3391;
         private const int Spell_Wide_Slash = 25814;
-        public int phase = 0;
-        public int Next_Mortal_Wound = 0;
-        public int Next_Thrash = 0;
-        public int Next_Wide_Slash = 0;
+        public int phase;
+        public int Next_Mortal_Wound;
+        public int Next_Thrash;
+        public int Next_Wide_Slash;
         // Public Next_Summon_1 As Integer = 0
         // Public Next_Summon_2 As Integer = 0
 
-        public CreatureAI_Kurinnax(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Kurinnax(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             phase = 0;
             AllowedMove = false;

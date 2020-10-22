@@ -61,7 +61,7 @@ namespace Mangos.World.Loots
                 ItemID = Item.ItemID;
                 checked
                 {
-                    ItemCount = (byte)WorldServiceLocator._WorldServer.Rnd.Next(Item.MinCountOrRef, unchecked(Item.MaxCount) + 1);
+                    ItemCount = (byte)WorldServiceLocator._WorldServer.Rnd.Next(Item.MinCountOrRef, Item.MaxCount + 1);
                 }
             }
 

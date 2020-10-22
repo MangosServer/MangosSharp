@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellFamilyNames : int
+    public enum SpellFamilyNames
     {
         SPELLFAMILY_GENERIC = 0,
         SPELLFAMILY_MAGE = 3,

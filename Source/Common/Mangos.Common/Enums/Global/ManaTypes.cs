@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    public enum ManaTypes : int
+    public enum ManaTypes
     {
         TYPE_MANA = 0,
         TYPE_RAGE = 1,

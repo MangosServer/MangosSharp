@@ -64,8 +64,8 @@ namespace Mangos.Common.Globals
         public readonly int DEFAULT_LOCK_TIMEOUT = 2000;
         public readonly int DEFAULT_INSTANCE_EXPIRE_TIME = 3600;              // 1 hour
         public readonly int DEFAULT_BATTLEFIELD_EXPIRE_TIME = 3600 * 24;      // 24 hours
-        public bool[] SERVER_CONFIG_DISABLED_CLASSES = new bool[] { false, false, false, false, false, false, false, false, false, true, false };
-        public bool[] SERVER_CONFIG_DISABLED_RACES = new bool[] { false, false, false, false, false, false, false, false, true, false, false };
+        public bool[] SERVER_CONFIG_DISABLED_CLASSES = { false, false, false, false, false, false, false, false, false, true, false };
+        public bool[] SERVER_CONFIG_DISABLED_RACES = { false, false, false, false, false, false, false, false, true, false, false };
         public readonly float UNIT_NORMAL_WALK_SPEED = 2.5f;
         public readonly float UNIT_NORMAL_RUN_SPEED = 7.0f;
         public readonly float UNIT_NORMAL_SWIM_SPEED = 4.722222f;
@@ -82,7 +82,7 @@ namespace Mangos.Common.Globals
         public readonly int FIELD_MASK_SIZE_DYNAMICOBJECT = ((int)EDynamicObjectFields.DYNAMICOBJECT_END + 32) / 32 * 32;
         public readonly int FIELD_MASK_SIZE_ITEM = ((int)EContainerFields.CONTAINER_END + 32) / 32 * 32;
         public readonly int FIELD_MASK_SIZE_CORPSE = ((int)ECorpseFields.CORPSE_END + 32) / 32 * 32;
-        public readonly string[] WorldServerStatus = new string[] { "ONLINE/G", "ONLINE/R", "OFFLINE " };
+        public readonly string[] WorldServerStatus = { "ONLINE/G", "ONLINE/R", "OFFLINE " };
         // Public ConsoleColor As New ConsoleColor
         // 1.12.1 - 5875
         // 1.12.2 - 6005

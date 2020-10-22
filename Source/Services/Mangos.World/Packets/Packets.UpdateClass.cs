@@ -137,8 +137,8 @@ namespace Mangos.World.Globals
                                 updateCount = i;
                             }
                         }
-                        packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-                        packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+                        packet.AddInt8((byte)(checked(updateCount + 32) / 32));
+                        packet.AddBitArray(UpdateMask, checked((byte)(checked(updateCount + 32) / 32)) * 4);
                         int num2 = UpdateMask.Count - 1;
                         for (int j = 0; j <= num2; j++)
                         {
@@ -219,8 +219,8 @@ namespace Mangos.World.Globals
                                 updateCount = i;
                             }
                         }
-                        packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-                        packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+                        packet.AddInt8((byte)(checked(updateCount + 32) / 32));
+                        packet.AddBitArray(UpdateMask, checked((byte)(checked(updateCount + 32) / 32)) * 4);
                         int num2 = UpdateMask.Count - 1;
                         for (int j = 0; j <= num2; j++)
                         {
@@ -268,7 +268,7 @@ namespace Mangos.World.Globals
                         packet.AddInt8(24);
                         packet.AddUInt64(updateObject.GUID);
                     }
-                    if (unchecked(updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_VALUES))
+                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_VALUES)
                     {
                         int updateCount = 0;
                         int num = UpdateMask.Count - 1;
@@ -279,8 +279,8 @@ namespace Mangos.World.Globals
                                 updateCount = j;
                             }
                         }
-                        packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-                        packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+                        packet.AddInt8((byte)(checked(updateCount + 32) / 32));
+                        packet.AddBitArray(UpdateMask, checked((byte)(checked(updateCount + 32) / 32)) * 4);
                         int num2 = UpdateMask.Count - 1;
                         for (int i = 0; i <= num2; i++)
                         {
@@ -366,8 +366,8 @@ namespace Mangos.World.Globals
                                 updateCount = i;
                             }
                         }
-                        packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-                        packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+                        packet.AddInt8((byte)(checked(updateCount + 32) / 32));
+                        packet.AddBitArray(UpdateMask, checked((byte)(checked(updateCount + 32) / 32)) * 4);
                         int num2 = UpdateMask.Count - 1;
                         for (int j = 0; j <= num2; j++)
                         {
@@ -423,8 +423,8 @@ namespace Mangos.World.Globals
                                 updateCount = i;
                             }
                         }
-                        packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-                        packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+                        packet.AddInt8((byte)(checked(updateCount + 32) / 32));
+                        packet.AddBitArray(UpdateMask, checked((byte)(checked(updateCount + 32) / 32)) * 4);
                         int num2 = UpdateMask.Count - 1;
                         for (int j = 0; j <= num2; j++)
                         {
@@ -469,7 +469,7 @@ namespace Mangos.World.Globals
                         packet.AddSingle(updateObject.orientation);
                         packet.AddUInt64(updateObject.GUID);
                     }
-                    if (unchecked(updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_VALUES))
+                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_VALUES)
                     {
                         int updateCount = 0;
                         int num = UpdateMask.Count - 1;
@@ -480,8 +480,8 @@ namespace Mangos.World.Globals
                                 updateCount = j;
                             }
                         }
-                        packet.AddInt8((byte)unchecked(checked(updateCount + 32) / 32));
-                        packet.AddBitArray(UpdateMask, unchecked(checked((byte)unchecked(checked(updateCount + 32) / 32))) * 4);
+                        packet.AddInt8((byte)(checked(updateCount + 32) / 32));
+                        packet.AddBitArray(UpdateMask, checked((byte)(checked(updateCount + 32) / 32)) * 4);
                         int num2 = UpdateMask.Count - 1;
                         for (int i = 0; i <= num2; i++)
                         {

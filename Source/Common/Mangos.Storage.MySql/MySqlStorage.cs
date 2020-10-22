@@ -16,9 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Dapper;
-using Mangos.Loggers;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,6 +25,9 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Dapper;
+using Mangos.Loggers;
+using MySql.Data.MySqlClient;
 
 namespace Mangos.Storage.MySql
 {

@@ -104,7 +104,7 @@ namespace Mangos.World.Objects
                         {
                             byte b = (byte)(characterObject.Items[i].ItemInfo.ContainerSlots - 1);
                             byte j = 0;
-                            while (unchecked(j <= (uint)b))
+                            while (j <= (uint)b)
                             {
                                 if (characterObject.Items[i].Items.ContainsKey(j) && characterObject.Items[i].Items[j] == this)
                                 {
@@ -165,7 +165,7 @@ namespace Mangos.World.Objects
                         {
                             byte b = (byte)(characterObject.Items[j].ItemInfo.ContainerSlots - 1);
                             byte l = 0;
-                            while (unchecked(l <= (uint)b))
+                            while (l <= (uint)b)
                             {
                                 if (characterObject.Items[j].Items.ContainsKey(l) && characterObject.Items[j].Items[l] == this)
                                 {
@@ -198,7 +198,7 @@ namespace Mangos.World.Objects
                             lostDurability = 300;
                         }
                         int subClass = 0;
-                        subClass = ((ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_WEAPON) ? (unchecked((int)ItemInfo.SubClass) + 21) : unchecked((int)ItemInfo.SubClass));
+                        subClass = ((ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_WEAPON) ? ((int)ItemInfo.SubClass + 21) : (int)ItemInfo.SubClass);
                         uint durabilityCost = (uint)Math.Round(lostDurability * (WorldServiceLocator._WS_DBCDatabase.DurabilityCosts[ItemInfo.Level, subClass] / 40.0 * 100.0));
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Durability cost: {0}", durabilityCost);
                         return durabilityCost;
@@ -249,15 +249,15 @@ namespace Mangos.World.Objects
                     {
                         if (Items.ContainsKey(i))
                         {
-                            update.SetUpdateFlag(50 + unchecked(i) * 2, (long)Items[i].GUID);
+                            update.SetUpdateFlag(50 + i * 2, (long)Items[i].GUID);
                         }
                         else
                         {
-                            update.SetUpdateFlag(50 + unchecked(i) * 2, 0);
+                            update.SetUpdateFlag(50 + i * 2, 0);
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
-                    while (unchecked(i) <= 35u);
+                    while (i <= 35u);
                     return;
                 }
                 update.SetUpdateFlag(0, GUID);
@@ -290,9 +290,9 @@ namespace Mangos.World.Objects
                 update.SetUpdateFlag(44, RandomProperties);
                 foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> enchant in Enchantments)
                 {
-                    update.SetUpdateFlag(22 + unchecked(enchant.Key) * 3, enchant.Value.ID);
-                    update.SetUpdateFlag(22 + unchecked(enchant.Key) * 3 + 1, enchant.Value.Duration);
-                    update.SetUpdateFlag(22 + unchecked(enchant.Key) * 3 + 2, enchant.Value.Charges);
+                    update.SetUpdateFlag(22 + enchant.Key * 3, enchant.Value.ID);
+                    update.SetUpdateFlag(22 + enchant.Key * 3 + 1, enchant.Value.Duration);
+                    update.SetUpdateFlag(22 + enchant.Key * 3 + 2, enchant.Value.Charges);
                 }
                 update.SetUpdateFlag(45, ItemText);
                 update.SetUpdateFlag(46, Durability);
@@ -695,7 +695,7 @@ namespace Mangos.World.Objects
                             }
                             j = (byte)unchecked((uint)(j + 1));
                         }
-                        while (unchecked(j) <= 2u);
+                        while (j <= 2u);
                     }
                     i = (byte)unchecked((uint)(i + 1));
                 }
@@ -739,7 +739,7 @@ namespace Mangos.World.Objects
                             }
                             j = (byte)unchecked((uint)(j + 1));
                         }
-                        while (unchecked(j) <= 2u);
+                        while (j <= 2u);
                     }
                     i = (byte)unchecked((uint)(i + 1));
                 }
@@ -761,9 +761,9 @@ namespace Mangos.World.Objects
                         packet.AddInt32(1);
                         packet.AddInt8(0);
                         Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
-                        tmpUpdate.SetUpdateFlag(22 + unchecked(slot) * 3, 0);
-                        tmpUpdate.SetUpdateFlag(22 + unchecked(slot) * 3 + 1, 0);
-                        tmpUpdate.SetUpdateFlag(22 + unchecked(slot) * 3 + 2, 0);
+                        tmpUpdate.SetUpdateFlag(22 + slot * 3, 0);
+                        tmpUpdate.SetUpdateFlag(22 + slot * 3 + 1, 0);
+                        tmpUpdate.SetUpdateFlag(22 + slot * 3 + 2, 0);
                         ItemObject updateObject = this;
                         tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                         WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID].client.Send(ref packet);

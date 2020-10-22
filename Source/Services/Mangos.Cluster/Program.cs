@@ -16,16 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Threading.Tasks;
 using Autofac;
 using Mangos.Cluster.DataStores;
+using Mangos.Cluster.Factories;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
-using Mangos.DataStores;
-using Mangos.Loggers;
-using Mangos.Loggers.Console;
-using Mangos.Zip;
-using System.Threading.Tasks;
-using Mangos.Cluster.Factories;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
 using Mangos.Cluster.Stats;
@@ -34,7 +30,11 @@ using Mangos.Common.Legacy;
 using Mangos.Configuration;
 using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
+using Mangos.DataStores;
+using Mangos.Loggers;
+using Mangos.Loggers.Console;
 using Mangos.Network.Tcp;
+using Mangos.Zip;
 using Functions = Mangos.Common.Legacy.Globals.Functions;
 
 namespace Mangos.Cluster

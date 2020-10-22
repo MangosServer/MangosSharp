@@ -18,6 +18,7 @@
 
 using System;
 using System.Security.Cryptography;
+using System.Text;
 using Microsoft.VisualBasic;
 
 namespace Mangos.WoWFakeClient
@@ -39,7 +40,7 @@ namespace Mangos.WoWFakeClient
             Console.WriteLine("[{0}][World] Received Auth Challenge.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
             WS_WardenClient.InitWarden();
             Worldserver.ServerSeed = Packet.GetUInt32();
-            var temp = System.Text.Encoding.ASCII.GetBytes(Realmserver.Account.ToCharArray());
+            var temp = Encoding.ASCII.GetBytes(Realmserver.Account.ToCharArray());
             temp = Realmserver.Concat(temp, BitConverter.GetBytes(0));
             temp = Realmserver.Concat(temp, BitConverter.GetBytes(Worldserver.ClientSeed));
             temp = Realmserver.Concat(temp, BitConverter.GetBytes(Worldserver.ServerSeed));

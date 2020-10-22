@@ -177,12 +177,11 @@ namespace Mangos.Common.Legacy.Globals
                     }
 
                 case ShapeshiftForm.FORM_GHOUL:
-                    {
-                        if (race == Races.RACE_NIGHT_ELF)
+                {
+                    if (race == Races.RACE_NIGHT_ELF)
                             return 10045;
-                        else
-                            return model;
-                    }
+                    return model;
+                }
 
                 case ShapeshiftForm.FORM_CREATUREBEAR:
                     {
@@ -299,7 +298,8 @@ namespace Mangos.Common.Legacy.Globals
                     logger.Debug("[{0}] Db Version Matched", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
                     return true;
                 }
-                else if (dbVersion == coreDbVersion & dbStructure == coreDbStructure & dbContent != coreDbContent) // Content MisMatch, only a warning
+
+                if (dbVersion == coreDbVersion & dbStructure == coreDbStructure & dbContent != coreDbContent) // Content MisMatch, only a warning
                 {
                     logger.Warning("--------------------------------------------------------------");
                     logger.Warning("-- WARNING: CONTENT VERSION MISMATCH                        --");
@@ -309,31 +309,27 @@ namespace Mangos.Common.Legacy.Globals
                     logger.Warning("The server will run, but you may be missing some database fixes");
                     return true;
                 }
-                else // Oh no they do not match
-                {
-                    logger.Error("--------------------------------------------------------------");
-                    logger.Error("-- FATAL ERROR: VERSION MISMATCH                            --");
-                    logger.Error("--------------------------------------------------------------");
-                    logger.Error("Your Database " + thisDatabase.SQLDBName + " requires updating.");
-                    logger.Error("You have: Rev{0}.{1}.{2}, however the core expects Rev{3}.{4}.{5}", dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent);
-                    logger.Error("The server is unable to run until the required updates are run");
-                    logger.Error("--------------------------------------------------------------");
-                    logger.Error("You must apply all updates after Rev{1}.{2}.{3} ", coreDbVersion, coreDbStructure, coreDbContent);
-                    logger.Error("These updates are included in the sql/updates folder.");
-                    logger.Error("--------------------------------------------------------------");
-                    return false;
-                }
-            }
-            else
-            {
-                logger.Debug("--------------------------------------------------------------");
-                logger.Debug("The table `db_version` in database " + thisDatabase.SQLDBName + " is missing");
-                logger.Debug("--------------------------------------------------------------");
-                logger.Debug("MaNGOSVB cannot find the version info required, please update", "hh:mm:ss");
-                logger.Debug("your database to check that the db is up to date.", "hh:mm:ss");
-                logger.Debug("your database to Rev{0}.{1}.{2} ", coreDbVersion, coreDbStructure, coreDbContent);
+
+                logger.Error("--------------------------------------------------------------");
+                logger.Error("-- FATAL ERROR: VERSION MISMATCH                            --");
+                logger.Error("--------------------------------------------------------------");
+                logger.Error("Your Database " + thisDatabase.SQLDBName + " requires updating.");
+                logger.Error("You have: Rev{0}.{1}.{2}, however the core expects Rev{3}.{4}.{5}", dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent);
+                logger.Error("The server is unable to run until the required updates are run");
+                logger.Error("--------------------------------------------------------------");
+                logger.Error("You must apply all updates after Rev{1}.{2}.{3} ", coreDbVersion, coreDbStructure, coreDbContent);
+                logger.Error("These updates are included in the sql/updates folder.");
+                logger.Error("--------------------------------------------------------------");
                 return false;
             }
+
+            logger.Debug("--------------------------------------------------------------");
+            logger.Debug("The table `db_version` in database " + thisDatabase.SQLDBName + " is missing");
+            logger.Debug("--------------------------------------------------------------");
+            logger.Debug("MaNGOSVB cannot find the version info required, please update", "hh:mm:ss");
+            logger.Debug("your database to check that the db is up to date.", "hh:mm:ss");
+            logger.Debug("your database to Rev{0}.{1}.{2} ", coreDbVersion, coreDbStructure, coreDbContent);
+            return false;
         }
     }
 }

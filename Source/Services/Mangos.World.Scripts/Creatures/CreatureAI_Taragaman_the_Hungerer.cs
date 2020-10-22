@@ -17,9 +17,12 @@
 //
 
 
+using Mangos.World.AI;
+using Mangos.World.Objects;
+
 namespace Mangos.World.Scripts.Creatures
 {
-    public class CreatureAI_Taragaman_the_Hungerer : World.AI.WS_Creatures_AI.BossAI
+    public class CreatureAI_Taragaman_the_Hungerer : WS_Creatures_AI.BossAI
     {
         private const int AI_UPDATE = 1000;
         private const int NOVA_COOLDOWN = 4000;
@@ -27,11 +30,11 @@ namespace Mangos.World.Scripts.Creatures
         private const int NOVA_SPELL = 11970;
         private const int UPPER_SPELL = 18072;
         public int NextWaypoint = 0;
-        public int NextNOVA = 0;
-        public int NextUPPER = 0;
+        public int NextNOVA;
+        public int NextUPPER;
         public int CurrentWaypoint = 0;
 
-        public CreatureAI_Taragaman_the_Hungerer(ref World.Objects.WS_Creatures.CreatureObject Creature) : base(ref Creature)
+        public CreatureAI_Taragaman_the_Hungerer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
             AllowedMove = false;
             Creature.Flying = false;
@@ -59,7 +62,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 1; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 aiCreature.CastSpell(NOVA_SPELL, aiTarget);
@@ -70,7 +73,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 1; i <= 1; i++)
             {
-                World.Objects.WS_Base.BaseUnit Target = aiCreature;
+                WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
                     return;
                 aiCreature.CastSpell(UPPER_SPELL, aiTarget);

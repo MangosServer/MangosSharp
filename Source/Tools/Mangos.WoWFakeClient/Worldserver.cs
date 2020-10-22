@@ -33,9 +33,9 @@ namespace Mangos.WoWFakeClient
         private static IPAddress ConnIP;
         private static int ConnPort;
         public static Queue Queue = new Queue();
-        private static Timer PingTimer = null;
-        public static int PingSent = 0;
-        public static uint CurrentPing = 0U;
+        private static Timer PingTimer;
+        public static int PingSent;
+        public static uint CurrentPing;
         public static int CurrentLatency = 0;
         public static Dictionary<OPCODES, HandlePacket> PacketHandlers = new Dictionary<OPCODES, HandlePacket>();
 
@@ -45,8 +45,8 @@ namespace Mangos.WoWFakeClient
         public static uint ServerSeed = 0U;
         public static byte[] Key = new byte[4];
         public static ulong CharacterGUID = 0UL;
-        public static bool Encoding = false;
-        public static bool Decoding = false;
+        public static bool Encoding;
+        public static bool Decoding;
 
         [DllImport("winmm.dll")]
         public static extern int timeGetTime();
@@ -133,7 +133,7 @@ namespace Mangos.WoWFakeClient
                             Array.Copy(Buffer, PacketLen, Buffer, 0, bytes);
                         }
 
-                        ThreadPool.QueueUserWorkItem((_) => OnData());
+                        ThreadPool.QueueUserWorkItem(_ => OnData());
                     }
 
                     if (!Connection.Connected)
@@ -200,7 +200,7 @@ namespace Mangos.WoWFakeClient
             {
                 lock (Queue.SyncRoot)
                     Packet = (Packets.PacketClass)Queue.Dequeue();
-                if (PacketHandlers.ContainsKey((OPCODES)Packet.OpCode) == true)
+                if (PacketHandlers.ContainsKey((OPCODES)Packet.OpCode))
                 {
                     try
                     {
@@ -208,13 +208,8 @@ namespace Mangos.WoWFakeClient
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Opcode handler {2}:{2:X} caused an error:{1}{0}", e.ToString(), Constants.vbCrLf, Packet.OpCode);
+                        Console.WriteLine("Opcode handler {2}:{2:X} caused an error:{1}{0}", e, Constants.vbCrLf, Packet.OpCode);
                     }
-                }
-                else
-                {
-                    // Console.WriteLine("[{0}][World] Unknown Opcode 0x{1:X} [{1}], DataLen={2}", Format(TimeOfDay, "HH:mm:ss"), Packet.OpCode, Packet.Length)
-                    // DumpPacket(Packet.Data)
                 }
 
                 Packet.Dispose();

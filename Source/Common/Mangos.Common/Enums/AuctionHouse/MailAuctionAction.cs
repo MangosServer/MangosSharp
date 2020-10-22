@@ -37,7 +37,7 @@ namespace Mangos.Common.Enums.AuctionHouse
     // Subject -> ItemID:0:4
     // Body    -> ""
     // Item returned
-    public enum MailAuctionAction : int
+    public enum MailAuctionAction
     {
         OUTBID = 0,
         AUCTION_WON = 1,

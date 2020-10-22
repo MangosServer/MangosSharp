@@ -42,9 +42,9 @@ namespace Mangos.Cluster.Stats
 
         // http://www.15seconds.com/issue/050615.htm
 
-        private int ConnectionsHandled = 0;
-        private int ConnectionsPeak = 0;
-        private int ConnectionsCurrent = 0;
+        private int ConnectionsHandled;
+        private int ConnectionsPeak;
+        private int ConnectionsCurrent;
 
         public void ConnectionsIncrement()
         {
@@ -62,18 +62,18 @@ namespace Mangos.Cluster.Stats
 
         public long DataTransferOut = 0L;
         public long DataTransferIn = 0L;
-        private int ThreadsWorker = 0;
-        private int ThreadsComletion = 0;
+        private int ThreadsWorker;
+        private int ThreadsComletion;
         private DateTime LastCheck = DateAndTime.Now;
-        private double LastCPUTime = 0d;
+        private double LastCPUTime;
         private TimeSpan Uptime;
-        private long Latency = 0L;
-        private float UsageCPU = 0.0f;
-        private long UsageMemory = 0L;
-        private int CountPlayers = 0;
-        private int CountPlayersAlliance = 0;
-        private int CountPlayersHorde = 0;
-        private int CountGMs = 0;
+        private long Latency;
+        private float UsageCPU;
+        private long UsageMemory;
+        private int CountPlayers;
+        private int CountPlayersAlliance;
+        private int CountPlayersHorde;
+        private int CountGMs;
         private readonly Dictionary<WorldInfo, List<string>> w = new Dictionary<WorldInfo, List<string>>();
 
         private string FormatUptime(TimeSpan time)
@@ -251,7 +251,7 @@ namespace Mangos.Cluster.Stats
                 {
                     f.WriteStartElement("gmplayer");
                     f.WriteStartElement("name");
-                    f.WriteValue(objCharacter.Value.Name.ToString());
+                    f.WriteValue(objCharacter.Value.Name);
                     f.WriteEndElement();
                     f.WriteStartElement("access");
                     f.WriteValue(objCharacter.Value.Access.ToString());
@@ -268,7 +268,7 @@ namespace Mangos.Cluster.Stats
                 {
                     f.WriteStartElement("player");
                     f.WriteStartElement("name");
-                    f.WriteValue(objCharacter.Value.Name.ToString());
+                    f.WriteValue(objCharacter.Value.Name);
                     f.WriteEndElement();
                     f.WriteStartElement("race");
                     f.WriteValue((byte)objCharacter.Value.Race);

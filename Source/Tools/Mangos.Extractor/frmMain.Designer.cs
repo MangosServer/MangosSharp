@@ -1,12 +1,14 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Extractor
 {
-    [Microsoft.VisualBasic.CompilerServices.DesignerGenerated()]
+    [DesignerGenerated()]
     public partial class frmMain : Form
     {
 
@@ -28,7 +30,7 @@ namespace Mangos.Extractor
         }
 
         // Required by the Windows Form Designer
-        private System.ComponentModel.IContainer components;
+        private IContainer components;
 
         // NOTE: The following procedure is required by the Windows Form Designer
         // It can be modified using the Windows Form Designer.  

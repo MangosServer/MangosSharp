@@ -111,7 +111,7 @@ namespace Mangos.World.Loots
                     response.AddInt8((byte)Items.Count);
                     byte b = (byte)(Items.Count - 1);
                     byte j = 0;
-                    while (unchecked(j <= (uint)b))
+                    while (j <= (uint)b)
                     {
                         if (Items[j] == null)
                         {
@@ -238,7 +238,7 @@ namespace Mangos.World.Loots
                 {
                     ProjectData.SetProjectError(ex);
                     Exception e = ex;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error getting loot.{0}", Environment.NewLine + e.ToString());
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error getting loot.{0}", Environment.NewLine + e);
                     ProjectData.ClearProjectError();
                 }
             }

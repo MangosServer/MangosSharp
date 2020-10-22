@@ -199,7 +199,7 @@ namespace Mangos.World.AI
                         {
                             Dictionary<WS_Base.BaseUnit, int> aiHateTable;
                             WS_Base.BaseUnit key;
-                            (aiHateTable = base.aiHateTable)[key = Attacker] = (int)Math.Round(aiHateTable[key] + HateValue * Attacker.Spell_ThreatModifier);
+                            (aiHateTable = this.aiHateTable)[key = Attacker] = (int)Math.Round(aiHateTable[key] + HateValue * Attacker.Spell_ThreatModifier);
                         }
                     }
                 }
@@ -391,7 +391,7 @@ namespace Mangos.World.AI
                         case AIState.AI_DO_NOTHING:
                             break;
                         default:
-                            aiCreature.SendChatMessage("Unknown AI mode!", ChatMsg.CHAT_MSG_MONSTER_SAY, LANGUAGES.LANG_GLOBAL, 0uL);
+                            aiCreature.SendChatMessage("Unknown AI mode!", ChatMsg.CHAT_MSG_MONSTER_SAY, LANGUAGES.LANG_GLOBAL);
                             State = AIState.AI_DO_NOTHING;
                             break;
                     }
@@ -446,7 +446,7 @@ namespace Mangos.World.AI
                             ref WS_Creatures.CreatureObject reference = ref aiCreature;
                             ref WS_Creatures.CreatureObject reference2 = ref reference;
                             WS_Base.BaseObject Object = reference;
-                            ref WS_Base.BaseUnit aiTarget = ref base.aiTarget;
+                            ref WS_Base.BaseUnit aiTarget = ref this.aiTarget;
                             ref WS_Base.BaseUnit reference3 = ref aiTarget;
                             WS_Base.BaseObject Object2 = aiTarget;
                             bool flag = wS_Combat.IsInFrontOf(ref Object, ref Object2);
@@ -455,7 +455,7 @@ namespace Mangos.World.AI
                             if (!flag)
                             {
                                 WS_Creatures.CreatureObject creatureObject = aiCreature;
-                                ref WS_Base.BaseUnit aiTarget2 = ref base.aiTarget;
+                                ref WS_Base.BaseUnit aiTarget2 = ref this.aiTarget;
                                 reference3 = ref aiTarget2;
                                 Object2 = aiTarget2;
                                 creatureObject.TurnTo(ref Object2);
@@ -465,14 +465,14 @@ namespace Mangos.World.AI
                             ref WS_Creatures.CreatureObject reference4 = ref aiCreature;
                             reference2 = ref reference4;
                             WS_Base.BaseUnit Attacker = reference4;
-                            WS_Combat.DamageInfo damageInfo2 = wS_Combat2.CalculateDamage(ref Attacker, ref base.aiTarget, DualWield: false, Ranged: false);
+                            WS_Combat.DamageInfo damageInfo2 = wS_Combat2.CalculateDamage(ref Attacker, ref this.aiTarget, DualWield: false, Ranged: false);
                             reference2 = (WS_Creatures.CreatureObject)Attacker;
                             WS_Combat.DamageInfo damageInfo = damageInfo2;
                             WS_Combat wS_Combat3 = WorldServiceLocator._WS_Combat;
                             ref WS_Creatures.CreatureObject reference5 = ref aiCreature;
                             reference2 = ref reference5;
                             Object2 = reference5;
-                            ref WS_Base.BaseUnit aiTarget3 = ref base.aiTarget;
+                            ref WS_Base.BaseUnit aiTarget3 = ref this.aiTarget;
                             reference3 = ref aiTarget3;
                             Object = aiTarget3;
                             WS_Combat.DamageInfo damageInfo3 = damageInfo;
@@ -480,7 +480,7 @@ namespace Mangos.World.AI
                             wS_Combat3.SendAttackerStateUpdate(ref Object2, ref Object, damageInfo3, client);
                             reference3 = (WS_Base.BaseUnit)Object;
                             reference2 = (WS_Creatures.CreatureObject)Object2;
-                            WS_Base.BaseUnit aiTarget4 = base.aiTarget;
+                            WS_Base.BaseUnit aiTarget4 = this.aiTarget;
                             int getDamage = damageInfo.GetDamage;
                             ref WS_Creatures.CreatureObject reference6 = ref aiCreature;
                             reference2 = ref reference6;
@@ -609,9 +609,9 @@ namespace Mangos.World.AI
                         return;
                     }
                     aiHateTable.Remove(aiTarget);
-                    if (aiTarget is WS_PlayerData.CharacterObject @object2)
+                    if (aiTarget is WS_PlayerData.CharacterObject object2)
                     {
-                        @object2.RemoveFromCombat(aiCreature);
+                        object2.RemoveFromCombat(aiCreature);
                     }
                     SelectTarget();
                     CheckTarget();

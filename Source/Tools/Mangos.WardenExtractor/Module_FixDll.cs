@@ -539,36 +539,34 @@ namespace Mangos.WardenExtractor
                         }
                 }
             }
-            else
+
+            switch (Instr.Opcode)
             {
-                switch (Instr.Opcode)
+                case 0x0:
                 {
-                    case 0x0:
-                        {
-                            return 6;
-                        }
+                    return 6;
+                }
 
-                    case 0x1:
-                        {
-                            return 7;
-                        }
+                case 0x1:
+                {
+                    return 7;
+                }
 
-                    case 0xC7:
-                        {
-                            return 9;
-                        }
+                case 0xC7:
+                {
+                    return 9;
+                }
 
-                    case 0x71:
-                    case 0x72:
-                    case 0x73:
-                        {
-                            return 0xA;
-                        }
+                case 0x71:
+                case 0x72:
+                case 0x73:
+                {
+                    return 0xA;
+                }
 
-                    default:
-                        {
-                            return 0;
-                        }
+                default:
+                {
+                    return 0;
                 }
             }
         }
@@ -579,10 +577,8 @@ namespace Mangos.WardenExtractor
             {
                 return IsBitSetInTable(Instr.Opcode, TWO_BYTE_OPCODE_MODREF_REQUIREMENT);
             }
-            else
-            {
-                return IsBitSetInTable(Instr.Opcode, ONE_BYTE_OPCODE_MODREF_REQUIREMENT);
-            }
+
+            return IsBitSetInTable(Instr.Opcode, ONE_BYTE_OPCODE_MODREF_REQUIREMENT);
         }
 
         private static int FindDisplacementDataSize(ref Instruction Instr)
@@ -633,7 +629,8 @@ namespace Mangos.WardenExtractor
             {
                 return 2;
             }
-            else if (Instr.Opcode == 0xC8)
+
+            if (Instr.Opcode == 0xC8)
             {
                 return 3;
             }
@@ -904,22 +901,22 @@ namespace Mangos.WardenExtractor
 
         public class Instruction
         {
-            public byte[] Prefix = new byte[] { 0, 0, 0, 0 };
-            public byte Opcode = 0;
-            public bool Two_Bytes = false;
-            public int ExtendedOpcode = 0;
-            public bool ModrefReq = false;
-            public byte ModRmData = 0;
-            public byte SibData = 0;
-            public bool SibAccompanies = false;
-            public bool AddressSizeOverwritten = false;
-            public bool OperandSizeOverwritten = false;
-            public bool FullDisplacement = false;
-            public int DisplacementSize = 0;
-            public int ImmediateSize = 0;
-            public byte[] DisplacementData = new byte[] { 0, 0, 0, 0, 0, 0 };
-            public byte[] ImmediateData = new byte[] { 0, 0, 0, 0 };
-            public int OrigSize = 0;
+            public byte[] Prefix = { 0, 0, 0, 0 };
+            public byte Opcode;
+            public bool Two_Bytes;
+            public int ExtendedOpcode;
+            public bool ModrefReq;
+            public byte ModRmData;
+            public byte SibData;
+            public bool SibAccompanies;
+            public bool AddressSizeOverwritten;
+            public bool OperandSizeOverwritten;
+            public bool FullDisplacement;
+            public int DisplacementSize;
+            public int ImmediateSize;
+            public byte[] DisplacementData = { 0, 0, 0, 0, 0, 0 };
+            public byte[] ImmediateData = { 0, 0, 0, 0 };
+            public int OrigSize;
 
             public void InitPrefix()
             {
@@ -1018,16 +1015,16 @@ namespace Mangos.WardenExtractor
         }
 
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        public static ushort[] ONE_BYTE_OPCODE_MODREF_REQUIREMENT = new ushort[] { 0xF0F0, 0xF0F0, 0xF0F0, 0xF0F0, 0x0, 0x0, 0x3050, 0x0, 0xFFFF, 0x0, 0x0, 0x0, 0xCF00, 0xF000, 0x0, 0x303 };
-        public static ushort[] TWO_BYTE_OPCODE_MODREF_REQUIREMENT = new ushort[] { 0xB000, 0x0, 0xF000, 0xF000, 0xFFFF, 0x0, 0xFFF3, 0x7E03, 0x0, 0xFFFF, 0x1C1D, 0xFF3F, 0xC100, 0x74DD, 0x64DD, 0x74EE };
-        public static ushort[] ONE_BYTE_OPCODE_DISPLACEMENT_SIZE_BYTE = new ushort[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xFFFF, 0x0, 0x0, 0xA000, 0x0, 0x0, 0x0, 0xF010, 0x0 };
-        public static ushort[] ONE_BYTE_OPCODE_DISPLACEMENT_SIZE_VARIABLE = new ushort[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x5000, 0x0, 0x0, 0x0, 0xC0, 0x0 };
-        public static ushort[] TWO_BYTE_OPCODE_DISPLACEMENT_SIZE_BYTE = new ushort[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
-        public static ushort[] TWO_BYTE_OPCODE_DISPLACEMENT_SIZE_VARIABLE = new ushort[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xFFFF, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
-        public static ushort[] ONE_BYTE_OPCODE_IMMEDIATE_SIZE_BYTE = new ushort[] { 0x808, 0x808, 0x808, 0x808, 0x0, 0x0, 0x30, 0x0, 0x0, 0x0, 0x80, 0xFF00, 0x200, 0x0, 0xF00, 0x0 };
-        public static ushort[] ONE_BYTE_OPCODE_IMMEDIATE_SIZE_VARIABLE = new ushort[] { 0x404, 0x404, 0x404, 0x404, 0x0, 0x0, 0xC0, 0x0, 0x0, 0x0, 0x40, 0xFF, 0x100, 0x0, 0x0, 0x0 };
-        public static ushort[] TWO_BYTE_OPCODE_IMMEDIATE_SIZE_BYTE = new ushort[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x808, 0x0, 0x0, 0x0, 0x0, 0x0 };
-        public static ushort[] TWO_BYTE_OPCODE_IMMEDIATE_SIZE_VARIABLE = new ushort[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        public static ushort[] ONE_BYTE_OPCODE_MODREF_REQUIREMENT = { 0xF0F0, 0xF0F0, 0xF0F0, 0xF0F0, 0x0, 0x0, 0x3050, 0x0, 0xFFFF, 0x0, 0x0, 0x0, 0xCF00, 0xF000, 0x0, 0x303 };
+        public static ushort[] TWO_BYTE_OPCODE_MODREF_REQUIREMENT = { 0xB000, 0x0, 0xF000, 0xF000, 0xFFFF, 0x0, 0xFFF3, 0x7E03, 0x0, 0xFFFF, 0x1C1D, 0xFF3F, 0xC100, 0x74DD, 0x64DD, 0x74EE };
+        public static ushort[] ONE_BYTE_OPCODE_DISPLACEMENT_SIZE_BYTE = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xFFFF, 0x0, 0x0, 0xA000, 0x0, 0x0, 0x0, 0xF010, 0x0 };
+        public static ushort[] ONE_BYTE_OPCODE_DISPLACEMENT_SIZE_VARIABLE = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x5000, 0x0, 0x0, 0x0, 0xC0, 0x0 };
+        public static ushort[] TWO_BYTE_OPCODE_DISPLACEMENT_SIZE_BYTE = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        public static ushort[] TWO_BYTE_OPCODE_DISPLACEMENT_SIZE_VARIABLE = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xFFFF, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        public static ushort[] ONE_BYTE_OPCODE_IMMEDIATE_SIZE_BYTE = { 0x808, 0x808, 0x808, 0x808, 0x0, 0x0, 0x30, 0x0, 0x0, 0x0, 0x80, 0xFF00, 0x200, 0x0, 0xF00, 0x0 };
+        public static ushort[] ONE_BYTE_OPCODE_IMMEDIATE_SIZE_VARIABLE = { 0x404, 0x404, 0x404, 0x404, 0x0, 0x0, 0xC0, 0x0, 0x0, 0x0, 0x40, 0xFF, 0x100, 0x0, 0x0, 0x0 };
+        public static ushort[] TWO_BYTE_OPCODE_IMMEDIATE_SIZE_BYTE = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x808, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        public static ushort[] TWO_BYTE_OPCODE_IMMEDIATE_SIZE_VARIABLE = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
         public const byte MOD_FIELD_NO_SIB = 0xC0;
         public const byte MOD_FIELD_MASK = 0xC0;
         public const byte RM_FIELD_SIB = 0x4;

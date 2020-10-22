@@ -100,7 +100,7 @@ namespace Mangos.World.Social
                     return;
                 }
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_BUY [GuildName={2}]", client.IP, client.Port, Name);
-                if (unchecked((ulong)client.Character.GuildID) != 0)
+                if ((ulong)client.Character.GuildID != 0)
                 {
                     return;
                 }
@@ -138,7 +138,7 @@ namespace Mangos.World.Social
                     return;
                 }
                 ref uint copper = ref client.Character.Copper;
-                copper = (uint)(unchecked(copper) - unchecked(CharterPrice));
+                copper = (uint)(copper - CharterPrice);
                 client.Character.SetUpdateFlag(1176, client.Character.Copper);
                 client.Character.SendCharacterUpdate(toNear: false);
                 ItemObject tmpItem = new ItemObject(CharterID, client.Character.GUID)
@@ -172,7 +172,7 @@ namespace Mangos.World.Social
                     response.AddInt8(MySQLQuery.Rows[0].As<byte>("petition_signedMembers"));
                     byte b = MySQLQuery.Rows[0].As<byte>("petition_signedMembers");
                     byte i = 1;
-                    while (unchecked(i <= (uint)b))
+                    while (i <= (uint)b)
                     {
                         response.AddUInt64(MySQLQuery.Rows[0].As<ulong>("petition_signedMember" + Conversions.ToString(i)));
                         response.AddInt32(0);
@@ -224,8 +224,8 @@ namespace Mangos.World.Social
                     }
                     else
                     {
-                        response.AddInt32(unchecked(MySQLQuery.Rows[0].As<byte>("petition_type")) - 1);
-                        response.AddInt32(unchecked(MySQLQuery.Rows[0].As<byte>("petition_type")) - 1);
+                        response.AddInt32(MySQLQuery.Rows[0].As<byte>("petition_type") - 1);
+                        response.AddInt32(MySQLQuery.Rows[0].As<byte>("petition_type") - 1);
                         response.AddInt32(MySQLQuery.Rows[0].As<byte>("petition_type"));
                     }
                     response.AddInt32(0);

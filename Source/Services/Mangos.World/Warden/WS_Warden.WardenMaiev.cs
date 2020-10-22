@@ -702,16 +702,16 @@ namespace Mangos.World.Warden
                                     if (dwValue < 0)
                                     {
                                         dwValue = (dwValue & 0x7F) << 8;
-                                        dwValue = dwValue + unchecked(Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 1)))) << 8;
-                                        dwValue = dwValue + unchecked(Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 2)))) << 8;
-                                        dwValue += unchecked(Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 3))));
+                                        dwValue = dwValue + Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 1))) << 8;
+                                        dwValue = dwValue + Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 2))) << 8;
+                                        dwValue += Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 3)));
                                         pbRelocationTable += 4;
                                         int old2 = Marshal.ReadInt32(new IntPtr(m_Mod + dwValue));
                                         Marshal.WriteInt32(new IntPtr(m_Mod + dwValue), m_Mod + old2);
                                     }
                                     else
                                     {
-                                        dwValue = (dwValue << 8) + dwLastRelocation + unchecked(Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 1))));
+                                        dwValue = (dwValue << 8) + dwLastRelocation + Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 1)));
                                         pbRelocationTable += 2;
                                         int old = Marshal.ReadInt32(new IntPtr(m_Mod + dwValue));
                                         Marshal.WriteInt32(new IntPtr(m_Mod + dwValue), m_Mod + old);

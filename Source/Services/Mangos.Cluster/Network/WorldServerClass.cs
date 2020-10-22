@@ -363,10 +363,8 @@ namespace Mangos.Cluster.Network
                 }
                 return true;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
 
         public bool BattlefieldCheck(uint MapID)
@@ -409,10 +407,8 @@ namespace Mangos.Cluster.Network
                 }
                 return true;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
 
         public List<int> BattlefieldList(byte MapType)
@@ -448,7 +444,7 @@ namespace Mangos.Cluster.Network
                 }
                 catch
                 {
-                    clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint>() { clusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Map });
+                    clusterServiceLocator._WC_Network.WorldServer.Disconnect("NULL", new List<uint> { clusterServiceLocator._WorldCluster.CLIENTs[ID].Character.Map });
                 }
             }
         }

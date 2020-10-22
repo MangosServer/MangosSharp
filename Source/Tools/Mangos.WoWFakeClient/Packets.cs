@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Text;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -40,7 +41,7 @@ namespace Mangos.WoWFakeClient
                     for (j = 0; j <= loopTo; j += 16)
                     {
                         buffer += "|  " + BitConverter.ToString(data, j, 16).Replace("-", " ");
-                        buffer += " |  " + System.Text.Encoding.ASCII.GetString(data, j, 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?") + " |" + Constants.vbCrLf;
+                        buffer += " |  " + Encoding.ASCII.GetString(data, j, 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?") + " |" + Constants.vbCrLf;
                     }
                 }
                 else
@@ -49,12 +50,12 @@ namespace Mangos.WoWFakeClient
                     for (j = 0; j <= loopTo1; j += 16)
                     {
                         buffer += "|  " + BitConverter.ToString(data, j, 16).Replace("-", " ");
-                        buffer += " |  " + System.Text.Encoding.ASCII.GetString(data, j, 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?") + " |" + Constants.vbCrLf;
+                        buffer += " |  " + Encoding.ASCII.GetString(data, j, 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?") + " |" + Constants.vbCrLf;
                     }
 
                     buffer += "|  " + BitConverter.ToString(data, j, data.Length % 16).Replace("-", " ");
                     buffer += new string(' ', (16 - data.Length % 16) * 3);
-                    buffer += " |  " + System.Text.Encoding.ASCII.GetString(data, j, data.Length % 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?");
+                    buffer += " |  " + Encoding.ASCII.GetString(data, j, data.Length % 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?");
                     buffer += new string(' ', 16 - data.Length % 16);
                     buffer += " |" + Constants.vbCrLf;
                 }
@@ -65,7 +66,7 @@ namespace Mangos.WoWFakeClient
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error dumping packet: {0}{1}", Constants.vbCrLf, e.ToString());
+                Console.WriteLine("Error dumping packet: {0}{1}", Constants.vbCrLf, e);
                 Console.ForegroundColor = ConsoleColor.White;
             }
         }
@@ -74,7 +75,7 @@ namespace Mangos.WoWFakeClient
         {
             public byte[] Data;
             public int Offset = 4;
-            private readonly bool Realm = false;
+            private readonly bool Realm;
 
             public int Length
             {
@@ -84,10 +85,8 @@ namespace Mangos.WoWFakeClient
                     {
                         return Data[1] + Data[2] * 256;
                     }
-                    else
-                    {
-                        return Data[1] + Data[0] * 256;
-                    }
+
+                    return Data[1] + Data[0] * 256;
                 }
             }
 
@@ -99,10 +98,8 @@ namespace Mangos.WoWFakeClient
                     {
                         return Data[0];
                     }
-                    else
-                    {
-                        return Data[2] + Data[3] * 256;
-                    }
+
+                    return Data[2] + Data[3] * 256;
                 }
             }
 
@@ -215,7 +212,7 @@ namespace Mangos.WoWFakeClient
                 }
                 else
                 {
-                    var Bytes = System.Text.Encoding.UTF8.GetBytes(buffer.ToCharArray());
+                    var Bytes = Encoding.UTF8.GetBytes(buffer.ToCharArray());
                     int Position = Data.Length;
                     if (EndZero)
                     {
@@ -466,7 +463,7 @@ namespace Mangos.WoWFakeClient
                 }
 
                 Offset += 1;
-                return System.Text.Encoding.UTF8.GetString(Data, start, i);
+                return Encoding.UTF8.GetString(Data, start, i);
             }
 
             public string GetString(int Offset)

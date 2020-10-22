@@ -49,7 +49,7 @@ namespace Mangos.Cluster.DataStores
                 var data = await dataStoreProvider.GetDataStoreAsync(MapDBC);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    var m = new MapInfo()
+                    var m = new MapInfo
                     {
                         ID = data.ReadInt(i, 0),
                         Type = (MapTypes)data.ReadInt(i, 2),
@@ -76,7 +76,7 @@ namespace Mangos.Cluster.DataStores
             public MapTypes Type = MapTypes.MAP_COMMON;
             public string Name = "";
             public int ParentMap = -1;
-            public int ResetTime = 0;
+            public int ResetTime;
 
             public bool IsDungeon => Type == MapTypes.MAP_INSTANCE || Type == MapTypes.MAP_RAID;
 
@@ -97,7 +97,7 @@ namespace Mangos.Cluster.DataStores
                 var data = await dataStoreProvider.GetDataStoreAsync(WorldSafeLocsDBC);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    var WorldSafeLoc = new TWorldSafeLoc()
+                    var WorldSafeLoc = new TWorldSafeLoc
                     {
                         ID = data.ReadInt(i, 0),
                         map = (uint)data.ReadInt(i, 1),
@@ -133,7 +133,7 @@ namespace Mangos.Cluster.DataStores
         {
             byte Entry;
             var MySQLQuery = new DataTable();
-            clusterServiceLocator._WorldCluster.GetWorldDatabase().Query(string.Format("SELECT * FROM battleground_template"), ref MySQLQuery);
+            clusterServiceLocator._WorldCluster.GetWorldDatabase().Query("SELECT * FROM battleground_template", ref MySQLQuery);
             foreach (DataRow row in MySQLQuery.Rows)
             {
                 Entry = row.As<byte>("id");
@@ -178,7 +178,7 @@ namespace Mangos.Cluster.DataStores
                 var data = await dataStoreProvider.GetDataStoreAsync(ChatChannelsDBC);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    var ChatChannels = new ChatChannelInfo()
+                    var ChatChannels = new ChatChannelInfo
                     {
                         Index = data.ReadInt(i, 0),
                         Flags = data.ReadInt(i, 1),

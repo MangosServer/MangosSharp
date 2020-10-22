@@ -70,7 +70,7 @@ namespace Mangos.World.ReaderWriterLock
             }
 
             WriteLine($"NewLock {ID}");
-            new Thread(new ThreadStart(WriteLoop))
+            new Thread(WriteLoop)
             {
                 Name = $"WriteLoop, ReaderWriterLock_Debug - {s}"
             }.Start();

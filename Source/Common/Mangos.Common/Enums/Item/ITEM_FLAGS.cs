@@ -21,7 +21,7 @@ using System;
 namespace Mangos.Common.Enums.Item
 {
     [Flags]
-    public enum ITEM_FLAGS : int
+    public enum ITEM_FLAGS
     {
         ITEM_FLAGS_BINDED = 0x1,
         ITEM_FLAGS_CONJURED = 0x2,

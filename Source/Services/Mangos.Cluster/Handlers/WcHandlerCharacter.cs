@@ -67,7 +67,7 @@ namespace Mangos.Cluster.Handlers
 
             public ulong Guid;
             public ClientClass Client;
-            public bool IsInWorld = false;
+            public bool IsInWorld;
             public uint Map;
             public uint Zone;
             public float PositionX;
@@ -89,8 +89,8 @@ namespace Mangos.Cluster.Handlers
             public string AfkMessage;
             public uint GuildInvited = 0U;
             public ulong GuildInvitedBy = 0UL;
-            public WC_Guild.Guild Guild = null;
-            public byte GuildRank = 0;
+            public WC_Guild.Guild Guild;
+            public byte GuildRank;
             public WC_Handlers_Group.Group Group = null;
             public bool GroupAssistant = false;
             public bool GroupInvitedFlag = false;
@@ -420,15 +420,11 @@ namespace Mangos.Cluster.Handlers
                 {
                     return q.Rows[0].As<ulong>("char_guid");
                 }
-                else
-                {
-                    return 0UL;
-                }
+
+                return 0UL;
             }
-            else
-            {
-                return GUID;
-            }
+
+            return GUID;
         }
 
         public string GetCharacterNameByGUID(string GUID)
@@ -437,19 +433,15 @@ namespace Mangos.Cluster.Handlers
             {
                 return clusterServiceLocator._WorldCluster.CHARACTERs[Conversions.ToULong(GUID)].Name;
             }
-            else
+
+            var q = new DataTable();
+            clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_guid = \"{0}\";", GUID), ref q);
+            if (q.Rows.Count > 0)
             {
-                var q = new DataTable();
-                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_guid = \"{0}\";", GUID), ref q);
-                if (q.Rows.Count > 0)
-                {
-                    return q.Rows[0].As<string>("char_name");
-                }
-                else
-                {
-                    return "";
-                }
+                return q.Rows[0].As<string>("char_name");
             }
+
+            return "";
         }
     }
 }

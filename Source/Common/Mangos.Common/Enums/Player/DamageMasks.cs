@@ -21,7 +21,7 @@ using System;
 namespace Mangos.Common.Enums.Player
 {
     [Flags]
-    public enum DamageMasks : int
+    public enum DamageMasks
     {
         DMG_NORMAL = 0x0,
         DMG_PHYSICAL = 0x1,

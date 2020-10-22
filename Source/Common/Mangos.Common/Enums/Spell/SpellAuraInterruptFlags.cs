@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Spell
 {
-    public enum SpellAuraInterruptFlags : int
+    public enum SpellAuraInterruptFlags
     {
         AURA_INTERRUPT_FLAG_HOSTILE_SPELL_INFLICTED = 0x1, // removed when recieving a hostile spell?
         AURA_INTERRUPT_FLAG_DAMAGE = 0x2, // removed by any damage

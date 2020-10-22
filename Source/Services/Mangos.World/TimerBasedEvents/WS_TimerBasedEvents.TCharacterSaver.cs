@@ -42,7 +42,7 @@ namespace Mangos.World.Server
                 CharacterSaverTimer = null;
                 CharacterSaverWorking = false;
                 UPDATE_TIMER = WorldServiceLocator._ConfigurationProvider.GetConfiguration().SaveTimer;
-                CharacterSaverTimer = new Timer(new TimerCallback(Update), null, 10000, UPDATE_TIMER);
+                CharacterSaverTimer = new Timer(Update, null, 10000, UPDATE_TIMER);
             }
 
             private void Update(object state)
