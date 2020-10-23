@@ -72,9 +72,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.World.Scripts", "Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Network.Tcp.Mvc", "Common\Mangos.Network.Tcp.Mvc\Mangos.Network.Tcp.Mvc.csproj", "{D4C46CF2-5F0F-4F04-ADF0-623414F2034D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealmServer", "Services\RealmServer\RealmServer.csproj", "{776C99A9-C8F5-4116-B05C-A4D588A7930D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmServer", "Services\RealmServer\RealmServer.csproj", "{776C99A9-C8F5-4116-B05C-A4D588A7930D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Legacy", "Services\Mangos.Realm.Legacy\Mangos.Realm.Legacy.csproj", "{351DF368-F6BD-4385-A720-DAE3506905D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangos.Realm", "Services\Mangos.Realm\Mangos.Realm.csproj", "{4F4B5B12-9E04-44CF-AF12-E935E38E45A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangos.Realm.Network", "Services\Mangos.Realm.Network\Mangos.Realm.Network.csproj", "{5A710140-10B1-436E-A9F0-F4BED150F240}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -178,6 +182,14 @@ Global
 		{351DF368-F6BD-4385-A720-DAE3506905D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{351DF368-F6BD-4385-A720-DAE3506905D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{351DF368-F6BD-4385-A720-DAE3506905D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F4B5B12-9E04-44CF-AF12-E935E38E45A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F4B5B12-9E04-44CF-AF12-E935E38E45A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F4B5B12-9E04-44CF-AF12-E935E38E45A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F4B5B12-9E04-44CF-AF12-E935E38E45A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A710140-10B1-436E-A9F0-F4BED150F240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A710140-10B1-436E-A9F0-F4BED150F240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A710140-10B1-436E-A9F0-F4BED150F240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A710140-10B1-436E-A9F0-F4BED150F240}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,6 +226,8 @@ Global
 		{D4C46CF2-5F0F-4F04-ADF0-623414F2034D} = {9EF781C4-F7AE-4720-A231-8F4C58737310}
 		{776C99A9-C8F5-4116-B05C-A4D588A7930D} = {4E5FCE8C-FE93-42A3-A3D9-4721A6A67CCC}
 		{351DF368-F6BD-4385-A720-DAE3506905D4} = {4E5FCE8C-FE93-42A3-A3D9-4721A6A67CCC}
+		{4F4B5B12-9E04-44CF-AF12-E935E38E45A8} = {4E5FCE8C-FE93-42A3-A3D9-4721A6A67CCC}
+		{5A710140-10B1-436E-A9F0-F4BED150F240} = {4E5FCE8C-FE93-42A3-A3D9-4721A6A67CCC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADB1D01A-F2D8-411D-8C5E-9B125F8FE64E}

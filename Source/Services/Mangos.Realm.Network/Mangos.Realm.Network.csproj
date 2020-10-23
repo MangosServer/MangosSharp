@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../Mangos.props" />
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Network.Tcp.Mvc\Mangos.Network.Tcp.Mvc.csproj" />
+    <ProjectReference Include="..\Mangos.Realm\Mangos.Realm.csproj" />
+  </ItemGroup>
+</Project>
