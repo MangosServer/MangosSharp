@@ -27,7 +27,7 @@ using Mangos.Storage.MySql;
 
 namespace Mangos.Realm
 {
-    public class RealmServer
+    public class RealmServerService
     {
         private readonly ILogger logger;
         private readonly MySqlAccountStorage accountStorage;
@@ -35,7 +35,7 @@ namespace Mangos.Realm
 
         private readonly TcpServer tcpServer;
 
-        public RealmServer(
+        public RealmServerService(
             ILogger logger,
             MySqlAccountStorage accountStorage,
             IConfigurationProvider<RealmServerConfiguration> configurationProvider,

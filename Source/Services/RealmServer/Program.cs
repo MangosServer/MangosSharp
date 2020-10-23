@@ -25,18 +25,19 @@ using Mangos.Configuration.Xml;
 using Mangos.Loggers;
 using Mangos.Loggers.Console;
 using Mangos.Network.Tcp;
+using Mangos.Realm;
 using Mangos.Realm.Factories;
 using Mangos.Storage.Account;
 using Mangos.Storage.MySql;
 
-namespace Mangos.Realm
+namespace RealmServer
 {
     public class Program
     {
         public async static Task Main(string[] args)
         {
             var container = CreateContainer();
-            var realmServer = container.Resolve<RealmServer>();
+            var realmServer = container.Resolve<RealmServerService>();
             await realmServer.StartAsync();
         }
 
@@ -84,7 +85,7 @@ namespace Mangos.Realm
             builder.RegisterType<Converter>().As<Converter>().SingleInstance();
             builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
 
-            builder.RegisterType<RealmServer>().As<RealmServer>().SingleInstance();
+            builder.RegisterType<RealmServerService>().As<RealmServerService>().SingleInstance();
             builder.RegisterType<RealmServerClientFactory>().As<ITcpClientFactory>().SingleInstance();
         }
     }

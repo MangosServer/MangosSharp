@@ -2,11 +2,6 @@
   <Import Project="../../Mangos.props" />
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <OutputType>Exe</OutputType>
-    <AssemblyName>RealmServer</AssemblyName>
-    <ApplicationIcon>realmd.ico</ApplicationIcon>
-    <OutputPath>..\..\..\Bin\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.0.0" />
