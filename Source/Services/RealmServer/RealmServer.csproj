@@ -11,6 +11,6 @@
     <PackageReference Include="Autofac" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mangos.Realm\Mangos.Realm.csproj" />
+    <ProjectReference Include="..\Mangos.Realm.Legacy\Mangos.Realm.Legacy.csproj" />
   </ItemGroup>
 </Project>
