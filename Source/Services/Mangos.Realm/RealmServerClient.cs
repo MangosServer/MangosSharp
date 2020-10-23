@@ -78,9 +78,7 @@ namespace Mangos.Realm
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                var header = await reader.ReadAsync(1).ToListAsync();
-                var opcode = (AuthCMD)header[0];
-
+                var opcode = (AuthCMD) await reader.ReadAsync();
                 await packetHandlers[opcode](reader, writer);
             }
         }
@@ -101,9 +99,9 @@ namespace Mangos.Realm
 
         public async Task On_RS_LOGON_CHALLENGE(ChannelReader<byte> reader, ChannelWriter<byte> writer)
         {
-            var header = await reader.ReadAsync(3).ToListAsync();
+            var header = await reader.ReadArrayAsync(3);
             var length = BitConverter.ToInt16(new[] { header[1], header[2] });
-            var body = await reader.ReadAsync(length).ToListAsync();
+            var body = await reader.ReadArrayAsync(length);
             var data = new byte[1].Concat(header).Concat(body).ToArray();
 
             int iUpper = data[33] - 1;
@@ -336,7 +334,7 @@ namespace Mangos.Realm
 
         public async Task On_RS_LOGON_PROOF(ChannelReader<byte> reader, ChannelWriter<byte> writer)
         {
-            var body = await reader.ReadAsync(74).ToListAsync();
+            var body = await reader.ReadArrayAsync(74);
             var data = new byte[1].Concat(body).ToArray();
 
             var a = new byte[32];
@@ -399,7 +397,7 @@ namespace Mangos.Realm
 
         public async Task On_RS_REALMLIST(ChannelReader<byte> reader, ChannelWriter<byte> writer)
         {
-            var body = await reader.ReadAsync(4).ToListAsync();
+            var body = await reader.ReadArrayAsync(4);
             var data = new byte[1].Concat(body).ToArray();
 
             int packetLen = 0;
@@ -523,7 +521,7 @@ namespace Mangos.Realm
 
         public async Task On_CMD_XFER_RESUME(ChannelReader<byte> reader, ChannelWriter<byte> writer)
         {
-            await reader.ReadAsync(8).ToListAsync();
+            await reader.ReadArrayAsync(8);
         }
     }
 }

@@ -111,13 +111,13 @@ namespace Mangos.Cluster.Network
             var buffer = new byte[8192];
             while (!cancellationToken.IsCancellationRequested)
             {
-                await reader.ReadAsync(buffer, 0, 6);
+                await reader.ReadToArrayAsync(buffer, 0, 6);
                 if (Encryption)
                 {
                     Decode(buffer);
                 }
                 var length = buffer[1] + buffer[0] * 256 + 2;
-                await reader.ReadAsync(buffer, 6, length - 6);
+                await reader.ReadToArrayAsync(buffer, 6, length - 6);
 
                 var packet = new PacketClass(buffer);
                 OnPacket(packet);
