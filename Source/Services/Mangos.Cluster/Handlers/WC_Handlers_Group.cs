@@ -38,7 +38,7 @@ namespace Mangos.Cluster.Handlers
 
         public WcHandlersGroup(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         // Used as counter for unique Group.ID
@@ -61,10 +61,10 @@ namespace Mangos.Cluster.Handlers
 
             public Group(WcHandlerCharacter.CharacterObject objCharacter, ClusterServiceLocator clusterServiceLocator)
             {
-                this._clusterServiceLocator = clusterServiceLocator;
-                Members = new WcHandlerCharacter.CharacterObject[this._clusterServiceLocator.GlobalConstants.GROUP_SIZE + 1];
-                Id = Interlocked.Increment(ref this._clusterServiceLocator.WcHandlersGroup._groupCounter);
-                this._clusterServiceLocator.WcHandlersGroup.GrouPs.Add(Id, this);
+                _clusterServiceLocator = clusterServiceLocator;
+                Members = new WcHandlerCharacter.CharacterObject[_clusterServiceLocator.GlobalConstants.GROUP_SIZE + 1];
+                Id = Interlocked.Increment(ref _clusterServiceLocator.WcHandlersGroup._groupCounter);
+                _clusterServiceLocator.WcHandlersGroup.GrouPs.Add(Id, this);
                 Members[0] = objCharacter;
                 Members[1] = null;
                 Members[2] = null;

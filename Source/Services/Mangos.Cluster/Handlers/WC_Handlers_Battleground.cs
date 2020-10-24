@@ -32,7 +32,7 @@ namespace Mangos.Cluster.Handlers
 
         public WcHandlersBattleground(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         public void On_CMSG_BATTLEFIELD_PORT(PacketClass packet, ClientClass client)
@@ -108,17 +108,17 @@ namespace Mangos.Cluster.Handlers
 
             public Battlefield(BattlefieldMapType rMapType, byte rLevel, uint rMap, ClusterServiceLocator clusterServiceLocator)
             {
-                this._clusterServiceLocator = clusterServiceLocator;
-                Id = Interlocked.Increment(ref this._clusterServiceLocator.WcHandlersBattleground._battlefielDsCounter);
+                _clusterServiceLocator = clusterServiceLocator;
+                Id = Interlocked.Increment(ref _clusterServiceLocator.WcHandlersBattleground._battlefielDsCounter);
                 LevelMin = 0;
                 LevelMax = 60;
                 MapType = rMapType;
                 _map = rMap;
-                _maxPlayersPerTeam = this._clusterServiceLocator.WsDbcDatabase.Battlegrounds[(byte)rMapType].MaxPlayersPerTeam;
-                _minPlayersPerTeam = this._clusterServiceLocator.WsDbcDatabase.Battlegrounds[(byte)rMapType].MinPlayersPerTeam;
-                this._clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.AcquireWriterLock(this._clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
-                this._clusterServiceLocator.WcHandlersBattleground.BattlefielDs.Add(Id, this);
-                this._clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.ReleaseWriterLock();
+                _maxPlayersPerTeam = _clusterServiceLocator.WsDbcDatabase.Battlegrounds[(byte)rMapType].MaxPlayersPerTeam;
+                _minPlayersPerTeam = _clusterServiceLocator.WsDbcDatabase.Battlegrounds[(byte)rMapType].MinPlayersPerTeam;
+                _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.AcquireWriterLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                _clusterServiceLocator.WcHandlersBattleground.BattlefielDs.Add(Id, this);
+                _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.ReleaseWriterLock();
                 _bfTimer = new Timer(Update, null, 20000, 20000);
             }
 

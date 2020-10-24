@@ -30,7 +30,7 @@ namespace Mangos.Cluster.Handlers
 
         public WcHandlersMovement(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         public void On_MSG_MOVE_HEARTBEAT(PacketClass packet, ClientClass client)

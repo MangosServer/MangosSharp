@@ -28,7 +28,7 @@ namespace Mangos.Cluster.Network
 
         public WcNetwork(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         public WorldServerClass WorldServer => _clusterServiceLocator.WorldServerClass;

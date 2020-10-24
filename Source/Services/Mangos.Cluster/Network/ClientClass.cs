@@ -42,8 +42,8 @@ namespace Mangos.Cluster.Network
 
         public ClientClass(ClusterServiceLocator clusterServiceLocator, Socket socket)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
-            this._socket = socket;
+            _clusterServiceLocator = clusterServiceLocator;
+            _socket = socket;
         }
 
         private readonly Socket _socket;

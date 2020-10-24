@@ -42,7 +42,7 @@ namespace Mangos.Cluster.Network
 
         public WorldServerClass(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         public void Start()

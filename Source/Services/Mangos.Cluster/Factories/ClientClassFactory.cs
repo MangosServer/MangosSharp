@@ -11,7 +11,7 @@ namespace Mangos.Cluster.Factories
 
         public ClientClassFactory(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
 

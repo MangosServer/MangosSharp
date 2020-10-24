@@ -137,7 +137,7 @@ namespace Mangos.Cluster.Handlers
                     ChannelFlags = (byte)((CHANNEL_FLAG)ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM);
                 }
 
-                this._clusterServiceLocator = clusterServiceLocator;
+                _clusterServiceLocator = clusterServiceLocator;
             }
 
             public void Say(string message, int msgLang, WcHandlerCharacter.CharacterObject character)

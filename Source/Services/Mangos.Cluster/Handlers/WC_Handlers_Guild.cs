@@ -35,7 +35,7 @@ namespace Mangos.Cluster.Handlers
 
         public WcHandlersGuild(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         public void On_CMSG_GUILD_QUERY(PacketClass packet, ClientClass client)

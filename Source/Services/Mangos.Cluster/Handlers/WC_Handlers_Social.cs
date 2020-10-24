@@ -36,7 +36,7 @@ namespace Mangos.Cluster.Handlers
 
         public WcHandlersSocial(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
 

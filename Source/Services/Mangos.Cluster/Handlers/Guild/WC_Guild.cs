@@ -36,7 +36,7 @@ namespace Mangos.Cluster.Handlers.Guild
 
         public WcGuild(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         public Dictionary<uint, Guild> GuilDs = new Dictionary<uint, Guild>();

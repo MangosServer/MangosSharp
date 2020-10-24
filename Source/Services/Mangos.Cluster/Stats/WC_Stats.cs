@@ -37,7 +37,7 @@ namespace Mangos.Cluster.Stats
 
         public WcStats(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         // http://www.15seconds.com/issue/050615.htm

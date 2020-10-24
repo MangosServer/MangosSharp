@@ -29,7 +29,7 @@ namespace Mangos.Cluster.DataStores
 
         public WsDbcLoad(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         public async Task InitializeInternalDatabaseAsync()

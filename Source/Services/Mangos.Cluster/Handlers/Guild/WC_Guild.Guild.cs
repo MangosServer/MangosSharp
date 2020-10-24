@@ -31,7 +31,7 @@ namespace Mangos.Cluster.Handlers.Guild
 
             public Guild(ClusterServiceLocator clusterServiceLocator)
             {
-                this._clusterServiceLocator = clusterServiceLocator;
+                _clusterServiceLocator = clusterServiceLocator;
             }
 
             public uint Id;

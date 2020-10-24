@@ -34,7 +34,7 @@ namespace Mangos.Cluster.Globals
 
         public Packets(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         public void DumpPacket(byte[] data, [Optional, DefaultParameterValue(null)] ClientClass client)

@@ -40,7 +40,7 @@ namespace Mangos.Cluster.Globals
 
         public Functions(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         public int ToInteger(bool value)

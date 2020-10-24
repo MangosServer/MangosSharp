@@ -47,8 +47,8 @@ namespace Mangos.Cluster
             ClusterServiceLocator clusterServiceLocator,
             TcpServer tcpServer)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
-            this._tcpServer = tcpServer;
+            _clusterServiceLocator = clusterServiceLocator;
+            _tcpServer = tcpServer;
         }
 
         private const string CLUSTER_PATH = "configs/WorldCluster.ini";

@@ -30,7 +30,7 @@ namespace Mangos.Cluster.Handlers
 
         public WcHandlers(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         public void IntializePacketHandlers()

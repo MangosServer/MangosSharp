@@ -40,7 +40,7 @@ namespace Mangos.Cluster.Handlers
 
         public WcHandlersAuth(ClusterServiceLocator clusterServiceLocator)
         {
-            this._clusterServiceLocator = clusterServiceLocator;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         private const int REQUIRED_BUILD_LOW = 5875; // 1.12.1

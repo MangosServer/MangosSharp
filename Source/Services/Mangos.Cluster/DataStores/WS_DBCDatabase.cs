@@ -35,8 +35,8 @@ namespace Mangos.Cluster.DataStores
 
         public WsDbcDatabase(DataStoreProvider dataStoreProvider, ClusterServiceLocator clusterServiceLocator)
         {
-            this._dataStoreProvider = dataStoreProvider;
-            this._clusterServiceLocator = clusterServiceLocator;
+            _dataStoreProvider = dataStoreProvider;
+            _clusterServiceLocator = clusterServiceLocator;
         }
 
         private readonly string _mapDbc = "Map.dbc";
