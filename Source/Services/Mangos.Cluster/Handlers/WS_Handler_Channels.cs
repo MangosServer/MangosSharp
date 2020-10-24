@@ -20,7 +20,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using Mangos.Cluster.DataStores;
 using Mangos.Cluster.Globals;
 using Mangos.Common.Enums.Channel;
 using Mangos.Common.Enums.Chat;

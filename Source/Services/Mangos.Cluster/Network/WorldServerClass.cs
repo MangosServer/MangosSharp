@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Mangos.Cluster.Globals;
-using Mangos.Cluster.Handlers;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;

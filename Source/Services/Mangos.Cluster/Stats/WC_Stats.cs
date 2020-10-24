@@ -22,7 +22,6 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Xml;
-using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
