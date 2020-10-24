@@ -22,23 +22,23 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Cluster.Network
 {
-    public class WC_Network
+    public class WcNetwork
     {
-        private readonly ClusterServiceLocator clusterServiceLocator;
+        private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WC_Network(ClusterServiceLocator clusterServiceLocator)
+        public WcNetwork(ClusterServiceLocator clusterServiceLocator)
         {
-            this.clusterServiceLocator = clusterServiceLocator;
+            this._clusterServiceLocator = clusterServiceLocator;
         }
 
-        public WorldServerClass WorldServer => clusterServiceLocator._WorldServerClass;
+        public WorldServerClass WorldServer => _clusterServiceLocator.WorldServerClass;
 
-        private readonly int LastPing = 0;
+        private readonly int _lastPing = 0;
 
         public int MsTime()
         {
             // DONE: Calculate the clusters timeGetTime("")
-            return clusterServiceLocator._NativeMethods.timeGetTime("") - LastPing;
+            return _clusterServiceLocator.NativeMethods.timeGetTime("") - _lastPing;
         }
 
         public Dictionary<uint, DateTime> LastConnections = new Dictionary<uint, DateTime>();

@@ -28,39 +28,39 @@ using Mangos.DataStores;
 
 namespace Mangos.Cluster.DataStores
 {
-    public class WS_DBCDatabase
+    public class WsDbcDatabase
     {
-        private readonly ClusterServiceLocator clusterServiceLocator;
-        private readonly DataStoreProvider dataStoreProvider;
+        private readonly ClusterServiceLocator _clusterServiceLocator;
+        private readonly DataStoreProvider _dataStoreProvider;
 
-        public WS_DBCDatabase(DataStoreProvider dataStoreProvider, ClusterServiceLocator clusterServiceLocator)
+        public WsDbcDatabase(DataStoreProvider dataStoreProvider, ClusterServiceLocator clusterServiceLocator)
         {
-            this.dataStoreProvider = dataStoreProvider;
-            this.clusterServiceLocator = clusterServiceLocator;
+            this._dataStoreProvider = dataStoreProvider;
+            this._clusterServiceLocator = clusterServiceLocator;
         }
 
-        private readonly string MapDBC = "Map.dbc";
+        private readonly string _mapDbc = "Map.dbc";
         public Dictionary<int, MapInfo> Maps = new Dictionary<int, MapInfo>();
 
         public async Task InitializeMapsAsync()
         {
             try
             {
-                var data = await dataStoreProvider.GetDataStoreAsync(MapDBC);
+                var data = await _dataStoreProvider.GetDataStoreAsync(_mapDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
                     var m = new MapInfo
                     {
-                        ID = data.ReadInt(i, 0),
+                        Id = data.ReadInt(i, 0),
                         Type = (MapTypes)data.ReadInt(i, 2),
                         Name = data.ReadString(i, 4),
                         ParentMap = data.ReadInt(i, 3),
                         ResetTime = data.ReadInt(i, 38),
                     };
-                    Maps.Add(m.ID, m);
+                    Maps.Add(m.Id, m);
                 }
 
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Maps Initialized.", data.Rows - 1);
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Maps Initialized.", data.Rows - 1);
             }
             catch (DirectoryNotFoundException)
             {
@@ -72,7 +72,7 @@ namespace Mangos.Cluster.DataStores
 
         public class MapInfo
         {
-            public int ID;
+            public int Id;
             public MapTypes Type = MapTypes.MAP_COMMON;
             public string Name = "";
             public int ParentMap = -1;
@@ -87,28 +87,28 @@ namespace Mangos.Cluster.DataStores
             public bool HasResetTime => ResetTime != 0;
         }
 
-        private readonly string WorldSafeLocsDBC = "WorldSafeLocs.dbc";
-        public Dictionary<int, TWorldSafeLoc> WorldSafeLocs = new Dictionary<int, TWorldSafeLoc>();
+        private readonly string _worldSafeLocsDbc = "WorldSafeLocs.dbc";
+        public Dictionary<int, WorldSafeLoc> WorldSafeLocs = new Dictionary<int, WorldSafeLoc>();
 
         public async Task InitializeWorldSafeLocsAsync()
         {
             try
             {
-                var data = await dataStoreProvider.GetDataStoreAsync(WorldSafeLocsDBC);
+                var data = await _dataStoreProvider.GetDataStoreAsync(_worldSafeLocsDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    var WorldSafeLoc = new TWorldSafeLoc
+                    var worldSafeLoc = new WorldSafeLoc
                     {
-                        ID = data.ReadInt(i, 0),
-                        map = (uint)data.ReadInt(i, 1),
-                        x = data.ReadFloat(i, 2),
-                        y = data.ReadFloat(i, 3),
-                        z = data.ReadFloat(i, 4),
+                        Id = data.ReadInt(i, 0),
+                        Map = (uint)data.ReadInt(i, 1),
+                        X = data.ReadFloat(i, 2),
+                        Y = data.ReadFloat(i, 3),
+                        Z = data.ReadFloat(i, 4),
                     };
-                    WorldSafeLocs.Add(WorldSafeLoc.ID, WorldSafeLoc);
+                    WorldSafeLocs.Add(worldSafeLoc.Id, worldSafeLoc);
                 }
 
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} WorldSafeLocs Initialized.", data.Rows - 1);
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} WorldSafeLocs Initialized.", data.Rows - 1);
             }
             catch (DirectoryNotFoundException)
             {
@@ -118,44 +118,44 @@ namespace Mangos.Cluster.DataStores
             }
         }
 
-        public class TWorldSafeLoc
+        public class WorldSafeLoc
         {
-            public int ID;
-            public uint map;
-            public float x;
-            public float y;
-            public float z;
+            public int Id;
+            public uint Map;
+            public float X;
+            public float Y;
+            public float Z;
         }
 
-        public Dictionary<byte, TBattleground> Battlegrounds = new Dictionary<byte, TBattleground>();
+        public Dictionary<byte, Battleground> Battlegrounds = new Dictionary<byte, Battleground>();
 
         public void InitializeBattlegrounds()
         {
-            byte Entry;
-            var MySQLQuery = new DataTable();
-            clusterServiceLocator._WorldCluster.GetWorldDatabase().Query("SELECT * FROM battleground_template", ref MySQLQuery);
-            foreach (DataRow row in MySQLQuery.Rows)
+            byte entry;
+            var mySqlQuery = new DataTable();
+            _clusterServiceLocator.WorldCluster.GetWorldDatabase().Query("SELECT * FROM battleground_template", ref mySqlQuery);
+            foreach (DataRow row in mySqlQuery.Rows)
             {
-                Entry = row.As<byte>("id");
-                Battlegrounds.Add(Entry, new TBattleground());
+                entry = row.As<byte>("id");
+                Battlegrounds.Add(entry, new Battleground());
 
                 // TODO: the MAPId needs to be located from somewhere other than the template file
                 // BUG: THIS IS AN UGLY HACK UNTIL THE ABOVE IS FIXED
                 // Battlegrounds(Entry).Map = row.Item("Map")
-                Battlegrounds[Entry].MinPlayersPerTeam = row.As<byte>("MinPlayersPerTeam");
-                Battlegrounds[Entry].MaxPlayersPerTeam = row.As<byte>("MaxPlayersPerTeam");
-                Battlegrounds[Entry].MinLevel = row.As<byte>("MinLvl");
-                Battlegrounds[Entry].MaxLevel = row.As<byte>("MaxLvl");
-                Battlegrounds[Entry].AllianceStartLoc = row.As<int>("AllianceStartLoc");
-                Battlegrounds[Entry].AllianceStartO = row.As<float>("AllianceStartO");
-                Battlegrounds[Entry].HordeStartLoc = row.As<int>("HordeStartLoc");
-                Battlegrounds[Entry].HordeStartO = row.As<float>("HordeStartO");
+                Battlegrounds[entry].MinPlayersPerTeam = row.As<byte>("MinPlayersPerTeam");
+                Battlegrounds[entry].MaxPlayersPerTeam = row.As<byte>("MaxPlayersPerTeam");
+                Battlegrounds[entry].MinLevel = row.As<byte>("MinLvl");
+                Battlegrounds[entry].MaxLevel = row.As<byte>("MaxLvl");
+                Battlegrounds[entry].AllianceStartLoc = row.As<int>("AllianceStartLoc");
+                Battlegrounds[entry].AllianceStartO = row.As<float>("AllianceStartO");
+                Battlegrounds[entry].HordeStartLoc = row.As<int>("HordeStartLoc");
+                Battlegrounds[entry].HordeStartO = row.As<float>("HordeStartO");
             }
 
-            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "World: {0} Battlegrounds Initialized.", MySQLQuery.Rows.Count);
+            _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "World: {0} Battlegrounds Initialized.", mySqlQuery.Rows.Count);
         }
 
-        public class TBattleground
+        public class Battleground
         {
             // Public Map As UInteger
             public byte MinPlayersPerTeam;
@@ -168,26 +168,26 @@ namespace Mangos.Cluster.DataStores
             public float HordeStartO;
         }
 
-        private readonly string ChatChannelsDBC = "ChatChannels.dbc";
+        private readonly string _chatChannelsDbc = "ChatChannels.dbc";
         public Dictionary<int, ChatChannelInfo> ChatChannelsInfo = new Dictionary<int, ChatChannelInfo>();
 
         public async Task InitializeChatChannelsAsync()
         {
             try
             {
-                var data = await dataStoreProvider.GetDataStoreAsync(ChatChannelsDBC);
+                var data = await _dataStoreProvider.GetDataStoreAsync(_chatChannelsDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    var ChatChannels = new ChatChannelInfo
+                    var chatChannels = new ChatChannelInfo
                     {
                         Index = data.ReadInt(i, 0),
                         Flags = data.ReadInt(i, 1),
                         Name = data.ReadString(i, 3),
                     };
-                    ChatChannelsInfo.Add(ChatChannels.Index, ChatChannels);
+                    ChatChannelsInfo.Add(chatChannels.Index, chatChannels);
                 }
 
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChatChannels Initialized.", data.Rows - 1);
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChatChannels Initialized.", data.Rows - 1);
             }
             catch (DirectoryNotFoundException)
             {
@@ -204,32 +204,32 @@ namespace Mangos.Cluster.DataStores
             public string Name;
         }
 
-        private readonly string ChrRacesDBC = "ChrRaces.dbc";
+        private readonly string _chrRacesDbc = "ChrRaces.dbc";
 
         public async Task InitializeCharRacesAsync()
         {
             try
             {
                 // Loading from DBC
-                int raceID;
-                int factionID;
+                int raceId;
+                int factionId;
                 int modelM;
                 int modelF;
-                int teamID; // 1 = Horde / 7 = Alliance
-                int cinematicID;
-                var data = await dataStoreProvider.GetDataStoreAsync(ChrRacesDBC);
+                int teamId; // 1 = Horde / 7 = Alliance
+                int cinematicId;
+                var data = await _dataStoreProvider.GetDataStoreAsync(_chrRacesDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    raceID = data.ReadInt(i, 0);
-                    factionID = data.ReadInt(i, 2);
+                    raceId = data.ReadInt(i, 0);
+                    factionId = data.ReadInt(i, 2);
                     modelM = data.ReadInt(i, 4);
                     modelF = data.ReadInt(i, 5);
-                    teamID = data.ReadInt(i, 8);
-                    cinematicID = data.ReadInt(i, 16);
-                    CharRaces[(byte)raceID] = new TCharRace((short)factionID, modelM, modelF, (byte)teamID, cinematicID);
+                    teamId = data.ReadInt(i, 8);
+                    cinematicId = data.ReadInt(i, 16);
+                    CharRaces[(byte)raceId] = new CharRace((short)factionId, modelM, modelF, (byte)teamId, cinematicId);
                 }
 
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrRace Loaded.", data.Rows - 1);
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrRace Loaded.", data.Rows - 1);
             }
             catch (DirectoryNotFoundException)
             {
@@ -239,24 +239,24 @@ namespace Mangos.Cluster.DataStores
             }
         }
 
-        private readonly string ChrClassesDBC = "ChrClasses.dbc";
+        private readonly string _chrClassesDbc = "ChrClasses.dbc";
 
         public async Task InitializeCharClassesAsync()
         {
             try
             {
                 // Loading from DBC
-                int classID;
-                int cinematicID;
-                var dataStore = await dataStoreProvider.GetDataStoreAsync(ChrClassesDBC);
+                int classId;
+                int cinematicId;
+                var dataStore = await _dataStoreProvider.GetDataStoreAsync(_chrClassesDbc);
                 for (int i = 0, loopTo = dataStore.Rows - 1; i <= loopTo; i++)
                 {
-                    classID = dataStore.ReadInt(i, 0);
-                    cinematicID = dataStore.ReadInt(i, 5); // or 14 or 15?
-                    CharClasses[(byte)classID] = new TCharClass(cinematicID);
+                    classId = dataStore.ReadInt(i, 0);
+                    cinematicId = dataStore.ReadInt(i, 5); // or 14 or 15?
+                    CharClasses[(byte)classId] = new CharClass(cinematicId);
                 }
 
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrClasses Loaded.", dataStore.Rows - 1);
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "DBC: {0} ChrClasses Loaded.", dataStore.Rows - 1);
             }
             catch (DirectoryNotFoundException)
             {
@@ -266,35 +266,35 @@ namespace Mangos.Cluster.DataStores
             }
         }
 
-        public Dictionary<int, TCharRace> CharRaces = new Dictionary<int, TCharRace>();
+        public Dictionary<int, CharRace> CharRaces = new Dictionary<int, CharRace>();
 
-        public class TCharRace
+        public class CharRace
         {
-            public short FactionID;
+            public short FactionId;
             public int ModelMale;
             public int ModelFemale;
-            public byte TeamID;
-            public int CinematicID;
+            public byte TeamId;
+            public int CinematicId;
 
-            public TCharRace(short faction, int modelM, int modelF, byte team, int cinematic)
+            public CharRace(short faction, int modelM, int modelF, byte team, int cinematic)
             {
-                FactionID = faction;
+                FactionId = faction;
                 ModelMale = modelM;
                 ModelFemale = modelF;
-                TeamID = team;
-                CinematicID = cinematic;
+                TeamId = team;
+                CinematicId = cinematic;
             }
         }
 
-        public Dictionary<int, TCharClass> CharClasses = new Dictionary<int, TCharClass>();
+        public Dictionary<int, CharClass> CharClasses = new Dictionary<int, CharClass>();
 
-        public class TCharClass
+        public class CharClass
         {
-            public int CinematicID;
+            public int CinematicId;
 
-            public TCharClass(int cinematic)
+            public CharClass(int cinematic)
             {
-                CinematicID = cinematic;
+                CinematicId = cinematic;
             }
         }
     }

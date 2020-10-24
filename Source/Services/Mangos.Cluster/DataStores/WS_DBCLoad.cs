@@ -23,13 +23,13 @@ using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster.DataStores
 {
-    public class WS_DBCLoad
+    public class WsDbcLoad
     {
-        private readonly ClusterServiceLocator clusterServiceLocator;
+        private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WS_DBCLoad(ClusterServiceLocator clusterServiceLocator)
+        public WsDbcLoad(ClusterServiceLocator clusterServiceLocator)
         {
-            this.clusterServiceLocator = clusterServiceLocator;
+            this._clusterServiceLocator = clusterServiceLocator;
         }
 
         public async Task InitializeInternalDatabaseAsync()
@@ -38,23 +38,23 @@ namespace Mangos.Cluster.DataStores
             try
             {
                 // Set all characters offline
-                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_online = 0;");
+                _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_online = 0;");
             }
             catch (Exception e)
             {
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Internal database initialization failed! [{0}]{1}{2}", e.Message, Constants.vbCrLf, e.ToString());
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "Internal database initialization failed! [{0}]{1}{2}", e.Message, Constants.vbCrLf, e.ToString());
             }
         }
 
         private async Task InitializeLoadDataStoresAsync()
         {
-            clusterServiceLocator._WS_DBCDatabase.InitializeBattlegrounds();
+            _clusterServiceLocator.WsDbcDatabase.InitializeBattlegrounds();
             await Task.WhenAll(
-                clusterServiceLocator._WS_DBCDatabase.InitializeMapsAsync(),
-                clusterServiceLocator._WS_DBCDatabase.InitializeChatChannelsAsync(),
-                clusterServiceLocator._WS_DBCDatabase.InitializeWorldSafeLocsAsync(),
-                clusterServiceLocator._WS_DBCDatabase.InitializeCharRacesAsync(),
-                clusterServiceLocator._WS_DBCDatabase.InitializeCharClassesAsync());
+                _clusterServiceLocator.WsDbcDatabase.InitializeMapsAsync(),
+                _clusterServiceLocator.WsDbcDatabase.InitializeChatChannelsAsync(),
+                _clusterServiceLocator.WsDbcDatabase.InitializeWorldSafeLocsAsync(),
+                _clusterServiceLocator.WsDbcDatabase.InitializeCharRacesAsync(),
+                _clusterServiceLocator.WsDbcDatabase.InitializeCharClassesAsync());
         }
     }
 }

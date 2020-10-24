@@ -19,7 +19,7 @@
 
 namespace Mangos.Cluster.Handlers
 {
-    public class WC_Handlers_Petition
+    public class WcHandlersPetition
     {
         // TODO: Need to code the petition handlers for guild creation
     }

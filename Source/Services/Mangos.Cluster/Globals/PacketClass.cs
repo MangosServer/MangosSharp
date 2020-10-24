@@ -127,12 +127,12 @@ namespace Mangos.Cluster.Globals
             }
             else
             {
-                var Bytes = Encoding.UTF8.GetBytes(buffer.ToCharArray());
-                Array.Resize(ref Data, Data.Length + Bytes.Length + 1);
+                var bytes = Encoding.UTF8.GetBytes(buffer.ToCharArray());
+                Array.Resize(ref Data, Data.Length + bytes.Length + 1);
                 Data[0] = (byte)((Data.Length - 2) / 256);
                 Data[1] = (byte)((Data.Length - 2) % 256);
-                for (int i = 0, loopTo = Bytes.Length - 1; i <= loopTo; i++)
-                    Data[Data.Length - 1 - Bytes.Length + i] = Bytes[i];
+                for (int i = 0, loopTo = bytes.Length - 1; i <= loopTo; i++)
+                    Data[Data.Length - 1 - bytes.Length + i] = bytes[i];
                 Data[^1] = 0;
             }
         }
@@ -164,15 +164,15 @@ namespace Mangos.Cluster.Globals
             Data[1] = (byte)((Data.Length - 2) % 256);
         }
 
-        public void AddPackGUID(ulong buffer)
+        public void AddPackGuid(ulong buffer)
         {
-            var GUID = BitConverter.GetBytes(buffer);
+            var guid = BitConverter.GetBytes(buffer);
             var flags = new BitArray(8);
             int offsetStart = Data.Length;
             int offsetNewSize = offsetStart;
             for (byte i = 0; i <= 7; i++)
             {
-                flags[i] = GUID[i] != 0;
+                flags[i] = guid[i] != 0;
                 if (flags[i])
                     offsetNewSize += 1;
             }
@@ -184,7 +184,7 @@ namespace Mangos.Cluster.Globals
             {
                 if (flags[i])
                 {
-                    Data[offsetStart] = GUID[i];
+                    Data[offsetStart] = guid[i];
                     offsetStart += 1;
                 }
             }

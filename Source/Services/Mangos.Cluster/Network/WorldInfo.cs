@@ -25,7 +25,7 @@ namespace Mangos.Cluster.Network
     {
         public int Latency;
         public DateTime Started = DateAndTime.Now;
-        public float CPUUsage;
+        public float CpuUsage;
         public ulong MemoryUsage;
     }
 }

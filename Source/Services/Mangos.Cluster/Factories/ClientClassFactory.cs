@@ -7,17 +7,17 @@ namespace Mangos.Cluster.Factories
 {
     public class ClientClassFactory : ITcpClientFactory
     {
-        private readonly ClusterServiceLocator clusterServiceLocator;
+        private readonly ClusterServiceLocator _clusterServiceLocator;
 
         public ClientClassFactory(ClusterServiceLocator clusterServiceLocator)
         {
-            this.clusterServiceLocator = clusterServiceLocator;
+            this._clusterServiceLocator = clusterServiceLocator;
         }
 
 
         public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
         {
-            var clientClass = new ClientClass(clusterServiceLocator, clientSocket);
+            var clientClass = new ClientClass(_clusterServiceLocator, clientSocket);
             await clientClass.OnConnectAsync();
             return clientClass;
         }

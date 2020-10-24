@@ -30,11 +30,11 @@ namespace Mangos.Cluster.Globals
 {
     public class Packets
     {
-        private readonly ClusterServiceLocator clusterServiceLocator;
+        private readonly ClusterServiceLocator _clusterServiceLocator;
 
         public Packets(ClusterServiceLocator clusterServiceLocator)
         {
-            this.clusterServiceLocator = clusterServiceLocator;
+            this._clusterServiceLocator = clusterServiceLocator;
         }
 
         public void DumpPacket(byte[] data, [Optional, DefaultParameterValue(null)] ClientClass client)
@@ -70,16 +70,16 @@ namespace Mangos.Cluster.Globals
                     buffer += " |" + Constants.vbCrLf;
                 }
 
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, buffer, default);
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, buffer, default);
             }
             // #End If
             catch (Exception e)
             {
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error dumping packet: {0}{1}", Constants.vbCrLf, e.ToString());
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "Error dumping packet: {0}{1}", Constants.vbCrLf, e.ToString());
             }
         }
 
-        public void LogPacket(byte[] data, bool Server, [Optional, DefaultParameterValue(null)] ClientClass client)
+        public void LogPacket(byte[] data, bool server, [Optional, DefaultParameterValue(null)] ClientClass client)
         {
             int j;
             string buffer = "";
@@ -88,26 +88,26 @@ namespace Mangos.Cluster.Globals
                 Opcodes opcode = (Opcodes)BitConverter.ToInt16(data, 2);
                 if (IgnorePacket(opcode))
                     return;
-                int StartAt = 6;
-                if (Server)
-                    StartAt = 4;
-                string TypeStr = "IN";
-                if (Server)
-                    TypeStr = "OUT";
+                int startAt = 6;
+                if (server)
+                    startAt = 4;
+                string typeStr = "IN";
+                if (server)
+                    typeStr = "OUT";
                 if (client is null)
                 {
-                    buffer += string.Format("{4} Packet: (0x{0:X4}) {1} PacketSize = {2}{3}", opcode, opcode, data.Length - StartAt, Constants.vbCrLf, TypeStr);
+                    buffer += string.Format("{4} Packet: (0x{0:X4}) {1} PacketSize = {2}{3}", opcode, opcode, data.Length - startAt, Constants.vbCrLf, typeStr);
                 }
                 else
                 {
-                    buffer += string.Format("[{0}:{1}] {6} Packet: (0x{2:X4}) {3} PacketSize = {4}{5}", client.IP, client.Port, opcode, opcode, data.Length - StartAt, Constants.vbCrLf, TypeStr);
+                    buffer += string.Format("[{0}:{1}] {6} Packet: (0x{2:X4}) {3} PacketSize = {4}{5}", client.IP, client.Port, opcode, opcode, data.Length - startAt, Constants.vbCrLf, typeStr);
                 }
 
                 buffer += "|------------------------------------------------|----------------|" + Constants.vbCrLf;
                 buffer += "|00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F |0123456789ABCDEF|" + Constants.vbCrLf;
                 buffer += "|------------------------------------------------|----------------|" + Constants.vbCrLf;
                 var loopTo = data.Length - 1;
-                for (j = StartAt; j <= loopTo; j += 16)
+                for (j = startAt; j <= loopTo; j += 16)
                 {
                     if (j + 16 > data.Length)
                     {

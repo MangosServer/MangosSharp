@@ -23,18 +23,18 @@ using Mangos.Common.Legacy;
 
 namespace Mangos.Cluster.Handlers.Guild
 {
-    public partial class WC_Guild
+    public partial class WcGuild
     {
         public class Guild : IDisposable
         {
-            private readonly ClusterServiceLocator clusterServiceLocator;
+            private readonly ClusterServiceLocator _clusterServiceLocator;
 
             public Guild(ClusterServiceLocator clusterServiceLocator)
             {
-                this.clusterServiceLocator = clusterServiceLocator;
+                this._clusterServiceLocator = clusterServiceLocator;
             }
 
-            public uint ID;
+            public uint Id;
             public string Name;
             public ulong Leader;
             public string Motd;
@@ -47,17 +47,17 @@ namespace Mangos.Cluster.Handlers.Guild
             public byte BorderStyle;
             public byte BorderColor;
             public byte BackgroundColor;
-            public short cYear;
-            public byte cMonth;
-            public byte cDay;
+            public short CYear;
+            public byte CMonth;
+            public byte CDay;
 
             public Guild(uint guildId)
             {
-                ID = guildId;
+                Id = guildId;
                 var mySqlQuery = new DataTable();
-                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT * FROM guilds WHERE guild_id = " + ID + ";", ref mySqlQuery);
+                _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT * FROM guilds WHERE guild_id = " + Id + ";", ref mySqlQuery);
                 if (mySqlQuery.Rows.Count == 0)
-                    throw new ApplicationException("GuildID " + ID + " not found in database.");
+                    throw new ApplicationException("GuildID " + Id + " not found in database.");
                 var guildInfo = mySqlQuery.Rows[0];
                 Name = guildInfo.As<string>("guild_name");
                 Leader = guildInfo.As<ulong>("guild_leader");
@@ -67,9 +67,9 @@ namespace Mangos.Cluster.Handlers.Guild
                 BorderStyle = guildInfo.As<byte>("guild_tBorderStyle");
                 BorderColor = guildInfo.As<byte>("guild_tBorderColor");
                 BackgroundColor = guildInfo.As<byte>("guild_tBackgroundColor");
-                cYear = guildInfo.As<short>("guild_cYear");
-                cMonth = guildInfo.As<byte>("guild_cMonth");
-                cDay = guildInfo.As<byte>("guild_cDay");
+                CYear = guildInfo.As<short>("guild_cYear");
+                CMonth = guildInfo.As<byte>("guild_cMonth");
+                CDay = guildInfo.As<byte>("guild_cDay");
                 for (int i = 0; i <= 9; i++)
                 {
                     Ranks[i] = guildInfo.As<string>("guild_rank" + i);
@@ -77,10 +77,10 @@ namespace Mangos.Cluster.Handlers.Guild
                 }
 
                 mySqlQuery.Clear();
-                clusterServiceLocator._WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_guildId = " + ID + ";", ref mySqlQuery);
+                _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_guildId = " + Id + ";", ref mySqlQuery);
                 foreach (DataRow memberInfo in mySqlQuery.Rows)
                     Members.Add(guildInfo.As<ulong>("char_guid"));
-                clusterServiceLocator._WC_Guild.GUILDs.Add(ID, this);
+                _clusterServiceLocator.WcGuild.GuilDs.Add(Id, this);
             }
 
             /* TODO ERROR: Skipped RegionDirectiveTrivia */
@@ -93,7 +93,7 @@ namespace Mangos.Cluster.Handlers.Guild
                 {
                     // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
                     // TODO: set large fields to null.
-                    clusterServiceLocator._WC_Guild.GUILDs.Remove(ID);
+                    _clusterServiceLocator.WcGuild.GuilDs.Remove(Id);
                 }
 
                 _disposedValue = true;

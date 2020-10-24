@@ -31,50 +31,50 @@ using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster.Stats
 {
-    public class WC_Stats
+    public class WcStats
     {
-        private readonly ClusterServiceLocator clusterServiceLocator;
+        private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WC_Stats(ClusterServiceLocator clusterServiceLocator)
+        public WcStats(ClusterServiceLocator clusterServiceLocator)
         {
-            this.clusterServiceLocator = clusterServiceLocator;
+            this._clusterServiceLocator = clusterServiceLocator;
         }
 
         // http://www.15seconds.com/issue/050615.htm
 
-        private int ConnectionsHandled;
-        private int ConnectionsPeak;
-        private int ConnectionsCurrent;
+        private int _connectionsHandled;
+        private int _connectionsPeak;
+        private int _connectionsCurrent;
 
         public void ConnectionsIncrement()
         {
-            Interlocked.Increment(ref ConnectionsHandled);
-            if (Interlocked.Increment(ref ConnectionsCurrent) > ConnectionsPeak)
+            Interlocked.Increment(ref _connectionsHandled);
+            if (Interlocked.Increment(ref _connectionsCurrent) > _connectionsPeak)
             {
-                ConnectionsPeak = ConnectionsCurrent;
+                _connectionsPeak = _connectionsCurrent;
             }
         }
 
         public void ConnectionsDecrement()
         {
-            Interlocked.Decrement(ref ConnectionsCurrent);
+            Interlocked.Decrement(ref _connectionsCurrent);
         }
 
         public long DataTransferOut = 0L;
         public long DataTransferIn = 0L;
-        private int ThreadsWorker;
-        private int ThreadsComletion;
-        private DateTime LastCheck = DateAndTime.Now;
-        private double LastCPUTime;
-        private TimeSpan Uptime;
-        private long Latency;
-        private float UsageCPU;
-        private long UsageMemory;
-        private int CountPlayers;
-        private int CountPlayersAlliance;
-        private int CountPlayersHorde;
-        private int CountGMs;
-        private readonly Dictionary<WorldInfo, List<string>> w = new Dictionary<WorldInfo, List<string>>();
+        private int _threadsWorker;
+        private int _threadsComletion;
+        private DateTime _lastCheck = DateAndTime.Now;
+        private double _lastCpuTime;
+        private TimeSpan _uptime;
+        private long _latency;
+        private float _usageCpu;
+        private long _usageMemory;
+        private int _countPlayers;
+        private int _countPlayersAlliance;
+        private int _countPlayersHorde;
+        private int _countGMs;
+        private readonly Dictionary<WorldInfo, List<string>> _w = new Dictionary<WorldInfo, List<string>>();
 
         private string FormatUptime(TimeSpan time)
         {
@@ -83,68 +83,68 @@ namespace Mangos.Cluster.Stats
 
         public void CheckCpu(object state)
         {
-            var timeSinceLastCheck = DateAndTime.Now.Subtract(LastCheck);
-            UsageCPU = (float)((Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds - LastCPUTime) / timeSinceLastCheck.TotalMilliseconds * 100d);
-            LastCheck = DateAndTime.Now;
-            LastCPUTime = Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds;
+            var timeSinceLastCheck = DateAndTime.Now.Subtract(_lastCheck);
+            _usageCpu = (float)((Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds - _lastCpuTime) / timeSinceLastCheck.TotalMilliseconds * 100d);
+            _lastCheck = DateAndTime.Now;
+            _lastCpuTime = Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds;
         }
 
         private void PrepareStats()
         {
-            Uptime = DateAndTime.Now.Subtract(Process.GetCurrentProcess().StartTime);
-            ThreadPool.GetAvailableThreads(out ThreadsWorker, out ThreadsComletion);
-            UsageMemory = (long)(Process.GetCurrentProcess().WorkingSet64 / (double)(1024 * 1024));
-            CountPlayers = 0;
-            CountPlayersHorde = 0;
-            CountPlayersAlliance = 0;
-            CountGMs = 0;
-            Latency = 0L;
-            clusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireReaderLock(clusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in clusterServiceLocator._WorldCluster.CHARACTERs)
+            _uptime = DateAndTime.Now.Subtract(Process.GetCurrentProcess().StartTime);
+            ThreadPool.GetAvailableThreads(out _threadsWorker, out _threadsComletion);
+            _usageMemory = (long)(Process.GetCurrentProcess().WorkingSet64 / (double)(1024 * 1024));
+            _countPlayers = 0;
+            _countPlayersHorde = 0;
+            _countPlayersAlliance = 0;
+            _countGMs = 0;
+            _latency = 0L;
+            _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (objCharacter.Value.IsInWorld)
                 {
-                    CountPlayers += 1;
+                    _countPlayers += 1;
                     if (objCharacter.Value.Race == Races.RACE_ORC || objCharacter.Value.Race == Races.RACE_TAUREN || objCharacter.Value.Race == Races.RACE_TROLL || objCharacter.Value.Race == Races.RACE_UNDEAD)
                     {
-                        CountPlayersHorde += 1;
+                        _countPlayersHorde += 1;
                     }
                     else
                     {
-                        CountPlayersAlliance += 1;
+                        _countPlayersAlliance += 1;
                     }
 
                     if (objCharacter.Value.Access > AccessLevel.Player)
-                        CountGMs += 1;
-                    Latency += objCharacter.Value.Latency;
+                        _countGMs += 1;
+                    _latency += objCharacter.Value.Latency;
                 }
             }
 
-            clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
-            if (CountPlayers > 1)
+            _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
+            if (_countPlayers > 1)
             {
-                Latency /= CountPlayers;
+                _latency /= _countPlayers;
             }
 
-            foreach (KeyValuePair<uint, WorldInfo> objCharacter in clusterServiceLocator._WC_Network.WorldServer.WorldsInfo)
+            foreach (KeyValuePair<uint, WorldInfo> objCharacter in _clusterServiceLocator.WcNetwork.WorldServer.WorldsInfo)
             {
                 if (!Information.IsNothing(objCharacter.Value))
                 {
-                    if (!w.ContainsKey(objCharacter.Value))
+                    if (!_w.ContainsKey(objCharacter.Value))
                     {
-                        w.Add(objCharacter.Value, new List<string>());
+                        _w.Add(objCharacter.Value, new List<string>());
                     }
 
-                    w[objCharacter.Value].Add(objCharacter.Key.ToString());
+                    _w[objCharacter.Value].Add(objCharacter.Key.ToString());
                 }
             }
         }
 
         public void GenerateStats(object state)
         {
-            clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.DEBUG, "Generating stats");
+            _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "Generating stats");
             PrepareStats();
-            var f = XmlWriter.Create(clusterServiceLocator._WorldCluster.GetConfig().StatsLocation);
+            var f = XmlWriter.Create(_clusterServiceLocator.WorldCluster.GetConfig().StatsLocation);
             f.WriteStartDocument(true);
             f.WriteComment("generated at " + DateTime.Now.ToString("hh:mm:ss"));
             // <?xml-stylesheet type="text/xsl" href="stats.xsl"?>
@@ -158,37 +158,37 @@ namespace Mangos.Cluster.Stats
             f.WriteValue(string.Format("mangosVB rev{0}", Assembly.GetExecutingAssembly().GetName().Version));
             f.WriteEndElement();
             f.WriteStartElement("uptime");
-            f.WriteValue(FormatUptime(Uptime));
+            f.WriteValue(FormatUptime(_uptime));
             f.WriteEndElement();
             f.WriteStartElement("onlineplayers");
-            f.WriteValue(CountPlayers);
+            f.WriteValue(_countPlayers);
             f.WriteEndElement();
             f.WriteStartElement("gmcount");
-            f.WriteValue(CountGMs);
+            f.WriteValue(_countGMs);
             f.WriteEndElement();
             f.WriteStartElement("alliance");
-            f.WriteValue(CountPlayersAlliance);
+            f.WriteValue(_countPlayersAlliance);
             f.WriteEndElement();
             f.WriteStartElement("horde");
-            f.WriteValue(CountPlayersHorde);
+            f.WriteValue(_countPlayersHorde);
             f.WriteEndElement();
             f.WriteStartElement("cpu");
-            f.WriteValue(Strings.Format(UsageCPU, "0.00"));
+            f.WriteValue(Strings.Format(_usageCpu, "0.00"));
             f.WriteEndElement();
             f.WriteStartElement("ram");
-            f.WriteValue(UsageMemory);
+            f.WriteValue(_usageMemory);
             f.WriteEndElement();
             f.WriteStartElement("latency");
-            f.WriteValue(Latency);
+            f.WriteValue(_latency);
             f.WriteEndElement();
             f.WriteStartElement("connaccepted");
-            f.WriteValue(ConnectionsHandled);
+            f.WriteValue(_connectionsHandled);
             f.WriteEndElement();
             f.WriteStartElement("connpeak");
-            f.WriteValue(ConnectionsPeak);
+            f.WriteValue(_connectionsPeak);
             f.WriteEndElement();
             f.WriteStartElement("conncurrent");
-            f.WriteValue(ConnectionsCurrent);
+            f.WriteValue(_connectionsCurrent);
             f.WriteEndElement();
             f.WriteStartElement("networkin");
             f.WriteValue(DataTransferIn);
@@ -197,10 +197,10 @@ namespace Mangos.Cluster.Stats
             f.WriteValue(DataTransferOut);
             f.WriteEndElement();
             f.WriteStartElement("threadsw");
-            f.WriteValue(ThreadsWorker);
+            f.WriteValue(_threadsWorker);
             f.WriteEndElement();
             f.WriteStartElement("threadsc");
-            f.WriteValue(ThreadsComletion);
+            f.WriteValue(_threadsComletion);
             f.WriteEndElement();
             f.WriteStartElement("lastupdate");
             f.WriteValue(DateAndTime.Now.ToString());
@@ -213,7 +213,7 @@ namespace Mangos.Cluster.Stats
             f.WriteStartElement("world");
             try
             {
-                foreach (KeyValuePair<WorldInfo, List<string>> objCharacter in w)
+                foreach (KeyValuePair<WorldInfo, List<string>> objCharacter in _w)
                 {
                     f.WriteStartElement("instance");
                     f.WriteStartElement("uptime");
@@ -226,7 +226,7 @@ namespace Mangos.Cluster.Stats
                     f.WriteValue(Strings.Join(objCharacter.Value.ToArray(), ", "));
                     f.WriteEndElement();
                     f.WriteStartElement("cpu");
-                    f.WriteValue(Strings.Format(objCharacter.Key.CPUUsage, "0.00"));
+                    f.WriteValue(Strings.Format(objCharacter.Key.CpuUsage, "0.00"));
                     f.WriteEndElement();
                     f.WriteStartElement("ram");
                     f.WriteValue((decimal)objCharacter.Key.MemoryUsage);
@@ -239,13 +239,13 @@ namespace Mangos.Cluster.Stats
             }
             catch (Exception ex)
             {
-                clusterServiceLocator._WorldCluster.Log.WriteLine(LogType.FAILED, "Error while generating stats file: {0}", ex.ToString());
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "Error while generating stats file: {0}", ex.ToString());
             }
             // </world>
             f.WriteEndElement();
-            clusterServiceLocator._WorldCluster.CHARACTERs_Lock.AcquireReaderLock(clusterServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+            _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
             f.WriteStartElement("users");
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in clusterServiceLocator._WorldCluster.CHARACTERs)
+            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (objCharacter.Value.IsInWorld && objCharacter.Value.Access >= AccessLevel.GameMaster)
                 {
@@ -262,7 +262,7 @@ namespace Mangos.Cluster.Stats
 
             f.WriteEndElement();
             f.WriteStartElement("sessions");
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in clusterServiceLocator._WorldCluster.CHARACTERs)
+            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (objCharacter.Value.IsInWorld)
                 {
@@ -296,13 +296,13 @@ namespace Mangos.Cluster.Stats
             }
 
             f.WriteEndElement();
-            clusterServiceLocator._WorldCluster.CHARACTERs_Lock.ReleaseReaderLock();
+            _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
 
             // </server>
             f.WriteEndElement();
             f.WriteEndDocument();
             f.Close();
-            w.Clear();
+            _w.Clear();
         }
     }
 }
