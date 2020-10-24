@@ -97,7 +97,7 @@ namespace Mangos.Cluster.Handlers.Guild
 
             // DONE: Send message to everyone
             var tmpArray = sender.Guild.Members.ToArray();
-            foreach (ulong member in tmpArray)
+            foreach (var member in tmpArray)
             {
                 if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(member))
                 {
@@ -132,7 +132,7 @@ namespace Mangos.Cluster.Handlers.Guild
 
             // DONE: Send message to everyone
             var tmpArray = sender.Guild.Members.ToArray();
-            foreach (ulong member in tmpArray)
+            foreach (var member in tmpArray)
             {
                 if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(member))
                 {
@@ -162,7 +162,7 @@ namespace Mangos.Cluster.Handlers.Guild
             var response = new PacketClass(Opcodes.SMSG_GUILD_QUERY_RESPONSE);
             response.AddUInt32(guildId);
             response.AddString(GuilDs[guildId].Name);
-            for (int i = 0; i <= 9; i++)
+            for (var i = 0; i <= 9; i++)
                 response.AddString(GuilDs[guildId].Ranks[i]);
             response.AddInt32(GuilDs[guildId].EmblemStyle);
             response.AddInt32(GuilDs[guildId].EmblemColor);
@@ -181,7 +181,7 @@ namespace Mangos.Cluster.Handlers.Guild
 
             // DONE: Count the ranks
             byte guildRanksCount = 0;
-            for (int i = 0; i <= 9; i++)
+            for (var i = 0; i <= 9; i++)
             {
                 if (!string.IsNullOrEmpty(objCharacter.Guild.Ranks[i]))
                     guildRanksCount = (byte)(guildRanksCount + 1);
@@ -195,7 +195,7 @@ namespace Mangos.Cluster.Handlers.Guild
             response.AddString(objCharacter.Guild.Motd);
             response.AddString(objCharacter.Guild.Info);
             response.AddInt32(guildRanksCount);
-            for (int i = 0; i <= 9; i++)
+            for (var i = 0; i <= 9; i++)
             {
                 if (!string.IsNullOrEmpty(objCharacter.Guild.Ranks[i]))
                 {
@@ -203,7 +203,7 @@ namespace Mangos.Cluster.Handlers.Guild
                 }
             }
 
-            bool officer = objCharacter.IsGuildRightSet(GuildRankRights.GR_RIGHT_VIEWOFFNOTE);
+            var officer = objCharacter.IsGuildRightSet(GuildRankRights.GR_RIGHT_VIEWOFFNOTE);
             for (int i = 0, loopTo = members.Rows.Count - 1; i <= loopTo; i++)
             {
                 if (members.Rows[i].As<byte>("char_online") == 1)
@@ -236,7 +236,7 @@ namespace Mangos.Cluster.Handlers.Guild
                     response.AddInt32(members.Rows[i].As<int>("char_zone_id"));
                     // 0 = < 1 hour / 0.1 = 2.4 hours / 1 = 24 hours (1 day)
                     // (Time logged out / 86400) = Days offline
-                    float daysOffline = (float)((_clusterServiceLocator.Functions.GetTimestamp(DateAndTime.Now) - members.Rows[i].As<uint>("char_logouttime")) / (double)DateInterval.Day);
+                    var daysOffline = (float)((_clusterServiceLocator.Functions.GetTimestamp(DateAndTime.Now) - members.Rows[i].As<uint>("char_logouttime")) / (double)DateInterval.Day);
                     response.AddSingle(daysOffline); // Days offline
                     response.AddString(members.Rows[i].As<string>("char_guildPNote"));
                     if (officer)
@@ -282,7 +282,7 @@ namespace Mangos.Cluster.Handlers.Guild
         public void BroadcastToGuild(PacketClass packet, Guild guild, [Optional, DefaultParameterValue(0UL)] ulong notTo)
         {
             var tmpArray = guild.Members.ToArray();
-            foreach (ulong member in tmpArray)
+            foreach (var member in tmpArray)
             {
                 if (member == notTo)
                     continue;

@@ -70,7 +70,7 @@ namespace Mangos.Cluster.Handlers.Guild
                 CYear = guildInfo.As<short>("guild_cYear");
                 CMonth = guildInfo.As<byte>("guild_cMonth");
                 CDay = guildInfo.As<byte>("guild_cDay");
-                for (int i = 0; i <= 9; i++)
+                for (var i = 0; i <= 9; i++)
                 {
                     Ranks[i] = guildInfo.As<string>("guild_rank" + i);
                     RankRights[i] = guildInfo.As<uint>("guild_rank" + i + "_Rights");

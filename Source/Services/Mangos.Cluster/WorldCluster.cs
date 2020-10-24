@@ -270,12 +270,12 @@ namespace Mangos.Cluster
         public async Task StartAsync()
         {
             Console.BackgroundColor = ConsoleColor.Black;
-            AssemblyTitleAttribute assemblyTitleAttribute = (AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false)[0];
+            var assemblyTitleAttribute = (AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false)[0];
             Console.Title = $"{assemblyTitleAttribute.Title} v{Assembly.GetExecutingAssembly().GetName().Version}";
             Console.ForegroundColor = ConsoleColor.Yellow;
-            AssemblyProductAttribute assemblyProductAttribute = (AssemblyProductAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false)[0];
+            var assemblyProductAttribute = (AssemblyProductAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false)[0];
             Console.WriteLine("{0}", assemblyProductAttribute.Product);
-            AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0];
+            var assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0];
             Console.WriteLine(assemblyCopyrightAttribute.Copyright);
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -288,7 +288,7 @@ namespace Mangos.Cluster
             Console.WriteLine("");
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.ForegroundColor = ConsoleColor.White;
-            AssemblyTitleAttribute assemblyTitleAttribute1 = (AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false)[0];
+            var assemblyTitleAttribute1 = (AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false)[0];
             Console.WriteLine(assemblyTitleAttribute1.Title);
             Console.WriteLine("version {0}", Assembly.GetExecutingAssembly().GetName().Version);
             Console.ForegroundColor = ConsoleColor.White;
@@ -397,7 +397,7 @@ namespace Mangos.Cluster
 
         public void WaitConsoleCommand()
         {
-            string tmp = "";
+            var tmp = "";
             string[] commandList;
             string[] cmds;
             var cmd = Array.Empty<string>();
@@ -466,7 +466,7 @@ namespace Mangos.Cluster
 
         private void GenericExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception ex = (Exception)e.ExceptionObject;
+            var ex = (Exception)e.ExceptionObject;
             Log.WriteLine(LogType.CRITICAL, ex + Constants.vbCrLf);
             Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'WorldCluster-Error-yyyy-mmm-d-h-mm.log' file has been created. Check your log folder for more information.");
             TextWriter tw;

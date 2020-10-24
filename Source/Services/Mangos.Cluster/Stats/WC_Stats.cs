@@ -100,7 +100,7 @@ namespace Mangos.Cluster.Stats
             _countGMs = 0;
             _latency = 0L;
             _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
+            foreach (var objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (objCharacter.Value.IsInWorld)
                 {
@@ -126,7 +126,7 @@ namespace Mangos.Cluster.Stats
                 _latency /= _countPlayers;
             }
 
-            foreach (KeyValuePair<uint, WorldInfo> objCharacter in _clusterServiceLocator.WcNetwork.WorldServer.WorldsInfo)
+            foreach (var objCharacter in _clusterServiceLocator.WcNetwork.WorldServer.WorldsInfo)
             {
                 if (!Information.IsNothing(objCharacter.Value))
                 {
@@ -213,7 +213,7 @@ namespace Mangos.Cluster.Stats
             f.WriteStartElement("world");
             try
             {
-                foreach (KeyValuePair<WorldInfo, List<string>> objCharacter in _w)
+                foreach (var objCharacter in _w)
                 {
                     f.WriteStartElement("instance");
                     f.WriteStartElement("uptime");
@@ -245,7 +245,7 @@ namespace Mangos.Cluster.Stats
             f.WriteEndElement();
             _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
             f.WriteStartElement("users");
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
+            foreach (var objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (objCharacter.Value.IsInWorld && objCharacter.Value.Access >= AccessLevel.GameMaster)
                 {
@@ -262,7 +262,7 @@ namespace Mangos.Cluster.Stats
 
             f.WriteEndElement();
             f.WriteStartElement("sessions");
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
+            foreach (var objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (objCharacter.Value.IsInWorld)
                 {

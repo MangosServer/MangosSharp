@@ -199,7 +199,7 @@ namespace Mangos.Cluster.Handlers
             public void NewLeader(WcHandlerCharacter.CharacterObject leaver = null)
             {
                 byte chosenMember = 255;
-                bool newLootMaster = false;
+                var newLootMaster = false;
                 for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
                 {
                     if (Members[i] is object && Members[i].Client is object)
@@ -374,14 +374,14 @@ namespace Mangos.Cluster.Handlers
 
             public void SendGroupList()
             {
-                byte groupCount = GetMembersCount();
+                var groupCount = GetMembersCount();
                 for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
                 {
                     if (Members[i] is object)
                     {
                         var packet = new PacketClass(Opcodes.SMSG_GROUP_LIST);
                         packet.AddInt8((byte)Type);                                    // GroupType 0:Party 1:Raid
-                        byte memberFlags = (byte)(i / _clusterServiceLocator.GlobalConstants.GROUP_SUBGROUPSIZE);
+                        var memberFlags = (byte)(i / _clusterServiceLocator.GlobalConstants.GROUP_SUBGROUPSIZE);
                         // If Members(i).GroupAssistant Then MemberFlags = MemberFlags Or &H1
                         packet.AddInt8(memberFlags);
                         packet.AddInt32(groupCount - 1);
@@ -443,7 +443,7 @@ namespace Mangos.Cluster.Handlers
 
             var response = new PacketClass(Opcodes.SMSG_RAID_INSTANCE_INFO);
             response.AddInt32(q.Rows.Count);                                 // Instances Counts
-            int i = 0;
+            var i = 0;
             foreach (DataRow r in q.Rows)
             {
                 response.AddUInt32(Conversions.ToUInteger(r["map"]));                               // MapID
@@ -472,11 +472,11 @@ namespace Mangos.Cluster.Handlers
             if (packet.Data.Length - 1 < 6)
                 return;
             packet.GetInt16();
-            string name = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
+            var name = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_INVITE [{2}]", client.IP, client.Port, name);
-            ulong guid = 0UL;
+            var guid = 0UL;
             _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> character in _clusterServiceLocator.WorldCluster.CharacteRs)
+            foreach (var character in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(character.Value.Name) == _clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(name))
                 {
@@ -486,7 +486,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
-            PartyCommandResult errCode = PartyCommandResult.INVITE_OK;
+            var errCode = PartyCommandResult.INVITE_OK;
             // TODO: InBattlegrounds: INVITE_RESTRICTED
             if (guid == 0m)
             {
@@ -603,11 +603,11 @@ namespace Mangos.Cluster.Handlers
             if (packet.Data.Length - 1 < 6)
                 return;
             packet.GetInt16();
-            string name = packet.GetString();
+            var name = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_UNINVITE [{2}]", client.IP, client.Port, name);
-            ulong guid = 0UL;
+            var guid = 0UL;
             _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> character in _clusterServiceLocator.WorldCluster.CharacteRs)
+            foreach (var character in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(character.Value.Name) == _clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(name))
                 {
@@ -641,7 +641,7 @@ namespace Mangos.Cluster.Handlers
             if (packet.Data.Length - 1 < 13)
                 return;
             packet.GetInt16();
-            ulong guid = packet.GetUInt64();
+            var guid = packet.GetUInt64();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_UNINVITE_GUID [0x{2:X}]", client.IP, client.Port, guid);
 
             // TODO: InBattlegrounds: INVITE_RESTRICTED
@@ -671,9 +671,9 @@ namespace Mangos.Cluster.Handlers
             if (packet.Data.Length - 1 < 6)
                 return;
             packet.GetInt16();
-            string name = packet.GetString();
+            var name = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_SET_LEADER [Name={2}]", client.IP, client.Port, name);
-            ulong guid = _clusterServiceLocator.WcHandlerCharacter.GetCharacterGuidByName(name);
+            var guid = _clusterServiceLocator.WcHandlerCharacter.GetCharacterGuidByName(name);
             if (guid == 0m)
             {
                 SendPartyResult(client, "", PartyCommand.PARTY_OP_INVITE, PartyCommandResult.INVITE_NOT_FOUND);
@@ -712,10 +712,10 @@ namespace Mangos.Cluster.Handlers
             if (packet.Data.Length - 1 < 6)
                 return;
             packet.GetInt16();
-            string name = packet.GetString();
+            var name = packet.GetString();
             if (packet.Data.Length - 1 < 6 + name.Length + 1)
                 return;
-            byte subGroup = packet.GetInt8();
+            var subGroup = packet.GetInt8();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_CHANGE_SUB_GROUP [{2}:{3}]", client.IP, client.Port, name, subGroup);
             if (client.Character.IsInGroup)
             {
@@ -749,10 +749,10 @@ namespace Mangos.Cluster.Handlers
             if (packet.Data.Length - 1 < 6)
                 return;
             packet.GetInt16();
-            string name1 = packet.GetString();
+            var name1 = packet.GetString();
             if (packet.Data.Length - 1 < 6 + name1.Length + 1)
                 return;
-            string name2 = packet.GetString();
+            var name2 = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_SWAP_SUB_GROUP [{2}:{3}]", client.IP, client.Port, name1, name2);
             if (client.Character.IsInGroup)
             {
@@ -794,9 +794,9 @@ namespace Mangos.Cluster.Handlers
             if (packet.Data.Length - 1 < 21)
                 return;
             packet.GetInt16();
-            int method = packet.GetInt32();
-            ulong master = packet.GetUInt64();
-            int threshold = packet.GetInt32();
+            var method = packet.GetInt32();
+            var master = packet.GetUInt64();
+            var threshold = packet.GetInt32();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT_METHOD [Method={2}, Master=0x{3:X}, Threshold={4}]", client.IP, client.Port, method, master, threshold);
             if (!client.Character.IsGroupLeader)
             {
@@ -813,8 +813,8 @@ namespace Mangos.Cluster.Handlers
         public void On_MSG_MINIMAP_PING(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            float x = packet.GetFloat();
-            float y = packet.GetFloat();
+            var x = packet.GetFloat();
+            var y = packet.GetFloat();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_MINIMAP_PING [{2}:{3}]", client.IP, client.Port, x, y);
             if (client.Character.IsInGroup)
             {
@@ -832,8 +832,8 @@ namespace Mangos.Cluster.Handlers
             if (packet.Data.Length - 1 < 13)
                 return;
             packet.GetInt16();
-            int minRoll = packet.GetInt32();
-            int maxRoll = packet.GetInt32();
+            var minRoll = packet.GetInt32();
+            var maxRoll = packet.GetInt32();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_RANDOM_ROLL [min={2} max={3}]", client.IP, client.Port, minRoll, maxRoll);
             var response = new PacketClass(Opcodes.MSG_RANDOM_ROLL);
             response.AddInt32(minRoll);
@@ -864,7 +864,7 @@ namespace Mangos.Cluster.Handlers
                 if (packet.Data.Length - 1 < 6)
                     return;
                 packet.GetInt16();
-                byte result = packet.GetInt8();
+                var result = packet.GetInt8();
                 if (result == 0)
                 {
                     // DONE: Not ready
@@ -888,7 +888,7 @@ namespace Mangos.Cluster.Handlers
             if (client.Character.Group is null)
                 return;
             packet.GetInt16();
-            byte icon = packet.GetInt8();
+            var icon = packet.GetInt8();
             if (icon == 255)
             {
                 // DONE: Send icon target list
@@ -911,7 +911,7 @@ namespace Mangos.Cluster.Handlers
                     return; // Not a valid icon
                 if (packet.Data.Length < 15)
                     return; // Too short packet
-                ulong guid = packet.GetUInt64();
+                var guid = packet.GetUInt64();
 
                 // DONE: Set the raid icon target
                 client.Character.Group.TargetIcons[icon] = guid;
@@ -929,7 +929,7 @@ namespace Mangos.Cluster.Handlers
             if (packet.Data.Length - 1 < 13)
                 return;
             packet.GetInt16();
-            ulong guid = packet.GetUInt64();
+            var guid = packet.GetUInt64();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_REQUEST_PARTY_MEMBER_STATS [{2:X}]", client.IP, client.Port, guid);
             if (!_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(guid))
             {

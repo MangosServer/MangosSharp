@@ -65,7 +65,7 @@ namespace Mangos.Cluster.Handlers
                 smsgFriendList.AddInt8((byte)q.Rows.Count);
                 foreach (DataRow row in q.Rows)
                 {
-                    ulong guid = row.As<ulong>("friend");
+                    var guid = row.As<ulong>("friend");
                     smsgFriendList.AddUInt64(guid);                    // Player GUID
                     if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(guid) && _clusterServiceLocator.WorldCluster.CharacteRs[guid].IsInWorld)
                     {
@@ -137,7 +137,7 @@ namespace Mangos.Cluster.Handlers
             friendpacket.AddUInt64(objCharacter.Guid);
             foreach (DataRow row in q.Rows)
             {
-                ulong guid = row.As<ulong>("guid");
+                var guid = row.As<ulong>("guid");
                 if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(guid) && _clusterServiceLocator.WorldCluster.CharacteRs[guid].Client is object)
                 {
                     _clusterServiceLocator.WorldCluster.CharacteRs[guid].Client.SendMultiplyPackets(friendpacket);
@@ -152,19 +152,19 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_WHO(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            uint levelMinimum = packet.GetUInt32();       // 0
-            uint levelMaximum = packet.GetUInt32();       // 100
-            string namePlayer = _clusterServiceLocator.Functions.EscapeString(packet.GetString());
-            string nameGuild = _clusterServiceLocator.Functions.EscapeString(packet.GetString());
-            uint maskRace = packet.GetUInt32();
-            uint maskClass = packet.GetUInt32();
-            uint zonesCount = packet.GetUInt32();         // Limited to 10
+            var levelMinimum = packet.GetUInt32();       // 0
+            var levelMaximum = packet.GetUInt32();       // 100
+            var namePlayer = _clusterServiceLocator.Functions.EscapeString(packet.GetString());
+            var nameGuild = _clusterServiceLocator.Functions.EscapeString(packet.GetString());
+            var maskRace = packet.GetUInt32();
+            var maskClass = packet.GetUInt32();
+            var zonesCount = packet.GetUInt32();         // Limited to 10
             if (zonesCount > 10L)
                 return;
             var zones = new List<uint>();
             for (int i = 1, loopTo = (int)zonesCount; i <= loopTo; i++)
                 zones.Add(packet.GetUInt32());
-            uint stringsCount = packet.GetUInt32();         // Limited to 4
+            var stringsCount = packet.GetUInt32();         // Limited to 4
             if (stringsCount > 4L)
                 return;
             var strings = new List<string>();
@@ -175,7 +175,7 @@ namespace Mangos.Cluster.Handlers
             // TODO: Don't show GMs?
             var results = new List<ulong>();
             _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
+            foreach (var objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (!objCharacter.Value.IsInWorld)
                     continue;
@@ -193,8 +193,8 @@ namespace Mangos.Cluster.Handlers
                     continue;
                 if (stringsCount > 0L)
                 {
-                    bool passedStrings = true;
-                    foreach (string stringValue in strings)
+                    var passedStrings = true;
+                    foreach (var stringValue in strings)
                     {
                         if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(objCharacter.Value.Name).IndexOf(stringValue, StringComparison.Ordinal) != -1)
                             continue;
@@ -222,7 +222,7 @@ namespace Mangos.Cluster.Handlers
             var response = new PacketClass(Opcodes.SMSG_WHO);
             response.AddInt32(results.Count);
             response.AddInt32(results.Count);
-            foreach (ulong guid in results)
+            foreach (var guid in results)
             {
                 response.AddString(_clusterServiceLocator.WorldCluster.CharacteRs[guid].Name);           // Name
                 if (_clusterServiceLocator.WorldCluster.CharacteRs[guid].Guild is object)
@@ -251,8 +251,8 @@ namespace Mangos.Cluster.Handlers
                 return;
             packet.GetInt16();
             var response = new PacketClass(Opcodes.SMSG_FRIEND_STATUS);
-            string name = packet.GetString();
-            ulong guid = 0UL;
+            var name = packet.GetString();
+            var guid = 0UL;
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ADD_FRIEND [{2}]", client.IP, client.Port, name);
 
             // DONE: Get GUID from DB
@@ -261,10 +261,10 @@ namespace Mangos.Cluster.Handlers
             if (q.Rows.Count > 0)
             {
                 guid = (ulong)q.Rows[0].As<long>("char_guid");
-                bool friendSide = _clusterServiceLocator.Functions.GetCharacterSide(q.Rows[0].As<byte>("char_race"));
+                var friendSide = _clusterServiceLocator.Functions.GetCharacterSide(q.Rows[0].As<byte>("char_race"));
                 q.Clear();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE flags = {0}", Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
-                int numberOfFriends = q.Rows.Count;
+                var numberOfFriends = q.Rows.Count;
                 q.Clear();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1} AND flags = {2};", client.Character.Guid, guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
                 if (guid == client.Character.Guid)
@@ -336,8 +336,8 @@ namespace Mangos.Cluster.Handlers
                 return;
             packet.GetInt16();
             var response = new PacketClass(Opcodes.SMSG_FRIEND_STATUS);
-            string name = packet.GetString();
-            ulong guid = 0UL;
+            var name = packet.GetString();
+            var guid = 0UL;
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ADD_IGNORE [{2}]", client.IP, client.Port, name);
 
             // DONE: Get GUID from DB
@@ -348,7 +348,7 @@ namespace Mangos.Cluster.Handlers
                 guid = (ulong)q.Rows[0].As<long>("char_guid");
                 q.Clear();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE flags = {0}", Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
-                int numberOfFriends = q.Rows.Count;
+                var numberOfFriends = q.Rows.Count;
                 q.Clear();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM character_social WHERE guid = {0} AND friend = {1} AND flags = {2};", client.Character.Guid, guid, Conversions.ToByte(SocialFlag.SOCIAL_FLAG_IGNORED)), ref q);
                 if (guid == client.Character.Guid)
@@ -393,14 +393,14 @@ namespace Mangos.Cluster.Handlers
                 return;
             packet.GetInt16();
             var response = new PacketClass(Opcodes.SMSG_FRIEND_STATUS);
-            ulong guid = packet.GetUInt64();
+            var guid = packet.GetUInt64();
             try
             {
                 var q = new DataTable();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1};", client.Character.Guid, guid), ref q);
                 if (q.Rows.Count > 0)
                 {
-                    int flags = q.Rows[0].As<int>("flags");
+                    var flags = q.Rows[0].As<int>("flags");
                     var newFlags = (SocialFlag)flags ^ SocialFlag.SOCIAL_FLAG_FRIEND;
                     if ((newFlags & (SocialFlag.SOCIAL_FLAG_FRIEND | SocialFlag.SOCIAL_FLAG_IGNORED)) == 0)
                     {
@@ -436,15 +436,15 @@ namespace Mangos.Cluster.Handlers
                 return;
             packet.GetInt16();
             var response = new PacketClass(Opcodes.SMSG_FRIEND_STATUS);
-            ulong guid = packet.GetUInt64();
+            var guid = packet.GetUInt64();
             try
             {
                 var q = new DataTable();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE guid = {0} AND friend = {1};", client.Character.Guid, guid), ref q);
                 if (q.Rows.Count > 0)
                 {
-                    int flags = q.Rows[0].As<int>("flags");
-                    SocialFlag newFlags = (SocialFlag)flags ^ SocialFlag.SOCIAL_FLAG_IGNORED;
+                    var flags = q.Rows[0].As<int>("flags");
+                    var newFlags = (SocialFlag)flags ^ SocialFlag.SOCIAL_FLAG_IGNORED;
                     if ((newFlags & (SocialFlag.SOCIAL_FLAG_FRIEND | SocialFlag.SOCIAL_FLAG_IGNORED)) == 0)
                     {
                         _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("DELETE FROM character_social WHERE friend = {1} AND guid = {0};", client.Character.Guid, guid));

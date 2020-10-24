@@ -57,7 +57,7 @@ namespace Mangos.Cluster.Globals
         {
             if (bBytes.Length == 0)
                 return "''";
-            string tmpStr = "0x";
+            var tmpStr = "0x";
             for (int i = start, loopTo = bBytes.Length - 1; i <= loopTo; i++)
             {
                 if (bBytes[i] < 16)
@@ -152,7 +152,7 @@ namespace Mangos.Cluster.Globals
 
         public DateTime GetNextDay(DayOfWeek iDay, int hour = 0)
         {
-            int iDiff = (int)iDay - (int)DateAndTime.Today.DayOfWeek;
+            var iDiff = (int)iDay - (int)DateAndTime.Today.DayOfWeek;
             if (iDiff <= 0)
                 iDiff += 7;
             var nextFriday = DateAndTime.Today.AddDays(iDiff);
@@ -263,7 +263,7 @@ namespace Mangos.Cluster.Globals
             _clusterServiceLocator.WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, username FROM account WHERE username = {0};", name), ref account);
             if (account.Rows.Count > 0)
             {
-                int accId = account.Rows[0].As<int>("id");
+                var accId = account.Rows[0].As<int>("id");
                 _clusterServiceLocator.WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", accId), ref bannedAccount);
                 if (bannedAccount.Rows.Count > 0)
                 {
@@ -271,7 +271,7 @@ namespace Mangos.Cluster.Globals
                 }
                 else
                 {
-                    string tempBanDate = Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongDate) + " " + Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongTime);
+                    var tempBanDate = Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongDate) + " " + Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongTime);
                     _clusterServiceLocator.WorldCluster.GetAccountDatabase().Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP('{1}'), UNIX_TIMESTAMP('{2}'), '{3}', '{4}', active = 1);", accId, tempBanDate, "0000-00-00 00:00:00", name, reason));
                 }
 
@@ -504,7 +504,7 @@ namespace Mangos.Cluster.Globals
 
         public string SetColor(string message, byte red, byte green, byte blue)
         {
-            string setColorRet = "|cFF";
+            var setColorRet = "|cFF";
             setColorRet = red < 16 ? setColorRet + "0" + Conversion.Hex(red) : setColorRet + Conversion.Hex(red);
             setColorRet = green < 16 ? setColorRet + "0" + Conversion.Hex(green) : setColorRet + Conversion.Hex(green);
             setColorRet = blue < 16 ? setColorRet + "0" + Conversion.Hex(blue) : setColorRet + Conversion.Hex(blue);
@@ -516,7 +516,7 @@ namespace Mangos.Cluster.Globals
 
         public bool RollChance(float chance)
         {
-            int nChance = (int)(chance * 100f);
+            var nChance = (int)(chance * 100f);
             if (_clusterServiceLocator.WorldCluster.Rnd.Next(1, 10001) <= nChance)
                 return true;
             return false;
@@ -558,7 +558,7 @@ namespace Mangos.Cluster.Globals
         public void Broadcast(string message)
         {
             _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
-            foreach (KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> character in _clusterServiceLocator.WorldCluster.CharacteRs)
+            foreach (var character in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (character.Value.Client is object)
                     SendMessageSystem(character.Value.Client, "System Message: " + SetColor(message, 255, 0, 0));
@@ -569,7 +569,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendAccountMd5(ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
-            bool foundData = false;
+            var foundData = false;
 
             // TODO: How Does Mangos Zero Handle the Account Data For the Characters?
             // Dim AccData As New DataTable
@@ -590,7 +590,7 @@ namespace Mangos.Cluster.Globals
             try
             {
                 // Dim md5hash As MD5 = MD5.Create()
-                for (int i = 0; i <= 7; i++)
+                for (var i = 0; i <= 7; i++)
                 {
                     if (foundData)
                     {
@@ -660,12 +660,12 @@ namespace Mangos.Cluster.Globals
             try
             {
                 var time = DateTime.Now;
-                int year = time.Year - 2000;
-                int month = time.Month - 1;
-                int day = time.Day - 1;
-                int dayOfWeek = (int)time.DayOfWeek;
-                int hour = time.Hour;
-                int minute = time.Minute;
+                var year = time.Year - 2000;
+                var month = time.Month - 1;
+                var day = time.Day - 1;
+                var dayOfWeek = (int)time.DayOfWeek;
+                var hour = time.Hour;
+                var minute = time.Minute;
 
                 // SMSG_LOGIN_SETTIMESPEED.AddInt32(CType((((((Minute + (Hour << 6)) + (DayOfWeek << 11)) + (Day << 14)) + (Year << 18)) + (Month << 20)), Integer))
                 smsgLoginSettimespeed.AddInt32(minute + (hour << 6) + (dayOfWeek << 11) + (day << 14) + (month << 20) + (year << 24));
