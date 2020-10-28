@@ -1,22 +1,23 @@
-﻿using Mangos.Network.Tcp;
+﻿using Mangos.Loggers;
+using Mangos.Network.Tcp;
 using Mangos.Realm.Models;
+using System;
 using System.Threading;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 
 namespace Mangos.Realm.Network
 {
     public class RealmTcpClient : ITcpClient
     {
+        private readonly ILogger logger;
         private readonly ClientModel clientModel;
         private readonly Router router;
 
-        public RealmTcpClient(
-            ClientModel clientModel, 
-            Router router)
+        public RealmTcpClient(ILogger logger, Router router, ClientModel clientModel)
         {
-            this.clientModel = clientModel;
+            this.logger = logger;
             this.router = router;
+            this.clientModel = clientModel;
         }
 
         public async void HandleAsync(
@@ -24,20 +25,19 @@ namespace Mangos.Realm.Network
             ChannelWriter<byte> writer, 
             CancellationToken cancellationToken)
         {
-            while(!cancellationToken.IsCancellationRequested)
+            try
             {
-                var opcode = await reader.ReadAsync(cancellationToken);
-                await HandleAsync(opcode, reader, writer);
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    var opcode = await reader.ReadAsync(cancellationToken);
+                    var packetHandler = router.GetPacketHandler(opcode);
+                    await packetHandler.HandleAsync(reader, writer, clientModel);
+                }
             }
-        }
-
-        private async Task HandleAsync(
-            byte opcode, 
-            ChannelReader<byte> reader,
-            ChannelWriter<byte> writer)
-        {
-            var packetHandler = router.GetPacketHandler(opcode);
-            await packetHandler.HandleAsync(reader, writer, clientModel);
+            catch (Exception ex)
+            {
+                logger.Error("Packet handler error", ex);
+            }
         }
     }
 }
