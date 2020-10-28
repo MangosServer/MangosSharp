@@ -16,7 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
@@ -24,6 +23,14 @@ namespace Mangos.Network.Tcp.Extensions
 {
     public static class ChannelReaderExtensions
     {
+        public static async ValueTask ReadToArrayAsync(this ChannelReader<byte> reader, byte[] buffer, int offset, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                buffer[offset + i] = await reader.ReadAsync();
+            }
+        }
+
         public static async ValueTask<byte[]> ReadArrayAsync(this ChannelReader<byte> reader, int count)
         {
             var buffer = new byte[count];
@@ -34,11 +41,11 @@ namespace Mangos.Network.Tcp.Extensions
             return buffer;
         }
 
-        public static async ValueTask ReadToArrayAsync(this ChannelReader<byte> reader, byte[] buffer, int offset, int count)
+        public static async ValueTask ReadVoidAsync(this ChannelReader<byte> reader, int count)
         {
             for (int i = 0; i < count; i++)
             {
-                buffer[offset + i] = await reader.ReadAsync();
+                await reader.ReadAsync();
             }
         }
     }

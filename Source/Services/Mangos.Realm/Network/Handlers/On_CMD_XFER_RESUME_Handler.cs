@@ -9,7 +9,7 @@ namespace Mangos.Realm.Network.Handlers
     {
         public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, ClientModel clientModel)
         {
-            await reader.ReadArrayAsync(8);
+            await reader.ReadVoidAsync(8);
         }
     }
 }
