@@ -1,8 +1,9 @@
-﻿using Mangos.Common.Enums.Authentication;
-using Mangos.Common.Enums.Global;
+﻿using Mangos.Common.Enums.Global;
 using Mangos.Loggers;
-using Mangos.Network.Tcp.Extensions;
 using Mangos.Realm.Models;
+using Mangos.Realm.Network.Readers;
+using Mangos.Realm.Network.Responses;
+using Mangos.Realm.Network.Writers;
 using Mangos.Storage.Account;
 using Microsoft.VisualBasic;
 using System;
@@ -17,61 +18,53 @@ namespace Mangos.Realm.Network.Handlers
         private readonly ILogger logger;
         private readonly IRealmStorage realmStorage;
 
-        public RS_LOGON_PROOF_Handler(ILogger logger, IRealmStorage realmStorage)
+        private readonly AUTH_LOGON_PROOF_Writer AUTH_LOGON_PROOF_Writer;
+        private readonly RS_LOGON_PROOF_Reader RS_LOGON_PROOF_Reader;
+
+        public RS_LOGON_PROOF_Handler(
+            ILogger logger,
+            IRealmStorage realmStorage,
+            AUTH_LOGON_PROOF_Writer AUTH_LOGON_PROOF_Writer, 
+            RS_LOGON_PROOF_Reader RS_LOGON_PROOF_Reader)
         {
             this.logger = logger;
             this.realmStorage = realmStorage;
+            this.AUTH_LOGON_PROOF_Writer = AUTH_LOGON_PROOF_Writer;
+            this.RS_LOGON_PROOF_Reader = RS_LOGON_PROOF_Reader;
         }
 
         public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, ClientModel clientModel)
         {
-            var a = await reader.ReadArrayAsync(32);
-            var m1 = await reader.ReadArrayAsync(20);
-            await reader.ReadVoidAsync(22);
-
-            // Dim CRC_Hash(19) As Byte
-            // Array.Copy(data, 53, CRC_Hash, 0, 20)
-            // Dim NumberOfKeys as Byte = data(73)
-            // Dim unk as Byte = data(74)
+            var request = await RS_LOGON_PROOF_Reader.ReadAsync(reader);
 
             // Calculate U and M1
-            clientModel.ClientAuthEngine.CalculateU(a);
+            clientModel.ClientAuthEngine.CalculateU(request.A);
             clientModel.ClientAuthEngine.CalculateM1();
             // AuthEngine.CalculateCRCHash()
 
-            if (!clientModel.ClientAuthEngine.M1.SequenceEqual(m1))
+            if (!clientModel.ClientAuthEngine.M1.SequenceEqual(request.M1))
             {
                 // Wrong pass
                 logger.Debug("Wrong password for user {0}.", clientModel.AccountName);
-                var dataResponse = new byte[2];
-                dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
-                dataResponse[1] = (byte)AccountState.LOGIN_BAD_PASS;
-                await writer.WriteAsync(dataResponse);
+
+                await AUTH_LOGON_PROOF_Writer.WriteAsync(writer, new AUTH_LOGON_PROOF(AccountState.LOGIN_BAD_PASS));
             }
             else
             {
-                clientModel.ClientAuthEngine.CalculateM2(m1);
-                var dataResponse = new byte[26];
-                dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
-                dataResponse[1] = (byte)AccountState.LOGIN_OK;
-                Array.Copy(clientModel.ClientAuthEngine.M2, 0, dataResponse, 2, 20);
-                dataResponse[22] = 0;
-                dataResponse[23] = 0;
-                dataResponse[24] = 0;
-                dataResponse[25] = 0;
-                await writer.WriteAsync(dataResponse);
+                clientModel.ClientAuthEngine.CalculateM2(request.M1);
+
+                await AUTH_LOGON_PROOF_Writer.WriteAsync(writer, new AUTH_LOGON_PROOF(
+                    AccountState.LOGIN_OK, 
+                    clientModel.ClientAuthEngine.M2));
 
                 // Set SSHash in DB
-                string sshash = "";
-                // For i as Integer = 0 To AuthEngine.SS_Hash.Length - 1
-                for (int i = 0; i <= 40 - 1; i++)
-                {
-                    sshash = clientModel.ClientAuthEngine.SsHash[i] < 16 
-                        ? sshash + "0" + Conversion.Hex(clientModel.ClientAuthEngine.SsHash[i]) 
-                        : sshash + Conversion.Hex(clientModel.ClientAuthEngine.SsHash[i]);
-                }
-                
-                await realmStorage.UpdateAccountAsync(sshash, clientModel.RemoteEnpoint.Address.ToString(), Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), clientModel.AccountName);
+                var sshash = string.Concat(clientModel.ClientAuthEngine.SsHash.Select(x => x.ToString("X2")));
+
+                await realmStorage.UpdateAccountAsync(sshash,
+                    clientModel.RemoteEnpoint.Address.ToString(), 
+                    Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), 
+                    clientModel.AccountName);
+
                 logger.Debug("Auth success for user {0} [{1}]", clientModel.AccountName, sshash);
             }
         }

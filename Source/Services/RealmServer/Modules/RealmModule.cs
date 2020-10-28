@@ -2,6 +2,8 @@
 using Mangos.Realm;
 using Mangos.Realm.Network;
 using Mangos.Realm.Network.Handlers;
+using Mangos.Realm.Network.Readers;
+using Mangos.Realm.Network.Writers;
 
 namespace RealmServer.Modules
 {
@@ -16,6 +18,10 @@ namespace RealmServer.Modules
             builder.RegisterType<CMD_XFER_CANCEL_Handler>().AsSelf().SingleInstance();
             builder.RegisterType<CMD_XFER_ACCEPT_Handler>().AsSelf().SingleInstance();
             builder.RegisterType<On_CMD_XFER_RESUME_Handler>().AsSelf().SingleInstance();
+
+            builder.RegisterType<RS_LOGON_PROOF_Reader>().AsSelf().SingleInstance();
+
+            builder.RegisterType<AUTH_LOGON_PROOF_Writer>().AsSelf().SingleInstance();
 
             builder.RegisterType<Converter>().As<Converter>().SingleInstance();
 
