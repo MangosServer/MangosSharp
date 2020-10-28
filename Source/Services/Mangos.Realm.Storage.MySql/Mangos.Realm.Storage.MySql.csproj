@@ -8,17 +8,9 @@
     <ProjectReference Include="..\Mangos.Realm.Storage\Mangos.Realm.Storage.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Queries\GetAccountInfoAsync.sql" />
-    <None Remove="Queries\GetNumcharsAsync.sql" />
-    <None Remove="Queries\GetRealmListAsync.sql" />
-    <None Remove="Queries\IsBannedAccountAsync.sql" />
-    <None Remove="Queries\UpdateAccountAsync.sql" />
+    <None Remove="Queries\*.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Queries\GetAccountInfoAsync.sql" />
-    <EmbeddedResource Include="Queries\GetNumcharsAsync.sql" />
-    <EmbeddedResource Include="Queries\GetRealmListAsync.sql" />
-    <EmbeddedResource Include="Queries\IsBannedAccountAsync.sql" />
-    <EmbeddedResource Include="Queries\UpdateAccountAsync.sql" />
+    <EmbeddedResource Include="Queries\*.sql" />
   </ItemGroup>
 </Project>
