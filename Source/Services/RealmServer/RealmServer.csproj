@@ -11,7 +11,10 @@
     <PackageReference Include="Autofac" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mangos.Realm.Legacy\Mangos.Realm.Legacy.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Configuration.Store\Mangos.Configuration.Store.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Configuration.Xml\Mangos.Configuration.Xml.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Loggers.Console\Mangos.Loggers.Console.csproj" />
+    <ProjectReference Include="..\Mangos.Realm\Mangos.Realm.csproj" />
     <ProjectReference Include="..\Mangos.Realm.Storage.MySql\Mangos.Realm.Storage.MySql.csproj" />
   </ItemGroup>
 </Project>
