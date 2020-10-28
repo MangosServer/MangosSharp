@@ -26,7 +26,7 @@ using Mangos.Loggers;
 using Mangos.Loggers.Console;
 using Mangos.Network.Tcp;
 using Mangos.Realm;
-using Mangos.Realm.Factories;
+using Mangos.Realm.Network;
 using Mangos.Realm.Storage.MySql;
 using Mangos.Storage.Account;
 using Mangos.Storage.MySql;
@@ -87,7 +87,7 @@ namespace RealmServer
             builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
 
             builder.RegisterType<RealmServerService>().As<RealmServerService>().SingleInstance();
-            builder.RegisterType<RealmServerClientFactory>().As<ITcpClientFactory>().SingleInstance();
+            builder.RegisterType<RealmTcpClientFactory>().As<ITcpClientFactory>().SingleInstance();
         }
     }
 }

@@ -22,7 +22,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
-using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Mangos.Common.Enums.Authentication;
@@ -30,57 +29,51 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
 using Mangos.Loggers;
-using Mangos.Network.Tcp;
 using Mangos.Network.Tcp.Extensions;
+using Mangos.Realm.Models;
 using Mangos.Storage.Account;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Mangos.Realm
+namespace Mangos.Realm.Network
 {
-    public class RealmServerClient : ITcpClient
+    public class LegacyServerClient
     {
         private readonly ILogger logger;
         private readonly IRealmStorage realmStorage;
         private readonly Converter converter;
         private readonly MangosGlobalConstants mangosGlobalConstants;
 
-        private readonly AuthEngineClass authEngineClass;
-
         private readonly Dictionary<AuthCMD, Func<ChannelReader<byte>, ChannelWriter<byte>, Task>> packetHandlers;
         private readonly IPEndPoint remoteEnpoint;
-
+        private readonly ClientModel clientModel;
 
         public string Account = "";
         public string UpdateFile = "";
         public AccessLevel Access = AccessLevel.Player;
 
-        public RealmServerClient(ILogger logger,
+        public LegacyServerClient(ILogger logger,
             IRealmStorage realmStorage,
             Converter converter,
             MangosGlobalConstants mangosGlobalConstants,
-            IPEndPoint remoteEnpoint)
+            IPEndPoint remoteEnpoint,
+            ClientModel clientModel)
         {
             this.logger = logger;
             this.realmStorage = realmStorage;
             this.converter = converter;
             this.mangosGlobalConstants = mangosGlobalConstants;
             this.remoteEnpoint = remoteEnpoint;
-
-            authEngineClass = new AuthEngineClass();
+            this.clientModel = clientModel;
             packetHandlers = GetPacketHandlers();
         }
 
-        public async void HandleAsync(
+        public async Task HandleAsync(
+            AuthCMD opcode,
             ChannelReader<byte> reader,
-            ChannelWriter<byte> writer,
-            CancellationToken cancellationToken)
+            ChannelWriter<byte> writer)
         {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                var opcode = (AuthCMD) await reader.ReadAsync();
-                await packetHandlers[opcode](reader, writer);
-            }
+            await packetHandlers[opcode](reader, writer);
         }
 
         private Dictionary<AuthCMD, Func<ChannelReader<byte>, ChannelWriter<byte>, Task>> GetPacketHandlers()
@@ -116,7 +109,7 @@ namespace Mangos.Realm
             Account = packetAccount;
 
             // Read users ip from packet
-            packetIp = ((int)data[29]) + "." + ((int)data[30]) + "." + ((int)data[31]) + "." + ((int)data[32]);
+            packetIp = (int)data[29] + "." + (int)data[30] + "." + (int)data[31] + "." + (int)data[32];
 
             // Get the client build from packet.
             int bMajor = data[8];
@@ -189,18 +182,18 @@ namespace Mangos.Realm
 
                                 try
                                 {
-                                    authEngineClass.CalculateX(account, hash);
+                                    clientModel.ClientAuthEngine.CalculateX(account, hash);
                                     var dataResponse = new byte[119];
                                     dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_CHALLENGE;
                                     dataResponse[1] = (byte)AccountState.LOGIN_OK;
                                     dataResponse[2] = (byte)Conversion.Val("&H00");
-                                    Array.Copy(authEngineClass.PublicB, 0, dataResponse, 3, 32);
-                                    dataResponse[35] = (byte)authEngineClass.g.Length;
-                                    dataResponse[36] = authEngineClass.g[0];
+                                    Array.Copy(clientModel.ClientAuthEngine.PublicB, 0, dataResponse, 3, 32);
+                                    dataResponse[35] = (byte)clientModel.ClientAuthEngine.g.Length;
+                                    dataResponse[36] = clientModel.ClientAuthEngine.g[0];
                                     dataResponse[37] = 32;
-                                    Array.Copy(authEngineClass.N, 0, dataResponse, 38, 32);
-                                    Array.Copy(authEngineClass.Salt, 0, dataResponse, 70, 32);
-                                    Array.Copy(AuthEngineClass.CrcSalt, 0, dataResponse, 102, 16);
+                                    Array.Copy(clientModel.ClientAuthEngine.N, 0, dataResponse, 38, 32);
+                                    Array.Copy(clientModel.ClientAuthEngine.Salt, 0, dataResponse, 70, 32);
+                                    Array.Copy(ClientAuthEngine.CrcSalt, 0, dataResponse, 102, 16);
                                     dataResponse[118] = 0; // Added in 1.12.x client branch? Security Flags (&H0...&H4)?
                                     await writer.WriteAsync(dataResponse);
                                 }
@@ -347,15 +340,15 @@ namespace Mangos.Realm
             // Dim unk as Byte = data(74)
 
             // Calculate U and M1
-            authEngineClass.CalculateU(a);
-            authEngineClass.CalculateM1();
+            clientModel.ClientAuthEngine.CalculateU(a);
+            clientModel.ClientAuthEngine.CalculateM1();
             // AuthEngine.CalculateCRCHash()
 
             // Check M1=ClientM1
             bool passCheck = true;
             for (byte i = 0; i <= 19; i++)
             {
-                if (m1[i] != authEngineClass.M1[i])
+                if (m1[i] != clientModel.ClientAuthEngine.M1[i])
                 {
                     passCheck = false;
                     break;
@@ -373,11 +366,11 @@ namespace Mangos.Realm
             }
             else
             {
-                authEngineClass.CalculateM2(m1);
+                clientModel.ClientAuthEngine.CalculateM2(m1);
                 var dataResponse = new byte[26];
                 dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
                 dataResponse[1] = (byte)AccountState.LOGIN_OK;
-                Array.Copy(authEngineClass.M2, 0, dataResponse, 2, 20);
+                Array.Copy(clientModel.ClientAuthEngine.M2, 0, dataResponse, 2, 20);
                 dataResponse[22] = 0;
                 dataResponse[23] = 0;
                 dataResponse[24] = 0;
@@ -389,7 +382,7 @@ namespace Mangos.Realm
 
                 // For i as Integer = 0 To AuthEngine.SS_Hash.Length - 1
                 for (int i = 0; i <= 40 - 1; i++)
-                    sshash = authEngineClass.SsHash[i] < 16 ? sshash + "0" + Conversion.Hex(authEngineClass.SsHash[i]) : sshash + Conversion.Hex(authEngineClass.SsHash[i]);
+                    sshash = clientModel.ClientAuthEngine.SsHash[i] < 16 ? sshash + "0" + Conversion.Hex(clientModel.ClientAuthEngine.SsHash[i]) : sshash + Conversion.Hex(clientModel.ClientAuthEngine.SsHash[i]);
                 await realmStorage.UpdateAccountAsync(sshash, remoteEnpoint.Address.ToString(), Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), Account);
                 logger.Debug("Auth success for user {0} [{1}]", Account, sshash);
             }

@@ -22,18 +22,19 @@ using System.Threading.Tasks;
 using Mangos.Common.Globals;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
+using Mangos.Realm.Models;
 using Mangos.Storage.Account;
 
-namespace Mangos.Realm.Factories
+namespace Mangos.Realm.Network
 {
-    public class RealmServerClientFactory : ITcpClientFactory
+    public class RealmTcpClientFactory : ITcpClientFactory
     {
         private readonly ILogger logger;
         private readonly IRealmStorage realmStorage;
         private readonly Converter converter;
         private readonly MangosGlobalConstants mangosGlobalConstants;
 
-        public RealmServerClientFactory(ILogger logger,
+        public RealmTcpClientFactory(ILogger logger,
             IRealmStorage realmStorage,
             Converter converter,
             MangosGlobalConstants mangosGlobalConstants)
@@ -46,12 +47,17 @@ namespace Mangos.Realm.Factories
 
         public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
         {
-            return new RealmServerClient(
+            var clientModel = new ClientModel();
+
+            var legacyServerClient =  new LegacyServerClient(
                 logger,
                 realmStorage,
                 converter,
                 mangosGlobalConstants,
-                (IPEndPoint)clientSocket.RemoteEndPoint);
+                (IPEndPoint)clientSocket.RemoteEndPoint,
+                clientModel);
+
+            return new RealmTcpClient(clientModel, legacyServerClient);
         }
     }
 }
