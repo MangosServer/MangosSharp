@@ -1,5 +1,4 @@
-﻿using Mangos.Common.Enums.Authentication;
-using Mangos.Network.Tcp;
+﻿using Mangos.Network.Tcp;
 using Mangos.Realm.Models;
 using System.Threading;
 using System.Threading.Channels;
@@ -10,12 +9,14 @@ namespace Mangos.Realm.Network
     public class RealmTcpClient : ITcpClient
     {
         private readonly ClientModel clientModel;
-        private readonly LegacyServerClient legacyServerClient;
+        private readonly Router router;
 
-        public RealmTcpClient(ClientModel clientModel, LegacyServerClient legacyServerClient)
+        public RealmTcpClient(
+            ClientModel clientModel, 
+            Router router)
         {
             this.clientModel = clientModel;
-            this.legacyServerClient = legacyServerClient;
+            this.router = router;
         }
 
         public async void HandleAsync(
@@ -35,7 +36,8 @@ namespace Mangos.Realm.Network
             ChannelReader<byte> reader,
             ChannelWriter<byte> writer)
         {
-            await legacyServerClient.HandleAsync((AuthCMD)opcode, reader, writer);
+            var packetHandler = router.GetPacketHandler(opcode);
+            await packetHandler.HandleAsync(reader, writer, clientModel);
         }
     }
 }

@@ -19,45 +19,25 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Mangos.Common.Globals;
-using Mangos.Loggers;
 using Mangos.Network.Tcp;
 using Mangos.Realm.Models;
-using Mangos.Storage.Account;
 
 namespace Mangos.Realm.Network
 {
     public class RealmTcpClientFactory : ITcpClientFactory
     {
-        private readonly ILogger logger;
-        private readonly IRealmStorage realmStorage;
-        private readonly Converter converter;
-        private readonly MangosGlobalConstants mangosGlobalConstants;
+        private readonly Router router;
 
-        public RealmTcpClientFactory(ILogger logger,
-            IRealmStorage realmStorage,
-            Converter converter,
-            MangosGlobalConstants mangosGlobalConstants)
+        public RealmTcpClientFactory(Router router)
         {
-            this.logger = logger;
-            this.realmStorage = realmStorage;
-            this.converter = converter;
-            this.mangosGlobalConstants = mangosGlobalConstants;
+            this.router = router;
         }
 
         public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
         {
-            var clientModel = new ClientModel();
+            var clientModel = new ClientModel((IPEndPoint) clientSocket.RemoteEndPoint);
 
-            var legacyServerClient =  new LegacyServerClient(
-                logger,
-                realmStorage,
-                converter,
-                mangosGlobalConstants,
-                (IPEndPoint)clientSocket.RemoteEndPoint,
-                clientModel);
-
-            return new RealmTcpClient(clientModel, legacyServerClient);
+            return new RealmTcpClient(clientModel, router);
         }
     }
 }
