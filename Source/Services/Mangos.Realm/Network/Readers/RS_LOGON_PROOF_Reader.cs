@@ -1,6 +1,5 @@
 ﻿using Mangos.Network.Tcp.Extensions;
 using Mangos.Realm.Network.Requests;
-using System;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
