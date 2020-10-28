@@ -74,7 +74,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Storage.MySql"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Common.Legacy", "Common\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj", "{B0E58AD5-A0CA-4207-B3A6-E45FF1A30C23}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Legacy", "Services\Mangos.Realm.Legacy\Mangos.Realm.Legacy.csproj", "{DD8DDEE5-C409-4EB4-8427-169EFD66AC29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm", "Services\Mangos.Realm\Mangos.Realm.csproj", "{AE464C7F-76DE-4D3C-B024-C31E2CC950B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -174,10 +174,10 @@ Global
 		{B0E58AD5-A0CA-4207-B3A6-E45FF1A30C23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0E58AD5-A0CA-4207-B3A6-E45FF1A30C23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0E58AD5-A0CA-4207-B3A6-E45FF1A30C23}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD8DDEE5-C409-4EB4-8427-169EFD66AC29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD8DDEE5-C409-4EB4-8427-169EFD66AC29}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD8DDEE5-C409-4EB4-8427-169EFD66AC29}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD8DDEE5-C409-4EB4-8427-169EFD66AC29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE464C7F-76DE-4D3C-B024-C31E2CC950B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE464C7F-76DE-4D3C-B024-C31E2CC950B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE464C7F-76DE-4D3C-B024-C31E2CC950B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE464C7F-76DE-4D3C-B024-C31E2CC950B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -213,7 +213,7 @@ Global
 		{64568E09-999F-4DF6-AD8A-D85C2EF95422} = {4E5FCE8C-FE93-42A3-A3D9-4721A6A67CCC}
 		{DBB23113-3E1C-48C6-A189-78416FC1FD02} = {4E5FCE8C-FE93-42A3-A3D9-4721A6A67CCC}
 		{B0E58AD5-A0CA-4207-B3A6-E45FF1A30C23} = {E4030417-3F95-48BA-8A9A-6E1B4A5B5873}
-		{DD8DDEE5-C409-4EB4-8427-169EFD66AC29} = {4E5FCE8C-FE93-42A3-A3D9-4721A6A67CCC}
+		{AE464C7F-76DE-4D3C-B024-C31E2CC950B0} = {4E5FCE8C-FE93-42A3-A3D9-4721A6A67CCC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADB1D01A-F2D8-411D-8C5E-9B125F8FE64E}
