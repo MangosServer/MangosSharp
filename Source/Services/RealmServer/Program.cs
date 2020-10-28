@@ -27,6 +27,7 @@ using Mangos.Loggers.Console;
 using Mangos.Network.Tcp;
 using Mangos.Realm;
 using Mangos.Realm.Factories;
+using Mangos.Realm.Storage.MySql;
 using Mangos.Storage.Account;
 using Mangos.Storage.MySql;
 
@@ -74,9 +75,9 @@ namespace RealmServer
 
         public static void RegisterStorages(ContainerBuilder builder)
         {
-            builder.RegisterType<MySqlAccountStorage>()
+            builder.RegisterType<RealmStorage>()
                 .AsSelf()
-                .As<IAccountStorage>()
+                .As<IRealmStorage>()
                 .SingleInstance();
         }
 

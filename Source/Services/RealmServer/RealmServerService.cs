@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Mangos.Configuration;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
+using Mangos.Realm.Storage.MySql;
 using Mangos.Storage.MySql;
 
 namespace Mangos.Realm
@@ -30,19 +31,19 @@ namespace Mangos.Realm
     public class RealmServerService
     {
         private readonly ILogger logger;
-        private readonly MySqlAccountStorage accountStorage;
+        private readonly RealmStorage realmStorage;
         private readonly IConfigurationProvider<RealmServerConfiguration> configurationProvider;
 
         private readonly TcpServer tcpServer;
 
         public RealmServerService(
             ILogger logger,
-            MySqlAccountStorage accountStorage,
+            RealmStorage realmStorage,
             IConfigurationProvider<RealmServerConfiguration> configurationProvider,
             TcpServer tcpServer)
         {
             this.logger = logger;
-            this.accountStorage = accountStorage;
+            this.realmStorage = realmStorage;
             this.configurationProvider = configurationProvider;
             this.tcpServer = tcpServer;
         }
@@ -60,7 +61,7 @@ namespace Mangos.Realm
         private async Task ConnectToDatabaseAsync()
         {
             var configuration = await configurationProvider.GetConfigurationAsync();
-            await accountStorage.ConnectAsync(configuration.AccountConnectionString);
+            await realmStorage.ConnectAsync(configuration.AccountConnectionString);
         }
 
         private async Task StartTcpServer()

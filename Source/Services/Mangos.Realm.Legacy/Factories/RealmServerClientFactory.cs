@@ -29,17 +29,17 @@ namespace Mangos.Realm.Factories
     public class RealmServerClientFactory : ITcpClientFactory
     {
         private readonly ILogger logger;
-        private readonly IAccountStorage accountStorage;
+        private readonly IRealmStorage realmStorage;
         private readonly Converter converter;
         private readonly MangosGlobalConstants mangosGlobalConstants;
 
         public RealmServerClientFactory(ILogger logger,
-            IAccountStorage accountStorage,
+            IRealmStorage realmStorage,
             Converter converter,
             MangosGlobalConstants mangosGlobalConstants)
         {
             this.logger = logger;
-            this.accountStorage = accountStorage;
+            this.realmStorage = realmStorage;
             this.converter = converter;
             this.mangosGlobalConstants = mangosGlobalConstants;
         }
@@ -48,7 +48,7 @@ namespace Mangos.Realm.Factories
         {
             return new RealmServerClient(
                 logger,
-                accountStorage,
+                realmStorage,
                 converter,
                 mangosGlobalConstants,
                 (IPEndPoint)clientSocket.RemoteEndPoint);

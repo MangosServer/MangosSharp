@@ -41,7 +41,7 @@ namespace Mangos.Realm
     public class RealmServerClient : ITcpClient
     {
         private readonly ILogger logger;
-        private readonly IAccountStorage accountStorage;
+        private readonly IRealmStorage realmStorage;
         private readonly Converter converter;
         private readonly MangosGlobalConstants mangosGlobalConstants;
 
@@ -56,13 +56,13 @@ namespace Mangos.Realm
         public AccessLevel Access = AccessLevel.Player;
 
         public RealmServerClient(ILogger logger,
-            IAccountStorage accountStorage,
+            IRealmStorage realmStorage,
             Converter converter,
             MangosGlobalConstants mangosGlobalConstants,
             IPEndPoint remoteEnpoint)
         {
             this.logger = logger;
-            this.accountStorage = accountStorage;
+            this.realmStorage = realmStorage;
             this.converter = converter;
             this.mangosGlobalConstants = mangosGlobalConstants;
             this.remoteEnpoint = remoteEnpoint;
@@ -139,13 +139,13 @@ namespace Mangos.Realm
             else if (clientBuild == mangosGlobalConstants.Required_Build_1_12_1 | clientBuild == mangosGlobalConstants.Required_Build_1_12_2 | clientBuild == mangosGlobalConstants.Required_Build_1_12_3)
             {
                 // TODO: in the far future should check if the account is expired too
-                var accountInfo = await accountStorage.GetAccountInfoAsync(packetAccount);
+                var accountInfo = await realmStorage.GetAccountInfoAsync(packetAccount);
                 try
                 {
                     // Check Account state
                     if (accountInfo != null)
                     {
-                        accState = await accountStorage.IsBannedAccountAsync(accountInfo.id)
+                        accState = await realmStorage.IsBannedAccountAsync(accountInfo.id)
                             ? AccountState.LOGIN_BANNED
                             : AccountState.LOGIN_OK;
                     }
@@ -390,7 +390,7 @@ namespace Mangos.Realm
                 // For i as Integer = 0 To AuthEngine.SS_Hash.Length - 1
                 for (int i = 0; i <= 40 - 1; i++)
                     sshash = authEngineClass.SsHash[i] < 16 ? sshash + "0" + Conversion.Hex(authEngineClass.SsHash[i]) : sshash + Conversion.Hex(authEngineClass.SsHash[i]);
-                await accountStorage.UpdateAccountAsync(sshash, remoteEnpoint.Address.ToString(), Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), Account);
+                await realmStorage.UpdateAccountAsync(sshash, remoteEnpoint.Address.ToString(), Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), Account);
                 logger.Debug("Auth success for user {0} [{1}]", Account, sshash);
             }
         }
@@ -403,7 +403,7 @@ namespace Mangos.Realm
             int packetLen = 0;
 
             // Fetch RealmList Data
-            var realmList = await accountStorage.GetRealmListAsync();
+            var realmList = await realmStorage.GetRealmListAsync();
             foreach (var row in realmList)
             {
                 packetLen = packetLen
@@ -436,7 +436,7 @@ namespace Mangos.Realm
             foreach (var realmListItem in realmList)
             {
                 // Get Number of Characters for the Realm
-                var characterCount = await accountStorage.GetNumcharsAsync(realmListItem.id);
+                var characterCount = await realmStorage.GetNumcharsAsync(realmListItem.id);
 
                 // (uint8) Realm Icon
                 // 0 -> Normal; 1 -> PvP; 6 -> RP; 8 -> RPPvP;

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../Mangos.props" />
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Mangos.Storage.MySql\Mangos.Storage.MySql.csproj" />
+    <ProjectReference Include="..\Mangos.Realm.Storage\Mangos.Realm.Storage.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Queries\GetAccountInfoAsync.sql" />
+    <None Remove="Queries\GetNumcharsAsync.sql" />
+    <None Remove="Queries\GetRealmListAsync.sql" />
+    <None Remove="Queries\IsBannedAccountAsync.sql" />
+    <None Remove="Queries\UpdateAccountAsync.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Queries\GetAccountInfoAsync.sql" />
+    <EmbeddedResource Include="Queries\GetNumcharsAsync.sql" />
+    <EmbeddedResource Include="Queries\GetRealmListAsync.sql" />
+    <EmbeddedResource Include="Queries\IsBannedAccountAsync.sql" />
+    <EmbeddedResource Include="Queries\UpdateAccountAsync.sql" />
+  </ItemGroup>
+</Project>

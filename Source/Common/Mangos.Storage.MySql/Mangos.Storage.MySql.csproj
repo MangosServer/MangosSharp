@@ -5,24 +5,9 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mangos.Loggers\Mangos.Loggers.csproj" />
-    <ProjectReference Include="..\Mangos.Storage\Mangos.Storage.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="MySql.Data" Version="8.0.22" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Account\GetAccountInfoAsync.sql" />
-    <None Remove="Account\GetNumcharsAsync.sql" />
-    <None Remove="Account\GetRealmListAsync.sql" />
-    <None Remove="Account\IsBannedAccountAsync.sql" />
-    <None Remove="Account\UpdateAccountAsync.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Account\GetAccountInfoAsync.sql" />
-    <EmbeddedResource Include="Account\GetRealmListAsync.sql" />
-    <EmbeddedResource Include="Account\IsBannedAccountAsync.sql" />
-    <EmbeddedResource Include="Account\UpdateAccountAsync.sql" />
-    <EmbeddedResource Include="Account\GetNumcharsAsync.sql" />
   </ItemGroup>
 </Project>

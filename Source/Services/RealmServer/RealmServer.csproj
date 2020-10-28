@@ -12,5 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mangos.Realm.Legacy\Mangos.Realm.Legacy.csproj" />
+    <ProjectReference Include="..\Mangos.Realm.Storage.MySql\Mangos.Realm.Storage.MySql.csproj" />
   </ItemGroup>
 </Project>

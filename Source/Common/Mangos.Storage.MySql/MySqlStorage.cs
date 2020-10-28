@@ -36,12 +36,12 @@ namespace Mangos.Storage.MySql
         private readonly ILogger logger;
 
         private MySqlConnection connection;
-        private readonly Dictionary<string, string> sql;
+        private readonly Dictionary<string, string> queries;
 
-        protected MySqlStorage(ILogger logger, string sqlResourceCatalogPrefix)
+        protected MySqlStorage(ILogger logger)
         {
             this.logger = logger;
-            sql = GetEmbeddedSqlResources(sqlResourceCatalogPrefix);
+            queries = GetEmbeddedQueries();
         }
 
         public async Task ConnectAsync(string conenctionString)
@@ -72,16 +72,21 @@ namespace Mangos.Storage.MySql
             }
         }
 
-        private Dictionary<string, string> GetEmbeddedSqlResources(string sqlResourceCatalogPrefix)
+        private Dictionary<string, string> GetEmbeddedQueries()
         {
-            return Assembly.GetExecutingAssembly().GetManifestResourceNames()
-                .Where(x => x.StartsWith($"Mangos.Storage.MySql.{sqlResourceCatalogPrefix}"))
-                .ToDictionary(x => GetEmbeddedSqlResourceName(sqlResourceCatalogPrefix, x), GetEmbeddedSqlResourcebody);
+            var type = GetType();
+            var queriesCatalog = $"{type.Namespace}.Queries";
+            var assembly = type.Assembly;
+            var resources = assembly.GetManifestResourceNames()
+                .Where(x => x.StartsWith(queriesCatalog))
+                .ToDictionary(
+                    x => GetEmbeddedSqlResourceName(queriesCatalog, x), 
+                    x => GetEmbeddedSqlResourcebody(assembly , x));
+            return resources;
         }
 
-        private string GetEmbeddedSqlResourcebody(string resource)
+        private string GetEmbeddedSqlResourcebody(Assembly assembly, string resource)
         {
-            var assembly = Assembly.GetExecutingAssembly();
             using var stream = assembly.GetManifestResourceStream(resource);
             using var reader = new StreamReader(stream);
             return reader.ReadToEnd();
@@ -89,16 +94,16 @@ namespace Mangos.Storage.MySql
 
         private string GetSqlScript(string name)
         {
-            if (sql.ContainsKey(name))
+            if (queries.ContainsKey(name))
             {
-                return sql[name];
+                return queries[name];
             }
             throw new Exception($"Unknown sql script {name}");
         }
 
-        private string GetEmbeddedSqlResourceName(string sqlResourceCatalogPrefix, string resource)
+        private string GetEmbeddedSqlResourceName(string queriesCatalog, string resource)
         {
-            return Regex.Split(resource, $"Mangos.Storage.MySql.{sqlResourceCatalogPrefix}.(.*).sql")[1];
+            return Regex.Split(resource, $"{queriesCatalog}.(.*).sql")[1];
         }
 
         protected async Task<T> QuerySingleAsync<T>(
