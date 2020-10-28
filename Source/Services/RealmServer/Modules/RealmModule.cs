@@ -21,6 +21,7 @@ namespace RealmServer.Modules
 
             builder.RegisterType<RS_LOGON_PROOF_Reader>().AsSelf().SingleInstance();
             builder.RegisterType<RS_LOGON_CHALLENGE_Reader>().AsSelf().SingleInstance();
+            builder.RegisterType<CMD_XFER_RESUME_Reader>().AsSelf().SingleInstance();
 
             builder.RegisterType<AUTH_LOGON_PROOF_Writer>().AsSelf().SingleInstance();
             builder.RegisterType<AUTH_LOGON_CHALLENGE_Writer>().AsSelf().SingleInstance();
