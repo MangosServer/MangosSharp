@@ -3,6 +3,7 @@ using Mangos.Common.Globals;
 using Mangos.Loggers;
 using Mangos.Realm.Models;
 using Mangos.Realm.Network.Readers;
+using Mangos.Realm.Network.Requests;
 using Mangos.Realm.Network.Responses;
 using Mangos.Realm.Network.Writers;
 using Mangos.Realm.Storage.Entities;
@@ -45,9 +46,6 @@ namespace Mangos.Realm.Network.Handlers
             clientModel.AccountName = request.AccountName;
 
             // DONE: Check if our build can join the server
-            // If ((RequiredVersion1 = 0 AndAlso RequiredVersion2 = 0 AndAlso RequiredVersion3 = 0) OrElse
-            // (bMajor = RequiredVersion1 AndAlso bMinor = RequiredVersion2 AndAlso bRevision = RequiredVersion3)) AndAlso
-            // clientBuild >= RequiredBuildLow AndAlso clientBuild <= RequiredBuildHigh Then
             if (request.Build == mangosGlobalConstants.Required_Build_1_12_1 
                 | request.Build == mangosGlobalConstants.Required_Build_1_12_2 
                 | request.Build == mangosGlobalConstants.Required_Build_1_12_3)
@@ -60,34 +58,8 @@ namespace Mangos.Realm.Network.Handlers
                 switch (accountState)
                 {
                     case AccountState.LOGIN_OK:
-                        {
-                            if (accountInfo.sha_pass_hash.Length != 40) // Invalid password type, should always be 40 characters
-                            {
-                                await AUTH_LOGON_PROOF_Writer.WriteAsync(writer, new AUTH_LOGON_PROOF(AccountState.LOGIN_BAD_PASS));
-                            }
-                            else // Bail out with something meaningful
-                            {
-                                var hash = GetPasswordHashFromString(accountInfo.sha_pass_hash);
-
-                                // Language = clientLanguage
-                                // If Not IsDBNull(result.Rows(0).Item("expansion")) Then
-                                // Expansion = result.Rows(0).Item("expansion")
-                                // Else
-                                // Expansion = ExpansionLevel.NORMAL
-                                // End If
-
-                                clientModel.ClientAuthEngine.CalculateX(request.Account, hash);
-
-                                await AUTH_LOGON_CHALLENGE_Writer.WriteAsync(writer, new AUTH_LOGON_CHALLENGE(
-                                    clientModel.ClientAuthEngine.PublicB,
-                                    clientModel.ClientAuthEngine.g,
-                                    clientModel.ClientAuthEngine.N,
-                                    clientModel.ClientAuthEngine.Salt,
-                                    ClientAuthEngine.CrcSalt
-                                    ));
-                            }
-                            return;
-                        }
+                        await HandleLoginOkStateAsync(request, writer, clientModel, accountInfo);
+                        return;
 
                     case AccountState.LOGIN_UNKNOWN_ACCOUNT:
                         await AUTH_LOGON_PROOF_Writer.WriteAsync(writer, new AUTH_LOGON_PROOF(AccountState.LOGIN_UNKNOWN_ACCOUNT));
@@ -125,6 +97,32 @@ namespace Mangos.Realm.Network.Handlers
                 logger.Warning($"WRONG_VERSION {request.Build}");
                 await AUTH_LOGON_PROOF_Writer.WriteAsync(writer, new AUTH_LOGON_PROOF(AccountState.LOGIN_BADVERSION));
             }
+        }
+
+        private async Task HandleLoginOkStateAsync(
+            RS_LOGON_CHALLENGE request, 
+            ChannelWriter<byte> writer, 
+            ClientModel clientModel, 
+            AccountInfoEntity accountInfo)
+        {
+            if (accountInfo.sha_pass_hash.Length != 40) // Invalid password type, should always be 40 characters
+            {
+                await AUTH_LOGON_PROOF_Writer.WriteAsync(writer, new AUTH_LOGON_PROOF(AccountState.LOGIN_BAD_PASS));
+                return;
+            }
+
+            var hash = GetPasswordHashFromString(accountInfo.sha_pass_hash);
+
+            clientModel.ClientAuthEngine.CalculateX(request.Account, hash);
+
+            var resposne = new AUTH_LOGON_CHALLENGE(
+                clientModel.ClientAuthEngine.PublicB,
+                clientModel.ClientAuthEngine.g,
+                clientModel.ClientAuthEngine.N,
+                clientModel.ClientAuthEngine.Salt,
+                ClientAuthEngine.CrcSalt);
+
+            await AUTH_LOGON_CHALLENGE_Writer.WriteAsync(writer, resposne);
         }
 
         private async Task<AccountState> GetAccountStateAsync(AccountInfoEntity accountInfo)
