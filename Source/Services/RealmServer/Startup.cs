@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Mangos.Configuration.Xml;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
+using Mangos.Realm.Configuration;
 using Mangos.Realm.Storage.MySql;
 
 namespace Mangos.Realm
@@ -63,8 +64,7 @@ namespace Mangos.Realm
 
         private async Task ConnectToDatabaseAsync()
         {
-            var configuration = configurationProvider.GetConfiguration();
-            await realmStorage.ConnectAsync(configuration.AccountConnectionString);
+            await realmStorage.ConnectAsync();
             logger.Debug("Connection to account database has been established");
         }
 

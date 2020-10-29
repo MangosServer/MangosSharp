@@ -25,25 +25,16 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Dapper;
-using Mangos.Loggers;
 using MySql.Data.MySqlClient;
 
 namespace Mangos.Storage.MySql
 {
-    public abstract class MySqlStorage : IAsyncDisposable
+    public class MySqlStorage : IAsyncDisposable
     {
-        private readonly ILogger logger;
-
         private MySqlConnection connection;
-        private readonly Dictionary<string, string> queries;
+        private Dictionary<string, string> queries;
 
-        protected MySqlStorage(ILogger logger)
-        {
-            this.logger = logger;
-            queries = GetEmbeddedQueries();
-        }
-
-        public async Task ConnectAsync(string conenctionString)
+        public async Task ConnectAsync(object queriesTarget, string conenctionString)
         {
             if (connection != null)
             {
@@ -51,7 +42,9 @@ namespace Mangos.Storage.MySql
             }
 
             connection = new MySqlConnection(conenctionString);
-            await connection.OpenAsync();
+            var conenctionTask = connection.OpenAsync();
+            queries = GetEmbeddedQueries(queriesTarget);
+            await conenctionTask;
         }
 
         public async ValueTask DisposeAsync()
@@ -62,11 +55,12 @@ namespace Mangos.Storage.MySql
             }
         }
 
-        private Dictionary<string, string> GetEmbeddedQueries()
+        private Dictionary<string, string> GetEmbeddedQueries(object executor)
         {
-            var type = GetType();
-            var queriesCatalog = $"{type.Namespace}.Queries";
+            var type = executor.GetType();
             var assembly = type.Assembly;
+            var queriesCatalog = $"{type.Namespace}.Queries";
+
             var resources = assembly.GetManifestResourceNames()
                 .Where(x => x.StartsWith(queriesCatalog))
                 .ToDictionary(
@@ -82,13 +76,13 @@ namespace Mangos.Storage.MySql
             return reader.ReadToEnd();
         }
 
-        private string GetSqlScript(string name)
+        private string GetQuery(string query)
         {
-            if (queries.ContainsKey(name))
+            if (queries.ContainsKey(query))
             {
-                return queries[name];
+                return queries[query];
             }
-            throw new Exception($"Unknown sql script {name}");
+            throw new Exception($"Unknown sql query '{query}'");
         }
 
         private string GetEmbeddedSqlResourceName(string queriesCatalog, string resource)
@@ -96,40 +90,40 @@ namespace Mangos.Storage.MySql
             return Regex.Split(resource, $"{queriesCatalog}.(.*).sql")[1];
         }
 
-        protected async Task<T> QuerySingleAsync<T>(
+        public async Task<T> QuerySingleAsync<T>(
             object parameters,
             [CallerMemberName] string callerMemberName = null)
         {
-            return await connection.QuerySingleAsync<T>(GetSqlScript(callerMemberName), parameters);
+            return await connection.QuerySingleAsync<T>(GetQuery(callerMemberName), parameters);
         }
 
-        protected async Task<T> QuerySingleOrDefaultAsync<T>(
+        public async Task<T> QuerySingleOrDefaultAsync<T>(
             object parameters,
             [CallerMemberName] string callerMemberName = null)
         {
-            return await connection.QuerySingleOrDefaultAsync<T>(GetSqlScript(callerMemberName), parameters);
+            return await connection.QuerySingleOrDefaultAsync<T>(GetQuery(callerMemberName), parameters);
         }
 
-        protected async Task<T> QueryFirstOrDefaultAsync<T>(
+        public async Task<T> QueryFirstOrDefaultAsync<T>(
             object parameters,
             [CallerMemberName] string callerMemberName = null)
         {
-            return await connection.QueryFirstOrDefaultAsync<T>(GetSqlScript(callerMemberName), parameters);
+            return await connection.QueryFirstOrDefaultAsync<T>(GetQuery(callerMemberName), parameters);
         }
 
-        protected async Task<List<T>> QueryAsync<T>(
+        public async Task<List<T>> QueryListAsync<T>(
             object parameters,
             [CallerMemberName] string callerMemberName = null)
         {
-            var result = await connection.QueryAsync<T>(GetSqlScript(callerMemberName), parameters);
+            var result = await connection.QueryAsync<T>(GetQuery(callerMemberName), parameters);
             return result.ToList();
         }
 
-        protected async Task QueryAsync(
+        public async Task QueryAsync(
            object parameters,
            [CallerMemberName] string callerMemberName = null)
         {
-            await connection.QueryAsync(GetSqlScript(callerMemberName), parameters);
+            await connection.QueryAsync(GetQuery(callerMemberName), parameters);
         }
     }
 }

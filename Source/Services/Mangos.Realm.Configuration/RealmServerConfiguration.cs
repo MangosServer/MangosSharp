@@ -18,7 +18,7 @@
 
 using System.Xml.Serialization;
 
-namespace Mangos.Realm
+namespace Mangos.Realm.Configuration
 {
     [XmlRoot(ElementName = "RealmServer")]
     public class RealmServerConfiguration

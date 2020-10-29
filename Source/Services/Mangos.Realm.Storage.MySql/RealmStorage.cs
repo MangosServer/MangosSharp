@@ -1,4 +1,5 @@
-﻿using Mangos.Loggers;
+﻿using Mangos.Configuration;
+using Mangos.Realm.Configuration;
 using Mangos.Realm.Storage.Entities;
 using Mangos.Storage.Account;
 using Mangos.Storage.MySql;
@@ -7,15 +8,26 @@ using System.Threading.Tasks;
 
 namespace Mangos.Realm.Storage.MySql
 {
-    public class RealmStorage : MySqlStorage, IRealmStorage
+    public class RealmStorage : IRealmStorage
     {
-        public RealmStorage(ILogger logger) : base(logger)
+        private readonly IConfigurationProvider<RealmServerConfiguration> configurationProvider;
+        private readonly MySqlStorage mySqlStorage;
+
+        public RealmStorage(IConfigurationProvider<RealmServerConfiguration> configurationProvider)
         {
+            this.configurationProvider = configurationProvider;
+            mySqlStorage = new MySqlStorage();
+        }
+
+        public async Task ConnectAsync()
+        {
+            var conenctionString = configurationProvider.GetConfiguration().AccountConnectionString;
+            await mySqlStorage.ConnectAsync(this, conenctionString);
         }
 
         public async Task<bool> IsBannedAccountAsync(string id)
         {
-            var count = await QuerySingleAsync<int>(new
+            var count = await mySqlStorage.QuerySingleAsync<int>(new
             {
                 Id = id
             });
@@ -24,7 +36,7 @@ namespace Mangos.Realm.Storage.MySql
 
         public async Task<AccountInfoEntity> GetAccountInfoAsync(string username)
         {
-            return await QueryFirstOrDefaultAsync<AccountInfoEntity>(new
+            return await mySqlStorage.QueryFirstOrDefaultAsync<AccountInfoEntity>(new
             {
                 Username = username
             });
@@ -32,12 +44,12 @@ namespace Mangos.Realm.Storage.MySql
 
         public async Task<List<RealmListItemEntitiy>> GetRealmListAsync()
         {
-            return await QueryAsync<RealmListItemEntitiy>(null);
+            return await mySqlStorage.QueryListAsync<RealmListItemEntitiy>(null);
         }
 
         public async Task UpdateAccountAsync(string sessionkey, string last_ip, string last_login, string username)
         {
-            await QueryAsync(new
+            await mySqlStorage.QueryAsync(new
             {
                 Sessionkey = sessionkey,
                 Last_ip = last_ip,
