@@ -28,7 +28,6 @@ using Mangos.Cluster.Stats;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Configuration;
-using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
 using Mangos.DataStores;
 using Mangos.Loggers;
@@ -63,12 +62,10 @@ namespace Mangos.Cluster
 
         public static void RegisterConfiguration(ContainerBuilder builder)
         {
-            builder.Register(x => new XmlFileConfigurationProvider<ClusterConfiguration>(
-                    x.Resolve<ILogger>(), "configs/WorldCluster.ini"))
+            builder.RegisterType<XmlConfigurationProvider<ClusterConfiguration>>()
                 .As<IConfigurationProvider<ClusterConfiguration>>()
+                .AsSelf()
                 .SingleInstance();
-            builder.RegisterDecorator<StoredConfigurationProvider<ClusterConfiguration>,
-                IConfigurationProvider<ClusterConfiguration>>();
         }
 
         public static void RegisterLoggers(ContainerBuilder builder)

@@ -32,6 +32,7 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Common.Legacy.Logging;
+using Mangos.Configuration.Xml;
 using Mangos.Network.Tcp;
 using Mangos.SignalR;
 using Microsoft.VisualBasic;
@@ -42,13 +43,16 @@ namespace Mangos.Cluster
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
         private readonly TcpServer _tcpServer;
+        private readonly XmlConfigurationProvider<ClusterConfiguration> configurationProvider;
 
         public WorldCluster(
             ClusterServiceLocator clusterServiceLocator,
-            TcpServer tcpServer)
+            TcpServer tcpServer,
+            XmlConfigurationProvider<ClusterConfiguration> configurationProvider)
         {
             _clusterServiceLocator = clusterServiceLocator;
             _tcpServer = tcpServer;
+            this.configurationProvider = configurationProvider;
         }
 
         private const string CLUSTER_PATH = "configs/WorldCluster.ini";
@@ -269,6 +273,8 @@ namespace Mangos.Cluster
 
         public async Task StartAsync()
         {
+            configurationProvider.LoadFromFile("configs/WorldCluster.ini");
+
             Console.BackgroundColor = ConsoleColor.Black;
             var assemblyTitleAttribute = (AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false)[0];
             Console.Title = $"{assemblyTitleAttribute.Title} v{Assembly.GetExecutingAssembly().GetName().Version}";

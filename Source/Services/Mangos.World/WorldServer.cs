@@ -30,6 +30,7 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Common.Legacy.Logging;
+using Mangos.Configuration.Xml;
 using Mangos.SignalR;
 using Mangos.World.Globals;
 using Mangos.World.Maps;
@@ -118,14 +119,14 @@ namespace Mangos.World
         public WS_Network.WorldServerClass ClsWorldServer;
 
         public const int SERVERSEED = -569166080;
-
+        private readonly XmlConfigurationProvider<WorldServerConfiguration> xmlConfigurationProvider;
         public SQL AccountDatabase;
 
         public SQL CharacterDatabase;
 
         public SQL WorldDatabase;
 
-        public WorldServer()
+        public WorldServer(XmlConfigurationProvider<WorldServerConfiguration> xmlConfigurationProvider)
         {
             CLIENTs = new Dictionary<uint, WS_Network.ClientClass>();
             CHARACTERs = new Dictionary<ulong, WS_PlayerData.CharacterObject>();
@@ -161,6 +162,7 @@ namespace Mangos.World
             AccountDatabase = new SQL();
             CharacterDatabase = new SQL();
             WorldDatabase = new SQL();
+            this.xmlConfigurationProvider = xmlConfigurationProvider;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -315,6 +317,8 @@ namespace Mangos.World
         [MTAThread]
         public async Task StartAsync()
         {
+            xmlConfigurationProvider.LoadFromFile("configs/WorldServer.ini");
+
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Title = $"{((AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), inherit: false)[0]).Title} v{Assembly.GetExecutingAssembly().GetName().Version}";
             Console.ForegroundColor = ConsoleColor.Yellow;

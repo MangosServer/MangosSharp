@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Mangos.Common.Globals;
 using Mangos.Configuration;
-using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
 using Mangos.DataStores;
 using Mangos.Loggers;
@@ -75,8 +74,10 @@ namespace Mangos.World
 
         public static void RegisterConfiguration(ContainerBuilder builder)
         {
-            builder.Register(x => new XmlFileConfigurationProvider<WorldServerConfiguration>(x.Resolve<ILogger>(), "configs/WorldServer.ini")).As<IConfigurationProvider<WorldServerConfiguration>>().SingleInstance();
-            builder.RegisterDecorator<StoredConfigurationProvider<WorldServerConfiguration>, IConfigurationProvider<WorldServerConfiguration>>();
+            builder.RegisterType<XmlConfigurationProvider<WorldServerConfiguration>>()
+                .As<IConfigurationProvider<WorldServerConfiguration>>()
+                .AsSelf()
+                .SingleInstance();
         }
 
         public static void RegisterServices(ContainerBuilder builder)

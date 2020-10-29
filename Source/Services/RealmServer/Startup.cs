@@ -20,7 +20,7 @@ using System;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
-using Mangos.Configuration;
+using Mangos.Configuration.Xml;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
 using Mangos.Realm.Storage.MySql;
@@ -31,14 +31,14 @@ namespace Mangos.Realm
     {
         private readonly ILogger logger;
         private readonly RealmStorage realmStorage;
-        private readonly IConfigurationProvider<RealmServerConfiguration> configurationProvider;
+        private readonly XmlConfigurationProvider<RealmServerConfiguration> configurationProvider;
 
         private readonly TcpServer tcpServer;
 
         public Startup(
             ILogger logger,
             RealmStorage realmStorage,
-            IConfigurationProvider<RealmServerConfiguration> configurationProvider,
+            XmlConfigurationProvider<RealmServerConfiguration> configurationProvider,
             TcpServer tcpServer)
         {
             this.logger = logger;
@@ -49,26 +49,34 @@ namespace Mangos.Realm
 
         public async Task StartAsync()
         {
-            SetupRealmServer();
-
+            WriteServiceInformation();
+            LoadConfiguration();
             await ConnectToDatabaseAsync();
-            await StartTcpServerAsync();
+            StartTcpServer();
+        }
+
+        private void LoadConfiguration()
+        {
+            configurationProvider.LoadFromFile("configs/RealmServer.ini");
+            logger.Debug("Realm configuration has been loaded");
         }
 
         private async Task ConnectToDatabaseAsync()
         {
-            var configuration = await configurationProvider.GetConfigurationAsync();
+            var configuration = configurationProvider.GetConfiguration();
             await realmStorage.ConnectAsync(configuration.AccountConnectionString);
+            logger.Debug("Connection to account database has been established");
         }
 
-        private async Task StartTcpServerAsync()
+        private void StartTcpServer()
         {
-            var configuration = await configurationProvider.GetConfigurationAsync();
+            var configuration = configurationProvider.GetConfiguration();
             var endpoint = IPEndPoint.Parse(configuration.RealmServerEndpoint);
             tcpServer.Start(endpoint, 10);
+            logger.Debug("Tcp server has been started");
         }
 
-        private void SetupRealmServer()
+        private void WriteServiceInformation()
         {
             var assembly = Assembly.GetExecutingAssembly();
             var assemblyTitle = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;

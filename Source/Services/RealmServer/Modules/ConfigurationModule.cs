@@ -1,8 +1,6 @@
 ﻿using Autofac;
 using Mangos.Configuration;
-using Mangos.Configuration.Store;
 using Mangos.Configuration.Xml;
-using Mangos.Loggers;
 using Mangos.Realm;
 
 namespace RealmServer.Modules
@@ -11,12 +9,10 @@ namespace RealmServer.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(x => new XmlFileConfigurationProvider<RealmServerConfiguration>(
-                    x.Resolve<ILogger>(), "configs/RealmServer.ini"))
+            builder.RegisterType<XmlConfigurationProvider<RealmServerConfiguration>>()
                 .As<IConfigurationProvider<RealmServerConfiguration>>()
+                .AsSelf()
                 .SingleInstance();
-            builder.RegisterDecorator<StoredConfigurationProvider<RealmServerConfiguration>, 
-                IConfigurationProvider<RealmServerConfiguration>>();
         }
     }
 }

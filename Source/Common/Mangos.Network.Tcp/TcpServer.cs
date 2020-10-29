@@ -44,39 +44,17 @@ namespace Mangos.Network.Tcp
 
         public void Start(IPEndPoint endPoint, int backlog)
         {
-            if (socket != null)
-            {
-                logger.Error("TcpServer already started");
-                throw new Exception("TcpServer already started");
-            }
-            try
-            {
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socket.Bind(endPoint);
-                socket.Listen(backlog);
-                StartAcceptLoop();
-                logger.Debug("TcpServer has been started");
-            }
-            catch (Exception ex)
-            {
-                logger.Error("TcpServer start execption", ex);
-                throw;
-            }
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket.Bind(endPoint);
+            socket.Listen(backlog);
+            StartAcceptLoop();
         }
 
         private async void StartAcceptLoop()
         {
-            try
+            while (!cancellationTokenSource.IsCancellationRequested)
             {
-                logger.Debug("Start accepting connections");
-                while (!cancellationTokenSource.IsCancellationRequested)
-                {
-                    OnAcceptAsync(await socket.AcceptAsync());
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error("Error during accepting conenction", ex);
+                OnAcceptAsync(await socket.AcceptAsync());
             }
         }
 

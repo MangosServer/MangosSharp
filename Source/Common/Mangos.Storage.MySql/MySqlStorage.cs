@@ -22,7 +22,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Dapper;
@@ -48,20 +47,11 @@ namespace Mangos.Storage.MySql
         {
             if (connection != null)
             {
-                logger.Error("MySql connection has already opened");
-                throw new Exception("MySql connection has already opened");
+                throw new Exception("MySql connection has already been opened");
             }
-            try
-            {
-                connection = new MySqlConnection(conenctionString);
-                await connection.OpenAsync();
-                logger.Debug("MySql connection for {0} database has been opened", connection.Database);
-            }
-            catch (Exception ex)
-            {
-                logger.Error("Unable to open MySql conenction", ex);
-                throw;
-            }
+
+            connection = new MySqlConnection(conenctionString);
+            await connection.OpenAsync();
         }
 
         public async ValueTask DisposeAsync()
@@ -110,84 +100,36 @@ namespace Mangos.Storage.MySql
             object parameters,
             [CallerMemberName] string callerMemberName = null)
         {
-            try
-            {
-                var result = await connection.QuerySingleAsync<T>(GetSqlScript(callerMemberName), parameters);
-                logger.Debug($"QuerySingleAsync for {callerMemberName} has beed successfuly executed");
-                return result;
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"Unable to execute {callerMemberName} script with args {0}", ex, JsonSerializer.Serialize(parameters));
-                throw;
-            }
+            return await connection.QuerySingleAsync<T>(GetSqlScript(callerMemberName), parameters);
         }
 
         protected async Task<T> QuerySingleOrDefaultAsync<T>(
             object parameters,
             [CallerMemberName] string callerMemberName = null)
         {
-            try
-            {
-                var result = await connection.QuerySingleOrDefaultAsync<T>(GetSqlScript(callerMemberName), parameters);
-                logger.Debug($"QuerySingleOrDefaultAsync for {callerMemberName} has beed successfuly executed");
-                return result;
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"Unable to execute {callerMemberName} script with args {0}", ex, JsonSerializer.Serialize(parameters));
-                throw;
-            }
+            return await connection.QuerySingleOrDefaultAsync<T>(GetSqlScript(callerMemberName), parameters);
         }
 
         protected async Task<T> QueryFirstOrDefaultAsync<T>(
             object parameters,
             [CallerMemberName] string callerMemberName = null)
         {
-            try
-            {
-                var result = await connection.QueryFirstOrDefaultAsync<T>(GetSqlScript(callerMemberName), parameters);
-                logger.Debug($"QueryFirstOrDefaultAsync for {callerMemberName} has beed successfuly executed");
-                return result;
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"Unable to execute {callerMemberName} script with args {0}", ex, JsonSerializer.Serialize(parameters));
-                throw;
-            }
+            return await connection.QueryFirstOrDefaultAsync<T>(GetSqlScript(callerMemberName), parameters);
         }
 
         protected async Task<List<T>> QueryAsync<T>(
             object parameters,
             [CallerMemberName] string callerMemberName = null)
         {
-            try
-            {
-                var result = await connection.QueryAsync<T>(GetSqlScript(callerMemberName), parameters);
-                logger.Debug($"QueryAsync for {callerMemberName} has beed successfuly executed");
-                return result.ToList();
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"Unable to execute {callerMemberName} script with args {0}", ex, JsonSerializer.Serialize(parameters));
-                throw;
-            }
+            var result = await connection.QueryAsync<T>(GetSqlScript(callerMemberName), parameters);
+            return result.ToList();
         }
 
         protected async Task QueryAsync(
            object parameters,
            [CallerMemberName] string callerMemberName = null)
         {
-            try
-            {
-                await connection.QueryAsync(GetSqlScript(callerMemberName), parameters);
-                logger.Debug($"QueryAsync for {callerMemberName} has beed successfuly executed");
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"Unable to execute {callerMemberName} script with args {0}", ex, JsonSerializer.Serialize(parameters));
-                throw;
-            }
+            await connection.QueryAsync(GetSqlScript(callerMemberName), parameters);
         }
     }
 }
