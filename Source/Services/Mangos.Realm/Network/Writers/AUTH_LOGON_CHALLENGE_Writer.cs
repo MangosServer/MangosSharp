@@ -14,13 +14,13 @@ namespace Mangos.Realm.Network.Writers
             await writer.WriteAsync((byte)AuthCMD.CMD_AUTH_LOGON_CHALLENGE);
             await writer.WriteAsync((byte)AccountState.LOGIN_OK);
             await writer.WriteAsync(0);
-            await writer.WriteAsync(packet.PublicB);
+            await writer.WriteEnumerableAsync(packet.PublicB);
             await writer.WriteAsync((byte)packet.G.Length);
             await writer.WriteAsync(packet.G[0]);
             await writer.WriteAsync(32);
-            await writer.WriteAsync(packet.N);
-            await writer.WriteAsync(packet.Salt);
-            await writer.WriteAsync(packet.CrcSalt);
+            await writer.WriteEnumerableAsync(packet.N);
+            await writer.WriteEnumerableAsync(packet.Salt);
+            await writer.WriteEnumerableAsync(packet.CrcSalt);
             await writer.WriteAsync(0);
         }
     }

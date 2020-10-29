@@ -45,13 +45,5 @@ namespace Mangos.Realm.Storage.MySql
                 Username = username
             });
         }
-
-        public async Task<int> GetNumcharsAsync(string realmId)
-        {
-            return await QuerySingleOrDefaultAsync<int>(new
-            {
-                Realmid = realmId
-            });
-        }
     }
 }

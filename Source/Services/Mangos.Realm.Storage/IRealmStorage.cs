@@ -31,7 +31,5 @@ namespace Mangos.Storage.Account
         Task<List<RealmListItemEntitiy>> GetRealmListAsync();
 
         Task UpdateAccountAsync(string sessionkey, string last_ip, string last_login, string username);
-
-        Task<int> GetNumcharsAsync(string realmId);
     }
 }

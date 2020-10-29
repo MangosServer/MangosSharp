@@ -20,6 +20,9 @@ namespace Mangos.Realm.Storage.Entities
 {
     public class RealmListItemEntitiy
     {
-        public string id, address, name, port, timezone, icon, realmflags, population;
+        public string address, name, port;
+        public byte timezone, icon, realmflags;
+        public float population;
+        public int numchars;
     }
 }

@@ -114,7 +114,7 @@ namespace Mangos.Network.Tcp
                         client.Dispose();
                         return;
                     }
-                    await writer.WriteAsync(buffer, bytesRead);
+                    await writer.WriteArrayAsync(buffer, bytesRead);
                 }
             }
             catch (Exception ex)

@@ -15,8 +15,8 @@ namespace Mangos.Realm.Network.Writers
 
             if(packet.M2 != null)
             {
-                await writer.WriteAsync(packet.M2);
-                await writer.WriteZeroAsync(4);
+                await writer.WriteEnumerableAsync(packet.M2);
+                await writer.WriteZeroNCountAsync(4);
             }
         }
     }

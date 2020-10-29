@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace Mangos.Network.Tcp.Extensions
 {
     public static class ChannelWriterExtensions
     {
-        public static async ValueTask WriteAsync(this ChannelWriter<byte> writer, IEnumerable<byte> data)
+        public static async ValueTask WriteEnumerableAsync(this ChannelWriter<byte> writer, IEnumerable<byte> data)
         {
             foreach (var item in data)
             {
@@ -32,7 +33,12 @@ namespace Mangos.Network.Tcp.Extensions
             }
         }
 
-        public static async ValueTask WriteZeroAsync(this ChannelWriter<byte> writer, int count)
+        public static async ValueTask WriteFloatAsync(this ChannelWriter<byte> writer, float data)
+        {
+            await writer.WriteEnumerableAsync(BitConverter.GetBytes(data));
+        }
+
+        public static async ValueTask WriteZeroNCountAsync(this ChannelWriter<byte> writer, int count)
         {
             for (var i = 0; i < count; i++)
             {
@@ -40,7 +46,7 @@ namespace Mangos.Network.Tcp.Extensions
             }
         }
 
-        public static async ValueTask WriteAsync(this ChannelWriter<byte> writer, byte[] data, int count)
+        public static async ValueTask WriteArrayAsync(this ChannelWriter<byte> writer, byte[] data, int count)
         {
             for (int i = 0; i < count; i++)
             {
