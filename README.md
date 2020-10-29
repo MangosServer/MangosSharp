@@ -25,13 +25,13 @@ World of Warcraft, and all World of Warcraft or Warcraft art, images, and lore a
 copyrighted by [Blizzard Entertainment, Inc.][1]
 
 ## Game server requirements
-    Supported OS: Windows 7-10, Linux, MacOS, Docker
+    Supported OS: Windows 7+, Linux, MacOS, Docker
     .NET Core 3.1
     MySQL 8.0
 
 ## Development Requirements
-    Windows 10
-    Visual Studio 2019
+    Windows 7+, Linux, MacOS
+    Visual Studio 2019 or any other editor with .NET support
     MySQL 8.0
     .NET Core 3.1 SDK
   
