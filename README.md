@@ -24,39 +24,17 @@ content just like the original did back then.
 World of Warcraft, and all World of Warcraft or Warcraft art, images, and lore are
 copyrighted by [Blizzard Entertainment, Inc.][1]
 
-Requirements
-------------
-TODO !!
+## Game server requirements
+    Supported OS: Windows 7-10, Linux, MacOS, Docker
+    .NET Core 3.1
+    MySQL 8.0
 
-Operating systems
------------------
-Currently we support running *Mangos* on the following operating systems:
-
-* **Windows**, 32 bit and 64 bit. [Windows][20] Server 2008 (or newer) or Windows 7 (or newer) is recommended.
-
-Of course, newer versions should work, too. In the case of Windows, matching
-server versions will work, too.
-
-Compilers
----------
-Building *Mangos* is currently possible with these compilers:
-
-* **Microsoft Visual Studio 32 bit and 64 bit.** All editions of [Visual Studio][31]
-  are supported. Only Visual Studio 2015 and above are now officially supported.
-
-Dependencies
-------------
-The *Mangos* server stands on the shoulders of well-known Open Source
-libraries, and a few awesome, but less known libraries to prevent us from
-inventing the wheel again.
-
-*Please note that Linux and Mac OS X users should install packages using
-their systems package management instead of source packages.*
-
-* **MySQL** / **MariaDB**: to store content, and user data, we rely on
-  [MySQL][40]/[MariaDB][41] to handle data.
-* **OpenSSL**: [OpenSSL][48] ([OpenSSL for Windows][55]) provides encryption
-  algorithms used when authenticating clients.
+## Development Requirements
+    Windows 10
+    Visual Studio 2019
+    MySQL 8.0
+    .NET Core 3.1 SDK
+  
 Discuss
 -------
 If you need help with building and installing *Mangos* there are thousands of
