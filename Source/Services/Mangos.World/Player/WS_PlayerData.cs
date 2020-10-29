@@ -38,7 +38,6 @@ using Mangos.World.Maps;
 using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Quests;
-using Mangos.World.ReaderWriterLock;
 using Mangos.World.Social;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
@@ -266,7 +265,7 @@ namespace Mangos.World.Player
 
             public int resurrectMana;
 
-            public ReaderWriterLock_Debug guidsForRemoving_Lock;
+            public ReaderWriterLock guidsForRemoving_Lock;
 
             public List<ulong> guidsForRemoving;
 
@@ -6230,7 +6229,7 @@ namespace Mangos.World.Player
                 resurrectPositionZ = 0f;
                 resurrectHealth = 0;
                 resurrectMana = 0;
-                guidsForRemoving_Lock = new ReaderWriterLock_Debug(null);
+                guidsForRemoving_Lock = new ReaderWriterLock();
                 guidsForRemoving = new List<ulong>();
                 creaturesNear = new List<ulong>();
                 playersNear = new List<ulong>();
@@ -6406,7 +6405,7 @@ namespace Mangos.World.Player
                 resurrectPositionZ = 0f;
                 resurrectHealth = 0;
                 resurrectMana = 0;
-                guidsForRemoving_Lock = new ReaderWriterLock_Debug(null);
+                guidsForRemoving_Lock = new ReaderWriterLock();
                 guidsForRemoving = new List<ulong>();
                 creaturesNear = new List<ulong>();
                 playersNear = new List<ulong>();
