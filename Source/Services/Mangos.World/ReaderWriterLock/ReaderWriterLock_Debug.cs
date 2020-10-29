@@ -43,19 +43,7 @@ namespace Mangos.World.ReaderWriterLock
         public ReaderWriterLock_Debug(string s)
         {
             WriteQueue = new Queue<string>();
-            
-            switch (s)
-            {
-                case null:
-                    return;
-            }
-
-            ID = ID switch
-            {
-                null => throw new ArgumentNullException(nameof(s)),
-                _ => s
-            };
-
+            ID = s ?? throw new ArgumentNullException(nameof(s));
             string path = $"ReaderWriterLock_Debug_{ID}_{DateAndTime.Now.Ticks}.log";
             file = new FileStream(path, FileMode.Create);
             writer = new StreamWriter(file);
@@ -68,7 +56,6 @@ namespace Mangos.World.ReaderWriterLock
             {
                 WriteLine($"\t{frame.GetMethod()!.Name}");
             }
-
             WriteLine($"NewLock {ID}");
             new Thread(WriteLoop)
             {
