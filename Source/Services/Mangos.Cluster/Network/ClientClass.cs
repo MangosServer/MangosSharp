@@ -24,12 +24,14 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Mangos.Cluster.Configuration;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
+using Mangos.Configuration;
 using Mangos.Network.Tcp;
 using Mangos.Network.Tcp.Extensions;
 using Microsoft.VisualBasic;
@@ -38,12 +40,16 @@ namespace Mangos.Cluster.Network
 {
     public class ClientClass : ClientInfo, ITcpClient
     {
+        private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public ClientClass(ClusterServiceLocator clusterServiceLocator, Socket socket)
+        public ClientClass(ClusterServiceLocator clusterServiceLocator, 
+            Socket socket, 
+            IConfigurationProvider<ClusterConfiguration> configurationProvider)
         {
             _clusterServiceLocator = clusterServiceLocator;
             _socket = socket;
+            this.configurationProvider = configurationProvider;
         }
 
         private readonly Socket _socket;
@@ -135,7 +141,7 @@ namespace Mangos.Cluster.Network
 
             var client = this;
 
-            if (_clusterServiceLocator.WorldCluster.GetConfig().PacketLogging)
+            if (configurationProvider.GetConfiguration().PacketLogging)
             {
                 var argclient = this;
                 _clusterServiceLocator.Packets.LogPacket(p.Data, false, client);
@@ -182,7 +188,7 @@ namespace Mangos.Cluster.Network
                 return;
             try
             {
-                if (_clusterServiceLocator.WorldCluster.GetConfig().PacketLogging)
+                if (configurationProvider.GetConfiguration().PacketLogging)
                 {
                     var argclient = this;
                     _clusterServiceLocator.Packets.LogPacket(data, true, argclient);
@@ -214,7 +220,7 @@ namespace Mangos.Cluster.Network
                 try
                 {
                     var data = packet.Data;
-                    if (_clusterServiceLocator.WorldCluster.GetConfig().PacketLogging)
+                    if (configurationProvider.GetConfiguration().PacketLogging)
                     {
                         var argclient = this;
                         _clusterServiceLocator.Packets.LogPacket(data, true, argclient);
@@ -243,7 +249,7 @@ namespace Mangos.Cluster.Network
             try
             {
                 var data = (byte[])packet.Data.Clone();
-                if (_clusterServiceLocator.WorldCluster.GetConfig().PacketLogging)
+                if (configurationProvider.GetConfiguration().PacketLogging)
                 {
                     var argclient = this;
                     _clusterServiceLocator.Packets.LogPacket(data, true, argclient);
@@ -345,7 +351,7 @@ namespace Mangos.Cluster.Network
 
         public void EnQueue(object state)
         {
-            while (_clusterServiceLocator.WorldCluster.CharacteRs.Count > _clusterServiceLocator.WorldCluster.GetConfig().ServerPlayerLimit)
+            while (_clusterServiceLocator.WorldCluster.CharacteRs.Count > configurationProvider.GetConfiguration().ServerPlayerLimit)
             {
                 if (!_socket.Connected)
                     return;

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading;
+using Mangos.Cluster.Configuration;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Authentication;
@@ -30,17 +31,22 @@ using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
+using Mangos.Configuration;
 using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster.Handlers
 {
     public class WcHandlersAuth
     {
+        private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WcHandlersAuth(ClusterServiceLocator clusterServiceLocator)
+        public WcHandlersAuth(
+            ClusterServiceLocator clusterServiceLocator, 
+            IConfigurationProvider<ClusterConfiguration> configurationProvider)
         {
             _clusterServiceLocator = clusterServiceLocator;
+            this.configurationProvider = configurationProvider;
         }
 
         private const int REQUIRED_BUILD_LOW = 5875; // 1.12.1
@@ -147,7 +153,7 @@ namespace Mangos.Cluster.Handlers
             // Next
 
             // DONE: If server full then queue, If GM/Admin let in
-            if (_clusterServiceLocator.WorldCluster.ClienTs.Count > _clusterServiceLocator.WorldCluster.GetConfig().ServerPlayerLimit & client.Access <= AccessLevel.Player)
+            if (_clusterServiceLocator.WorldCluster.ClienTs.Count > configurationProvider.GetConfiguration().ServerPlayerLimit & client.Access <= AccessLevel.Player)
             {
                 ThreadPool.QueueUserWorkItem(client.EnQueue);
             }

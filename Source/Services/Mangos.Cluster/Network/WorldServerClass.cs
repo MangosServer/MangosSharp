@@ -20,11 +20,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Mangos.Cluster.Configuration;
 using Mangos.Cluster.Globals;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
+using Mangos.Configuration;
 using Mangos.SignalR;
 using Microsoft.AspNetCore.SignalR;
 
@@ -33,15 +35,18 @@ namespace Mangos.Cluster.Network
     public class WorldServerClass : Hub, ICluster
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
+        private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
 
         public bool MFlagStopListen = false;
         private Timer _mTimerPing;
         private Timer _mTimerStats;
         private Timer _mTimerCpu;
 
-        public WorldServerClass(ClusterServiceLocator clusterServiceLocator)
+        public WorldServerClass(ClusterServiceLocator clusterServiceLocator, 
+            IConfigurationProvider<ClusterConfiguration> configurationProvider)
         {
             _clusterServiceLocator = clusterServiceLocator;
+            this.configurationProvider = configurationProvider;
         }
 
         public void Start()
@@ -50,9 +55,13 @@ namespace Mangos.Cluster.Network
             _mTimerPing = new Timer(Ping, null, 0, 15000);
 
             // Creating stats timer
-            if (_clusterServiceLocator.WorldCluster.GetConfig().StatsEnabled)
+            if (configurationProvider.GetConfiguration().StatsEnabled)
             {
-                _mTimerStats = new Timer(_clusterServiceLocator.WcStats.GenerateStats, null, _clusterServiceLocator.WorldCluster.GetConfig().StatsTimer, _clusterServiceLocator.WorldCluster.GetConfig().StatsTimer);
+                _mTimerStats = new Timer(
+                    _clusterServiceLocator.WcStats.GenerateStats, 
+                    null, 
+                    configurationProvider.GetConfiguration().StatsTimer,
+                    configurationProvider.GetConfiguration().StatsTimer);
             }
 
             // Creating CPU check timer

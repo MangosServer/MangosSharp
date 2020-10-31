@@ -22,21 +22,26 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Xml;
+using Mangos.Cluster.Configuration;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
+using Mangos.Configuration;
 using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster.Stats
 {
     public class WcStats
     {
+        private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WcStats(ClusterServiceLocator clusterServiceLocator)
+        public WcStats(ClusterServiceLocator clusterServiceLocator, 
+            IConfigurationProvider<ClusterConfiguration> configurationProvider)
         {
             _clusterServiceLocator = clusterServiceLocator;
+            this.configurationProvider = configurationProvider;
         }
 
         // http://www.15seconds.com/issue/050615.htm
@@ -143,7 +148,7 @@ namespace Mangos.Cluster.Stats
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "Generating stats");
             PrepareStats();
-            var f = XmlWriter.Create(_clusterServiceLocator.WorldCluster.GetConfig().StatsLocation);
+            var f = XmlWriter.Create(configurationProvider.GetConfiguration().StatsLocation);
             f.WriteStartDocument(true);
             f.WriteComment("generated at " + DateTime.Now.ToString("hh:mm:ss"));
             // <?xml-stylesheet type="text/xsl" href="stats.xsl"?>
