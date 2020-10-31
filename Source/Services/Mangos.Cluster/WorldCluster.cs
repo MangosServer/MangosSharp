@@ -25,6 +25,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Mangos.Cluster.Configuration;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Network;

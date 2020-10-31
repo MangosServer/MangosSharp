@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Mangos.Cluster;
+using Mangos.Cluster.Configuration;
 using Mangos.Configuration;
 using Mangos.Configuration.Xml;
 

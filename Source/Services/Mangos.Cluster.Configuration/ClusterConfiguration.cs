@@ -19,7 +19,7 @@
 using System.Xml.Serialization;
 using Mangos.Common.Enums.Global;
 
-namespace Mangos.Cluster
+namespace Mangos.Cluster.Configuration
 {
     [XmlRoot(ElementName = "WorldCluster")]
     public class ClusterConfiguration
