@@ -29,17 +29,17 @@ namespace Mangos.Realm.Network.Handlers
 {
     public class RS_REALMLIST_Handler : IPacketHandler
     {
-        private readonly IRealmStorage realmStorage;
+        private readonly IAccountStorage accountStorage;
 
         private readonly RS_REALMLIST_Reader RS_REALMLIST_Reader;
         private readonly AUTH_REALMLIST_Writer AUTH_REALMLIST_Writer;
 
         public RS_REALMLIST_Handler(
-            IRealmStorage realmStorage,
+            IAccountStorage accountStorage,
             RS_REALMLIST_Reader RS_REALMLIST_Reader, 
             AUTH_REALMLIST_Writer AUTH_REALMLIST_Writer)
         {
-            this.realmStorage = realmStorage;
+            this.accountStorage = accountStorage;
             this.RS_REALMLIST_Reader = RS_REALMLIST_Reader;
             this.AUTH_REALMLIST_Writer = AUTH_REALMLIST_Writer;
         }
@@ -48,7 +48,7 @@ namespace Mangos.Realm.Network.Handlers
         {
             var request = await RS_REALMLIST_Reader.ReadAsync(reader);
 
-            var realmList = await realmStorage.GetRealmListAsync();
+            var realmList = await accountStorage.GetRealmListAsync();
 
             var realms = realmList.Select(x => new AUTH_REALMLIST.Realm(
                 x.address,

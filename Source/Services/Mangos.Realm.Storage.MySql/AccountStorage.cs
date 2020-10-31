@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Mangos.Realm.Storage.MySql
 {
-    public class RealmStorage : IRealmStorage
+    public class AccountStorage : IAccountStorage
     {
         private readonly IConfigurationProvider<RealmServerConfiguration> configurationProvider;
         private readonly MySqlStorage mySqlStorage;
 
-        public RealmStorage(IConfigurationProvider<RealmServerConfiguration> configurationProvider)
+        public AccountStorage(IConfigurationProvider<RealmServerConfiguration> configurationProvider)
         {
             this.configurationProvider = configurationProvider;
             mySqlStorage = new MySqlStorage();

@@ -36,7 +36,7 @@ namespace Mangos.Realm.Network.Handlers
     {
         private readonly ILogger logger;
         private readonly MangosGlobalConstants mangosGlobalConstants;
-        private readonly IRealmStorage realmStorage;
+        private readonly IAccountStorage accountStorage;
 
         private readonly AUTH_LOGON_PROOF_Writer AUTH_LOGON_PROOF_Writer;
         private readonly RS_LOGON_CHALLENGE_Reader RS_LOGON_CHALLENGE_Reader;
@@ -45,13 +45,13 @@ namespace Mangos.Realm.Network.Handlers
         public RS_LOGON_CHALLENGE_Handler(
             ILogger logger,
             MangosGlobalConstants mangosGlobalConstants,
-            IRealmStorage realmStorage,
+            IAccountStorage accountStorage,
             AUTH_LOGON_PROOF_Writer AUTH_LOGON_PROOF_Writer,
             RS_LOGON_CHALLENGE_Reader RS_LOGON_CHALLENGE_Reader, 
             AUTH_LOGON_CHALLENGE_Writer AUTH_LOGON_CHALLENGE_Writer)
         {
             this.mangosGlobalConstants = mangosGlobalConstants;
-            this.realmStorage = realmStorage;
+            this.accountStorage = accountStorage;
             this.logger = logger;
             this.AUTH_LOGON_PROOF_Writer = AUTH_LOGON_PROOF_Writer;
             this.RS_LOGON_CHALLENGE_Reader = RS_LOGON_CHALLENGE_Reader;
@@ -69,7 +69,7 @@ namespace Mangos.Realm.Network.Handlers
                 | request.Build == mangosGlobalConstants.Required_Build_1_12_3)
             {
                 // TODO: in the far future should check if the account is expired too                
-                var accountInfo = await realmStorage.GetAccountInfoAsync(clientModel.AccountName);
+                var accountInfo = await accountStorage.GetAccountInfoAsync(clientModel.AccountName);
                 var accountState = await GetAccountStateAsync(accountInfo);
 
                 // DONE: Send results to client
@@ -147,7 +147,7 @@ namespace Mangos.Realm.Network.Handlers
         {
             if (accountInfo != null)
             {
-                return await realmStorage.IsBannedAccountAsync(accountInfo.id)
+                return await accountStorage.IsBannedAccountAsync(accountInfo.id)
                     ? AccountState.LOGIN_BANNED
                     : AccountState.LOGIN_OK;
             }

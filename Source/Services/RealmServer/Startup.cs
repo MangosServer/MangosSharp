@@ -31,14 +31,14 @@ namespace Mangos.Realm
     public class Startup
     {
         private readonly ILogger logger;
-        private readonly RealmStorage realmStorage;
+        private readonly AccountStorage realmStorage;
         private readonly XmlConfigurationProvider<RealmServerConfiguration> configurationProvider;
 
         private readonly TcpServer tcpServer;
 
         public Startup(
             ILogger logger,
-            RealmStorage realmStorage,
+            AccountStorage realmStorage,
             XmlConfigurationProvider<RealmServerConfiguration> configurationProvider,
             TcpServer tcpServer)
         {

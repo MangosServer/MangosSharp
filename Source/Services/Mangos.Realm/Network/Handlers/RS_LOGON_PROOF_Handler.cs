@@ -34,19 +34,19 @@ namespace Mangos.Realm.Network.Handlers
     public class RS_LOGON_PROOF_Handler : IPacketHandler
     {
         private readonly ILogger logger;
-        private readonly IRealmStorage realmStorage;
+        private readonly IAccountStorage accountStorage;
 
         private readonly AUTH_LOGON_PROOF_Writer AUTH_LOGON_PROOF_Writer;
         private readonly RS_LOGON_PROOF_Reader RS_LOGON_PROOF_Reader;
 
         public RS_LOGON_PROOF_Handler(
             ILogger logger,
-            IRealmStorage realmStorage,
+            IAccountStorage accountStorage,
             AUTH_LOGON_PROOF_Writer AUTH_LOGON_PROOF_Writer, 
             RS_LOGON_PROOF_Reader RS_LOGON_PROOF_Reader)
         {
             this.logger = logger;
-            this.realmStorage = realmStorage;
+            this.accountStorage = accountStorage;
             this.AUTH_LOGON_PROOF_Writer = AUTH_LOGON_PROOF_Writer;
             this.RS_LOGON_PROOF_Reader = RS_LOGON_PROOF_Reader;
         }
@@ -78,7 +78,7 @@ namespace Mangos.Realm.Network.Handlers
                 // Set SSHash in DB
                 var sshash = string.Concat(clientModel.ClientAuthEngine.SsHash.Select(x => x.ToString("X2")));
 
-                await realmStorage.UpdateAccountAsync(sshash,
+                await accountStorage.UpdateAccountAsync(sshash,
                     clientModel.RemoteEnpoint.Address.ToString(), 
                     Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), 
                     clientModel.AccountName);

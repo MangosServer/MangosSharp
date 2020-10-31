@@ -8,9 +8,9 @@ namespace RealmServer.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<RealmStorage>()
+            builder.RegisterType<AccountStorage>()
                 .AsSelf()
-                .As<IRealmStorage>()
+                .As<IAccountStorage>()
                 .SingleInstance();
         }
     }

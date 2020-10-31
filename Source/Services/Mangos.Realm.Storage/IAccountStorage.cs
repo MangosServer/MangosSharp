@@ -22,7 +22,7 @@ using Mangos.Realm.Storage.Entities;
 
 namespace Mangos.Storage.Account
 {
-    public interface IRealmStorage
+    public interface IAccountStorage
     {
         Task<bool> IsBannedAccountAsync(string id);
 
