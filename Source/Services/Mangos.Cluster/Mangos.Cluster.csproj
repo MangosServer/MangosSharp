@@ -14,5 +14,6 @@
     <ProjectReference Include="..\..\Common\Mangos.Network.Tcp\Mangos.Network.Tcp.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.SignalR\Mangos.SignalR.csproj" />
     <ProjectReference Include="..\Mangos.Cluster.Configuration\Mangos.Cluster.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Cluster.Storage\Mangos.Cluster.Storage.csproj" />
   </ItemGroup>
 </Project>

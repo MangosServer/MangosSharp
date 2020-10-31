@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../Mangos.props" />
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mangos.Realm.Storage.MySql\Mangos.Realm.Storage.MySql.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Queries\*.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Queries\*.sql" />
+  </ItemGroup>
+</Project>
