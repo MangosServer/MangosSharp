@@ -21,9 +21,9 @@ using System.Collections;
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace Mangos.Realm.Models
+namespace Mangos.Realm
 {
-    public sealed class ClientAuthEngine
+    public sealed class AuthEngine
     {
         public static readonly byte[] CrcSalt;
         private static readonly Random _random;
@@ -55,14 +55,14 @@ namespace Mangos.Realm.Models
         private BigInteger _bNv;
         private BigInteger _bNx;
 
-        static ClientAuthEngine()
+        static AuthEngine()
         {
             CrcSalt = new byte[16];
             _random = new Random();
             _random.NextBytes(CrcSalt);
         }
 
-        public ClientAuthEngine()
+        public AuthEngine()
         {
             var buffer1 = new byte[] { 7 };
             g = buffer1;

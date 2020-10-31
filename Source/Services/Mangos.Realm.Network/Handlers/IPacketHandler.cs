@@ -16,20 +16,13 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Net;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
-namespace Mangos.Realm.Models
+namespace Mangos.Realm.Network.Handlers
 {
-    public class ClientModel
+    public interface IPacketHandler
     {
-        public string AccountName { get; set; }
-        public ClientAuthEngine ClientAuthEngine { get; }
-        public IPEndPoint RemoteEnpoint { get; }
-
-        public ClientModel(IPEndPoint remoteEnpoint)
-        {
-            RemoteEnpoint = remoteEnpoint;
-            ClientAuthEngine = new ClientAuthEngine();
-        }
+        Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, Client clientModel);
     }
 }

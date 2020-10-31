@@ -16,7 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Realm.Models;
 using Mangos.Realm.Network.Readers;
 using Mangos.Realm.Network.Responses;
 using Mangos.Realm.Network.Writers;
@@ -44,7 +43,7 @@ namespace Mangos.Realm.Network.Handlers
             this.AUTH_REALMLIST_Writer = AUTH_REALMLIST_Writer;
         }
 
-        public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, ClientModel clientModel)
+        public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, Client clientModel)
         {
             var request = await RS_REALMLIST_Reader.ReadAsync(reader);
 

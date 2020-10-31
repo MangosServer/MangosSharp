@@ -16,14 +16,30 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Realm.Models;
-using System.Threading.Channels;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
+using Mangos.Loggers;
+using Mangos.Network.Tcp;
 
-namespace Mangos.Realm.Network.Handlers
+namespace Mangos.Realm.Network
 {
-    public interface IPacketHandler
+    public class RealmTcpClientFactory : ITcpClientFactory
     {
-        Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, ClientModel clientModel);
+        private readonly ILogger logger;
+        private readonly Router router;
+
+        public RealmTcpClientFactory(ILogger logger, Router router)
+        {
+            this.router = router;
+            this.logger = logger;
+        }
+
+        public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
+        {
+            var clientModel = new Client((IPEndPoint) clientSocket.RemoteEndPoint);
+
+            return new RealmTcpClient(logger, router, clientModel);
+        }
     }
 }

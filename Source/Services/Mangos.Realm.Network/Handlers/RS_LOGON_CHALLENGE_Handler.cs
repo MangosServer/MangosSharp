@@ -19,7 +19,6 @@
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Loggers;
-using Mangos.Realm.Models;
 using Mangos.Realm.Network.Readers;
 using Mangos.Realm.Network.Requests;
 using Mangos.Realm.Network.Responses;
@@ -58,7 +57,7 @@ namespace Mangos.Realm.Network.Handlers
             this.AUTH_LOGON_CHALLENGE_Writer = AUTH_LOGON_CHALLENGE_Writer;
         }
 
-        public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, ClientModel clientModel)
+        public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, Client clientModel)
         {
             var request = await RS_LOGON_CHALLENGE_Reader.ReadAsync(reader);
             clientModel.AccountName = request.AccountName;
@@ -120,7 +119,7 @@ namespace Mangos.Realm.Network.Handlers
         private async Task HandleLoginOkStateAsync(
             RS_LOGON_CHALLENGE request, 
             ChannelWriter<byte> writer, 
-            ClientModel clientModel, 
+            Client clientModel, 
             AccountInfoEntity accountInfo)
         {
             if (accountInfo.sha_pass_hash.Length != 40) // Invalid password type, should always be 40 characters
@@ -131,14 +130,14 @@ namespace Mangos.Realm.Network.Handlers
 
             var hash = GetPasswordHashFromString(accountInfo.sha_pass_hash);
 
-            clientModel.ClientAuthEngine.CalculateX(request.Account, hash);
+            clientModel.AuthEngine.CalculateX(request.Account, hash);
 
             var resposne = new AUTH_LOGON_CHALLENGE(
-                clientModel.ClientAuthEngine.PublicB,
-                clientModel.ClientAuthEngine.g,
-                clientModel.ClientAuthEngine.N,
-                clientModel.ClientAuthEngine.Salt,
-                ClientAuthEngine.CrcSalt);
+                clientModel.AuthEngine.PublicB,
+                clientModel.AuthEngine.g,
+                clientModel.AuthEngine.N,
+                clientModel.AuthEngine.Salt,
+                AuthEngine.CrcSalt);
 
             await AUTH_LOGON_CHALLENGE_Writer.WriteAsync(writer, resposne);
         }

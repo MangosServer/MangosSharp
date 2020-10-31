@@ -13,6 +13,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Mangos.Configuration.Xml\Mangos.Configuration.Xml.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.Loggers.Console\Mangos.Loggers.Console.csproj" />
+    <ProjectReference Include="..\Mangos.Realm.Configuration\Mangos.Realm.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Realm.Network\Mangos.Realm.Network.csproj" />
+    <ProjectReference Include="..\Mangos.Realm.Storage\Mangos.Realm.Storage.csproj" />
     <ProjectReference Include="..\Mangos.Realm\Mangos.Realm.csproj" />
     <ProjectReference Include="..\Mangos.Realm.Storage.MySql\Mangos.Realm.Storage.MySql.csproj" />
   </ItemGroup>

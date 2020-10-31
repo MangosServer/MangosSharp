@@ -18,7 +18,6 @@
 
 using Mangos.Common.Enums.Global;
 using Mangos.Loggers;
-using Mangos.Realm.Models;
 using Mangos.Realm.Network.Readers;
 using Mangos.Realm.Network.Responses;
 using Mangos.Realm.Network.Writers;
@@ -51,16 +50,16 @@ namespace Mangos.Realm.Network.Handlers
             this.RS_LOGON_PROOF_Reader = RS_LOGON_PROOF_Reader;
         }
 
-        public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, ClientModel clientModel)
+        public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, Client clientModel)
         {
             var request = await RS_LOGON_PROOF_Reader.ReadAsync(reader);
 
             // Calculate U and M1
-            clientModel.ClientAuthEngine.CalculateU(request.A);
-            clientModel.ClientAuthEngine.CalculateM1();
+            clientModel.AuthEngine.CalculateU(request.A);
+            clientModel.AuthEngine.CalculateM1();
             // AuthEngine.CalculateCRCHash()
 
-            if (!clientModel.ClientAuthEngine.M1.SequenceEqual(request.M1))
+            if (!clientModel.AuthEngine.M1.SequenceEqual(request.M1))
             {
                 // Wrong pass
                 logger.Debug("Wrong password for user {0}.", clientModel.AccountName);
@@ -69,14 +68,14 @@ namespace Mangos.Realm.Network.Handlers
             }
             else
             {
-                clientModel.ClientAuthEngine.CalculateM2(request.M1);
+                clientModel.AuthEngine.CalculateM2(request.M1);
 
                 await AUTH_LOGON_PROOF_Writer.WriteAsync(writer, new AUTH_LOGON_PROOF(
                     AccountState.LOGIN_OK, 
-                    clientModel.ClientAuthEngine.M2));
+                    clientModel.AuthEngine.M2));
 
                 // Set SSHash in DB
-                var sshash = string.Concat(clientModel.ClientAuthEngine.SsHash.Select(x => x.ToString("X2")));
+                var sshash = string.Concat(clientModel.AuthEngine.SsHash.Select(x => x.ToString("X2")));
 
                 await accountStorage.UpdateAccountAsync(sshash,
                     clientModel.RemoteEnpoint.Address.ToString(), 

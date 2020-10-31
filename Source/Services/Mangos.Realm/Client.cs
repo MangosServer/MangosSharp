@@ -17,30 +17,19 @@
 //
 
 using System.Net;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-using Mangos.Loggers;
-using Mangos.Network.Tcp;
-using Mangos.Realm.Models;
 
-namespace Mangos.Realm.Network
+namespace Mangos.Realm
 {
-    public class RealmTcpClientFactory : ITcpClientFactory
+    public class Client
     {
-        private readonly ILogger logger;
-        private readonly Router router;
+        public string AccountName { get; set; }
+        public AuthEngine AuthEngine { get; }
+        public IPEndPoint RemoteEnpoint { get; }
 
-        public RealmTcpClientFactory(ILogger logger, Router router)
+        public Client(IPEndPoint remoteEnpoint)
         {
-            this.router = router;
-            this.logger = logger;
-        }
-
-        public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
-        {
-            var clientModel = new ClientModel((IPEndPoint) clientSocket.RemoteEndPoint);
-
-            return new RealmTcpClient(logger, router, clientModel);
+            RemoteEnpoint = remoteEnpoint;
+            AuthEngine = new AuthEngine();
         }
     }
 }

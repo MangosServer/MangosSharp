@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../Mangos.props" />
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Mangos.Common\Mangos.Common.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Loggers\Mangos.Loggers.csproj" />
+    <ProjectReference Include="..\..\Common\Mangos.Network.Tcp\Mangos.Network.Tcp.csproj" />
+    <ProjectReference Include="..\Mangos.Realm.Configuration\Mangos.Realm.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Realm.Storage\Mangos.Realm.Storage.csproj" />
+    <ProjectReference Include="..\Mangos.Realm\Mangos.Realm.csproj" />
+  </ItemGroup>
+</Project>

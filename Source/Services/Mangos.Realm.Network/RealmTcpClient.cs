@@ -18,7 +18,6 @@
 
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
-using Mangos.Realm.Models;
 using System;
 using System.Threading;
 using System.Threading.Channels;
@@ -28,10 +27,10 @@ namespace Mangos.Realm.Network
     public class RealmTcpClient : ITcpClient
     {
         private readonly ILogger logger;
-        private readonly ClientModel clientModel;
+        private readonly Client clientModel;
         private readonly Router router;
 
-        public RealmTcpClient(ILogger logger, Router router, ClientModel clientModel)
+        public RealmTcpClient(ILogger logger, Router router, Client clientModel)
         {
             this.logger = logger;
             this.router = router;
