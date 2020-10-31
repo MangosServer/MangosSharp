@@ -31,19 +31,19 @@ namespace Mangos.Realm
     public class Startup
     {
         private readonly ILogger logger;
-        private readonly AccountStorage realmStorage;
+        private readonly AccountStorage accountStorage;
         private readonly XmlConfigurationProvider<RealmServerConfiguration> configurationProvider;
 
         private readonly TcpServer tcpServer;
 
         public Startup(
             ILogger logger,
-            AccountStorage realmStorage,
+            AccountStorage accountStorage,
             XmlConfigurationProvider<RealmServerConfiguration> configurationProvider,
             TcpServer tcpServer)
         {
             this.logger = logger;
-            this.realmStorage = realmStorage;
+            this.accountStorage = accountStorage;
             this.configurationProvider = configurationProvider;
             this.tcpServer = tcpServer;
         }
@@ -64,7 +64,7 @@ namespace Mangos.Realm
 
         private async Task ConnectToDatabaseAsync()
         {
-            await realmStorage.ConnectAsync();
+            await accountStorage.ConnectAsync();
             logger.Debug("Connection to account database has been established");
         }
 
