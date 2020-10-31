@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using Mangos.Cluster.Configuration;
 using Mangos.Cluster.Globals;
@@ -32,7 +31,6 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Configuration;
-using Mangos.Network.Tcp.Extensions;
 using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster.Network
