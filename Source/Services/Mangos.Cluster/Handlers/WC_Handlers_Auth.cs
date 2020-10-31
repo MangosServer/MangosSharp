@@ -120,10 +120,10 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            client.SsHash = new byte[40];
+            client.Client.PacketEncryption.Hash = new byte[40];
             for (int i = 0, loopTo = Strings.Len(tmp) - 1; i <= loopTo; i += 2)
-                client.SsHash[i / 2] = (byte)Conversion.Val("&H" + Strings.Mid(tmp, i + 1, 2));
-            client.Encryption = true;
+                client.Client.PacketEncryption.Hash[i / 2] = (byte)Conversion.Val("&H" + Strings.Mid(tmp, i + 1, 2));
+            client.Client.PacketEncryption.IsEncryptionEnabled = true;
 
             // DONE: Disconnect clients trying to enter with an invalid build
             if (clientVersion < REQUIRED_BUILD_LOW || clientVersion > REQUIRED_BUILD_HIGH)

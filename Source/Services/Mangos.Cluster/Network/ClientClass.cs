@@ -40,20 +40,21 @@ namespace Mangos.Cluster.Network
         private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public ClientClass(ClusterServiceLocator clusterServiceLocator, 
-            Socket socket, 
+        public Client Client { get; }
+
+        public ClientClass(Client client,
+            Socket socket,
+            ClusterServiceLocator clusterServiceLocator, 
             IConfigurationProvider<ClusterConfiguration> configurationProvider)
         {
             _clusterServiceLocator = clusterServiceLocator;
             _socket = socket;
             this.configurationProvider = configurationProvider;
+            Client = client;
         }
 
         private readonly Socket _socket;
         public WcHandlerCharacter.CharacterObject Character;
-        public byte[] SsHash;
-        public bool Encryption = false;
-        private readonly byte[] _key = { 0, 0, 0, 0 };
 
         public ClientInfo GetClientInfo()
         {
@@ -173,7 +174,7 @@ namespace Mangos.Cluster.Network
                     _clusterServiceLocator.Packets.LogPacket(data, true, argclient);
                 }
 
-                if (Encryption)
+                if (Client.PacketEncryption.IsEncryptionEnabled)
                     Encode(data);
                 _socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
             }
@@ -205,7 +206,7 @@ namespace Mangos.Cluster.Network
                         _clusterServiceLocator.Packets.LogPacket(data, true, argclient);
                     }
 
-                    if (Encryption)
+                    if (Client.PacketEncryption.IsEncryptionEnabled)
                         Encode(data);
 
                     _socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
@@ -234,7 +235,7 @@ namespace Mangos.Cluster.Network
                     _clusterServiceLocator.Packets.LogPacket(data, true, argclient);
                 }
 
-                if (Encryption)
+                if (Client.PacketEncryption.IsEncryptionEnabled)
                     Encode(data);
                 _socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
             }
@@ -307,24 +308,15 @@ namespace Mangos.Cluster.Network
             Dispose();
         }
 
-        public void Decode(byte[] data)
-        {
-            for (var i = 0; i < 6; i++)
-            {
-                var tmp = data[i];
-                data[i] = (byte)(SsHash[_key[1]] ^ (256 + data[i] - _key[0]) % 256);
-                _key[0] = tmp;
-                _key[1] = (byte)((_key[1] + 1) % 40);
-            }
-        }
-
         public void Encode(byte[] data)
         {
+            var key = Client.PacketEncryption.Key;
+
             for (var i = 0; i < 4; i++)
             {
-                data[i] = (byte)(((SsHash[_key[3]] ^ data[i]) + _key[2]) % 256);
-                _key[2] = data[i];
-                _key[3] = (byte)((_key[3] + 1) % 40);
+                data[i] = (byte)(((Client.PacketEncryption.Hash[key[3]] ^ data[i]) + key[2]) % 256);
+                key[2] = data[i];
+                key[3] = (byte)((key[3] + 1) % 40);
             }
         }
 

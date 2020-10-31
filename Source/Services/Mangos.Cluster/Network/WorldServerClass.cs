@@ -258,7 +258,7 @@ namespace Mangos.Cluster.Network
         public byte[] ClientGetCryptKey(uint id)
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0:000000}] Requested client crypt key", id);
-            return _clusterServiceLocator.WorldCluster.ClienTs[id].SsHash;
+            return _clusterServiceLocator.WorldCluster.ClienTs[id].Client.PacketEncryption.Hash;
         }
 
         public void Broadcast(byte[] data)

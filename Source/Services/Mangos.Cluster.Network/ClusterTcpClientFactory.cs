@@ -25,9 +25,21 @@ namespace Mangos.Cluster.Network
 
         public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
         {
-            var clientClass = new ClientClass(_clusterServiceLocator, clientSocket, configurationProvider);
+            var client = new Client();
+
+            var clientClass = new ClientClass(
+                client, 
+                clientSocket, 
+                _clusterServiceLocator,  
+                configurationProvider);
+
             await clientClass.OnConnectAsync();
-            var clusterTcpClient = new ClusterTcpClient(logger, clientClass);
+
+            var clusterTcpClient = new ClusterTcpClient(
+                logger, 
+                client, 
+                clientClass);
+
             return clusterTcpClient;
         }
     }
