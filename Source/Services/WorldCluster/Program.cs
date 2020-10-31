@@ -36,8 +36,8 @@ namespace WorldCluster
                 .RegisterModule<ClusterModule>();
 
             var container = builder.Build();
-            var worldCluster = container.Resolve<Mangos.Cluster.WorldCluster>();
-            await worldCluster.StartAsync();
+            var startup = container.Resolve<Startup>();
+            await startup.StartAsync();
         }
     }
 }

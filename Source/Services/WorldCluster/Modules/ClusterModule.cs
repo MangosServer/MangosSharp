@@ -46,6 +46,8 @@ namespace WorldCluster.Modules
             builder.RegisterType<ClusterServiceLocator>().As<ClusterServiceLocator>()
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
                 .SingleInstance();
+
+            builder.RegisterType<Startup>().AsSelf().SingleInstance();
         }
     }
 }
