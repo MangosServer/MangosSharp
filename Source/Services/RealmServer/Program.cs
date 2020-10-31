@@ -17,6 +17,7 @@
 //
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Mangos.Realm;
@@ -41,7 +42,7 @@ namespace RealmServer
             var startup = container.Resolve<Startup>();
             await startup.StartAsync();
 
-            Console.ReadLine();
+            Thread.CurrentThread.Join();
         }
     }
 }

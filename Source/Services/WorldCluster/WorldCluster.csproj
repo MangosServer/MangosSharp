@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Exe</OutputType>
-    <ApplicationIcon>mangosClusterCS.ico</ApplicationIcon>
+    <ApplicationIcon>cluster.ico</ApplicationIcon>
     <OutputPath>..\..\..\Bin\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>

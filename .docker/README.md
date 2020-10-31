@@ -1,5 +1,5 @@
 
-You can use mangosvb in docker
+You can use MangosSharp in docker
 
 # Setup
 1. Install docker for your OS (Windows 10, Linux, Mac)

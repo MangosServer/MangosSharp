@@ -3,6 +3,8 @@ services:
   realm:
     image: mangosvb/realm
     container_name: realm
+    depends_on:
+      - mysql
     ports: 
       - 3724:3724
     build: 
@@ -14,6 +16,8 @@ services:
   cluster:
     image: mangosvb/cluster
     container_name: cluster
+    depends_on:
+      - mysql
     ports: 
       - 8085:8085
     build: 
@@ -25,6 +29,8 @@ services:
   world:
     image: mangosvb/world
     container_name: world
+    depends_on:
+      - mysql
     build: 
       context: ..
       dockerfile: ./.docker/WorldServer.Dockerfile
