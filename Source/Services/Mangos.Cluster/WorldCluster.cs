@@ -33,7 +33,6 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Common.Legacy.Logging;
-using Mangos.Network.Tcp;
 using Mangos.SignalR;
 using Microsoft.VisualBasic;
 
@@ -42,14 +41,10 @@ namespace Mangos.Cluster
     public class WorldCluster
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
-        private readonly TcpServer _tcpServer;
 
-        public WorldCluster(
-            ClusterServiceLocator clusterServiceLocator,
-            TcpServer tcpServer)
+        public WorldCluster(ClusterServiceLocator clusterServiceLocator)
         {
             _clusterServiceLocator = clusterServiceLocator;
-            _tcpServer = tcpServer;
         }
 
         private const string CLUSTER_PATH = "configs/WorldCluster.ini";
@@ -377,7 +372,6 @@ namespace Mangos.Cluster
                 }
             }
 
-            _tcpServer.Start(IPEndPoint.Parse(GetConfig().WorldClusterEndpoint), 10);
             _clusterServiceLocator.WorldServerClass.Start();
             var server = new ProxyServer<WorldServerClass>(IPAddress.Parse(GetConfig().ClusterListenAddress), GetConfig().ClusterListenPort, _clusterServiceLocator.WcNetwork.WorldServer);
             Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}:{1}", GetConfig().ClusterListenAddress, GetConfig().ClusterListenPort);
@@ -393,7 +387,6 @@ namespace Mangos.Cluster
 
             Log.WriteLine(LogType.INFORMATION, "Load Time: {0}", Strings.Format(DateAndTime.DateDiff(DateInterval.Second, DateAndTime.Now, DateAndTime.Now), "0 seconds"));
             Log.WriteLine(LogType.INFORMATION, "Used memory: {0}", Strings.Format(GC.GetTotalMemory(false), "### ### ##0 bytes"));
-            WaitConsoleCommand();
         }
 
         public void WaitConsoleCommand()
