@@ -17,7 +17,7 @@
 //
 
 using Autofac;
-using Mangos.Cluster.Factories;
+using Mangos.Cluster.Network;
 using Mangos.Network.Tcp;
 
 namespace WorldCluster.Modules
@@ -27,7 +27,7 @@ namespace WorldCluster.Modules
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<TcpServer>().AsSelf().SingleInstance();
-            builder.RegisterType<ClientClassFactory>().As<ITcpClientFactory>().SingleInstance();
+            builder.RegisterType<ClusterTcpClientFactory>().As<ITcpClientFactory>().SingleInstance();
         }
     }
 }

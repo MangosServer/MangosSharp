@@ -32,13 +32,12 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Configuration;
-using Mangos.Network.Tcp;
 using Mangos.Network.Tcp.Extensions;
 using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster.Network
 {
-    public class ClientClass : ClientInfo, ITcpClient
+    public class ClientClass : ClientInfo
     {
         private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
         private readonly ClusterServiceLocator _clusterServiceLocator;
@@ -110,24 +109,6 @@ namespace Mangos.Cluster.Network
             lock (((ICollection)_clusterServiceLocator.WorldCluster.ClienTs).SyncRoot)
                 _clusterServiceLocator.WorldCluster.ClienTs.Add(Index, this);
             _clusterServiceLocator.WcStats.ConnectionsIncrement();
-        }
-
-        public async void HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, CancellationToken cancellationToken)
-        {
-            var buffer = new byte[8192];
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                await reader.ReadToArrayAsync(buffer, 0, 6);
-                if (Encryption)
-                {
-                    Decode(buffer);
-                }
-                var length = buffer[1] + buffer[0] * 256 + 2;
-                await reader.ReadToArrayAsync(buffer, 6, length - 6);
-
-                var packet = new PacketClass(buffer);
-                OnPacket(packet);
-            }
         }
 
         public void OnPacket(PacketClass p)
