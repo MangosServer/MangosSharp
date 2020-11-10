@@ -26,7 +26,7 @@ copyrighted by [Blizzard Entertainment, Inc.][1]
 
 ## Software Requirements
     Supported platforms: Windows 7+, Linux, MacOS, Docker
-    .NET Core 3.1 SDK
+    .NET 5 SDK
     MySQL 8.0
     Visual Studio 2019 or any other editor with .NET support
   
