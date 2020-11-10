@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../Mangos.props" />
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
@@ -6,10 +6,4 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>DBCReader</AssemblyName>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="frmMain.cs" />
-    <Compile Include="frmMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-  </ItemGroup>
 </Project>
