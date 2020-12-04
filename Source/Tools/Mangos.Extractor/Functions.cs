@@ -236,11 +236,15 @@ namespace Mangos.Extractor
             var f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
             var r1 = new BinaryReader(f);
             var r2 = new StreamReader(f);
-            var o = new FileStream("Global.UpdateFields.vb", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            var o = new FileStream("Global.UpdateFields.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
             var w = new StreamWriter(o);
             int FIELD_NAME_OFFSET = SearchInFile(f, "CORPSE_FIELD_PAD");
             int OBJECT_FIELD_GUID = SearchInFile(f, "OBJECT_FIELD_GUID") + 0x400000;
             int FIELD_TYPE_OFFSET = SearchInFile(f, OBJECT_FIELD_GUID);
+            if (FIELD_NAME_OFFSET == -1)
+            {
+                FIELD_NAME_OFFSET = SearchInFile(f, "CORPSE_FIELD_FLAGS");
+            }
             if (FIELD_NAME_OFFSET == -1 | FIELD_TYPE_OFFSET == -1)
             {
                 MessageBox.Show("Wrong offsets! " + FIELD_NAME_OFFSET + "  " + FIELD_TYPE_OFFSET);
@@ -294,8 +298,8 @@ namespace Mangos.Extractor
                 }
 
                 MessageBox.Show(string.Format("{0} fields extracted.", Names.Count));
-                w.WriteLine("' Auto generated file");
-                w.WriteLine("' {0}", DateAndTime.Now);
+                w.WriteLine("// Auto generated file");
+                w.WriteLine("// {0}", DateAndTime.Now);
                 w.WriteLine();
                 string LastFieldType = "";
                 string sName;
@@ -318,17 +322,18 @@ namespace Mangos.Extractor
                                 EndNum.Add(LastFieldType, Info[j - 1].Offset + 1);
                                 if (LastFieldType.ToLower() == "object")
                                 {
-                                    w.WriteLine("    {0,-78}", LastFieldType.ToUpper() + "_END = &H" + Conversion.Hex(Info[j - 1].Offset + Info[j - 1].Size));
+                                    w.WriteLine("    {0,-78}", LastFieldType.ToUpper() + "_END = 0x" + Conversion.Hex(Info[j - 1].Offset + Info[j - 1].Size));
                                 }
                                 else
                                 {
-                                    w.WriteLine("    {0,-78}' 0x{1:X3}", LastFieldType.ToUpper() + "_END = " + BasedOnName + " + &H" + Conversion.Hex(Info[j - 1].Offset + Info[j - 1].Size), BasedOn + Info[j - 1].Offset + Info[j - 1].Size);
+                                    w.WriteLine("    {0,-78}// 0x{1:X3}", LastFieldType.ToUpper() + "_END = " + BasedOnName + " + 0x" + Conversion.Hex(Info[j - 1].Offset + Info[j - 1].Size), BasedOn + Info[j - 1].Offset + Info[j - 1].Size);
                                 }
 
-                                w.WriteLine("End Enum");
+                                w.WriteLine("}");
                             }
 
                             w.WriteLine("Public Enum E" + sField + "Fields");
+                            w.WriteLine("{");
                             if (sField.ToLower() == "container")
                             {
                                 BasedOn = EndNum["Item"];
@@ -350,18 +355,18 @@ namespace Mangos.Extractor
 
                         if (BasedOn > 0)
                         {
-                            w.WriteLine("    {0,-78}' 0x{1:X3} - Size: {2} - Type: {3} - Flags: {4}", sName + " = " + BasedOnName + " + &H" + Conversion.Hex(Info[j].Offset), BasedOn + Info[j].Offset, Info[j].Size, ToType(Info[j].Type), ToFlags(Info[j].Flags));
+                            w.WriteLine("    {0,-78}// 0x{1:X3} - Size: {2} - Type: {3} - Flags: {4}", sName + " = " + BasedOnName + " + 0x" + Conversion.Hex(Info[j].Offset) + ",", BasedOn + Info[j].Offset, Info[j].Size, ToType(Info[j].Type), ToFlags(Info[j].Flags));
                         }
                         else
                         {
-                            w.WriteLine("    {0,-78}' 0x{1:X3} - Size: {2} - Type: {3} - Flags: {4}", sName + " = &H" + Conversion.Hex(Info[j].Offset), Info[j].Offset, Info[j].Size, ToType(Info[j].Type), ToFlags(Info[j].Flags));
+                            w.WriteLine("    {0,-78}// 0x{1:X3} - Size: {2} - Type: {3} - Flags: {4}", sName + " = 0x" + Conversion.Hex(Info[j].Offset) + ",", Info[j].Offset, Info[j].Size, ToType(Info[j].Type), ToFlags(Info[j].Flags));
                         }
                     }
                 }
 
                 if (!string.IsNullOrEmpty(LastFieldType))
-                    w.WriteLine("    {0,-78}' 0x{1:X3}", LastFieldType.ToUpper() + "_END = " + BasedOnName + " + &H" + Conversion.Hex(Info[^1].Offset + Info[^1].Size), BasedOn + Info[^1].Offset + Info[^1].Size);
-                w.WriteLine("End Enum");
+                    w.WriteLine("    {0,-78}// 0x{1:X3}", LastFieldType.ToUpper() + "_END = " + BasedOnName + " + 0x" + Conversion.Hex(Info[^1].Offset + Info[^1].Size), BasedOn + Info[^1].Offset + Info[^1].Size);
+                w.WriteLine("}");
                 w.Flush();
             }
 
@@ -374,7 +379,7 @@ namespace Mangos.Extractor
             var f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
             var r1 = new BinaryReader(f);
             var r2 = new StreamReader(f);
-            var o = new FileStream("Global.Opcodes.vb", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            var o = new FileStream("Global.Opcodes.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
             var w = new StreamWriter(o);
             MessageBox.Show(ReadString(f, SearchInFile(f, "CMSG_REQUEST_PARTY_MEMBER_STATS")));
             int START = SearchInFile(f, "NUM_MSG_TYPES");
@@ -394,18 +399,19 @@ namespace Mangos.Extractor
                 }
 
                 MessageBox.Show(string.Format("{0} opcodes extracted.", Names.Count));
-                w.WriteLine("' Auto generated file");
-                w.WriteLine("' {0}", DateAndTime.Now);
+                w.WriteLine("// Auto generated file");
+                w.WriteLine("// {0}", DateAndTime.Now);
                 w.WriteLine();
                 w.WriteLine("Public Enum OPCODES");
+                w.WriteLine("{");
                 int i = 0;
                 while (Names.Count > 0)
                 {
-                    w.WriteLine("    {0,-64}' 0x{1:X3}", Names.Pop() + "=" + i, i);
+                    w.WriteLine("    {0,-64}// 0x{1:X3}", Names.Pop() + "=" + i, i);
                     i += 1;
                 }
 
-                w.WriteLine("End Enum");
+                w.WriteLine("}");
                 w.Flush();
             }
 
@@ -418,7 +424,7 @@ namespace Mangos.Extractor
             var f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
             var r1 = new BinaryReader(f);
             var r2 = new StreamReader(f);
-            var o = new FileStream("Global.SpellFailedReasons.vb", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            var o = new FileStream("Global.SpellFailedReasons.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
             var w = new StreamWriter(o);
             int REASON_NAME_OFFSET = SearchInFile(f, "SPELL_FAILED_UNKNOWN");
             if (REASON_NAME_OFFSET == -1)
@@ -439,19 +445,20 @@ namespace Mangos.Extractor
                 }
 
                 MessageBox.Show(string.Format("{0} spell failed reasons extracted.", Names.Count));
-                w.WriteLine("' Auto generated file");
-                w.WriteLine("' {0}", DateAndTime.Now);
+                w.WriteLine("// Auto generated file");
+                w.WriteLine("// {0}", DateAndTime.Now);
                 w.WriteLine();
-                w.WriteLine("Public Enum SpellFailedReason As Byte");
+                w.WriteLine("Public Enum SpellFailedReason");
+                w.WriteLine("{");
                 int i = 0;
                 while (Names.Count > 0)
                 {
-                    w.WriteLine("    {0,-64}' 0x{1:X3}", Names.Pop() + " = &H" + Conversion.Hex(i), i);
+                    w.WriteLine("    {0,-64}// 0x{1:X3}", Names.Pop() + " = 0x" + Conversion.Hex(i) + ",", i);
                     i += 1;
                 }
 
-                w.WriteLine("    {0,-64}' 0x{1:X3}", "SPELL_NO_ERROR = &H" + Conversion.Hex(255), 255);
-                w.WriteLine("End Enum");
+                w.WriteLine("    {0,-64}// 0x{1:X3}", "SPELL_NO_ERROR = 0x" + Conversion.Hex(255), 255);
+                w.WriteLine("}");
                 w.Flush();
             }
 
@@ -464,7 +471,7 @@ namespace Mangos.Extractor
             var f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
             var r1 = new BinaryReader(f);
             var r2 = new StreamReader(f);
-            var o = new FileStream("Global.ChatTypes.vb", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            var o = new FileStream("Global.ChatTypes.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
             var w = new StreamWriter(o);
             int START = SearchInFile(f, "CHAT_MSG_RAID_WARNING");
             if (START == -1)
@@ -485,18 +492,19 @@ namespace Mangos.Extractor
                 }
 
                 MessageBox.Show(string.Format("{0} chat types extracted.", Names.Count));
-                w.WriteLine("' Auto generated file");
-                w.WriteLine("' {0}", DateAndTime.Now);
+                w.WriteLine("// Auto generated file");
+                w.WriteLine("// {0}", DateAndTime.Now);
                 w.WriteLine();
-                w.WriteLine("Public Enum ChatMsg As Integer");
+                w.WriteLine("Public Enum ChatMsg");
+                w.WriteLine("{");
                 int i = 0;
                 while (Names.Count > 0)
                 {
-                    w.WriteLine("    {0,-64}' 0x{1:X3}", Names.Pop() + " = &H" + Conversion.Hex(i), i);
+                    w.WriteLine("    {0,-64}// 0x{1:X3}", Names.Pop() + " = 0x" + Conversion.Hex(i) + ",", i);
                     i += 1;
                 }
 
-                w.WriteLine("End Enum");
+                w.WriteLine("}");
                 w.Flush();
             }
 
