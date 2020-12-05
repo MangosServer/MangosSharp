@@ -6,4 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>WowExeExtractor</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\..\Bin\Tools\Mangos.Extractor\</OutputPath>
+  </PropertyGroup>
 </Project>

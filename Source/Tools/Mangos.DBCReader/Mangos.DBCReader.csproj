@@ -6,4 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>DBCReader</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\..\Bin\Tools\Mangos.DBCReader\</OutputPath>
+  </PropertyGroup>
 </Project>

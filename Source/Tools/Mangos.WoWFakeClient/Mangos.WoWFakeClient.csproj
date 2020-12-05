@@ -5,6 +5,9 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>WoWFakeClient</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\..\Bin\Tools\Mangos.WoWFakeClient\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Mangos.Zip\Mangos.Zip.csproj" />
   </ItemGroup>

@@ -5,6 +5,9 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>WardenExtractor</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\..\Bin\Tools\Mangos.WardenExtractor\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Mangos.Zip\Mangos.Zip.csproj" />
   </ItemGroup>
