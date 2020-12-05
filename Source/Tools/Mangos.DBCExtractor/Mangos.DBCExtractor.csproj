@@ -5,6 +5,9 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>DBCExtractor</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\..\Bin\Tools\Mangos.DBCExtractor\</OutputPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\..\Bin\Tools\Mangos.DBCExtractor\</OutputPath>
   </PropertyGroup>

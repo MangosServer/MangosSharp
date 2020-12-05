@@ -9,4 +9,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\..\Bin\Tools\Mangos.Extractor\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\..\Bin\Tools\Mangos.Extractor\</OutputPath>
+  </PropertyGroup>
 </Project>
