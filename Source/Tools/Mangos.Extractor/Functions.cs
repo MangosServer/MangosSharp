@@ -235,6 +235,7 @@ namespace Mangos.Extractor
         public static void ExtractUpdateFields()
         {
             var TBC = 0;
+            var alpha = 0;
             var versInfo = FileVersionInfo.GetVersionInfo("Wow.exe");
             var f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
             var r1 = new BinaryReader(f);
@@ -250,6 +251,11 @@ namespace Mangos.Extractor
             if (FIELD_NAME_OFFSET == -1) // pre 1.5 vanilla support
             {
                 FIELD_NAME_OFFSET = SearchInFile(f, "CORPSE_FIELD_FLAGS");
+            }
+            if (FIELD_NAME_OFFSET == -1) // alpha support
+            {
+                FIELD_NAME_OFFSET = SearchInFile(f, "CORPSE_FIELD_LEVEL");
+                alpha = 1;
             }
             if (FIELD_TYPE_OFFSET == -1) // TBC support
             {
@@ -331,8 +337,15 @@ namespace Mangos.Extractor
                     if (!string.IsNullOrEmpty(sName))
                     {
                         sField = ToField(sName.Substring(0, sName.IndexOf("_")));
-                        if (sName == "OBJECT_FIELD_CREATED_BY")
+                        if (sName == "OBJECT_FIELD_CREATED_BY" && alpha == 0)
                             sField = "GameObject";
+                        if (sName == "UINT_FIELD_BASESTAT0" || // alpha support
+                            sName == "UINT_FIELD_BASESTAT1" ||
+                            sName == "UINT_FIELD_BASESTAT2" ||
+                            sName == "UINT_FIELD_BASESTAT3" ||
+                            sName == "UINT_FIELD_BASESTAT4" ||
+                            sName == "UINT_FIELD_BYTES_1")
+                            sField = "Unit";
                         if ((LastFieldType ?? "") != (sField ?? ""))
                         {
                             if (!string.IsNullOrEmpty(LastFieldType))
