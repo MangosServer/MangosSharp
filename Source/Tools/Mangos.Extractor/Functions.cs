@@ -24,6 +24,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System.Diagnostics;
 
 namespace Mangos.Extractor
 {
@@ -233,17 +234,34 @@ namespace Mangos.Extractor
 
         public static void ExtractUpdateFields()
         {
+            var TBC = 0;
+            var alpha = 0;
+            var versInfo = FileVersionInfo.GetVersionInfo("Wow.exe");
             var f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
             var r1 = new BinaryReader(f);
             var r2 = new StreamReader(f);
-            var o = new FileStream("Global.UpdateFields.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            var o = new FileStream(versInfo.FileMajorPart + "." + versInfo.FileMinorPart + "."+ versInfo.FileBuildPart + "." + versInfo.FilePrivatePart + "_Global.UpdateFields.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
             var w = new StreamWriter(o);
             int FIELD_NAME_OFFSET = SearchInFile(f, "CORPSE_FIELD_PAD");
             int OBJECT_FIELD_GUID = SearchInFile(f, "OBJECT_FIELD_GUID") + 0x400000;
             int FIELD_TYPE_OFFSET = SearchInFile(f, OBJECT_FIELD_GUID);
-            if (FIELD_NAME_OFFSET == -1)
+            #if DEBUG
+            MessageBox.Show("FIELD_NAME_OFFSET " + FIELD_NAME_OFFSET + " OBJECT_FIELD_GUID " + OBJECT_FIELD_GUID + " FIELD_TYPE_OFFSET " + FIELD_TYPE_OFFSET);
+            #endif
+            if (FIELD_NAME_OFFSET == -1) // pre 1.5 vanilla support
             {
                 FIELD_NAME_OFFSET = SearchInFile(f, "CORPSE_FIELD_FLAGS");
+            }
+            if (FIELD_NAME_OFFSET == -1) // alpha support
+            {
+                FIELD_NAME_OFFSET = SearchInFile(f, "CORPSE_FIELD_LEVEL");
+                alpha = 1;
+            }
+            if (FIELD_TYPE_OFFSET == -1) // TBC support
+            {
+                OBJECT_FIELD_GUID = SearchInFile(f, "OBJECT_FIELD_GUID") + (0x1A00 + 0x400000);
+                FIELD_TYPE_OFFSET = SearchInFile(f, OBJECT_FIELD_GUID);
+                TBC = 1;
             }
             if (FIELD_NAME_OFFSET == -1 | FIELD_TYPE_OFFSET == -1)
             {
@@ -300,6 +318,8 @@ namespace Mangos.Extractor
                 MessageBox.Show(string.Format("{0} fields extracted.", Names.Count));
                 w.WriteLine("// Auto generated file");
                 w.WriteLine("// {0}", DateAndTime.Now);
+                w.WriteLine("// Patch: " + versInfo.FileMajorPart + "." + versInfo.FileMinorPart + "."+ versInfo.FileBuildPart);
+                w.WriteLine("// Build: " + versInfo.FilePrivatePart);
                 w.WriteLine();
                 string LastFieldType = "";
                 string sName;
@@ -310,11 +330,22 @@ namespace Mangos.Extractor
                 for (int j = 0, loopTo1 = Info.Count - 1; j <= loopTo1; j++)
                 {
                     sName = ReadString(f, Info[j].Name - 0x400000);
+                    if (TBC == 1) // TBC support
+                    {
+                        sName = ReadString(f, Info[j].Name - (0x1A00 + 0x400000));
+                    }
                     if (!string.IsNullOrEmpty(sName))
                     {
                         sField = ToField(sName.Substring(0, sName.IndexOf("_")));
-                        if (sName == "OBJECT_FIELD_CREATED_BY")
+                        if (sName == "OBJECT_FIELD_CREATED_BY" && alpha == 0)
                             sField = "GameObject";
+                        if (sName == "UINT_FIELD_BASESTAT0" || // alpha support
+                            sName == "UINT_FIELD_BASESTAT1" ||
+                            sName == "UINT_FIELD_BASESTAT2" ||
+                            sName == "UINT_FIELD_BASESTAT3" ||
+                            sName == "UINT_FIELD_BASESTAT4" ||
+                            sName == "UINT_FIELD_BYTES_1")
+                            sField = "Unit";
                         if ((LastFieldType ?? "") != (sField ?? ""))
                         {
                             if (!string.IsNullOrEmpty(LastFieldType))
@@ -334,7 +365,27 @@ namespace Mangos.Extractor
 
                             w.WriteLine("Public Enum E" + sField + "Fields");
                             w.WriteLine("{");
-                            if (sField.ToLower() == "container")
+                            #if DEBUG
+                            MessageBox.Show("sField: " + sField  + "\nsName: " + sName);
+                            #endif
+                            if (TBC == 1) // TBC support
+                                if (sField.ToLower() == "item")
+                            {
+                                BasedOn = EndNum["Container"];
+                                BasedOnName = "EContainerFields.CONTAINER_END";
+                            }
+                            else if (sField.ToLower() == "player")
+                            {
+                                BasedOn = EndNum["Unit"];
+                                BasedOnName = "EUnitFields.UNIT_END";
+                            }
+                            else if (sField.ToLower() != "object")
+                            {
+                                BasedOn = EndNum["Object"];
+                                BasedOnName = "EObjectFields.OBJECT_END";
+                            }
+                            if (TBC == 0)
+                                if (sField.ToLower() == "container")
                             {
                                 BasedOn = EndNum["Item"];
                                 BasedOnName = "EItemFields.ITEM_END";
