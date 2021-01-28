@@ -64,11 +64,8 @@ namespace Mangos.World.Handlers
             if (client.Character != null)
             {
                 client.Character.orientation = packet.GetFloat();
-            }
-            if (client.Character != null)
-            {
                 WS_Anticheat.MovementEvent(ref client, client.Character.RunSpeed, posX, client.Character.positionX, posY, client.Character.positionY, posZ, client.Character.positionZ, checked((int)Time), WorldServiceLocator._WS_Network.MsTime());
-            }            
+            }
             if (client.Character == null)
             {
                 return;
