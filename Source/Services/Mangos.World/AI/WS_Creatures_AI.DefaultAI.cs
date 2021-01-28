@@ -548,7 +548,7 @@ namespace Mangos.World.AI
                         selectedY2 = (float)(aiCreature.positionY + Math.Sin(angle2) * distance2);
                         selectedZ2 = WorldServiceLocator._WS_Maps.GetZCoord(selectedX2, selectedY2, aiCreature.positionZ, aiCreature.MapID);
                         MoveTries = checked(MoveTries + 1);
-                        if (!(Math.Abs(aiCreature.positionZ - selectedZ2) > 5f))
+                        if (!(Math.Abs(aiCreature.positionZ - selectedZ2) <= 5f))
                         {
                             WS_Maps wS_Maps = WorldServiceLocator._WS_Maps;
                             ref WS_Creatures.CreatureObject reference = ref aiCreature;
@@ -594,9 +594,9 @@ namespace Mangos.World.AI
                     }
                     destDist *= 0.5f;
                     float NearX = aiTarget.positionX;
-                    NearX = ((!(aiTarget.positionX > aiCreature.positionX)) ? (NearX + destDist) : (NearX - destDist));
+                    NearX = (!(aiTarget.positionX <= aiCreature.positionX)) ? (NearX + destDist) : (NearX - destDist);
                     float NearY = aiTarget.positionY;
-                    NearY = ((!(aiTarget.positionY > aiCreature.positionY)) ? (NearY + destDist) : (NearY - destDist));
+                    NearY = (!(aiTarget.positionY <= aiCreature.positionY)) ? (NearY + destDist) : (NearY - destDist);
                     float NearZ = WorldServiceLocator._WS_Maps.GetZCoord(NearX, NearY, aiCreature.positionZ, aiCreature.MapID);
                     if ((NearZ > aiTarget.positionZ + 2f) | (NearZ < aiTarget.positionZ - 2f))
                     {

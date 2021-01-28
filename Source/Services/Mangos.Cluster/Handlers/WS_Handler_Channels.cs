@@ -624,7 +624,7 @@ namespace Mangos.Cluster.Handlers
                     character.Client.Send(packet);
                     packet.Dispose();
                 }
-                else if (!(character.Guid != Owner))
+                else if (!(character.Guid == Owner))
                 {
                     var packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_OWNER, character.Guid, default, default);
                     character.Client.Send(packet);

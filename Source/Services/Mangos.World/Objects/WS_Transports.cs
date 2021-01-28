@@ -327,19 +327,19 @@ namespace Mangos.World.Objects
                                     }
                                     if (tFrom < tTo)
                                     {
-                                        d = ((!(tFrom <= 30000f)) ? (450f + 30f * ((tFrom - 30000f) / 1000f)) : (0.5f * (tFrom / 1000f) * (tFrom / 1000f)));
+                                        d = (!(tFrom > 30000f)) ? (450f + (30f * ((tFrom - 30000f) / 1000f))) : (0.5f * (tFrom / 1000f) * (tFrom / 1000f));
                                         d -= PathPoints[k].DistSinceStop;
                                     }
                                     else
                                     {
-                                        d = ((!(tTo <= 30000f)) ? (450f + 30f * ((tTo - 30000f) / 1000f)) : (0.5f * (tTo / 1000f) * (tTo / 1000f)));
+                                        d = (!(tTo > 30000f)) ? (450f + (30f * ((tTo - 30000f) / 1000f))) : (0.5f * (tTo / 1000f) * (tTo / 1000f));
                                         d = PathPoints[k].DistUntilStop - d;
                                     }
                                     t += 100;
                                 }
                                 t -= 100;
                             }
-                            t = ((!(PathPoints[k + 1].tFrom > PathPoints[k + 1].tTo)) ? ((int)(t + checked((long)PathPoints[k + 1].tTo) % 100)) : ((int)(t + (100 - checked((long)PathPoints[k + 1].tTo) % 100))));
+                            t = (!(PathPoints[k + 1].tFrom <= PathPoints[k + 1].tTo)) ? ((int)(t + (checked((long)PathPoints[k + 1].tTo) % 100))) : ((int)(t + (100 - checked((long)PathPoints[k + 1].tTo) % 100)));
                             teleport = false;
                             if (PathPoints[k + 1].ActionFlag == 1 || PathPoints[k + 1].MapID != PathPoints[k].MapID)
                             {

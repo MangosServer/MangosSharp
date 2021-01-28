@@ -226,7 +226,7 @@ namespace Mangos.World.AI
                         selectedY = (float)(aiCreature.positionY + Math.Sin(angle) * distance);
                         selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
                         MoveTries = (byte)(MoveTries + 1);
-                        if (!(Math.Abs(aiCreature.positionZ - selectedZ) > 5f))
+                        if (!(Math.Abs(aiCreature.positionZ - selectedZ) <= 5f))
                         {
                             WS_Maps wS_Maps = WorldServiceLocator._WS_Maps;
                             ref WS_Creatures.CreatureObject reference = ref aiCreature;
