@@ -137,9 +137,10 @@ namespace Mangos.World.Network
                 }
             }
 
+            private readonly object lockObj = new object();
             public void Send(ref byte[] data)
             {
-                lock (this)
+                lock (lockObj)
                 {
                     try
                     {
