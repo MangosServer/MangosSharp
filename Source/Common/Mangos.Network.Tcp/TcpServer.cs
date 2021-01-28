@@ -21,7 +21,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 using Mangos.Loggers;
 using Mangos.Network.Tcp.Extensions;
 
@@ -43,23 +42,23 @@ namespace Mangos.Network.Tcp
             cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public async Task Start(IPEndPoint endPoint, int backlog)
+        public void Start(IPEndPoint endPoint, int backlog)
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(endPoint);
             socket.Listen(backlog);
-            await StartAcceptLoop();
+            StartAcceptLoop();
         }
 
-        public async Task StartAcceptLoop()
+        private async void StartAcceptLoop()
         {
             while (!cancellationTokenSource.IsCancellationRequested)
             {
-                await OnAcceptAsync(await socket.AcceptAsync());
+                OnAcceptAsync(await socket.AcceptAsync());
             }
         }
 
-        public async Task OnAcceptAsync(Socket clientSocket)
+        private async void OnAcceptAsync(Socket clientSocket)
         {
             try
             {
@@ -67,7 +66,7 @@ namespace Mangos.Network.Tcp
                 var recieveChannel = Channel.CreateUnbounded<byte>();
                 var sendChannel = Channel.CreateUnbounded<byte>();
 
-                await RecieveAsync(clientSocket, recieveChannel.Writer);
+                RecieveAsync(clientSocket, recieveChannel.Writer);
                 SendAsync(clientSocket, sendChannel.Reader);
                 tcpClient.HandleAsync(recieveChannel.Reader, sendChannel.Writer, cancellationTokenSource.Token);
 
@@ -80,7 +79,7 @@ namespace Mangos.Network.Tcp
         }
 
 
-        public async Task RecieveAsync(Socket client, ChannelWriter<byte> writer)
+        private async void RecieveAsync(Socket client, ChannelWriter<byte> writer)
         {
             try
             {
