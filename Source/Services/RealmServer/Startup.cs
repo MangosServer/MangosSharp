@@ -52,7 +52,7 @@ namespace Mangos.Realm
         {
             WriteServiceInformation();
             LoadConfiguration();
-            await ConnectToDatabaseAsync();
+            await ConnectToDatabaseAsync().ConfigureAwait(false);
             StartTcpServer();
         }
 

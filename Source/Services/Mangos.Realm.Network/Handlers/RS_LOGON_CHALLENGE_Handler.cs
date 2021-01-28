@@ -69,13 +69,13 @@ namespace Mangos.Realm.Network.Handlers
             {
                 // TODO: in the far future should check if the account is expired too                
                 var accountInfo = await accountStorage.GetAccountInfoAsync(clientModel.AccountName);
-                var accountState = await GetAccountStateAsync(accountInfo);
+                var accountState = await GetAccountStateAsync(accountInfo).ConfigureAwait(false);
 
                 // DONE: Send results to client
                 switch (accountState)
                 {
                     case AccountState.LOGIN_OK:
-                        await HandleLoginOkStateAsync(request, writer, clientModel, accountInfo);
+                        await HandleLoginOkStateAsync(request, writer, clientModel, accountInfo).ConfigureAwait(false);
                         return;
 
                     case AccountState.LOGIN_UNKNOWN_ACCOUNT:

@@ -34,7 +34,7 @@ namespace Mangos.Cluster.DataStores
 
         public async Task InitializeInternalDatabaseAsync()
         {
-            await InitializeLoadDataStoresAsync();
+            await InitializeLoadDataStoresAsync().ConfigureAwait(false);
             try
             {
                 // Set all characters offline
