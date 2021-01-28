@@ -97,7 +97,7 @@ namespace Mangos.World.Network
                             {
                                 if (!WorldServiceLocator._WorldServer.PacketHandlers.ContainsKey(packet.OpCode))
                                 {
-                                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, $"[{IP}:{Port}] Unknown Opcode 0x{((int)packet.OpCode).ToString("X2")} [DataLen={packet.Data.Length} {packet.OpCode}]");
+                                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, $"[{IP}:{Port}] Unknown Opcode 0x{(int)packet.OpCode:X2} [DataLen={packet.Data.Length} {packet.OpCode}]");
                                     DumpPacket(packet);
                                 }
                                 else
