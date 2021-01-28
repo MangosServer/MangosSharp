@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.78" />
-    <PackageReference Include="MySql.Data" Version="8.0.22" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.2" />
+    <PackageReference Include="MySql.Data" Version="8.0.23" />
   </ItemGroup>
 </Project>
