@@ -272,15 +272,15 @@ namespace Mangos.Cluster.Handlers
             private void SendBattlegroundStatus(WcHandlerCharacter.CharacterObject objCharacter, byte slot)
             {
                 var status = BattlegroundStatus.STATUS_CLEAR;
-                if (_queueTeam1.Contains(objCharacter) | _queueTeam2.Contains(objCharacter))
+                if (_queueTeam1.Contains(objCharacter) || _queueTeam2.Contains(objCharacter))
                 {
                     status = BattlegroundStatus.STATUS_WAIT_QUEUE;
                 }
-                else if (_invitedTeam1.Contains(objCharacter) | _invitedTeam2.Contains(objCharacter))
+                else if (_invitedTeam1.Contains(objCharacter) || _invitedTeam2.Contains(objCharacter))
                 {
                     status = BattlegroundStatus.STATUS_WAIT_JOIN;
                 }
-                else if (_membersTeam1.Contains(objCharacter) | _membersTeam2.Contains(objCharacter))
+                else if (_membersTeam1.Contains(objCharacter) || _membersTeam2.Contains(objCharacter))
                 {
                     status = BattlegroundStatus.STATUS_IN_PROGRESS;
                 }

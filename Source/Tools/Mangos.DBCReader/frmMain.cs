@@ -79,7 +79,7 @@ namespace Mangos.DBCReader
                 return;
             }
 
-            if (Rows <= 0 | Columns <= 0 | RowLength <= 0)
+            if (Rows <= 0 || Columns <= 0 || RowLength <= 0)
             {
                 MessageBox.Show("This file is not a DBC file.", "Error");
                 return;
@@ -125,7 +125,7 @@ namespace Mangos.DBCReader
                         {
                             tmpString = tmpSng.ToString().Replace(",", ".");
                             tmpString = tmpString.Substring(tmpString.IndexOf(".") + 1);
-                            if (tmpSng.ToString().Replace(",", ".").IndexOf(".") == -1 || tmpString.Length >= 1 & tmpString.Length <= 6) // Only allow a minimum of 1 decimal and a maximum of 5 decimals
+                            if (tmpSng.ToString().Replace(",", ".").IndexOf(".") == -1 || tmpString.Length >= 1 && tmpString.Length <= 6) // Only allow a minimum of 1 decimal and a maximum of 5 decimals
                             {
                                 if (IsFloat.Contains(j) == false)
                                     IsFloat.Add(j);
@@ -156,7 +156,7 @@ namespace Mangos.DBCReader
                         {
                             tmpOffset = 20 + i * RowLength + j * 4;
                             tmpInt = BitConverter.ToInt32(Data, tmpOffset);
-                            if (tmpInt >= 0 & tmpInt < StringPartLength)
+                            if (tmpInt >= 0 && tmpInt < StringPartLength)
                             {
                                 tmpOffset = 20 + Rows * RowLength + tmpInt;
                                 if (tmpInt > 0 && Data[tmpOffset - 1] > 0)

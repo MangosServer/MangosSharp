@@ -293,13 +293,13 @@ namespace Mangos.Common.Legacy.Globals
 
                 // NOTES: Version or Structure mismatch is a hard error, Content mismatch as a warning
 
-                if (dbVersion == coreDbVersion & dbStructure == coreDbStructure & dbContent == coreDbContent) // Full Match
+                if (dbVersion == coreDbVersion && dbStructure == coreDbStructure && dbContent == coreDbContent) // Full Match
                 {
                     logger.Debug("[{0}] Db Version Matched", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
                     return true;
                 }
 
-                if (dbVersion == coreDbVersion & dbStructure == coreDbStructure & dbContent != coreDbContent) // Content MisMatch, only a warning
+                if (dbVersion == coreDbVersion && dbStructure == coreDbStructure && dbContent != coreDbContent) // Content MisMatch, only a warning
                 {
                     logger.Warning("--------------------------------------------------------------");
                     logger.Warning("-- WARNING: CONTENT VERSION MISMATCH                        --");

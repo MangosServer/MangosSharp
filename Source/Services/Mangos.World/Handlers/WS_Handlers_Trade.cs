@@ -361,7 +361,7 @@ namespace Mangos.World.Handlers
                         }
                         return;
                     }
-                    if ((TargetGold > 0L) | (TraderGold > 0L))
+                    if ((TargetGold > 0L) || (TraderGold > 0L))
                     {
                         checked
                         {

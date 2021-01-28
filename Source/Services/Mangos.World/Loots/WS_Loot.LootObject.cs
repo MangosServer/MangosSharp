@@ -143,7 +143,7 @@ namespace Mangos.World.Loots
                     client.Send(ref response);
                     response.Dispose();
                     client.Character.lootGUID = GUID;
-                    if (!client.Character.IsInGroup || !((client.Character.Group.LootMethod == GroupLootMethod.LOOT_NEED_BEFORE_GREED) | (client.Character.Group.LootMethod == GroupLootMethod.LOOT_GROUP)))
+                    if (!client.Character.IsInGroup || !((client.Character.Group.LootMethod == GroupLootMethod.LOOT_NEED_BEFORE_GREED) || (client.Character.Group.LootMethod == GroupLootMethod.LOOT_GROUP)))
                     {
                         return;
                     }

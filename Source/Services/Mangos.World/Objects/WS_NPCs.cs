@@ -647,7 +647,7 @@ namespace Mangos.World.Objects
                         }
                         return;
                     }
-                    if ((WorldServiceLocator._WorldServer.ITEMDatabase[WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ItemEntry].SellPrice == 0) | (WorldServiceLocator._WorldServer.ITEMDatabase[WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ItemEntry].ObjectClass == ITEM_CLASS.ITEM_CLASS_QUEST))
+                    if ((WorldServiceLocator._WorldServer.ITEMDatabase[WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ItemEntry].SellPrice == 0) || (WorldServiceLocator._WorldServer.ITEMDatabase[WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ItemEntry].ObjectClass == ITEM_CLASS.ITEM_CLASS_QUEST))
                     {
                         Packets.PacketClass okPckt4 = new Packets.PacketClass(Opcodes.SMSG_SELL_ITEM);
                         try

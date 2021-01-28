@@ -64,7 +64,7 @@ namespace Mangos.Realm.Network.Handlers
 
             // DONE: Check if our build can join the server
             if (request.Build == mangosGlobalConstants.Required_Build_1_12_1 
-                | request.Build == mangosGlobalConstants.Required_Build_1_12_2 
+                || request.Build == mangosGlobalConstants.Required_Build_1_12_2 
                 | request.Build == mangosGlobalConstants.Required_Build_1_12_3)
             {
                 // TODO: in the far future should check if the account is expired too                

@@ -572,7 +572,7 @@ namespace Mangos.World.Handlers
             {
                 return;
             }
-            if ((client.Character.CellX != WorldServiceLocator._WS_Maps.GetMapTileX(client.Character.positionX)) | (client.Character.CellY != WorldServiceLocator._WS_Maps.GetMapTileY(client.Character.positionY)))
+            if ((client.Character.CellX != WorldServiceLocator._WS_Maps.GetMapTileX(client.Character.positionX)) || (client.Character.CellY != WorldServiceLocator._WS_Maps.GetMapTileY(client.Character.positionY)))
             {
                 MoveCell(ref client.Character);
             }
@@ -771,7 +771,7 @@ namespace Mangos.World.Handlers
             {
                 MAP_Load(Character.CellX, Character.CellY, Character.MapID);
             }
-            if ((Character.CellX != oldX) | (Character.CellY != oldY) && Character != null)
+            if ((Character.CellX != oldX) || (Character.CellY != oldY) && Character != null)
             {
                 if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles != null)
                 {
@@ -931,11 +931,11 @@ namespace Mangos.World.Handlers
             }
             checked
             {
-                if (((short)unchecked(Character.CellX + CellXAdd) > 63) | ((short)unchecked(Character.CellX + CellXAdd) < 0))
+                if (((short)unchecked(Character.CellX + CellXAdd) > 63) || ((short)unchecked(Character.CellX + CellXAdd) < 0))
                 {
                     CellXAdd = 0;
                 }
-                if (((short)unchecked(Character.CellY + CellYAdd) > 63) | ((short)unchecked(Character.CellY + CellYAdd) < 0))
+                if (((short)unchecked(Character.CellY + CellYAdd) > 63) || ((short)unchecked(Character.CellY + CellYAdd) < 0))
                 {
                     CellYAdd = 0;
                 }

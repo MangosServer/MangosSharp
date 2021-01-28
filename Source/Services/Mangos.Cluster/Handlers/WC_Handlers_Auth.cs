@@ -153,7 +153,7 @@ namespace Mangos.Cluster.Handlers
             // Next
 
             // DONE: If server full then queue, If GM/Admin let in
-            if (_clusterServiceLocator.WorldCluster.ClienTs.Count > configurationProvider.GetConfiguration().ServerPlayerLimit & client.Access <= AccessLevel.Player)
+            if (_clusterServiceLocator.WorldCluster.ClienTs.Count > configurationProvider.GetConfiguration().ServerPlayerLimit && client.Access <= AccessLevel.Player)
             {
                 ThreadPool.QueueUserWorkItem(client.EnQueue);
             }

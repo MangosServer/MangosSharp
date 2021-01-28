@@ -263,7 +263,7 @@ namespace Mangos.Extractor
                 FIELD_TYPE_OFFSET = SearchInFile(f, OBJECT_FIELD_GUID);
                 TBC = 1;
             }
-            if (FIELD_NAME_OFFSET == -1 | FIELD_TYPE_OFFSET == -1)
+            if (FIELD_NAME_OFFSET == -1 || FIELD_TYPE_OFFSET == -1)
             {
                 MessageBox.Show("Wrong offsets! " + FIELD_NAME_OFFSET + "  " + FIELD_TYPE_OFFSET);
             }

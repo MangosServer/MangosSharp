@@ -598,7 +598,7 @@ namespace Mangos.World.AI
                     float NearY = aiTarget.positionY;
                     NearY = (!(aiTarget.positionY <= aiCreature.positionY)) ? (NearY + destDist) : (NearY - destDist);
                     float NearZ = WorldServiceLocator._WS_Maps.GetZCoord(NearX, NearY, aiCreature.positionZ, aiCreature.MapID);
-                    if ((NearZ > aiTarget.positionZ + 2f) | (NearZ < aiTarget.positionZ - 2f))
+                    if ((NearZ > aiTarget.positionZ + 2f) || (NearZ < aiTarget.positionZ - 2f))
                     {
                         NearZ = aiTarget.positionZ;
                     }

@@ -307,7 +307,7 @@ namespace Mangos.World.Globals
             {
                 checked
                 {
-                    if (!((Data[0] != 0) | (Data[1] != 0)))
+                    if (!((Data[0] != 0) || (Data[1] != 0)))
                     {
                         Data[0] = (byte)(checked(Data.Length - 2) / 256);
                         Data[1] = (byte)(checked(Data.Length - 2) % 256);

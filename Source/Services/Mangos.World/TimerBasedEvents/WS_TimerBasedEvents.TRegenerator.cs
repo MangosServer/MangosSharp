@@ -179,7 +179,7 @@ namespace Mangos.World.Server
                                 value.GroupUpdateFlag |= 16u;
                                 value.SetUpdateFlag(23, value.Mana.Current);
                             }
-                            if ((BaseRage != value.Rage.Current) | ((value.cUnitFlags & 0x80000) == 0x80000))
+                            if ((BaseRage != value.Rage.Current) || ((value.cUnitFlags & 0x80000) == 0x80000))
                             {
                                 _updateFlag = true;
                                 value.GroupUpdateFlag |= 16u;
