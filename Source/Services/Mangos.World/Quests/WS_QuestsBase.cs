@@ -196,7 +196,6 @@ namespace Mangos.World.Quests
                         bytLoop = (byte)unchecked((uint)(bytLoop + 1));
                     }
                     while (bytLoop <= 3u);
-                    IsCompleted();
                 }
                 Title = Quest.Title;
                 ID = Quest.ID;
