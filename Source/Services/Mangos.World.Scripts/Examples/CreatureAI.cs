@@ -31,9 +31,9 @@ namespace Mangos.World.Scripts.Examples
         private const int Knockdown_CD = 5000; // Cooldown for spells get listed under a private constant. The timer is followed in milliseconds.
         private const int Spell_Knockdown = 16790; // The spell is defined here. This is the equivilent of a MaNGOS C++ enumerator. This should work for NPCs and healing spells too.
         private const int Frost_Armor = 7302; // Self buff.
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextKnockdown; // This will be called later, this is only needed along with the CD if you plan to have it recasted.
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
         public CreatureAI(ref WS_Creatures.CreatureObject Creature) : base(ref Creature) // The following under this are very self explanatory, on spawn the creature will not move by itself nor fly. It will be visible from far away. This can be changed.
         {

@@ -27,9 +27,9 @@ namespace Mangos.World.Scripts.Creatures
         private const int AI_UPDATE = 1000;
         private const int COA_COOLDOWN = 15000;
         private const int COA_SPELL = 18266;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextCOA;
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
         public CreatureAI_Searing_Blade_Cultist(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {

@@ -47,8 +47,8 @@ namespace Mangos.World.Scripts.Creatures
         public int NextDecimate;
         public int NextFrenzy;
         public int NextRoar;
-        public int NextWaypoint = 0;
-        public int CurrentWaypoint = 0;
+        public int NextWaypoint;
+        public int CurrentWaypoint;
 
         public CreatureAI_Gluth(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {

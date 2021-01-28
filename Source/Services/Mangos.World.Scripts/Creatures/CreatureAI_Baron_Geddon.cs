@@ -35,8 +35,8 @@ namespace Mangos.World.Scripts.Creatures
         private const int Spell_Ignite = 19659; // Drains a random targets mana.
         private const int Spell_Living_Bomb = 20475;
         private const int Spell_Armageddon = 20478; // Cast at 2% to make self invincible, this spell won't work so we'll make a workaround.
-        public int NextWaypoint = 0;
-        public int CurrentWaypoint = 0;
+        public int NextWaypoint;
+        public int CurrentWaypoint;
         public int NextInferno;
         public int NextIgnite;
         public int NextLivingBomb;

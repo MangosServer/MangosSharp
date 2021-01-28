@@ -27,9 +27,9 @@ namespace Mangos.World.Scripts.Creatures
         private const int AI_UPDATE = 1000;
         private const int ACID_COOLDOWN = 10000;
         private const int ACID_SPELL = 18070;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextAcid;
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
         public CreatureAI_Earthborer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {

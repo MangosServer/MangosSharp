@@ -37,7 +37,7 @@ namespace Mangos.Cluster.Network
         private readonly ClusterServiceLocator _clusterServiceLocator;
         private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
 
-        public bool MFlagStopListen = false;
+        public bool MFlagStopListen;
         private Timer _mTimerPing;
         private Timer _mTimerStats;
         private Timer _mTimerCpu;

@@ -30,8 +30,8 @@ namespace Mangos.World.Scripts.Creatures
         private const int NPC_Gluth = 15932;
         private const int Spell_Infected_Wound = 29306; // The target takes 100 extra physical damage. This ability stacks.
         public int NextInfectedWound;
-        public int NextWaypoint = 0;
-        public int CurrentWaypoint = 0;
+        public int NextWaypoint;
+        public int CurrentWaypoint;
 
         public CreatureAI_Zombie_Chow(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {

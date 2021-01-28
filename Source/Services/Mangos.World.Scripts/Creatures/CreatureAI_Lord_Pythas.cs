@@ -35,11 +35,11 @@ namespace Mangos.World.Scripts.Creatures
         private const int Healing_Spell = 23381;
         private const int Spell_Serpent_Form = 8041; // Not sure how this will work. 
         private const int Spell_Lightning_Bolt = 9532;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextThunderClap;
         public int NextLightningBolt;
         public int NextSlumber;
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
         public int NextHealingTouch;
 
         public CreatureAI_Lord_Pythas(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)

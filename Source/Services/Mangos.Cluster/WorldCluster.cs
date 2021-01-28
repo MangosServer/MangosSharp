@@ -50,7 +50,7 @@ namespace Mangos.Cluster
         }
 
         // Players' containers
-        public long ClietniDs = 0L;
+        public long ClietniDs;
         public Dictionary<uint, ClientClass> ClienTs = new Dictionary<uint, ClientClass>();
         public ReaderWriterLock CharacteRsLock = new ReaderWriterLock();
         public Dictionary<ulong, WcHandlerCharacter.CharacterObject> CharacteRs = new Dictionary<ulong, WcHandlerCharacter.CharacterObject>();

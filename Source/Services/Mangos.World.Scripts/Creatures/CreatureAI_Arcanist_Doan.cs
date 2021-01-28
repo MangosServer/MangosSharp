@@ -43,9 +43,9 @@ namespace Mangos.World.Scripts.Creatures
         public int NextArcaneBubble; // Again, this should never be reused.
         public int NextPolymorph;
         public int NextSilence;
-        public int NextWaypoint = 0;
-        public int NextAcid = 0;
-        public int CurrentWaypoint = 0;
+        public int NextWaypoint;
+        public int NextAcid;
+        public int CurrentWaypoint;
         // Public NextExplosion As Integer = 0
 
         public CreatureAI_Arcanist_Doan(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)

@@ -36,15 +36,15 @@ namespace Mangos.WoWFakeClient
         private static Timer PingTimer;
         public static int PingSent;
         public static uint CurrentPing;
-        public static int CurrentLatency = 0;
+        public static int CurrentLatency;
         public static Dictionary<OPCODES, HandlePacket> PacketHandlers = new Dictionary<OPCODES, HandlePacket>();
 
         public delegate void HandlePacket(ref Packets.PacketClass Packet);
 
-        public static uint ClientSeed = 0U;
-        public static uint ServerSeed = 0U;
+        public static uint ClientSeed;
+        public static uint ServerSeed;
         public static byte[] Key = new byte[4];
-        public static ulong CharacterGUID = 0UL;
+        public static ulong CharacterGUID;
         public static bool Encoding;
         public static bool Decoding;
 

@@ -27,9 +27,9 @@ namespace Mangos.World.Scripts.Creatures
         private const int AI_UPDATE = 1000;
         private const int STRIKE_COOLDOWN = 4000;
         private const int STRIKE_SPELL = 11976;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextStrike;
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
         public CreatureAI_Ragefire_Trogg(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {

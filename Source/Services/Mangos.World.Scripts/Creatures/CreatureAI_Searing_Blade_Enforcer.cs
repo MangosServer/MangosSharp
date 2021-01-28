@@ -27,9 +27,9 @@ namespace Mangos.World.Scripts.Creatures
         private const int AI_UPDATE = 1000;
         private const int SLAM_COOLDOWN = 8000;
         private const int SLAM_SPELL = 8242;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextSLAM;
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
         public CreatureAI_Searing_Blade_Enforcer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {

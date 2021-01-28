@@ -38,12 +38,12 @@ namespace Mangos.World.Scripts.Creatures
         // Private Const SUMMONPLAYER_SPELL As Integer = 20477
 
         public int Phase;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextEarthQuake;
         public int NextMagmaSplash;
         public int NextPyroBlast;
         // Public NextSummon As Integer = 0
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
         public CreatureAI_Golemagg_the_Incinerator(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {

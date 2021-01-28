@@ -32,9 +32,9 @@ namespace Mangos.World.Scripts.Creatures
         private const int Spell_Frenzy = 8599;
         private const int Spell_Thrash = 3391;
         public int NextThrash;
-        public int NextWaypoint = 0;
-        public int NextAcid = 0;
-        public int CurrentWaypoint = 0;
+        public int NextWaypoint;
+        public int NextAcid;
+        public int CurrentWaypoint;
 
         public CreatureAI_Targorr_the_Dread(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {

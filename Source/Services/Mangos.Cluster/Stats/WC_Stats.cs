@@ -64,8 +64,8 @@ namespace Mangos.Cluster.Stats
             Interlocked.Decrement(ref _connectionsCurrent);
         }
 
-        public long DataTransferOut = 0L;
-        public long DataTransferIn = 0L;
+        public long DataTransferOut;
+        public long DataTransferIn;
         private int _threadsWorker;
         private int _threadsComletion;
         private DateTime _lastCheck = DateAndTime.Now;

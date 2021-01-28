@@ -81,19 +81,19 @@ namespace Mangos.Cluster.Handlers
             public Classes Classe;
             public byte Gender;
             public DateTime Time = DateAndTime.Now;
-            public int Latency = 0;
+            public int Latency;
             public List<ulong> IgnoreList = new List<ulong>();
             public List<string> JoinedChannels = new List<string>();
             public bool Afk;
             public bool Dnd;
             public string AfkMessage;
-            public uint GuildInvited = 0U;
-            public ulong GuildInvitedBy = 0UL;
+            public uint GuildInvited;
+            public ulong GuildInvitedBy;
             public WcGuild.Guild Guild;
             public byte GuildRank;
-            public WcHandlersGroup.Group Group = null;
-            public bool GroupAssistant = false;
-            public bool GroupInvitedFlag = false;
+            public WcHandlersGroup.Group Group;
+            public bool GroupAssistant;
+            public bool GroupInvitedFlag;
 
             public bool IsInGroup => Group is object && GroupInvitedFlag == false;
 

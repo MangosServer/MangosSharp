@@ -40,7 +40,7 @@ namespace Mangos.World.Scripts.Creatures
         public int NextLightningBolt;
         public int NextSerpentTransform;
         public int NextSlumber;
-        public int NextHealingTouch = 0;
+        public int NextHealingTouch;
 
         public CreatureAI_Lord_Cobrahn(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
