@@ -154,15 +154,15 @@ namespace Mangos.Cluster.Globals
 
         private string FormatPacketStr(string str)
         {
-            for (int i = 0, loopTo = str.ToCharArray().Length - 1; i <= loopTo; i++)
+            for (int i = 0, loopTo = str.Length - 1; i <= loopTo; i++)
             {
-                if (str.ToCharArray()[i] < 'A' || str.ToCharArray()[i] > 'z')
+                if (str[i] is < 'A' or > 'z')
                 {
                     str.ToCharArray()[i] = '.';
                 }
             }
 
-            return Conversions.ToString(str.ToCharArray());
+            return Conversions.ToString(str);
         }
     }
 }
