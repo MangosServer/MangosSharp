@@ -652,7 +652,6 @@ namespace Mangos.World.Handlers
                     i = (short)unchecked(i + 1);
                 }
                 while (i <= 1);
-                GC.Collect();
             }
         }
 
