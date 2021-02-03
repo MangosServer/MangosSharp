@@ -432,7 +432,7 @@ namespace Mangos.World.Objects
                     int timeDiff = checked(WorldServiceLocator._NativeMethods.timeGetTime("") - LastMove);
                     if ((Forced || aiScript.IsMoving()) && LastMove > 0 && timeDiff < LastMove_Time)
                     {
-                        float distance = ((aiScript.State != AIState.AI_MOVING && aiScript.State != AIState.AI_WANDERING) ? (timeDiff / 1000f * (CreatureInfo.RunSpeed * SpeedMod)) : (timeDiff / 1000f * (CreatureInfo.WalkSpeed * SpeedMod)));
+                        float distance = ((aiScript.State is not AIState.AI_MOVING and not AIState.AI_WANDERING) ? (timeDiff / 1000f * (CreatureInfo.RunSpeed * SpeedMod)) : (timeDiff / 1000f * (CreatureInfo.WalkSpeed * SpeedMod)));
                         positionX = (float)(OldX + Math.Cos(orientation) * distance);
                         positionY = (float)(OldY + Math.Sin(orientation) * distance);
                         positionZ = WorldServiceLocator._WS_Maps.GetZCoord(positionX, positionY, positionZ, MapID);

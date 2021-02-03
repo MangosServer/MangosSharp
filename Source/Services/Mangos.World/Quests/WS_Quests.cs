@@ -2064,7 +2064,7 @@ namespace Mangos.World.Quests
                                 {
                                     fullxp2 = reqMoneyMaxLevel2 / 1.2f;
                                 }
-                                else if (qLevel2 > 0 && qLevel2 <= 60)
+                                else if (qLevel2 is > 0 and <= 60)
                                 {
                                     fullxp2 = reqMoneyMaxLevel2 / 0.6f;
                                 }
@@ -2247,7 +2247,7 @@ namespace Mangos.World.Quests
                             {
                                 fullxp = reqMoneyMaxLevel / 1.2f;
                             }
-                            else if (qLevel > 0 && qLevel <= 60)
+                            else if (qLevel is > 0 and <= 60)
                             {
                                 fullxp = reqMoneyMaxLevel / 0.6f;
                             }

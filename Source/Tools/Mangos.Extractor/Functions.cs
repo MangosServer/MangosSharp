@@ -339,12 +339,12 @@ namespace Mangos.Extractor
                         sField = ToField(sName.Substring(0, sName.IndexOf("_")));
                         if (sName == "OBJECT_FIELD_CREATED_BY" && alpha == 0)
                             sField = "GameObject";
-                        if (sName == "UINT_FIELD_BASESTAT0" || // alpha support
-                            sName == "UINT_FIELD_BASESTAT1" ||
-                            sName == "UINT_FIELD_BASESTAT2" ||
-                            sName == "UINT_FIELD_BASESTAT3" ||
-                            sName == "UINT_FIELD_BASESTAT4" ||
-                            sName == "UINT_FIELD_BYTES_1")
+                        if (sName is "UINT_FIELD_BASESTAT0" or // alpha support
+                            "UINT_FIELD_BASESTAT1" or
+                            "UINT_FIELD_BASESTAT2" or
+                            "UINT_FIELD_BASESTAT3" or
+                            "UINT_FIELD_BASESTAT4" or
+                            "UINT_FIELD_BYTES_1")
                             sField = "Unit";
                         if ((LastFieldType ?? "") != (sField ?? ""))
                         {

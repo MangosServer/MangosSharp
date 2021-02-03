@@ -128,7 +128,7 @@ namespace Mangos.World.Social
         public Packets.PacketClass BuildPartyMemberStats(ref WS_PlayerData.CharacterObject objCharacter, uint flag)
         {
             Opcodes opCode = Opcodes.SMSG_PARTY_MEMBER_STATS;
-            if (flag == 1015 || flag == 524279)
+            if (flag is 1015 or 524279)
             {
                 opCode = Opcodes.SMSG_PARTY_MEMBER_STATS_FULL;
                 if (objCharacter.ManaType != 0)

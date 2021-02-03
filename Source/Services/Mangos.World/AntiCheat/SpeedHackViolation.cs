@@ -63,7 +63,7 @@ namespace Mangos.World.AntiCheat
             {
                 TotalOffset = GetTotalOffset(cTime, sTime);
                 float Distance = PlayerMoveDistance(posX, positionX, posY, positionY, posZ, positionZ);
-                if (TotalOffset >= 235 && TotalOffset < 35000)
+                if (TotalOffset is >= 235 and < 35000)
                 {
                     LastMessage = $"Time Hack | Offset: {TotalOffset}";
                     LastViolation = ViolationType.AC_VIOLATION_SPEEDHACK_TIME;

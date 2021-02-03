@@ -586,7 +586,7 @@ namespace Mangos.WardenExtractor
             bool address_size_is_32 = false;
             if (Instr.EffectiveAddressSize == 32)
                 address_size_is_32 = true;
-            if (Instr.Opcode == 0x9A || Instr.Opcode == 0xEA)
+            if (Instr.Opcode is 0x9A or 0xEA)
             {
                 Instr.FullDisplacement = true;
                 return address_size_is_32 ? 6 : 4;
@@ -625,7 +625,7 @@ namespace Mangos.WardenExtractor
             bool operand_size_32 = false;
             if (Instr.EffectiveOperandSize == 32)
                 operand_size_32 = true;
-            if (Instr.Opcode == 0xC2 || Instr.Opcode == 0xCA)
+            if (Instr.Opcode is 0xC2 or 0xCA)
             {
                 return 2;
             }
@@ -734,7 +734,7 @@ namespace Mangos.WardenExtractor
 
                 case 2:
                     {
-                        if (Instr.Opcode == 0xC0 || Instr.Opcode == 0xC1)
+                        if (Instr.Opcode is 0xC0 or 0xC1)
                         {
                             immediate_size = 1;
                         }

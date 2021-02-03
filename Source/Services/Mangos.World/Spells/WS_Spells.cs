@@ -1144,7 +1144,7 @@ namespace Mangos.World.Spells
                                     break;
                             }
                             characterObject.RemoveAurasByInterruptFlag(32768);
-                            if (Targets.unitTarget != null && Targets.unitTarget is WS_Creatures.CreatureObject object3)
+                            if (Targets.unitTarget is not null and WS_Creatures.CreatureObject object3)
                             {
                                 WS_Quests aLLQUESTS = WorldServiceLocator._WorldServer.ALLQUESTS;
                                 Character = (WS_PlayerData.CharacterObject)Caster;
@@ -1562,7 +1562,7 @@ namespace Mangos.World.Spells
                                 case 19:
                                     if (Character.Items.ContainsKey(17) && !Character.Items[17].IsBroken() && (int)Character.Items[17].ItemInfo.ObjectClass == EquippedItemClass)
                                     {
-                                        if (i == 2 || i == 18 || i == 3)
+                                        if (i is 2 or 18 or 3)
                                         {
                                             if (Character.AmmoID == 0)
                                             {
@@ -1700,7 +1700,7 @@ namespace Mangos.World.Spells
                         }
 
                     default:
-                        if (!(Caster is WS_Creatures.CreatureObject))
+                        if (Caster is not WS_Creatures.CreatureObject)
                         {
                             return;
                         }
@@ -2990,7 +2990,7 @@ namespace Mangos.World.Spells
             int Current = 0;
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
-                int Damage = (!(Caster is WS_DynamicObjects.DynamicObjectObject @object)) ? SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) : SpellInfo.GetValue(@object.Caster.Level, 0);
+                int Damage = (Caster is not WS_DynamicObjects.DynamicObjectObject @object) ? SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) : SpellInfo.GetValue(@object.Caster.Level, 0);
                 if (Current > 0)
                 {
                     Damage = checked((int)Math.Round(Damage * Math.Pow(SpellInfo.DamageMultiplier, Current)));
@@ -3321,7 +3321,7 @@ namespace Mangos.World.Spells
 
         public SpellFailedReason SPELL_EFFECT_OPEN_LOCK(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
-            if (!(Caster is WS_PlayerData.CharacterObject))
+            if (Caster is not WS_PlayerData.CharacterObject)
             {
                 return SpellFailedReason.SPELL_FAILED_ERROR;
             }
@@ -3417,7 +3417,7 @@ namespace Mangos.World.Spells
 
         public SpellFailedReason SPELL_EFFECT_PICKPOCKET(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
-            if (!(Caster is WS_PlayerData.CharacterObject))
+            if (Caster is not WS_PlayerData.CharacterObject)
             {
                 return SpellFailedReason.SPELL_FAILED_ERROR;
             }
@@ -3426,7 +3426,7 @@ namespace Mangos.World.Spells
                 if (Target.unitTarget is WS_Creatures.CreatureObject @object && !((WS_Base.BaseUnit)Caster).IsFriendlyTo(ref Target.unitTarget))
                 {
                     WS_Creatures.CreatureObject creatureObject = @object;
-                    if (creatureObject.CreatureInfo.CreatureType == 7 || creatureObject.CreatureInfo.CreatureType == 6)
+                    if (creatureObject.CreatureInfo.CreatureType is 7 or 6)
                     {
                         if (!creatureObject.IsDead)
                         {
@@ -3468,7 +3468,7 @@ namespace Mangos.World.Spells
 
         public SpellFailedReason SPELL_EFFECT_SKINNING(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
-            if (!(Caster is WS_PlayerData.CharacterObject))
+            if (Caster is not WS_PlayerData.CharacterObject)
             {
                 return SpellFailedReason.SPELL_FAILED_ERROR;
             }
@@ -3519,7 +3519,7 @@ namespace Mangos.World.Spells
 
         public SpellFailedReason SPELL_EFFECT_DISENCHANT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
-            if (!(Caster is WS_PlayerData.CharacterObject))
+            if (Caster is not WS_PlayerData.CharacterObject)
             {
                 return SpellFailedReason.SPELL_FAILED_ERROR;
             }
@@ -3974,7 +3974,7 @@ namespace Mangos.World.Spells
 
         public SpellFailedReason SPELL_EFFECT_CREATE_ITEM(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
-            if (!(Target.unitTarget is WS_PlayerData.CharacterObject))
+            if (Target.unitTarget is not WS_PlayerData.CharacterObject)
             {
                 return SpellFailedReason.SPELL_FAILED_BAD_TARGETS;
             }
@@ -4407,7 +4407,7 @@ namespace Mangos.World.Spells
 
         public SpellFailedReason SPELL_EFFECT_SUMMON_OBJECT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
-            if (!(Caster is WS_Base.BaseUnit))
+            if (Caster is not WS_Base.BaseUnit)
             {
                 return SpellFailedReason.SPELL_FAILED_CASTER_DEAD;
             }
@@ -4593,7 +4593,7 @@ namespace Mangos.World.Spells
                 packet.AddSingle(SpellInfo.MiscValue / -10f);
                 Unit.SendToNearPlayers(ref packet);
                 packet.Dispose();
-                if (!(Unit is WS_Creatures.CreatureObject))
+                if (Unit is not WS_Creatures.CreatureObject)
                 {
                 }
             }
@@ -4604,7 +4604,7 @@ namespace Mangos.World.Spells
         {
             if (SPELLs[SpellID].SpellFamilyName == 10)
             {
-                if (SPELLs[SpellID].SpellIconID == 70 || SPELLs[SpellID].SpellIconID == 242)
+                if (SPELLs[SpellID].SpellIconID is 70 or 242)
                 {
                     return SPELL_EFFECT_HEAL(ref Target, ref Caster, ref SpellInfo, SpellID, ref Infected, ref Item);
                 }
@@ -4643,7 +4643,7 @@ namespace Mangos.World.Spells
             int implicitTargetA = SpellInfo.implicitTargetA;
             if (implicitTargetA == 25)
             {
-                if (!(Target.unitTarget is WS_PlayerData.CharacterObject))
+                if (Target.unitTarget is not WS_PlayerData.CharacterObject)
                 {
                     return SpellFailedReason.SPELL_FAILED_TARGET_NOT_PLAYER;
                 }
@@ -5556,7 +5556,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_REGEN(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -5593,7 +5593,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_POWER_REGEN(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -5648,7 +5648,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_POWER_REGEN_PERCENT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -5906,7 +5906,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_DISARM(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -5938,7 +5938,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_SCHOOL_ABSORB(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Caster is WS_Base.BaseUnit))
+            if (Caster is not WS_Base.BaseUnit)
             {
                 return;
             }
@@ -6058,7 +6058,7 @@ namespace Mangos.World.Spells
                 tmpUpdate.Dispose();
                 packet.Dispose();
             }
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -6357,7 +6357,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_INCREASE_SWIM_SPEED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -7536,7 +7536,7 @@ namespace Mangos.World.Spells
                     }
                     checked
                     {
-                        if (!(Target is WS_PlayerData.CharacterObject))
+                        if (Target is not WS_PlayerData.CharacterObject)
                         {
                             Target.Mana.Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                             break;
@@ -7563,7 +7563,7 @@ namespace Mangos.World.Spells
                     }
                     checked
                     {
-                        if (!(Target is WS_PlayerData.CharacterObject))
+                        if (Target is not WS_PlayerData.CharacterObject)
                         {
                             Target.Mana.Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                             break;
@@ -7607,7 +7607,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_BASE_RESISTANCE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -7665,7 +7665,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_BASE_RESISTANCE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -7725,7 +7725,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_RESISTANCE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -7814,7 +7814,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_RESISTANCE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -7905,7 +7905,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_RESISTANCE_EXCLUSIVE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -8098,7 +8098,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_DAMAGE_DONE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -8165,7 +8165,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_DAMAGE_DONE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -8311,7 +8311,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_POSSESS(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            if (!(Target is WS_Creatures.CreatureObject) && !(Target is WS_PlayerData.CharacterObject))
+            if (Target is not WS_Creatures.CreatureObject and not WS_PlayerData.CharacterObject)
             {
                 return;
             }
@@ -8545,13 +8545,13 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_UPDATE:
                     return;
                 case AuraAction.AURA_ADD:
-                    Value = ((!(Target is WS_PlayerData.CharacterObject)) ? EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) : EffectInfo.GetValue(Target.Level, 0));
+                    Value = ((Target is not WS_PlayerData.CharacterObject) ? EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) : EffectInfo.GetValue(Target.Level, 0));
                     break;
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     checked
                     {
-                        Value = ((!(Target is WS_PlayerData.CharacterObject)) ? (-EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0)) : (-EffectInfo.GetValue(Target.Level, 0)));
+                        Value = ((Target is not WS_PlayerData.CharacterObject) ? (-EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0)) : (-EffectInfo.GetValue(Target.Level, 0)));
                         break;
                     }
             }

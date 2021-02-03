@@ -1255,7 +1255,7 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            if (instanceID < 0 || instanceID > 400000)
+            if (instanceID is < 0 or > 400000)
             {
                 return false;
             }
@@ -1837,7 +1837,7 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            if (aLevel < 0u || aLevel > 3u)
+            if (aLevel is < 0u or > 3u)
             {
                 objCharacter.CommandResponse($"Not a valid access level. Must be in the range {0}-{3}.");
                 return true;

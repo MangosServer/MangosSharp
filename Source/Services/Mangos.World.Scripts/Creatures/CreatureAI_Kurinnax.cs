@@ -77,7 +77,7 @@ namespace Mangos.World.Scripts.Creatures
             base.OnThink();
             if (phase < 1)
                 return;
-            if (phase == 1 || phase == 3)
+            if (phase is 1 or 3)
             {
             }
 

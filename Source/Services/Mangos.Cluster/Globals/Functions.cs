@@ -218,7 +218,7 @@ namespace Mangos.Cluster.Globals
 
         public bool ValidateName(string strName)
         {
-            if (strName.Length < 2 || strName.Length > 16)
+            if (strName.Length is < 2 or > 16)
                 return false;
             return _regexAz.IsMatch(strName);
         }
@@ -227,7 +227,7 @@ namespace Mangos.Cluster.Globals
 
         public bool ValidateGuildName(string strName)
         {
-            if (strName.Length < 2 || strName.Length > 16)
+            if (strName.Length is < 2 or > 16)
                 return false;
             return _regexGuild.IsMatch(strName);
         }

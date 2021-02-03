@@ -282,7 +282,7 @@ namespace Mangos.World.Handlers
                     WS_Creatures.CreatureObject creature = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
                     aLLQUESTS.OnQuestDoEmote(ref character, ref creature, TextEmote);
                     wORLD_CREATUREs[key] = creature;
-                    if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript != null && WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript is WS_Creatures_AI.GuardAI)
+                    if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript is not null and WS_Creatures_AI.GuardAI)
                     {
                         ((WS_Creatures_AI.GuardAI)WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript).OnEmote(TextEmote);
                     }
@@ -625,7 +625,7 @@ namespace Mangos.World.Handlers
             {
                 faction = 255;
             }
-            if (faction >= 0 && faction <= 255)
+            if (faction is >= 0 and <= 255)
             {
                 client.Character.WatchedFactionIndex = checked((byte)faction);
                 client.Character.SetUpdateFlag(1261, faction);

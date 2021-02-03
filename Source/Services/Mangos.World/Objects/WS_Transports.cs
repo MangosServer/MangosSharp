@@ -510,7 +510,7 @@ namespace Mangos.World.Objects
 
                         default:
                             {
-                                if (!(tmpUnit is WS_Creatures.CreatureObject))
+                                if (tmpUnit is not WS_Creatures.CreatureObject)
                                 {
                                     continue;
                                 }
@@ -714,7 +714,7 @@ namespace Mangos.World.Objects
                                     }
 
                                 default:
-                                    if (!(tmpUnit is WS_Creatures.CreatureObject))
+                                    if (tmpUnit is not WS_Creatures.CreatureObject)
                                     {
                                     }
 

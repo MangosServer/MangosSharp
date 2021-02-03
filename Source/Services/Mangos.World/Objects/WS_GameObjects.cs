@@ -751,7 +751,7 @@ namespace Mangos.World.Objects
                 {
                     do
                     {
-                        if (WorldServiceLocator._WS_Loot.Locks[LockID].KeyType[i] == 2 && (WorldServiceLocator._WS_Loot.Locks[LockID].KeyType[i] == 3 || WorldServiceLocator._WS_Loot.Locks[LockID].KeyType[i] == 2))
+                        if (WorldServiceLocator._WS_Loot.Locks[LockID].KeyType[i] is 2 and (3 or 2))
                         {
                             if (Force || MineRemaining == 0)
                             {

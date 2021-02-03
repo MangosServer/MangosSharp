@@ -116,7 +116,7 @@ namespace Mangos.World.Scripts.Creatures
         {
             if (Phase < 1)
                 return;
-            if (Phase == 1 || Phase == 3)
+            if (Phase is 1 or 3)
             {
                 NextBreathe -= AI_UPDATE;
                 NextCleave -= AI_UPDATE;

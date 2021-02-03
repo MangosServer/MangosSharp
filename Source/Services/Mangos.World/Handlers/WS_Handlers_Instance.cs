@@ -340,7 +340,7 @@ namespace Mangos.World.Handlers
             {
                 Time = checked(-Time);
             }
-            else if (Time <= 60 || Time >= 3600)
+            else if (Time is <= 60 or >= 3600)
             {
                 switch (Time)
                 {

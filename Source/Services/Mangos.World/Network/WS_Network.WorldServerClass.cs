@@ -136,7 +136,7 @@ namespace Mangos.World.Network
             {
                 try
                 {
-                    Cluster.Disconnect(LocalURI, (List<uint>)WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Select(x => Convert.ToUInt32(x)));
+                    Cluster.Disconnect(LocalURI, WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Select(x => Conversions.ToUInteger(x)).ToList());
                 }
                 catch (Exception ex)
                 {

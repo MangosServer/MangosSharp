@@ -375,7 +375,7 @@ namespace Mangos.World.Objects
 
             public virtual bool IsStunned => (cUnitFlags & 0x40000) != 0;
 
-            public bool IsInFeralForm => ShapeshiftForm == ShapeshiftForm.FORM_CAT || ShapeshiftForm == ShapeshiftForm.FORM_BEAR || ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR;
+            public bool IsInFeralForm => ShapeshiftForm is ShapeshiftForm.FORM_CAT or ShapeshiftForm.FORM_BEAR or ShapeshiftForm.FORM_DIREBEAR;
 
             public bool IsPlayer => this is WS_PlayerData.CharacterObject;
 

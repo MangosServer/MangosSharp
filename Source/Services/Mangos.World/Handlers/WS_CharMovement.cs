@@ -930,11 +930,11 @@ namespace Mangos.World.Handlers
             }
             checked
             {
-                if (((short)unchecked(Character.CellX + CellXAdd) > 63) || ((short)unchecked(Character.CellX + CellXAdd) < 0))
+                if ((short)(Character.CellX + CellXAdd) is > 63 or < 0)
                 {
                     CellXAdd = 0;
                 }
-                if (((short)unchecked(Character.CellY + CellYAdd) > 63) || ((short)unchecked(Character.CellY + CellYAdd) < 0))
+                if ((short)(Character.CellY + CellYAdd) is > 63 or < 0)
                 {
                     CellYAdd = 0;
                 }

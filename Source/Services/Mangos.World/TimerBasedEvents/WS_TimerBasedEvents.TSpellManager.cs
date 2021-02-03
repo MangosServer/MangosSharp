@@ -218,7 +218,7 @@ namespace Mangos.World.Server
                                                 break;
                                             }
 
-                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter).Caster != null && ((WS_Totems.TotemObject)objCharacter).Caster is WS_PlayerData.CharacterObject:
+                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter).Caster is not null and WS_PlayerData.CharacterObject:
                                             {
                                                 WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
                                                 ref WS_Base.BaseUnit caster2 = ref ((WS_Totems.TotemObject)objCharacter).Caster;
@@ -250,7 +250,7 @@ namespace Mangos.World.Server
                                         case WS_PlayerData.CharacterObject _:
                                             caster = (WS_PlayerData.CharacterObject)objCharacter.ActiveSpells[i].SpellCaster;
                                             break;
-                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster != null && ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster is WS_PlayerData.CharacterObject object1:
+                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster is not null and WS_PlayerData.CharacterObject object1:
                                             caster = object1;
                                             break;
                                     }

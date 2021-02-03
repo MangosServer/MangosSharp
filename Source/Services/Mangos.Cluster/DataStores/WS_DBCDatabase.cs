@@ -78,7 +78,7 @@ namespace Mangos.Cluster.DataStores
             public int ParentMap = -1;
             public int ResetTime;
 
-            public bool IsDungeon => Type == MapTypes.MAP_INSTANCE || Type == MapTypes.MAP_RAID;
+            public bool IsDungeon => Type is MapTypes.MAP_INSTANCE or MapTypes.MAP_RAID;
 
             public bool IsRaid => Type == MapTypes.MAP_RAID;
 

@@ -126,7 +126,7 @@ namespace Mangos.Cluster.Handlers
             client.Client.PacketEncryption.IsEncryptionEnabled = true;
 
             // DONE: Disconnect clients trying to enter with an invalid build
-            if (clientVersion < REQUIRED_BUILD_LOW || clientVersion > REQUIRED_BUILD_HIGH)
+            if (clientVersion is < REQUIRED_BUILD_LOW or > REQUIRED_BUILD_HIGH)
             {
                 var invalidVersion = new PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
                 invalidVersion.AddInt8((byte)AuthResult.WOW_FAIL_VERSION_INVALID);

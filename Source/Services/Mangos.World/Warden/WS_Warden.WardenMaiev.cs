@@ -895,7 +895,7 @@ namespace Mangos.World.Warden
 
             private void SendPacket(int ptrPacket, int dwSize)
             {
-                if (dwSize >= 1 && dwSize <= 5000)
+                if (dwSize is >= 1 and <= 5000)
                 {
                     m_PKT = new byte[checked(dwSize - 1 + 1)];
                     Marshal.Copy(new IntPtr(ptrPacket), m_PKT, 0, dwSize);

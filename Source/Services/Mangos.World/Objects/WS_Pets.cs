@@ -256,7 +256,7 @@ namespace Mangos.World.Objects
 
         public void SendPetInitialize(ref WS_PlayerData.CharacterObject Caster, ref WS_Base.BaseUnit Pet)
         {
-            if (Pet is WS_Creatures.CreatureObject || Pet is WS_PlayerData.CharacterObject)
+            if (Pet is WS_Creatures.CreatureObject or WS_PlayerData.CharacterObject)
             {
             }
             ushort Command = 7;

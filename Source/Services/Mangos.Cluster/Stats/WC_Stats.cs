@@ -109,7 +109,7 @@ namespace Mangos.Cluster.Stats
                 if (objCharacter.Value.IsInWorld)
                 {
                     _countPlayers += 1;
-                    if (objCharacter.Value.Race == Races.RACE_ORC || objCharacter.Value.Race == Races.RACE_TAUREN || objCharacter.Value.Race == Races.RACE_TROLL || objCharacter.Value.Race == Races.RACE_UNDEAD)
+                    if (objCharacter.Value.Race is Races.RACE_ORC or Races.RACE_TAUREN or Races.RACE_TROLL or Races.RACE_UNDEAD)
                     {
                         _countPlayersHorde += 1;
                     }

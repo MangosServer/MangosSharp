@@ -755,7 +755,7 @@ namespace Mangos.World.Handlers
                     WepMax += AmmoDmg;
                 }
             }
-            else if (objCharacter.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || objCharacter.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR || objCharacter.ShapeshiftForm == ShapeshiftForm.FORM_CAT)
+            else if (objCharacter.ShapeshiftForm is ShapeshiftForm.FORM_BEAR or ShapeshiftForm.FORM_DIREBEAR or ShapeshiftForm.FORM_CAT)
             {
                 WepMin = (float)(WepMin + objCharacter.Level * 0.85 * AttSpeed);
                 WepMax = (float)(WepMax + objCharacter.Level * 0.85 * AttSpeed);

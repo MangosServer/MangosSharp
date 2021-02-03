@@ -105,7 +105,7 @@ namespace Mangos.Cluster.Handlers
             var rankRights = packet.GetUInt32();
             var rankName = packet.GetString().Replace("\"", "_").Replace("'", "_");
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_RANK [{2}:{3}:{4}]", client.IP, client.Port, rankId, rankRights, rankName);
-            if (rankId < 0 || rankId > 9)
+            if (rankId is < 0 or > 9)
                 return;
             if (!client.Character.IsInGuild)
             {

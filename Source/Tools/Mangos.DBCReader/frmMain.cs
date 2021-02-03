@@ -270,7 +270,7 @@ namespace Mangos.DBCReader
             var accepted = @" ():.,'-*_?\/<>;$%".ToCharArray();
             for (int i = 0, loopTo = chars.Length - 1; i <= loopTo; i++)
             {
-                if ((chars[i] < 'A' || chars[i] > 'z') && (chars[i] < '0' || chars[i] > '9'))
+                if (chars[i] is (< 'A' or > 'z') and (< '0' or > '9'))
                 {
                     for (int j = 0, loopTo1 = accepted.Length - 1; j <= loopTo1; j++)
                     {

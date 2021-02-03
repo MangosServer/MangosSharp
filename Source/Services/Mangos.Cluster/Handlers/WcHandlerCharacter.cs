@@ -390,7 +390,7 @@ namespace Mangos.Cluster.Handlers
                 if (string.IsNullOrEmpty(channelName))
                     channelName = "Global";
                 var msgChatFlag = ChatFlag;
-                if (msgType == ChatMsg.CHAT_MSG_WHISPER_INFORM || msgType == ChatMsg.CHAT_MSG_WHISPER)
+                if (msgType is ChatMsg.CHAT_MSG_WHISPER_INFORM or ChatMsg.CHAT_MSG_WHISPER)
                     msgChatFlag = _clusterServiceLocator.WorldCluster.CharacteRs[thisguid].ChatFlag;
                 var packet = _clusterServiceLocator.Functions.BuildChatMessage(thisguid, message, msgType, (LANGUAGES)msgLanguage, (byte)msgChatFlag, channelName);
                 Client.Send(packet);

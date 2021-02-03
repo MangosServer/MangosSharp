@@ -275,7 +275,7 @@ namespace Mangos.World.Objects
                 int j = 0;
                 do
                 {
-                    if (ItemInfo.Spells[j].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.USE || ItemInfo.Spells[j].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.NO_DELAY_USE)
+                    if (ItemInfo.Spells[j].SpellTrigger is ITEM_SPELLTRIGGER_TYPE.USE or ITEM_SPELLTRIGGER_TYPE.NO_DELAY_USE)
                     {
                         update.SetUpdateFlag(16 + j, ChargesLeft);
                     }

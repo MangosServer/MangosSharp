@@ -241,27 +241,27 @@ namespace Mangos.World.Quests
             RequiredMinReputation = MySQLQuery.Rows[0].As<int>("RequiredMaxRepValue");
             ObjectiveRepFaction = MySQLQuery.Rows[0].As<int>("RepObjectiveFaction");
             ObjectiveRepStanding = MySQLQuery.Rows[0].As<int>("RepObjectiveValue");
-            if (!(MySQLQuery.Rows[0]["Title"] is DBNull))
+            if (MySQLQuery.Rows[0]["Title"] is not DBNull)
             {
                 Title = MySQLQuery.Rows[0].As<string>("Title");
             }
-            if (!(MySQLQuery.Rows[0]["Objectives"] is DBNull))
+            if (MySQLQuery.Rows[0]["Objectives"] is not DBNull)
             {
                 TextObjectives = MySQLQuery.Rows[0].As<string>("Objectives");
             }
-            if (!(MySQLQuery.Rows[0]["Details"] is DBNull))
+            if (MySQLQuery.Rows[0]["Details"] is not DBNull)
             {
                 TextDescription = MySQLQuery.Rows[0].As<string>("Details");
             }
-            if (!(MySQLQuery.Rows[0]["EndText"] is DBNull))
+            if (MySQLQuery.Rows[0]["EndText"] is not DBNull)
             {
                 TextEnd = MySQLQuery.Rows[0].As<string>("EndText");
             }
-            if (!(MySQLQuery.Rows[0]["RequestItemsText"] is DBNull))
+            if (MySQLQuery.Rows[0]["RequestItemsText"] is not DBNull)
             {
                 TextIncomplete = MySQLQuery.Rows[0].As<string>("RequestItemsText");
             }
-            if (!(MySQLQuery.Rows[0]["OfferRewardText"] is DBNull))
+            if (MySQLQuery.Rows[0]["OfferRewardText"] is not DBNull)
             {
                 TextComplete = MySQLQuery.Rows[0].As<string>("OfferRewardText");
             }
@@ -323,19 +323,19 @@ namespace Mangos.World.Quests
             ObjectivesItem_Count[3] = MySQLQuery.Rows[0].As<int>("ReqItemCount4");
             ObjectivesDeliver = MySQLQuery.Rows[0].As<int>("SrcItemId");
             ObjectivesDeliver_Count = MySQLQuery.Rows[0].As<int>("SrcItemCount");
-            if (!(MySQLQuery.Rows[0]["ObjectiveText1"] is DBNull))
+            if (MySQLQuery.Rows[0]["ObjectiveText1"] is not DBNull)
             {
                 ObjectivesText[0] = MySQLQuery.Rows[0].As<string>("ObjectiveText1");
             }
-            if (!(MySQLQuery.Rows[0]["ObjectiveText2"] is DBNull))
+            if (MySQLQuery.Rows[0]["ObjectiveText2"] is not DBNull)
             {
                 ObjectivesText[1] = MySQLQuery.Rows[0].As<string>("ObjectiveText2");
             }
-            if (!(MySQLQuery.Rows[0]["ObjectiveText3"] is DBNull))
+            if (MySQLQuery.Rows[0]["ObjectiveText3"] is not DBNull)
             {
                 ObjectivesText[2] = MySQLQuery.Rows[0].As<string>("ObjectiveText3");
             }
-            if (!(MySQLQuery.Rows[0]["ObjectiveText4"] is DBNull))
+            if (MySQLQuery.Rows[0]["ObjectiveText4"] is not DBNull)
             {
                 ObjectivesText[3] = MySQLQuery.Rows[0].As<string>("ObjectiveText4");
             }

@@ -37,7 +37,7 @@ namespace Mangos.World.AI
                 base.OnEnterCombat();
                 foreach (KeyValuePair<WS_Base.BaseUnit, int> Unit in aiHateTable)
                 {
-                    if (!(Unit.Key is WS_PlayerData.CharacterObject))
+                    if (Unit.Key is not WS_PlayerData.CharacterObject)
                     {
                         continue;
                     }

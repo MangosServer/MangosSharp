@@ -1301,7 +1301,7 @@ namespace Mangos.World.Player
                     {
                         packet.Dispose();
                     }
-                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject @object)
+                    if (OnTransport is not null and WS_Transports.TransportObject @object)
                     {
                         WS_Transports.TransportObject obj = @object;
                         CharacterObject Character = this;
@@ -1827,11 +1827,11 @@ namespace Mangos.World.Player
             {
                 packet.AddInt8(checked((byte)UPDATETYPE));
                 packet.AddPackGUID(GUID);
-                if (UPDATETYPE == 2 || UPDATETYPE == 3)
+                if (UPDATETYPE is 2 or 3)
                 {
                     packet.AddInt8(4);
                 }
-                if (UPDATETYPE == 2 || UPDATETYPE == 1 || UPDATETYPE == 3)
+                if (UPDATETYPE is 2 or 1 or 3)
                 {
                     int flags2 = 8192;
                     if (OnTransport != null)
@@ -1866,7 +1866,7 @@ namespace Mangos.World.Player
                     packet.AddSingle(TurnRate);
                     packet.AddUInt32(47u);
                 }
-                if (!(UPDATETYPE == 2 || UPDATETYPE == 0 || UPDATETYPE == 3))
+                if (UPDATETYPE is not (2 or 0 or 3))
                 {
                     return;
                 }
@@ -4821,7 +4821,7 @@ namespace Mangos.World.Player
                     WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                     CharacterObject Character = this;
                     wS_CharMovement.RemoveFromWorld(ref Character);
-                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject @object)
+                    if (OnTransport is not null and WS_Transports.TransportObject @object)
                     {
                         WS_Transports.TransportObject obj = @object;
                         WS_Base.BaseUnit Unit = this;
@@ -5446,7 +5446,7 @@ namespace Mangos.World.Player
                     SetUpdateFlag(46, cUnitFlags);
                     SetUpdateFlag(143, cDynamicFlags);
                     SendCharacterUpdate();
-                    if (Attacker == null || Attacker is WS_Creatures.CreatureObject)
+                    if (Attacker is null or WS_Creatures.CreatureObject)
                     {
                         byte i = 0;
                         do
@@ -5645,7 +5645,7 @@ namespace Mangos.World.Player
                         }
                     }
 
-                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject _transport)
+                    if (OnTransport is not null and WS_Transports.TransportObject _transport)
                     {
                         WS_Base.BaseUnit Unit = this;
                         _transport.RemovePassenger(ref Unit);
