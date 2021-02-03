@@ -1837,7 +1837,7 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            if (aLevel is < 0u or > 3u)
+            if (aLevel is < 0 or > 3)
             {
                 objCharacter.CommandResponse($"Not a valid access level. Must be in the range {0}-{3}.");
                 return true;
