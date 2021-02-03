@@ -138,7 +138,7 @@ namespace Mangos.World.Handlers
                                 byte mySlot = (byte)(TargetSlots[i] & 0xFF);
                                 byte myBag = (byte)(TargetSlots[i] >> 8);
                                 ItemObject myItem = null;
-                                myItem = ((myBag != 0) ? Target.Items[myBag].Items[mySlot] : Target.Items[mySlot]);
+                                myItem = (myBag != 0) ? Target.Items[myBag].Items[mySlot] : Target.Items[mySlot];
                                 packet.AddInt32(myItem.ItemEntry);
                                 packet.AddInt32(myItem.ItemInfo.Model);
                                 packet.AddInt32(myItem.StackCount);
@@ -207,7 +207,7 @@ namespace Mangos.World.Handlers
                                 byte mySlot = (byte)(TraderSlots[i] & 0xFF);
                                 byte myBag = (byte)(TraderSlots[i] >> 8);
                                 ItemObject myItem = null;
-                                myItem = ((myBag != 0) ? Trader.Items[myBag].Items[mySlot] : Trader.Items[mySlot]);
+                                myItem = (myBag != 0) ? Trader.Items[myBag].Items[mySlot] : Trader.Items[mySlot];
                                 packet.AddInt32(myItem.ItemEntry);
                                 packet.AddInt32(myItem.ItemInfo.Model);
                                 packet.AddInt32(myItem.StackCount);
@@ -383,7 +383,7 @@ namespace Mangos.World.Handlers
                                     byte mySlot2 = (byte)(TraderSlots[j] & 0xFF);
                                     byte myBag2 = (byte)(TraderSlots[j] >> 8);
                                     ItemObject myItem2 = null;
-                                    myItem2 = ((myBag2 != 0) ? Trader.Items[myBag2].Items[mySlot2] : Trader.Items[mySlot2]);
+                                    myItem2 = (myBag2 != 0) ? Trader.Items[myBag2].Items[mySlot2] : Trader.Items[mySlot2];
                                     if (myItem2.ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_QUEST)
                                     {
                                         myItem2.OwnerGUID = Target.GUID;
@@ -398,7 +398,7 @@ namespace Mangos.World.Handlers
                                     byte mySlot = (byte)(TargetSlots[j] & 0xFF);
                                     byte myBag = (byte)(TargetSlots[j] >> 8);
                                     ItemObject myItem = null;
-                                    myItem = ((myBag != 0) ? Target.Items[myBag].Items[mySlot] : Target.Items[mySlot]);
+                                    myItem = (myBag != 0) ? Target.Items[myBag].Items[mySlot] : Target.Items[mySlot];
                                     if (myItem.ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_QUEST)
                                     {
                                         myItem.OwnerGUID = Trader.GUID;

@@ -405,7 +405,7 @@ namespace Mangos.World.Quests
                 return;
             }
             int unsignedNextQuest = Math.Abs(NextQuest);
-            int signedQuestID = ((NextQuest < 0) ? checked(-ID) : ID);
+            int signedQuestID = (NextQuest < 0) ? checked(-ID) : ID;
             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(unsignedNextQuest))
             {
                 WS_QuestInfo tmpQuest = new WS_QuestInfo(unsignedNextQuest);

@@ -248,7 +248,7 @@ namespace Mangos.World.Objects
                                 int j2 = checked(n + LastStop) % PathPoints.Count;
                                 if (j2 >= 0)
                                 {
-                                    tmpDist = ((PathPoints[j2].ActionFlag != 2) ? (tmpDist + PathPoints[j2].DistFromPrev) : 0f);
+                                    tmpDist = (PathPoints[j2].ActionFlag != 2) ? (tmpDist + PathPoints[j2].DistFromPrev) : 0f;
                                     PathPoints[j2].DistSinceStop = tmpDist;
                                 }
                             }
@@ -258,7 +258,7 @@ namespace Mangos.World.Objects
                         {
                             unchecked
                             {
-                                int j2 = checked(m + (FirstStop + 1)) % PathPoints.Count;
+                                int j2 = checked(m + FirstStop + 1) % PathPoints.Count;
                                 tmpDist += PathPoints[checked(j2 + 1) % PathPoints.Count].DistFromPrev;
                                 PathPoints[j2].DistUntilStop = tmpDist;
                                 if (PathPoints[j2].ActionFlag == 2)
@@ -608,7 +608,7 @@ namespace Mangos.World.Objects
                                     {
                                         WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[plGUID];
                                         WS_Base.BaseObject objCharacter = this;
-                                        num = (characterObject.CanSee(ref objCharacter) ? 1 : 0);
+                                        num = characterObject.CanSee(ref objCharacter) ? 1 : 0;
                                     }
                                     else
                                     {

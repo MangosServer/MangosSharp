@@ -758,7 +758,7 @@ namespace Mangos.World.Objects
         public void SendItemInfo(ref WS_Network.ClientClass client, int itemID)
         {
             Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_ITEM_QUERY_SINGLE_RESPONSE);
-            ItemInfo item = (WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(itemID) ? WorldServiceLocator._WorldServer.ITEMDatabase[itemID] : new ItemInfo(itemID));
+            ItemInfo item = WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(itemID) ? WorldServiceLocator._WorldServer.ITEMDatabase[itemID] : new ItemInfo(itemID);
             response.AddInt32(item.Id);
             response.AddInt32((int)item.ObjectClass);
             if (item.ObjectClass == ITEM_CLASS.ITEM_CLASS_CONSUMABLE)
@@ -892,7 +892,7 @@ namespace Mangos.World.Objects
             {
                 packet.GetInt16();
                 int itemID = packet.GetInt32();
-                ItemInfo item = (WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(itemID) ? WorldServiceLocator._WorldServer.ITEMDatabase[itemID] : new ItemInfo(itemID));
+                ItemInfo item = WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(itemID) ? WorldServiceLocator._WorldServer.ITEMDatabase[itemID] : new ItemInfo(itemID);
                 Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_ITEM_NAME_QUERY_RESPONSE);
                 response.AddInt32(itemID);
                 response.AddString(item.Name);
@@ -1397,7 +1397,7 @@ namespace Mangos.World.Objects
             }
             byte slot = packet.GetInt8();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_OPEN_ITEM [bag={2} slot={3}]", client.IP, client.Port, bag, slot);
-            ulong itemGuid = ((bag != 0) ? client.Character.Items[bag].Items[slot].GUID : client.Character.Items[slot].GUID);
+            ulong itemGuid = (bag != 0) ? client.Character.Items[bag].Items[slot].GUID : client.Character.Items[slot].GUID;
             if (decimal.Compare(new decimal(itemGuid), 0m) != 0 && WorldServiceLocator._WorldServer.WORLD_ITEMs.ContainsKey(itemGuid))
             {
                 if (WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].GenerateLoot())

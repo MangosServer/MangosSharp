@@ -1107,7 +1107,7 @@ namespace Mangos.World.Player
                             WS_Base.BaseUnit objCharacter2 = (WS_Base.BaseUnit)objCharacter;
                             float stealthDistance = GetStealthDistance(ref objCharacter2);
                             objCharacter = objCharacter2;
-                            num = ((distance < stealthDistance) ? 1 : 0);
+                            num = (distance < stealthDistance) ? 1 : 0;
                         }
                         else
                         {
@@ -1159,7 +1159,7 @@ namespace Mangos.World.Player
                         WS_Base.BaseUnit objCharacter2 = (WS_Base.BaseUnit)objCharacter;
                         float stealthDistance = GetStealthDistance(ref objCharacter2);
                         objCharacter = objCharacter2;
-                        num2 = ((distance < stealthDistance) ? 1 : 0);
+                        num2 = (distance < stealthDistance) ? 1 : 0;
                     }
                     else
                     {
@@ -2104,7 +2104,7 @@ namespace Mangos.World.Player
                     {
                         WS_Spells.SpellInfo spellInfo = WorldServiceLocator._WS_Spells.SPELLs[SpellID];
                         CharacterObject Character = this;
-                        num = ((spellInfo.CanCast(ref Character, t, FirstCheck: false) == SpellFailedReason.SPELL_NO_ERROR) ? 1 : 0);
+                        num = (spellInfo.CanCast(ref Character, t, FirstCheck: false) == SpellFailedReason.SPELL_NO_ERROR) ? 1 : 0;
                     }
                     else
                     {
@@ -2135,7 +2135,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int maxSkill = ((Level > WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL) ? (WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL * 5) : (Level * 5));
+                    int maxSkill = (Level > WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL) ? (WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL * 5) : (Level * 5);
                     switch (SpellID)
                     {
                         case 4036:
@@ -3634,8 +3634,8 @@ namespace Mangos.World.Player
 
             public bool ItemSTACK(byte srcBag, byte srcSlot, byte dstBag, byte dstSlot)
             {
-                ItemObject srcItem = ((srcBag == 0) ? Items[srcSlot] : Items[srcBag].Items[srcSlot]);
-                ItemObject dstItem = ((dstBag == 0) ? Items[dstSlot] : Items[dstBag].Items[dstSlot]);
+                ItemObject srcItem = (srcBag == 0) ? Items[srcSlot] : Items[srcBag].Items[srcSlot];
+                ItemObject dstItem = (dstBag == 0) ? Items[dstSlot] : Items[dstBag].Items[dstSlot];
                 if ((srcItem.StackCount == dstItem.ItemInfo.Stackable) | (dstItem.StackCount == dstItem.ItemInfo.Stackable))
                 {
                     return false;
@@ -5294,7 +5294,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int points = (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0))));
+                    int points = WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0)));
                     if (Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Flags > 0)
                     {
                         points += Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Value;
@@ -5320,7 +5320,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int points = (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0))));
+                    int points = WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0)));
                     if (Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Flags > 0)
                     {
                         points += Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Value;
@@ -6608,7 +6608,7 @@ namespace Mangos.World.Player
                             }
                             else if (AuraExpire < 0)
                             {
-                                duration = (int)(-AuraExpire);
+                                duration = (int)-AuraExpire;
                             }
                             else
                             {

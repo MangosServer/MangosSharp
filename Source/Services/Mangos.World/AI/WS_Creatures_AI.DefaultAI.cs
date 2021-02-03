@@ -639,7 +639,7 @@ namespace Mangos.World.AI
 
             protected void DoMoveReset()
             {
-                float distance = ((!ResetRun) ? ((float)(3.0 * aiCreature.CreatureInfo.WalkSpeed)) : ((float)(3.0 * aiCreature.CreatureInfo.RunSpeed)));
+                float distance = (!ResetRun) ? ((float)(3.0 * aiCreature.CreatureInfo.WalkSpeed)) : ((float)(3.0 * aiCreature.CreatureInfo.RunSpeed));
                 aiCreature.SetToRealPosition(Forced: true);
                 float angle = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, ResetX, aiCreature.positionY, ResetY);
                 aiCreature.orientation = angle;

@@ -1447,7 +1447,7 @@ namespace Mangos.World.Spells
                         {
                             goto IL_028d;
                         }
-                        actAsShifted = ((ShapeShift.Flags1 & 1) == 0);
+                        actAsShifted = (ShapeShift.Flags1 & 1) == 0;
                     }
                     if (actAsShifted)
                     {
@@ -4423,7 +4423,7 @@ namespace Mangos.World.Spells
                 selectedX = (float)(Caster.positionX + Math.Cos(Caster.orientation) * SPELLs[SpellID].GetRange);
                 selectedY = (float)(Caster.positionY + Math.Sin(Caster.orientation) * SPELLs[SpellID].GetRange);
             }
-            WS_GameObjects.GameObjectInfo GameobjectInfo = (WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(SpellInfo.MiscValue) ? WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[SpellInfo.MiscValue] : new WS_GameObjects.GameObjectInfo(SpellInfo.MiscValue));
+            WS_GameObjects.GameObjectInfo GameobjectInfo = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(SpellInfo.MiscValue) ? WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[SpellInfo.MiscValue] : new WS_GameObjects.GameObjectInfo(SpellInfo.MiscValue);
             WS_GameObjects.GameObjectObject gameObjectObject = new WS_GameObjects.GameObjectObject(PosZ: (GameobjectInfo.Type != GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE) ? WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID) : WorldServiceLocator._WS_Maps.GetWaterLevel(selectedX, selectedY, checked((int)Caster.MapID)), ID_: SpellInfo.MiscValue, MapID_: Caster.MapID, PosX: selectedX, PosY: selectedY, Rotation: Caster.orientation, Owner_: Caster.GUID)
             {
                 CreatedBySpell = SpellID,
@@ -4496,7 +4496,7 @@ namespace Mangos.World.Spells
             int Duration = SPELLs[SpellID].GetDuration;
             if (Duration == 0)
             {
-                Duration = ((SPELLs[SpellID].SpellVisual == 563) ? 600 : ((SPELLs[SpellID].SpellFamilyName == 8) ? 3600 : ((SPELLs[SpellID].SpellFamilyName == 11) ? 1800 : ((SPELLs[SpellID].SpellVisual == 215) ? 1800 : ((SPELLs[SpellID].SpellVisual != 0) ? 3600 : 1800)))));
+                Duration = (SPELLs[SpellID].SpellVisual == 563) ? 600 : ((SPELLs[SpellID].SpellFamilyName == 8) ? 3600 : ((SPELLs[SpellID].SpellFamilyName == 11) ? 1800 : ((SPELLs[SpellID].SpellVisual == 215) ? 1800 : ((SPELLs[SpellID].SpellVisual != 0) ? 3600 : 1800))));
                 Duration = checked(Duration * 1000);
             }
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Enchant duration [{0}]", Duration);
@@ -4546,9 +4546,9 @@ namespace Mangos.World.Spells
                 @object.SetToRealPosition();
             }
             float NearX = Target.unitTarget.positionX;
-            NearX = ((!(Target.unitTarget.positionX > Caster.positionX)) ? (NearX + 1f) : (NearX - 1f));
+            NearX = (!(Target.unitTarget.positionX > Caster.positionX)) ? (NearX + 1f) : (NearX - 1f);
             float NearY = Target.unitTarget.positionY;
-            NearY = ((!(Target.unitTarget.positionY > Caster.positionY)) ? (NearY + 1f) : (NearY - 1f));
+            NearY = (!(Target.unitTarget.positionY > Caster.positionY)) ? (NearY + 1f) : (NearY - 1f);
             float NearZ = WorldServiceLocator._WS_Maps.GetZCoord(NearX, NearY, Caster.positionZ, Caster.MapID);
             if ((NearZ > Target.unitTarget.positionZ + 2f) | (NearZ < Target.unitTarget.positionZ - 2f))
             {
@@ -6227,7 +6227,7 @@ namespace Mangos.World.Spells
                     if (Target is WS_PlayerData.CharacterObject @object)
                     {
                         float newSpeed = @object.RunSpeed;
-                        newSpeed = ((EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) >= 0) ? ((float)(newSpeed / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0))) : ((float)(newSpeed / (Math.Abs(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0))));
+                        newSpeed = (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) >= 0) ? ((float)(newSpeed / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0))) : ((float)(newSpeed / (Math.Abs(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0)));
                         @object.ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed);
                         @object.RemoveAurasByInterruptFlag(128);
                     }
@@ -6251,7 +6251,7 @@ namespace Mangos.World.Spells
                     if (Target is WS_PlayerData.CharacterObject object2)
                     {
                         float newSpeed2 = object2.RunSpeed;
-                        newSpeed2 = ((EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) >= 0) ? ((float)(newSpeed2 * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0))) : ((float)(newSpeed2 * (Math.Abs(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0))));
+                        newSpeed2 = (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) >= 0) ? ((float)(newSpeed2 * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0))) : ((float)(newSpeed2 * (Math.Abs(EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0) + 1.0)));
                         object2.ChangeSpeedForced(ChangeSpeedType.RUN, newSpeed2);
                     }
                     else if (Target is WS_Creatures.CreatureObject object1)
@@ -6841,7 +6841,7 @@ namespace Mangos.World.Spells
                                 }
                                 else
                                 {
-                                    send_val = (ushort)((65535 + (tmpval + 2)) & 0xFFFF);
+                                    send_val = (ushort)((65535 + tmpval + 2) & 0xFFFF);
                                     send_mark = ushort.MaxValue;
                                 }
                             }
@@ -6865,7 +6865,7 @@ namespace Mangos.World.Spells
                             return;
                         }
                     default:
-                        num = ((Action == AuraAction.AURA_REMOVEBYDURATION) ? 1 : 0);
+                        num = (Action == AuraAction.AURA_REMOVEBYDURATION) ? 1 : 0;
                         break;
                     case AuraAction.AURA_REMOVE:
                         num = 1;
@@ -6906,7 +6906,7 @@ namespace Mangos.World.Spells
                                 }
                                 else
                                 {
-                                    send_val = (ushort)((65535 + (tmpval + 2)) & 0xFFFF);
+                                    send_val = (ushort)((65535 + tmpval + 2) & 0xFFFF);
                                     send_mark = ushort.MaxValue;
                                 }
                             }
@@ -6930,7 +6930,7 @@ namespace Mangos.World.Spells
                             return;
                         }
                     default:
-                        num = ((Action == AuraAction.AURA_REMOVEBYDURATION) ? 1 : 0);
+                        num = (Action == AuraAction.AURA_REMOVEBYDURATION) ? 1 : 0;
                         break;
                     case AuraAction.AURA_REMOVE:
                         num = 1;
@@ -8545,13 +8545,13 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_UPDATE:
                     return;
                 case AuraAction.AURA_ADD:
-                    Value = ((Target is not WS_PlayerData.CharacterObject) ? EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) : EffectInfo.GetValue(Target.Level, 0));
+                    Value = (Target is not WS_PlayerData.CharacterObject) ? EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) : EffectInfo.GetValue(Target.Level, 0);
                     break;
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     checked
                     {
-                        Value = ((Target is not WS_PlayerData.CharacterObject) ? (-EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0)) : (-EffectInfo.GetValue(Target.Level, 0)));
+                        Value = (Target is not WS_PlayerData.CharacterObject) ? (-EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0)) : (-EffectInfo.GetValue(Target.Level, 0));
                         break;
                     }
             }

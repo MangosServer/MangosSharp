@@ -46,7 +46,7 @@ namespace Mangos.World.Player
             Character.FacialHair = FacialHair;
             WorldServiceLocator._WorldServer.AccountDatabase.Query($"SELECT id, gmlevel FROM account WHERE username = \"{Account}\";", ref MySQLQuery);
             int Account_ID = MySQLQuery.Rows[0].As<int>("id");
-            AccessLevel Account_Access = (Character.Access = (AccessLevel)MySQLQuery.Rows[0].As<byte>("gmlevel"));
+            AccessLevel Account_Access = Character.Access = (AccessLevel)MySQLQuery.Rows[0].As<byte>("gmlevel");
             if (!WorldServiceLocator._Functions.ValidateName(Character.Name))
             {
                 return 70;

@@ -186,7 +186,7 @@ namespace Mangos.World.Handlers
                     if (client.Character.spellCasted[1] != null)
                     {
                         WS_Spells.CastSpellParameters castSpellParameters = client.Character.spellCasted[1];
-                        if (unchecked((0u - ((!castSpellParameters.Finished) ? 1u : 0u)) & ((uint)WorldServiceLocator._WS_Spells.SPELLs[castSpellParameters.SpellID].interruptFlags & (true ? 1u : 0u))) != 0)
+                        if (unchecked((0u - ((!castSpellParameters.Finished) ? 1u : 0u)) & (uint)WorldServiceLocator._WS_Spells.SPELLs[castSpellParameters.SpellID].interruptFlags & (true ? 1u : 0u)) != 0)
                         {
                             client.Character.FinishSpell(CurrentSpellTypes.CURRENT_GENERIC_SPELL);
                         }
@@ -477,7 +477,7 @@ namespace Mangos.World.Handlers
                         int safe_fall = client.Character.GetAuraModifier(AuraEffects_Names.SPELL_AURA_SAFE_FALL);
                         if (safe_fall > 0)
                         {
-                            FallTime = ((FallTime > safe_fall * 10) ? (FallTime - safe_fall * 10) : 0);
+                            FallTime = (FallTime > safe_fall * 10) ? (FallTime - safe_fall * 10) : 0;
                         }
                         if (FallTime > 1100)
                         {
@@ -826,7 +826,7 @@ namespace Mangos.World.Handlers
                     WS_Base.BaseObject objCharacter = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID2];
                     bool flag = obj2.CanSee(ref objCharacter);
                     wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)objCharacter;
-                    num = ((!flag) ? 1 : 0);
+                    num = (!flag) ? 1 : 0;
                 }
                 else
                 {
@@ -1254,7 +1254,7 @@ namespace Mangos.World.Handlers
                         WS_Base.BaseObject objCharacter = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
                         bool flag = obj.CanSee(ref objCharacter);
                         wORLD_GAMEOBJECTs[key] = (WS_GameObjects.GameObjectObject)objCharacter;
-                        num = (flag ? 1 : 0);
+                        num = flag ? 1 : 0;
                     }
                     else
                     {

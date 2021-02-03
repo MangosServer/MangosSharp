@@ -33,7 +33,7 @@ namespace Mangos.World.Globals
             {
                 try
                 {
-                    buffer = ((client != null) ? (buffer + $"[{client.IP}:{client.Port}] DEBUG: Packet Dump - Length={data.Length - start}{Environment.NewLine}") : (buffer + $"DEBUG: Packet Dump{Environment.NewLine}"));
+                    buffer = (client != null) ? (buffer + $"[{client.IP}:{client.Port}] DEBUG: Packet Dump - Length={data.Length - start}{Environment.NewLine}") : (buffer + $"DEBUG: Packet Dump{Environment.NewLine}");
                     if (checked(data.Length - start) % 16 == 0)
                     {
                         int num = data.Length - 1;

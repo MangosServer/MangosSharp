@@ -324,7 +324,7 @@ namespace Mangos.World.Objects
                                         {
                                             WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[plGUID];
                                             WS_Base.BaseObject objCharacter = this;
-                                            num = (characterObject.CanSee(ref objCharacter) ? 1 : 0);
+                                            num = characterObject.CanSee(ref objCharacter) ? 1 : 0;
                                         }
                                         else
                                         {

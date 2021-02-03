@@ -116,7 +116,7 @@ namespace Mangos.World.Globals
                 int num = bBytes.Length - 1;
                 for (int i = start; i <= num; i++)
                 {
-                    tmpStr = ((bBytes[i] >= 16) ? (tmpStr + Conversion.Hex(bBytes[i])) : (tmpStr + "0" + Conversion.Hex(bBytes[i])));
+                    tmpStr = (bBytes[i] >= 16) ? (tmpStr + Conversion.Hex(bBytes[i])) : (tmpStr + "0" + Conversion.Hex(bBytes[i]));
                 }
                 return tmpStr;
             }
@@ -445,9 +445,9 @@ namespace Mangos.World.Globals
         public string SetColor(string Message, byte Red, byte Green, byte Blue)
         {
             string SetColor = "|cFF";
-            SetColor = ((Red >= 16) ? (SetColor + Conversion.Hex(Red)) : (SetColor + "0" + Conversion.Hex(Red)));
-            SetColor = ((Green >= 16) ? (SetColor + Conversion.Hex(Green)) : (SetColor + "0" + Conversion.Hex(Green)));
-            SetColor = ((Blue >= 16) ? (SetColor + Conversion.Hex(Blue)) : (SetColor + "0" + Conversion.Hex(Blue)));
+            SetColor = (Red >= 16) ? (SetColor + Conversion.Hex(Red)) : (SetColor + "0" + Conversion.Hex(Red));
+            SetColor = (Green >= 16) ? (SetColor + Conversion.Hex(Green)) : (SetColor + "0" + Conversion.Hex(Green));
+            SetColor = (Blue >= 16) ? (SetColor + Conversion.Hex(Blue)) : (SetColor + "0" + Conversion.Hex(Blue));
             return SetColor + Message + "|r";
         }
 

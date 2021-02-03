@@ -541,7 +541,7 @@ namespace Mangos.World.Handlers
             {
                 WS_Spells.SpellTargets Targets = new WS_Spells.SpellTargets();
                 Targets.SetTarget_UNIT(ref Victim);
-                int SpellID = ((Character.AutoShotSpell <= 0) ? 75 : Character.AutoShotSpell);
+                int SpellID = (Character.AutoShotSpell <= 0) ? 75 : Character.AutoShotSpell;
                 ref WS_PlayerData.CharacterObject character = ref Character;
                 WS_Base.BaseObject Caster = character;
                 WS_Spells.CastSpellParameters castSpellParameters = new WS_Spells.CastSpellParameters(ref Targets, ref Caster, SpellID, Instant: true);
@@ -645,7 +645,7 @@ namespace Mangos.World.Handlers
             byte i = 0;
             do
             {
-                Dmg = ((!MaxDmg) ? (Dmg + objCharacter.Items[WepSlot].ItemInfo.Damage[i].Minimum) : (Dmg + objCharacter.Items[WepSlot].ItemInfo.Damage[i].Maximum));
+                Dmg = (!MaxDmg) ? (Dmg + objCharacter.Items[WepSlot].ItemInfo.Damage[i].Minimum) : (Dmg + objCharacter.Items[WepSlot].ItemInfo.Damage[i].Maximum);
                 checked
                 {
                     i = (byte)unchecked((uint)(i + 1));

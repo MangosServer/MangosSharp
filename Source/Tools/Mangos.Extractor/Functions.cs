@@ -259,7 +259,7 @@ namespace Mangos.Extractor
             }
             if (FIELD_TYPE_OFFSET == -1) // TBC support
             {
-                OBJECT_FIELD_GUID = SearchInFile(f, "OBJECT_FIELD_GUID") + (0x1A00 + 0x400000);
+                OBJECT_FIELD_GUID = SearchInFile(f, "OBJECT_FIELD_GUID") + 0x1A00 + 0x400000;
                 FIELD_TYPE_OFFSET = SearchInFile(f, OBJECT_FIELD_GUID);
                 TBC = 1;
             }

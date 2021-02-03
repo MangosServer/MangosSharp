@@ -2068,7 +2068,7 @@ namespace Mangos.World.Quests
                                 {
                                     fullxp2 = reqMoneyMaxLevel2 / 0.6f;
                                 }
-                                xp2 = ((pLevel2 <= qLevel2 + 5) ? ((int)fullxp2) : ((pLevel2 == qLevel2 + 6) ? ((int)(fullxp2 * 0.8f)) : ((pLevel2 == qLevel2 + 7) ? ((int)(fullxp2 * 0.6f)) : ((pLevel2 == qLevel2 + 8) ? ((int)(fullxp2 * 0.4f)) : ((pLevel2 != qLevel2 + 9) ? ((int)(fullxp2 * 0.1f)) : ((int)(fullxp2 * 0.2f)))))));
+                                xp2 = (pLevel2 <= qLevel2 + 5) ? ((int)fullxp2) : ((pLevel2 == qLevel2 + 6) ? ((int)(fullxp2 * 0.8f)) : ((pLevel2 == qLevel2 + 7) ? ((int)(fullxp2 * 0.6f)) : ((pLevel2 == qLevel2 + 8) ? ((int)(fullxp2 * 0.4f)) : ((pLevel2 != qLevel2 + 9) ? ((int)(fullxp2 * 0.1f)) : ((int)(fullxp2 * 0.2f))))));
                                 client.Character.AddXP(xp2, 0);
                             }
                             else
@@ -2251,7 +2251,7 @@ namespace Mangos.World.Quests
                             {
                                 fullxp = reqMoneyMaxLevel / 0.6f;
                             }
-                            xp = ((pLevel <= qLevel + 5) ? ((int)fullxp) : ((pLevel == qLevel + 6) ? ((int)(fullxp * 0.8f)) : ((pLevel == qLevel + 7) ? ((int)(fullxp * 0.6f)) : ((pLevel == qLevel + 8) ? ((int)(fullxp * 0.4f)) : ((pLevel != qLevel + 9) ? ((int)(fullxp * 0.1f)) : ((int)(fullxp * 0.2f)))))));
+                            xp = (pLevel <= qLevel + 5) ? ((int)fullxp) : ((pLevel == qLevel + 6) ? ((int)(fullxp * 0.8f)) : ((pLevel == qLevel + 7) ? ((int)(fullxp * 0.6f)) : ((pLevel == qLevel + 8) ? ((int)(fullxp * 0.4f)) : ((pLevel != qLevel + 9) ? ((int)(fullxp * 0.1f)) : ((int)(fullxp * 0.2f))))));
                             client.Character.AddXP(xp, 0);
                         }
                         else
