@@ -42,13 +42,11 @@ using Mangos.World.Spells;
 using Mangos.World.Warden;
 using Mangos.World.Weather;
 using Mangos.Zip;
-using Microsoft.VisualBasic.CompilerServices;
 using Functions = Mangos.Common.Legacy.Globals.Functions;
 using NativeMethods = Mangos.Common.Legacy.NativeMethods;
 
 namespace Mangos.World
 {
-    [StandardModule]
     public sealed class Program
     {
         public static async Task Main()

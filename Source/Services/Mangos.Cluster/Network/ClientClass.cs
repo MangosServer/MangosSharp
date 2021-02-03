@@ -31,7 +31,6 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Configuration;
-using Microsoft.VisualBasic;
 
 namespace Mangos.Cluster.Network
 {
@@ -82,9 +81,9 @@ namespace Mangos.Cluster.Network
             // DONE: Connection spam protection
             if (_clusterServiceLocator.WcNetwork.LastConnections.ContainsKey(_clusterServiceLocator.WcNetwork.Ip2Int(IP)))
             {
-                if (DateAndTime.Now > _clusterServiceLocator.WcNetwork.LastConnections[_clusterServiceLocator.WcNetwork.Ip2Int(IP)])
+                if (DateTime.Now > _clusterServiceLocator.WcNetwork.LastConnections[_clusterServiceLocator.WcNetwork.Ip2Int(IP)])
                 {
-                    _clusterServiceLocator.WcNetwork.LastConnections[_clusterServiceLocator.WcNetwork.Ip2Int(IP)] = DateAndTime.Now.AddSeconds(5d);
+                    _clusterServiceLocator.WcNetwork.LastConnections[_clusterServiceLocator.WcNetwork.Ip2Int(IP)] = DateTime.Now.AddSeconds(5d);
                 }
                 else
                 {
@@ -95,7 +94,7 @@ namespace Mangos.Cluster.Network
             }
             else
             {
-                _clusterServiceLocator.WcNetwork.LastConnections.Add(_clusterServiceLocator.WcNetwork.Ip2Int(IP), DateAndTime.Now.AddSeconds(5d));
+                _clusterServiceLocator.WcNetwork.LastConnections.Add(_clusterServiceLocator.WcNetwork.Ip2Int(IP), DateTime.Now.AddSeconds(5d));
             }
 
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "Incoming connection from [{0}:{1}]", IP, Port);
@@ -134,7 +133,7 @@ namespace Mangos.Cluster.Network
                     _socket?.Dispose();
                     _socket?.Close();
 
-                    _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Unknown Opcode 0x{2:X} [{2}], DataLen={4}", IP, Port, p.OpCode, Constants.vbCrLf, p.Length);
+                    _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Unknown Opcode 0x{2:X} [{2}], DataLen={4}", IP, Port, p.OpCode, Environment.NewLine, p.Length);
                     _clusterServiceLocator.Packets.DumpPacket(p.Data, client);
                 }
                 else
@@ -157,7 +156,7 @@ namespace Mangos.Cluster.Network
                 }
                 catch (Exception e)
                 {
-                    _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "Opcode handler {2}:{2:X} caused an error: {1}{0}", e.ToString(), Constants.vbCrLf, p.OpCode);
+                    _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "Opcode handler {2}:{2:X} caused an error: {1}{0}", e.ToString(), Environment.NewLine, p.OpCode);
                 }
             }
         }
@@ -181,7 +180,7 @@ namespace Mangos.Cluster.Network
             catch (Exception err)
             {
                 // NOTE: If it's a error here it means the connection is closed?
-                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] caused an error {2}{3}", IP, Port, err.ToString(), Constants.vbCrLf);
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] caused an error {2}{3}", IP, Port, err.ToString(), Environment.NewLine);
                 Delete();
             }
         }
@@ -214,7 +213,7 @@ namespace Mangos.Cluster.Network
                 catch (Exception err)
                 {
                     // NOTE: If it's a error here it means the connection is closed?
-                    _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] caused an error {2}{3}", IP, Port, err.ToString(), Constants.vbCrLf);
+                    _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] caused an error {2}{3}", IP, Port, err.ToString(), Environment.NewLine);
                     Delete();
                 }
             }
@@ -242,7 +241,7 @@ namespace Mangos.Cluster.Network
             catch (Exception err)
             {
                 // NOTE: If it's a error here it means the connection is closed?
-                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] caused an error {2}{3}", IP, Port, err.ToString(), Constants.vbCrLf);
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.CRITICAL, "Connection from [{0}:{1}] caused an error {2}{3}", IP, Port, err.ToString(), Environment.NewLine);
                 Delete();
             }
 
@@ -258,7 +257,6 @@ namespace Mangos.Cluster.Network
             }
         }
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         private bool _disposedValue; // To detect redundant calls
 
         // IDisposable
@@ -301,7 +299,7 @@ namespace Mangos.Cluster.Network
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
+
         public void Delete()
         {
             _socket.Close();

@@ -39,7 +39,7 @@ using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Quests;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+//using Microsoft.VisualBasic.CompilerServices;
 using System.Threading;
 
 namespace Mangos.World
@@ -187,7 +187,6 @@ namespace Mangos.World
                     Console.WriteLine("Please copy the ini files into the same directory as the Server exe files.");
                     Console.WriteLine("Press any key to exit server: ");
                     Console.ReadKey();
-                    ProjectData.EndApp();
                 }
                 Console.Write("[{0}] Loading Configuration from {1}...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), FileName);
                 WorldServerConfiguration configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
@@ -205,7 +204,7 @@ namespace Mangos.World
                     AccountDatabase.SQLPort = AccountDBSettings[3];
                     AccountDatabase.SQLUser = AccountDBSettings[0];
                     AccountDatabase.SQLPass = AccountDBSettings[1];
-                    AccountDatabase.SQLTypeServer = (SQL.DB_Type)Conversions.ToInteger(Enum.Parse(typeof(SQL.DB_Type), AccountDBSettings[5]));
+                    AccountDatabase.SQLTypeServer = (SQL.DB_Type)Conversion.Int(Enum.Parse(typeof(SQL.DB_Type), AccountDBSettings[5]));
                 }
                 else
                 {
@@ -219,7 +218,7 @@ namespace Mangos.World
                     CharacterDatabase.SQLPort = CharacterDBSettings[3];
                     CharacterDatabase.SQLUser = CharacterDBSettings[0];
                     CharacterDatabase.SQLPass = CharacterDBSettings[1];
-                    CharacterDatabase.SQLTypeServer = (SQL.DB_Type)Conversions.ToInteger(Enum.Parse(typeof(SQL.DB_Type), CharacterDBSettings[5]));
+                    CharacterDatabase.SQLTypeServer = (SQL.DB_Type)Conversion.Int(Enum.Parse(typeof(SQL.DB_Type), CharacterDBSettings[5]));
                 }
                 else
                 {
@@ -233,7 +232,7 @@ namespace Mangos.World
                     WorldDatabase.SQLPort = WorldDBSettings[3];
                     WorldDatabase.SQLUser = WorldDBSettings[0];
                     WorldDatabase.SQLPass = WorldDBSettings[1];
-                    WorldDatabase.SQLTypeServer = (SQL.DB_Type)Conversions.ToInteger(Enum.Parse(typeof(SQL.DB_Type), WorldDBSettings[5]));
+                    WorldDatabase.SQLTypeServer = (SQL.DB_Type)Conversion.Int(Enum.Parse(typeof(SQL.DB_Type), WorldDBSettings[5]));
                 }
                 else
                 {
@@ -253,10 +252,8 @@ namespace Mangos.World
             }
             catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex);
                 Exception e = ex;
                 Console.WriteLine(e.ToString());
-                ProjectData.ClearProjectError();
             }
         }
 
@@ -340,7 +337,7 @@ namespace Mangos.World
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("");
             Console.ForegroundColor = ConsoleColor.Gray;
-            DateTime dateTimeStarted = DateAndTime.Now;
+            DateTime dateTimeStarted = DateTime.Now;
             Log.WriteLine(LogType.INFORMATION, "[{0}] World Server Starting...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += GenericExceptionHandler;
@@ -357,7 +354,6 @@ namespace Mangos.World
                 Console.WriteLine("* Press any key to exit *");
                 Console.WriteLine("*************************");
                 Console.ReadKey();
-                ProjectData.EndApp();
             }
             AccountDatabase.Update("SET NAMES 'utf8';");
             ReturnValues = CharacterDatabase.Connect();
@@ -368,7 +364,6 @@ namespace Mangos.World
                 Console.WriteLine("* Press any key to exit *");
                 Console.WriteLine("*************************");
                 Console.ReadKey();
-                ProjectData.EndApp();
             }
             CharacterDatabase.Update("SET NAMES 'utf8';");
             ReturnValues = WorldDatabase.Connect();
@@ -379,7 +374,6 @@ namespace Mangos.World
                 Console.WriteLine("* Press any key to exit *");
                 Console.WriteLine("*************************");
                 Console.ReadKey();
-                ProjectData.EndApp();
             }
             WorldDatabase.Update("SET NAMES 'utf8';");
             bool areDbVersionsOk = true;
@@ -401,7 +395,6 @@ namespace Mangos.World
                 Console.WriteLine("* Press any key to exit *");
                 Console.WriteLine("*************************");
                 Console.ReadKey();
-                ProjectData.EndApp();
             }
             await WorldServiceLocator._WS_DBCDatabase.InitializeInternalDatabaseAsync();
             WorldServiceLocator._WS_Handlers.IntializePacketHandlers();
@@ -424,17 +417,15 @@ namespace Mangos.World
             }
             Log.WriteLine(LogType.INFORMATION, " Load Time:   {0}", Strings.Format(DateAndTime.DateDiff(DateInterval.Second, dateTimeStarted, DateAndTime.Now), "0 seconds"));
             Log.WriteLine(LogType.INFORMATION, " Used Memory: {0}", Strings.Format(GC.GetTotalMemory(forceFullCollection: false), "### ### ##0 bytes"));
-            WaitConsoleCommand();
             try
             {
+                WaitConsoleCommand();
             }
             catch (Exception ex2)
             {
-                ProjectData.SetProjectError(ex2);
                 Exception ex = ex2;
                 WorldServiceLocator._WS_TimerBasedEvents.Regenerator.Dispose();
                 AreaTriggers.Dispose();
-                ProjectData.ClearProjectError();
             }
         }
 
@@ -488,10 +479,8 @@ namespace Mangos.World
                 }
                 catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex);
                     Exception e = ex;
                     Log.WriteLine(LogType.FAILED, "Error executing command [{0}]. {2}{1}", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), tmp, e.ToString(), Environment.NewLine);
-                    ProjectData.ClearProjectError();
                 }
             }
         }
