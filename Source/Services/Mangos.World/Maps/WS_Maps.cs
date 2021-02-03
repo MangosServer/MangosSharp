@@ -274,12 +274,10 @@ namespace Mangos.World.Maps
                         }
                     }
                     try
-                    {
-                        {
+                    {                        
                             float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
                             float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
-                            return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
-                        }
+                            return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);                        
                     }
                     catch (Exception projectError)
                     {

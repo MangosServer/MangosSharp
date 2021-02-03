@@ -487,16 +487,6 @@ namespace Mangos.World
 
         private void GenericExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
-            if (sender is null)
-            {
-                throw new ArgumentNullException(nameof(sender));
-            }
-
-            if (e is null)
-            {
-                throw new ArgumentNullException(nameof(e));
-            }
-
             Exception EX = (Exception)e.ExceptionObject;
             Log.WriteLine(LogType.CRITICAL, EX + Environment.NewLine);
             Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'WorldServer-Error-yyyy-mmm-d-h-mm.log' file has been created. Check your log folder for more information.");
