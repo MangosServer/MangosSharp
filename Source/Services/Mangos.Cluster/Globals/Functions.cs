@@ -75,7 +75,7 @@ namespace Mangos.Cluster.Globals
         public char[] ByteToCharArray(byte[] bBytes)
         {
             if (bBytes.Length == 0)
-                return new char[] { };
+                return Array.Empty<char>();
             var bChar = new char[bBytes.Length];
             for (int i = 0, loopTo = bBytes.Length - 1; i <= loopTo; i++)
                 bChar[i] = (char)bBytes[i];
@@ -85,7 +85,7 @@ namespace Mangos.Cluster.Globals
         public int[] ByteToIntArray(byte[] bBytes)
         {
             if (bBytes.Length == 0)
-                return new int[] { };
+                return Array.Empty<int>();
             var bInt = new int[(bBytes.Length - 1) / 4 + 1];
             for (int i = 0, loopTo = bBytes.Length - 1; i <= loopTo; i += 4)
                 bInt[i / 4] = BitConverter.ToInt32(bBytes, i);
@@ -95,7 +95,7 @@ namespace Mangos.Cluster.Globals
         public byte[] IntToByteArray(int[] bInt)
         {
             if (bInt.Length == 0)
-                return new byte[] { };
+                return Array.Empty<byte>();
             var bBytes = new byte[(bInt.Length * 4)];
             for (int i = 0, loopTo = bInt.Length - 1; i <= loopTo; i++)
             {

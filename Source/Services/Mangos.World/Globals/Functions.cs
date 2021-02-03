@@ -126,7 +126,7 @@ namespace Mangos.World.Globals
         {
             if (bBytes.Length == 0)
             {
-                return new char[0];
+                return Array.Empty<char>();
             }
             checked
             {
@@ -144,7 +144,7 @@ namespace Mangos.World.Globals
         {
             if (bBytes.Length == 0)
             {
-                return new int[0];
+                return Array.Empty<int>();
             }
             checked
             {
@@ -162,7 +162,7 @@ namespace Mangos.World.Globals
         {
             if (bInt.Length == 0)
             {
-                return new byte[0];
+                return Array.Empty<byte>();
             }
             checked
             {

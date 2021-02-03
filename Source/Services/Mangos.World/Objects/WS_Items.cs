@@ -279,7 +279,7 @@ namespace Mangos.World.Objects
                 {
                     17
                 },
-                _ => new byte[0],
+                _ => Array.Empty<byte>(),
             };
 
             public int GetReqSkill

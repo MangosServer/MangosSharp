@@ -603,7 +603,7 @@ namespace Mangos.World.Handlers
         [ChatCommand("combatlist", "combatlist - Lists everyone in your targets combatlist.", AccessLevel.Developer)]
         public bool cmdCombatList(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            ulong[] combatList = new ulong[0];
+            ulong[] combatList = Array.Empty<ulong>();
             combatList = ((decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0 || !WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID)) ? objCharacter.inCombatWith.ToArray() : WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].inCombatWith.ToArray());
             objCharacter.CommandResponse("Combat List (" + Conversions.ToString(combatList.Length) + "):");
             ulong[] array = combatList;

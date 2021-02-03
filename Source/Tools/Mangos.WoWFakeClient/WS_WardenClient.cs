@@ -136,7 +136,7 @@ namespace Mangos.WoWFakeClient
                         Maiev.ModuleName = BitConverter.ToString(Name).Replace("-", "");
                         Maiev.ModuleKey = Key;
                         ModuleLength = (int)Size;
-                        Maiev.ModuleData = new byte[] { };
+                        Maiev.ModuleData = Array.Empty<byte>();
                         if (File.Exists(@"modules\" + Maiev.ModuleName + ".mod") == false)
                         {
                             Console.WriteLine("[{0}][WARDEN] Module is missing.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
@@ -744,7 +744,7 @@ namespace Mangos.WoWFakeClient
 
             public int HandlePacket(byte[] PacketData)
             {
-                m_PKT = new byte[] { };
+                m_PKT = Array.Empty<byte>();
                 int BytesRead = 0;
                 int localVarPtr() { object argobj = BytesRead; var ret = VarPtr(ref argobj); return ret; }
 

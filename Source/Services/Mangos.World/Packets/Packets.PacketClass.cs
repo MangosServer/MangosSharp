@@ -477,7 +477,7 @@ namespace Mangos.World.Globals
                 int lengthLoc = checked(Data.Length - Offset);
                 if (lengthLoc <= 0)
                 {
-                    return new byte[0];
+                    return Array.Empty<byte>();
                 }
                 return GetByteArray(lengthLoc);
             }
@@ -492,7 +492,7 @@ namespace Mangos.World.Globals
                     }
                     if (lengthLoc <= 0)
                     {
-                        return new byte[0];
+                        return Array.Empty<byte>();
                     }
                     byte[] tmpBytes = new byte[lengthLoc - 1 + 1];
                     Array.Copy(Data, Offset, tmpBytes, 0, tmpBytes.Length);

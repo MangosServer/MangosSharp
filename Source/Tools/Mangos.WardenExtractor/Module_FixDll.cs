@@ -125,7 +125,7 @@ namespace Mangos.WardenExtractor
                 Characteristics = 0x40000040,
                 // 40000000 + 40 (can be read, initialized data)
                 Size = 0x8D,
-                Data = new byte[] { }, // TODO!!
+                Data = Array.Empty<byte>(), // TODO!!
                 Pointer = CurrentPosition,
                 RawSize = 0x200
             };
@@ -138,7 +138,7 @@ namespace Mangos.WardenExtractor
                 Characteristics = 0x42000040,
                 // 40000000 + 2000000 + 40 (can be read, can be discarded, initialized data)
                 Size = 0x3C,
-                Data = new byte[] { }, // TODO!!
+                Data = Array.Empty<byte>(), // TODO!!
                 Pointer = CurrentPosition,
                 RawSize = 0x200
             };
@@ -151,7 +151,7 @@ namespace Mangos.WardenExtractor
                 Characteristics = 0x42000040,
                 // 40000000 + 2000000 + 40 (can be read, can be discarded, initialized data)
                 Size = 0x2F4,
-                Data = new byte[] { }, // TODO!!
+                Data = Array.Empty<byte>(), // TODO!!
                 Pointer = CurrentPosition,
                 RawSize = 0x400
             };

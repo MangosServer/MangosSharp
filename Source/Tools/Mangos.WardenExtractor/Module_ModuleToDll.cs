@@ -52,7 +52,7 @@ namespace Mangos.WardenExtractor
                     var fs = new FileStream(sFile, FileMode.Open, FileAccess.Read, FileShare.Read);
                     if (fs.Length == 0L)
                     {
-                        fileData = new byte[] { };
+                        fileData = Array.Empty<byte>();
                     }
                     else
                     {
@@ -100,7 +100,7 @@ namespace Mangos.WardenExtractor
                     var fs = new FileStream(sFile, FileMode.Open, FileAccess.Read, FileShare.Read);
                     if (fs.Length == 0L)
                     {
-                        fileData = new byte[] { };
+                        fileData = Array.Empty<byte>();
                     }
                     else
                     {

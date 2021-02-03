@@ -96,7 +96,7 @@ namespace Mangos.WardenExtractor
         public static byte[] Reverse(byte[] bytes)
         {
             if (bytes.Length == 0)
-                return new byte[] { };
+                return Array.Empty<byte>();
             var tmpBytes = new byte[bytes.Length];
             for (int i = bytes.Length - 1; i >= 0; i -= 1)
                 tmpBytes[bytes.Length - 1 - i] = bytes[i];
@@ -106,7 +106,7 @@ namespace Mangos.WardenExtractor
         public static byte[] ParseKey(string str)
         {
             if (str.Length == 0)
-                return new byte[] { };
+                return Array.Empty<byte>();
             var bBytes = new byte[Conversion.Int((str.Length - 1) / 2) + 1];
             for (int i = 0, loopTo = str.Length - 1; i <= loopTo; i += 2)
             {

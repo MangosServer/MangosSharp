@@ -432,7 +432,7 @@ namespace Mangos.World
         public void WaitConsoleCommand()
         {
             string tmp = "";
-            string[] cmd = new string[0];
+            string[] cmd = Array.Empty<string>();
             while (!ClsWorldServer._flagStopListen)
             {
                 try

@@ -633,7 +633,7 @@ namespace Mangos.WoWFakeClient
             public byte[] GetByteArray(int Length)
             {
                 if (Length < 0)
-                    return new byte[] { };
+                    return Array.Empty<byte>();
                 var tmpArray = new byte[Length];
                 Array.Copy(Data, Offset, tmpArray, 0, Length);
                 Offset += Length;

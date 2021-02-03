@@ -240,10 +240,10 @@ namespace Mangos.World.Warden
 
             public WardenMaiev()
             {
-                WardenModule = new byte[0];
+                WardenModule = Array.Empty<byte>();
                 ModuleName = "";
-                ModuleKey = new byte[0];
-                ModuleData = new byte[0];
+                ModuleKey = Array.Empty<byte>();
+                ModuleData = Array.Empty<byte>();
                 ModuleSize = 0;
                 CheckIDs = new byte[8];
                 Script = null;
@@ -272,7 +272,7 @@ namespace Mangos.World.Warden
                 myWardenList = default;
                 pWardenList = 0;
                 m_RC4 = 0;
-                m_PKT = new byte[0];
+                m_PKT = Array.Empty<byte>();
             }
 
             public void InitWarden()
@@ -958,7 +958,7 @@ namespace Mangos.World.Warden
 
             public int HandlePacket(byte[] PacketData)
             {
-                m_PKT = new byte[0];
+                m_PKT = Array.Empty<byte>();
                 int BytesRead = 0;
                 WS_Warden wS_Warden = WorldServiceLocator._WS_Warden;
                 object obj = BytesRead;

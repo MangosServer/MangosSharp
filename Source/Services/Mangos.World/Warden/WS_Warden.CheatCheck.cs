@@ -45,7 +45,7 @@ namespace Mangos.World.Warden
                 Str = "";
                 Str2 = "";
                 Addr = 0;
-                Hash = new byte[0];
+                Hash = System.Array.Empty<byte>();
                 Seed = 0;
                 Length = 0;
                 Type = Type_;
