@@ -128,8 +128,9 @@ namespace Mangos.Cluster.Globals
                 buffer += "-------------------------------------------------------------------" + Constants.vbCrLf + Constants.vbCrLf;
                 File.AppendAllText("packets.log", buffer);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, $"Log Packet has thrown an Exception!", e);
             }
         }
 

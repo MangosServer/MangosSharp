@@ -121,8 +121,10 @@ namespace Mangos.WardenExtractor
                         bBytes[Conversion.Int(i / 2)] = Conversions.ToByte("&H" + str[i] + str[i + 1]);
                     }
                 }
-                catch
+                catch (Exception e)
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.Write("ParseKey has thrown an Exception! The exception is {0}", e);
                 }
             }
 

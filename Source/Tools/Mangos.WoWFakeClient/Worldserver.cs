@@ -142,8 +142,10 @@ namespace Mangos.WoWFakeClient
                         break;
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("ProcessServerConnection has thrown an Exception! The exception is {0}", e);
             }
 
             Connection.Close();

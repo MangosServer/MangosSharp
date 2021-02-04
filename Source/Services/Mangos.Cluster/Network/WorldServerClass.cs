@@ -131,6 +131,7 @@ namespace Mangos.Cluster.Network
                     }
                     catch
                     {
+                        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, "Map: {0:000} has thrown an Exception!", map);
                     }
                     finally
                     {

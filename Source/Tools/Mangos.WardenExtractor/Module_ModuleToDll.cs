@@ -66,8 +66,10 @@ namespace Mangos.WardenExtractor
                     if (fileData.Length == 0)
                         continue;
                 }
-                catch
+                catch (Exception e)
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.Write("FileStream has thrown an Exception! The exception is {0}", e);
                 }
 
                 if (fileData is null)

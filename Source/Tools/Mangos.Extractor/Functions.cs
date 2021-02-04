@@ -114,8 +114,9 @@ namespace Mangos.Extractor
                     t = (byte)f.ReadByte();
                 }
             }
-            catch
+            catch (Exception e)
             {
+                MessageBox.Show("ReadString has thrown an Exception! The string is {0}", e.Message);
             }
 
             return r;
