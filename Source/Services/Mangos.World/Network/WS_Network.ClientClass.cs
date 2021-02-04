@@ -279,8 +279,15 @@ namespace Mangos.World.Network
                 ProcessQueueSempahore.Set(); //Allow thread to exit.
                 ProcessQueueSempahore?.Dispose();
 
-                try { ProcessQueueThread?.Interrupt(); } catch { }
-                try { ProcessQueueThread?.Join(1000); } catch { }
+                try
+                { 
+                ProcessQueueThread?.Interrupt();
+                ProcessQueueThread?.Join(1000);
+                }
+                catch (ThreadInterruptedException ex)
+                {
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "{0} Thread ID: {1}", ex, Thread.CurrentThread.ManagedThreadId);
+                }
                 ProcessQueueThread = null;
 
                 Packets?.Clear();
