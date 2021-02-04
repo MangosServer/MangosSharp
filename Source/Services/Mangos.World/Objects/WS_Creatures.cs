@@ -1821,21 +1821,29 @@ namespace Mangos.World.Objects
 
             public void RemoveFromWorld()
             {
-                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
-                WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID);
-                ulong[] array = SeenBy.ToArray();
-                foreach (ulong plGUID in array)
+                try
                 {
-                    if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID))
+                    WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                    WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID);
+                    ulong[] array = SeenBy.ToArray();
+                    foreach (ulong plGUID in array)
                     {
-                        WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                        WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                        WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
-                        WorldServiceLocator._WorldServer.CHARACTERs[plGUID].creaturesNear.Remove(GUID);
+                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID))
+                        {
+                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
+                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].creaturesNear.Remove(GUID);
+                        }
                     }
+                    SeenBy.Clear();
                 }
-                SeenBy.Clear();
-            }
+                catch (Exception ex)
+                {
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WS_Creatures:RemoveFromWorld - Unable to remove creatue from world, Remove again  {0}", ex.Message);
+                    WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID);
+                }
+             }
 
             public void MoveCell()
             {
