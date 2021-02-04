@@ -150,7 +150,7 @@ namespace Mangos.WoWFakeClient
 
             Connection.Close();
             Console.WriteLine("[{0}][World] Disconnected.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
-            oThread.Abort();
+            oThread.Interrupt();
         }
 
         public static void Disconnect()
