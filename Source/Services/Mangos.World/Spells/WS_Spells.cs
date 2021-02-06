@@ -1377,6 +1377,11 @@ namespace Mangos.World.Spells
 
             public SpellFailedReason CanCast(ref WS_PlayerData.CharacterObject Character, SpellTargets Targets, bool FirstCheck)
             {
+                if (Character == null)
+                {
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WS_Spells:CanCast Null Character Object");
+                    return SpellFailedReason.SPELL_FAILED_ERROR;
+                }
                 if (Character != null)
                     if (Character.Spell_Silenced)
                     {
@@ -8804,6 +8809,11 @@ namespace Mangos.World.Spells
             packet.GetInt16();
             int spellID = packet.GetInt32();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CSMG_CAST_SPELL [spellID={2}]", client.IP, client.Port, spellID);
+            if (client.Character == null)
+            {
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] WS_Spells:On_CMSG_CAST_SPELL Null Character Object [spellID={2}]", client.IP, client.Port, spellID);
+                return;
+            }
             if (client.Character != null)
                 if (!client.Character.HaveSpell(spellID))
                 {
