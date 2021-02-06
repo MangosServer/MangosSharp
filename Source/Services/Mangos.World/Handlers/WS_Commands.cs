@@ -430,6 +430,29 @@ namespace Mangos.World.Handlers
             return true;
         }
 
+        [ChatCommand("notifymessage", "notify #message - Send text message to all players on the server.")]
+        public bool cmdNotificationMessage(ref WS_PlayerData.CharacterObject objCharacter, string Text)
+        {
+            if (Operators.CompareString(Text, "", TextCompare: false) == 0)
+            {
+                return false;
+            }
+            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_NOTIFICATION);
+            packet.AddString(Text);
+            packet.UpdateLength();
+            WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
+            packet.Dispose();
+            return true;
+        }
+
+        [ChatCommand("nullchar", " - Set's Character Object to Null, forcing an NullReferenceException to throw on actions peformed after issuing this command.", AccessLevel.Developer)]
+        public bool cmdNullChar(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        {
+            Thread.Sleep(5000);
+            objCharacter = null;
+            return true;
+        }
+
         [ChatCommand("servermessage", "servermessage #type #text - Send text message to all players on the server.")]
         public bool cmdServerMessage(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
@@ -442,21 +465,6 @@ namespace Mangos.World.Handlers
             string Text = tmp[1];
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SERVER_MESSAGE);
             packet.AddInt32(Type);
-            packet.AddString(Text);
-            packet.UpdateLength();
-            WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
-            packet.Dispose();
-            return true;
-        }
-
-        [ChatCommand("notifymessage", "notify #message - Send text message to all players on the server.")]
-        public bool cmdNotificationMessage(ref WS_PlayerData.CharacterObject objCharacter, string Text)
-        {
-            if (Operators.CompareString(Text, "", TextCompare: false) == 0)
-            {
-                return false;
-            }
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_NOTIFICATION);
             packet.AddString(Text);
             packet.UpdateLength();
             WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
