@@ -16,9 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Data;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
@@ -30,6 +27,9 @@ using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Quests;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace Mangos.World.Handlers
 {
@@ -282,7 +282,7 @@ namespace Mangos.World.Handlers
                     WS_Creatures.CreatureObject creature = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
                     aLLQUESTS.OnQuestDoEmote(ref character, ref creature, TextEmote);
                     wORLD_CREATUREs[key] = creature;
-                    if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript != null && WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript is WS_Creatures_AI.GuardAI)
+                    if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript is not null and WS_Creatures_AI.GuardAI)
                     {
                         ((WS_Creatures_AI.GuardAI)WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript).OnEmote(TextEmote);
                     }
@@ -320,7 +320,7 @@ namespace Mangos.World.Handlers
                     SMSG_TEXT_EMOTE.AddInt32(255);
                     SMSG_TEXT_EMOTE.AddInt32(secondName.Length + 1);
                     SMSG_TEXT_EMOTE.AddString(secondName);
-                        client.Character.SendToNearPlayers(ref SMSG_TEXT_EMOTE);
+                    client.Character.SendToNearPlayers(ref SMSG_TEXT_EMOTE);
                 }
                 finally
                 {
@@ -625,7 +625,7 @@ namespace Mangos.World.Handlers
             {
                 faction = 255;
             }
-            if (faction >= 0 && faction <= 255)
+            if (faction is >= 0 and <= 255)
             {
                 client.Character.WatchedFactionIndex = checked((byte)faction);
                 client.Character.SetUpdateFlag(1261, faction);

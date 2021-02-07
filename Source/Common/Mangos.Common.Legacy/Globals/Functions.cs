@@ -18,12 +18,12 @@
 
 // Note: Temp place holder
 
-using System.Data;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
 using Mangos.Loggers;
 using Microsoft.VisualBasic;
+using System.Data;
 
 namespace Mangos.Common.Legacy.Globals
 {
@@ -41,63 +41,90 @@ namespace Mangos.Common.Legacy.Globals
         public bool GuidIsCreature(ulong guid)
         {
             if (GuidHigh2(guid) == mangosGlobalConstants.GUID_UNIT)
+            {
                 return true;
+            }
+
             return false;
         }
 
         public bool GuidIsPet(ulong guid)
         {
             if (GuidHigh2(guid) == mangosGlobalConstants.GUID_PET)
+            {
                 return true;
+            }
+
             return false;
         }
 
         public bool GuidIsItem(ulong guid)
         {
             if (GuidHigh2(guid) == mangosGlobalConstants.GUID_ITEM)
+            {
                 return true;
+            }
+
             return false;
         }
 
         public bool GuidIsGameObject(ulong guid)
         {
             if (GuidHigh2(guid) == mangosGlobalConstants.GUID_GAMEOBJECT)
+            {
                 return true;
+            }
+
             return false;
         }
 
         public bool GuidIsDnyamicObject(ulong guid)
         {
             if (GuidHigh2(guid) == mangosGlobalConstants.GUID_DYNAMICOBJECT)
+            {
                 return true;
+            }
+
             return false;
         }
 
         public bool GuidIsTransport(ulong guid)
         {
             if (GuidHigh2(guid) == mangosGlobalConstants.GUID_TRANSPORT)
+            {
                 return true;
+            }
+
             return false;
         }
 
         public bool GuidIsMoTransport(ulong guid)
         {
             if (GuidHigh2(guid) == mangosGlobalConstants.GUID_MO_TRANSPORT)
+            {
                 return true;
+            }
+
             return false;
         }
 
         public bool GuidIsCorpse(ulong guid)
         {
             if (GuidHigh2(guid) == mangosGlobalConstants.GUID_CORPSE)
+            {
                 return true;
+            }
+
             return false;
         }
 
         public bool GuidIsPlayer(ulong guid)
         {
             if (GuidHigh2(guid) == mangosGlobalConstants.GUID_PLAYER)
+            {
                 return true;
+            }
+
             return false;
         }
 
@@ -123,9 +150,15 @@ namespace Mangos.Common.Legacy.Globals
                 case ShapeshiftForm.FORM_CAT:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
+                        {
                             return 892;
+                        }
+
                         if (race == Races.RACE_TAUREN)
+                        {
                             return 8571;
+                        }
+
                         break;
                     }
 
@@ -133,18 +166,30 @@ namespace Mangos.Common.Legacy.Globals
                 case ShapeshiftForm.FORM_DIREBEAR:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
+                        {
                             return 2281;
+                        }
+
                         if (race == Races.RACE_TAUREN)
+                        {
                             return 2289;
+                        }
+
                         break;
                     }
 
                 case ShapeshiftForm.FORM_MOONKIN:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
+                        {
                             return 15374;
+                        }
+
                         if (race == Races.RACE_TAUREN)
+                        {
                             return 15375;
+                        }
+
                         break;
                     }
 
@@ -161,27 +206,42 @@ namespace Mangos.Common.Legacy.Globals
                 case ShapeshiftForm.FORM_FLIGHT:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
+                        {
                             return 20857;
+                        }
+
                         if (race == Races.RACE_TAUREN)
+                        {
                             return 20872;
+                        }
+
                         break;
                     }
 
                 case ShapeshiftForm.FORM_SWIFT:
                     {
                         if (race == Races.RACE_NIGHT_ELF)
+                        {
                             return 21243;
+                        }
+
                         if (race == Races.RACE_TAUREN)
+                        {
                             return 21244;
+                        }
+
                         break;
                     }
 
                 case ShapeshiftForm.FORM_GHOUL:
-                {
-                    if (race == Races.RACE_NIGHT_ELF)
+                    {
+                        if (race == Races.RACE_NIGHT_ELF)
+                        {
                             return 10045;
-                    return model;
-                }
+                        }
+
+                        return model;
+                    }
 
                 case ShapeshiftForm.FORM_CREATUREBEAR:
                     {
@@ -247,7 +307,7 @@ namespace Mangos.Common.Legacy.Globals
 
         public bool CheckRequiredDbVersion(SQL thisDatabase, ServerDb thisServerDb)
         {
-            var mySqlQuery = new DataTable();
+            DataTable mySqlQuery = new DataTable();
             // thisDatabase.Query(String.Format("SELECT column_name FROM information_schema.columns WHERE table_name='" & thisTableName & "'  AND TABLE_SCHEMA='" & thisDatabase.SQLDBName & "'"), mySqlQuery)
             thisDatabase.Query("SELECT `version`,`structure`,`content` FROM db_version ORDER BY VERSION DESC, structure DESC, content DESC LIMIT 0,1", ref mySqlQuery);
             // Check database version against code version
@@ -280,6 +340,12 @@ namespace Mangos.Common.Legacy.Globals
                         coreDbContent = mangosGlobalConstants.RevisionDbMangosContent;
                         break;
                     }
+
+                case 0:
+                    {
+                        logger.Warning("Default switch fallback has occured with an error, data output: ThisServerDb {0}, CoreDbVersion {1}, CoreDbContent {2}, CoreDbVersion {3}", thisServerDb, coreDbVersion, coreDbContent, coreDbVersion);
+                        break;
+                    }
             }
 
             if (mySqlQuery.Rows.Count > 0)
@@ -293,13 +359,13 @@ namespace Mangos.Common.Legacy.Globals
 
                 // NOTES: Version or Structure mismatch is a hard error, Content mismatch as a warning
 
-                if (dbVersion == coreDbVersion & dbStructure == coreDbStructure & dbContent == coreDbContent) // Full Match
+                if (dbVersion == coreDbVersion && dbStructure == coreDbStructure && dbContent == coreDbContent) // Full Match
                 {
                     logger.Debug("[{0}] Db Version Matched", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
                     return true;
                 }
 
-                if (dbVersion == coreDbVersion & dbStructure == coreDbStructure & dbContent != coreDbContent) // Content MisMatch, only a warning
+                if (dbVersion == coreDbVersion && dbStructure == coreDbStructure && dbContent != coreDbContent) // Content MisMatch, only a warning
                 {
                     logger.Warning("--------------------------------------------------------------");
                     logger.Warning("-- WARNING: CONTENT VERSION MISMATCH                        --");

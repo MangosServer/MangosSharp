@@ -9,6 +9,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.2" />
+    <PackageReference Include="MySql.Data" Version="8.0.23" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Mangos.Configuration.Xml\Mangos.Configuration.Xml.csproj" />

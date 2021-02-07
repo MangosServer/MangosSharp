@@ -16,11 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Gossip;
 using Mangos.Common.Enums.Item;
@@ -36,6 +31,11 @@ using Mangos.World.Player;
 using Mangos.World.Quests;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading;
 using Functions = Mangos.World.Globals.Functions;
 
 namespace Mangos.World.Objects
@@ -431,7 +431,7 @@ namespace Mangos.World.Objects
                 {
                     reqSpell = WorldServiceLocator._WS_Spells.SpellChains[spellInfo.ID];
                 }
-                if (!client.Character.HaveSpell(spellInfo.ID) && client.Character.Copper >= spellCost && client.Character.Level >= (uint)reqLevel && (reqSpell <= 0 || client.Character.HaveSpell(reqSpell)) && ((mySqlQuery.Rows[0].As<int>("reqskill") <= 0 || client.Character.HaveSkill(mySqlQuery.Rows[0].As<int>("reqskill"), mySqlQuery.Rows[0].As<int>("reqskillvalue")))))
+                if (!client.Character.HaveSpell(spellInfo.ID) && client.Character.Copper >= spellCost && client.Character.Level >= (uint)reqLevel && (reqSpell <= 0 || client.Character.HaveSpell(reqSpell)) && (mySqlQuery.Rows[0].As<int>("reqskill") <= 0 || client.Character.HaveSkill(mySqlQuery.Rows[0].As<int>("reqskill"), mySqlQuery.Rows[0].As<int>("reqskillvalue"))))
                 {
                     try
                     {
@@ -647,7 +647,7 @@ namespace Mangos.World.Objects
                         }
                         return;
                     }
-                    if ((WorldServiceLocator._WorldServer.ITEMDatabase[WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ItemEntry].SellPrice == 0) | (WorldServiceLocator._WorldServer.ITEMDatabase[WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ItemEntry].ObjectClass == ITEM_CLASS.ITEM_CLASS_QUEST))
+                    if ((WorldServiceLocator._WorldServer.ITEMDatabase[WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ItemEntry].SellPrice == 0) || (WorldServiceLocator._WorldServer.ITEMDatabase[WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ItemEntry].ObjectClass == ITEM_CLASS.ITEM_CLASS_QUEST))
                     {
                         Packets.PacketClass okPckt4 = new Packets.PacketClass(Opcodes.SMSG_SELL_ITEM);
                         try

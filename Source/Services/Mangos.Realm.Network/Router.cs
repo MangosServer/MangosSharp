@@ -27,7 +27,7 @@ namespace Mangos.Realm.Network
         private readonly Dictionary<AuthCMD, IPacketHandler> handlers;
 
         public Router(
-            RS_LOGON_CHALLENGE_Handler RS_LOGON_CHALLENGE_Handler, 
+            RS_LOGON_CHALLENGE_Handler RS_LOGON_CHALLENGE_Handler,
             RS_LOGON_PROOF_Handler RS_LOGON_PROOF_Handler,
             RS_REALMLIST_Handler RS_REALMLIST_Handler,
             CMD_XFER_CANCEL_Handler CMD_XFER_CANCEL_Handler,
@@ -48,7 +48,7 @@ namespace Mangos.Realm.Network
 
         public IPacketHandler GetPacketHandler(byte opcode)
         {
-            var authCMD = (AuthCMD)opcode;
+            AuthCMD authCMD = (AuthCMD)opcode;
             return handlers.ContainsKey(authCMD) ? handlers[authCMD] : null;
         }
     }

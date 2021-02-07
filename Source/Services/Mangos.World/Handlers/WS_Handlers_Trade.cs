@@ -16,8 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Item;
 using Mangos.Common.Enums.Misc;
@@ -27,6 +25,8 @@ using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
 
 namespace Mangos.World.Handlers
 {
@@ -138,7 +138,7 @@ namespace Mangos.World.Handlers
                                 byte mySlot = (byte)(TargetSlots[i] & 0xFF);
                                 byte myBag = (byte)(TargetSlots[i] >> 8);
                                 ItemObject myItem = null;
-                                myItem = ((myBag != 0) ? Target.Items[myBag].Items[mySlot] : Target.Items[mySlot]);
+                                myItem = (myBag != 0) ? Target.Items[myBag].Items[mySlot] : Target.Items[mySlot];
                                 packet.AddInt32(myItem.ItemEntry);
                                 packet.AddInt32(myItem.ItemInfo.Model);
                                 packet.AddInt32(myItem.StackCount);
@@ -207,7 +207,7 @@ namespace Mangos.World.Handlers
                                 byte mySlot = (byte)(TraderSlots[i] & 0xFF);
                                 byte myBag = (byte)(TraderSlots[i] >> 8);
                                 ItemObject myItem = null;
-                                myItem = ((myBag != 0) ? Trader.Items[myBag].Items[mySlot] : Trader.Items[mySlot]);
+                                myItem = (myBag != 0) ? Trader.Items[myBag].Items[mySlot] : Trader.Items[mySlot];
                                 packet.AddInt32(myItem.ItemEntry);
                                 packet.AddInt32(myItem.ItemInfo.Model);
                                 packet.AddInt32(myItem.StackCount);
@@ -361,7 +361,7 @@ namespace Mangos.World.Handlers
                         }
                         return;
                     }
-                    if ((TargetGold > 0L) | (TraderGold > 0L))
+                    if ((TargetGold > 0L) || (TraderGold > 0L))
                     {
                         checked
                         {
@@ -383,7 +383,7 @@ namespace Mangos.World.Handlers
                                     byte mySlot2 = (byte)(TraderSlots[j] & 0xFF);
                                     byte myBag2 = (byte)(TraderSlots[j] >> 8);
                                     ItemObject myItem2 = null;
-                                    myItem2 = ((myBag2 != 0) ? Trader.Items[myBag2].Items[mySlot2] : Trader.Items[mySlot2]);
+                                    myItem2 = (myBag2 != 0) ? Trader.Items[myBag2].Items[mySlot2] : Trader.Items[mySlot2];
                                     if (myItem2.ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_QUEST)
                                     {
                                         myItem2.OwnerGUID = Target.GUID;
@@ -398,7 +398,7 @@ namespace Mangos.World.Handlers
                                     byte mySlot = (byte)(TargetSlots[j] & 0xFF);
                                     byte myBag = (byte)(TargetSlots[j] >> 8);
                                     ItemObject myItem = null;
-                                    myItem = ((myBag != 0) ? Target.Items[myBag].Items[mySlot] : Target.Items[mySlot]);
+                                    myItem = (myBag != 0) ? Target.Items[myBag].Items[mySlot] : Target.Items[mySlot];
                                     if (myItem.ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_QUEST)
                                     {
                                         myItem.OwnerGUID = Trader.GUID;

@@ -16,8 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Enums.Spell;
@@ -26,6 +24,8 @@ using Mangos.World.Globals;
 using Mangos.World.Player;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
 
 namespace Mangos.World.Objects
 {
@@ -375,7 +375,7 @@ namespace Mangos.World.Objects
 
             public virtual bool IsStunned => (cUnitFlags & 0x40000) != 0;
 
-            public bool IsInFeralForm => ShapeshiftForm == ShapeshiftForm.FORM_CAT || ShapeshiftForm == ShapeshiftForm.FORM_BEAR || ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR;
+            public bool IsInFeralForm => ShapeshiftForm is ShapeshiftForm.FORM_CAT or ShapeshiftForm.FORM_BEAR or ShapeshiftForm.FORM_DIREBEAR;
 
             public bool IsPlayer => this is WS_PlayerData.CharacterObject;
 
@@ -955,7 +955,7 @@ namespace Mangos.World.Objects
                         {
                             PenaltyFactor = 5;
                         }
-                        int SpellDamage = ((!IsHeal) ? @object.spellDamage[(uint)DamageType].Value : @object.healing.Value);
+                        int SpellDamage = (!IsHeal) ? @object.spellDamage[(uint)DamageType].Value : @object.healing.Value;
                         if (IsDot)
                         {
                             int TickAmount = (int)Math.Round(WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration / (double)EffectInfo.Amplitude);
@@ -1058,11 +1058,11 @@ namespace Mangos.World.Objects
                 {
                     return SpellMissInfo.SPELL_MISS_NONE;
                 }
-                int lchance = ((this is WS_PlayerData.CharacterObject) ? 7 : 11);
+                int lchance = (this is WS_PlayerData.CharacterObject) ? 7 : 11;
                 checked
                 {
                     int leveldiff = Level - Caster.Level;
-                    int modHitChance = ((leveldiff >= 3) ? (94 - (leveldiff - 2) * lchance) : (96 - leveldiff));
+                    int modHitChance = (leveldiff >= 3) ? (94 - (leveldiff - 2) * lchance) : (96 - leveldiff);
                     modHitChance += Caster.GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT, (int)Spell.SchoolMask);
                     modHitChance += GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, (int)Spell.SchoolMask);
                     if (Spell.IsAOE)
@@ -1171,7 +1171,7 @@ namespace Mangos.World.Objects
             {
                 if (this is WS_PlayerData.CharacterObject characterObject)
                 {
-                    int value = ((!Attacker.IsPlayer) ? characterObject.Skills[95].CurrentWithBonus : characterObject.Skills[95].MaximumWithBonus);
+                    int value = (!Attacker.IsPlayer) ? characterObject.Skills[95].CurrentWithBonus : characterObject.Skills[95].MaximumWithBonus;
                     return value;
                 }
                 checked
@@ -1217,7 +1217,7 @@ namespace Mangos.World.Objects
                             return Level * 5;
                         }
                         int skill = item?.GetSkill ?? 162;
-                        int value = ((!Victim.IsPlayer) ? characterObject.Skills[skill].CurrentWithBonus : characterObject.Skills[skill].MaximumWithBonus);
+                        int value = (!Victim.IsPlayer) ? characterObject.Skills[skill].CurrentWithBonus : characterObject.Skills[skill].MaximumWithBonus;
                         return value;
                     }
                     return Level * 5;
@@ -1253,7 +1253,7 @@ namespace Mangos.World.Objects
             public float GetResist(ref BaseUnit t, DamageTypes School, int Damage)
             {
                 float damageReduction = GetDamageReduction(ref t, School, Damage);
-                int[] partialChances = ((damageReduction < 0.15f) ? new int[4]
+                int[] partialChances = (damageReduction < 0.15f) ? new int[4]
                 {
                     33,
                     11,
@@ -1283,7 +1283,7 @@ namespace Mangos.World.Objects
                     40,
                     34,
                     11
-                }))));
+                })));
                 int ran = WorldServiceLocator._WorldServer.Rnd.Next(0, 101);
                 int j = 0;
                 int val = 0;

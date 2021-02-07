@@ -16,15 +16,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Mangos.Cluster.Globals
 {
@@ -41,13 +41,13 @@ namespace Mangos.Cluster.Globals
         {
             // #If DEBUG Then
             int j;
-            var buffer = "";
+            string buffer = "";
             try
             {
                 buffer = client is null ? buffer + string.Format("DEBUG: Packet Dump{0}", Constants.vbCrLf) : buffer + string.Format("[{0}:{1}] DEBUG: Packet Dump - Length={2}{3}", client.IP, client.Port, data.Length, Constants.vbCrLf);
                 if (data.Length % 16 == 0)
                 {
-                    var loopTo = data.Length - 1;
+                    int loopTo = data.Length - 1;
                     for (j = 0; j <= loopTo; j += 16)
                     {
                         buffer += "|  " + BitConverter.ToString(data, j, 16).Replace("-", " ");
@@ -56,7 +56,7 @@ namespace Mangos.Cluster.Globals
                 }
                 else
                 {
-                    var loopTo1 = data.Length - 1 - 16;
+                    int loopTo1 = data.Length - 1 - 16;
                     for (j = 0; j <= loopTo1; j += 16)
                     {
                         buffer += "|  " + BitConverter.ToString(data, j, 16).Replace("-", " ");
@@ -82,18 +82,27 @@ namespace Mangos.Cluster.Globals
         public void LogPacket(byte[] data, bool server, [Optional, DefaultParameterValue(null)] ClientClass client)
         {
             int j;
-            var buffer = "";
+            string buffer = "";
             try
             {
-                var opcode = (Opcodes)BitConverter.ToInt16(data, 2);
+                Opcodes opcode = (Opcodes)BitConverter.ToInt16(data, 2);
                 if (IgnorePacket(opcode))
+                {
                     return;
-                var startAt = 6;
+                }
+
+                int startAt = 6;
                 if (server)
+                {
                     startAt = 4;
-                var typeStr = "IN";
+                }
+
+                string typeStr = "IN";
                 if (server)
+                {
                     typeStr = "OUT";
+                }
+
                 if (client is null)
                 {
                     buffer += string.Format("{4} Packet: (0x{0:X4}) {1} PacketSize = {2}{3}", opcode, opcode, data.Length - startAt, Constants.vbCrLf, typeStr);
@@ -106,7 +115,7 @@ namespace Mangos.Cluster.Globals
                 buffer += "|------------------------------------------------|----------------|" + Constants.vbCrLf;
                 buffer += "|00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F |0123456789ABCDEF|" + Constants.vbCrLf;
                 buffer += "|------------------------------------------------|----------------|" + Constants.vbCrLf;
-                var loopTo = data.Length - 1;
+                int loopTo = data.Length - 1;
                 for (j = startAt; j <= loopTo; j += 16)
                 {
                     if (j + 16 > data.Length)
@@ -128,15 +137,19 @@ namespace Mangos.Cluster.Globals
                 buffer += "-------------------------------------------------------------------" + Constants.vbCrLf + Constants.vbCrLf;
                 File.AppendAllText("packets.log", buffer);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, $"Log Packet has thrown an Exception!", e);
             }
         }
 
         private bool IgnorePacket(Opcodes opcode)
         {
             if (string.Format("{0}", opcode).StartsWith("MSG_MOVE"))
+            {
                 return true;
+            }
+
             switch (opcode)
             {
                 case var @case when @case == Opcodes.SMSG_MONSTER_MOVE:
@@ -154,15 +167,15 @@ namespace Mangos.Cluster.Globals
 
         private string FormatPacketStr(string str)
         {
-            for (int i = 0, loopTo = str.ToCharArray().Length - 1; i <= loopTo; i++)
+            for (int i = 0, loopTo = str.Length - 1; i <= loopTo; i++)
             {
-                if (str.ToCharArray()[i] < 'A' || str.ToCharArray()[i] > 'z')
+                if (str[i] is < 'A' or > 'z')
                 {
                     str.ToCharArray()[i] = '.';
                 }
             }
 
-            return Conversions.ToString(str.ToCharArray());
+            return Conversions.ToString(str);
         }
     }
 }

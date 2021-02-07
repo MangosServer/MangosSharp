@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 namespace Mangos.World.Scripts.Creatures
 {
@@ -51,7 +51,10 @@ namespace Mangos.World.Scripts.Creatures
         public override void OnEnterCombat()
         {
             if (Phase > 1)
+            {
                 return;
+            }
+
             base.OnEnterCombat();
             aiCreature.Flying = false;
             AllowedAttack = true;
@@ -79,7 +82,10 @@ namespace Mangos.World.Scripts.Creatures
         public override void OnThink()
         {
             if (Phase < 1)
+            {
                 return;
+            }
+
             if (Phase == 1)
             {
                 NextImpendingDoom -= AI_UPDATE;
@@ -120,7 +126,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit theTarget = aiCreature;
                 if (theTarget is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(Lucifrons_Curse, aiTarget);
@@ -138,7 +147,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit theTarget = aiCreature;
                 if (theTarget is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(Impending_Doom, aiTarget);
@@ -154,9 +166,12 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 2; i <= 2; i++)
             {
-                var theTarget = aiCreature.GetRandomTarget();
+                WS_Base.BaseUnit theTarget = aiCreature.GetRandomTarget();
                 if (theTarget is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(Shadow_Shock, theTarget.positionX, theTarget.positionY, theTarget.positionZ);
@@ -240,7 +255,9 @@ namespace Mangos.World.Scripts.Creatures
 
             CurrentWaypoint += 1;
             if (CurrentWaypoint > 12)
+            {
                 CurrentWaypoint = 3;
+            }
         }
     }
 }

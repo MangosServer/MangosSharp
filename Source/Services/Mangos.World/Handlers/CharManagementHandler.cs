@@ -16,8 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Threading;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Item;
 using Mangos.Common.Globals;
@@ -25,6 +23,8 @@ using Mangos.World.Globals;
 using Mangos.World.Network;
 using Mangos.World.Player;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Threading;
 
 namespace Mangos.World.Handlers
 {
@@ -83,7 +83,7 @@ namespace Mangos.World.Handlers
                 }
                 return;
             }
-            if (!(client.Character.positionZ > WorldServiceLocator._WS_Maps.GetZCoord(client.Character.positionX, client.Character.positionY, client.Character.positionZ, client.Character.MapID) + 10f))
+            if (!(client.Character.positionZ <= WorldServiceLocator._WS_Maps.GetZCoord(client.Character.positionX, client.Character.positionY, client.Character.positionZ, client.Character.MapID) + 10f))
             {
                 Packets.UpdateClass UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                 Packets.PacketClass SMSG_UPDATE_OBJECT = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);

@@ -29,10 +29,10 @@ namespace Mangos.World.Scripts.Creatures
         private const int BOLT_COOLDOWN = 3000;
         private const int HEAL_SPELL = 11986;
         private const int BOLT_SPELL = 9532;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextHeal;
         public int NextBolt;
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
         public CreatureAI_Ragefire_Shaman(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
@@ -64,7 +64,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(HEAL_SPELL, aiTarget);
             }
         }
@@ -75,7 +78,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(BOLT_SPELL, aiTarget);
             }
         }

@@ -16,11 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Spell;
@@ -33,6 +28,11 @@ using Mangos.World.Network;
 using Mangos.World.Player;
 using Mangos.World.Quests;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace Mangos.World.Objects
 {
@@ -530,7 +530,7 @@ namespace Mangos.World.Objects
                                     {
                                         WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[plGUID];
                                         WS_Base.BaseObject objCharacter = this;
-                                        num = (characterObject.CanSee(ref objCharacter) ? 1 : 0);
+                                        num = characterObject.CanSee(ref objCharacter) ? 1 : 0;
                                     }
                                     else
                                     {
@@ -751,7 +751,7 @@ namespace Mangos.World.Objects
                 {
                     do
                     {
-                        if (WorldServiceLocator._WS_Loot.Locks[LockID].KeyType[i] == 2 && (WorldServiceLocator._WS_Loot.Locks[LockID].KeyType[i] == 3 || WorldServiceLocator._WS_Loot.Locks[LockID].KeyType[i] == 2))
+                        if (WorldServiceLocator._WS_Loot.Locks[LockID].KeyType[i] is 2 and (3 or 2))
                         {
                             if (Force || MineRemaining == 0)
                             {

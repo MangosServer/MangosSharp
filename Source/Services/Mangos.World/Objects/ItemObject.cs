@@ -16,11 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Runtime.CompilerServices;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Item;
 using Mangos.Common.Enums.Spell;
@@ -33,6 +28,11 @@ using Mangos.World.Player;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace Mangos.World.Objects
 {
@@ -198,7 +198,7 @@ namespace Mangos.World.Objects
                             lostDurability = 300;
                         }
                         int subClass = 0;
-                        subClass = ((ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_WEAPON) ? ((int)ItemInfo.SubClass + 21) : (int)ItemInfo.SubClass);
+                        subClass = (ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_WEAPON) ? ((int)ItemInfo.SubClass + 21) : (int)ItemInfo.SubClass;
                         uint durabilityCost = (uint)Math.Round(lostDurability * (WorldServiceLocator._WS_DBCDatabase.DurabilityCosts[ItemInfo.Level, subClass] / 40.0 * 100.0));
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Durability cost: {0}", durabilityCost);
                         return durabilityCost;
@@ -275,7 +275,7 @@ namespace Mangos.World.Objects
                 int j = 0;
                 do
                 {
-                    if (ItemInfo.Spells[j].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.USE || ItemInfo.Spells[j].SpellTrigger == ITEM_SPELLTRIGGER_TYPE.NO_DELAY_USE)
+                    if (ItemInfo.Spells[j].SpellTrigger is ITEM_SPELLTRIGGER_TYPE.USE or ITEM_SPELLTRIGGER_TYPE.NO_DELAY_USE)
                     {
                         update.SetUpdateFlag(16 + j, ChargesLeft);
                     }

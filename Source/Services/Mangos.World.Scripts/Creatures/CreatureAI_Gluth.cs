@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 namespace Mangos.World.Scripts.Creatures
 {
@@ -47,8 +47,8 @@ namespace Mangos.World.Scripts.Creatures
         public int NextDecimate;
         public int NextFrenzy;
         public int NextRoar;
-        public int NextWaypoint = 0;
-        public int CurrentWaypoint = 0;
+        public int NextWaypoint;
+        public int CurrentWaypoint;
 
         public CreatureAI_Gluth(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
@@ -94,7 +94,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(Spell_Decimate, aiTarget);
@@ -112,7 +115,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpellOnSelf(Spell_Frenzy);
@@ -130,7 +136,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(Spell_Mortal_Wound, aiTarget);
@@ -148,7 +157,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(Spell_Terrifying_Roar, aiTarget);

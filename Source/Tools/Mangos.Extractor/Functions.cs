@@ -16,15 +16,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using System.Diagnostics;
 
 namespace Mangos.Extractor
 {
@@ -33,15 +33,18 @@ namespace Mangos.Extractor
         public static int SearchInFile(Stream f, string s, int o = 0)
         {
             f.Seek(0L, SeekOrigin.Begin);
-            var r = new BinaryReader(f);
-            var b1 = r.ReadBytes((int)f.Length);
-            var b2 = Encoding.ASCII.GetBytes(s);
+            BinaryReader r = new BinaryReader(f);
+            byte[] b1 = r.ReadBytes((int)f.Length);
+            byte[] b2 = Encoding.ASCII.GetBytes(s);
             for (int i = o, loopTo = b1.Length - 1; i <= loopTo; i++)
             {
                 for (int j = 0, loopTo1 = b2.Length - 1; j <= loopTo1; j++)
                 {
                     if (b1[i + j] != b2[j])
+                    {
                         break;
+                    }
+
                     if (j == b2.Length - 1)
                     {
                         return i;
@@ -55,15 +58,18 @@ namespace Mangos.Extractor
         public static int SearchInFile(Stream f, int v)
         {
             f.Seek(0L, SeekOrigin.Begin);
-            var r = new BinaryReader(f);
-            var b1 = r.ReadBytes((int)f.Length);
-            var b2 = BitConverter.GetBytes(v);
+            BinaryReader r = new BinaryReader(f);
+            byte[] b1 = r.ReadBytes((int)f.Length);
+            byte[] b2 = BitConverter.GetBytes(v);
             // Array.Reverse(b2)
 
             for (int i = 0, loopTo = b1.Length - 1; i <= loopTo; i++)
             {
                 if (i + 3 >= b1.Length)
+                {
                     break;
+                }
+
                 if (b1[i] == b2[0] && b1[i + 1] == b2[1] && b1[i + 2] == b2[2] && b1[i + 3] == b2[3])
                 {
                     return i;
@@ -81,7 +87,9 @@ namespace Mangos.Extractor
             // Read if there are zeros
             t = (byte)f.ReadByte();
             while (t == 0)
+            {
                 t = (byte)f.ReadByte();
+            }
 
             // Read string
             while (t != 0)
@@ -98,14 +106,19 @@ namespace Mangos.Extractor
             string r = "";
             byte t;
             if (pos == -1)
+            {
                 return "*Nothing*";
+            }
+
             f.Seek(pos, SeekOrigin.Begin);
             try
             {
                 // Read if there are zeros
                 t = (byte)f.ReadByte();
                 while (t == 0)
+                {
                     t = (byte)f.ReadByte();
+                }
 
                 // Read string
                 while (t != 0)
@@ -114,8 +127,9 @@ namespace Mangos.Extractor
                     t = (byte)f.ReadByte();
                 }
             }
-            catch
+            catch (Exception e)
             {
+                MessageBox.Show("ReadString has thrown an Exception! The string is {0}", e.Message);
             }
 
             return r;
@@ -181,7 +195,10 @@ namespace Mangos.Extractor
         private static void AddFlag(ref string sFlags, string sFlag)
         {
             if (!string.IsNullOrEmpty(sFlags))
+            {
                 sFlags += " + ";
+            }
+
             sFlags += sFlag;
         }
 
@@ -189,25 +206,55 @@ namespace Mangos.Extractor
         {
             string tmp = "";
             if (iFlags == 0)
+            {
                 tmp = "NONE";
+            }
+
             if (Conversions.ToBoolean(iFlags & 1))
+            {
                 AddFlag(ref tmp, "PUBLIC");
+            }
+
             if (Conversions.ToBoolean(iFlags & 2))
+            {
                 AddFlag(ref tmp, "PRIVATE");
+            }
+
             if (Conversions.ToBoolean(iFlags & 4))
+            {
                 AddFlag(ref tmp, "OWNER_ONLY");
+            }
+
             if (Conversions.ToBoolean(iFlags & 8))
+            {
                 AddFlag(ref tmp, "UNK1");
+            }
+
             if (Conversions.ToBoolean(iFlags & 16))
+            {
                 AddFlag(ref tmp, "UNK2");
+            }
+
             if (Conversions.ToBoolean(iFlags & 32))
+            {
                 AddFlag(ref tmp, "UNK3");
+            }
+
             if (Conversions.ToBoolean(iFlags & 64))
+            {
                 AddFlag(ref tmp, "GROUP_ONLY");
+            }
+
             if (Conversions.ToBoolean(iFlags & 128))
+            {
                 AddFlag(ref tmp, "UNK5");
+            }
+
             if (Conversions.ToBoolean(iFlags & 256))
+            {
                 AddFlag(ref tmp, "DYNAMIC");
+            }
+
             return tmp;
         }
 
@@ -234,20 +281,20 @@ namespace Mangos.Extractor
 
         public static void ExtractUpdateFields()
         {
-            var TBC = 0;
-            var alpha = 0;
-            var versInfo = FileVersionInfo.GetVersionInfo("Wow.exe");
-            var f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
-            var r1 = new BinaryReader(f);
-            var r2 = new StreamReader(f);
-            var o = new FileStream(versInfo.FileMajorPart + "." + versInfo.FileMinorPart + "."+ versInfo.FileBuildPart + "." + versInfo.FilePrivatePart + "_Global.UpdateFields.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
-            var w = new StreamWriter(o);
+            int TBC = 0;
+            int alpha = 0;
+            FileVersionInfo versInfo = FileVersionInfo.GetVersionInfo("Wow.exe");
+            FileStream f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
+            BinaryReader r1 = new BinaryReader(f);
+            StreamReader r2 = new StreamReader(f);
+            FileStream o = new FileStream(versInfo.FileMajorPart + "." + versInfo.FileMinorPart + "." + versInfo.FileBuildPart + "." + versInfo.FilePrivatePart + "_Global.UpdateFields.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            StreamWriter w = new StreamWriter(o);
             int FIELD_NAME_OFFSET = SearchInFile(f, "CORPSE_FIELD_PAD");
             int OBJECT_FIELD_GUID = SearchInFile(f, "OBJECT_FIELD_GUID") + 0x400000;
             int FIELD_TYPE_OFFSET = SearchInFile(f, OBJECT_FIELD_GUID);
-            #if DEBUG
+#if DEBUG
             MessageBox.Show("FIELD_NAME_OFFSET " + FIELD_NAME_OFFSET + " OBJECT_FIELD_GUID " + OBJECT_FIELD_GUID + " FIELD_TYPE_OFFSET " + FIELD_TYPE_OFFSET);
-            #endif
+#endif
             if (FIELD_NAME_OFFSET == -1) // pre 1.5 vanilla support
             {
                 FIELD_NAME_OFFSET = SearchInFile(f, "CORPSE_FIELD_FLAGS");
@@ -259,17 +306,17 @@ namespace Mangos.Extractor
             }
             if (FIELD_TYPE_OFFSET == -1) // TBC support
             {
-                OBJECT_FIELD_GUID = SearchInFile(f, "OBJECT_FIELD_GUID") + (0x1A00 + 0x400000);
+                OBJECT_FIELD_GUID = SearchInFile(f, "OBJECT_FIELD_GUID") + 0x1A00 + 0x400000;
                 FIELD_TYPE_OFFSET = SearchInFile(f, OBJECT_FIELD_GUID);
                 TBC = 1;
             }
-            if (FIELD_NAME_OFFSET == -1 | FIELD_TYPE_OFFSET == -1)
+            if (FIELD_NAME_OFFSET == -1 || FIELD_TYPE_OFFSET == -1)
             {
                 MessageBox.Show("Wrong offsets! " + FIELD_NAME_OFFSET + "  " + FIELD_TYPE_OFFSET);
             }
             else
             {
-                var Names = new List<string>();
+                List<string> Names = new List<string>();
                 string Last = "";
                 int Offset = FIELD_NAME_OFFSET;
                 f.Seek(Offset, SeekOrigin.Begin);
@@ -279,9 +326,9 @@ namespace Mangos.Extractor
                     Names.Add(Last);
                 }
 
-                var Info = new List<TypeEntry>();
+                List<TypeEntry> Info = new List<TypeEntry>();
                 int Temp;
-                var Buffer = new byte[4];
+                byte[] Buffer = new byte[4];
                 Offset = 0;
                 f.Seek(FIELD_TYPE_OFFSET, SeekOrigin.Begin);
                 for (int i = 0, loopTo = Names.Count - 1; i <= loopTo; i++)
@@ -296,7 +343,7 @@ namespace Mangos.Extractor
                         continue;
                     }
 
-                    var tmp = new TypeEntry
+                    TypeEntry tmp = new TypeEntry
                     {
                         Name = Temp
                     };
@@ -318,7 +365,7 @@ namespace Mangos.Extractor
                 MessageBox.Show(string.Format("{0} fields extracted.", Names.Count));
                 w.WriteLine("// Auto generated file");
                 w.WriteLine("// {0}", DateAndTime.Now);
-                w.WriteLine("// Patch: " + versInfo.FileMajorPart + "." + versInfo.FileMinorPart + "."+ versInfo.FileBuildPart);
+                w.WriteLine("// Patch: " + versInfo.FileMajorPart + "." + versInfo.FileMinorPart + "." + versInfo.FileBuildPart);
                 w.WriteLine("// Build: " + versInfo.FilePrivatePart);
                 w.WriteLine();
                 string LastFieldType = "";
@@ -326,7 +373,7 @@ namespace Mangos.Extractor
                 string sField;
                 int BasedOn = 0;
                 string BasedOnName = "";
-                var EndNum = new Dictionary<string, int>();
+                Dictionary<string, int> EndNum = new Dictionary<string, int>();
                 for (int j = 0, loopTo1 = Info.Count - 1; j <= loopTo1; j++)
                 {
                     sName = ReadString(f, Info[j].Name - 0x400000);
@@ -338,14 +385,20 @@ namespace Mangos.Extractor
                     {
                         sField = ToField(sName.Substring(0, sName.IndexOf("_")));
                         if (sName == "OBJECT_FIELD_CREATED_BY" && alpha == 0)
+                        {
                             sField = "GameObject";
-                        if (sName == "UINT_FIELD_BASESTAT0" || // alpha support
-                            sName == "UINT_FIELD_BASESTAT1" ||
-                            sName == "UINT_FIELD_BASESTAT2" ||
-                            sName == "UINT_FIELD_BASESTAT3" ||
-                            sName == "UINT_FIELD_BASESTAT4" ||
-                            sName == "UINT_FIELD_BYTES_1")
+                        }
+
+                        if (sName is "UINT_FIELD_BASESTAT0" or // alpha support
+                            "UINT_FIELD_BASESTAT1" or
+                            "UINT_FIELD_BASESTAT2" or
+                            "UINT_FIELD_BASESTAT3" or
+                            "UINT_FIELD_BASESTAT4" or
+                            "UINT_FIELD_BYTES_1")
+                        {
                             sField = "Unit";
+                        }
+
                         if ((LastFieldType ?? "") != (sField ?? ""))
                         {
                             if (!string.IsNullOrEmpty(LastFieldType))
@@ -365,40 +418,45 @@ namespace Mangos.Extractor
 
                             w.WriteLine("Public Enum E" + sField + "Fields");
                             w.WriteLine("{");
-                            #if DEBUG
-                            MessageBox.Show("sField: " + sField  + "\nsName: " + sName);
-                            #endif
+#if DEBUG
+                            MessageBox.Show("sField: " + sField + "\nsName: " + sName);
+#endif
                             if (TBC == 1) // TBC support
+                            {
                                 if (sField.ToLower() == "item")
-                            {
-                                BasedOn = EndNum["Container"];
-                                BasedOnName = "EContainerFields.CONTAINER_END";
+                                {
+                                    BasedOn = EndNum["Container"];
+                                    BasedOnName = "EContainerFields.CONTAINER_END";
+                                }
+                                else if (sField.ToLower() == "player")
+                                {
+                                    BasedOn = EndNum["Unit"];
+                                    BasedOnName = "EUnitFields.UNIT_END";
+                                }
+                                else if (sField.ToLower() != "object")
+                                {
+                                    BasedOn = EndNum["Object"];
+                                    BasedOnName = "EObjectFields.OBJECT_END";
+                                }
                             }
-                            else if (sField.ToLower() == "player")
-                            {
-                                BasedOn = EndNum["Unit"];
-                                BasedOnName = "EUnitFields.UNIT_END";
-                            }
-                            else if (sField.ToLower() != "object")
-                            {
-                                BasedOn = EndNum["Object"];
-                                BasedOnName = "EObjectFields.OBJECT_END";
-                            }
+
                             if (TBC == 0)
+                            {
                                 if (sField.ToLower() == "container")
-                            {
-                                BasedOn = EndNum["Item"];
-                                BasedOnName = "EItemFields.ITEM_END";
-                            }
-                            else if (sField.ToLower() == "player")
-                            {
-                                BasedOn = EndNum["Unit"];
-                                BasedOnName = "EUnitFields.UNIT_END";
-                            }
-                            else if (sField.ToLower() != "object")
-                            {
-                                BasedOn = EndNum["Object"];
-                                BasedOnName = "EObjectFields.OBJECT_END";
+                                {
+                                    BasedOn = EndNum["Item"];
+                                    BasedOnName = "EItemFields.ITEM_END";
+                                }
+                                else if (sField.ToLower() == "player")
+                                {
+                                    BasedOn = EndNum["Unit"];
+                                    BasedOnName = "EUnitFields.UNIT_END";
+                                }
+                                else if (sField.ToLower() != "object")
+                                {
+                                    BasedOn = EndNum["Object"];
+                                    BasedOnName = "EObjectFields.OBJECT_END";
+                                }
                             }
 
                             LastFieldType = sField;
@@ -416,7 +474,10 @@ namespace Mangos.Extractor
                 }
 
                 if (!string.IsNullOrEmpty(LastFieldType))
+                {
                     w.WriteLine("    {0,-78}// 0x{1:X3}", LastFieldType.ToUpper() + "_END = " + BasedOnName + " + 0x" + Conversion.Hex(Info[^1].Offset + Info[^1].Size), BasedOn + Info[^1].Offset + Info[^1].Size);
+                }
+
                 w.WriteLine("}");
                 w.Flush();
             }
@@ -427,11 +488,11 @@ namespace Mangos.Extractor
 
         public static void ExtractOpcodes()
         {
-            var f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
-            var r1 = new BinaryReader(f);
-            var r2 = new StreamReader(f);
-            var o = new FileStream("Global.Opcodes.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
-            var w = new StreamWriter(o);
+            FileStream f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
+            BinaryReader r1 = new BinaryReader(f);
+            StreamReader r2 = new StreamReader(f);
+            FileStream o = new FileStream("Global.Opcodes.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            StreamWriter w = new StreamWriter(o);
             MessageBox.Show(ReadString(f, SearchInFile(f, "CMSG_REQUEST_PARTY_MEMBER_STATS")));
             int START = SearchInFile(f, "NUM_MSG_TYPES");
             if (START == -1)
@@ -440,7 +501,7 @@ namespace Mangos.Extractor
             }
             else
             {
-                var Names = new Stack<string>();
+                Stack<string> Names = new Stack<string>();
                 string Last = "";
                 f.Seek(START, SeekOrigin.Begin);
                 while (Last != "MSG_NULL_ACTION")
@@ -472,11 +533,11 @@ namespace Mangos.Extractor
 
         public static void ExtractSpellFailedReason()
         {
-            var f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
-            var r1 = new BinaryReader(f);
-            var r2 = new StreamReader(f);
-            var o = new FileStream("Global.SpellFailedReasons.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
-            var w = new StreamWriter(o);
+            FileStream f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
+            BinaryReader r1 = new BinaryReader(f);
+            StreamReader r2 = new StreamReader(f);
+            FileStream o = new FileStream("Global.SpellFailedReasons.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            StreamWriter w = new StreamWriter(o);
             int REASON_NAME_OFFSET = SearchInFile(f, "SPELL_FAILED_UNKNOWN");
             if (REASON_NAME_OFFSET == -1)
             {
@@ -484,7 +545,7 @@ namespace Mangos.Extractor
             }
             else
             {
-                var Names = new Stack<string>();
+                Stack<string> Names = new Stack<string>();
                 string Last = "";
                 int Offset = REASON_NAME_OFFSET;
                 f.Seek(Offset, SeekOrigin.Begin);
@@ -492,7 +553,9 @@ namespace Mangos.Extractor
                 {
                     Last = ReadString(f);
                     if (Last.Length > 13 && Last.Substring(0, 13) == "SPELL_FAILED_")
+                    {
                         Names.Push(Last);
+                    }
                 }
 
                 MessageBox.Show(string.Format("{0} spell failed reasons extracted.", Names.Count));
@@ -519,11 +582,11 @@ namespace Mangos.Extractor
 
         public static void ExtractChatTypes()
         {
-            var f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
-            var r1 = new BinaryReader(f);
-            var r2 = new StreamReader(f);
-            var o = new FileStream("Global.ChatTypes.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
-            var w = new StreamWriter(o);
+            FileStream f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
+            BinaryReader r1 = new BinaryReader(f);
+            StreamReader r2 = new StreamReader(f);
+            FileStream o = new FileStream("Global.ChatTypes.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            StreamWriter w = new StreamWriter(o);
             int START = SearchInFile(f, "CHAT_MSG_RAID_WARNING");
             if (START == -1)
             {
@@ -531,7 +594,7 @@ namespace Mangos.Extractor
             }
             else
             {
-                var Names = new Stack<string>();
+                Stack<string> Names = new Stack<string>();
                 string Last = "";
                 int Offset = START;
                 f.Seek(Offset, SeekOrigin.Begin);
@@ -539,7 +602,9 @@ namespace Mangos.Extractor
                 {
                     Last = ReadString(f);
                     if (Last.Length > 10 && Last.Substring(0, 9) == "CHAT_MSG_")
+                    {
                         Names.Push(Last);
+                    }
                 }
 
                 MessageBox.Show(string.Format("{0} chat types extracted.", Names.Count));

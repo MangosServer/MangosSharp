@@ -16,13 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Globals;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
 
 namespace Mangos.World.Globals
 {
@@ -108,7 +108,7 @@ namespace Mangos.World.Globals
                     {
                         packet.AddInt8(3);
                     }
-                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_MOVEMENT)
+                    if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_MOVEMENT)
                     {
                         packet.AddInt8(112);
                         packet.AddInt32(8388608);
@@ -126,7 +126,7 @@ namespace Mangos.World.Globals
                         packet.AddSingle(WorldServiceLocator._Global_Constants.UNIT_NORMAL_TURN_RATE);
                         packet.AddUInt32(1u);
                     }
-                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_VALUES)
+                    if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_VALUES)
                     {
                         int updateCount = 0;
                         int num = UpdateMask.Count - 1;
@@ -171,11 +171,11 @@ namespace Mangos.World.Globals
             {
                 packet.AddInt8(checked((byte)updateType));
                 packet.AddPackGUID(updateObject.GUID);
-                if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
+                if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
                 {
                     packet.AddInt8(4);
                 }
-                if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF || updateType == ObjectUpdateType.UPDATETYPE_MOVEMENT)
+                if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF or ObjectUpdateType.UPDATETYPE_MOVEMENT)
                 {
                     int flags2 = updateObject.charMovementFlags & 0xFF;
                     if (updateObject.OnTransport != null)
@@ -208,7 +208,7 @@ namespace Mangos.World.Globals
                 }
                 checked
                 {
-                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_VALUES || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
+                    if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_VALUES or ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
                     {
                         int updateCount = 0;
                         int num = UpdateMask.Count - 1;
@@ -268,7 +268,7 @@ namespace Mangos.World.Globals
                         packet.AddInt8(24);
                         packet.AddUInt64(updateObject.GUID);
                     }
-                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_VALUES)
+                    if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_VALUES)
                     {
                         int updateCount = 0;
                         int num = UpdateMask.Count - 1;
@@ -324,10 +324,10 @@ namespace Mangos.World.Globals
                             updateType = ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF;
                             break;
                     }
-                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
+                    if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
                     {
                         packet.AddInt8(5);
-                        if (updateObject.Type == GameObjectType.GAMEOBJECT_TYPE_TRANSPORT || updateObject.Type == GameObjectType.GAMEOBJECT_TYPE_MO_TRANSPORT)
+                        if (updateObject.Type is GameObjectType.GAMEOBJECT_TYPE_TRANSPORT or GameObjectType.GAMEOBJECT_TYPE_MO_TRANSPORT)
                         {
                             packet.AddInt8(82);
                         }
@@ -350,12 +350,12 @@ namespace Mangos.World.Globals
                             packet.AddSingle(updateObject.orientation);
                         }
                         packet.AddUInt32(WorldServiceLocator._CommonGlobalFunctions.GuidHigh(updateObject.GUID));
-                        if (updateObject.Type == GameObjectType.GAMEOBJECT_TYPE_TRANSPORT || updateObject.Type == GameObjectType.GAMEOBJECT_TYPE_MO_TRANSPORT)
+                        if (updateObject.Type is GameObjectType.GAMEOBJECT_TYPE_TRANSPORT or GameObjectType.GAMEOBJECT_TYPE_MO_TRANSPORT)
                         {
                             packet.AddInt32(WorldServiceLocator._WS_Network.MsTime());
                         }
                     }
-                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF || updateType == ObjectUpdateType.UPDATETYPE_VALUES)
+                    if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF or ObjectUpdateType.UPDATETYPE_VALUES)
                     {
                         int updateCount = 0;
                         int num = UpdateMask.Count - 1;
@@ -402,7 +402,7 @@ namespace Mangos.World.Globals
                 {
                     packet.AddInt8((byte)updateType);
                     packet.AddPackGUID(updateObject.GUID);
-                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
+                    if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF)
                     {
                         packet.AddInt8(6);
                         packet.AddInt8(88);
@@ -412,7 +412,7 @@ namespace Mangos.World.Globals
                         packet.AddSingle(updateObject.orientation);
                         packet.AddUInt64(updateObject.GUID);
                     }
-                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF || updateType == ObjectUpdateType.UPDATETYPE_VALUES)
+                    if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF or ObjectUpdateType.UPDATETYPE_VALUES)
                     {
                         int updateCount = 0;
                         int num = UpdateMask.Count - 1;
@@ -469,7 +469,7 @@ namespace Mangos.World.Globals
                         packet.AddSingle(updateObject.orientation);
                         packet.AddUInt64(updateObject.GUID);
                     }
-                    if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT || updateType == ObjectUpdateType.UPDATETYPE_VALUES)
+                    if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_VALUES)
                     {
                         int updateCount = 0;
                         int num = UpdateMask.Count - 1;

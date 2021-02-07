@@ -38,16 +38,16 @@ namespace Mangos.Realm.Network
         }
 
         public async void HandleAsync(
-            ChannelReader<byte> reader, 
-            ChannelWriter<byte> writer, 
+            ChannelReader<byte> reader,
+            ChannelWriter<byte> writer,
             CancellationToken cancellationToken)
         {
             try
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    var opcode = await reader.ReadAsync(cancellationToken);
-                    var packetHandler = router.GetPacketHandler(opcode);
+                    byte opcode = await reader.ReadAsync(cancellationToken);
+                    Handlers.IPacketHandler packetHandler = router.GetPacketHandler(opcode);
                     await packetHandler.HandleAsync(reader, writer, clientModel);
                 }
             }

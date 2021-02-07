@@ -40,8 +40,8 @@ namespace Mangos.DataStores
                 return dataStores[dbcFileName];
             }
 
-            var path = Path.Combine(dbcDirectory, dbcFileName);
-            var dataStore = new DataStore();
+            string path = Path.Combine(dbcDirectory, dbcFileName);
+            DataStore dataStore = new DataStore();
             await dataStore.LoadFromFileAsync(path);
             dataStores[dbcFileName] = dataStore;
             return dataStore;

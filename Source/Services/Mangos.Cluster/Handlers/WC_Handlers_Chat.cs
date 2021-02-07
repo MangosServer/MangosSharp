@@ -37,11 +37,11 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHAT_IGNORED(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var guid = packet.GetUInt64();
+            ulong guid = packet.GetUInt64();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAT_IGNORED [0x{2}]", client.IP, client.Port, guid);
             if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(guid))
             {
-                var response = _clusterServiceLocator.Functions.BuildChatMessage(client.Character.Guid, "", ChatMsg.CHAT_MSG_IGNORED, LANGUAGES.LANG_UNIVERSAL, 0, "");
+                PacketClass response = _clusterServiceLocator.Functions.BuildChatMessage(client.Character.Guid, "", ChatMsg.CHAT_MSG_IGNORED, LANGUAGES.LANG_UNIVERSAL, 0, "");
                 _clusterServiceLocator.WorldCluster.CharacteRs[guid].Client.Send(response);
                 response.Dispose();
             }
@@ -50,19 +50,25 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_MESSAGECHAT(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 14)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var msgType = (ChatMsg)packet.GetInt32();
-            var msgLanguage = (LANGUAGES)packet.GetInt32();
+            ChatMsg msgType = (ChatMsg)packet.GetInt32();
+            LANGUAGES msgLanguage = (LANGUAGES)packet.GetInt32();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MESSAGECHAT [{2}:{3}]", client.IP, client.Port, msgType, msgLanguage);
             switch (msgType)
             {
                 case var @case when @case == ChatMsg.CHAT_MSG_CHANNEL:
                     {
-                        var channel = packet.GetString();
+                        string channel = packet.GetString();
                         if (packet.Data.Length - 1 < 14 + channel.Length)
+                        {
                             return;
-                        var message = packet.GetString();
+                        }
+
+                        string message = packet.GetString();
 
                         // DONE: Broadcast to all
                         if (_clusterServiceLocator.WsHandlerChannels.ChatChanneLs.ContainsKey(channel))
@@ -75,11 +81,14 @@ namespace Mangos.Cluster.Handlers
 
                 case var case1 when case1 == ChatMsg.CHAT_MSG_WHISPER:
                     {
-                        var argname = packet.GetString();
-                        var toUser = _clusterServiceLocator.Functions.CapitalizeName(argname);
+                        string argname = packet.GetString();
+                        string toUser = _clusterServiceLocator.Functions.CapitalizeName(argname);
                         if (packet.Data.Length - 1 < 14 + toUser.Length)
+                        {
                             return;
-                        var message = packet.GetString();
+                        }
+
+                        string message = packet.GetString();
 
                         // DONE: Handle admin/gm commands
                         // If ToUser = "Warden" AndAlso client.Character.Access > 0 Then
@@ -88,9 +97,9 @@ namespace Mangos.Cluster.Handlers
                         // End If
 
                         // DONE: Send whisper MSG to receiver
-                        var guid = 0UL;
+                        ulong guid = 0UL;
                         _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
-                        foreach (var character in _clusterServiceLocator.WorldCluster.CharacteRs)
+                        foreach (System.Collections.Generic.KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> character in _clusterServiceLocator.WorldCluster.CharacteRs)
                         {
                             if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(character.Value.Name) == _clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(toUser))
                             {
@@ -125,12 +134,14 @@ namespace Mangos.Cluster.Handlers
 
                                 // DONE: Send the AFK message
                                 if (_clusterServiceLocator.WorldCluster.CharacteRs[guid].Afk)
+                                {
                                     client.Character.SendChatMessage(guid, _clusterServiceLocator.WorldCluster.CharacteRs[guid].AfkMessage, ChatMsg.CHAT_MSG_AFK, (int)msgLanguage, "");
+                                }
                             }
                         }
                         else
                         {
-                            var smsgChatPlayerNotFound = new PacketClass(Opcodes.SMSG_CHAT_PLAYER_NOT_FOUND);
+                            PacketClass smsgChatPlayerNotFound = new PacketClass(Opcodes.SMSG_CHAT_PLAYER_NOT_FOUND);
                             smsgChatPlayerNotFound.AddString(toUser);
                             client.Send(smsgChatPlayerNotFound);
                             smsgChatPlayerNotFound.Dispose();
@@ -144,7 +155,7 @@ namespace Mangos.Cluster.Handlers
                 case var case4 when case4 == ChatMsg.CHAT_MSG_RAID_LEADER:
                 case var case5 when case5 == ChatMsg.CHAT_MSG_RAID_WARNING:
                     {
-                        var message = packet.GetString();
+                        string message = packet.GetString();
 
                         // DONE: Check in group
                         if (!client.Character.IsInGroup)
@@ -159,14 +170,17 @@ namespace Mangos.Cluster.Handlers
 
                 case var case6 when case6 == ChatMsg.CHAT_MSG_AFK:
                     {
-                        var message = packet.GetString();
+                        string message = packet.GetString();
                         // TODO: Can not be used while in combat!
                         if (string.IsNullOrEmpty(message) || client.Character.Afk == false)
                         {
                             if (client.Character.Afk == false)
                             {
                                 if (string.IsNullOrEmpty(message))
+                                {
                                     message = "Away From Keyboard";
+                                }
+
                                 client.Character.AfkMessage = message;
                             }
 
@@ -193,13 +207,16 @@ namespace Mangos.Cluster.Handlers
 
                 case var case7 when case7 == ChatMsg.CHAT_MSG_DND:
                     {
-                        var message = packet.GetString();
+                        string message = packet.GetString();
                         if (string.IsNullOrEmpty(message) || client.Character.Dnd == false)
                         {
                             if (client.Character.Dnd == false)
                             {
                                 if (string.IsNullOrEmpty(message))
+                                {
                                     message = "Do Not Disturb";
+                                }
+
                                 client.Character.AfkMessage = message;
                             }
 
@@ -234,7 +251,7 @@ namespace Mangos.Cluster.Handlers
 
                 case var case11 when case11 == ChatMsg.CHAT_MSG_GUILD:
                     {
-                        var message = packet.GetString();
+                        string message = packet.GetString();
 
                         // DONE: Broadcast to guild
                         _clusterServiceLocator.WcGuild.BroadcastChatMessageGuild(client.Character, message, msgLanguage, (int)client.Character.Guild.Id);
@@ -243,7 +260,7 @@ namespace Mangos.Cluster.Handlers
 
                 case var case12 when case12 == ChatMsg.CHAT_MSG_OFFICER:
                     {
-                        var message = packet.GetString();
+                        string message = packet.GetString();
 
                         // DONE: Broadcast to officer chat
                         _clusterServiceLocator.WcGuild.BroadcastChatMessageOfficer(client.Character, message, msgLanguage, (int)client.Character.Guild.Id);
@@ -262,13 +279,13 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_JOIN_CHANNEL(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
-            var password = packet.GetString();
+            string channelName = packet.GetString();
+            string password = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_JOIN_CHANNEL [{2}]", client.IP, client.Port, channelName);
             if (!_clusterServiceLocator.WsHandlerChannels.ChatChanneLs.ContainsKey(channelName))
             {
                 // The New does a an add to the .Containskey collection above
-                var newChannel = new WsHandlerChannels.ChatChannelClass(channelName, _clusterServiceLocator);
+                WsHandlerChannels.ChatChannelClass newChannel = new WsHandlerChannels.ChatChannelClass(channelName, _clusterServiceLocator);
             }
 
             _clusterServiceLocator.WsHandlerChannels.ChatChanneLs[channelName].Join(client.Character, password);
@@ -277,7 +294,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_LEAVE_CHANNEL(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
+            string channelName = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LEAVE_CHANNEL [{2}]", client.IP, client.Port, channelName);
             if (_clusterServiceLocator.WsHandlerChannels.ChatChanneLs.ContainsKey(channelName))
             {
@@ -288,7 +305,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_LIST(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
+            string channelName = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_LIST [{2}]", client.IP, client.Port, channelName);
 
             // ChannelName = ChannelName.ToUpper
@@ -301,8 +318,8 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_PASSWORD(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
-            var channelNewPassword = packet.GetString();
+            string channelName = packet.GetString();
+            string channelNewPassword = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_PASSWORD [{2}, {3}]", client.IP, client.Port, channelName, channelNewPassword);
 
             // ChannelName = ChannelName.ToUpper
@@ -315,8 +332,8 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_SET_OWNER(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
-            var channelNewOwner = packet.GetString();
+            string channelName = packet.GetString();
+            string channelNewOwner = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_SET_OWNER [{2}, {3}]", client.IP, client.Port, channelName, channelNewOwner);
 
             // ChannelName = ChannelName.ToUpper
@@ -324,12 +341,12 @@ namespace Mangos.Cluster.Handlers
             {
                 if (_clusterServiceLocator.WsHandlerChannels.ChatChanneLs[channelName].CanSetOwner(client.Character, channelNewOwner))
                 {
-                    foreach (var guid in _clusterServiceLocator.WsHandlerChannels.ChatChanneLs[channelName].Joined.ToArray())
+                    foreach (ulong guid in _clusterServiceLocator.WsHandlerChannels.ChatChanneLs[channelName].Joined.ToArray())
                     {
                         if ((_clusterServiceLocator.WorldCluster.CharacteRs[guid].Name.ToUpper() ?? "") == (channelNewOwner.ToUpper() ?? ""))
                         {
-                            var tmp = _clusterServiceLocator.WorldCluster.CharacteRs;
-                            var argCharacter = tmp[guid];
+                            System.Collections.Generic.Dictionary<ulong, WcHandlerCharacter.CharacterObject> tmp = _clusterServiceLocator.WorldCluster.CharacteRs;
+                            WcHandlerCharacter.CharacterObject argCharacter = tmp[guid];
                             _clusterServiceLocator.WsHandlerChannels.ChatChanneLs[channelName].SetOwner(argCharacter);
                             tmp[guid] = argCharacter;
                             break;
@@ -342,7 +359,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_OWNER(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
+            string channelName = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_OWNER [{2}]", client.IP, client.Port, channelName);
 
             // ChannelName = ChannelName.ToUpper
@@ -355,8 +372,8 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_MODERATOR(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
-            var channelUser = packet.GetString();
+            string channelName = packet.GetString();
+            string channelUser = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_MODERATOR [{2}, {3}]", client.IP, client.Port, channelName, channelUser);
 
             // ChannelName = ChannelName.ToUpper
@@ -369,8 +386,8 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_UNMODERATOR(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
-            var channelUser = packet.GetString();
+            string channelName = packet.GetString();
+            string channelUser = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_UNMODERATOR [{2}, {3}]", client.IP, client.Port, channelName, channelUser);
 
             // ChannelName = ChannelName.ToUpper
@@ -383,8 +400,8 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_MUTE(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
-            var channelUser = packet.GetString();
+            string channelName = packet.GetString();
+            string channelUser = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_MUTE [{2}, {3}]", client.IP, client.Port, channelName, channelUser);
 
             // ChannelName = ChannelName.ToUpper
@@ -397,8 +414,8 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_UNMUTE(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
-            var channelUser = packet.GetString();
+            string channelName = packet.GetString();
+            string channelUser = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_UNMUTE [{2}, {3}]", client.IP, client.Port, channelName, channelUser);
 
             // ChannelName = ChannelName.ToUpper
@@ -411,12 +428,18 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_INVITE(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var channelName = packet.GetString();
+            string channelName = packet.GetString();
             if (packet.Data.Length - 1 < 6 + channelName.Length + 1)
+            {
                 return;
-            var playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
+            }
+
+            string playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_INVITE [{2}, {3}]", client.IP, client.Port, channelName, playerName);
 
             // ChannelName = ChannelName.ToUpper
@@ -429,12 +452,18 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_KICK(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var channelName = packet.GetString();
+            string channelName = packet.GetString();
             if (packet.Data.Length - 1 < 6 + channelName.Length + 1)
+            {
                 return;
-            var playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
+            }
+
+            string playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_KICK [{2}, {3}]", client.IP, client.Port, channelName, playerName);
 
             // ChannelName = ChannelName.ToUpper
@@ -447,7 +476,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_ANNOUNCEMENTS(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
+            string channelName = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_ANNOUNCEMENTS [{2}]", client.IP, client.Port, channelName);
 
             // ChannelName = ChannelName.ToUpper
@@ -460,12 +489,18 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_BAN(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var channelName = packet.GetString();
+            string channelName = packet.GetString();
             if (packet.Data.Length - 1 < 6 + channelName.Length + 1)
+            {
                 return;
-            var playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
+            }
+
+            string playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_BAN [{2}, {3}]", client.IP, client.Port, channelName, playerName);
 
             // ChannelName = ChannelName.ToUpper
@@ -478,12 +513,18 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_UNBAN(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var channelName = packet.GetString();
+            string channelName = packet.GetString();
             if (packet.Data.Length - 1 < 6 + channelName.Length + 1)
+            {
                 return;
-            var playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
+            }
+
+            string playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_UNBAN [{2}, {3}]", client.IP, client.Port, channelName, playerName);
 
             // ChannelName = ChannelName.ToUpper
@@ -496,7 +537,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHANNEL_MODERATE(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var channelName = packet.GetString();
+            string channelName = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHANNEL_MODERATE [{2}]", client.IP, client.Port, channelName);
 
             // ChannelName = ChannelName.ToUpper

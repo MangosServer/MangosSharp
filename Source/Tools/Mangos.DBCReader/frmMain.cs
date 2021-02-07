@@ -16,13 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.DBCReader
 {
@@ -43,7 +43,7 @@ namespace Mangos.DBCReader
 
         private void cmdBrowse_Click(object sender, EventArgs e)
         {
-            var fdlg = new OpenFileDialog
+            OpenFileDialog fdlg = new OpenFileDialog
             {
                 Title = "Which DBC You Want to View",
                 Filter = "DBC File (*.dbc)|*.dbc",
@@ -57,10 +57,10 @@ namespace Mangos.DBCReader
                 IsString.Clear();
                 DBCData.Clear();
                 cmbColumn.Items.Clear();
-                var fs = new FileStream(fdlg.FileName, FileMode.Open, FileAccess.Read);
-                var s = new BinaryReader(fs);
+                FileStream fs = new FileStream(fdlg.FileName, FileMode.Open, FileAccess.Read);
+                BinaryReader s = new BinaryReader(fs);
                 s.BaseStream.Seek(0L, SeekOrigin.Begin);
-                var Buffer = s.ReadBytes((int)FileSystem.FileLen(fdlg.FileName));
+                byte[] Buffer = s.ReadBytes((int)FileSystem.FileLen(fdlg.FileName));
                 HandleDBCData(Buffer);
                 s.Close();
             }
@@ -79,7 +79,7 @@ namespace Mangos.DBCReader
                 return;
             }
 
-            if (Rows <= 0 | Columns <= 0 | RowLength <= 0)
+            if (Rows <= 0 || Columns <= 0 || RowLength <= 0)
             {
                 MessageBox.Show("This file is not a DBC file.", "Error");
                 return;
@@ -88,13 +88,13 @@ namespace Mangos.DBCReader
             int i;
             int j;
             int tmpOffset;
-            var tmpStr = new string[Columns];
-            var AmtZero = new int[Columns];
-            var foundStrings = new List<int>[Columns];
-            var loopTo = Columns - 1;
+            string[] tmpStr = new string[Columns];
+            int[] AmtZero = new int[Columns];
+            List<int>[] foundStrings = new List<int>[Columns];
+            int loopTo = Columns - 1;
             for (i = 0; i <= loopTo; i++)
             {
-                var tmpColumn = new ColumnHeader
+                ColumnHeader tmpColumn = new ColumnHeader
                 {
                     Text = i.ToString(),
                     Width = 90
@@ -109,12 +109,15 @@ namespace Mangos.DBCReader
             // Code below doesn't work at the moment, flags are in some cases counted as floats
             float tmpSng;
             string tmpString = "";
-            var notFloat = new List<int>();
+            List<int> notFloat = new List<int>();
             for (i = 0; i <= 99; i++)
             {
                 if (i > Rows - 1)
+                {
                     break;
-                var loopTo1 = Columns - 1;
+                }
+
+                int loopTo1 = Columns - 1;
                 for (j = 0; j <= loopTo1; j++)
                 {
                     if (notFloat.Contains(j) == false)
@@ -125,10 +128,12 @@ namespace Mangos.DBCReader
                         {
                             tmpString = tmpSng.ToString().Replace(",", ".");
                             tmpString = tmpString.Substring(tmpString.IndexOf(".") + 1);
-                            if (tmpSng.ToString().Replace(",", ".").IndexOf(".") == -1 || tmpString.Length >= 1 & tmpString.Length <= 6) // Only allow a minimum of 1 decimal and a maximum of 5 decimals
+                            if (tmpSng.ToString().Replace(",", ".").IndexOf(".") == -1 || tmpString.Length >= 1 && tmpString.Length <= 6) // Only allow a minimum of 1 decimal and a maximum of 5 decimals
                             {
                                 if (IsFloat.Contains(j) == false)
+                                {
                                     IsFloat.Add(j);
+                                }
                             }
                             else if (IsFloat.Contains(j))
                             {
@@ -142,27 +147,33 @@ namespace Mangos.DBCReader
 
             // Check if any column is a string
             int tmpInt;
-            var notString = new List<int>();
+            List<int> notString = new List<int>();
             if (StringPartLength > 0)
             {
                 for (i = 0; i <= 99; i++)
                 {
                     if (i > Rows - 1)
+                    {
                         break;
-                    var loopTo2 = Columns - 1;
+                    }
+
+                    int loopTo2 = Columns - 1;
                     for (j = 0; j <= loopTo2; j++)
                     {
                         if (notString.Contains(j) == false && IsFloat.Contains(j) == false)
                         {
                             tmpOffset = 20 + i * RowLength + j * 4;
                             tmpInt = BitConverter.ToInt32(Data, tmpOffset);
-                            if (tmpInt >= 0 & tmpInt < StringPartLength)
+                            if (tmpInt >= 0 && tmpInt < StringPartLength)
                             {
                                 tmpOffset = 20 + Rows * RowLength + tmpInt;
                                 if (tmpInt > 0 && Data[tmpOffset - 1] > 0)
                                 {
                                     if (IsString.Contains(j))
+                                    {
                                         IsString.Remove(j);
+                                    }
+
                                     notString.Add(j);
                                     continue;
                                 }
@@ -179,9 +190,14 @@ namespace Mangos.DBCReader
                                 if (tmpInt == 0 || IsValidString(tmpString))
                                 {
                                     if (IsString.Contains(j) == false)
+                                    {
                                         IsString.Add(j);
+                                    }
+
                                     if (foundStrings[j].Contains(tmpInt) == false)
+                                    {
                                         foundStrings[j].Add(tmpInt);
+                                    }
                                 }
                                 else if (IsString.Contains(j))
                                 {
@@ -199,7 +215,7 @@ namespace Mangos.DBCReader
                 }
             }
 
-            var loopTo3 = Columns - 1;
+            int loopTo3 = Columns - 1;
             for (i = 0; i <= loopTo3; i++)
             {
                 if (IsString.Contains(i))
@@ -218,11 +234,11 @@ namespace Mangos.DBCReader
             }
 
             Application.DoEvents();
-            var tmpTag = new int[Columns];
-            var loopTo4 = Rows - 1;
+            int[] tmpTag = new int[Columns];
+            int loopTo4 = Rows - 1;
             for (i = 0; i <= loopTo4; i++)
             {
-                var loopTo5 = Columns - 1;
+                int loopTo5 = Columns - 1;
                 for (j = 0; j <= loopTo5; j++)
                 {
                     tmpTag[j] = 0;
@@ -244,12 +260,14 @@ namespace Mangos.DBCReader
                 }
 
                 {
-                    var withBlock = DBCData.Items.Add(tmpStr[0]);
+                    ListViewItem withBlock = DBCData.Items.Add(tmpStr[0]);
                     if (Columns > 1)
                     {
-                        var loopTo6 = Columns - 1;
+                        int loopTo6 = Columns - 1;
                         for (j = 1; j <= loopTo6; j++)
+                        {
                             withBlock.SubItems.Add(tmpStr[j]).Tag = tmpTag[j];
+                        }
                     }
                 }
 
@@ -266,16 +284,19 @@ namespace Mangos.DBCReader
 
         private bool IsValidString(string str)
         {
-            var chars = str.ToCharArray();
-            var accepted = @" ():.,'-*_?\/<>;$%".ToCharArray();
+            char[] chars = str.ToCharArray();
+            char[] accepted = @" ():.,'-*_?\/<>;$%".ToCharArray();
             for (int i = 0, loopTo = chars.Length - 1; i <= loopTo; i++)
             {
-                if ((chars[i] < 'A' || chars[i] > 'z') && (chars[i] < '0' || chars[i] > '9'))
+                if (chars[i] is (< 'A' or > 'z') and (< '0' or > '9'))
                 {
                     for (int j = 0, loopTo1 = accepted.Length - 1; j <= loopTo1; j++)
                     {
                         if (chars[i] == accepted[j])
+                        {
                             break;
+                        }
+
                         if (j == accepted.Length - 1)
                         {
                             return false;
@@ -292,17 +313,20 @@ namespace Mangos.DBCReader
             int i;
             int tmpInt;
             float tmpSng;
-            var Buffer = new byte[4];
+            byte[] Buffer = new byte[4];
             bool A_Float;
             bool A_String;
             bool FailString = false;
             bool DoneChange = false;
             int tmpInt2;
             if (DBCData.Items.Count == 0)
+            {
                 return;
+            }
+
             A_Float = IsFloat.Contains(e.Column);
             A_String = A_Float == false && IsString.Contains(e.Column);
-            var loopTo = DBCData.Items.Count - 1;
+            int loopTo = DBCData.Items.Count - 1;
             for (i = 0; i <= loopTo; i++)
             {
                 if (A_Float) // To string or int if it's not possible
@@ -377,15 +401,20 @@ namespace Mangos.DBCReader
         private string GetString(ref byte[] Data, int Index)
         {
             int i;
-            var loopTo = Data.Length - 1;
+            int loopTo = Data.Length - 1;
             for (i = Index; i <= loopTo; i++)
             {
                 if (Data[i] == 0)
+                {
                     break;
+                }
             }
 
             if (i == Index)
+            {
                 return "";
+            }
+
             return Encoding.ASCII.GetString(Data, Index, i - Index);
         }
 
@@ -412,7 +441,9 @@ namespace Mangos.DBCReader
                 foreach (ListViewItem item in DBCData.SelectedItems)
                 {
                     if (item.Index < start)
+                    {
                         start = item.Index;
+                    }
                 }
 
                 start += 1;

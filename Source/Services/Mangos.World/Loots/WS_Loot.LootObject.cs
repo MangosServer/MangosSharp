@@ -16,8 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
 using Mangos.Common.Globals;
@@ -25,6 +23,8 @@ using Mangos.World.Globals;
 using Mangos.World.Network;
 using Mangos.World.Objects;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
 
 namespace Mangos.World.Loots
 {
@@ -143,7 +143,7 @@ namespace Mangos.World.Loots
                     client.Send(ref response);
                     response.Dispose();
                     client.Character.lootGUID = GUID;
-                    if (!client.Character.IsInGroup || !((client.Character.Group.LootMethod == GroupLootMethod.LOOT_NEED_BEFORE_GREED) | (client.Character.Group.LootMethod == GroupLootMethod.LOOT_GROUP)))
+                    if (!client.Character.IsInGroup || !((client.Character.Group.LootMethod == GroupLootMethod.LOOT_NEED_BEFORE_GREED) || (client.Character.Group.LootMethod == GroupLootMethod.LOOT_GROUP)))
                     {
                         return;
                     }

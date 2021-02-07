@@ -31,7 +31,7 @@ namespace Mangos.Realm.Network.Writers
             await writer.WriteAsync((byte)AuthCMD.CMD_AUTH_LOGON_PROOF);
             await writer.WriteAsync((byte)packet.AccountState);
 
-            if(packet.M2 != null)
+            if (packet.M2 != null)
             {
                 await writer.WriteEnumerableAsync(packet.M2);
                 await writer.WriteZeroNCountAsync(4);

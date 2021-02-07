@@ -66,8 +66,8 @@ namespace Mangos.DataStores
 
         public string ReadString(int row, int column)
         {
-            var offset = GetRowOffset(row) + ReadInt(row, column);
-            var length = Array.IndexOf<byte>(data, 0, offset) - offset;
+            int offset = GetRowOffset(row) + ReadInt(row, column);
+            int length = Array.IndexOf<byte>(data, 0, offset) - offset;
             return BitConverter.ToString(data, offset, length);
         }
 

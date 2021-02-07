@@ -16,12 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Mangos.Cluster.Configuration;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
@@ -33,6 +27,12 @@ using Mangos.Common.Legacy.Logging;
 using Mangos.Configuration;
 using Mangos.SignalR;
 using Microsoft.VisualBasic;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mangos.Cluster
 {
@@ -42,7 +42,7 @@ namespace Mangos.Cluster
         private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
 
         public WorldCluster(
-            ClusterServiceLocator clusterServiceLocator, 
+            ClusterServiceLocator clusterServiceLocator,
             IConfigurationProvider<ClusterConfiguration> configurationProvider)
         {
             _clusterServiceLocator = clusterServiceLocator;
@@ -50,7 +50,7 @@ namespace Mangos.Cluster
         }
 
         // Players' containers
-        public long ClietniDs = 0L;
+        public long ClietniDs;
         public Dictionary<uint, ClientClass> ClienTs = new Dictionary<uint, ClientClass>();
         public ReaderWriterLock CharacteRsLock = new ReaderWriterLock();
         public Dictionary<ulong, WcHandlerCharacter.CharacterObject> CharacteRs = new Dictionary<ulong, WcHandlerCharacter.CharacterObject>();
@@ -65,7 +65,7 @@ namespace Mangos.Cluster
         public void LoadConfig()
         {
             // DONE: Setting SQL Connections
-            var accountDbSettings = Strings.Split(configurationProvider.GetConfiguration().AccountDatabase, ";");
+            string[] accountDbSettings = Strings.Split(configurationProvider.GetConfiguration().AccountDatabase, ";");
             if (accountDbSettings.Length != 6)
             {
                 Console.WriteLine("Invalid connect string for the account database!");
@@ -80,7 +80,7 @@ namespace Mangos.Cluster
                 GetAccountDatabase().SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), accountDbSettings[5]);
             }
 
-            var characterDbSettings = Strings.Split(configurationProvider.GetConfiguration().CharacterDatabase, ";");
+            string[] characterDbSettings = Strings.Split(configurationProvider.GetConfiguration().CharacterDatabase, ";");
             if (characterDbSettings.Length != 6)
             {
                 Console.WriteLine("Invalid connect string for the character database!");
@@ -95,7 +95,7 @@ namespace Mangos.Cluster
                 GetCharacterDatabase().SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), characterDbSettings[5]);
             }
 
-            var worldDbSettings = Strings.Split(configurationProvider.GetConfiguration().WorldDatabase, ";");
+            string[] worldDbSettings = Strings.Split(configurationProvider.GetConfiguration().WorldDatabase, ";");
             if (worldDbSettings.Length != 6)
             {
                 Console.WriteLine("Invalid connect string for the world database!");
@@ -278,13 +278,13 @@ namespace Mangos.Cluster
 
             _clusterServiceLocator.WorldServerClass.Start();
 
-            var configuration = configurationProvider.GetConfiguration();
-            var server = new ProxyServer<WorldServerClass>(
+            ClusterConfiguration configuration = configurationProvider.GetConfiguration();
+            ProxyServer<WorldServerClass> server = new ProxyServer<WorldServerClass>(
                 IPAddress.Parse(configuration.ClusterListenAddress),
                 configuration.ClusterListenPort,
                 _clusterServiceLocator.WcNetwork.WorldServer);
-            Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}:{1}", 
-                configuration.ClusterListenAddress, 
+            Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}:{1}",
+                configuration.ClusterListenAddress,
                 configuration.ClusterListenPort);
             Log.WriteLine(LogType.INFORMATION, "Load Time: {0}", Strings.Format(DateAndTime.DateDiff(DateInterval.Second, DateAndTime.Now, DateAndTime.Now), "0 seconds"));
             Log.WriteLine(LogType.INFORMATION, "Used memory: {0}", Strings.Format(GC.GetTotalMemory(false), "### ### ##0 bytes"));
@@ -292,10 +292,10 @@ namespace Mangos.Cluster
 
         public void WaitConsoleCommand()
         {
-            var tmp = "";
+            string tmp = "";
             string[] commandList;
             string[] cmds;
-            var cmd = Array.Empty<string>();
+            string[] cmd = Array.Empty<string>();
             int varList;
             while (!_clusterServiceLocator.WcNetwork.WorldServer.MFlagStopListen)
             {
@@ -303,7 +303,7 @@ namespace Mangos.Cluster
                 {
                     tmp = Log.ReadLine();
                     commandList = tmp.Split(";");
-                    var loopTo = Information.UBound(commandList);
+                    int loopTo = Information.UBound(commandList);
                     for (varList = Information.LBound(commandList); varList <= loopTo; varList++)
                     {
                         cmds = Strings.Split(commandList[varList], " ", 2);

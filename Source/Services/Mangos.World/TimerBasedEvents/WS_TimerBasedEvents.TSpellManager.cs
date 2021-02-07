@@ -16,16 +16,16 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Spell;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Mangos.World.Server
 {
@@ -93,7 +93,7 @@ namespace Mangos.World.Server
                     try
                     {
                         WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                        foreach (var Character in WorldServiceLocator._WorldServer.CHARACTERs.Where(Character => Character.Value != null))
+                        foreach (KeyValuePair<ulong, WS_PlayerData.CharacterObject> Character in WorldServiceLocator._WorldServer.CHARACTERs.Where(Character => Character.Value != null))
                         {
                             WS_Base.BaseUnit objCharacter = Character.Value;
                             UpdateSpells(ref objCharacter);
@@ -218,7 +218,7 @@ namespace Mangos.World.Server
                                                 break;
                                             }
 
-                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter).Caster != null && ((WS_Totems.TotemObject)objCharacter).Caster is WS_PlayerData.CharacterObject:
+                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter).Caster is not null and WS_PlayerData.CharacterObject:
                                             {
                                                 WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
                                                 ref WS_Base.BaseUnit caster2 = ref ((WS_Totems.TotemObject)objCharacter).Caster;
@@ -250,7 +250,7 @@ namespace Mangos.World.Server
                                         case WS_PlayerData.CharacterObject _:
                                             caster = (WS_PlayerData.CharacterObject)objCharacter.ActiveSpells[i].SpellCaster;
                                             break;
-                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster != null && ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster is WS_PlayerData.CharacterObject object1:
+                                        case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter.ActiveSpells[i].SpellCaster).Caster is not null and WS_PlayerData.CharacterObject object1:
                                             caster = object1;
                                             break;
                                     }

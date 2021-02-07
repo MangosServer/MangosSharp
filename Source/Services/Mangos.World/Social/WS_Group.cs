@@ -16,13 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
 using Mangos.World.Player;
+using System;
+using System.Collections.Generic;
 
 namespace Mangos.World.Social
 {
@@ -128,7 +128,7 @@ namespace Mangos.World.Social
         public Packets.PacketClass BuildPartyMemberStats(ref WS_PlayerData.CharacterObject objCharacter, uint flag)
         {
             Opcodes opCode = Opcodes.SMSG_PARTY_MEMBER_STATS;
-            if (flag == 1015 || flag == 524279)
+            if (flag is 1015 or 524279)
             {
                 opCode = Opcodes.SMSG_PARTY_MEMBER_STATS_FULL;
                 if (objCharacter.ManaType != 0)

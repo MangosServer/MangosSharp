@@ -16,15 +16,15 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Net;
-using System.Reflection;
-using System.Threading.Tasks;
 using Mangos.Configuration.Xml;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
 using Mangos.Realm.Configuration;
 using Mangos.Realm.Storage.MySql;
+using System;
+using System.Net;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Mangos.Realm
 {
@@ -52,7 +52,7 @@ namespace Mangos.Realm
         {
             WriteServiceInformation();
             LoadConfiguration();
-            await ConnectToDatabaseAsync();
+            await ConnectToDatabaseAsync().ConfigureAwait(false);
             StartTcpServer();
         }
 
@@ -70,18 +70,18 @@ namespace Mangos.Realm
 
         private void StartTcpServer()
         {
-            var configuration = configurationProvider.GetConfiguration();
-            var endpoint = IPEndPoint.Parse(configuration.RealmServerEndpoint);
+            RealmServerConfiguration configuration = configurationProvider.GetConfiguration();
+            IPEndPoint endpoint = IPEndPoint.Parse(configuration.RealmServerEndpoint);
             tcpServer.Start(endpoint, 10);
             logger.Debug("Tcp server has been started");
         }
 
         private void WriteServiceInformation()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var assemblyTitle = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
-            var product = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
-            var copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string assemblyTitle = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
+            string product = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+            string copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
 
             Console.Title = $"{assemblyTitle} v{Assembly.GetExecutingAssembly().GetName().Version}";
             logger.Debug(product);

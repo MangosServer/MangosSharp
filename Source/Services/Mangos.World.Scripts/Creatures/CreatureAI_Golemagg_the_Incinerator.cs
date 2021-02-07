@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 namespace Mangos.World.Scripts.Creatures
 {
@@ -38,12 +38,12 @@ namespace Mangos.World.Scripts.Creatures
         // Private Const SUMMONPLAYER_SPELL As Integer = 20477
 
         public int Phase;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextEarthQuake;
         public int NextMagmaSplash;
         public int NextPyroBlast;
         // Public NextSummon As Integer = 0
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
         public CreatureAI_Golemagg_the_Incinerator(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
@@ -56,7 +56,10 @@ namespace Mangos.World.Scripts.Creatures
         public override void OnEnterCombat()
         {
             if (Phase > 1)
+            {
                 return;
+            }
+
             base.OnEnterCombat();
             aiCreature.Flying = false;
             AllowedAttack = true;
@@ -84,7 +87,10 @@ namespace Mangos.World.Scripts.Creatures
         public override void OnThink()
         {
             if (Phase < 1)
+            {
                 return;
+            }
+
             if (Phase == 1)
             {
                 NextEarthQuake -= AI_UPDATE;
@@ -122,7 +128,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(EARTHQUAKE_SPELL, aiTarget);
@@ -140,7 +149,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(MAGMASPLASH_SPELL, aiTarget);
@@ -158,7 +170,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(PYROBLAST_SPELL, aiTarget);

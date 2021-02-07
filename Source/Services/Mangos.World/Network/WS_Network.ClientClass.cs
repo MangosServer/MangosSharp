@@ -16,15 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.World.Globals;
 using Mangos.World.Player;
-using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace Mangos.World.Network
 {
@@ -36,7 +35,7 @@ namespace Mangos.World.Network
             public ConcurrentQueue<Packets.PacketClass> Packets = new ConcurrentQueue<Packets.PacketClass>();
             public bool DEBUG_CONNECTION;
             private Thread ProcessQueueThread;
-            private ManualResetEvent ProcessQueueSempahore = new ManualResetEvent(false);
+            private readonly ManualResetEvent ProcessQueueSempahore = new ManualResetEvent(false);
             private volatile bool IsActive = true;
 
             public ClientClass(ClientInfo ci, bool isDebug = false)
@@ -53,15 +52,19 @@ namespace Mangos.World.Network
                 IP = ci.IP;
                 Port = ci.Port;
 
-                ProcessQueueThread = new Thread(QueueProcessor);
-                ProcessQueueThread.IsBackground = true;
+                ProcessQueueThread = new Thread(QueueProcessor)
+                {
+                    IsBackground = true
+                };
                 ProcessQueueThread.Start();
             }
 
             public void PushPacket(Packets.PacketClass packet)
             {
                 if (Character == null)
+                {
                     return;
+                }
 
                 Packets.Enqueue(packet);
 
@@ -78,12 +81,14 @@ namespace Mangos.World.Network
                 {
                     while (IsActive)
                     {
-                        if (Packets.Count == 0)
+                        if (Packets.IsEmpty)
                         {
                             ProcessQueueSempahore.WaitOne();
 
                             if (!IsActive)
+                            {
                                 break;
+                            }
 
                             lock (_sempahoreLock)
                             {
@@ -97,7 +102,7 @@ namespace Mangos.World.Network
                             {
                                 if (!WorldServiceLocator._WorldServer.PacketHandlers.ContainsKey(packet.OpCode))
                                 {
-                                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, $"[{IP}:{Port}] Unknown Opcode 0x{((int)packet.OpCode).ToString("X2")} [DataLen={packet.Data.Length} {packet.OpCode}]");
+                                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, $"[{IP}:{Port}] Unknown Opcode 0x{(int)packet.OpCode:X2} [DataLen={packet.Data.Length} {packet.OpCode}]");
                                     DumpPacket(packet);
                                 }
                                 else
@@ -137,9 +142,10 @@ namespace Mangos.World.Network
                 }
             }
 
+            private readonly object lockObj = new object();
             public void Send(ref byte[] data)
             {
-                lock (this)
+                lock (lockObj)
                 {
                     try
                     {
@@ -247,9 +253,7 @@ namespace Mangos.World.Network
 
             private void SetError(Exception ex, string message, LogType logType)
             {
-                ProjectData.SetProjectError(ex);
-                WorldServiceLocator._WorldServer.Log.WriteLine(logType, message);
-                ProjectData.ClearProjectError();
+                WorldServiceLocator._WorldServer.Log.WriteLine(logType, message, ex);
             }
 
             private void DumpPacket(Packets.PacketClass packet)
@@ -269,21 +273,27 @@ namespace Mangos.World.Network
                 }
                 catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Unable to dump packet");
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Unable to dump packet", ex);
                 }
             }
 
             public void Dispose()
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, $"Connection from [{IP}:{Port}] disposed.");
-           
+
                 IsActive = false;
                 ProcessQueueSempahore.Set(); //Allow thread to exit.
                 ProcessQueueSempahore?.Dispose();
 
-                try { ProcessQueueThread?.Interrupt(); } catch { }
-                try { ProcessQueueThread?.Join(1000); } catch { }
+                try
+                {
+                    ProcessQueueThread?.Interrupt();
+                    ProcessQueueThread?.Join(1000);
+                }
+                catch (ThreadInterruptedException ex)
+                {
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "{0} Thread ID: {1}", ex, Thread.CurrentThread.ManagedThreadId);
+                }
                 ProcessQueueThread = null;
 
                 Packets?.Clear();
@@ -315,7 +325,7 @@ namespace Mangos.World.Network
                 }
                 catch (Exception ex)
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, $"Connection from [{IP}:{Port}] was not properly disposed.");
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, $"Connection from [{IP}:{Port}] was not properly disposed.", ex);
                 }
             }
         }

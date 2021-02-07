@@ -20,7 +20,7 @@ using System.Windows.Forms;
 
 namespace Mangos.Extractor
 {
-    static class Program
+    internal static class Program
     {
         public static void Main()
         {

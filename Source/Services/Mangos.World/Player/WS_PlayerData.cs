@@ -16,11 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.Global;
@@ -42,6 +37,11 @@ using Mangos.World.Social;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading;
 
 namespace Mangos.World.Player
 {
@@ -1107,7 +1107,7 @@ namespace Mangos.World.Player
                             WS_Base.BaseUnit objCharacter2 = (WS_Base.BaseUnit)objCharacter;
                             float stealthDistance = GetStealthDistance(ref objCharacter2);
                             objCharacter = objCharacter2;
-                            num = ((distance < stealthDistance) ? 1 : 0);
+                            num = (distance < stealthDistance) ? 1 : 0;
                         }
                         else
                         {
@@ -1159,7 +1159,7 @@ namespace Mangos.World.Player
                         WS_Base.BaseUnit objCharacter2 = (WS_Base.BaseUnit)objCharacter;
                         float stealthDistance = GetStealthDistance(ref objCharacter2);
                         objCharacter = objCharacter2;
-                        num2 = ((distance < stealthDistance) ? 1 : 0);
+                        num2 = (distance < stealthDistance) ? 1 : 0;
                     }
                     else
                     {
@@ -1301,7 +1301,7 @@ namespace Mangos.World.Player
                     {
                         packet.Dispose();
                     }
-                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject @object)
+                    if (OnTransport is not null and WS_Transports.TransportObject @object)
                     {
                         WS_Transports.TransportObject obj = @object;
                         CharacterObject Character = this;
@@ -1827,11 +1827,11 @@ namespace Mangos.World.Player
             {
                 packet.AddInt8(checked((byte)UPDATETYPE));
                 packet.AddPackGUID(GUID);
-                if (UPDATETYPE == 2 || UPDATETYPE == 3)
+                if (UPDATETYPE is 2 or 3)
                 {
                     packet.AddInt8(4);
                 }
-                if (UPDATETYPE == 2 || UPDATETYPE == 1 || UPDATETYPE == 3)
+                if (UPDATETYPE is 2 or 1 or 3)
                 {
                     int flags2 = 8192;
                     if (OnTransport != null)
@@ -1866,7 +1866,7 @@ namespace Mangos.World.Player
                     packet.AddSingle(TurnRate);
                     packet.AddUInt32(47u);
                 }
-                if (!(UPDATETYPE == 2 || UPDATETYPE == 0 || UPDATETYPE == 3))
+                if (UPDATETYPE is not (2 or 0 or 3))
                 {
                     return;
                 }
@@ -2104,7 +2104,7 @@ namespace Mangos.World.Player
                     {
                         WS_Spells.SpellInfo spellInfo = WorldServiceLocator._WS_Spells.SPELLs[SpellID];
                         CharacterObject Character = this;
-                        num = ((spellInfo.CanCast(ref Character, t, FirstCheck: false) == SpellFailedReason.SPELL_NO_ERROR) ? 1 : 0);
+                        num = (spellInfo.CanCast(ref Character, t, FirstCheck: false) == SpellFailedReason.SPELL_NO_ERROR) ? 1 : 0;
                     }
                     else
                     {
@@ -2135,7 +2135,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int maxSkill = ((Level > WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL) ? (WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL * 5) : (Level * 5));
+                    int maxSkill = (Level > WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL) ? (WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL * 5) : (Level * 5);
                     switch (SpellID)
                     {
                         case 4036:
@@ -3634,8 +3634,8 @@ namespace Mangos.World.Player
 
             public bool ItemSTACK(byte srcBag, byte srcSlot, byte dstBag, byte dstSlot)
             {
-                ItemObject srcItem = ((srcBag == 0) ? Items[srcSlot] : Items[srcBag].Items[srcSlot]);
-                ItemObject dstItem = ((dstBag == 0) ? Items[dstSlot] : Items[dstBag].Items[dstSlot]);
+                ItemObject srcItem = (srcBag == 0) ? Items[srcSlot] : Items[srcBag].Items[srcSlot];
+                ItemObject dstItem = (dstBag == 0) ? Items[dstSlot] : Items[dstBag].Items[dstSlot];
                 if ((srcItem.StackCount == dstItem.ItemInfo.Stackable) | (dstItem.StackCount == dstItem.ItemInfo.Stackable))
                 {
                     return false;
@@ -4179,7 +4179,7 @@ namespace Mangos.World.Player
                             tmp = null;
                             goto IL_0ec5;
                         }
-                    IL_06f5:
+                        IL_06f5:
                         SendItemAndCharacterUpdate(Items[srcBag]);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {GUID} WHERE item_guid = {Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         if (Items[srcBag].Items.ContainsKey(srcSlot))
@@ -4187,7 +4187,7 @@ namespace Mangos.World.Player
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {Items[srcBag].GUID} WHERE item_guid = {Items[srcBag].Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
                         goto end_IL_0080;
-                    IL_0ab8:
+                        IL_0ab8:
                         SendItemAndCharacterUpdate(Items[dstBag]);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {Items[dstBag].GUID} WHERE item_guid = {Items[dstBag].Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         if (Items.ContainsKey(srcSlot))
@@ -4195,7 +4195,7 @@ namespace Mangos.World.Player
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {GUID} WHERE item_guid = {Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
                         goto end_IL_0080;
-                    IL_0ec5:
+                        IL_0ec5:
                         SendItemAndCharacterUpdate(Items[dstSlot]);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {GUID} WHERE item_guid = {Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         if (Items.ContainsKey(srcSlot))
@@ -4203,7 +4203,7 @@ namespace Mangos.World.Player
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {GUID} WHERE item_guid = {Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
                         goto end_IL_0080;
-                    IL_02e9:
+                        IL_02e9:
                         SendItemUpdate(Items[srcBag]);
                         if (dstBag != srcBag)
                         {
@@ -4214,7 +4214,7 @@ namespace Mangos.World.Player
                         {
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {Items[srcBag].GUID} WHERE item_guid = {Items[srcBag].Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
-                    end_IL_0080:;
+                        end_IL_0080:;
                     }
                     catch (Exception ex)
                     {
@@ -4821,7 +4821,7 @@ namespace Mangos.World.Player
                     WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                     CharacterObject Character = this;
                     wS_CharMovement.RemoveFromWorld(ref Character);
-                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject @object)
+                    if (OnTransport is not null and WS_Transports.TransportObject @object)
                     {
                         WS_Transports.TransportObject obj = @object;
                         WS_Base.BaseUnit Unit = this;
@@ -5294,7 +5294,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int points = (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0))));
+                    int points = WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0)));
                     if (Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Flags > 0)
                     {
                         points += Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Value;
@@ -5320,7 +5320,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int points = (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0))));
+                    int points = WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0)));
                     if (Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Flags > 0)
                     {
                         points += Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Value;
@@ -5446,7 +5446,7 @@ namespace Mangos.World.Player
                     SetUpdateFlag(46, cUnitFlags);
                     SetUpdateFlag(143, cDynamicFlags);
                     SendCharacterUpdate();
-                    if (Attacker == null || Attacker is WS_Creatures.CreatureObject)
+                    if (Attacker is null or WS_Creatures.CreatureObject)
                     {
                         byte i = 0;
                         do
@@ -5645,7 +5645,7 @@ namespace Mangos.World.Player
                         }
                     }
 
-                    if (OnTransport != null && OnTransport is WS_Transports.TransportObject _transport)
+                    if (OnTransport is not null and WS_Transports.TransportObject _transport)
                     {
                         WS_Base.BaseUnit Unit = this;
                         _transport.RemovePassenger(ref Unit);
@@ -6608,7 +6608,7 @@ namespace Mangos.World.Player
                             }
                             else if (AuraExpire < 0)
                             {
-                                duration = (int)(-AuraExpire);
+                                duration = (int)-AuraExpire;
                             }
                             else
                             {

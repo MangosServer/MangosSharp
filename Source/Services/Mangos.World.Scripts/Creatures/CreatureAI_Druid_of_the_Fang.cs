@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 namespace Mangos.World.Scripts.Creatures
 {
@@ -35,12 +35,12 @@ namespace Mangos.World.Scripts.Creatures
         private const int Healing_Spell = 23381;
         private const int Spell_Serpent_Form = 8041; // Not sure how this will work. 
         private const int Spell_Lightning_Bolt = 9532;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextLightningBolt;
         public int NextSerpentForm;
         public int NextHealingTouch;
         public int NextSlumber;
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
         public CreatureAI_Druid_of_the_Fang(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
@@ -68,7 +68,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
             }
         }

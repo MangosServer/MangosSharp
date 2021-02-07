@@ -16,16 +16,16 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Legacy;
 using Mangos.World.Objects;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 
 namespace Mangos.World.Player
 {
@@ -46,7 +46,7 @@ namespace Mangos.World.Player
             Character.FacialHair = FacialHair;
             WorldServiceLocator._WorldServer.AccountDatabase.Query($"SELECT id, gmlevel FROM account WHERE username = \"{Account}\";", ref MySQLQuery);
             int Account_ID = MySQLQuery.Rows[0].As<int>("id");
-            AccessLevel Account_Access = (Character.Access = (AccessLevel)MySQLQuery.Rows[0].As<byte>("gmlevel"));
+            AccessLevel Account_Access = Character.Access = (AccessLevel)MySQLQuery.Rows[0].As<byte>("gmlevel");
             if (!WorldServiceLocator._Functions.ValidateName(Character.Name))
             {
                 return 70;

@@ -16,13 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
 using Mangos.Common.Legacy;
@@ -33,8 +26,13 @@ using Mangos.World.Maps;
 using Mangos.World.Player;
 using Mangos.World.Social;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mangos.World.Network
 {
@@ -44,39 +42,6 @@ namespace Mangos.World.Network
         {
 
             private readonly DataStoreProvider dataStoreProvider;
-
-            [Serializable]
-            [CompilerGenerated]
-            internal sealed class _Closure_0024__
-            {
-                public static readonly _Closure_0024__ _0024I;
-
-                public static Func<string, uint> _0024I13_002D0;
-
-                public static Func<string, uint> _0024I13_002D1;
-
-                public static Func<string, uint> _0024I14_002D0;
-
-                static _Closure_0024__()
-                {
-                    _0024I = new _Closure_0024__();
-                }
-
-                internal uint _Lambda_0024__13_002D0(string x)
-                {
-                    return Conversions.ToUInteger(x);
-                }
-
-                internal uint _Lambda_0024__13_002D1(string x)
-                {
-                    return Conversions.ToUInteger(x);
-                }
-
-                internal uint _Lambda_0024__14_002D0(string x)
-                {
-                    return Conversions.ToUInteger(x);
-                }
-            }
 
             public bool _flagStopListen;
 
@@ -145,22 +110,20 @@ namespace Mangos.World.Network
                     try
                     {
                         Cluster = ProxyClient.Create<ICluster>(m_RemoteURI);
-                        if (!Information.IsNothing(Cluster))
+                        if (Cluster != null)
                         {
                             WorldServerConfiguration configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
-                            if (Cluster.Connect(LocalURI, configuration.Maps.Select(_Closure_0024__._0024I13_002D0 ??= x => Conversions.ToUInteger(x)).ToList()))
+                            if (Cluster.Connect(LocalURI, configuration.Maps.Select(x => Conversions.ToUInteger(x)).ToList()))
                             {
                                 break;
                             }
-                            Cluster.Disconnect(LocalURI, configuration.Maps.Select(_Closure_0024__._0024I13_002D1 ??= x => Conversions.ToUInteger(x)).ToList());
+                            Cluster.Disconnect(LocalURI, configuration.Maps.Select(x => Conversions.ToUInteger(x)).ToList());
                         }
                     }
                     catch (Exception ex)
                     {
-                        ProjectData.SetProjectError(ex);
                         Exception e = ex;
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Unable to connect to cluster. [{0}]", e.Message);
-                        ProjectData.ClearProjectError();
                     }
                     Cluster = null;
                     Thread.Sleep(3000);
@@ -168,16 +131,16 @@ namespace Mangos.World.Network
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.SUCCESS, "Contacted cluster [{0}]", m_RemoteURI);
             }
 
+
             public void ClusterDisconnect()
             {
                 try
                 {
-                    Cluster.Disconnect(LocalURI, WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Select(_Closure_0024__._0024I14_002D0 ??= x => Conversions.ToUInteger(x)).ToList());
+                    Cluster.Disconnect(LocalURI, WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Select(x => Conversions.ToUInteger(x)).ToList());
                 }
-                catch (Exception projectError)
+                catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(projectError);
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Cluster Disconnected [{0}]", ex);
                 }
                 finally
                 {
@@ -253,10 +216,8 @@ namespace Mangos.World.Network
                 }
                 catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex);
                     Exception e = ex;
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error on login: {0}", e.ToString());
-                    ProjectData.ClearProjectError();
                 }
             }
 
@@ -284,23 +245,23 @@ namespace Mangos.World.Network
                 {
                     throw new ApplicationException("Packet doesn't contain data!");
                 }
-                
+
                 try
                 {
-                    if(WorldServiceLocator._WorldServer.CLIENTs.TryGetValue(id, out ClientClass _client))
+                    if (WorldServiceLocator._WorldServer.CLIENTs.TryGetValue(id, out ClientClass _client))
                     {
                         Packets.PacketClass p = new Packets.PacketClass(ref data);
                         _client?.PushPacket(p);
                     }
                     else
+                    {
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Client ID doesn't contain a key!: {0}", ToString());
+                    }
                 }
                 catch (Exception ex2)
                 {
-                    ProjectData.SetProjectError(ex2);
                     Exception ex = ex2;
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error on Client OnPacket: {0}", ex.ToString());
-                    ProjectData.ClearProjectError();
                 }
             }
 
@@ -360,7 +321,7 @@ namespace Mangos.World.Network
 
             public void CheckConnection(object State)
             {
-                if (checked(WorldServiceLocator._NativeMethods.timeGetTime("") - WorldServiceLocator._WS_Network.LastPing) > 40000)
+                if ((WorldServiceLocator._NativeMethods.timeGetTime("") - WorldServiceLocator._WS_Network.LastPing) > 40000)
                 {
                     if (Cluster != null)
                     {
@@ -374,9 +335,9 @@ namespace Mangos.World.Network
 
             public void CheckCPU(object State)
             {
-                TimeSpan TimeSinceLastCheck = DateAndTime.Now.Subtract(LastInfo);
+                TimeSpan TimeSinceLastCheck = DateTime.Now.Subtract(LastInfo);
                 UsageCPU = (float)((Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds - LastCPUTime) / TimeSinceLastCheck.TotalMilliseconds * 100.0);
-                LastInfo = DateAndTime.Now;
+                LastInfo = DateTime.Now;
                 LastCPUTime = Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds;
             }
 
@@ -407,7 +368,7 @@ namespace Mangos.World.Network
             async Task IWorld.InstanceCreateAsync(uint MapID)
             {
                 //ILSpy generated this explicit interface implementation from .override directive in InstanceCreate
-                await InstanceCreateAsync(MapID);
+                await InstanceCreateAsync(MapID).ConfigureAwait(false);
             }
 
             public void InstanceDestroy(uint MapID)

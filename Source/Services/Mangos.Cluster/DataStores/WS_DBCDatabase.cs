@@ -16,15 +16,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Common.Enums.Global;
+using Mangos.Common.Enums.Map;
+using Mangos.Common.Legacy;
+using Mangos.DataStores;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading.Tasks;
-using Mangos.Common.Enums.Global;
-using Mangos.Common.Enums.Map;
-using Mangos.Common.Legacy;
-using Mangos.DataStores;
 
 namespace Mangos.Cluster.DataStores
 {
@@ -46,10 +46,10 @@ namespace Mangos.Cluster.DataStores
         {
             try
             {
-                var data = await _dataStoreProvider.GetDataStoreAsync(_mapDbc);
+                DataStore data = await _dataStoreProvider.GetDataStoreAsync(_mapDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    var m = new MapInfo
+                    MapInfo m = new MapInfo
                     {
                         Id = data.ReadInt(i, 0),
                         Type = (MapTypes)data.ReadInt(i, 2),
@@ -78,7 +78,7 @@ namespace Mangos.Cluster.DataStores
             public int ParentMap = -1;
             public int ResetTime;
 
-            public bool IsDungeon => Type == MapTypes.MAP_INSTANCE || Type == MapTypes.MAP_RAID;
+            public bool IsDungeon => Type is MapTypes.MAP_INSTANCE or MapTypes.MAP_RAID;
 
             public bool IsRaid => Type == MapTypes.MAP_RAID;
 
@@ -94,10 +94,10 @@ namespace Mangos.Cluster.DataStores
         {
             try
             {
-                var data = await _dataStoreProvider.GetDataStoreAsync(_worldSafeLocsDbc);
+                DataStore data = await _dataStoreProvider.GetDataStoreAsync(_worldSafeLocsDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    var worldSafeLoc = new WorldSafeLoc
+                    WorldSafeLoc worldSafeLoc = new WorldSafeLoc
                     {
                         Id = data.ReadInt(i, 0),
                         Map = (uint)data.ReadInt(i, 1),
@@ -132,7 +132,7 @@ namespace Mangos.Cluster.DataStores
         public void InitializeBattlegrounds()
         {
             byte entry;
-            var mySqlQuery = new DataTable();
+            DataTable mySqlQuery = new DataTable();
             _clusterServiceLocator.WorldCluster.GetWorldDatabase().Query("SELECT * FROM battleground_template", ref mySqlQuery);
             foreach (DataRow row in mySqlQuery.Rows)
             {
@@ -175,10 +175,10 @@ namespace Mangos.Cluster.DataStores
         {
             try
             {
-                var data = await _dataStoreProvider.GetDataStoreAsync(_chatChannelsDbc);
+                DataStore data = await _dataStoreProvider.GetDataStoreAsync(_chatChannelsDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    var chatChannels = new ChatChannelInfo
+                    ChatChannelInfo chatChannels = new ChatChannelInfo
                     {
                         Index = data.ReadInt(i, 0),
                         Flags = data.ReadInt(i, 1),
@@ -217,7 +217,7 @@ namespace Mangos.Cluster.DataStores
                 int modelF;
                 int teamId; // 1 = Horde / 7 = Alliance
                 int cinematicId;
-                var data = await _dataStoreProvider.GetDataStoreAsync(_chrRacesDbc);
+                DataStore data = await _dataStoreProvider.GetDataStoreAsync(_chrRacesDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
                     raceId = data.ReadInt(i, 0);
@@ -248,7 +248,7 @@ namespace Mangos.Cluster.DataStores
                 // Loading from DBC
                 int classId;
                 int cinematicId;
-                var dataStore = await _dataStoreProvider.GetDataStoreAsync(_chrClassesDbc);
+                DataStore dataStore = await _dataStoreProvider.GetDataStoreAsync(_chrClassesDbc);
                 for (int i = 0, loopTo = dataStore.Rows - 1; i <= loopTo; i++)
                 {
                     classId = dataStore.ReadInt(i, 0);

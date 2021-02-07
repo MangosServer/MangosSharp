@@ -16,13 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Mangos.Cluster.Handlers
 {
@@ -44,7 +44,7 @@ namespace Mangos.Cluster.Handlers
             // Dim MapType As UInteger = packet.GetInt32           'type id from dbc
             // Dim MapType As Byte = packet.GetUInt8
             uint id = packet.GetUInt16();               // ID
-            var action = (byte)packet.GetUInt8();                 // enter battle 0x1, leave queue 0x0
+            byte action = (byte)packet.GetUInt8();                 // enter battle 0x1, leave queue 0x0
 
             // _WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEFIELD_PORT [MapType: {2}, Action: {3}, Unk1: {4}, Unk2: {5}, ID: {6}]", client.IP, client.Port, MapType, Action, Unk1, Unk2, ID)
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEFIELD_PORT [Action: {1}, ID: {2}]", client.IP, client.Port, action, id);
@@ -61,9 +61,9 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_LEAVE_BATTLEFIELD(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var unk1 = packet.GetInt8();
-            var unk2 = packet.GetInt8();
-            var mapType = (uint)packet.GetInt32();
+            byte unk1 = packet.GetInt8();
+            byte unk2 = packet.GetInt8();
+            uint mapType = (uint)packet.GetInt32();
             uint id = packet.GetUInt16();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LEAVE_BATTLEFIELD [MapType: {2}, Unk1: {3}, Unk2: {4}, ID: {5}]", client.IP, client.Port, mapType, unk1, unk2, id);
             BattlefielDs[(int)id].Leave(client.Character);
@@ -72,12 +72,15 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_BATTLEMASTER_JOIN(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 16)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var guid = packet.GetUInt64();
-            var mapType = (uint)packet.GetInt32();
-            var instance = (uint)packet.GetInt32();
-            var asGroup = packet.GetInt8();
+            ulong guid = packet.GetUInt64();
+            uint mapType = (uint)packet.GetInt32();
+            uint instance = (uint)packet.GetInt32();
+            byte asGroup = packet.GetInt8();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEMASTER_JOIN [MapType: {2}, Instance: {3}, Group: {4}, GUID: {5}]", client.IP, client.Port, mapType, instance, asGroup, guid);
             GetBattlefield((BattlefieldMapType)mapType, (byte)client.Character.Level).Enqueue(client.Character);
         }
@@ -160,7 +163,7 @@ namespace Mangos.Cluster.Handlers
                 // DONE: Adding members from queue
                 if (_membersTeam1.Count + _invitedTeam1.Count < _maxPlayersPerTeam && _queueTeam1.Count > 0)
                 {
-                    var objCharacter = _queueTeam1[0];
+                    WcHandlerCharacter.CharacterObject objCharacter = _queueTeam1[0];
                     _queueTeam1.RemoveAt(0);
                     _invitedTeam1.Add(objCharacter);
                     SendBattlegroundStatus(objCharacter, 0);
@@ -168,7 +171,7 @@ namespace Mangos.Cluster.Handlers
 
                 if (_membersTeam2.Count + _invitedTeam2.Count < _maxPlayersPerTeam && _queueTeam2.Count > 0)
                 {
-                    var objCharacter = _queueTeam2[0];
+                    WcHandlerCharacter.CharacterObject objCharacter = _queueTeam2[0];
                     _queueTeam2.RemoveAt(0);
                     _invitedTeam2.Add(objCharacter);
                     SendBattlegroundStatus(objCharacter, 0);
@@ -219,7 +222,7 @@ namespace Mangos.Cluster.Handlers
 
                     SendBattlegroundStatus(objCharacter, 0);
                     {
-                        var withBlock = _clusterServiceLocator.WsDbcDatabase.WorldSafeLocs[_clusterServiceLocator.WsDbcDatabase.Battlegrounds[(byte)MapType].AllianceStartLoc];
+                        DataStores.WsDbcDatabase.WorldSafeLoc withBlock = _clusterServiceLocator.WsDbcDatabase.WorldSafeLocs[_clusterServiceLocator.WsDbcDatabase.Battlegrounds[(byte)MapType].AllianceStartLoc];
                         // TODO: WTF? characters_locations table? when?
                         // Dim q As New DataTable
                         // _WorldCluster.CharacterDatabase.Query(String.Format("SELECT char_guid FROM characters_locations WHERE char_guid = {0};", objCharacter.GUID), q)
@@ -271,21 +274,21 @@ namespace Mangos.Cluster.Handlers
             /// <returns></returns>
             private void SendBattlegroundStatus(WcHandlerCharacter.CharacterObject objCharacter, byte slot)
             {
-                var status = BattlegroundStatus.STATUS_CLEAR;
-                if (_queueTeam1.Contains(objCharacter) | _queueTeam2.Contains(objCharacter))
+                BattlegroundStatus status = BattlegroundStatus.STATUS_CLEAR;
+                if (_queueTeam1.Contains(objCharacter) || _queueTeam2.Contains(objCharacter))
                 {
                     status = BattlegroundStatus.STATUS_WAIT_QUEUE;
                 }
-                else if (_invitedTeam1.Contains(objCharacter) | _invitedTeam2.Contains(objCharacter))
+                else if (_invitedTeam1.Contains(objCharacter) || _invitedTeam2.Contains(objCharacter))
                 {
                     status = BattlegroundStatus.STATUS_WAIT_JOIN;
                 }
-                else if (_membersTeam1.Contains(objCharacter) | _membersTeam2.Contains(objCharacter))
+                else if (_membersTeam1.Contains(objCharacter) || _membersTeam2.Contains(objCharacter))
                 {
                     status = BattlegroundStatus.STATUS_IN_PROGRESS;
                 }
 
-                var p = new PacketClass(Opcodes.SMSG_BATTLEFIELD_STATUS);
+                PacketClass p = new PacketClass(Opcodes.SMSG_BATTLEFIELD_STATUS);
                 try
                 {
                     p.AddUInt32(slot);               // Slot (0, 1 or 2)
@@ -351,7 +354,7 @@ namespace Mangos.Cluster.Handlers
         {
             Battlefield battlefield = null;
             BattlefielDsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
-            foreach (var b in BattlefielDs)
+            foreach (KeyValuePair<int, Battlefield> b in BattlefielDs)
             {
                 if (b.Value.MapType == mapType && b.Value.LevelMax >= level && b.Value.LevelMin <= level)
                 {
@@ -364,7 +367,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Create new if not found any
             if (battlefield is null)
             {
-                var map = (uint)GetBattleGrounMapIdByTypeId((BattleGroundTypeId)mapType);
+                uint map = (uint)GetBattleGrounMapIdByTypeId((BattleGroundTypeId)mapType);
                 if (_clusterServiceLocator.WcNetwork.WorldServer.BattlefieldCheck(map))
                 {
                     battlefield = new Battlefield(mapType, level, map, _clusterServiceLocator);
@@ -440,7 +443,7 @@ namespace Mangos.Cluster.Handlers
             // 3 - Your group has joined the queue for AB
 
 
-            var p = new PacketClass(Opcodes.SMSG_GROUP_JOINED_BATTLEGROUND);
+            PacketClass p = new PacketClass(Opcodes.SMSG_GROUP_JOINED_BATTLEGROUND);
             try
             {
                 p.AddUInt32(0xFFFFFFFEU);
@@ -454,7 +457,7 @@ namespace Mangos.Cluster.Handlers
 
         public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(PacketClass packet, ClientClass client)
         {
-            var p = new PacketClass(Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS);
+            PacketClass p = new PacketClass(Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS);
             try
             {
                 p.AddUInt32(0U);

@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.IO;
 using Mangos.Common.Enums.Global;
 using Microsoft.VisualBasic;
+using System;
+using System.IO;
 
 // Using this logging type, all logs are saved in files numbered by date.
 // Writting commands is done trought console.
@@ -63,18 +63,30 @@ namespace Mangos.Common.Legacy.Logging
         public override void Write(LogType type, string formatStr, params object[] arg)
         {
             if (LogLevel > type)
+            {
                 return;
+            }
+
             if (LastDate != DateAndTime.Now.Date)
+            {
                 CreateNewFile();
+            }
+
             Output.Write(formatStr, arg);
         }
 
         public override void WriteLine(LogType type, string formatStr, params object[] arg)
         {
             if (LogLevel > type)
+            {
                 return;
+            }
+
             if (LastDate != DateAndTime.Now.Date)
+            {
                 CreateNewFile();
+            }
+
             Output.WriteLine(L[(int)type] + ":[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
         }
     }

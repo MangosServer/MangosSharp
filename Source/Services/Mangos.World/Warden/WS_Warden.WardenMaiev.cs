@@ -16,6 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Common.Enums.Global;
+using Mangos.World.Globals;
+using Mangos.World.Handlers;
+using Mangos.World.Player;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,12 +29,6 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using Mangos.Common.Enums.Global;
-using Mangos.World.Globals;
-using Mangos.World.Handlers;
-using Mangos.World.Player;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Warden
 {
@@ -240,10 +240,10 @@ namespace Mangos.World.Warden
 
             public WardenMaiev()
             {
-                WardenModule = new byte[0];
+                WardenModule = Array.Empty<byte>();
                 ModuleName = "";
-                ModuleKey = new byte[0];
-                ModuleData = new byte[0];
+                ModuleKey = Array.Empty<byte>();
+                ModuleData = Array.Empty<byte>();
                 ModuleSize = 0;
                 CheckIDs = new byte[8];
                 Script = null;
@@ -272,7 +272,7 @@ namespace Mangos.World.Warden
                 myWardenList = default;
                 pWardenList = 0;
                 m_RC4 = 0;
-                m_PKT = new byte[0];
+                m_PKT = Array.Empty<byte>();
             }
 
             public void InitWarden()
@@ -667,7 +667,7 @@ namespace Mangos.World.Warden
                     {
                         int pModule = WorldServiceLocator._WS_Warden.ByteArrPtr(ref data);
                         object? obj = Marshal.PtrToStructure(new IntPtr(pModule), typeof(CHeader));
-                        Header = ((obj != null) ? ((CHeader)obj) : default);
+                        Header = (obj != null) ? ((CHeader)obj) : default;
                         dwModuleSize = Header.dwModuleSize;
                         if (dwModuleSize < int.MaxValue)
                         {
@@ -724,7 +724,7 @@ namespace Mangos.World.Warden
                                 while (dwLibraryIndex < Header.dwLibraryCount)
                                 {
                                     object? obj2 = Marshal.PtrToStructure(new IntPtr(m_Mod + Header.dwLibraryTable + dwLibraryIndex * 8), typeof(CLibraryEntry));
-                                    CLibraryEntry pLibraryTable = ((obj2 != null) ? ((CLibraryEntry)obj2) : default);
+                                    CLibraryEntry pLibraryTable = (obj2 != null) ? ((CLibraryEntry)obj2) : default;
                                     string procLib = Marshal.PtrToStringAnsi(new IntPtr(m_Mod + pLibraryTable.dwFileName));
                                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "    Library: {0}", procLib);
                                     int hModule = NativeMethods.LoadLibrary(procLib, "");
@@ -874,7 +874,7 @@ namespace Mangos.World.Warden
                     }
                     pWardenList = Marshal.ReadInt32(new IntPtr(m_ModMem));
                     object? obj2 = Marshal.PtrToStructure(new IntPtr(pWardenList), typeof(WardenFuncList));
-                    myWardenList = ((obj2 != null) ? ((WardenFuncList)obj2) : default);
+                    myWardenList = (obj2 != null) ? ((WardenFuncList)obj2) : default;
                     Console.WriteLine("Exports:");
                     Console.WriteLine("  GenerateRC4Keys: 0x{0:X}", myWardenList.fpGenerateRC4Keys);
                     Console.WriteLine("  Unload: 0x{0:X}", myWardenList.fpUnload);
@@ -895,7 +895,7 @@ namespace Mangos.World.Warden
 
             private void SendPacket(int ptrPacket, int dwSize)
             {
-                if (dwSize >= 1 && dwSize <= 5000)
+                if (dwSize is >= 1 and <= 5000)
                 {
                     m_PKT = new byte[checked(dwSize - 1 + 1)];
                     Marshal.Copy(new IntPtr(ptrPacket), m_PKT, 0, dwSize);
@@ -958,7 +958,7 @@ namespace Mangos.World.Warden
 
             public int HandlePacket(byte[] PacketData)
             {
-                m_PKT = new byte[0];
+                m_PKT = Array.Empty<byte>();
                 int BytesRead = 0;
                 WS_Warden wS_Warden = WorldServiceLocator._WS_Warden;
                 object obj = BytesRead;

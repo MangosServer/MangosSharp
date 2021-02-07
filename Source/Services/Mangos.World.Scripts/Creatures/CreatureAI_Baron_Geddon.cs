@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 // AI TODO: Implement a workaround (Or fix, fixes work too!) for Armageddon.
 namespace Mangos.World.Scripts.Creatures
@@ -35,8 +35,8 @@ namespace Mangos.World.Scripts.Creatures
         private const int Spell_Ignite = 19659; // Drains a random targets mana.
         private const int Spell_Living_Bomb = 20475;
         private const int Spell_Armageddon = 20478; // Cast at 2% to make self invincible, this spell won't work so we'll make a workaround.
-        public int NextWaypoint = 0;
-        public int CurrentWaypoint = 0;
+        public int NextWaypoint;
+        public int CurrentWaypoint;
         public int NextInferno;
         public int NextIgnite;
         public int NextLivingBomb;
@@ -76,9 +76,12 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                var Target = aiTarget;
+                WS_Base.BaseUnit Target = aiTarget;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(Spell_Inferno, aiTarget); // This spell should be mitigated with fire resistance and nothing more.
             }
         }
@@ -87,9 +90,12 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 1; i <= 3; i++)
             {
-                var target = aiCreature.GetRandomTarget();
+                WS_Base.BaseUnit target = aiCreature.GetRandomTarget();
                 if (target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(Spell_Ignite, aiCreature.GetRandomTarget()); // This spell drains 400 mana per second and MUST be dispelled immediately or your healers will wipe the group.
             }
         }
@@ -98,9 +104,12 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 2; i <= 3; i++)
             {
-                var target = aiCreature.GetRandomTarget();
+                WS_Base.BaseUnit target = aiCreature.GetRandomTarget();
                 if (target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(Spell_Living_Bomb, aiCreature.GetRandomTarget()); // The traditional way of getting away of this is to run where the dead trash is from your group so they don't die, but we may need to fix AoE implementations for this.
             }
         }

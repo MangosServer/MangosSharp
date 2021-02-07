@@ -27,7 +27,7 @@ namespace Mangos.Network.Tcp.Extensions
     {
         public static async ValueTask WriteEnumerableAsync(this ChannelWriter<byte> writer, IEnumerable<byte> data)
         {
-            foreach (var item in data)
+            foreach (byte item in data)
             {
                 await writer.WriteAsync(item);
             }
@@ -40,7 +40,7 @@ namespace Mangos.Network.Tcp.Extensions
 
         public static async ValueTask WriteZeroNCountAsync(this ChannelWriter<byte> writer, int count)
         {
-            for (var i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 await writer.WriteAsync(0);
             }

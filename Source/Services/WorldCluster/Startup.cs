@@ -38,7 +38,7 @@ namespace WorldCluster
         public Startup(
             ILogger logger,
             XmlConfigurationProvider<ClusterConfiguration> configurationProvider,
-            Mangos.Cluster.WorldCluster worldCluster, 
+            Mangos.Cluster.WorldCluster worldCluster,
             TcpServer tcpServer)
         {
             this.worldCluster = worldCluster;
@@ -67,18 +67,18 @@ namespace WorldCluster
 
         private void StartTcpServer()
         {
-            var configuration = configurationProvider.GetConfiguration();
-            var endpoint = IPEndPoint.Parse(configuration.WorldClusterEndpoint);
+            ClusterConfiguration configuration = configurationProvider.GetConfiguration();
+            IPEndPoint endpoint = IPEndPoint.Parse(configuration.WorldClusterEndpoint);
             tcpServer.Start(endpoint, 10);
             logger.Debug("Tcp server has been started");
         }
 
         private void WriteServiceInformation()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var assemblyTitle = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
-            var product = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
-            var copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string assemblyTitle = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
+            string product = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+            string copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
 
             Console.Title = $"{assemblyTitle} v{Assembly.GetExecutingAssembly().GetName().Version}";
             logger.Debug(product);

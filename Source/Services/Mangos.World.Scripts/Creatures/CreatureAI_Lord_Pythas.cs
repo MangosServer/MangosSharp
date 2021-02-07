@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 namespace Mangos.World.Scripts.Creatures
 {
@@ -35,11 +35,11 @@ namespace Mangos.World.Scripts.Creatures
         private const int Healing_Spell = 23381;
         private const int Spell_Serpent_Form = 8041; // Not sure how this will work. 
         private const int Spell_Lightning_Bolt = 9532;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextThunderClap;
         public int NextLightningBolt;
         public int NextSlumber;
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
         public int NextHealingTouch;
 
         public CreatureAI_Lord_Pythas(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
@@ -86,7 +86,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
             }
         }
@@ -95,9 +98,11 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 1; i <= 3; i++)
             {
-                var target = aiCreature.GetRandomTarget();
+                WS_Base.BaseUnit target = aiCreature.GetRandomTarget();
                 if (target is null)
+                {
                     return;
+                }
             }
 
             aiCreature.CastSpell(Slumber_Spell, aiCreature.GetRandomTarget());
@@ -109,7 +114,9 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
+                {
                     return;
+                }
             }
 
             aiCreature.CastSpell(Thunder_Clap_CD, aiTarget);

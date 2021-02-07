@@ -16,10 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Data;
-using System.Text;
-using System.Text.RegularExpressions;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Chat;
@@ -30,6 +26,10 @@ using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Data;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Mangos.Cluster.Globals
 {
@@ -55,8 +55,11 @@ namespace Mangos.Cluster.Globals
         public string ToHex(byte[] bBytes, int start = 0)
         {
             if (bBytes.Length == 0)
+            {
                 return "''";
-            var tmpStr = "0x";
+            }
+
+            string tmpStr = "0x";
             for (int i = start, loopTo = bBytes.Length - 1; i <= loopTo; i++)
             {
                 if (bBytes[i] < 16)
@@ -75,31 +78,46 @@ namespace Mangos.Cluster.Globals
         public char[] ByteToCharArray(byte[] bBytes)
         {
             if (bBytes.Length == 0)
-                return new char[] { };
-            var bChar = new char[bBytes.Length];
+            {
+                return Array.Empty<char>();
+            }
+
+            char[] bChar = new char[bBytes.Length];
             for (int i = 0, loopTo = bBytes.Length - 1; i <= loopTo; i++)
+            {
                 bChar[i] = (char)bBytes[i];
+            }
+
             return bChar;
         }
 
         public int[] ByteToIntArray(byte[] bBytes)
         {
             if (bBytes.Length == 0)
-                return new int[] { };
-            var bInt = new int[(bBytes.Length - 1) / 4 + 1];
+            {
+                return Array.Empty<int>();
+            }
+
+            int[] bInt = new int[(bBytes.Length - 1) / 4 + 1];
             for (int i = 0, loopTo = bBytes.Length - 1; i <= loopTo; i += 4)
+            {
                 bInt[i / 4] = BitConverter.ToInt32(bBytes, i);
+            }
+
             return bInt;
         }
 
         public byte[] IntToByteArray(int[] bInt)
         {
             if (bInt.Length == 0)
-                return new byte[] { };
-            var bBytes = new byte[(bInt.Length * 4)];
+            {
+                return Array.Empty<byte>();
+            }
+
+            byte[] bBytes = new byte[(bInt.Length * 4)];
             for (int i = 0, loopTo = bInt.Length - 1; i <= loopTo; i++)
             {
-                var tmpBytes = BitConverter.GetBytes(bInt[i]);
+                byte[] tmpBytes = BitConverter.GetBytes(bInt[i]);
                 Array.Copy(tmpBytes, 0, bBytes, i * 4, 4);
             }
 
@@ -108,21 +126,27 @@ namespace Mangos.Cluster.Globals
 
         public byte[] Concat(byte[] a, byte[] b)
         {
-            var buffer1 = new byte[(a.Length + b.Length)];
+            byte[] buffer1 = new byte[(a.Length + b.Length)];
             int num1;
-            var loopTo = a.Length - 1;
+            int loopTo = a.Length - 1;
             for (num1 = 0; num1 <= loopTo; num1++)
+            {
                 buffer1[num1] = a[num1];
+            }
+
             int num2;
-            var loopTo1 = b.Length - 1;
+            int loopTo1 = b.Length - 1;
             for (num2 = 0; num2 <= loopTo1; num2++)
+            {
                 buffer1[num2 + a.Length] = b[num2];
+            }
+
             return buffer1;
         }
 
         public bool HaveFlag(uint value, byte flagPos)
         {
-            value >>= (int)flagPos;
+            value >>= flagPos;
             value = (uint)(value % 2L);
             if (value == 1L)
             {
@@ -151,24 +175,27 @@ namespace Mangos.Cluster.Globals
 
         public DateTime GetNextDay(DayOfWeek iDay, int hour = 0)
         {
-            var iDiff = (int)iDay - (int)DateAndTime.Today.DayOfWeek;
+            int iDiff = (int)iDay - (int)DateAndTime.Today.DayOfWeek;
             if (iDiff <= 0)
+            {
                 iDiff += 7;
-            var nextFriday = DateAndTime.Today.AddDays(iDiff);
+            }
+
+            DateTime nextFriday = DateAndTime.Today.AddDays(iDiff);
             nextFriday = nextFriday.AddHours(hour);
             return nextFriday;
         }
 
         public DateTime GetNextDate(int days, int hours = 0)
         {
-            var nextDate = DateAndTime.Today.AddDays(days);
+            DateTime nextDate = DateAndTime.Today.AddDays(days);
             nextDate = nextDate.AddHours(hours);
             return nextDate;
         }
 
         public uint GetTimestamp(DateTime fromDateTime)
         {
-            var startDate = DateTime.Parse("1970-01-01");
+            DateTime startDate = DateTime.Parse("1970-01-01");
             TimeSpan timeSpan;
             timeSpan = fromDateTime.Subtract(startDate);
             return (uint)Math.Abs(timeSpan.TotalSeconds);
@@ -177,9 +204,12 @@ namespace Mangos.Cluster.Globals
         public DateTime GetDateFromTimestamp(uint unixTimestamp)
         {
             TimeSpan timeSpan;
-            var startDate = DateTime.Parse("1970-01-01");
+            DateTime startDate = DateTime.Parse("1970-01-01");
             if (unixTimestamp == 0L)
+            {
                 return startDate;
+            }
+
             timeSpan = new TimeSpan(0, 0, (int)unixTimestamp);
             return startDate.Add(timeSpan);
         }
@@ -218,8 +248,11 @@ namespace Mangos.Cluster.Globals
 
         public bool ValidateName(string strName)
         {
-            if (strName.Length < 2 || strName.Length > 16)
+            if (strName.Length is < 2 or > 16)
+            {
                 return false;
+            }
+
             return _regexAz.IsMatch(strName);
         }
 
@@ -227,8 +260,11 @@ namespace Mangos.Cluster.Globals
 
         public bool ValidateGuildName(string strName)
         {
-            if (strName.Length < 2 || strName.Length > 16)
+            if (strName.Length is < 2 or > 16)
+            {
                 return false;
+            }
+
             return _regexGuild.IsMatch(strName);
         }
 
@@ -240,12 +276,18 @@ namespace Mangos.Cluster.Globals
         public void RAND_bytes(ref byte[] bBytes, int length)
         {
             if (length == 0)
+            {
                 return;
+            }
+
             bBytes = (new byte[length]);
             for (int i = 0, loopTo = length - 1; i <= loopTo; i++)
             {
                 if (i == bBytes.Length)
+                {
                     break;
+                }
+
                 bBytes[i] = (byte)new Random().Next(0, 256);
             }
         }
@@ -257,12 +299,12 @@ namespace Mangos.Cluster.Globals
 
         public void Ban_Account(string name, string reason)
         {
-            var account = new DataTable();
-            var bannedAccount = new DataTable();
+            DataTable account = new DataTable();
+            DataTable bannedAccount = new DataTable();
             _clusterServiceLocator.WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, username FROM account WHERE username = {0};", name), ref account);
             if (account.Rows.Count > 0)
             {
-                var accId = account.Rows[0].As<int>("id");
+                int accId = account.Rows[0].As<int>("id");
                 _clusterServiceLocator.WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, active FROM account_banned WHERE id = {0};", accId), ref bannedAccount);
                 if (bannedAccount.Rows.Count > 0)
                 {
@@ -270,7 +312,7 @@ namespace Mangos.Cluster.Globals
                 }
                 else
                 {
-                    var tempBanDate = Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongDate) + " " + Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongTime);
+                    string tempBanDate = Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongDate) + " " + Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongTime);
                     _clusterServiceLocator.WorldCluster.GetAccountDatabase().Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP('{1}'), UNIX_TIMESTAMP('{2}'), '{3}', '{4}', active = 1);", accId, tempBanDate, "0000-00-00 00:00:00", name, reason));
                 }
 
@@ -503,7 +545,7 @@ namespace Mangos.Cluster.Globals
 
         public string SetColor(string message, byte red, byte green, byte blue)
         {
-            var setColorRet = "|cFF";
+            string setColorRet = "|cFF";
             setColorRet = red < 16 ? setColorRet + "0" + Conversion.Hex(red) : setColorRet + Conversion.Hex(red);
             setColorRet = green < 16 ? setColorRet + "0" + Conversion.Hex(green) : setColorRet + Conversion.Hex(green);
             setColorRet = blue < 16 ? setColorRet + "0" + Conversion.Hex(blue) : setColorRet + Conversion.Hex(blue);
@@ -515,21 +557,24 @@ namespace Mangos.Cluster.Globals
 
         public bool RollChance(float chance)
         {
-            var nChance = (int)(chance * 100f);
+            int nChance = (int)(chance * 100f);
             if (_clusterServiceLocator.WorldCluster.Rnd.Next(1, 10001) <= nChance)
+            {
                 return true;
+            }
+
             return false;
         }
 
         public void SendMessageMotd(ClientClass client, string message)
         {
-            var packet = BuildChatMessage(0, message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL);
+            PacketClass packet = BuildChatMessage(0, message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL);
             client.Send(packet);
         }
 
         public void SendMessageNotification(ClientClass client, string message)
         {
-            var packet = new PacketClass(Opcodes.SMSG_NOTIFICATION);
+            PacketClass packet = new PacketClass(Opcodes.SMSG_NOTIFICATION);
             try
             {
                 packet.AddString(message);
@@ -543,7 +588,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendMessageSystem(ClientClass objCharacter, string message)
         {
-            var packet = BuildChatMessage(0, message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL, 0, "");
+            PacketClass packet = BuildChatMessage(0, message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_UNIVERSAL, 0, "");
             try
             {
                 objCharacter.Send(packet);
@@ -557,10 +602,12 @@ namespace Mangos.Cluster.Globals
         public void Broadcast(string message)
         {
             _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
-            foreach (var character in _clusterServiceLocator.WorldCluster.CharacteRs)
+            foreach (System.Collections.Generic.KeyValuePair<ulong, WcHandlerCharacter.CharacterObject> character in _clusterServiceLocator.WorldCluster.CharacteRs)
             {
                 if (character.Value.Client is object)
+                {
                     SendMessageSystem(character.Value.Client, "System Message: " + SetColor(message, 255, 0, 0));
+                }
             }
 
             _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
@@ -568,7 +615,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendAccountMd5(ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
-            var foundData = false;
+            bool foundData = false;
 
             // TODO: How Does Mangos Zero Handle the Account Data For the Characters?
             // Dim AccData As New DataTable
@@ -585,11 +632,11 @@ namespace Mangos.Cluster.Globals
             // End If
             // End If
 
-            var smsgAccountDataTimes = new PacketClass(Opcodes.SMSG_ACCOUNT_DATA_MD5);
+            PacketClass smsgAccountDataTimes = new PacketClass(Opcodes.SMSG_ACCOUNT_DATA_MD5);
             try
             {
                 // Dim md5hash As MD5 = MD5.Create()
-                for (var i = 0; i <= 7; i++)
+                for (int i = 0; i <= 7; i++)
                 {
                     if (foundData)
                     {
@@ -622,7 +669,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendTriggerCinematic(ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
-            var packet = new PacketClass(Opcodes.SMSG_TRIGGER_CINEMATIC);
+            PacketClass packet = new PacketClass(Opcodes.SMSG_TRIGGER_CINEMATIC);
             try
             {
                 if (_clusterServiceLocator.WsDbcDatabase.CharRaces.ContainsKey((int)character.Race))
@@ -655,16 +702,16 @@ namespace Mangos.Cluster.Globals
 
         public void SendGameTime(ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
-            var smsgLoginSettimespeed = new PacketClass(Opcodes.SMSG_LOGIN_SETTIMESPEED);
+            PacketClass smsgLoginSettimespeed = new PacketClass(Opcodes.SMSG_LOGIN_SETTIMESPEED);
             try
             {
-                var time = DateTime.Now;
-                var year = time.Year - 2000;
-                var month = time.Month - 1;
-                var day = time.Day - 1;
-                var dayOfWeek = (int)time.DayOfWeek;
-                var hour = time.Hour;
-                var minute = time.Minute;
+                DateTime time = DateTime.Now;
+                int year = time.Year - 2000;
+                int month = time.Month - 1;
+                int day = time.Day - 1;
+                int dayOfWeek = (int)time.DayOfWeek;
+                int hour = time.Hour;
+                int minute = time.Minute;
 
                 // SMSG_LOGIN_SETTIMESPEED.AddInt32(CType((((((Minute + (Hour << 6)) + (DayOfWeek << 11)) + (Day << 14)) + (Year << 18)) + (Month << 20)), Integer))
                 smsgLoginSettimespeed.AddInt32(minute + (hour << 6) + (dayOfWeek << 11) + (day << 14) + (month << 20) + (year << 24));
@@ -681,7 +728,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendProficiency(ClientClass client, byte proficiencyType, int proficiencyFlags)
         {
-            var packet = new PacketClass(Opcodes.SMSG_SET_PROFICIENCY);
+            PacketClass packet = new PacketClass(Opcodes.SMSG_SET_PROFICIENCY);
             try
             {
                 packet.AddInt8(proficiencyType);
@@ -698,7 +745,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendCorpseReclaimDelay(ClientClass client, WcHandlerCharacter.CharacterObject character, int seconds = 30)
         {
-            var packet = new PacketClass(Opcodes.SMSG_CORPSE_RECLAIM_DELAY);
+            PacketClass packet = new PacketClass(Opcodes.SMSG_CORPSE_RECLAIM_DELAY);
             try
             {
                 packet.AddInt32(seconds * 1000);
@@ -714,7 +761,7 @@ namespace Mangos.Cluster.Globals
 
         public PacketClass BuildChatMessage(ulong senderGuid, string message, ChatMsg msgType, LANGUAGES msgLanguage, byte flag = 0, string msgChannel = "Global")
         {
-            var packet = new PacketClass(Opcodes.SMSG_MESSAGECHAT);
+            PacketClass packet = new PacketClass(Opcodes.SMSG_MESSAGECHAT);
             try
             {
                 packet.AddInt8((byte)msgType);
@@ -836,7 +883,7 @@ namespace Mangos.Cluster.Globals
 
         public PacketClass BuildPartyMemberStatsOffline(ulong guid)
         {
-            var packet = new PacketClass(Opcodes.SMSG_PARTY_MEMBER_STATS_FULL);
+            PacketClass packet = new PacketClass(Opcodes.SMSG_PARTY_MEMBER_STATS_FULL);
             packet.AddPackGuid(guid);
             packet.AddUInt32((uint)PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS);
             packet.AddInt8((byte)PartyMemberStatsStatus.STATUS_OFFLINE);

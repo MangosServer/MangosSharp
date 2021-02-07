@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
-using System.Threading;
 using Mangos.World.Objects;
 using Mangos.World.Player;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Mangos.World.AI
 {
@@ -37,7 +37,7 @@ namespace Mangos.World.AI
                 base.OnEnterCombat();
                 foreach (KeyValuePair<WS_Base.BaseUnit, int> Unit in aiHateTable)
                 {
-                    if (!(Unit.Key is WS_PlayerData.CharacterObject))
+                    if (Unit.Key is not WS_PlayerData.CharacterObject)
                     {
                         continue;
                     }

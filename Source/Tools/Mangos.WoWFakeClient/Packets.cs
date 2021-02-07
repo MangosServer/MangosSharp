@@ -17,11 +17,11 @@
 //
 
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections;
 using System.Text;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.WoWFakeClient
 {
@@ -37,7 +37,7 @@ namespace Mangos.WoWFakeClient
                 buffer += string.Format("DEBUG: Packet Dump - Length={0}{1}", data.Length, Constants.vbCrLf);
                 if (data.Length % 16 == 0)
                 {
-                    var loopTo = data.Length - 1;
+                    int loopTo = data.Length - 1;
                     for (j = 0; j <= loopTo; j += 16)
                     {
                         buffer += "|  " + BitConverter.ToString(data, j, 16).Replace("-", " ");
@@ -46,7 +46,7 @@ namespace Mangos.WoWFakeClient
                 }
                 else
                 {
-                    var loopTo1 = data.Length - 1 - 16;
+                    int loopTo1 = data.Length - 1 - 16;
                     for (j = 0; j <= loopTo1; j += 16)
                     {
                         buffer += "|  " + BitConverter.ToString(data, j, 16).Replace("-", " ");
@@ -136,7 +136,7 @@ namespace Mangos.WoWFakeClient
                     Data[1] = (byte)((Data.Length - 2) % 256);
                 }
 
-                var bufferarray = new byte[(Conversions.ToByte((buffer.Length + 8) / 8d) + 1)];
+                byte[] bufferarray = new byte[(Conversions.ToByte((buffer.Length + 8) / 8d) + 1)];
                 buffer.CopyTo(bufferarray, 0);
                 Array.Copy(bufferarray, 0, Data, Data.Length - Len, Len);
             }
@@ -212,7 +212,7 @@ namespace Mangos.WoWFakeClient
                 }
                 else
                 {
-                    var Bytes = Encoding.UTF8.GetBytes(buffer.ToCharArray());
+                    byte[] Bytes = Encoding.UTF8.GetBytes(buffer.ToCharArray());
                     int Position = Data.Length;
                     if (EndZero)
                     {
@@ -240,7 +240,7 @@ namespace Mangos.WoWFakeClient
                     }
                     else
                     {
-                        var loopTo = Bytes.Length - 1;
+                        int loopTo = Bytes.Length - 1;
                         for (i = 0; i <= loopTo; i++)
                         {
                             Data[Position] = Bytes[i];
@@ -249,13 +249,15 @@ namespace Mangos.WoWFakeClient
                     }
 
                     if (EndZero)
+                    {
                         Data[Position] = 0;
+                    }
                 }
             }
 
             public void AddDouble(double buffer2)
             {
-                var buffer1 = BitConverter.GetBytes(buffer2);
+                byte[] buffer1 = BitConverter.GetBytes(buffer2);
                 Array.Resize(ref Data, Data.Length + buffer1.Length);
                 Buffer.BlockCopy(buffer1, 0, Data, Data.Length - buffer1.Length, buffer1.Length);
                 if (Realm == false)
@@ -267,7 +269,7 @@ namespace Mangos.WoWFakeClient
 
             public void AddSingle(float buffer2)
             {
-                var buffer1 = BitConverter.GetBytes(buffer2);
+                byte[] buffer1 = BitConverter.GetBytes(buffer2);
                 Array.Resize(ref Data, Data.Length + buffer1.Length);
                 Buffer.BlockCopy(buffer1, 0, Data, Data.Length - buffer1.Length, buffer1.Length);
                 if (Realm == false)
@@ -291,8 +293,8 @@ namespace Mangos.WoWFakeClient
 
             public void AddPackGUID(ulong buffer)
             {
-                var GUID = BitConverter.GetBytes(buffer);
-                var flags = new BitArray(8);
+                byte[] GUID = BitConverter.GetBytes(buffer);
+                BitArray flags = new BitArray(8);
                 int offsetStart = Data.Length;
                 int offsetNewSize = offsetStart;
                 byte i;
@@ -300,7 +302,9 @@ namespace Mangos.WoWFakeClient
                 {
                     flags[i] = GUID[i] != 0;
                     if (flags[i])
+                    {
                         offsetNewSize += 1;
+                    }
                 }
 
                 Array.Resize(ref Data, offsetNewSize + 1);
@@ -522,7 +526,7 @@ namespace Mangos.WoWFakeClient
             public ulong GetPackGUID()
             {
                 byte flags = Data[Offset];
-                var GUID = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+                byte[] GUID = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
                 Offset += 1;
                 if ((flags & 1) == 1)
                 {
@@ -578,7 +582,7 @@ namespace Mangos.WoWFakeClient
             public ulong GetPackGUID(int Offset)
             {
                 byte flags = Data[Offset];
-                var GUID = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+                byte[] GUID = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
                 Offset += 1;
                 if ((flags & 1) == 1)
                 {
@@ -633,8 +637,11 @@ namespace Mangos.WoWFakeClient
             public byte[] GetByteArray(int Length)
             {
                 if (Length < 0)
-                    return new byte[] { };
-                var tmpArray = new byte[Length];
+                {
+                    return Array.Empty<byte>();
+                }
+
+                byte[] tmpArray = new byte[Length];
                 Array.Copy(Data, Offset, tmpArray, 0, Length);
                 Offset += Length;
                 return tmpArray;

@@ -16,11 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
@@ -30,6 +25,11 @@ using Mangos.World.Handlers;
 using Mangos.World.Maps;
 using Mangos.World.Player;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
 
 namespace Mangos.World.Objects
 {
@@ -248,7 +248,7 @@ namespace Mangos.World.Objects
                                 int j2 = checked(n + LastStop) % PathPoints.Count;
                                 if (j2 >= 0)
                                 {
-                                    tmpDist = ((PathPoints[j2].ActionFlag != 2) ? (tmpDist + PathPoints[j2].DistFromPrev) : 0f);
+                                    tmpDist = (PathPoints[j2].ActionFlag != 2) ? (tmpDist + PathPoints[j2].DistFromPrev) : 0f;
                                     PathPoints[j2].DistSinceStop = tmpDist;
                                 }
                             }
@@ -258,7 +258,7 @@ namespace Mangos.World.Objects
                         {
                             unchecked
                             {
-                                int j2 = checked(m + (FirstStop + 1)) % PathPoints.Count;
+                                int j2 = checked(m + FirstStop + 1) % PathPoints.Count;
                                 tmpDist += PathPoints[checked(j2 + 1) % PathPoints.Count].DistFromPrev;
                                 PathPoints[j2].DistUntilStop = tmpDist;
                                 if (PathPoints[j2].ActionFlag == 2)
@@ -327,19 +327,19 @@ namespace Mangos.World.Objects
                                     }
                                     if (tFrom < tTo)
                                     {
-                                        d = ((!(tFrom <= 30000f)) ? (450f + 30f * ((tFrom - 30000f) / 1000f)) : (0.5f * (tFrom / 1000f) * (tFrom / 1000f)));
+                                        d = (!(tFrom <= 30000f)) ? (450f + (30f * ((tFrom - 30000f) / 1000f))) : (0.5f * (tFrom / 1000f) * (tFrom / 1000f));
                                         d -= PathPoints[k].DistSinceStop;
                                     }
                                     else
                                     {
-                                        d = ((!(tTo <= 30000f)) ? (450f + 30f * ((tTo - 30000f) / 1000f)) : (0.5f * (tTo / 1000f) * (tTo / 1000f)));
+                                        d = (!(tTo <= 30000f)) ? (450f + (30f * ((tTo - 30000f) / 1000f))) : (0.5f * (tTo / 1000f) * (tTo / 1000f));
                                         d = PathPoints[k].DistUntilStop - d;
                                     }
                                     t += 100;
                                 }
                                 t -= 100;
                             }
-                            t = ((!(PathPoints[k + 1].tFrom > PathPoints[k + 1].tTo)) ? ((int)(t + checked((long)PathPoints[k + 1].tTo) % 100)) : ((int)(t + (100 - checked((long)PathPoints[k + 1].tTo) % 100))));
+                            t = (!(PathPoints[k + 1].tFrom > PathPoints[k + 1].tTo)) ? ((int)(t + (((long)PathPoints[k + 1].tTo) % 100))) : ((int)(t + (100 - ((long)PathPoints[k + 1].tTo) % 100)));
                             teleport = false;
                             if (PathPoints[k + 1].ActionFlag == 1 || PathPoints[k + 1].MapID != PathPoints[k].MapID)
                             {
@@ -510,7 +510,7 @@ namespace Mangos.World.Objects
 
                         default:
                             {
-                                if (!(tmpUnit is WS_Creatures.CreatureObject))
+                                if (tmpUnit is not WS_Creatures.CreatureObject)
                                 {
                                     continue;
                                 }
@@ -608,7 +608,7 @@ namespace Mangos.World.Objects
                                     {
                                         WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[plGUID];
                                         WS_Base.BaseObject objCharacter = this;
-                                        num = (characterObject.CanSee(ref objCharacter) ? 1 : 0);
+                                        num = characterObject.CanSee(ref objCharacter) ? 1 : 0;
                                     }
                                     else
                                     {
@@ -650,7 +650,9 @@ namespace Mangos.World.Objects
                                                 SeenBy?.Add(plGUID);
                                             }
                                             else
+                                            {
                                                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, $"Failed to retrieve character {plGUID}");
+                                            }
                                         }
                                         catch (Exception ex)
                                         {
@@ -714,7 +716,7 @@ namespace Mangos.World.Objects
                                     }
 
                                 default:
-                                    if (!(tmpUnit is WS_Creatures.CreatureObject))
+                                    if (tmpUnit is not WS_Creatures.CreatureObject)
                                     {
                                     }
 

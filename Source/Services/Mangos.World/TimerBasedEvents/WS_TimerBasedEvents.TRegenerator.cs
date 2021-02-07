@@ -16,13 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
 using Mangos.World.Player;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Mangos.World.Server
 {
@@ -179,7 +179,7 @@ namespace Mangos.World.Server
                                 value.GroupUpdateFlag |= 16u;
                                 value.SetUpdateFlag(23, value.Mana.Current);
                             }
-                            if ((BaseRage != value.Rage.Current) | ((value.cUnitFlags & 0x80000) == 0x80000))
+                            if ((BaseRage != value.Rage.Current) || ((value.cUnitFlags & 0x80000) == 0x80000))
                             {
                                 _updateFlag = true;
                                 value.GroupUpdateFlag |= 16u;

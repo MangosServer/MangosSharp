@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 namespace Mangos.World.Scripts.Creatures
 {
@@ -56,7 +56,10 @@ namespace Mangos.World.Scripts.Creatures
         public override void OnEnterCombat()
         {
             if (Phase > 1)
+            {
                 return;
+            }
+
             base.OnEnterCombat();
             aiCreature.Flying = false;
             AllowedAttack = true;
@@ -89,7 +92,10 @@ namespace Mangos.World.Scripts.Creatures
         public override void OnThink()
         {
             if (Phase < 1)
+            {
                 return;
+            }
+
             if (Phase == 1)
             {
                 NextBerserk -= AI_UPDATE;
@@ -139,7 +145,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Self = aiCreature;
                 if (Self is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpellOnSelf(BERSERK_SPELL);
@@ -229,7 +238,9 @@ namespace Mangos.World.Scripts.Creatures
 
             CurrentWaypoint += 1;
             if (CurrentWaypoint > 11)
+            {
                 CurrentWaypoint = 3;
+            }
         }
     }
 }

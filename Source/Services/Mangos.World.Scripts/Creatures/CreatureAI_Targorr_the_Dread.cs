@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 namespace Mangos.World.Scripts.Creatures
 {
@@ -32,9 +32,9 @@ namespace Mangos.World.Scripts.Creatures
         private const int Spell_Frenzy = 8599;
         private const int Spell_Thrash = 3391;
         public int NextThrash;
-        public int NextWaypoint = 0;
-        public int NextAcid = 0;
-        public int CurrentWaypoint = 0;
+        public int NextWaypoint;
+        public int NextAcid;
+        public int CurrentWaypoint;
 
         public CreatureAI_Targorr_the_Dread(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
@@ -59,7 +59,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpellOnSelf(Spell_Thrash);

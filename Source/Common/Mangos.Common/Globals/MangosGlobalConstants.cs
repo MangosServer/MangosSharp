@@ -16,8 +16,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Global;
+using System;
 
 namespace Mangos.Common.Globals
 {
@@ -33,8 +33,8 @@ namespace Mangos.Common.Globals
         }
 
         public readonly int RevisionDbCharactersVersion = 21;
-        public readonly int RevisionDbCharactersStructure = 0;
-        public readonly int RevisionDbCharactersContent = 0;
+        public readonly int RevisionDbCharactersStructure;
+        public readonly int RevisionDbCharactersContent;
         public readonly int RevisionDbMangosVersion = 21;
         public readonly int RevisionDbMangosStructure = 7;
         public readonly int RevisionDbMangosContent = 77;
@@ -46,7 +46,7 @@ namespace Mangos.Common.Globals
         public readonly int GROUP_RAIDSIZE = 40;     // Max Raid Size
         public readonly ulong GUID_ITEM = 0x4000000000000000UL;
         public readonly ulong GUID_CONTAINER = 0x4000000000000000UL;
-        public readonly ulong GUID_PLAYER = 0x0UL;
+        public readonly ulong GUID_PLAYER;
         public readonly ulong GUID_GAMEOBJECT = 0xF110000000000000UL;
         public readonly ulong GUID_TRANSPORT = 0xF120000000000000UL;
         public readonly ulong GUID_UNIT = 0xF130000000000000UL;
@@ -173,7 +173,7 @@ namespace Mangos.Common.Globals
         public readonly int MAX_POSITIVE_AURA_EFFECTs = 32;
         public readonly int MAX_NEGATIVE_AURA_EFFECTs;
         public readonly uint UINT32_MAX = 0xFFFFFFFF;
-        public readonly int UINT32_MIN = 0;
+        public readonly int UINT32_MIN;
         public readonly long MpqId = 441536589L;
         public readonly long MpqHeaderSize = 32L;
     }

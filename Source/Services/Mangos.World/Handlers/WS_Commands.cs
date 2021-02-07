@@ -16,15 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
@@ -40,6 +31,15 @@ using Mangos.World.Player;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
 
 namespace Mangos.World.Handlers
 {
@@ -430,6 +430,29 @@ namespace Mangos.World.Handlers
             return true;
         }
 
+        [ChatCommand("notifymessage", "notify #message - Send text message to all players on the server.")]
+        public bool cmdNotificationMessage(ref WS_PlayerData.CharacterObject objCharacter, string Text)
+        {
+            if (Operators.CompareString(Text, "", TextCompare: false) == 0)
+            {
+                return false;
+            }
+            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_NOTIFICATION);
+            packet.AddString(Text);
+            packet.UpdateLength();
+            WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
+            packet.Dispose();
+            return true;
+        }
+
+        [ChatCommand("nullchar", " - Set's Character Object to Null, forcing an NullReferenceException to throw on actions peformed after issuing this command.", AccessLevel.Developer)]
+        public bool cmdNullChar(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        {
+            Thread.Sleep(5000);
+            objCharacter = null;
+            return true;
+        }
+
         [ChatCommand("servermessage", "servermessage #type #text - Send text message to all players on the server.")]
         public bool cmdServerMessage(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
@@ -442,21 +465,6 @@ namespace Mangos.World.Handlers
             string Text = tmp[1];
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SERVER_MESSAGE);
             packet.AddInt32(Type);
-            packet.AddString(Text);
-            packet.UpdateLength();
-            WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
-            packet.Dispose();
-            return true;
-        }
-
-        [ChatCommand("notifymessage", "notify #message - Send text message to all players on the server.")]
-        public bool cmdNotificationMessage(ref WS_PlayerData.CharacterObject objCharacter, string Text)
-        {
-            if (Operators.CompareString(Text, "", TextCompare: false) == 0)
-            {
-                return false;
-            }
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_NOTIFICATION);
             packet.AddString(Text);
             packet.UpdateLength();
             WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
@@ -603,8 +611,8 @@ namespace Mangos.World.Handlers
         [ChatCommand("combatlist", "combatlist - Lists everyone in your targets combatlist.", AccessLevel.Developer)]
         public bool cmdCombatList(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            ulong[] combatList = new ulong[0];
-            combatList = ((decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0 || !WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID)) ? objCharacter.inCombatWith.ToArray() : WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].inCombatWith.ToArray());
+            ulong[] combatList = Array.Empty<ulong>();
+            combatList = (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0 || !WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID)) ? objCharacter.inCombatWith.ToArray() : WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].inCombatWith.ToArray();
             objCharacter.CommandResponse("Combat List (" + Conversions.ToString(combatList.Length) + "):");
             ulong[] array = combatList;
             foreach (ulong Guid in array)
@@ -894,7 +902,7 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            if (!int.TryParse(tID, out var ID) || ID < 0)
+            if (!int.TryParse(tID, out int ID) || ID < 0)
             {
                 return false;
             }
@@ -1255,7 +1263,7 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            if (instanceID < 0 || instanceID > 400000)
+            if (instanceID is < 0 or > 400000)
             {
                 return false;
             }
@@ -1833,11 +1841,11 @@ namespace Mangos.World.Handlers
                 return false;
             }
             string aName = acct[0];
-            if (!byte.TryParse(acct[1], out var aLevel))
+            if (!byte.TryParse(acct[1], out byte aLevel))
             {
                 return false;
             }
-            if (aLevel < 0u || aLevel > 3u)
+            if (aLevel is < 0 or > 3)
             {
                 objCharacter.CommandResponse($"Not a valid access level. Must be in the range {0}-{3}.");
                 return true;

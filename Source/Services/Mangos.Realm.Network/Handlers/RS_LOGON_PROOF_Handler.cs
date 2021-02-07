@@ -41,7 +41,7 @@ namespace Mangos.Realm.Network.Handlers
         public RS_LOGON_PROOF_Handler(
             ILogger logger,
             IAccountStorage accountStorage,
-            AUTH_LOGON_PROOF_Writer AUTH_LOGON_PROOF_Writer, 
+            AUTH_LOGON_PROOF_Writer AUTH_LOGON_PROOF_Writer,
             RS_LOGON_PROOF_Reader RS_LOGON_PROOF_Reader)
         {
             this.logger = logger;
@@ -52,7 +52,7 @@ namespace Mangos.Realm.Network.Handlers
 
         public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, Client clientModel)
         {
-            var request = await RS_LOGON_PROOF_Reader.ReadAsync(reader);
+            Requests.RS_LOGON_PROOF request = await RS_LOGON_PROOF_Reader.ReadAsync(reader);
 
             // Calculate U and M1
             clientModel.AuthEngine.CalculateU(request.A);
@@ -71,15 +71,15 @@ namespace Mangos.Realm.Network.Handlers
                 clientModel.AuthEngine.CalculateM2(request.M1);
 
                 await AUTH_LOGON_PROOF_Writer.WriteAsync(writer, new AUTH_LOGON_PROOF(
-                    AccountState.LOGIN_OK, 
+                    AccountState.LOGIN_OK,
                     clientModel.AuthEngine.M2));
 
                 // Set SSHash in DB
-                var sshash = string.Concat(clientModel.AuthEngine.SsHash.Select(x => x.ToString("X2")));
+                string sshash = string.Concat(clientModel.AuthEngine.SsHash.Select(x => x.ToString("X2")));
 
                 await accountStorage.UpdateAccountAsync(sshash,
-                    clientModel.RemoteEnpoint.Address.ToString(), 
-                    Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), 
+                    clientModel.RemoteEnpoint.Address.ToString(),
+                    Strings.Format(DateAndTime.Now, "yyyy-MM-dd"),
                     clientModel.AccountName);
 
                 logger.Debug("Auth success for user {0} [{1}]", clientModel.AccountName, sshash);

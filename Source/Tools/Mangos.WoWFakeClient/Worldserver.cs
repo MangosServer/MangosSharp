@@ -16,6 +16,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,28 +24,27 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Microsoft.VisualBasic;
 
 namespace Mangos.WoWFakeClient
 {
     public static class Worldserver
     {
-        private readonly static Socket Connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+        private static readonly Socket Connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
         private static IPAddress ConnIP;
         private static int ConnPort;
         public static Queue Queue = new Queue();
         private static Timer PingTimer;
         public static int PingSent;
         public static uint CurrentPing;
-        public static int CurrentLatency = 0;
+        public static int CurrentLatency;
         public static Dictionary<OPCODES, HandlePacket> PacketHandlers = new Dictionary<OPCODES, HandlePacket>();
 
         public delegate void HandlePacket(ref Packets.PacketClass Packet);
 
-        public static uint ClientSeed = 0U;
-        public static uint ServerSeed = 0U;
+        public static uint ClientSeed;
+        public static uint ServerSeed;
         public static byte[] Key = new byte[4];
-        public static ulong CharacterGUID = 0UL;
+        public static ulong CharacterGUID;
         public static bool Encoding;
         public static bool Decoding;
 
@@ -113,7 +113,9 @@ namespace Mangos.WoWFakeClient
                         while (bytes > 0)
                         {
                             if (Decoding)
+                            {
                                 Decode(ref Buffer);
+                            }
 
                             // Calculate Length from packet
                             int PacketLen = Buffer[1] + Buffer[0] * 256 + 2;
@@ -124,11 +126,14 @@ namespace Mangos.WoWFakeClient
                             }
 
                             // Move packet to Data
-                            var data = new byte[PacketLen];
+                            byte[] data = new byte[PacketLen];
                             Array.Copy(Buffer, data, PacketLen);
-                            var Packet = new Packets.PacketClass(ref data);
+                            Packets.PacketClass Packet = new Packets.PacketClass(ref data);
                             lock (Queue.SyncRoot)
+                            {
                                 Queue.Enqueue(Packet);
+                            }
+
                             bytes -= PacketLen;
                             Array.Copy(Buffer, PacketLen, Buffer, 0, bytes);
                         }
@@ -137,18 +142,25 @@ namespace Mangos.WoWFakeClient
                     }
 
                     if (!Connection.Connected)
+                    {
                         break;
+                    }
+
                     if (Connection.Poll(100, SelectMode.SelectRead) & Connection.Available == 0)
+                    {
                         break;
+                    }
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("ProcessServerConnection has thrown an Exception! The exception is {0}", e);
             }
 
             Connection.Close();
             Console.WriteLine("[{0}][World] Disconnected.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
-            oThread.Abort();
+            oThread.Interrupt();
         }
 
         public static void Disconnect()
@@ -178,10 +190,13 @@ namespace Mangos.WoWFakeClient
             try
             {
                 if (CurrentPing == uint.MaxValue)
+                {
                     CurrentPing = 0U;
+                }
+
                 CurrentPing = (uint)(CurrentPing + 1L);
                 PingSent = timeGetTime();
-                var Ping = new Packets.PacketClass(OPCODES.CMSG_PING);
+                Packets.PacketClass Ping = new Packets.PacketClass(OPCODES.CMSG_PING);
                 Ping.AddUInt32(CurrentPing);
                 Ping.AddInt32(CurrentLatency);
                 Send(Ping);
@@ -199,7 +214,10 @@ namespace Mangos.WoWFakeClient
             while (Queue.Count > 0)
             {
                 lock (Queue.SyncRoot)
+                {
                     Packet = (Packets.PacketClass)Queue.Dequeue();
+                }
+
                 if (PacketHandlers.ContainsKey((OPCODES)Packet.OpCode))
                 {
                     try
@@ -219,7 +237,10 @@ namespace Mangos.WoWFakeClient
         public static void Send(Packets.PacketClass Packet)
         {
             if (Encoding)
+            {
                 Encode(ref Packet.Data);
+            }
+
             int i = Connection.Send(Packet.Data, 0, Packet.Data.Length, SocketFlags.None);
         }
 

@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.IO;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.IO;
 
 namespace Mangos.WardenExtractor
 {
@@ -36,25 +36,28 @@ namespace Mangos.WardenExtractor
                 return;
             }
 
-            var fs = new FileStream(sWDB, FileMode.Open, FileAccess.Read, FileShare.Read);
-            var br = new BinaryReader(fs);
+            FileStream fs = new FileStream(sWDB, FileMode.Open, FileAccess.Read, FileShare.Read);
+            BinaryReader br = new BinaryReader(fs);
             string Header = Conversions.ToString(br.ReadChars(4));
             uint Version = br.ReadUInt32();
             string Lang = Program.Reverse(Conversions.ToString(br.ReadChars(4)));
-            var Unk = br.ReadBytes(8);
+            byte[] Unk = br.ReadBytes(8);
             Console.ForegroundColor = ConsoleColor.White;
             Directory.CreateDirectory("Modules");
             while (fs.Position + 20L <= fs.Length)
             {
-                var argbBytes = br.ReadBytes(16);
+                byte[] argbBytes = br.ReadBytes(16);
                 string ModName = Program.ToHex(ref argbBytes);
                 int DataLen = br.ReadInt32();
                 if (DataLen == 0)
+                {
                     continue;
+                }
+
                 int ModLen = br.ReadInt32();
-                var ModData = new byte[ModLen];
+                byte[] ModData = new byte[ModLen];
                 br.Read(ModData, 0, ModLen);
-                var fs2 = new FileStream(@"Modules\" + ModName + ".mod", FileMode.Create, FileAccess.Write, FileShare.None);
+                FileStream fs2 = new FileStream(@"Modules\" + ModName + ".mod", FileMode.Create, FileAccess.Write, FileShare.None);
                 fs2.Write(ModData, 0, ModLen);
                 fs2.Close();
                 fs2.Dispose();
@@ -76,10 +79,10 @@ namespace Mangos.WardenExtractor
                 return;
             }
 
-            var fs = new FileStream(sWDB, FileMode.Open, FileAccess.Read, FileShare.Read);
-            var br = new BinaryReader(fs);
-            var ms = new MemoryStream();
-            var bw = new BinaryWriter(ms);
+            FileStream fs = new FileStream(sWDB, FileMode.Open, FileAccess.Read, FileShare.Read);
+            BinaryReader br = new BinaryReader(fs);
+            MemoryStream ms = new MemoryStream();
+            BinaryWriter bw = new BinaryWriter(ms);
             string Header = Conversions.ToString(br.ReadChars(4));
             uint Version = br.ReadUInt32();
             string Lang = Program.Reverse(Conversions.ToString(br.ReadChars(4)));
@@ -101,7 +104,7 @@ namespace Mangos.WardenExtractor
             bw.Write(1); // Count of modules?
             while (fs.Position + 20L <= fs.Length)
             {
-                var byteName = br.ReadBytes(16);
+                byte[] byteName = br.ReadBytes(16);
                 string ModName = Program.ToHex(ref byteName);
                 int DataLen = br.ReadInt32();
                 bw.Write(byteName, 0, byteName.Length);
@@ -113,7 +116,7 @@ namespace Mangos.WardenExtractor
 
                 int ModLen = br.ReadInt32();
                 bw.Write(ModLen);
-                var ModData = new byte[ModLen];
+                byte[] ModData = new byte[ModLen];
                 br.Read(ModData, 0, ModLen);
                 bw.Write(ModData, 0, ModLen);
                 Console.WriteLine("Module: {0} [{1} bytes]", ModName, ModLen);
@@ -121,8 +124,8 @@ namespace Mangos.WardenExtractor
 
             fs.Close();
             fs.Dispose();
-            var fs2 = new FileStream(sWDB.Replace(Path.GetExtension(sWDB), "") + ".new.wdb", FileMode.Create, FileAccess.Write, FileShare.Read);
-            var newFile = ms.ToArray();
+            FileStream fs2 = new FileStream(sWDB.Replace(Path.GetExtension(sWDB), "") + ".new.wdb", FileMode.Create, FileAccess.Write, FileShare.Read);
+            byte[] newFile = ms.ToArray();
             fs2.Write(newFile, 0, newFile.Length);
             fs2.Close();
             fs2.Dispose();

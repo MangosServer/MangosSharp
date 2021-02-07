@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Threading.Tasks;
 using Mangos.Common.Enums.Global;
 using Microsoft.VisualBasic;
+using System;
+using System.Threading.Tasks;
 
 namespace Mangos.Cluster.DataStores
 {
@@ -34,7 +34,7 @@ namespace Mangos.Cluster.DataStores
 
         public async Task InitializeInternalDatabaseAsync()
         {
-            await InitializeLoadDataStoresAsync();
+            await InitializeLoadDataStoresAsync().ConfigureAwait(false);
             try
             {
                 // Set all characters offline

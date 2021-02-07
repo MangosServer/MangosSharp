@@ -34,8 +34,8 @@ namespace Mangos.Configuration.Xml
                 throw new Exception("Configuration has already been loaded");
             }
 
-            using var streamReader = new StreamReader(filePath);
-            var xmlSerializer = new XmlSerializer(typeof(T));
+            using StreamReader streamReader = new StreamReader(filePath);
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
             configuration = (T)xmlSerializer.Deserialize(streamReader);
         }
 

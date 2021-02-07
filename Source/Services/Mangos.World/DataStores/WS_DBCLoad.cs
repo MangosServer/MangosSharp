@@ -16,12 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Threading.Tasks;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Spell;
 using Mangos.Common.Legacy;
@@ -31,6 +25,12 @@ using Mangos.World.Maps;
 using Mangos.World.Spells;
 using Mangos.World.Weather;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Mangos.World.DataStores
 {
@@ -49,7 +49,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellRadius.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellRadius.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -76,7 +76,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellCastTimes.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellCastTimes.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -103,7 +103,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellRange.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellRange.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -130,7 +130,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellShapeshiftForm.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellShapeshiftForm.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -159,7 +159,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellFocusObject.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellFocusObject.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -186,7 +186,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellDuration.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("SpellDuration.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -213,7 +213,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var spellDBC = await dataStoreProvider.GetDataStoreAsync("Spell.dbc");
+                    DataStore spellDBC = await dataStoreProvider.GetDataStoreAsync("Spell.dbc");
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: Initializing Spells - This may take a few moments....");
                     for (int i = 0; i <= spellDBC.Rows - 1; i++)
                     {
@@ -341,7 +341,10 @@ namespace Mangos.World.DataStores
                             do
                             {
                                 if (WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects[j] != null)
+                                {
                                     WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects[j].DamageMultiplier = spellDBC.ReadFloat(i, 167 + j);
+                                }
+
                                 j++;
                             }
                             while (j <= 2);
@@ -409,7 +412,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("TaxiNodes.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("TaxiNodes.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -422,7 +425,9 @@ namespace Mangos.World.DataStores
                         int taxiMountTypeAlliance = tmpDBC.ReadInt(i, 15);
 
                         if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Contains(taxiMapID.ToString()))
+                        {
                             WorldServiceLocator._WS_DBCDatabase.TaxiNodes.Add(taxiNode, new WS_DBCDatabase.TTaxiNode(taxiPosX, taxiPosY, taxiPosZ, taxiMapID, taxiMountTypeHorde, taxiMountTypeAlliance));
+                        }
                     }
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} TaxiNodes initialized.", tmpDBC.Rows - 1);
                 }
@@ -443,7 +448,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("TaxiPath.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("TaxiPath.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -472,7 +477,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("TaxiPathNode.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("TaxiPathNode.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -512,7 +517,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SkillLine.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("SkillLine.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -539,7 +544,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("SkillLineAbility.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("SkillLineAbility.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -579,7 +584,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("Lock.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("Lock.dbc");
                     byte[] keyType = new byte[5];
                     int[] key = new int[5];
                     int num = tmpDBC.Rows - 1;
@@ -619,7 +624,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("AreaTable.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("AreaTable.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -631,9 +636,14 @@ namespace Mangos.World.DataStores
                         int areaLevel = tmpDBC.ReadInt(i, 10);
 
                         if (areaLevel > 255)
+                        {
                             areaLevel = 255;
+                        }
+
                         if (areaLevel < 0)
+                        {
                             areaLevel = 0;
+                        }
 
                         WorldServiceLocator._WS_Maps.AreaTable[areaExploreFlag] = new WS_Maps.TArea
                         {
@@ -663,7 +673,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("Emotes.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("Emotes.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -671,7 +681,9 @@ namespace Mangos.World.DataStores
                         int emoteState = tmpDBC.ReadInt(i, 4);
 
                         if (emoteID != 0)
+                        {
                             WorldServiceLocator._WS_DBCDatabase.EmotesState[emoteID] = emoteState;
+                        }
                     }
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Emotes initialized.", tmpDBC.Rows - 1);
                 }
@@ -692,7 +704,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("EmotesText.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("EmotesText.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -700,7 +712,9 @@ namespace Mangos.World.DataStores
                         int emoteID = tmpDBC.ReadInt(i, 2);
 
                         if (emoteID != 0)
+                        {
                             WorldServiceLocator._WS_DBCDatabase.EmotesText[textEmoteID] = emoteID;
+                        }
                     }
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} EmotesText initialized.", tmpDBC.Rows - 1);
                 }
@@ -721,7 +735,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("Faction.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("Faction.dbc");
                     int[] flags = new int[4];
                     int[] reputationStats = new int[4];
                     int[] reputationFlags = new int[4];
@@ -763,7 +777,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("FactionTemplate.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("FactionTemplate.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -801,7 +815,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("ChrRaces.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("ChrRaces.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -834,7 +848,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("ChrClasses.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("ChrClasses.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -861,7 +875,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var tmpDBC = await dataStoreProvider.GetDataStoreAsync("DurabilityCosts.dbc");
+                    DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("DurabilityCosts.dbc");
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -892,7 +906,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var dbc = await dataStoreProvider.GetDataStoreAsync("Talent.dbc");
+                    DataStore dbc = await dataStoreProvider.GetDataStoreAsync("Talent.dbc");
                     int num = dbc.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -931,7 +945,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var dbc = await dataStoreProvider.GetDataStoreAsync("TalentTab.dbc");
+                    DataStore dbc = await dataStoreProvider.GetDataStoreAsync("TalentTab.dbc");
                     int num = dbc.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -958,7 +972,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var dbc = await dataStoreProvider.GetDataStoreAsync("AuctionHouse.dbc");
+                    DataStore dbc = await dataStoreProvider.GetDataStoreAsync("AuctionHouse.dbc");
                     int num = dbc.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -988,7 +1002,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var dbc = await dataStoreProvider.GetDataStoreAsync("SpellItemEnchantment.dbc");
+                    DataStore dbc = await dataStoreProvider.GetDataStoreAsync("SpellItemEnchantment.dbc");
                     int[] type = new int[3];
                     int[] amount = new int[3];
                     int[] spellID = new int[3];
@@ -1025,7 +1039,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var dbc = await dataStoreProvider.GetDataStoreAsync("ItemSet.dbc");
+                    DataStore dbc = await dataStoreProvider.GetDataStoreAsync("ItemSet.dbc");
                     int[] itemID = new int[8];
                     int[] spellID = new int[8];
                     int[] itemCount = new int[8];
@@ -1065,7 +1079,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var dbc = await dataStoreProvider.GetDataStoreAsync("ItemDisplayInfo.dbc");
+                    DataStore dbc = await dataStoreProvider.GetDataStoreAsync("ItemDisplayInfo.dbc");
                     int num = dbc.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -1096,7 +1110,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var dbc = await dataStoreProvider.GetDataStoreAsync("ItemRandomProperties.dbc");
+                    DataStore dbc = await dataStoreProvider.GetDataStoreAsync("ItemRandomProperties.dbc");
                     int num = dbc.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
@@ -1167,7 +1181,7 @@ namespace Mangos.World.DataStores
             {
                 try
                 {
-                    var dbc = await dataStoreProvider.GetDataStoreAsync("CreatureFamily.dbc");
+                    DataStore dbc = await dataStoreProvider.GetDataStoreAsync("CreatureFamily.dbc");
                     int num = dbc.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {

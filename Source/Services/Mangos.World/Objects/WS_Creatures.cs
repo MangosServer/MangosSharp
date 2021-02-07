@@ -16,13 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.Global;
@@ -42,6 +35,13 @@ using Mangos.World.Quests;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading;
 
 namespace Mangos.World.Objects
 {
@@ -432,7 +432,7 @@ namespace Mangos.World.Objects
                     int timeDiff = checked(WorldServiceLocator._NativeMethods.timeGetTime("") - LastMove);
                     if ((Forced || aiScript.IsMoving()) && LastMove > 0 && timeDiff < LastMove_Time)
                     {
-                        float distance = ((aiScript.State != AIState.AI_MOVING && aiScript.State != AIState.AI_WANDERING) ? (timeDiff / 1000f * (CreatureInfo.RunSpeed * SpeedMod)) : (timeDiff / 1000f * (CreatureInfo.WalkSpeed * SpeedMod)));
+                        float distance = (aiScript.State is not AIState.AI_MOVING and not AIState.AI_WANDERING) ? (timeDiff / 1000f * (CreatureInfo.RunSpeed * SpeedMod)) : (timeDiff / 1000f * (CreatureInfo.WalkSpeed * SpeedMod));
                         positionX = (float)(OldX + Math.Cos(orientation) * distance);
                         positionY = (float)(OldY + Math.Sin(orientation) * distance);
                         positionZ = WorldServiceLocator._WS_Maps.GetZCoord(positionX, positionY, positionZ, MapID);
@@ -1066,12 +1066,12 @@ namespace Mangos.World.Objects
                     }
                     XP = (int)Math.Round(XP / (double)Character.Group.GetMembersCount());
                     int membersCount = Character.Group.GetMembersCount();
-                    XP = ((membersCount <= 2) ? (XP * 1) : (membersCount switch
+                    XP = (membersCount <= 2) ? (XP * 1) : (membersCount switch
                     {
                         3 => (int)Math.Round(XP * 1.166),
                         4 => (int)Math.Round(XP * 1.3),
                         _ => (int)Math.Round(XP * 1.4),
-                    }));
+                    });
                     int baseLvl = 0;
                     foreach (ulong Member2 in Character.Group.LocalMembers)
                     {
@@ -1821,20 +1821,28 @@ namespace Mangos.World.Objects
 
             public void RemoveFromWorld()
             {
-                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
-                WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID);
-                ulong[] array = SeenBy.ToArray();
-                foreach (ulong plGUID in array)
+                try
                 {
-                    if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID))
+                    WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                    WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID);
+                    ulong[] array = SeenBy.ToArray();
+                    foreach (ulong plGUID in array)
                     {
-                        WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                        WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                        WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
-                        WorldServiceLocator._WorldServer.CHARACTERs[plGUID].creaturesNear.Remove(GUID);
+                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID) && plGUID != 0)
+                        {
+                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
+                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                            WorldServiceLocator._WorldServer.CHARACTERs[plGUID].creaturesNear.Remove(GUID);
+                        }
                     }
+                    SeenBy.Clear();
                 }
-                SeenBy.Clear();
+                catch (Exception ex)
+                {
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WS_Creatures:RemoveFromWorld - Unable to remove creatue from world, Remove again  {0}", ex.Message);
+                    WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID);
+                }
             }
 
             public void MoveCell()
@@ -2081,7 +2089,7 @@ namespace Mangos.World.Objects
                 ulong CreatureGUID = packet.GetUInt64();
                 try
                 {
-                    if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(CreatureID))
+                    if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(CreatureID) && CreatureID != 0 && CreatureGUID != 0)
                     {
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CREATURE_QUERY [Creature {2} not loaded.]", client.IP, client.Port, CreatureID);
                         response.AddUInt32((uint)(CreatureID | int.MinValue));

@@ -16,12 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Text;
 using Mangos.Common.Globals;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Text;
 
 namespace Mangos.World.Globals
 {
@@ -307,7 +307,7 @@ namespace Mangos.World.Globals
             {
                 checked
                 {
-                    if (!((Data[0] != 0) | (Data[1] != 0)))
+                    if (!((Data[0] != 0) || (Data[1] != 0)))
                     {
                         Data[0] = (byte)(checked(Data.Length - 2) / 256);
                         Data[1] = (byte)(checked(Data.Length - 2) % 256);
@@ -477,7 +477,7 @@ namespace Mangos.World.Globals
                 int lengthLoc = checked(Data.Length - Offset);
                 if (lengthLoc <= 0)
                 {
-                    return new byte[0];
+                    return Array.Empty<byte>();
                 }
                 return GetByteArray(lengthLoc);
             }
@@ -492,7 +492,7 @@ namespace Mangos.World.Globals
                     }
                     if (lengthLoc <= 0)
                     {
-                        return new byte[0];
+                        return Array.Empty<byte>();
                     }
                     byte[] tmpBytes = new byte[lengthLoc - 1 + 1];
                     Array.Copy(Data, Offset, tmpBytes, 0, tmpBytes.Length);

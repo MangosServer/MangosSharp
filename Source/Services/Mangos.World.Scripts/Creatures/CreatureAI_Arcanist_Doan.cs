@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 namespace Mangos.World.Scripts.Creatures
 {
@@ -43,9 +43,9 @@ namespace Mangos.World.Scripts.Creatures
         public int NextArcaneBubble; // Again, this should never be reused.
         public int NextPolymorph;
         public int NextSilence;
-        public int NextWaypoint = 0;
-        public int NextAcid = 0;
-        public int CurrentWaypoint = 0;
+        public int NextWaypoint;
+        public int NextAcid;
+        public int CurrentWaypoint;
         // Public NextExplosion As Integer = 0
 
         public CreatureAI_Arcanist_Doan(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
@@ -98,9 +98,12 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 1; i <= 2; i++)
             {
-                var target = aiCreature.GetRandomTarget(); // Finally learned how random target functions work.
+                WS_Base.BaseUnit target = aiCreature.GetRandomTarget(); // Finally learned how random target functions work.
                 if (target is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(SPELL_POLYMORPH, aiCreature.GetRandomTarget()); // Might not properly work.
@@ -116,9 +119,12 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 2; i <= 2; i++)
             {
-                var target = aiCreature.GetRandomTarget();
+                WS_Base.BaseUnit target = aiCreature.GetRandomTarget();
                 if (target is null)
+                {
                     return;
+                }
+
                 try
                 {
                     aiCreature.CastSpell(SPELL_SILENCE, aiCreature.GetRandomTarget());

@@ -16,8 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
@@ -27,6 +25,8 @@ using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
 
 namespace Mangos.World.AI
 {
@@ -594,11 +594,11 @@ namespace Mangos.World.AI
                     }
                     destDist *= 0.5f;
                     float NearX = aiTarget.positionX;
-                    NearX = ((!(aiTarget.positionX > aiCreature.positionX)) ? (NearX + destDist) : (NearX - destDist));
+                    NearX = (!(aiTarget.positionX > aiCreature.positionX)) ? (NearX + destDist) : (NearX - destDist);
                     float NearY = aiTarget.positionY;
-                    NearY = ((!(aiTarget.positionY > aiCreature.positionY)) ? (NearY + destDist) : (NearY - destDist));
+                    NearY = (!(aiTarget.positionY > aiCreature.positionY)) ? (NearY + destDist) : (NearY - destDist);
                     float NearZ = WorldServiceLocator._WS_Maps.GetZCoord(NearX, NearY, aiCreature.positionZ, aiCreature.MapID);
-                    if ((NearZ > aiTarget.positionZ + 2f) | (NearZ < aiTarget.positionZ - 2f))
+                    if ((NearZ > aiTarget.positionZ + 2f) || (NearZ < aiTarget.positionZ - 2f))
                     {
                         NearZ = aiTarget.positionZ;
                     }
@@ -639,7 +639,7 @@ namespace Mangos.World.AI
 
             protected void DoMoveReset()
             {
-                float distance = ((!ResetRun) ? ((float)(3.0 * aiCreature.CreatureInfo.WalkSpeed)) : ((float)(3.0 * aiCreature.CreatureInfo.RunSpeed)));
+                float distance = (!ResetRun) ? ((float)(3.0 * aiCreature.CreatureInfo.WalkSpeed)) : ((float)(3.0 * aiCreature.CreatureInfo.RunSpeed));
                 aiCreature.SetToRealPosition(Forced: true);
                 float angle = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, ResetX, aiCreature.positionY, ResetY);
                 aiCreature.orientation = angle;

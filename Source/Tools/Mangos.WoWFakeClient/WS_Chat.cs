@@ -74,11 +74,11 @@ namespace Mangos.WoWFakeClient
 
         public static void SendChatMessage(string Message)
         {
-            var target = new Packets.PacketClass(OPCODES.CMSG_SET_SELECTION);
+            Packets.PacketClass target = new Packets.PacketClass(OPCODES.CMSG_SET_SELECTION);
             target.AddUInt64(Worldserver.CharacterGUID);
             Worldserver.Send(target);
             target.Dispose();
-            var packet = new Packets.PacketClass(OPCODES.CMSG_MESSAGECHAT);
+            Packets.PacketClass packet = new Packets.PacketClass(OPCODES.CMSG_MESSAGECHAT);
             packet.AddInt32((int)ChatMsg.CHAT_MSG_WHISPER); // Whisper
             packet.AddInt32((int)LANGUAGES.LANG_GLOBAL); // Global
             packet.AddString("Warden");

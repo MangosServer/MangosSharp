@@ -16,9 +16,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.IO;
 using Mangos.Common.Enums.Warden;
 using Microsoft.VisualBasic.CompilerServices;
+using System.IO;
 
 namespace Mangos.World.Warden
 {
@@ -45,7 +45,7 @@ namespace Mangos.World.Warden
                 Str = "";
                 Str2 = "";
                 Addr = 0;
-                Hash = new byte[0];
+                Hash = System.Array.Empty<byte>();
                 Seed = 0;
                 Length = 0;
                 Type = Type_;

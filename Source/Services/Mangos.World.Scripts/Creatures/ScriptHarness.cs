@@ -19,7 +19,7 @@
 
 namespace Mangos.World.Scripts.Creatures
 {
-    static class ScriptHarness
+    internal static class ScriptHarness
     {
         public static void Main()
         {

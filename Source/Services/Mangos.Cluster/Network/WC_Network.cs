@@ -16,9 +16,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.Cluster.Network
 {
@@ -33,7 +33,7 @@ namespace Mangos.Cluster.Network
 
         public WorldServerClass WorldServer => _clusterServiceLocator.WorldServerClass;
 
-        private readonly int _lastPing = 0;
+        private readonly int _lastPing;
 
         public int MsTime()
         {
@@ -46,10 +46,13 @@ namespace Mangos.Cluster.Network
         public uint Ip2Int(string ip)
         {
             if (ip.Split(".").Length != 4)
+            {
                 return 0U;
+            }
+
             try
             {
-                var ipBytes = new byte[4];
+                byte[] ipBytes = new byte[4];
                 ipBytes[0] = Conversions.ToByte(ip.Split(".")[3]);
                 ipBytes[1] = Conversions.ToByte(ip.Split(".")[2]);
                 ipBytes[2] = Conversions.ToByte(ip.Split(".")[1]);

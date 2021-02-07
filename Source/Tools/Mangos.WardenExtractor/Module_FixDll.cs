@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.WardenExtractor
 {
@@ -30,11 +30,11 @@ namespace Mangos.WardenExtractor
         /* TODO ERROR: Skipped RegionDirectiveTrivia */    // http://www.openrce.org/reference_library/files/reference/PE%20Format.pdf
         public static void FixNormalDll(ref byte[] Data)
         {
-            var ms = new MemoryStream();
-            var bw = new BinaryWriter(ms);
-            var ms2 = new MemoryStream(Data);
-            var br = new BinaryReader(ms2);
-            var Sections = new List<Section>();
+            MemoryStream ms = new MemoryStream();
+            BinaryWriter bw = new BinaryWriter(ms);
+            MemoryStream ms2 = new MemoryStream(Data);
+            BinaryReader br = new BinaryReader(ms2);
+            List<Section> Sections = new List<Section>();
             int CurrentPosition = 0x400;
             int ImportAddress = br.ReadInt32();
             int ImportUnk = br.ReadInt32();
@@ -79,7 +79,7 @@ namespace Mangos.WardenExtractor
                 }
 
                 long tmpPos = br.BaseStream.Position;
-                var newSection = new Section
+                Section newSection = new Section
                 {
                     Name = name,
                     Address = virtualaddress,
@@ -118,49 +118,51 @@ namespace Mangos.WardenExtractor
             br = null;
 
             // TODO: Other headers!
-            var ExportSection = new Section
+            Section ExportSection = new Section
             {
                 Name = ".edata",
                 Address = ExportAddress,
                 Characteristics = 0x40000040,
                 // 40000000 + 40 (can be read, initialized data)
                 Size = 0x8D,
-                Data = new byte[] { }, // TODO!!
+                Data = Array.Empty<byte>(), // TODO!!
                 Pointer = CurrentPosition,
                 RawSize = 0x200
             };
             CurrentPosition += ExportSection.RawSize;
             Sections.Add(ExportSection);
-            var ImportSection = new Section
+            Section ImportSection = new Section
             {
                 Name = ".idata",
                 Address = ImportAddress,
                 Characteristics = 0x42000040,
                 // 40000000 + 2000000 + 40 (can be read, can be discarded, initialized data)
                 Size = 0x3C,
-                Data = new byte[] { }, // TODO!!
+                Data = Array.Empty<byte>(), // TODO!!
                 Pointer = CurrentPosition,
                 RawSize = 0x200
             };
             CurrentPosition += ImportSection.RawSize;
             Sections.Add(ImportSection);
-            var RelocSection = new Section
+            Section RelocSection = new Section
             {
                 Name = ".reloc",
                 Address = 0xC000,
                 Characteristics = 0x42000040,
                 // 40000000 + 2000000 + 40 (can be read, can be discarded, initialized data)
                 Size = 0x2F4,
-                Data = new byte[] { }, // TODO!!
+                Data = Array.Empty<byte>(), // TODO!!
                 Pointer = CurrentPosition,
                 RawSize = 0x400
             };
             CurrentPosition += RelocSection.RawSize;
             Sections.Add(RelocSection);
-            var Null = new byte[1025];
-            var loopTo = Null.Length - 1;
+            byte[] Null = new byte[1025];
+            int loopTo = Null.Length - 1;
             for (i = 0; i <= loopTo; i++)
+            {
                 Null[i] = 0;
+            }
 
             // Start Header
             bw.Write(23117);
@@ -286,7 +288,7 @@ namespace Mangos.WardenExtractor
                 bw.Write((byte)0);
             }
 
-            var DllData = ms.ToArray();
+            byte[] DllData = ms.ToArray();
             Data = DllData;
             ms.Close();
             ms.Dispose();
@@ -298,11 +300,14 @@ namespace Mangos.WardenExtractor
 
         public static ulong GetName(string Name)
         {
-            var bBytes = new byte[8];
+            byte[] bBytes = new byte[8];
             for (int i = 0; i <= 7; i++)
             {
                 if (i + 1 > Name.Length)
+                {
                     break;
+                }
+
                 bBytes[i] = (byte)Strings.Asc(Name[i]);
             }
 
@@ -312,7 +317,7 @@ namespace Mangos.WardenExtractor
         public static byte[] GetSectionData(ref BinaryReader br, int Position, string Name, int Address, int Length, int characteristics)
         {
             br.BaseStream.Position = Position;
-            var tmpBytes = br.ReadBytes(Length);
+            byte[] tmpBytes = br.ReadBytes(Length);
             if (Conversions.ToBoolean(characteristics & 0x20))
             {
                 int InstructionPos = 0;
@@ -321,9 +326,12 @@ namespace Mangos.WardenExtractor
                     try
                     {
                         int InstrPos = InstructionPos;
-                        var Instr = ParseInstuction(ref tmpBytes, ref InstructionPos);
+                        Instruction Instr = ParseInstuction(ref tmpBytes, ref InstructionPos);
                         if (Instr is null)
+                        {
                             continue;
+                        }
+
                         if (Instr.Opcode == 0xA1)
                         {
                             Instr.DisplacementData[2] = 0x40;
@@ -359,7 +367,7 @@ namespace Mangos.WardenExtractor
                             Instr.DisplacementData[2] = 0x40;
                             if (Instr.ImmediateData[0] != 0xFF)
                             {
-                                var tmpBytes2 = tmpBytes;
+                                byte[] tmpBytes2 = tmpBytes;
                                 Array.Resize(ref tmpBytes, tmpBytes.Length + 1 + 1);
                                 Array.Copy(tmpBytes2, InstructionPos - 2, tmpBytes, InstructionPos, tmpBytes2.Length - (InstructionPos - 2));
                                 Instr.ImmediateData[0] = 0;
@@ -400,7 +408,7 @@ namespace Mangos.WardenExtractor
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
         private static Instruction ParseInstuction(ref byte[] Data, ref int Position)
         {
-            var newInstruction = new Instruction();
+            Instruction newInstruction = new Instruction();
             if (Data[Position] == 0)
             {
                 Position += 1;
@@ -411,7 +419,10 @@ namespace Mangos.WardenExtractor
             for (int i = 0; i <= 3; i++)
             {
                 if (!IsPrefix(Data[Position]))
+                {
                     break;
+                }
+
                 newInstruction.Prefix[i] = Data[Position];
                 Position += 1;
             }
@@ -452,14 +463,20 @@ namespace Mangos.WardenExtractor
             if (newInstruction.DisplacementSize > 0)
             {
                 for (int i = 0, loopTo = newInstruction.DisplacementSize - 1; i <= loopTo; i++)
+                {
                     newInstruction.DisplacementData[i] = Data[Position + i];
+                }
+
                 Position += newInstruction.DisplacementSize;
             }
 
             if (newInstruction.ImmediateSize > 0)
             {
                 for (int i = 0, loopTo1 = newInstruction.ImmediateSize - 1; i <= loopTo1; i++)
+                {
                     newInstruction.ImmediateData[i] = Data[Position + i];
+                }
+
                 Position += newInstruction.ImmediateSize;
             }
 
@@ -543,31 +560,31 @@ namespace Mangos.WardenExtractor
             switch (Instr.Opcode)
             {
                 case 0x0:
-                {
-                    return 6;
-                }
+                    {
+                        return 6;
+                    }
 
                 case 0x1:
-                {
-                    return 7;
-                }
+                    {
+                        return 7;
+                    }
 
                 case 0xC7:
-                {
-                    return 9;
-                }
+                    {
+                        return 9;
+                    }
 
                 case 0x71:
                 case 0x72:
                 case 0x73:
-                {
-                    return 0xA;
-                }
+                    {
+                        return 0xA;
+                    }
 
                 default:
-                {
-                    return 0;
-                }
+                    {
+                        return 0;
+                    }
             }
         }
 
@@ -585,8 +602,11 @@ namespace Mangos.WardenExtractor
         {
             bool address_size_is_32 = false;
             if (Instr.EffectiveAddressSize == 32)
+            {
                 address_size_is_32 = true;
-            if (Instr.Opcode == 0x9A || Instr.Opcode == 0xEA)
+            }
+
+            if (Instr.Opcode is 0x9A or 0xEA)
             {
                 Instr.FullDisplacement = true;
                 return address_size_is_32 ? 6 : 4;
@@ -624,8 +644,11 @@ namespace Mangos.WardenExtractor
         {
             bool operand_size_32 = false;
             if (Instr.EffectiveOperandSize == 32)
+            {
                 operand_size_32 = true;
-            if (Instr.Opcode == 0xC2 || Instr.Opcode == 0xCA)
+            }
+
+            if (Instr.Opcode is 0xC2 or 0xCA)
             {
                 return 2;
             }
@@ -668,7 +691,10 @@ namespace Mangos.WardenExtractor
             bool address_size_is_32 = false;
             int DisplacementSize = 0;
             if (Instr.EffectiveOperandSize == 32)
+            {
                 address_size_is_32 = true;
+            }
+
             switch (Instr.ModRmData & MOD_FIELD_MASK)
             {
                 case MOD_FIELD_00:
@@ -715,7 +741,10 @@ namespace Mangos.WardenExtractor
             bool operand_size_32 = false;
             int immediate_size = 0;
             if (Instr.EffectiveOperandSize == 32)
+            {
                 operand_size_32 = true;
+            }
+
             switch (Instr.ExtendedOpcode)
             {
                 case 1:
@@ -734,7 +763,7 @@ namespace Mangos.WardenExtractor
 
                 case 2:
                     {
-                        if (Instr.Opcode == 0xC0 || Instr.Opcode == 0xC1)
+                        if (Instr.Opcode is 0xC0 or 0xC1)
                         {
                             immediate_size = 1;
                         }
@@ -923,7 +952,10 @@ namespace Mangos.WardenExtractor
                 for (int i = 0; i <= 3; i++)
                 {
                     if (IsPrefix(Prefix[i]) == false)
+                    {
                         break;
+                    }
+
                     if (Prefix[i] == 0x67)
                     {
                         AddressSizeOverwritten = true;
@@ -940,7 +972,10 @@ namespace Mangos.WardenExtractor
                 get
                 {
                     if (AddressSizeOverwritten)
+                    {
                         return 16;
+                    }
+
                     return 32;
                 }
             }
@@ -950,23 +985,32 @@ namespace Mangos.WardenExtractor
                 get
                 {
                     if (OperandSizeOverwritten)
+                    {
                         return 16;
+                    }
+
                     return 32;
                 }
             }
 
             public byte[] GetBytes()
             {
-                var newData = new MemoryStream();
+                MemoryStream newData = new MemoryStream();
                 for (int i = 0; i <= 3; i++)
                 {
                     if (IsPrefix(Prefix[i]) == false)
+                    {
                         break;
+                    }
+
                     newData.WriteByte(Prefix[i]);
                 }
 
                 if (Two_Bytes)
+                {
                     newData.WriteByte(0xF);
+                }
+
                 newData.WriteByte(Opcode);
                 if (ModrefReq)
                 {
@@ -980,13 +1024,17 @@ namespace Mangos.WardenExtractor
                 if (DisplacementSize > 0)
                 {
                     for (int i = 0, loopTo = DisplacementSize - 1; i <= loopTo; i++)
+                    {
                         newData.WriteByte(DisplacementData[i]);
+                    }
                 }
 
                 if (ImmediateSize > 0)
                 {
                     for (int i = 0, loopTo1 = ImmediateSize - 1; i <= loopTo1; i++)
+                    {
                         newData.WriteByte(ImmediateData[i]);
+                    }
                 }
 
                 return newData.ToArray();
@@ -999,15 +1047,20 @@ namespace Mangos.WardenExtractor
 
             public void Place(ref byte[] Data, int Index)
             {
-                var tmpBytes = GetBytes();
+                byte[] tmpBytes = GetBytes();
                 if (tmpBytes.Length != OrigSize)
                 {
-                    var tmpBytes2 = Data;
+                    byte[] tmpBytes2 = Data;
                     if (tmpBytes.Length > OrigSize)
+                    {
                         Array.Resize(ref Data, Data.Length + (tmpBytes.Length - OrigSize));
+                    }
+
                     Array.Copy(tmpBytes2, Index + OrigSize, Data, Index + tmpBytes.Length, tmpBytes2.Length - (Index + OrigSize));
                     if (tmpBytes.Length < OrigSize)
+                    {
                         Array.Resize(ref Data, Data.Length - (OrigSize - tmpBytes.Length));
+                    }
                 }
 
                 Array.Copy(tmpBytes, 0, Data, Index, tmpBytes.Length);

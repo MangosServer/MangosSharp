@@ -61,7 +61,10 @@ namespace Mangos.World.Scripts.Creatures
         public override void OnEnterCombat()
         {
             if (Phase > 1)
+            {
                 return;
+            }
+
             base.OnEnterCombat();
             aiCreature.Flying = false;
             AllowedAttack = true;
@@ -115,8 +118,11 @@ namespace Mangos.World.Scripts.Creatures
         public override void OnThink()
         {
             if (Phase < 1)
+            {
                 return;
-            if (Phase == 1 || Phase == 3)
+            }
+
+            if (Phase is 1 or 3)
             {
                 NextBreathe -= AI_UPDATE;
                 NextCleave -= AI_UPDATE;
@@ -182,9 +188,12 @@ namespace Mangos.World.Scripts.Creatures
         {
             for (int i = 0; i <= 3; i++)
             {
-                var theTarget = aiCreature.GetRandomTarget();
+                WS_Base.BaseUnit theTarget = aiCreature.GetRandomTarget();
                 if (theTarget is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(FIREBALL_SPELL, theTarget.positionX, theTarget.positionY, theTarget.positionZ);
             }
         }
@@ -312,19 +321,25 @@ namespace Mangos.World.Scripts.Creatures
 
             CurrentWaypoint += 1;
             if (CurrentWaypoint > 12)
+            {
                 CurrentWaypoint = 3;
+            }
         }
 
         public void SpawnWhelpsLeft(int Count)
         {
             for (int i = 1, loopTo = Count; i <= loopTo; i++)
+            {
                 aiCreature.SpawnCreature(WHELP_CREATURE, -30.812f, -166.395f, -89.0f);
+            }
         }
 
         public void SpawnWhelpsRight(int Count)
         {
             for (int i = 1, loopTo = Count; i <= loopTo; i++)
+            {
                 aiCreature.SpawnCreature(WHELP_CREATURE, -30.233f, -264.158f, 89.896f);
+            }
         }
     }
 }

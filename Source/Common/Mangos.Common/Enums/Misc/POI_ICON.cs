@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Misc
 {
-    enum POI_ICON
+    internal enum POI_ICON
     {
         ICON_POI_0 = 0,                                         // Grey ?
         ICON_POI_1 = 1,                                         // Red ?

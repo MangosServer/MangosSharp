@@ -16,11 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using System.Text.RegularExpressions;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
@@ -30,6 +25,11 @@ using Mangos.World.Network;
 using Mangos.World.Player;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Mangos.World.Globals
 {
@@ -116,7 +116,7 @@ namespace Mangos.World.Globals
                 int num = bBytes.Length - 1;
                 for (int i = start; i <= num; i++)
                 {
-                    tmpStr = ((bBytes[i] >= 16) ? (tmpStr + Conversion.Hex(bBytes[i])) : (tmpStr + "0" + Conversion.Hex(bBytes[i])));
+                    tmpStr = (bBytes[i] >= 16) ? (tmpStr + Conversion.Hex(bBytes[i])) : (tmpStr + "0" + Conversion.Hex(bBytes[i]));
                 }
                 return tmpStr;
             }
@@ -126,7 +126,7 @@ namespace Mangos.World.Globals
         {
             if (bBytes.Length == 0)
             {
-                return new char[0];
+                return Array.Empty<char>();
             }
             checked
             {
@@ -144,7 +144,7 @@ namespace Mangos.World.Globals
         {
             if (bBytes.Length == 0)
             {
-                return new int[0];
+                return Array.Empty<int>();
             }
             checked
             {
@@ -162,7 +162,7 @@ namespace Mangos.World.Globals
         {
             if (bInt.Length == 0)
             {
-                return new byte[0];
+                return Array.Empty<byte>();
             }
             checked
             {
@@ -295,7 +295,7 @@ namespace Mangos.World.Globals
 
         public bool ValidateName(string strName)
         {
-            if (strName.Length < 2 || strName.Length > 16)
+            if (strName.Length is < 2 or > 16)
             {
                 return false;
             }
@@ -304,7 +304,7 @@ namespace Mangos.World.Globals
 
         public bool ValidateGuildName(string strName)
         {
-            if (strName.Length < 2 || strName.Length > 16)
+            if (strName.Length is < 2 or > 16)
             {
                 return false;
             }
@@ -445,9 +445,9 @@ namespace Mangos.World.Globals
         public string SetColor(string Message, byte Red, byte Green, byte Blue)
         {
             string SetColor = "|cFF";
-            SetColor = ((Red >= 16) ? (SetColor + Conversion.Hex(Red)) : (SetColor + "0" + Conversion.Hex(Red)));
-            SetColor = ((Green >= 16) ? (SetColor + Conversion.Hex(Green)) : (SetColor + "0" + Conversion.Hex(Green)));
-            SetColor = ((Blue >= 16) ? (SetColor + Conversion.Hex(Blue)) : (SetColor + "0" + Conversion.Hex(Blue)));
+            SetColor = (Red >= 16) ? (SetColor + Conversion.Hex(Red)) : (SetColor + "0" + Conversion.Hex(Red));
+            SetColor = (Green >= 16) ? (SetColor + Conversion.Hex(Green)) : (SetColor + "0" + Conversion.Hex(Green));
+            SetColor = (Blue >= 16) ? (SetColor + Conversion.Hex(Blue)) : (SetColor + "0" + Conversion.Hex(Blue));
             return SetColor + Message + "|r";
         }
 

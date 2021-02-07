@@ -16,8 +16,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.IO;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using System.IO;
 
 namespace Mangos.Zip
 {
@@ -25,8 +25,8 @@ namespace Mangos.Zip
     {
         public byte[] Compress(byte[] data, int offset, int length)
         {
-            using var outputStream = new MemoryStream();
-            using var compressordStream = new DeflaterOutputStream(outputStream);
+            using MemoryStream outputStream = new MemoryStream();
+            using DeflaterOutputStream compressordStream = new DeflaterOutputStream(outputStream);
             compressordStream.Write(data, offset, length);
             compressordStream.Flush();
             return outputStream.ToArray();
@@ -34,9 +34,9 @@ namespace Mangos.Zip
 
         public byte[] DeCompress(byte[] data)
         {
-            using var outputStream = new MemoryStream();
-            using var compressedStream = new MemoryStream(data);
-            using var inputStream = new InflaterInputStream(compressedStream);
+            using MemoryStream outputStream = new MemoryStream();
+            using MemoryStream compressedStream = new MemoryStream(data);
+            using InflaterInputStream inputStream = new InflaterInputStream(compressedStream);
             inputStream.CopyTo(outputStream);
             outputStream.Position = 0;
             return outputStream.ToArray();

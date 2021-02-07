@@ -29,10 +29,10 @@ namespace Mangos.World.Scripts.Creatures
         private const int UPPER_COOLDOWN = 12000;
         private const int NOVA_SPELL = 11970;
         private const int UPPER_SPELL = 18072;
-        public int NextWaypoint = 0;
+        public int NextWaypoint;
         public int NextNOVA;
         public int NextUPPER;
-        public int CurrentWaypoint = 0;
+        public int CurrentWaypoint;
 
         public CreatureAI_Taragaman_the_Hungerer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
         {
@@ -64,7 +64,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(NOVA_SPELL, aiTarget);
             }
         }
@@ -75,7 +78,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(UPPER_SPELL, aiTarget);
             }
         }

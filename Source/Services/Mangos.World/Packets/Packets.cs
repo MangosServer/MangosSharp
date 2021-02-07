@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Text;
 using Mangos.Common.Enums.Global;
 using Mangos.World.Network;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Text;
 
 namespace Mangos.World.Globals
 {
@@ -33,7 +33,7 @@ namespace Mangos.World.Globals
             {
                 try
                 {
-                    buffer = ((client != null) ? (buffer + $"[{client.IP}:{client.Port}] DEBUG: Packet Dump - Length={data.Length - start}{Environment.NewLine}") : (buffer + $"DEBUG: Packet Dump{Environment.NewLine}"));
+                    buffer = (client != null) ? (buffer + $"[{client.IP}:{client.Port}] DEBUG: Packet Dump - Length={data.Length - start}{Environment.NewLine}") : (buffer + $"DEBUG: Packet Dump{Environment.NewLine}");
                     if (checked(data.Length - start) % 16 == 0)
                     {
                         int num = data.Length - 1;

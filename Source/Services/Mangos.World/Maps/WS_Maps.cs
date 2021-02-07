@@ -16,11 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
 using Mangos.Common.Globals;
@@ -31,6 +26,11 @@ using Mangos.World.Network;
 using Mangos.World.Objects;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace Mangos.World.Maps
 {
@@ -83,7 +83,7 @@ namespace Mangos.World.Maps
             foreach (string map2 in WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps)
             {
                 uint id = Conversions.ToUInteger(map2);
-                var map = new TMap(checked((int)id), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));
+                TMap map = new TMap(checked((int)id), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));
             }
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: {0} Maps initialized.", Maps.Count);
         }
@@ -275,8 +275,8 @@ namespace Mangos.World.Maps
                     }
                     try
                     {
-                        float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), MapTile_LocalY), xNormalized);
-                        float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(MapTile_LocalY + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), (byte)(MapTile_LocalY + 1)), xNormalized);
+                        float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
+                        float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
                         return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
                     }
                     catch (Exception projectError)

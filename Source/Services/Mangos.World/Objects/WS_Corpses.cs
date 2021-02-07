@@ -16,9 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Data;
-using System.Runtime.CompilerServices;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
@@ -26,6 +23,9 @@ using Mangos.World.Maps;
 using Mangos.World.Player;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace Mangos.World.Objects
 {
@@ -324,7 +324,7 @@ namespace Mangos.World.Objects
                                         {
                                             WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[plGUID];
                                             WS_Base.BaseObject objCharacter = this;
-                                            num = (characterObject.CanSee(ref objCharacter) ? 1 : 0);
+                                            num = characterObject.CanSee(ref objCharacter) ? 1 : 0;
                                         }
                                         else
                                         {

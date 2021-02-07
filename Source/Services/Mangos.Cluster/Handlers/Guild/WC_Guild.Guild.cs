@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Common.Legacy;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Mangos.Common.Legacy;
 
 namespace Mangos.Cluster.Handlers.Guild
 {
@@ -54,11 +54,14 @@ namespace Mangos.Cluster.Handlers.Guild
             public Guild(uint guildId)
             {
                 Id = guildId;
-                var mySqlQuery = new DataTable();
+                DataTable mySqlQuery = new DataTable();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT * FROM guilds WHERE guild_id = " + Id + ";", ref mySqlQuery);
                 if (mySqlQuery.Rows.Count == 0)
+                {
                     throw new ApplicationException("GuildID " + Id + " not found in database.");
-                var guildInfo = mySqlQuery.Rows[0];
+                }
+
+                DataRow guildInfo = mySqlQuery.Rows[0];
                 Name = guildInfo.As<string>("guild_name");
                 Leader = guildInfo.As<ulong>("guild_leader");
                 Motd = guildInfo.As<string>("guild_MOTD");
@@ -70,7 +73,7 @@ namespace Mangos.Cluster.Handlers.Guild
                 CYear = guildInfo.As<short>("guild_cYear");
                 CMonth = guildInfo.As<byte>("guild_cMonth");
                 CDay = guildInfo.As<byte>("guild_cDay");
-                for (var i = 0; i <= 9; i++)
+                for (int i = 0; i <= 9; i++)
                 {
                     Ranks[i] = guildInfo.As<string>("guild_rank" + i);
                     RankRights[i] = guildInfo.As<uint>("guild_rank" + i + "_Rights");
@@ -79,7 +82,10 @@ namespace Mangos.Cluster.Handlers.Guild
                 mySqlQuery.Clear();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_guildId = " + Id + ";", ref mySqlQuery);
                 foreach (DataRow memberInfo in mySqlQuery.Rows)
+                {
                     Members.Add(guildInfo.As<ulong>("char_guid"));
+                }
+
                 _clusterServiceLocator.WcGuild.GuilDs.Add(Id, this);
             }
 

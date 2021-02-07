@@ -16,8 +16,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Reflection;
 using Microsoft.AspNetCore.SignalR.Client;
+using System.Reflection;
 
 namespace Mangos.SignalR
 {
@@ -38,11 +38,11 @@ namespace Mangos.SignalR
 
         public static T Create<T>(string url)
         {
-            var hubConnectionBuilder = new HubConnectionBuilder();
+            HubConnectionBuilder hubConnectionBuilder = new HubConnectionBuilder();
             hubConnectionBuilder.WithUrl(url);
-            var hubConnection = hubConnectionBuilder.Build();
+            HubConnection hubConnection = hubConnectionBuilder.Build();
             hubConnection.StartAsync().Wait();
-            var proxy = Create<T, ProxyClient>();
+            T proxy = Create<T, ProxyClient>();
             (proxy as ProxyClient).hubConnection = hubConnection;
             return proxy;
         }

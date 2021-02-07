@@ -26,7 +26,9 @@ namespace Mangos.Common.Legacy
         public static T As<T>(this DataRow row, int column)
         {
             if (row == null || row[column] == null)
+            {
                 throw new Exception("Null data row.");
+            }
 
             return (T)Convert.ChangeType(row[column], typeof(T));
         }
@@ -34,7 +36,9 @@ namespace Mangos.Common.Legacy
         public static T As<T>(this DataRow row, string field)
         {
             if (row == null || row[field] == null)
+            {
                 throw new Exception("Null data row.");
+            }
 
             return (T)Convert.ChangeType(row[field], typeof(T));
         }
@@ -44,9 +48,11 @@ namespace Mangos.Common.Legacy
         public static T2 As<T1, T2>(this DataRow row, string field)
         {
             if (row == null || row[field] == null)
+            {
                 throw new Exception("Null data row.");
+            }
 
-            var t1 = (T1)Convert.ChangeType(row[field], typeof(T1));
+            T1 t1 = (T1)Convert.ChangeType(row[field], typeof(T1));
             return (T2)Convert.ChangeType(t1, typeof(T2));
         }
     }
