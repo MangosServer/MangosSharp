@@ -33,7 +33,7 @@ namespace Mangos.Network.Tcp.Extensions
 
         public static async ValueTask<byte[]> ReadArrayAsync(this ChannelReader<byte> reader, int count)
         {
-            var buffer = new byte[count];
+            byte[] buffer = new byte[count];
             for (int i = 0; i < count; i++)
             {
                 buffer[i] = await reader.ReadAsync();

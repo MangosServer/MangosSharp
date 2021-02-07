@@ -16,6 +16,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections;
 using System.Net;
@@ -24,15 +26,13 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.WoWFakeClient
 {
-    static class Realmserver
+    internal static class Realmserver
     {
-        private readonly static Random Random = new Random();
-        private readonly static Socket Connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+        private static readonly Random Random = new Random();
+        private static readonly Socket Connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
         private static IPAddress ConnIP;
         private static int ConnPort;
         public static string Account = "Administrator";
@@ -81,7 +81,10 @@ namespace Mangos.WoWFakeClient
             {
                 sChatMsg = Console.ReadLine();
                 if (sChatMsg.ToLower() == "quit")
+                {
                     break;
+                }
+
                 WS_Chat.SendChatMessage(sChatMsg);
             }
         }
@@ -149,9 +152,14 @@ namespace Mangos.WoWFakeClient
                     }
 
                     if (!Connection.Connected)
+                    {
                         break;
+                    }
+
                     if (Connection.Poll(100, SelectMode.SelectRead) & Connection.Available == 0)
+                    {
                         break;
+                    }
                 }
             }
             catch (ObjectDisposedException)
@@ -174,7 +182,7 @@ namespace Mangos.WoWFakeClient
 
         public static void OnConnect()
         {
-            var LogonChallenge = new Packets.PacketClass(CMD_AUTH_LOGON_CHALLENGE);
+            Packets.PacketClass LogonChallenge = new Packets.PacketClass(CMD_AUTH_LOGON_CHALLENGE);
             LogonChallenge.AddInt8(0x8);
             LogonChallenge.AddUInt16(0); // Packet length
             LogonChallenge.AddString("WoW");
@@ -197,7 +205,7 @@ namespace Mangos.WoWFakeClient
 
         public static void OnData(byte[] Buffer)
         {
-            var Packet = new Packets.PacketClass(ref Buffer, true);
+            Packets.PacketClass Packet = new Packets.PacketClass(ref Buffer, true);
             switch (Packet.OpCode)
             {
                 case CMD_AUTH_LOGON_CHALLENGE:
@@ -218,7 +226,7 @@ namespace Mangos.WoWFakeClient
                                     CrcSalt = Packet.GetByteArray(16);
                                     CalculateProof();
                                     Thread.Sleep(100);
-                                    var LogonProof = new Packets.PacketClass(CMD_AUTH_LOGON_PROOF);
+                                    Packets.PacketClass LogonProof = new Packets.PacketClass(CMD_AUTH_LOGON_PROOF);
                                     LogonProof.AddByteArray(PublicA);
                                     LogonProof.AddByteArray(M1);
                                     LogonProof.AddByteArray(CrcHash);
@@ -262,7 +270,7 @@ namespace Mangos.WoWFakeClient
                             case 0: // No error
                                 {
                                     Console.WriteLine("[{0}][Realm] Proof Success.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
-                                    var RealmList = new Packets.PacketClass(CMD_AUTH_REALMLIST);
+                                    Packets.PacketClass RealmList = new Packets.PacketClass(CMD_AUTH_REALMLIST);
                                     RealmList.AddInt32(0);
                                     SendR(RealmList);
                                     RealmList.Dispose();
@@ -318,7 +326,7 @@ namespace Mangos.WoWFakeClient
                                 Console.WriteLine("[{0}][Realm] Connecting to realm [{1}][{2}].", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"), RealmName, RealmIP);
                                 if (Strings.InStr(RealmIP, ":") > 0)
                                 {
-                                    var SplitIP = Strings.Split(RealmIP, ":");
+                                    string[] SplitIP = Strings.Split(RealmIP, ":");
                                     if (SplitIP.Length == 2)
                                     {
                                         if (Information.IsNumeric(SplitIP[1]))
@@ -369,34 +377,34 @@ namespace Mangos.WoWFakeClient
             Random.NextBytes(A);
             Array.Reverse(A);
             string tempStr = Account.ToUpper() + ":" + Password.ToUpper();
-            var temp = Encoding.ASCII.GetBytes(tempStr.ToCharArray());
-            var algorithm1 = new SHA1Managed();
+            byte[] temp = Encoding.ASCII.GetBytes(tempStr.ToCharArray());
+            SHA1Managed algorithm1 = new SHA1Managed();
             temp = algorithm1.ComputeHash(temp);
-            var X = algorithm1.ComputeHash(Concat(Salt, temp));
+            byte[] X = algorithm1.ComputeHash(Concat(Salt, temp));
             Array.Reverse(X);
             Array.Reverse(N);
-            var K = new byte[] { 3 };
-            var S = new byte[32];
-            var BNg = new BigInteger(G, isUnsigned: true, isBigEndian: true);
-            var BNa = new BigInteger(A, isUnsigned: true, isBigEndian: true);
-            var BNn = new BigInteger(N, isUnsigned: true, isBigEndian: true);
-            var BNx = new BigInteger(X, isUnsigned: true, isBigEndian: true);
-            var BNk = new BigInteger(K, isUnsigned: true, isBigEndian: true);
-            var BNpublicA = BigInteger.ModPow(BNg, BNa, BNn);
+            byte[] K = new byte[] { 3 };
+            byte[] S = new byte[32];
+            BigInteger BNg = new BigInteger(G, isUnsigned: true, isBigEndian: true);
+            BigInteger BNa = new BigInteger(A, isUnsigned: true, isBigEndian: true);
+            BigInteger BNn = new BigInteger(N, isUnsigned: true, isBigEndian: true);
+            BigInteger BNx = new BigInteger(X, isUnsigned: true, isBigEndian: true);
+            BigInteger BNk = new BigInteger(K, isUnsigned: true, isBigEndian: true);
+            BigInteger BNpublicA = BigInteger.ModPow(BNg, BNa, BNn);
             PublicA = BNpublicA.ToByteArray(isUnsigned: true, isBigEndian: true);
             Array.Reverse(PublicA);
-            var U = algorithm1.ComputeHash(Concat(PublicA, ServerB));
+            byte[] U = algorithm1.ComputeHash(Concat(PublicA, ServerB));
             Array.Reverse(ServerB);
             Array.Reverse(U);
-            var BNu = new BigInteger(U, isUnsigned: true, isBigEndian: true);
-            var BNb = new BigInteger(ServerB, isUnsigned: true, isBigEndian: true);
+            BigInteger BNu = new BigInteger(U, isUnsigned: true, isBigEndian: true);
+            BigInteger BNb = new BigInteger(ServerB, isUnsigned: true, isBigEndian: true);
 
             // S= (B - kg^x) ^ (a + ux)   (mod N)
-            var temp1 = new BigInteger();
-            var temp2 = new BigInteger();
-            var temp3 = new BigInteger();
-            var temp4 = new BigInteger();
-            var temp5 = new BigInteger();
+            BigInteger temp1 = new BigInteger();
+            BigInteger temp2 = new BigInteger();
+            BigInteger temp3 = new BigInteger();
+            BigInteger temp4 = new BigInteger();
+            BigInteger temp5 = new BigInteger();
 
             // Temp1 = g ^ x mod n
             temp1 = BigInteger.ModPow(BNg, BNx, BNn);
@@ -414,23 +422,26 @@ namespace Mangos.WoWFakeClient
             temp5 = BNa + temp4;
 
             // S = Temp3 ^ Temp5 mod n
-            var BNs = BigInteger.ModPow(temp3, temp5, BNn);
+            BigInteger BNs = BigInteger.ModPow(temp3, temp5, BNn);
             S = BNs.ToByteArray(isUnsigned: true, isBigEndian: true);
             Array.Reverse(S);
-            var list1 = new ArrayList();
+            ArrayList list1 = new ArrayList();
             list1 = SplitArray(S);
             list1[0] = algorithm1.ComputeHash((byte[])list1[0]);
             list1[1] = algorithm1.ComputeHash((byte[])list1[1]);
             SS_Hash = Combine((byte[])list1[0], (byte[])list1[1]);
             tempStr = Strings.UCase(Account.ToUpper());
-            var User_Hash = algorithm1.ComputeHash(Encoding.UTF8.GetBytes(tempStr.ToCharArray()));
+            byte[] User_Hash = algorithm1.ComputeHash(Encoding.UTF8.GetBytes(tempStr.ToCharArray()));
             Array.Reverse(N);
             Array.Reverse(ServerB);
-            var N_Hash = algorithm1.ComputeHash(N);
-            var G_Hash = algorithm1.ComputeHash(G);
-            var NG_Hash = new byte[20];
+            byte[] N_Hash = algorithm1.ComputeHash(N);
+            byte[] G_Hash = algorithm1.ComputeHash(G);
+            byte[] NG_Hash = new byte[20];
             for (int i = 0; i <= 19; i++)
+            {
                 NG_Hash[i] = (byte)(N_Hash[i] ^ G_Hash[i]);
+            }
+
             temp = Concat(NG_Hash, User_Hash);
             temp = Concat(temp, Salt);
             temp = Concat(temp, PublicA);
@@ -442,18 +453,18 @@ namespace Mangos.WoWFakeClient
 
         private static ArrayList SplitArray(byte[] bo)
         {
-            var buffer1 = new byte[(bo.Length - 1)];
+            byte[] buffer1 = new byte[(bo.Length - 1)];
             if (bo.Length % 2 != 0 && bo.Length > 2)
             {
                 Buffer.BlockCopy(bo, 1, buffer1, 0, bo.Length);
             }
 
-            var buffer2 = new byte[(int)(bo.Length / 2d - 1d + 1)];
-            var buffer3 = new byte[(int)(bo.Length / 2d - 1d + 1)];
+            byte[] buffer2 = new byte[(int)(bo.Length / 2d - 1d + 1)];
+            byte[] buffer3 = new byte[(int)(bo.Length / 2d - 1d + 1)];
             int num1 = 0;
             int num2 = 1;
             int num3;
-            var loopTo = buffer2.Length - 1;
+            int loopTo = buffer2.Length - 1;
             for (num3 = 0; num3 <= loopTo; num3++)
             {
                 buffer2[num3] = bo[num1];
@@ -462,7 +473,7 @@ namespace Mangos.WoWFakeClient
             }
 
             int num4;
-            var loopTo1 = buffer3.Length - 1;
+            int loopTo1 = buffer3.Length - 1;
             for (num4 = 0; num4 <= loopTo1; num4++)
             {
                 buffer3[num4] = bo[num2];
@@ -470,7 +481,7 @@ namespace Mangos.WoWFakeClient
                 num2 += 1;
             }
 
-            var list1 = new ArrayList
+            ArrayList list1 = new ArrayList
             {
                 buffer2,
                 buffer3
@@ -482,11 +493,11 @@ namespace Mangos.WoWFakeClient
         {
             if (b1.Length == b2.Length)
             {
-                var buffer1 = new byte[(b1.Length + b2.Length)];
+                byte[] buffer1 = new byte[(b1.Length + b2.Length)];
                 int num1 = 0;
                 int num2 = 1;
                 int num3;
-                var loopTo = b1.Length - 1;
+                int loopTo = b1.Length - 1;
                 for (num3 = 0; num3 <= loopTo; num3++)
                 {
                     buffer1[num1] = b1[num3];
@@ -495,7 +506,7 @@ namespace Mangos.WoWFakeClient
                 }
 
                 int num4;
-                var loopTo1 = b2.Length - 1;
+                int loopTo1 = b2.Length - 1;
                 for (num4 = 0; num4 <= loopTo1; num4++)
                 {
                     buffer1[num2] = b2[num4];
@@ -511,15 +522,21 @@ namespace Mangos.WoWFakeClient
 
         public static byte[] Concat(byte[] a, byte[] b)
         {
-            var buffer1 = new byte[(a.Length + b.Length)];
+            byte[] buffer1 = new byte[(a.Length + b.Length)];
             int num1;
-            var loopTo = a.Length - 1;
+            int loopTo = a.Length - 1;
             for (num1 = 0; num1 <= loopTo; num1++)
+            {
                 buffer1[num1] = a[num1];
+            }
+
             int num2;
-            var loopTo1 = b.Length - 1;
+            int loopTo1 = b.Length - 1;
             for (num2 = 0; num2 <= loopTo1; num2++)
+            {
                 buffer1[num2 + a.Length] = b[num2];
+            }
+
             return buffer1;
         }
     }

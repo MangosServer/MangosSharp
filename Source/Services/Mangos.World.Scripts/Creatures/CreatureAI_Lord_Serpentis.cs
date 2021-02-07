@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 namespace Mangos.World.Scripts.Creatures
 {
@@ -75,7 +75,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
             }
         }
@@ -86,7 +89,9 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
+                {
                     return;
+                }
             }
 
             aiCreature.CastSpell(Slumber_Spell, aiTarget);

@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
 using Mangos.World.Network;
+using System.Collections.Generic;
 
 namespace Mangos.World.Weather
 {

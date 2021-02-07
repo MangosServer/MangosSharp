@@ -16,13 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.Global;
@@ -42,6 +35,13 @@ using Mangos.World.Quests;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading;
 
 namespace Mangos.World.Objects
 {
@@ -1843,7 +1843,7 @@ namespace Mangos.World.Objects
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WS_Creatures:RemoveFromWorld - Unable to remove creatue from world, Remove again  {0}", ex.Message);
                     WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID);
                 }
-             }
+            }
 
             public void MoveCell()
             {

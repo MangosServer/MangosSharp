@@ -16,9 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Data;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
@@ -30,6 +27,9 @@ using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Quests;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace Mangos.World.Handlers
 {
@@ -320,7 +320,7 @@ namespace Mangos.World.Handlers
                     SMSG_TEXT_EMOTE.AddInt32(255);
                     SMSG_TEXT_EMOTE.AddInt32(secondName.Length + 1);
                     SMSG_TEXT_EMOTE.AddString(secondName);
-                        client.Character.SendToNearPlayers(ref SMSG_TEXT_EMOTE);
+                    client.Character.SendToNearPlayers(ref SMSG_TEXT_EMOTE);
                 }
                 finally
                 {

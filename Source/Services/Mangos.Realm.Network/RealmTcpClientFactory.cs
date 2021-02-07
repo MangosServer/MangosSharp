@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Loggers;
+using Mangos.Network.Tcp;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Mangos.Loggers;
-using Mangos.Network.Tcp;
 
 namespace Mangos.Realm.Network
 {
@@ -37,7 +37,7 @@ namespace Mangos.Realm.Network
 
         public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
         {
-            var clientModel = new Client((IPEndPoint) clientSocket.RemoteEndPoint);
+            Client clientModel = new Client((IPEndPoint)clientSocket.RemoteEndPoint);
 
             return new RealmTcpClient(logger, router, clientModel);
         }

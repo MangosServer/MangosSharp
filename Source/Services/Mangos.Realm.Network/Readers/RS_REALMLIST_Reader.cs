@@ -27,7 +27,7 @@ namespace Mangos.Realm.Network.Readers
     {
         public async ValueTask<RS_REALMLIST> ReadAsync(ChannelReader<byte> reader)
         {
-            var unk = await reader.ReadArrayAsync(4);
+            byte[] unk = await reader.ReadArrayAsync(4);
             return new RS_REALMLIST(unk);
         }
     }

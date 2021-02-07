@@ -16,15 +16,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Foole.Mpq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Foole.Mpq;
 
 namespace Mangos.DBCExtractor
 {
-    static class MainModule
+    internal static class MainModule
     {
         public static List<MpqArchive> MPQArchives = new List<MpqArchive>();
         public static List<int> MapIDs = new List<int>();
@@ -46,7 +46,7 @@ namespace Mangos.DBCExtractor
                 goto ExitNow;
             }
 
-            var MPQFilesToOpen = new List<string> { "terrain.MPQ", "dbc.MPQ", "misc.MPQ", "patch.MPQ", "patch-2.MPQ" };
+            List<string> MPQFilesToOpen = new List<string> { "terrain.MPQ", "dbc.MPQ", "misc.MPQ", "patch.MPQ", "patch-2.MPQ" };
             foreach (string mpq in MPQFilesToOpen)
             {
                 if (File.Exists(@"Data\" + mpq) == false)
@@ -59,8 +59,8 @@ namespace Mangos.DBCExtractor
             Console.ForegroundColor = ConsoleColor.Yellow;
             foreach (string mpq in MPQFilesToOpen)
             {
-                var stream = File.Open(Path.GetFullPath(@"Data\" + mpq), FileMode.Open);
-                var newArchive = new MpqArchive(stream, true);
+                FileStream stream = File.Open(Path.GetFullPath(@"Data\" + mpq), FileMode.Open);
+                MpqArchive newArchive = new MpqArchive(stream, true);
                 MPQArchives.Add(newArchive);
                 Console.WriteLine("Loaded archive [{0}].", mpq);
             }
@@ -118,17 +118,20 @@ namespace Mangos.DBCExtractor
             Console.ForegroundColor = ConsoleColor.Gray;
             string dbcFolder = Path.GetFullPath("dbc");
             int numDBCs = 0;
-            foreach (var mpqArchive in MPQArchives)
+            foreach (MpqArchive mpqArchive in MPQArchives)
+            {
                 numDBCs += mpqArchive.Where(x => x.Filename is object).Where(x => x.Filename.EndsWith(".dbc")).Count();
+            }
+
             int i = 0;
             int numDiv30 = numDBCs / 30;
-            foreach (var mpqArchive in MPQArchives)
+            foreach (MpqArchive mpqArchive in MPQArchives)
             {
-                foreach (var mpqFile in mpqArchive.Where(x => x.Filename is object).Where(x => x.Filename.EndsWith(".dbc")))
+                foreach (MpqEntry mpqFile in mpqArchive.Where(x => x.Filename is object).Where(x => x.Filename.EndsWith(".dbc")))
                 {
-                    using (var mpqStream = mpqArchive.OpenFile(mpqFile))
+                    using (MpqStream mpqStream = mpqArchive.OpenFile(mpqFile))
                     {
-                        using var fileStream = File.Create(Path.Combine(dbcFolder, Path.GetFileName(mpqFile.Filename)));
+                        using FileStream fileStream = File.Create(Path.Combine(dbcFolder, Path.GetFileName(mpqFile.Filename)));
                         mpqStream.CopyTo(fileStream);
                     }
 

@@ -16,16 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
@@ -39,8 +29,18 @@ using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Quests;
 using Microsoft.VisualBasic;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 //using Microsoft.VisualBasic.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mangos.World
 {
@@ -173,9 +173,9 @@ namespace Mangos.World
                 string FileName = "configs/WorldServer.ini";
                 string[] args = Environment.GetCommandLineArgs();
                 string[] array = args;
-                foreach (var arg in from string arg in array
-                                    where arg.IndexOf("config") != -1
-                                    select arg)
+                foreach (string arg in from string arg in array
+                                       where arg.IndexOf("config") != -1
+                                       select arg)
                 {
                     FileName = Strings.Trim(arg.Substring(checked(arg.IndexOf("=") + 1)));
                 }

@@ -39,13 +39,13 @@ namespace Mangos.Realm.Storage.MySql
 
         public async Task ConnectAsync()
         {
-            var conenctionString = configurationProvider.GetConfiguration().AccountConnectionString;
+            string conenctionString = configurationProvider.GetConfiguration().AccountConnectionString;
             await mySqlStorage.ConnectAsync(this, conenctionString);
         }
 
         public async Task<bool> IsBannedAccountAsync(string id)
         {
-            var count = await mySqlStorage.QuerySingleAsync<int>(new
+            int count = await mySqlStorage.QuerySingleAsync<int>(new
             {
                 Id = id
             });

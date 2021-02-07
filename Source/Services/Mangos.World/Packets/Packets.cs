@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Text;
 using Mangos.Common.Enums.Global;
 using Mangos.World.Network;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Text;
 
 namespace Mangos.World.Globals
 {

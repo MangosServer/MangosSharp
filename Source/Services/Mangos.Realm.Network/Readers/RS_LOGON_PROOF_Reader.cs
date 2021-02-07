@@ -27,8 +27,8 @@ namespace Mangos.Realm.Network.Readers
     {
         public async ValueTask<RS_LOGON_PROOF> ReadAsync(ChannelReader<byte> reader)
         {
-            var a = await reader.ReadArrayAsync(32);
-            var m1 = await reader.ReadArrayAsync(20);
+            byte[] a = await reader.ReadArrayAsync(32);
+            byte[] m1 = await reader.ReadArrayAsync(20);
             await reader.ReadVoidAsync(22);
             return new RS_LOGON_PROOF(a, m1);
         }

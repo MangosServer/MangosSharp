@@ -16,7 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Threading.Tasks;
 using Autofac;
 using Mangos.Common.Globals;
 using Mangos.Configuration;
@@ -42,6 +41,7 @@ using Mangos.World.Spells;
 using Mangos.World.Warden;
 using Mangos.World.Weather;
 using Mangos.Zip;
+using System.Threading.Tasks;
 using Functions = Mangos.Common.Legacy.Globals.Functions;
 using NativeMethods = Mangos.Common.Legacy.NativeMethods;
 

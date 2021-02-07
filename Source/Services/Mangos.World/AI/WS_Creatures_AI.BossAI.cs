@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
-using System.Threading;
 using Mangos.World.Objects;
 using Mangos.World.Player;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Mangos.World.AI
 {

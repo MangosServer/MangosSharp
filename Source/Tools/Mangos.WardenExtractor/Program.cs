@@ -16,13 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
 
 namespace Mangos.WardenExtractor
 {
-    static class Program
+    internal static class Program
     {
         public static void Main()
         {
@@ -89,25 +89,37 @@ namespace Mangos.WardenExtractor
         {
             string tmpStr = "";
             for (int i = str.Length - 1; i >= 0; i -= 1)
+            {
                 tmpStr += Conversions.ToString(str[i]);
+            }
+
             return tmpStr;
         }
 
         public static byte[] Reverse(byte[] bytes)
         {
             if (bytes.Length == 0)
+            {
                 return Array.Empty<byte>();
-            var tmpBytes = new byte[bytes.Length];
+            }
+
+            byte[] tmpBytes = new byte[bytes.Length];
             for (int i = bytes.Length - 1; i >= 0; i -= 1)
+            {
                 tmpBytes[bytes.Length - 1 - i] = bytes[i];
+            }
+
             return tmpBytes;
         }
 
         public static byte[] ParseKey(string str)
         {
             if (str.Length == 0)
+            {
                 return Array.Empty<byte>();
-            var bBytes = new byte[Conversion.Int((str.Length - 1) / 2) + 1];
+            }
+
+            byte[] bBytes = new byte[Conversion.Int((str.Length - 1) / 2) + 1];
             for (int i = 0, loopTo = str.Length - 1; i <= loopTo; i += 2)
             {
                 try
@@ -140,9 +152,12 @@ namespace Mangos.WardenExtractor
                 int val = 0;
                 int position = 0;
                 byte temp;
-                var key = new byte[258];
+                byte[] key = new byte[258];
                 for (int i = 0; i <= 256 - 1; i++)
+                {
                     key[i] = (byte)i;
+                }
+
                 key[256] = 0;
                 key[257] = 0;
                 for (int i = 1; i <= 64; i++)

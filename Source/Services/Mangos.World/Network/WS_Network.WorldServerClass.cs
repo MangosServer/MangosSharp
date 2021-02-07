@@ -16,12 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
 using Mangos.Common.Legacy;
@@ -33,6 +27,12 @@ using Mangos.World.Player;
 using Mangos.World.Social;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mangos.World.Network
 {
@@ -245,16 +245,18 @@ namespace Mangos.World.Network
                 {
                     throw new ApplicationException("Packet doesn't contain data!");
                 }
-                
+
                 try
                 {
-                    if(WorldServiceLocator._WorldServer.CLIENTs.TryGetValue(id, out ClientClass _client))
+                    if (WorldServiceLocator._WorldServer.CLIENTs.TryGetValue(id, out ClientClass _client))
                     {
                         Packets.PacketClass p = new Packets.PacketClass(ref data);
                         _client?.PushPacket(p);
                     }
                     else
+                    {
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Client ID doesn't contain a key!: {0}", ToString());
+                    }
                 }
                 catch (Exception ex2)
                 {

@@ -22,11 +22,11 @@ namespace Mangos.Realm.Network.Responses
     {
         public class Realm
         {
-            public string Address { get;  }
-            public string Name { get;  }
+            public string Address { get; }
+            public string Name { get; }
             public string Port { get; }
             public byte Timezone { get; }
-            public byte Icon { get;  }
+            public byte Icon { get; }
             public byte Realmflags { get; }
             public float Population { get; }
             public int CharacterCount { get; }

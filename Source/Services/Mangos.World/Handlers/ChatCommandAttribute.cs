@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Common.Enums.Misc;
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Mangos.Common.Enums.Misc;
 
 namespace Mangos.World.Handlers
 {

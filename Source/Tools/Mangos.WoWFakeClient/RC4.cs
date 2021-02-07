@@ -29,9 +29,12 @@ namespace Mangos.WoWFakeClient
             int val = 0;
             int position = 0;
             byte temp;
-            var key = new byte[258];
+            byte[] key = new byte[258];
             for (int i = 0; i <= 256 - 1; i++)
+            {
                 key[i] = (byte)i;
+            }
+
             key[256] = 0;
             key[257] = 0;
             for (int i = 1; i <= 64; i++)

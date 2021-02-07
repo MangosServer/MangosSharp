@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
 using Mangos.Common.Enums.Global;
 using Mangos.World.AI;
 using Mangos.World.Objects;
+using System;
 
 // Summon implementation isn't yet supported.
 // Sand trap not implemented into script, need to make a gameobject I assume.
@@ -58,7 +58,10 @@ namespace Mangos.World.Scripts.Creatures
         public override void OnEnterCombat()
         {
             if (phase > 1)
+            {
                 return;
+            }
+
             base.OnEnterCombat();
             AllowedAttack = true;
             aiCreature.Flying = false;
@@ -76,7 +79,10 @@ namespace Mangos.World.Scripts.Creatures
         {
             base.OnThink();
             if (phase < 1)
+            {
                 return;
+            }
+
             if (phase is 1 or 3)
             {
             }

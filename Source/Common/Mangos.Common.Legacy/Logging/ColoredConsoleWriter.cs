@@ -16,9 +16,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Common.Enums.Global;
 using System;
 using System.Runtime.CompilerServices;
-using Mangos.Common.Enums.Global;
 
 // Using this logging type, all logs are displayed in console.
 // Writting commands is done trought console.
@@ -31,7 +31,10 @@ namespace Mangos.Common.Legacy.Logging
         public override void Write(LogType type, string formatStr, params object[] arg)
         {
             if (LogLevel > type)
+            {
                 return;
+            }
+
             switch (type)
             {
                 case LogType.NETWORK:
@@ -105,7 +108,10 @@ namespace Mangos.Common.Legacy.Logging
         public override void WriteLine(LogType type, string formatStr, params object[] arg)
         {
             if (LogLevel > type)
+            {
                 return;
+            }
+
             switch (type)
             {
                 case LogType.NETWORK:
@@ -164,9 +170,13 @@ namespace Mangos.Common.Legacy.Logging
             }
 
             if (arg is null)
+            {
                 Console.WriteLine($"[{DateTime.Now:hh:mm:ss}] {formatStr}");
+            }
             else
+            {
                 Console.WriteLine($"[{DateTime.Now:hh:mm:ss}] {string.Format(formatStr, arg)}");
+            }
 
             Console.ForegroundColor = ConsoleColor.Gray;
         }

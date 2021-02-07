@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using MySql.Data.MySqlClient;
 using System;
 using System.ComponentModel;
 using System.Data;
 using System.Threading;
-using MySql.Data.MySqlClient;
 
 namespace Mangos.Common.Legacy
 {
@@ -355,8 +355,8 @@ namespace Mangos.Common.Legacy
                     case DB_Type.MySQL:
                         {
                             Monitor.Enter(MySQLConn);
-                            var MySQLCommand = new MySqlCommand(sqlquery, MySQLConn);
-                            var MySQLAdapter = new MySqlDataAdapter(MySQLCommand);
+                            MySqlCommand MySQLCommand = new MySqlCommand(sqlquery, MySQLConn);
+                            MySqlDataAdapter MySQLAdapter = new MySqlDataAdapter(MySQLCommand);
                             if (Result is null)
                             {
                                 Result = new DataTable();
@@ -419,8 +419,8 @@ namespace Mangos.Common.Legacy
                     case DB_Type.MySQL:
                         {
                             Monitor.Enter(MySQLConn);
-                            var MySQLTransaction = MySQLConn.BeginTransaction();
-                            var MySQLCommand = new MySqlCommand(sqlquery, MySQLConn, MySQLTransaction);
+                            MySqlTransaction MySQLTransaction = MySQLConn.BeginTransaction();
+                            MySqlCommand MySQLCommand = new MySqlCommand(sqlquery, MySQLConn, MySQLTransaction);
                             MySQLCommand.ExecuteNonQuery();
                             MySQLTransaction.Commit();
                             Console.WriteLine("transaction completed");
@@ -449,7 +449,7 @@ namespace Mangos.Common.Legacy
         // TODO: Apply proper implementation as needed
         public int TableInsert(string tablename, string dbField1, string dbField1Value, string dbField2, int dbField2Value)
         {
-            var cmd = new MySqlCommand("", MySQLConn);
+            MySqlCommand cmd = new MySqlCommand("", MySQLConn);
             cmd.Connection.Open();
             cmd.CommandText = "insert into `" + tablename + "`(`" + dbField1 + "`,`" + dbField2 + "`) " + "VALUES (@field1value, @field2value)";
             cmd.Parameters.AddWithValue("@field1value", dbField1Value);
@@ -470,14 +470,14 @@ namespace Mangos.Common.Legacy
         // TODO: Apply proper implementation as needed
         public DataSet TableSelect(string tablename, string returnfields, string dbField1, string dbField1Value)
         {
-            var cmd = new MySqlCommand("", MySQLConn);
+            MySqlCommand cmd = new MySqlCommand("", MySQLConn);
             cmd.Connection.Open();
             cmd.CommandText = "select " + returnfields + " FROM `" + tablename + "` WHERE `" + dbField1 + "` = '@dbField1value';";
             cmd.Parameters.AddWithValue("@dbfield1value", dbField1Value);
             try
             {
-                var adapter = new MySqlDataAdapter();
-                var myDataset = new DataSet();
+                MySqlDataAdapter adapter = new MySqlDataAdapter();
+                DataSet myDataset = new DataSet();
                 adapter.SelectCommand = cmd;
                 adapter.Fill(myDataset);
                 cmd.ExecuteScalar();
@@ -519,9 +519,9 @@ namespace Mangos.Common.Legacy
                     case DB_Type.MySQL:
                         {
                             Monitor.Enter(MySQLConn);
-                            var MySQLCommand = new MySqlCommand(sqlquery, MySQLConn);
-                            var MySQLAdapter = new MySqlDataAdapter(MySQLCommand);
-                            var result = new DataTable();
+                            MySqlCommand MySQLCommand = new MySqlCommand(sqlquery, MySQLConn);
+                            MySqlDataAdapter MySQLAdapter = new MySqlDataAdapter(MySQLCommand);
+                            DataTable result = new DataTable();
                             MySQLAdapter.Fill(result);
                             break;
                         }

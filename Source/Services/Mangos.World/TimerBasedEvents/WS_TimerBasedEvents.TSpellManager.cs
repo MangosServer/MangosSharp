@@ -16,16 +16,16 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Spell;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Mangos.World.Server
 {
@@ -93,7 +93,7 @@ namespace Mangos.World.Server
                     try
                     {
                         WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                        foreach (var Character in WorldServiceLocator._WorldServer.CHARACTERs.Where(Character => Character.Value != null))
+                        foreach (KeyValuePair<ulong, WS_PlayerData.CharacterObject> Character in WorldServiceLocator._WorldServer.CHARACTERs.Where(Character => Character.Value != null))
                         {
                             WS_Base.BaseUnit objCharacter = Character.Value;
                             UpdateSpells(ref objCharacter);

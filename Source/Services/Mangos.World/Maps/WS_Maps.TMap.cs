@@ -16,13 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.IO;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
 using Mangos.DataStores;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.IO;
 
 namespace Mangos.World.Maps
 {

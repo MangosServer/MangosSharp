@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
+using System.Collections.Generic;
 
 namespace Mangos.Cluster.Handlers
 {
@@ -36,7 +36,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_QUERY_TIME(PacketClass packet, ClientClass client)
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUERY_TIME", client.IP, client.Port);
-            var response = new PacketClass(Opcodes.SMSG_QUERY_TIME_RESPONSE);
+            PacketClass response = new PacketClass(Opcodes.SMSG_QUERY_TIME_RESPONSE);
             response.AddInt32(_clusterServiceLocator.NativeMethods.timeGetTime("")); // GetTimestamp(Now))
             client.Send(response);
             response.Dispose();
@@ -56,7 +56,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_PLAYED_TIME(PacketClass packet, ClientClass client)
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY", client.IP, client.Port);
-            var response = new PacketClass(Opcodes.SMSG_PLAYED_TIME);
+            PacketClass response = new PacketClass(Opcodes.SMSG_PLAYED_TIME);
             response.AddInt32(1);
             response.AddInt32(1);
             client.Send(response);
@@ -66,13 +66,16 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_NAME_QUERY(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 13)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var guid = packet.GetUInt64();
+            ulong guid = packet.GetUInt64();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY [GUID={2:X}]", client.IP, client.Port, guid);
             if (_clusterServiceLocator.CommonGlobalFunctions.GuidIsPlayer(guid) && _clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(guid))
             {
-                var smsgNameQueryResponse = new PacketClass(Opcodes.SMSG_NAME_QUERY_RESPONSE);
+                PacketClass smsgNameQueryResponse = new PacketClass(Opcodes.SMSG_NAME_QUERY_RESPONSE);
                 smsgNameQueryResponse.AddUInt64(guid);
                 smsgNameQueryResponse.AddString(_clusterServiceLocator.WorldCluster.CharacteRs[guid].Name);
                 smsgNameQueryResponse.AddInt32((byte)_clusterServiceLocator.WorldCluster.CharacteRs[guid].Race);
@@ -99,7 +102,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_INSPECT(PacketClass packet, ClientClass client)
         {
             packet.GetInt16();
-            var guid = packet.GetUInt64();
+            ulong guid = packet.GetUInt64();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_INSPECT [GUID={2:X}]", client.IP, client.Port, guid);
         }
 

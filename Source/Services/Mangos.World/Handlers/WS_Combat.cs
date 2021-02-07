@@ -16,9 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Item;
 using Mangos.Common.Enums.Player;
@@ -30,6 +27,9 @@ using Mangos.World.Player;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Mangos.World.Handlers
 {
@@ -1345,19 +1345,21 @@ namespace Mangos.World.Handlers
         public void On_CMSG_SET_SELECTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
+            {
                 if (client.Character != null)
                 {
-                packet.GetInt16();
-                client.Character.TargetGUID = packet.GetUInt64();
-                client.Character.SetUpdateFlag(16, client.Character.TargetGUID);
-                client.Character.SendCharacterUpdate();
+                    packet.GetInt16();
+                    client.Character.TargetGUID = packet.GetUInt64();
+                    client.Character.SetUpdateFlag(16, client.Character.TargetGUID);
+                    client.Character.SendCharacterUpdate();
+                }
             }
         }
 
         public void On_CMSG_ATTACKSWING(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13 && client.Character != null)
-                {
+            {
                 packet.GetInt16();
                 ulong GUID = packet.GetUInt64();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ATTACKSWING [GUID={2:X}]", client.IP, client.Port, GUID);

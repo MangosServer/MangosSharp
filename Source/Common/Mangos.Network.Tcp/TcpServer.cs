@@ -16,13 +16,13 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Loggers;
+using Mangos.Network.Tcp.Extensions;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Channels;
-using Mangos.Loggers;
-using Mangos.Network.Tcp.Extensions;
 
 namespace Mangos.Network.Tcp
 {
@@ -62,9 +62,9 @@ namespace Mangos.Network.Tcp
         {
             try
             {
-                var tcpClient = await tcpClientFactory.CreateTcpClientAsync(clientSocket);
-                var recieveChannel = Channel.CreateUnbounded<byte>();
-                var sendChannel = Channel.CreateUnbounded<byte>();
+                ITcpClient tcpClient = await tcpClientFactory.CreateTcpClientAsync(clientSocket);
+                Channel<byte> recieveChannel = Channel.CreateUnbounded<byte>();
+                Channel<byte> sendChannel = Channel.CreateUnbounded<byte>();
 
                 RecieveAsync(clientSocket, recieveChannel.Writer);
                 SendAsync(clientSocket, sendChannel.Reader);
@@ -83,10 +83,10 @@ namespace Mangos.Network.Tcp
         {
             try
             {
-                var buffer = new byte[client.ReceiveBufferSize];
+                byte[] buffer = new byte[client.ReceiveBufferSize];
                 while (!cancellationTokenSource.IsCancellationRequested)
                 {
-                    var bytesRead = await client.ReceiveAsync(buffer, SocketFlags.None);
+                    int bytesRead = await client.ReceiveAsync(buffer, SocketFlags.None);
                     if (bytesRead == 0)
                     {
                         client.Dispose();
@@ -105,15 +105,19 @@ namespace Mangos.Network.Tcp
         {
             try
             {
-                var buffer = new byte[client.SendBufferSize];
+                byte[] buffer = new byte[client.SendBufferSize];
                 while (!cancellationTokenSource.IsCancellationRequested)
                 {
                     await reader.WaitToReadAsync();
                     int writeCount;
                     for (writeCount = 0;
                         writeCount < buffer.Length && reader.TryRead(out buffer[writeCount]);
-                        writeCount++) ;
-                    var arraySegment = new ArraySegment<byte>(buffer, 0, writeCount);
+                        writeCount++)
+                    {
+                        ;
+                    }
+
+                    ArraySegment<byte> arraySegment = new ArraySegment<byte>(buffer, 0, writeCount);
                     await client.SendAsync(arraySegment, SocketFlags.None);
                 }
             }

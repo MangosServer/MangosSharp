@@ -16,14 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Net;
 
 namespace Mangos.SignalR
 {
@@ -33,7 +33,7 @@ namespace Mangos.SignalR
 
         public ProxyServer(IPAddress address, int port, T hub)
         {
-            var hostbuilder = Host.CreateDefaultBuilder();
+            IHostBuilder hostbuilder = Host.CreateDefaultBuilder();
             hostbuilder.ConfigureWebHost(x => ConfigureWebHost(x, address, port, hub));
             webhost = hostbuilder.Build();
             webhost.Start();

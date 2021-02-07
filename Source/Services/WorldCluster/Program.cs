@@ -26,7 +26,7 @@ namespace WorldCluster
     {
         public static async Task Main(string[] args)
         {
-            var builder = new ContainerBuilder();
+            ContainerBuilder builder = new ContainerBuilder();
 
             builder
                 .RegisterModule<LoggerModule>()
@@ -35,8 +35,8 @@ namespace WorldCluster
                 .RegisterModule<DataStoreModule>()
                 .RegisterModule<ClusterModule>();
 
-            var container = builder.Build();
-            var startup = container.Resolve<Startup>();
+            IContainer container = builder.Build();
+            Startup startup = container.Resolve<Startup>();
             await startup.StartAsync();
         }
     }

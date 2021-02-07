@@ -16,14 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Zip;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using Mangos.Zip;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.WoWFakeClient
 {
@@ -51,9 +51,9 @@ namespace Mangos.WoWFakeClient
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public static void InitWarden()
         {
-            var m = new MaievData(Realmserver.SS_Hash);
-            var seedOut = m.GetBytes(16);
-            var seedIn = m.GetBytes(16);
+            MaievData m = new MaievData(Realmserver.SS_Hash);
+            byte[] seedOut = m.GetBytes(16);
+            byte[] seedIn = m.GetBytes(16);
             Maiev.KeyOut = RC4.Init(seedOut);
             Maiev.KeyIn = RC4.Init(seedIn);
         }
@@ -68,7 +68,7 @@ namespace Mangos.WoWFakeClient
             public MaievData(byte[] seed)
             {
                 // Initialization
-                var sha1 = new SHA1Managed();
+                SHA1Managed sha1 = new SHA1Managed();
                 source1 = sha1.ComputeHash(seed, 0, 20);
                 source2 = sha1.ComputeHash(seed, 20, 20);
                 Update();
@@ -76,8 +76,8 @@ namespace Mangos.WoWFakeClient
 
             public void Update()
             {
-                var buffer1 = new byte[60];
-                var sha1 = new SHA1Managed();
+                byte[] buffer1 = new byte[60];
+                SHA1Managed sha1 = new SHA1Managed();
                 Buffer.BlockCopy(source1, 0, buffer1, 0, 20);
                 Buffer.BlockCopy(data, 0, buffer1, 20, 20);
                 Buffer.BlockCopy(source2, 0, buffer1, 40, 20);
@@ -99,9 +99,12 @@ namespace Mangos.WoWFakeClient
 
             public byte[] GetBytes(int count)
             {
-                var b = new byte[count];
+                byte[] b = new byte[count];
                 for (int i = 0, loopTo = count - 1; i <= loopTo; i++)
+                {
                     b[i] = GetByte();
+                }
+
                 return b;
             }
         }
@@ -114,13 +117,13 @@ namespace Mangos.WoWFakeClient
         {
 
             // START Warden Decryption
-            var b = new byte[(Packet.Data.Length - 4)];
+            byte[] b = new byte[(Packet.Data.Length - 4)];
             Buffer.BlockCopy(Packet.Data, 4, b, 0, b.Length);
             RC4.Crypt(ref b, Maiev.KeyIn);
             Buffer.BlockCopy(b, 0, Packet.Data, 4, b.Length);
             // END
 
-            var WardenData = new byte[(Packet.Data.Length - 4)];
+            byte[] WardenData = new byte[(Packet.Data.Length - 4)];
             Buffer.BlockCopy(Packet.Data, 4, WardenData, 0, WardenData.Length);
             MaievOpcode Opcode = (MaievOpcode)Packet.GetInt8();
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -130,8 +133,8 @@ namespace Mangos.WoWFakeClient
             {
                 case MaievOpcode.MAIEV_MODULE_INFORMATION:
                     {
-                        var Name = Packet.GetByteArray(16);
-                        var Key = Packet.GetByteArray(16);
+                        byte[] Name = Packet.GetByteArray(16);
+                        byte[] Key = Packet.GetByteArray(16);
                         uint Size = Packet.GetUInt32();
                         Maiev.ModuleName = BitConverter.ToString(Name).Replace("-", "");
                         Maiev.ModuleKey = Key;
@@ -140,7 +143,7 @@ namespace Mangos.WoWFakeClient
                         if (File.Exists(@"modules\" + Maiev.ModuleName + ".mod") == false)
                         {
                             Console.WriteLine("[{0}][WARDEN] Module is missing.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
-                            var response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
+                            Packets.PacketClass response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
                             response.AddInt8((byte)MaievResponse.MAIEV_RESPONSE_FAILED_OR_MISSING);
                             SendWardenPacket(ref response);
                             response.Dispose();
@@ -152,14 +155,14 @@ namespace Mangos.WoWFakeClient
                             if (Maiev.LoadModule(Maiev.ModuleName, ref Maiev.ModuleData, Maiev.ModuleKey))
                             {
                                 Console.WriteLine("[{0}][WARDEN] Successfully loaded the module.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
-                                var response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
+                                Packets.PacketClass response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
                                 response.AddInt8((byte)MaievResponse.MAIEV_RESPONSE_SUCCESS);
                                 SendWardenPacket(ref response);
                                 response.Dispose();
                             }
                             else
                             {
-                                var response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
+                                Packets.PacketClass response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
                                 response.AddInt8((byte)MaievResponse.MAIEV_RESPONSE_FAILED_OR_MISSING);
                                 SendWardenPacket(ref response);
                                 response.Dispose();
@@ -172,19 +175,22 @@ namespace Mangos.WoWFakeClient
                 case MaievOpcode.MAIEV_MODULE_TRANSFER:
                     {
                         ushort Size = Packet.GetUInt16();
-                        var Data = Packet.GetByteArray(Size);
+                        byte[] Data = Packet.GetByteArray(Size);
                         Maiev.ModuleData = Realmserver.Concat(Maiev.ModuleData, Data);
                         ModuleLength -= Size;
                         if (ModuleLength <= 0)
                         {
                             Console.WriteLine("[{0}][WARDEN] Module is fully transfered.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
                             if (Directory.Exists("modules") == false)
+                            {
                                 Directory.CreateDirectory("modules");
+                            }
+
                             File.WriteAllBytes(@"modules\" + Maiev.ModuleName + ".mod", Maiev.ModuleData);
                             if (Maiev.LoadModule(Maiev.ModuleName, ref Maiev.ModuleData, Maiev.ModuleKey))
                             {
                                 Console.WriteLine("[{0}][WARDEN] Successfully loaded the module.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
-                                var response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
+                                Packets.PacketClass response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
                                 response.AddInt8((byte)MaievResponse.MAIEV_RESPONSE_SUCCESS);
                                 SendWardenPacket(ref response);
                                 response.Dispose();
@@ -207,16 +213,22 @@ namespace Mangos.WoWFakeClient
                         RC4.Crypt(ref WardenData, Maiev.ModKeyIn);
                         int HandledBytes = Maiev.HandlePacket(WardenData);
                         if (HandledBytes <= 0)
+                        {
                             return;
-                        var thePacket = Maiev.ReadPacket();
+                        }
+
+                        byte[] thePacket = Maiev.ReadPacket();
                         if (thePacket.Length == 0)
+                        {
                             return;
+                        }
+
                         RC4.Crypt(ref WardenData, Maiev.ModKeyOut);
 
                         // TODO: Decrypt?
 
                         Packets.DumpPacket(thePacket);
-                        var response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
+                        Packets.PacketClass response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
                         response.AddByteArray(thePacket);
                         SendWardenPacket(ref response);
                         response.Dispose();
@@ -230,15 +242,21 @@ namespace Mangos.WoWFakeClient
                         RC4.Crypt(ref WardenData, Maiev.ModKeyIn);
                         int HandledBytes = Maiev.HandlePacket(WardenData);
                         if (HandledBytes <= 0)
+                        {
                             return;
-                        var thePacket = Maiev.ReadPacket();
+                        }
+
+                        byte[] thePacket = Maiev.ReadPacket();
                         if (thePacket.Length == 0)
+                        {
                             return;
+                        }
+
                         RC4.Crypt(ref WardenData, Maiev.ModKeyOut);
                         // TODO: Decrypt?
 
                         Packets.DumpPacket(thePacket);
-                        var response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
+                        Packets.PacketClass response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
                         response.AddByteArray(thePacket);
                         SendWardenPacket(ref response);
                         response.Dispose();
@@ -250,11 +268,14 @@ namespace Mangos.WoWFakeClient
                         Maiev.GenerateNewRC4Keys(Realmserver.SS_Hash);
                         int HandledBytes = Maiev.HandlePacket(WardenData);
                         if (HandledBytes <= 0)
+                        {
                             return;
-                        var thePacket = Maiev.ReadPacket();
+                        }
+
+                        byte[] thePacket = Maiev.ReadPacket();
                         Maiev.ModKeyIn = new byte[258];
                         Maiev.ModKeyOut = new byte[258];
-                        var response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
+                        Packets.PacketClass response = new Packets.PacketClass(OPCODES.CMSG_WARDEN_DATA);
                         response.AddByteArray(thePacket);
                         SendWardenPacket(ref response);
                         response.Dispose();
@@ -273,7 +294,7 @@ namespace Mangos.WoWFakeClient
         public static void SendWardenPacket(ref Packets.PacketClass Packet)
         {
             // START Warden Encryption
-            var b = new byte[(Packet.Data.Length - 6)];
+            byte[] b = new byte[(Packet.Data.Length - 6)];
             Buffer.BlockCopy(Packet.Data, 6, b, 0, b.Length);
             RC4.Crypt(ref b, Maiev.KeyOut);
             Buffer.BlockCopy(b, 0, Packet.Data, 6, b.Length);
@@ -308,7 +329,7 @@ namespace Mangos.WoWFakeClient
                     return false;
                 }
 
-                var CompressedData = new byte[(Data.Length - 0x108)];
+                byte[] CompressedData = new byte[(Data.Length - 0x108)];
                 Array.Copy(Data, 4, CompressedData, 0, CompressedData.Length);
                 int dataPos = 4 + CompressedData.Length;
                 string Sign = Conversions.ToString((char)Data[dataPos + 3]) + (char)Data[dataPos + 2] + (char)Data[dataPos + 1] + (char)Data[dataPos];
@@ -319,7 +340,7 @@ namespace Mangos.WoWFakeClient
                 }
 
                 dataPos += 4;
-                var Signature = new byte[256];
+                byte[] Signature = new byte[256];
                 Array.Copy(Data, dataPos, Signature, 0, Signature.Length);
 
                 // Check signature
@@ -329,45 +350,56 @@ namespace Mangos.WoWFakeClient
                     return false;
                 }
 
-                var DecompressedData = new ZipService().DeCompress(CompressedData);
-                var ms = new MemoryStream(DecompressedData);
-                var br = new BinaryReader(ms);
+                byte[] DecompressedData = new ZipService().DeCompress(CompressedData);
+                MemoryStream ms = new MemoryStream(DecompressedData);
+                BinaryReader br = new BinaryReader(ms);
                 ModuleData = PrepairModule(ref br);
                 ms.Close();
                 ms.Dispose();
                 br = null;
                 Console.WriteLine("[WARDEN] Successfully prepaired Warden Module.");
                 if (!InitModule(ref ModuleData))
+                {
                     return false;
+                }
+
                 return true;
             }
 
             public bool CheckSignature(byte[] Signature, byte[] Data, int DataLen)
             {
-                var power = new BigInteger(new byte[] { 0x1, 0x0, 0x1, 0x0 }, true);
-                var pmod = new BigInteger(new byte[] { 0x6B, 0xCE, 0xF5, 0x2D, 0x2A, 0x7D, 0x7A, 0x67, 0x21, 0x21, 0x84, 0xC9, 0xBC, 0x25, 0xC7, 0xBC, 0xDF, 0x3D, 0x8F, 0xD9, 0x47, 0xBC, 0x45, 0x48, 0x8B, 0x22, 0x85, 0x3B, 0xC5, 0xC1, 0xF4, 0xF5, 0x3C, 0xC, 0x49, 0xBB, 0x56, 0xE0, 0x3D, 0xBC, 0xA2, 0xD2, 0x35, 0xC1, 0xF0, 0x74, 0x2E, 0x15, 0x5A, 0x6, 0x8A, 0x68, 0x1, 0x9E, 0x60, 0x17, 0x70, 0x8B, 0xBD, 0xF8, 0xD5, 0xF9, 0x3A, 0xD3, 0x25, 0xB2, 0x66, 0x92, 0xBA, 0x43, 0x8A, 0x81, 0x52, 0xF, 0x64, 0x98, 0xFF, 0x60, 0x37, 0xAF, 0xB4, 0x11, 0x8C, 0xF9, 0x2E, 0xC5, 0xEE, 0xCA, 0xB4, 0x41, 0x60, 0x3C, 0x7D, 0x2, 0xAF, 0xA1, 0x2B, 0x9B, 0x22, 0x4B, 0x3B, 0xFC, 0xD2, 0x5D, 0x73, 0xE9, 0x29, 0x34, 0x91, 0x85, 0x93, 0x4C, 0xBE, 0xBE, 0x73, 0xA9, 0xD2, 0x3B, 0x27, 0x7A, 0x47, 0x76, 0xEC, 0xB0, 0x28, 0xC9, 0xC1, 0xDA, 0xEE, 0xAA, 0xB3, 0x96, 0x9C, 0x1E, 0xF5, 0x6B, 0xF6, 0x64, 0xD8, 0x94, 0x2E, 0xF1, 0xF7, 0x14, 0x5F, 0xA0, 0xF1, 0xA3, 0xB9, 0xB1, 0xAA, 0x58, 0x97, 0xDC, 0x9, 0x17, 0xC, 0x4, 0xD3, 0x8E, 0x2, 0x2C, 0x83, 0x8A, 0xD6, 0xAF, 0x7C, 0xFE, 0x83, 0x33, 0xC6, 0xA8, 0xC3, 0x84, 0xEF, 0x29, 0x6, 0xA9, 0xB7, 0x2D, 0x6, 0xB, 0xD, 0x6F, 0x70, 0x9E, 0x34, 0xA6, 0xC7, 0x31, 0xBE, 0x56, 0xDE, 0xDD, 0x2, 0x92, 0xF8, 0xA0, 0x58, 0xB, 0xFC, 0xFA, 0xBA, 0x49, 0xB4, 0x48, 0xDB, 0xEC, 0x25, 0xF3, 0x18, 0x8F, 0x2D, 0xB3, 0xC0, 0xB8, 0xDD, 0xBC, 0xD6, 0xAA, 0xA6, 0xDB, 0x6F, 0x7D, 0x7D, 0x25, 0xA6, 0xCD, 0x39, 0x6D, 0xDA, 0x76, 0xC, 0x79, 0xBF, 0x48, 0x25, 0xFC, 0x2D, 0xC5, 0xFA, 0x53, 0x9B, 0x4D, 0x60, 0xF4, 0xEF, 0xC7, 0xEA, 0xAC, 0xA1, 0x7B, 0x3, 0xF4, 0xAF, 0xC7 }, true);
-                var sig = new BigInteger(Signature, true);
-                var res = BigInteger.ModPow(sig, power, pmod);
-                var result = res.ToByteArray(true);
+                BigInteger power = new BigInteger(new byte[] { 0x1, 0x0, 0x1, 0x0 }, true);
+                BigInteger pmod = new BigInteger(new byte[] { 0x6B, 0xCE, 0xF5, 0x2D, 0x2A, 0x7D, 0x7A, 0x67, 0x21, 0x21, 0x84, 0xC9, 0xBC, 0x25, 0xC7, 0xBC, 0xDF, 0x3D, 0x8F, 0xD9, 0x47, 0xBC, 0x45, 0x48, 0x8B, 0x22, 0x85, 0x3B, 0xC5, 0xC1, 0xF4, 0xF5, 0x3C, 0xC, 0x49, 0xBB, 0x56, 0xE0, 0x3D, 0xBC, 0xA2, 0xD2, 0x35, 0xC1, 0xF0, 0x74, 0x2E, 0x15, 0x5A, 0x6, 0x8A, 0x68, 0x1, 0x9E, 0x60, 0x17, 0x70, 0x8B, 0xBD, 0xF8, 0xD5, 0xF9, 0x3A, 0xD3, 0x25, 0xB2, 0x66, 0x92, 0xBA, 0x43, 0x8A, 0x81, 0x52, 0xF, 0x64, 0x98, 0xFF, 0x60, 0x37, 0xAF, 0xB4, 0x11, 0x8C, 0xF9, 0x2E, 0xC5, 0xEE, 0xCA, 0xB4, 0x41, 0x60, 0x3C, 0x7D, 0x2, 0xAF, 0xA1, 0x2B, 0x9B, 0x22, 0x4B, 0x3B, 0xFC, 0xD2, 0x5D, 0x73, 0xE9, 0x29, 0x34, 0x91, 0x85, 0x93, 0x4C, 0xBE, 0xBE, 0x73, 0xA9, 0xD2, 0x3B, 0x27, 0x7A, 0x47, 0x76, 0xEC, 0xB0, 0x28, 0xC9, 0xC1, 0xDA, 0xEE, 0xAA, 0xB3, 0x96, 0x9C, 0x1E, 0xF5, 0x6B, 0xF6, 0x64, 0xD8, 0x94, 0x2E, 0xF1, 0xF7, 0x14, 0x5F, 0xA0, 0xF1, 0xA3, 0xB9, 0xB1, 0xAA, 0x58, 0x97, 0xDC, 0x9, 0x17, 0xC, 0x4, 0xD3, 0x8E, 0x2, 0x2C, 0x83, 0x8A, 0xD6, 0xAF, 0x7C, 0xFE, 0x83, 0x33, 0xC6, 0xA8, 0xC3, 0x84, 0xEF, 0x29, 0x6, 0xA9, 0xB7, 0x2D, 0x6, 0xB, 0xD, 0x6F, 0x70, 0x9E, 0x34, 0xA6, 0xC7, 0x31, 0xBE, 0x56, 0xDE, 0xDD, 0x2, 0x92, 0xF8, 0xA0, 0x58, 0xB, 0xFC, 0xFA, 0xBA, 0x49, 0xB4, 0x48, 0xDB, 0xEC, 0x25, 0xF3, 0x18, 0x8F, 0x2D, 0xB3, 0xC0, 0xB8, 0xDD, 0xBC, 0xD6, 0xAA, 0xA6, 0xDB, 0x6F, 0x7D, 0x7D, 0x25, 0xA6, 0xCD, 0x39, 0x6D, 0xDA, 0x76, 0xC, 0x79, 0xBF, 0x48, 0x25, 0xFC, 0x2D, 0xC5, 0xFA, 0x53, 0x9B, 0x4D, 0x60, 0xF4, 0xEF, 0xC7, 0xEA, 0xAC, 0xA1, 0x7B, 0x3, 0xF4, 0xAF, 0xC7 }, true);
+                BigInteger sig = new BigInteger(Signature, true);
+                BigInteger res = BigInteger.ModPow(sig, power, pmod);
+                byte[] result = res.ToByteArray(true);
                 byte[] digest;
-                var properResult = new byte[256];
+                byte[] properResult = new byte[256];
                 for (int i = 0, loopTo = properResult.Length - 1; i <= loopTo; i++)
+                {
                     properResult[i] = 0xBB;
+                }
+
                 properResult[0x100 - 1] = 0xB;
                 string tmpKey = "MAIEV.MOD";
-                var bKey = new byte[tmpKey.Length];
+                byte[] bKey = new byte[tmpKey.Length];
                 for (int i = 0, loopTo1 = tmpKey.Length - 1; i <= loopTo1; i++)
+                {
                     bKey[i] = (byte)Strings.Asc(tmpKey[i]);
-                var newData = new byte[(DataLen + bKey.Length)];
+                }
+
+                byte[] newData = new byte[(DataLen + bKey.Length)];
                 Array.Copy(Data, 0, newData, 0, DataLen);
                 Array.Copy(bKey, 0, newData, DataLen, bKey.Length);
-                var sha1 = new SHA1Managed();
+                SHA1Managed sha1 = new SHA1Managed();
                 digest = sha1.ComputeHash(newData);
                 Array.Copy(digest, 0, properResult, 0, digest.Length);
                 for (int i = 0, loopTo2 = result.Length - 1; i <= loopTo2; i++)
                 {
                     if (result[i] != properResult[i])
+                    {
                         return false;
+                    }
                 }
 
                 return true;
@@ -385,16 +417,16 @@ namespace Mangos.WoWFakeClient
             {
                 int length = br.ReadInt32();
                 m_Mod = malloc(length);
-                var bModule = new byte[length];
-                var ms = new MemoryStream(bModule);
-                var bw = new BinaryWriter(ms);
-                var br2 = new BinaryReader(ms);
+                byte[] bModule = new byte[length];
+                MemoryStream ms = new MemoryStream(bModule);
+                BinaryWriter bw = new BinaryWriter(ms);
+                BinaryReader br2 = new BinaryReader(ms);
 
                 // Console.WriteLine("Allocated {0} (0x{1:X}) bytes for new module.", length, length)
 
                 // Copy 40 bytes from the original module to the new one.
                 br.BaseStream.Position = 0L;
-                var tmpBytes = br.ReadBytes(40);
+                byte[] tmpBytes = br.ReadBytes(40);
                 bw.Write(tmpBytes, 0, tmpBytes.Length);
                 br2.BaseStream.Position = 0x24L;
                 int source_location = 0x28 + br2.ReadInt32() * 12;
@@ -448,7 +480,7 @@ namespace Mangos.WoWFakeClient
                 br2.BaseStream.Position = 0x20L;
                 limit = br2.ReadInt32();
                 string library;
-                var loopTo = limit - 1;
+                int loopTo = limit - 1;
                 for (counter = 0; counter <= loopTo; counter++)
                 {
                     br2.BaseStream.Position = 0x1CL;
@@ -495,7 +527,10 @@ namespace Mangos.WoWFakeClient
                 {
                     tmpByte = br.ReadByte();
                     if (tmpByte == 0)
+                    {
                         return tmpStr;
+                    }
+
                     tmpStr += Conversions.ToString((char)tmpByte);
                     i += 1;
                 }
@@ -566,16 +601,19 @@ namespace Mangos.WoWFakeClient
                 int A;
                 int B;
                 int C;
-                var bCode = new byte[16];
-                var ms = new MemoryStream(Data);
-                var br = new BinaryReader(ms);
+                byte[] bCode = new byte[16];
+                MemoryStream ms = new MemoryStream(Data);
+                BinaryReader br = new BinaryReader(ms);
                 Marshal.Copy(Data, 0, new IntPtr(m_Mod), Data.Length);
                 br.BaseStream.Position = 0x18L;
                 C = br.ReadInt32();
                 B = 1 - C;
                 br.BaseStream.Position = 0x14L;
                 if (B > br.ReadInt32())
+                {
                     return false;
+                }
+
                 br.BaseStream.Position = 0x10L;
                 A = br.ReadInt32();
                 br.BaseStream.Position = A + B * 4;
@@ -612,7 +650,7 @@ namespace Mangos.WoWFakeClient
                 myFuncList = new IntPtr(malloc(0x1C));
                 Marshal.StructureToPtr(myFunctionList, myFuncList, false);
                 pFuncList = myFuncList.ToInt32();
-                int localVarPtr() { object argobj = pFuncList; var ret = VarPtr(ref argobj); return ret; }
+                int localVarPtr() { object argobj = pFuncList; int ret = VarPtr(ref argobj); return ret; }
 
                 ppFuncList = localVarPtr();
                 Console.WriteLine("Initializing module");
@@ -682,9 +720,15 @@ namespace Mangos.WoWFakeClient
             private void SendPacket(int ptrPacket, int dwSize)
             {
                 if (dwSize < 1)
+                {
                     return;
+                }
+
                 if (dwSize > 5000)
+                {
                     return;
+                }
+
                 m_PKT = new byte[dwSize];
                 Marshal.Copy(new IntPtr(ptrPacket), m_PKT, 0, dwSize);
                 Console.WriteLine("Warden.SendPacket() ptrPacket={0}, size={1}", ptrPacket, dwSize);
@@ -731,7 +775,10 @@ namespace Mangos.WoWFakeClient
                 // GetRC4Data = 0 'generate new keys
 
                 for (int i = 0, loopTo = dwSize - 1; i <= loopTo; i++) // Clear the keys
+                {
                     Marshal.WriteByte(new IntPtr(lpBuffer + i), 0);
+                }
+
                 m_RC4 = lpBuffer;
                 return 1;
             }
@@ -746,7 +793,7 @@ namespace Mangos.WoWFakeClient
             {
                 m_PKT = Array.Empty<byte>();
                 int BytesRead = 0;
-                int localVarPtr() { object argobj = BytesRead; var ret = VarPtr(ref argobj); return ret; }
+                int localVarPtr() { object argobj = BytesRead; int ret = VarPtr(ref argobj); return ret; }
 
                 BytesRead = localVarPtr();
                 PacketHandler(m_ModMem, ByteArrPtr(ref PacketData), PacketData.Length, BytesRead);
@@ -760,7 +807,7 @@ namespace Mangos.WoWFakeClient
 
             public void ReadKeys()
             {
-                var KeyData = new byte[516];
+                byte[] KeyData = new byte[516];
                 Marshal.Copy(new IntPtr(m_ModMem + 32), KeyData, 0, KeyData.Length);
                 Buffer.BlockCopy(KeyData, 0, KeyOut, 0, 258);
                 Buffer.BlockCopy(KeyData, 258, KeyIn, 0, 258);
@@ -768,7 +815,7 @@ namespace Mangos.WoWFakeClient
 
             public void ReadKeys2()
             {
-                var KeyData = new byte[516];
+                byte[] KeyData = new byte[516];
                 Marshal.Copy(new IntPtr(m_ModMem + 32), KeyData, 0, KeyData.Length);
                 Buffer.BlockCopy(KeyData, 0, ModKeyOut, 0, 258);
                 Buffer.BlockCopy(KeyData, 258, ModKeyIn, 0, 258);
@@ -784,7 +831,7 @@ namespace Mangos.WoWFakeClient
 
         private static int VarPtr(ref object obj)
         {
-            var gc = GCHandle.Alloc(obj, GCHandleType.Pinned);
+            GCHandle gc = GCHandle.Alloc(obj, GCHandleType.Pinned);
             return gc.AddrOfPinnedObject().ToInt32();
         }
 

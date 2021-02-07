@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Microsoft.VisualBasic;
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.VisualBasic;
 
 namespace Mangos.WoWFakeClient
 {
@@ -40,17 +40,17 @@ namespace Mangos.WoWFakeClient
             Console.WriteLine("[{0}][World] Received Auth Challenge.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
             WS_WardenClient.InitWarden();
             Worldserver.ServerSeed = Packet.GetUInt32();
-            var temp = Encoding.ASCII.GetBytes(Realmserver.Account.ToCharArray());
+            byte[] temp = Encoding.ASCII.GetBytes(Realmserver.Account.ToCharArray());
             temp = Realmserver.Concat(temp, BitConverter.GetBytes(0));
             temp = Realmserver.Concat(temp, BitConverter.GetBytes(Worldserver.ClientSeed));
             temp = Realmserver.Concat(temp, BitConverter.GetBytes(Worldserver.ServerSeed));
             temp = Realmserver.Concat(temp, Realmserver.SS_Hash);
-            var algorithm1 = new SHA1Managed();
-            var ShaDigest = algorithm1.ComputeHash(temp);
+            SHA1Managed algorithm1 = new SHA1Managed();
+            byte[] ShaDigest = algorithm1.ComputeHash(temp);
             Worldserver.Decoding = true;
             VBMath.Randomize();
             Worldserver.ClientSeed = (uint)(uint.MaxValue * VBMath.Rnd());
-            var Response = new Packets.PacketClass(OPCODES.CMSG_AUTH_SESSION);
+            Packets.PacketClass Response = new Packets.PacketClass(OPCODES.CMSG_AUTH_SESSION);
             Response.AddInt32(Realmserver.Revision);
             Response.AddInt32(0); // SessionID?
             Response.AddString(Realmserver.Account.ToUpper());
@@ -71,7 +71,7 @@ namespace Mangos.WoWFakeClient
                 case 0xC:
                     {
                         Console.WriteLine("[{0}][World] Auth succeeded.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
-                        var Response = new Packets.PacketClass(OPCODES.CMSG_CHAR_ENUM);
+                        Packets.PacketClass Response = new Packets.PacketClass(OPCODES.CMSG_CHAR_ENUM);
                         Worldserver.Send(Response);
                         Response.Dispose();
                         break;
@@ -125,7 +125,7 @@ namespace Mangos.WoWFakeClient
                     uint PetFamilyID = Packet.GetUInt32();
                     Console.WriteLine("[{0}][World] Logging in with character [{1}].", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"), Name);
                     Worldserver.CharacterGUID = GUID;
-                    var Response = new Packets.PacketClass(OPCODES.CMSG_PLAYER_LOGIN);
+                    Packets.PacketClass Response = new Packets.PacketClass(OPCODES.CMSG_PLAYER_LOGIN);
                     Response.AddUInt64(GUID);
                     Worldserver.Send(Response);
                     Response.Dispose();

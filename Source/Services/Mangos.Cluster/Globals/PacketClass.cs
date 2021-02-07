@@ -16,12 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Text;
 using Mangos.Common.Globals;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Text;
 
 namespace Mangos.Cluster.Globals
 {
@@ -127,19 +127,22 @@ namespace Mangos.Cluster.Globals
             }
             else
             {
-                var bytes = Encoding.UTF8.GetBytes(buffer.ToCharArray());
+                byte[] bytes = Encoding.UTF8.GetBytes(buffer.ToCharArray());
                 Array.Resize(ref Data, Data.Length + bytes.Length + 1);
                 Data[0] = (byte)((Data.Length - 2) / 256);
                 Data[1] = (byte)((Data.Length - 2) % 256);
                 for (int i = 0, loopTo = bytes.Length - 1; i <= loopTo; i++)
+                {
                     Data[Data.Length - 1 - bytes.Length + i] = bytes[i];
+                }
+
                 Data[^1] = 0;
             }
         }
 
         public void AddDouble(double buffer2)
         {
-            var buffer1 = BitConverter.GetBytes(buffer2);
+            byte[] buffer1 = BitConverter.GetBytes(buffer2);
             Array.Resize(ref Data, Data.Length + buffer1.Length);
             Buffer.BlockCopy(buffer1, 0, Data, Data.Length - buffer1.Length, buffer1.Length);
             Data[0] = (byte)((Data.Length - 2) / 256);
@@ -148,7 +151,7 @@ namespace Mangos.Cluster.Globals
 
         public void AddSingle(float buffer2)
         {
-            var buffer1 = BitConverter.GetBytes(buffer2);
+            byte[] buffer1 = BitConverter.GetBytes(buffer2);
             Array.Resize(ref Data, Data.Length + buffer1.Length);
             Buffer.BlockCopy(buffer1, 0, Data, Data.Length - buffer1.Length, buffer1.Length);
             Data[0] = (byte)((Data.Length - 2) / 256);
@@ -157,7 +160,7 @@ namespace Mangos.Cluster.Globals
 
         public void AddByteArray(byte[] buffer)
         {
-            var tmp = Data.Length;
+            int tmp = Data.Length;
             Array.Resize(ref Data, Data.Length + buffer.Length);
             Array.Copy(buffer, 0, Data, tmp, buffer.Length);
             Data[0] = (byte)((Data.Length - 2) / 256);
@@ -166,15 +169,17 @@ namespace Mangos.Cluster.Globals
 
         public void AddPackGuid(ulong buffer)
         {
-            var guid = BitConverter.GetBytes(buffer);
-            var flags = new BitArray(8);
-            var offsetStart = Data.Length;
-            var offsetNewSize = offsetStart;
+            byte[] guid = BitConverter.GetBytes(buffer);
+            BitArray flags = new BitArray(8);
+            int offsetStart = Data.Length;
+            int offsetNewSize = offsetStart;
             for (byte i = 0; i <= 7; i++)
             {
                 flags[i] = guid[i] != 0;
                 if (flags[i])
+                {
                     offsetNewSize += 1;
+                }
             }
 
             Array.Resize(ref Data, offsetNewSize + 1);
@@ -198,7 +203,7 @@ namespace Mangos.Cluster.Globals
 
         public ushort GetUInt8()
         {
-            var num1 = (ushort)(Data.Length + 1);
+            ushort num1 = (ushort)(Data.Length + 1);
             Offset += 1;
             return num1;
         }
@@ -251,7 +256,7 @@ namespace Mangos.Cluster.Globals
 
         public short GetInt16()
         {
-            var num1 = BitConverter.ToInt16(Data, Offset);
+            short num1 = BitConverter.ToInt16(Data, Offset);
             Offset += 2;
             return num1;
         }
@@ -264,7 +269,7 @@ namespace Mangos.Cluster.Globals
 
         public int GetInt32()
         {
-            var num1 = BitConverter.ToInt32(Data, Offset);
+            int num1 = BitConverter.ToInt32(Data, Offset);
             Offset += 4;
             return num1;
         }
@@ -277,7 +282,7 @@ namespace Mangos.Cluster.Globals
 
         public long GetInt64()
         {
-            var num1 = BitConverter.ToInt64(Data, Offset);
+            long num1 = BitConverter.ToInt64(Data, Offset);
             Offset += 8;
             return num1;
         }
@@ -290,7 +295,7 @@ namespace Mangos.Cluster.Globals
 
         public float GetFloat()
         {
-            var single1 = BitConverter.ToSingle(Data, Offset);
+            float single1 = BitConverter.ToSingle(Data, Offset);
             Offset += 4;
             return single1;
         }
@@ -303,7 +308,7 @@ namespace Mangos.Cluster.Globals
 
         public double GetDouble()
         {
-            var num1 = BitConverter.ToDouble(Data, Offset);
+            double num1 = BitConverter.ToDouble(Data, Offset);
             Offset += 8;
             return num1;
         }
@@ -316,8 +321,8 @@ namespace Mangos.Cluster.Globals
 
         public string GetString()
         {
-            var start = Offset;
-            var i = 0;
+            int start = Offset;
+            int i = 0;
             while (Data[start + i] != 0)
             {
                 i += 1;
@@ -342,7 +347,7 @@ namespace Mangos.Cluster.Globals
 
         public ushort GetUInt16()
         {
-            var num1 = BitConverter.ToUInt16(Data, Offset);
+            ushort num1 = BitConverter.ToUInt16(Data, Offset);
             Offset += 2;
             return num1;
         }
@@ -355,7 +360,7 @@ namespace Mangos.Cluster.Globals
 
         public uint GetUInt32()
         {
-            var num1 = BitConverter.ToUInt32(Data, Offset);
+            uint num1 = BitConverter.ToUInt32(Data, Offset);
             Offset += 4;
             return num1;
         }
@@ -368,7 +373,7 @@ namespace Mangos.Cluster.Globals
 
         public ulong GetUInt64()
         {
-            var num1 = BitConverter.ToUInt64(Data, Offset);
+            ulong num1 = BitConverter.ToUInt64(Data, Offset);
             Offset += 8;
             return num1;
         }

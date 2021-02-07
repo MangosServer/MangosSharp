@@ -64,7 +64,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(HEAL_SPELL, aiTarget);
             }
         }
@@ -75,7 +78,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(BOLT_SPELL, aiTarget);
             }
         }

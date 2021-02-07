@@ -16,10 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Data;
-using System.IO;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
 using Mangos.Common.Legacy;
@@ -28,6 +24,10 @@ using Mangos.World.Network;
 using Mangos.World.Player;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Data;
+using System.IO;
 
 namespace Mangos.World.Handlers
 {

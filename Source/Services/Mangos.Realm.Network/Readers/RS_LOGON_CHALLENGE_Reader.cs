@@ -30,15 +30,15 @@ namespace Mangos.Realm.Network.Readers
         public async ValueTask<RS_LOGON_CHALLENGE> ReadAsync(ChannelReader<byte> reader)
         {
             await reader.ReadVoidAsync(1);
-            var lengthArray = await reader.ReadArrayAsync(2);
-            var length = BitConverter.ToInt16(lengthArray);
-            var data = await reader.ReadArrayAsync(length);
+            byte[] lengthArray = await reader.ReadArrayAsync(2);
+            short length = BitConverter.ToInt16(lengthArray);
+            byte[] data = await reader.ReadArrayAsync(length);
 
             // Read account name from packet
-            var accountLength = data[29];
-            var account = new byte[accountLength];
+            byte accountLength = data[29];
+            byte[] account = new byte[accountLength];
             Array.Copy(data, 30, account, 0, accountLength);
-            var accountName = Encoding.UTF8.GetString(account);
+            string accountName = Encoding.UTF8.GetString(account);
 
             // Get the client build from packet.
             int clientBuild = BitConverter.ToInt16(new[] { data[7], data[8] }, 0);

@@ -16,6 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Dapper;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,8 +26,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Dapper;
-using MySql.Data.MySqlClient;
 
 namespace Mangos.Storage.MySql
 {
@@ -42,7 +42,7 @@ namespace Mangos.Storage.MySql
             }
 
             connection = new MySqlConnection(conenctionString);
-            var conenctionTask = connection.OpenAsync();
+            Task conenctionTask = connection.OpenAsync();
             queries = GetEmbeddedQueries(queriesTarget);
             await conenctionTask;
         }
@@ -57,22 +57,22 @@ namespace Mangos.Storage.MySql
 
         private Dictionary<string, string> GetEmbeddedQueries(object executor)
         {
-            var type = executor.GetType();
-            var assembly = type.Assembly;
-            var queriesCatalog = $"{type.Namespace}.Queries";
+            Type type = executor.GetType();
+            Assembly assembly = type.Assembly;
+            string queriesCatalog = $"{type.Namespace}.Queries";
 
-            var resources = assembly.GetManifestResourceNames()
+            Dictionary<string, string> resources = assembly.GetManifestResourceNames()
                 .Where(x => x.StartsWith(queriesCatalog))
                 .ToDictionary(
-                    x => GetEmbeddedSqlResourceName(queriesCatalog, x), 
-                    x => GetEmbeddedSqlResourcebody(assembly , x));
+                    x => GetEmbeddedSqlResourceName(queriesCatalog, x),
+                    x => GetEmbeddedSqlResourcebody(assembly, x));
             return resources;
         }
 
         private string GetEmbeddedSqlResourcebody(Assembly assembly, string resource)
         {
-            using var stream = assembly.GetManifestResourceStream(resource);
-            using var reader = new StreamReader(stream);
+            using Stream stream = assembly.GetManifestResourceStream(resource);
+            using StreamReader reader = new StreamReader(stream);
             return reader.ReadToEnd();
         }
 
@@ -115,7 +115,7 @@ namespace Mangos.Storage.MySql
             object parameters,
             [CallerMemberName] string callerMemberName = null)
         {
-            var result = await connection.QueryAsync<T>(GetQuery(callerMemberName), parameters);
+            IEnumerable<T> result = await connection.QueryAsync<T>(GetQuery(callerMemberName), parameters);
             return result.ToList();
         }
 

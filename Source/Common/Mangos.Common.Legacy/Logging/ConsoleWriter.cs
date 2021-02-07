@@ -16,10 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Threading;
 using Mangos.Common.Enums.Global;
 using Microsoft.VisualBasic;
+using System;
+using System.Threading;
 
 namespace Mangos.Common.Legacy.Logging
 {
@@ -28,14 +28,20 @@ namespace Mangos.Common.Legacy.Logging
         public override void Write(LogType type, string formatStr, params object[] arg)
         {
             if (LogLevel > type)
+            {
                 return;
+            }
+
             Console.Write(formatStr, arg);
         }
 
         public override void WriteLine(LogType type, string formatStr, params object[] arg)
         {
             if (LogLevel > type)
+            {
                 return;
+            }
+
             Console.WriteLine(L[(int)type] + ":" + "[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
         }
 

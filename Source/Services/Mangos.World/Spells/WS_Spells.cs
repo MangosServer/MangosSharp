@@ -16,9 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
@@ -39,6 +36,9 @@ using Mangos.World.Player;
 using Mangos.World.Quests;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Mangos.World.Spells
 {
@@ -1383,10 +1383,13 @@ namespace Mangos.World.Spells
                     return SpellFailedReason.SPELL_FAILED_ERROR;
                 }
                 if (Character != null)
+                {
                     if (Character.Spell_Silenced)
                     {
                         return SpellFailedReason.SPELL_FAILED_SILENCED;
                     }
+                }
+
                 if (((uint)Character.cUnitFlags & 0x100000u) != 0)
                 {
                     return SpellFailedReason.SPELL_FAILED_ERROR;
@@ -8815,11 +8818,14 @@ namespace Mangos.World.Spells
                 return;
             }
             if (client.Character != null)
+            {
                 if (!client.Character.HaveSpell(spellID))
                 {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] CHEAT: Character {2} casting unlearned spell {3}!", client.IP, client.Port, client.Character.Name, spellID);
-                return;
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] CHEAT: Character {2} casting unlearned spell {3}!", client.IP, client.Port, client.Character.Name, spellID);
+                    return;
                 }
+            }
+
             if (!SPELLs.ContainsKey(spellID))
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Character tried to cast a spell that didn't exist: {2}!", client.IP, client.Port, spellID);
@@ -8914,7 +8920,7 @@ namespace Mangos.World.Spells
                 packet.GetInt16();
                 int SpellID = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_CAST", client.IP, client.Port);
-                    if (client.Character.spellCasted[1] != null && client.Character.spellCasted[1].SpellID == SpellID)
+                if (client.Character.spellCasted[1] != null && client.Character.spellCasted[1].SpellID == SpellID)
                 {
                     client.Character.FinishSpell(CurrentSpellTypes.CURRENT_GENERIC_SPELL);
                 }

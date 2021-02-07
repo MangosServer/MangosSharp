@@ -16,15 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
@@ -40,6 +31,15 @@ using Mangos.World.Player;
 using Mangos.World.Spells;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
 
 namespace Mangos.World.Handlers
 {
@@ -902,7 +902,7 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            if (!int.TryParse(tID, out var ID) || ID < 0)
+            if (!int.TryParse(tID, out int ID) || ID < 0)
             {
                 return false;
             }
@@ -1841,7 +1841,7 @@ namespace Mangos.World.Handlers
                 return false;
             }
             string aName = acct[0];
-            if (!byte.TryParse(acct[1], out var aLevel))
+            if (!byte.TryParse(acct[1], out byte aLevel))
             {
                 return false;
             }

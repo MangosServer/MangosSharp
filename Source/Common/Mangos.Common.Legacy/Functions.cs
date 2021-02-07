@@ -28,7 +28,7 @@ namespace Mangos.Common.Legacy
                 return val;
             }
 
-            var array = val.ToCharArray();
+            char[] array = val.ToCharArray();
             array[0] = char.ToUpper(array[0]);
             return new string(array);
         }
@@ -40,7 +40,7 @@ namespace Mangos.Common.Legacy
                 return val;
             }
 
-            var array = val.ToCharArray();
+            char[] array = val.ToCharArray();
             array[0] = char.ToLower(array[0]);
             return new string(array);
         }

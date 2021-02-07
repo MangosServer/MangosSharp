@@ -30,12 +30,12 @@ namespace Mangos.Realm.Network.Writers
     {
         public async ValueTask WriteAsync(ChannelWriter<byte> writer, AUTH_REALMLIST packet)
         {
-            var t = Channel.CreateUnbounded<byte>();
+            Channel<byte> t = Channel.CreateUnbounded<byte>();
             //writer = t.Writer;
 
-            var responseBodyLength = packet.Realms.Sum(x => 
+            int responseBodyLength = packet.Realms.Sum(x =>
                 5
-                + x.Name.Length  + 1
+                + x.Name.Length + 1
                 + x.Address.Length + 1 + x.Port.Length + 1
                 + 7) + 7;
 
@@ -46,7 +46,7 @@ namespace Mangos.Realm.Network.Writers
 
             await writer.WriteAsync((byte)packet.Realms.Length);
 
-            foreach (var realmListItem in packet.Realms)
+            foreach (AUTH_REALMLIST.Realm realmListItem in packet.Realms)
             {
                 // (uint8) Realm Icon
                 // 0 -> Normal; 1 -> PvP; 6 -> RP; 8 -> RPPvP;

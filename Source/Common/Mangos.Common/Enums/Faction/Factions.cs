@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Faction
 {
-    enum Factions
+    internal enum Factions
     {
         None = 0,
         PLAYERHuman = 1,

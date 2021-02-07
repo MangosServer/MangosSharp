@@ -46,7 +46,7 @@ namespace Mangos.Realm.Network.Handlers
             MangosGlobalConstants mangosGlobalConstants,
             IAccountStorage accountStorage,
             AUTH_LOGON_PROOF_Writer AUTH_LOGON_PROOF_Writer,
-            RS_LOGON_CHALLENGE_Reader RS_LOGON_CHALLENGE_Reader, 
+            RS_LOGON_CHALLENGE_Reader RS_LOGON_CHALLENGE_Reader,
             AUTH_LOGON_CHALLENGE_Writer AUTH_LOGON_CHALLENGE_Writer)
         {
             this.mangosGlobalConstants = mangosGlobalConstants;
@@ -59,17 +59,17 @@ namespace Mangos.Realm.Network.Handlers
 
         public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, Client clientModel)
         {
-            var request = await RS_LOGON_CHALLENGE_Reader.ReadAsync(reader);
+            RS_LOGON_CHALLENGE request = await RS_LOGON_CHALLENGE_Reader.ReadAsync(reader);
             clientModel.AccountName = request.AccountName;
 
             // DONE: Check if our build can join the server
-            if (request.Build == mangosGlobalConstants.Required_Build_1_12_1 
-                || request.Build == mangosGlobalConstants.Required_Build_1_12_2 
+            if (request.Build == mangosGlobalConstants.Required_Build_1_12_1
+                || request.Build == mangosGlobalConstants.Required_Build_1_12_2
                 | request.Build == mangosGlobalConstants.Required_Build_1_12_3)
             {
                 // TODO: in the far future should check if the account is expired too                
-                var accountInfo = await accountStorage.GetAccountInfoAsync(clientModel.AccountName);
-                var accountState = await GetAccountStateAsync(accountInfo).ConfigureAwait(false);
+                AccountInfoEntity accountInfo = await accountStorage.GetAccountInfoAsync(clientModel.AccountName);
+                AccountState accountState = await GetAccountStateAsync(accountInfo).ConfigureAwait(false);
 
                 // DONE: Send results to client
                 switch (accountState)
@@ -96,7 +96,7 @@ namespace Mangos.Realm.Network.Handlers
 
                     case AccountState.LOGIN_FAILED:
                     case AccountState.LOGIN_BAD_PASS:
-                    case AccountState.LOGIN_DBBUSY:     
+                    case AccountState.LOGIN_DBBUSY:
                     case AccountState.LOGIN_BADVERSION:
                     case AccountState.LOGIN_DOWNLOADFILE:
                     case AccountState.LOGIN_SUSPENDED:
@@ -117,9 +117,9 @@ namespace Mangos.Realm.Network.Handlers
         }
 
         private async Task HandleLoginOkStateAsync(
-            RS_LOGON_CHALLENGE request, 
-            ChannelWriter<byte> writer, 
-            Client clientModel, 
+            RS_LOGON_CHALLENGE request,
+            ChannelWriter<byte> writer,
+            Client clientModel,
             AccountInfoEntity accountInfo)
         {
             if (accountInfo.sha_pass_hash.Length != 40) // Invalid password type, should always be 40 characters
@@ -128,11 +128,11 @@ namespace Mangos.Realm.Network.Handlers
                 return;
             }
 
-            var hash = GetPasswordHashFromString(accountInfo.sha_pass_hash);
+            byte[] hash = GetPasswordHashFromString(accountInfo.sha_pass_hash);
 
             clientModel.AuthEngine.CalculateX(request.Account, hash);
 
-            var resposne = new AUTH_LOGON_CHALLENGE(
+            AUTH_LOGON_CHALLENGE resposne = new AUTH_LOGON_CHALLENGE(
                 clientModel.AuthEngine.PublicB,
                 clientModel.AuthEngine.g,
                 clientModel.AuthEngine.N,
@@ -158,7 +158,7 @@ namespace Mangos.Realm.Network.Handlers
 
         private byte[] GetPasswordHashFromString(string sha_pass_hash)
         {
-            var hash = new byte[20];
+            byte[] hash = new byte[20];
             for (int i = 0; i < 40; i += 2)
             {
                 hash[i / 2] = byte.Parse(sha_pass_hash.Substring(i, 2), NumberStyles.HexNumber);

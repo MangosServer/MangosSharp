@@ -16,11 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System.Collections.Generic;
 using Mangos.World.AI;
 using Mangos.World.DataStores;
 using Mangos.World.Objects;
 using Microsoft.VisualBasic.CompilerServices;
+using System.Collections.Generic;
 
 namespace Mangos.World.Scripts.Creatures
 {
@@ -72,7 +72,9 @@ namespace Mangos.World.Scripts.Creatures
         {
             NextWaypoint -= 1000;
             if (NextWaypoint > 0)
+            {
                 return;
+            }
             // The guide has finished
             if (Conversions.ToBoolean(aiCreature.Life.Current) || CurrentWaypoint >= Waypoints.Count)
             {

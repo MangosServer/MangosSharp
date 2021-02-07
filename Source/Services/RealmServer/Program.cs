@@ -16,20 +16,20 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Autofac;
 using Mangos.Realm;
 using RealmServer.Modules;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RealmServer
 {
     public class Program
     {
-        public async static Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var builder = new ContainerBuilder();
+            ContainerBuilder builder = new ContainerBuilder();
             builder
                 .RegisterModule<LoggerModule>()
                 .RegisterModule<ConfigurationModule>()
@@ -38,8 +38,8 @@ namespace RealmServer
                 .RegisterModule<CommonModule>()
                 .RegisterModule<RealmModule>();
 
-            var container = builder.Build();
-            var startup = container.Resolve<Startup>();
+            IContainer container = builder.Build();
+            Startup startup = container.Resolve<Startup>();
             await startup.StartAsync();
 
             Thread.CurrentThread.Join();

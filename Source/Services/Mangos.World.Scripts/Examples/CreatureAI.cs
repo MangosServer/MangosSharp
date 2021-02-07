@@ -58,7 +58,10 @@ namespace Mangos.World.Scripts.Examples
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return; // If no player is targetted, don't cast knockdown.
+                }
+
                 aiCreature.CastSpell(Spell_Knockdown, aiTarget); // The casting of the spell. This will be casted on the selected target as defined previously.
             }
         }

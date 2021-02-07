@@ -54,7 +54,10 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit Target = aiCreature;
                 if (Target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(ACID_SPELL, aiTarget);
             }
         }

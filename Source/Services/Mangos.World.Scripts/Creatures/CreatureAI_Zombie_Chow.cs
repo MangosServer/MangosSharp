@@ -56,14 +56,17 @@ namespace Mangos.World.Scripts.Creatures
             {
                 WS_Base.BaseUnit target = aiCreature;
                 if (target is null)
+                {
                     return;
+                }
+
                 aiCreature.CastSpell(Spell_Infected_Wound, aiTarget);
             }
         }
 
         public void HealGluth(ref WS_Creatures.CreatureObject NPC_Gluth, ref WS_Creatures.CreatureObject Zombie_Chow)
         {
-            var Waypoint1 = new coords
+            coords Waypoint1 = new coords
             {
                 X = 3304.919922d,
                 Y = 3139.149902d,

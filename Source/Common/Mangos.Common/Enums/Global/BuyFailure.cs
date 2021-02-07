@@ -18,7 +18,7 @@
 
 namespace Mangos.Common.Enums.Global
 {
-    enum BuyFailure : byte
+    internal enum BuyFailure : byte
     {
         BUY_ERR_CANT_FIND_ITEM = 0,
         BUY_ERR_ITEM_ALREADY_SOLD = 1,

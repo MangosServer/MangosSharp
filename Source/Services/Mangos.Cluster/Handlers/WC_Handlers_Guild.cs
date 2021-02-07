@@ -16,8 +16,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Data;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
@@ -26,6 +24,8 @@ using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Data;
 
 namespace Mangos.Cluster.Handlers
 {
@@ -41,9 +41,12 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_QUERY(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 9)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var guildId = packet.GetUInt32();
+            uint guildId = packet.GetUInt32();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_QUERY [{2}]", client.IP, client.Port, guildId);
             _clusterServiceLocator.WcGuild.SendGuildQuery(client, guildId);
         }
@@ -59,9 +62,12 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_CREATE(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var guildName = packet.GetString();
+            string guildName = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_CREATE [{2}]", client.IP, client.Port, guildName);
             if (client.Character.IsInGuild)
             {
@@ -70,7 +76,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Create guild data
-            var mySqlQuery = new DataTable();
+            DataTable mySqlQuery = new DataTable();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES (\"{0}\", {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = \"{0}\";", guildName, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref mySqlQuery);
             _clusterServiceLocator.WcGuild.AddCharacterToGuild(client.Character, mySqlQuery.Rows[0].As<int>("guild_id"), 0);
         }
@@ -85,7 +91,7 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            var response = new PacketClass(Opcodes.SMSG_GUILD_INFO);
+            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_INFO);
             response.AddString(client.Character.Guild.Name);
             response.AddInt32(client.Character.Guild.CDay);
             response.AddInt32(client.Character.Guild.CMonth);
@@ -99,14 +105,20 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_RANK(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 14)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var rankId = packet.GetInt32();
-            var rankRights = packet.GetUInt32();
-            var rankName = packet.GetString().Replace("\"", "_").Replace("'", "_");
+            int rankId = packet.GetInt32();
+            uint rankRights = packet.GetUInt32();
+            string rankName = packet.GetString().Replace("\"", "_").Replace("'", "_");
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_RANK [{2}:{3}:{4}]", client.IP, client.Port, rankId, rankRights, rankName);
             if (rankId is < 0 or > 9)
+            {
                 return;
+            }
+
             if (!client.Character.IsInGuild)
             {
                 _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
@@ -129,9 +141,12 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_ADD_RANK(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var newRankName = packet.GetString().Replace("\"", "_").Replace("'", "_");
+            string newRankName = packet.GetString().Replace("\"", "_").Replace("'", "_");
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_ADD_RANK [{2}]", client.IP, client.Port, newRankName);
             if (!client.Character.IsInGuild)
             {
@@ -151,7 +166,7 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            for (var i = 0; i <= 9; i++)
+            for (int i = 0; i <= 9; i++)
             {
                 if (string.IsNullOrEmpty(client.Character.Guild.Ranks[i]))
                 {
@@ -185,7 +200,7 @@ namespace Mangos.Cluster.Handlers
 
             // TODO: Check if someone in the guild is the rank we're removing?
             // TODO: Can we really remove all ranks?
-            for (var i = 9; i >= 0; i -= 1)
+            for (int i = 9; i >= 0; i -= 1)
             {
                 if (!string.IsNullOrEmpty(client.Character.Guild.Ranks[i]))
                 {
@@ -202,12 +217,18 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_LEADER(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var playerName = packet.GetString();
+            string playerName = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_LEADER [{2}]", client.IP, client.Port, playerName);
             if (playerName.Length < 2)
+            {
                 return;
+            }
+
             playerName = _clusterServiceLocator.Functions.CapitalizeName(playerName);
             if (!client.Character.IsInGuild)
             {
@@ -222,7 +243,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Find new leader's GUID
-            var mySqlQuery = new DataTable();
+            DataTable mySqlQuery = new DataTable();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid, char_guildId, char_guildrank FROM characters WHERE char_name = '" + playerName + "';", ref mySqlQuery);
             if (mySqlQuery.Rows.Count == 0)
             {
@@ -236,7 +257,7 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            var playerGuid = mySqlQuery.Rows[0].As<ulong>("char_guid");
+            ulong playerGuid = mySqlQuery.Rows[0].As<ulong>("char_guid");
             client.Character.GuildRank = 1; // Officer
             client.Character.SendGuildUpdate();
             if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(playerGuid))
@@ -251,12 +272,12 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", client.Character.GuildRank, client.Character.Guid));
 
             // DONE: Send notify message
-            var response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.LEADER_CHANGED);
             response.AddInt8(2);
             response.AddString(client.Character.Name);
             response.AddString(playerName);
-            var argnotTo = 0UL;
+            ulong argnotTo = 0UL;
             _clusterServiceLocator.WcGuild.BroadcastToGuild(response, client.Character.Guild, notTo: argnotTo);
             response.Dispose();
         }
@@ -264,15 +285,18 @@ namespace Mangos.Cluster.Handlers
         public void On_MSG_SAVE_GUILD_EMBLEM(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length < 34)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var unk0 = packet.GetInt32();
-            var unk1 = packet.GetInt32();
-            var tEmblemStyle = packet.GetInt32();
-            var tEmblemColor = packet.GetInt32();
-            var tBorderStyle = packet.GetInt32();
-            var tBorderColor = packet.GetInt32();
-            var tBackgroundColor = packet.GetInt32();
+            int unk0 = packet.GetInt32();
+            int unk1 = packet.GetInt32();
+            int tEmblemStyle = packet.GetInt32();
+            int tEmblemColor = packet.GetInt32();
+            int tBorderStyle = packet.GetInt32();
+            int tBorderColor = packet.GetInt32();
+            int tBackgroundColor = packet.GetInt32();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_SAVE_GUILD_EMBLEM [{2},{3}] [{4}:{5}:{6}:{7}:{8}]", client.IP, client.Port, unk0, unk1, tEmblemStyle, tEmblemColor, tBorderStyle, tBorderColor, tBackgroundColor);
             if (!client.Character.IsInGuild)
             {
@@ -298,10 +322,10 @@ namespace Mangos.Cluster.Handlers
             client.Character.Guild.BackgroundColor = (byte)tBackgroundColor;
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_tEmblemStyle = {1}, guild_tEmblemColor = {2}, guild_tBorderStyle = {3}, guild_tBorderColor = {4}, guild_tBackgroundColor = {5} WHERE guild_id = {0};", client.Character.Guild.Id, tEmblemStyle, tEmblemColor, tBorderStyle, tBorderColor, tBackgroundColor));
             _clusterServiceLocator.WcGuild.SendGuildQuery(client, client.Character.Guild.Id);
-            var packetEvent = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass packetEvent = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
             packetEvent.AddInt8((byte)GuildEvent.TABARDCHANGE);
             packetEvent.AddInt32((int)client.Character.Guild.Id);
-            var argnotTo = 0UL;
+            ulong argnotTo = 0UL;
             _clusterServiceLocator.WcGuild.BroadcastToGuild(packetEvent, client.Character.Guild, notTo: argnotTo);
             packetEvent.Dispose();
 
@@ -329,17 +353,17 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Clear all members
-            var response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.DISBANDED);
             response.AddInt8(0);
-            var guildId = (int)client.Character.Guild.Id;
-            var tmpArray = client.Character.Guild.Members.ToArray();
-            foreach (var member in tmpArray)
+            int guildId = (int)client.Character.Guild.Id;
+            ulong[] tmpArray = client.Character.Guild.Members.ToArray();
+            foreach (ulong member in tmpArray)
             {
                 if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(member))
                 {
-                    var tmp = _clusterServiceLocator.WorldCluster.CharacteRs;
-                    var argobjCharacter = tmp[member];
+                    System.Collections.Generic.Dictionary<ulong, WcHandlerCharacter.CharacterObject> tmp = _clusterServiceLocator.WorldCluster.CharacteRs;
+                    WcHandlerCharacter.CharacterObject argobjCharacter = tmp[member];
                     _clusterServiceLocator.WcGuild.RemoveCharacterFromGuild(argobjCharacter);
                     tmp[member] = argobjCharacter;
                     _clusterServiceLocator.WorldCluster.CharacteRs[member].Client.SendMultiplyPackets(response);
@@ -361,11 +385,17 @@ namespace Mangos.Cluster.Handlers
         {
             // Isn't the client even sending a null terminator for the motd if it's empty?
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var motd = "";
+            string motd = "";
             if (packet.Length != 4)
+            {
                 motd = packet.GetString().Replace("\"", "_").Replace("'", "_");
+            }
+
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_MOTD", client.IP, client.Port);
             if (!client.Character.IsInGuild)
             {
@@ -381,13 +411,13 @@ namespace Mangos.Cluster.Handlers
 
             client.Character.Guild.Motd = motd;
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_MOTD = '{1}' WHERE guild_id = '{0}';", client.Character.Guild.Id, motd));
-            var response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.MOTD);
             response.AddInt8(1);
             response.AddString(motd);
 
             // DONE: Send message to everyone in the guild
-            var argnotTo = 0UL;
+            ulong argnotTo = 0UL;
             _clusterServiceLocator.WcGuild.BroadcastToGuild(response, client.Character.Guild, notTo: argnotTo);
             response.Dispose();
         }
@@ -395,12 +425,18 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_SET_OFFICER_NOTE(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var playerName = packet.GetString();
+            string playerName = packet.GetString();
             if (packet.Data.Length - 1 < 6 + playerName.Length + 1)
+            {
                 return;
-            var note = packet.GetString();
+            }
+
+            string note = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_SET_OFFICER_NOTE [{2}]", client.IP, client.Port, playerName);
             if (!client.Character.IsInGuild)
             {
@@ -421,12 +457,18 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_SET_PUBLIC_NOTE(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var playerName = packet.GetString();
+            string playerName = packet.GetString();
             if (packet.Data.Length - 1 < 6 + playerName.Length + 1)
+            {
                 return;
-            var note = packet.GetString();
+            }
+
+            string note = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_SET_PUBLIC_NOTE [{2}]", client.IP, client.Port, playerName);
             if (!client.Character.IsInGuild)
             {
@@ -447,12 +489,18 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_REMOVE(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var playerName = packet.GetString().Replace("'", "_").Replace("\"", "_");
+            string playerName = packet.GetString().Replace("'", "_").Replace("\"", "_");
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_REMOVE [{2}]", client.IP, client.Port, playerName);
             if (playerName.Length < 2)
+            {
                 return;
+            }
+
             playerName = _clusterServiceLocator.Functions.CapitalizeName(playerName);
 
             // DONE: Player1 checks
@@ -469,7 +517,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Find player2's guid
-            var q = new DataTable();
+            DataTable q = new DataTable();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName + "';", ref q);
 
             // DONE: Removed checks
@@ -485,7 +533,7 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            var objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
+            WcHandlerCharacter.CharacterObject objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
             if (objCharacter.IsGuildLeader)
             {
                 _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_LEADER_LEAVE);
@@ -493,12 +541,12 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Send guild event
-            var response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.REMOVED);
             response.AddInt8(2);
             response.AddString(playerName);
             response.AddString(objCharacter.Name);
-            var argnotTo = 0UL;
+            ulong argnotTo = 0UL;
             _clusterServiceLocator.WcGuild.BroadcastToGuild(response, client.Character.Guild, notTo: argnotTo);
             response.Dispose();
             _clusterServiceLocator.WcGuild.RemoveCharacterFromGuild(objCharacter);
@@ -507,9 +555,12 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_PROMOTE(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
+            string playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_PROMOTE [{2}]", client.IP, client.Port, playerName);
             if (!client.Character.IsInGuild)
             {
@@ -524,7 +575,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Find promoted player's guid
-            var q = new DataTable();
+            DataTable q = new DataTable();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
 
             // DONE: Promoted checks
@@ -540,7 +591,7 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            var objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
+            WcHandlerCharacter.CharacterObject objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
             if (objCharacter.Guild.Id != client.Character.Guild.Id)
             {
                 _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
@@ -565,13 +616,13 @@ namespace Mangos.Cluster.Handlers
             objCharacter.SendGuildUpdate();
 
             // DONE: Send event to guild
-            var response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.PROMOTION);
             response.AddInt8(3);
             response.AddString(objCharacter.Name);
             response.AddString(playerName);
             response.AddString(client.Character.Guild.Ranks[objCharacter.GuildRank]);
-            var argnotTo = 0UL;
+            ulong argnotTo = 0UL;
             _clusterServiceLocator.WcGuild.BroadcastToGuild(response, client.Character.Guild, notTo: argnotTo);
             response.Dispose();
         }
@@ -579,9 +630,12 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_DEMOTE(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
+            string playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_DEMOTE [{2}]", client.IP, client.Port, playerName);
             if (!client.Character.IsInGuild)
             {
@@ -596,7 +650,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Find demoted player's guid
-            var q = new DataTable();
+            DataTable q = new DataTable();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
 
             // DONE: Demoted checks
@@ -612,7 +666,7 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            var objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
+            WcHandlerCharacter.CharacterObject objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
             if (objCharacter.Guild.Id != client.Character.Guild.Id)
             {
                 _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
@@ -644,13 +698,13 @@ namespace Mangos.Cluster.Handlers
             objCharacter.SendGuildUpdate();
 
             // DONE: Send event to guild
-            var response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.DEMOTION);
             response.AddInt8(3);
             response.AddString(objCharacter.Name);
             response.AddString(playerName);
             response.AddString(client.Character.Guild.Ranks[objCharacter.GuildRank]);
-            var argnotTo = 0UL;
+            ulong argnotTo = 0UL;
             _clusterServiceLocator.WcGuild.BroadcastToGuild(response, client.Character.Guild, notTo: argnotTo);
             response.Dispose();
         }
@@ -659,9 +713,12 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_INVITE(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 6)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var playerName = packet.GetString();
+            string playerName = packet.GetString();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_INVITE [{2}]", client.IP, client.Port, playerName);
 
             // DONE: Inviter checks
@@ -678,7 +735,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Find invited player's guid
-            var q = new DataTable();
+            DataTable q = new DataTable();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
 
             // DONE: Invited checks
@@ -694,7 +751,7 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            var objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
+            WcHandlerCharacter.CharacterObject objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
             if (objCharacter.IsInGuild)
             {
                 _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.ALREADY_IN_GUILD, playerName);
@@ -713,7 +770,7 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            var response = new PacketClass(Opcodes.SMSG_GUILD_INVITE);
+            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_INVITE);
             response.AddString(client.Character.Name);
             response.AddString(client.Character.Guild.Name);
             objCharacter.Client.Send(response);
@@ -725,14 +782,17 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_GUILD_ACCEPT(PacketClass packet, ClientClass client)
         {
             if (client.Character.GuildInvited == 0L)
+            {
                 throw new ApplicationException("Character accepting guild invitation whihtout being invited.");
+            }
+
             _clusterServiceLocator.WcGuild.AddCharacterToGuild(client.Character, (int)client.Character.GuildInvited);
             client.Character.GuildInvited = 0U;
-            var response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.JOINED);
             response.AddInt8(1);
             response.AddString(client.Character.Name);
-            var argnotTo = 0UL;
+            ulong argnotTo = 0UL;
             _clusterServiceLocator.WcGuild.BroadcastToGuild(response, client.Character.Guild, notTo: argnotTo);
             response.Dispose();
             _clusterServiceLocator.WcGuild.SendGuildRoster(client.Character);
@@ -744,7 +804,7 @@ namespace Mangos.Cluster.Handlers
             client.Character.GuildInvited = 0U;
             if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey((ulong)Conversions.ToLong(client.Character.GuildInvitedBy)))
             {
-                var response = new PacketClass(Opcodes.SMSG_GUILD_DECLINE);
+                PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_DECLINE);
                 response.AddString(client.Character.Name);
                 _clusterServiceLocator.WorldCluster.CharacteRs[(ulong)Conversions.ToLong(client.Character.GuildInvitedBy)].Client.Send(response);
                 response.Dispose();
@@ -772,11 +832,11 @@ namespace Mangos.Cluster.Handlers
 
             _clusterServiceLocator.WcGuild.RemoveCharacterFromGuild(client.Character);
             _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_PLAYER_NO_MORE_IN_GUILD, client.Character.Name);
-            var response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.LEFT);
             response.AddInt8(1);
             response.AddString(client.Character.Name);
-            var argnotTo = 0UL;
+            ulong argnotTo = 0UL;
             _clusterServiceLocator.WcGuild.BroadcastToGuild(response, client.Character.Guild, notTo: argnotTo);
             response.Dispose();
         }
@@ -784,23 +844,29 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_TURN_IN_PETITION(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 13)
+            {
                 return;
+            }
+
             packet.GetInt16();
-            var itemGuid = packet.GetUInt64();
+            ulong itemGuid = packet.GetUInt64();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TURN_IN_PETITION [GUID={2:X}]", client.IP, client.Port, itemGuid);
 
             // DONE: Get info
-            var q = new DataTable();
+            DataTable q = new DataTable();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT * FROM petitions WHERE petition_itemGuid = " + (itemGuid - _clusterServiceLocator.GlobalConstants.GUID_ITEM) + " LIMIT 1;", ref q);
             if (q.Rows.Count == 0)
+            {
                 return;
-            var type = q.Rows[0].As<byte>("petition_type");
-            var name = q.Rows[0].As<string>("petition_name");
+            }
+
+            byte type = q.Rows[0].As<byte>("petition_type");
+            string name = q.Rows[0].As<string>("petition_name");
 
             // DONE: Check if already in guild
             if (type == 9 && client.Character.IsInGuild)
             {
-                var response = new PacketClass(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
+                PacketClass response = new PacketClass(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
                 response.AddInt32((int)PetitionTurnInError.PETITIONTURNIN_ALREADY_IN_GUILD);
                 client.Send(response);
                 response.Dispose();
@@ -811,14 +877,14 @@ namespace Mangos.Cluster.Handlers
             byte requiredSigns = 9;
             if (q.Rows[0].As<int>("petition_signedMembers") < requiredSigns)
             {
-                var response = new PacketClass(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
+                PacketClass response = new PacketClass(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
                 response.AddInt32((int)PetitionTurnInError.PETITIONTURNIN_NEED_MORE_SIGNATURES);
                 client.Send(response);
                 response.Dispose();
                 return;
             }
 
-            var q2 = new DataTable();
+            DataTable q2 = new DataTable();
 
             // DONE: Create guild and add members
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES ('{0}', {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = '{0}';", name, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref q2);
@@ -829,8 +895,8 @@ namespace Mangos.Cluster.Handlers
             {
                 if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(q.Rows[0].As<ulong>("petition_signedMember" + i)))
                 {
-                    var tmp = _clusterServiceLocator.WorldCluster.CharacteRs;
-                    var argobjCharacter = tmp[q.Rows[0].As<ulong>("petition_signedMember") + i];
+                    System.Collections.Generic.Dictionary<ulong, WcHandlerCharacter.CharacterObject> tmp = _clusterServiceLocator.WorldCluster.CharacteRs;
+                    WcHandlerCharacter.CharacterObject argobjCharacter = tmp[q.Rows[0].As<ulong>("petition_signedMember") + i];
                     _clusterServiceLocator.WcGuild.AddCharacterToGuild(argobjCharacter, q2.Rows[0].As<int>("guild_id"));
                     tmp[q.Rows[0].As<ulong>("petition_signedMember") + i] = argobjCharacter;
                 }
@@ -842,7 +908,7 @@ namespace Mangos.Cluster.Handlers
 
             // DONE: Delete guild charter item, on the world server
             client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-            var success = new PacketClass(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
+            PacketClass success = new PacketClass(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
             success.AddInt32(0); // Okay
             client.Send(success);
             success.Dispose();

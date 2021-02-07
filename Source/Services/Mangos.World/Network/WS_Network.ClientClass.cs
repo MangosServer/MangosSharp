@@ -16,14 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.World.Globals;
 using Mangos.World.Player;
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace Mangos.World.Network
 {
@@ -52,15 +52,19 @@ namespace Mangos.World.Network
                 IP = ci.IP;
                 Port = ci.Port;
 
-                ProcessQueueThread = new Thread(QueueProcessor);
-                ProcessQueueThread.IsBackground = true;
+                ProcessQueueThread = new Thread(QueueProcessor)
+                {
+                    IsBackground = true
+                };
                 ProcessQueueThread.Start();
             }
 
             public void PushPacket(Packets.PacketClass packet)
             {
                 if (Character == null)
+                {
                     return;
+                }
 
                 Packets.Enqueue(packet);
 
@@ -82,7 +86,9 @@ namespace Mangos.World.Network
                             ProcessQueueSempahore.WaitOne();
 
                             if (!IsActive)
+                            {
                                 break;
+                            }
 
                             lock (_sempahoreLock)
                             {
@@ -274,15 +280,15 @@ namespace Mangos.World.Network
             public void Dispose()
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, $"Connection from [{IP}:{Port}] disposed.");
-           
+
                 IsActive = false;
                 ProcessQueueSempahore.Set(); //Allow thread to exit.
                 ProcessQueueSempahore?.Dispose();
 
                 try
-                { 
-                ProcessQueueThread?.Interrupt();
-                ProcessQueueThread?.Join(1000);
+                {
+                    ProcessQueueThread?.Interrupt();
+                    ProcessQueueThread?.Join(1000);
                 }
                 catch (ThreadInterruptedException ex)
                 {
