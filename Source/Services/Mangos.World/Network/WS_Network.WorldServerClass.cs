@@ -321,7 +321,7 @@ namespace Mangos.World.Network
 
             public void CheckConnection(object State)
             {
-                if (checked(WorldServiceLocator._NativeMethods.timeGetTime("") - WorldServiceLocator._WS_Network.LastPing) > 40000)
+                if ((WorldServiceLocator._NativeMethods.timeGetTime("") - WorldServiceLocator._WS_Network.LastPing) > 40000)
                 {
                     if (Cluster != null)
                     {
@@ -368,7 +368,7 @@ namespace Mangos.World.Network
             async Task IWorld.InstanceCreateAsync(uint MapID)
             {
                 //ILSpy generated this explicit interface implementation from .override directive in InstanceCreate
-                await InstanceCreateAsync(MapID);
+                await InstanceCreateAsync(MapID).ConfigureAwait(false);
             }
 
             public void InstanceDestroy(uint MapID)

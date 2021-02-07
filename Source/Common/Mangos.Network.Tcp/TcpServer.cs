@@ -112,10 +112,7 @@ namespace Mangos.Network.Tcp
                     int writeCount;
                     for (writeCount = 0;
                         writeCount < buffer.Length && reader.TryRead(out buffer[writeCount]);
-                        writeCount++)
-                    {
-                        ;
-                    }
+                        writeCount++) ;
 
                     ArraySegment<byte> arraySegment = new ArraySegment<byte>(buffer, 0, writeCount);
                     await client.SendAsync(arraySegment, SocketFlags.None);

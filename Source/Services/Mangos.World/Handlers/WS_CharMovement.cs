@@ -958,24 +958,24 @@ namespace Mangos.World.Handlers
                 {
                     if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)unchecked(Character.CellX + CellXAdd), Character.CellY] == null)
                     {
-                        MAP_Load((byte)(short)unchecked(Character.CellX + CellXAdd), Character.CellY, Character.MapID);
+                        MAP_Load((byte)(short)(Character.CellX + CellXAdd), Character.CellY, Character.MapID);
                     }
-                    if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)unchecked(Character.CellX + CellXAdd), Character.CellY].CreaturesHere.Count > 0 || WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)unchecked(Character.CellX + CellXAdd), Character.CellY].GameObjectsHere.Count > 0)
+                    if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)(Character.CellX + CellXAdd), Character.CellY].CreaturesHere.Count > 0 || WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)unchecked(Character.CellX + CellXAdd), Character.CellY].GameObjectsHere.Count > 0)
                     {
-                        UpdateCreaturesAndGameObjectsInCell(ref WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)unchecked(Character.CellX + CellXAdd), Character.CellY], ref Character);
+                        UpdateCreaturesAndGameObjectsInCell(ref WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)(Character.CellX + CellXAdd), Character.CellY], ref Character);
                     }
-                    if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)unchecked(Character.CellX + CellXAdd), Character.CellY].PlayersHere.Count > 0)
+                    if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)(Character.CellX + CellXAdd), Character.CellY].PlayersHere.Count > 0)
                     {
-                        UpdatePlayersInCell(ref WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)unchecked(Character.CellX + CellXAdd), Character.CellY], ref Character);
+                        UpdatePlayersInCell(ref WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)(Character.CellX + CellXAdd), Character.CellY], ref Character);
                     }
-                    if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)unchecked(Character.CellX + CellXAdd), Character.CellY].CorpseObjectsHere.Count > 0)
+                    if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)(Character.CellX + CellXAdd), Character.CellY].CorpseObjectsHere.Count > 0)
                     {
-                        UpdateCorpseObjectsInCell(ref WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)unchecked(Character.CellX + CellXAdd), Character.CellY], ref Character);
+                        UpdateCorpseObjectsInCell(ref WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[(short)(Character.CellX + CellXAdd), Character.CellY], ref Character);
                     }
                 }
                 if (CellYAdd != 0)
                 {
-                    if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[Character.CellX, (short)unchecked(Character.CellY + CellYAdd)] == null)
+                    if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[Character.CellX, (short)(Character.CellY + CellYAdd)] == null)
                     {
                         MAP_Load(Character.CellX, (byte)(short)unchecked(Character.CellY + CellYAdd), Character.MapID);
                     }
