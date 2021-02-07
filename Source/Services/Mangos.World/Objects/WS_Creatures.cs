@@ -1828,7 +1828,7 @@ namespace Mangos.World.Objects
                     ulong[] array = SeenBy.ToArray();
                     foreach (ulong plGUID in array)
                     {
-                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID))
+                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID) && plGUID != 0)
                         {
                             WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                             WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
@@ -2089,7 +2089,7 @@ namespace Mangos.World.Objects
                 ulong CreatureGUID = packet.GetUInt64();
                 try
                 {
-                    if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(CreatureID))
+                    if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(CreatureID) && CreatureID != 0 && CreatureGUID != 0)
                     {
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CREATURE_QUERY [Creature {2} not loaded.]", client.IP, client.Port, CreatureID);
                         response.AddUInt32((uint)(CreatureID | int.MinValue));
