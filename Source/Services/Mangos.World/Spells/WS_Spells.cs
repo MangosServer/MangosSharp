@@ -4613,7 +4613,7 @@ namespace Mangos.World.Spells
                 NearZ = Target.unitTarget.positionZ;
             }
             float moveDist = WorldServiceLocator._WS_Combat.GetDistance(Caster, NearX, NearY, NearZ);
-            int TimeToMove = checked((int)Math.Round(moveDist / SPELLs[SpellID].Speed * 1000f));
+            double TimeToMove = checked((double)Math.Round(moveDist / SPELLs[SpellID].Speed * 1000f));
             Packets.PacketClass SMSG_MONSTER_MOVE = new Packets.PacketClass(Opcodes.SMSG_MONSTER_MOVE);
             SMSG_MONSTER_MOVE.AddPackGUID(Caster.GUID);
             SMSG_MONSTER_MOVE.AddSingle(Caster.positionX);
@@ -4622,7 +4622,7 @@ namespace Mangos.World.Spells
             SMSG_MONSTER_MOVE.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
             SMSG_MONSTER_MOVE.AddInt8(0);
             SMSG_MONSTER_MOVE.AddInt32(256);
-            SMSG_MONSTER_MOVE.AddInt32(TimeToMove);
+            SMSG_MONSTER_MOVE.AddInt32((int)TimeToMove);
             SMSG_MONSTER_MOVE.AddInt32(1);
             SMSG_MONSTER_MOVE.AddSingle(NearX);
             SMSG_MONSTER_MOVE.AddSingle(NearY);
