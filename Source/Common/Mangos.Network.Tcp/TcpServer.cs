@@ -78,7 +78,6 @@ namespace Mangos.Network.Tcp
             }
         }
 
-
         private async void RecieveAsync(Socket client, ChannelWriter<byte> writer)
         {
             try

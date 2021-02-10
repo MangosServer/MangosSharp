@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -53,9 +53,11 @@ namespace Mangos.World.Handlers
                     case 64:
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTION_BUTTON [Added Macro {2} into button {3}]", client.IP, client.Port, action, button);
                         break;
+
                     case 128:
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTION_BUTTON [Added Item {2} into button {3}]", client.IP, client.Port, action, button);
                         break;
+
                     default:
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTION_BUTTON [Added Action {2}:{4}:{5} into button {3}]", client.IP, client.Port, action, button, actionType, actionMisc);
                         break;
@@ -296,12 +298,14 @@ namespace Mangos.World.Handlers
                         return false;
                     }
                     break;
+
                 case ITEM_SUBCLASS.ITEM_SUBCLASS_POTION:
                     if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].SubClass != ITEM_SUBCLASS.ITEM_SUBCLASS_POTION)
                     {
                         return false;
                     }
                     break;
+
                 default:
                     return false;
             }

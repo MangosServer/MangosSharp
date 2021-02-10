@@ -51,6 +51,7 @@ namespace Mangos.Cluster
 
         // Players' containers
         public long ClietniDs;
+
         public Dictionary<uint, ClientClass> ClienTs = new Dictionary<uint, ClientClass>();
         public ReaderWriterLock CharacteRsLock = new ReaderWriterLock();
         public Dictionary<ulong, WcHandlerCharacter.CharacterObject> CharacteRs = new Dictionary<ulong, WcHandlerCharacter.CharacterObject>();
@@ -58,6 +59,7 @@ namespace Mangos.Cluster
 
         // System Things...
         public BaseWriter Log = new BaseWriter();
+
         public Random Rnd = new Random();
 
         public delegate void HandlePacket(PacketClass packet, ClientClass client);
@@ -122,24 +124,28 @@ namespace Mangos.Cluster
         }
 
         private Dictionary<Opcodes, HandlePacket> _packetHandlers = new Dictionary<Opcodes, HandlePacket>();
+
         public Dictionary<Opcodes, HandlePacket> GetPacketHandlers()
         {
             return _packetHandlers;
         }
 
         private SQL _accountDatabase = new SQL();
+
         public SQL GetAccountDatabase()
         {
             return _accountDatabase;
         }
 
         private SQL _characterDatabase = new SQL();
+
         public SQL GetCharacterDatabase()
         {
             return _characterDatabase;
         }
 
         private SQL _worldDatabase = new SQL();
+
         public SQL GetWorldDatabase()
         {
             return _worldDatabase;

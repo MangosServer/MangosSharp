@@ -1,16 +1,16 @@
 ﻿//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -290,14 +290,13 @@ namespace Mangos.Cluster.Handlers
             // If UncompressedSize > ReceivedPacketSize Then
             // Dim compressedBuffer(ReceivedPacketSize - 1) As Byte
             // Array.Copy(packet.Data, packet.Offset, compressedBuffer, 0, compressedBuffer.Length)
-            // 
+            //
             // dataStr = ToHex(DeCompress(compressedBuffer))
             // Else
             // dataStr = ToHex(packet.Data, packet.Offset)
             // End If
 
             // _WorldCluster.AccountDatabase.Update(String.Format("UPDATE `account_data` SET `account_data{0}`={2} WHERE `account_id`={1};", DataID, AccID, dataStr))
-
             catch (Exception e)
             {
                 _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "Error while updating account data.{0}", Constants.vbCrLf + e);
@@ -323,7 +322,7 @@ namespace Mangos.Cluster.Handlers
             // _WorldCluster.AccountDatabase.Query(String.Format("SELECT account_id FROM accounts WHERE username = ""{0}"";", client.Account), AccData)
             // If AccData.Rows.Count > 0 Then
             // Dim AccID As Integer = CType(AccData.Rows(0).Item("account_id"), Integer)
-            // 
+            //
             // AccData.Clear()
             // _WorldCluster.AccountDatabase.Query(String.Format("SELECT `account_data{1}` FROM account_data WHERE account_id = {0}", AccID, DataID), AccData)
             // If AccData.Rows.Count > 0 Then FoundData = True

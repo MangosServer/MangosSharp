@@ -1,16 +1,16 @@
 ﻿//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -27,10 +27,13 @@ namespace Mangos.Common.Enums.Spell
         SPELL_FAILED_ALREADY_HAVE_CHARM = 0x4,                           // 0x004
         SPELL_FAILED_ALREADY_HAVE_SUMMON = 0x5,                          // 0x005
         SPELL_FAILED_ALREADY_OPEN = 0x6,                                 // 0x006
+
         // SPELL_FAILED_AURA_BOUNCED = &H7                                ' 0x007
         SPELL_FAILED_MORE_POWERFUL_SPELL_ACTIVE = 0x7,                   // 0x007
+
         // SPELL_FAILED_AUTOTRACK_INTERRUPTED = &H8                       ' 0x008 ' old commented CAST_FAIL_FAILED = 8,-> 29
         SPELL_FAILED_BAD_IMPLICIT_TARGETS = 0x9,                         // 0x009
+
         SPELL_FAILED_BAD_TARGETS = 0xA,                                  // 0x00A
         SPELL_FAILED_CANT_BE_CHARMED = 0xB,                              // 0x00B
         SPELL_FAILED_CANT_BE_DISENCHANTED = 0xC,                         // 0x00C
@@ -38,9 +41,11 @@ namespace Mangos.Common.Enums.Spell
         SPELL_FAILED_CANT_CAST_ON_TAPPED = 0xE,                          // 0x00D
         SPELL_FAILED_CANT_DUEL_WHILE_INVISIBLE = 0xF,                    // 0x00E
         SPELL_FAILED_CANT_DUEL_WHILE_STEALTHED = 0x10,                   // 0x00F
+
         // SPELL_FAILED_CANT_STEALTH = &H10                               ' 0x010
         // SPELL_FAILED_CASTER_AURASTATE = &H11                           ' 0x011
         SPELL_FAILED_CANT_TOO_CLOSE_TO_ENEMY = 0x11,
+
         SPELL_FAILED_CANT_DO_THAT_YET = 0x12,
         SPELL_FAILED_CASTER_DEAD = 0x13,                                 // 0x012
         SPELL_FAILED_CHARMED = 0x14,                                     // 0x013
@@ -56,8 +61,10 @@ namespace Mangos.Common.Enums.Spell
         SPELL_FAILED_FLEEING = 0x1E,                                     // 0x01D
         SPELL_FAILED_FOOD_LOWLEVEL = 0x1F,                               // 0x01E
         SPELL_FAILED_HIGHLEVEL = 0x20,                                   // 0x01F
+
         // SPELL_FAILED_HUNGER_SATIATED = &H21                            ' 0x020
         SPELL_FAILED_IMMUNE = 0x22,                                      // 0x021
+
         SPELL_FAILED_INTERRUPTED = 0x23,                                 // 0x022
         SPELL_FAILED_INTERRUPTED_COMBAT = 0x24,                          // 0x023
         SPELL_FAILED_ITEM_ALREADY_ENCHANTED = 0x25,                      // 0x024
@@ -115,8 +122,10 @@ namespace Mangos.Common.Enums.Spell
         SPELL_FAILED_OUT_OF_RANGE = 0x59,                                // 0x057
         SPELL_FAILED_PACIFIED = 0x5,                                    // 0x058
         SPELL_FAILED_POSSESSED = 0x5B,                                   // 0x059
+
         // SPELL_FAILED_REAGENTS = &H5C                                   ' 0x05A ' [-ZERO] not in 1.12
         SPELL_FAILED_REQUIRES_AREA = 0x5D,                               // 0x05B ' CAST_FAIL_YOU_NEED_TO_BE_IN_XXX
+
         SPELL_FAILED_REQUIRES_SPELL_FOCUS = 0x5E,                        // 0x05C ' CAST_FAIL_REQUIRES_XXX
         SPELL_FAILED_ROOTED = 0x5F,                                      // 0x05D ' CAST_FAIL_UNABLE_TO_MOVE
         SPELL_FAILED_SILENCED = 0x60,                                    // 0x05E
@@ -143,8 +152,10 @@ namespace Mangos.Common.Enums.Spell
         SPELL_FAILED_THIRST_SATIATED = 0x75,                             // 0x073
         SPELL_FAILED_TOO_CLOSE = 0x76,                                   // 0x074
         SPELL_FAILED_TOO_MANY_OF_ITEM = 0x77,                            // 0x075
+
         // SPELL_FAILED_TOTEMS = &H78                                     ' 0x076 ' [-ZERO] not in 1.12
         SPELL_FAILED_TRAINING_POINTS = 0x79,                             // 0x077
+
         SPELL_FAILED_TRY_AGAIN = 0x7A,                                   // 0x078 ' CAST_FAIL_FAILED_ATTEMPT
         SPELL_FAILED_UNIT_NOT_BEHIND = 0x7B,                             // 0x079
         SPELL_FAILED_UNIT_NOT_INFRONT = 0x7C,                            // 0x07A
@@ -155,8 +166,10 @@ namespace Mangos.Common.Enums.Spell
         SPELL_FAILED_TARGET_NOT_IN_RAID = 0x81,                          // 0x07F
         SPELL_FAILED_DISENCHANT_WHILE_LOOTING = 0x82,                    // 0x080
         SPELL_FAILED_PROSPECT_WHILE_LOOTING = 0x83,
+
         // SPELL_FAILED_PROSPECT_NEED_MORE = &H85
         SPELL_FAILED_TARGET_FREEFORALL = 0x85,                           // 0x081
+
         SPELL_FAILED_NO_EDIBLE_CORPSES = 0x86,                           // 0x082
         SPELL_FAILED_ONLY_BATTLEGROUNDS = 0x87,                          // 0x083
         SPELL_FAILED_TARGET_NOT_GHOST = 0x88,                            // 0x084

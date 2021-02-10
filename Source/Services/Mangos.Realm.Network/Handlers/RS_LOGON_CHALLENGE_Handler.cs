@@ -67,7 +67,7 @@ namespace Mangos.Realm.Network.Handlers
                 || request.Build == mangosGlobalConstants.Required_Build_1_12_2
                 || request.Build == mangosGlobalConstants.Required_Build_1_12_3)
             {
-                // TODO: in the far future should check if the account is expired too                
+                // TODO: in the far future should check if the account is expired too
                 AccountInfoEntity accountInfo = await accountStorage.GetAccountInfoAsync(clientModel.AccountName);
                 AccountState accountState = await GetAccountStateAsync(accountInfo).ConfigureAwait(false);
 

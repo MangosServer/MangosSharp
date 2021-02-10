@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -131,6 +131,7 @@ namespace Mangos.World.Objects
                         case 21:
                         case 27:
                             return false;
+
                         default:
                             return true;
                     }
@@ -806,6 +807,7 @@ namespace Mangos.World.Objects
                                 }
                             }
                             break;
+
                         case GroupLootMethod.LOOT_MASTER:
                             if (Character.Group.LocalLootMaster == null)
                             {
@@ -818,6 +820,7 @@ namespace Mangos.World.Objects
                                 Character.Group.LocalLootMaster.client.Send(ref packet);
                             }
                             break;
+
                         case GroupLootMethod.LOOT_ROUND_ROBIN:
                         case GroupLootMethod.LOOT_GROUP:
                         case GroupLootMethod.LOOT_NEED_BEFORE_GREED:
@@ -883,6 +886,7 @@ namespace Mangos.World.Objects
                             case 5:
                                 GrayLevel = 0;
                                 break;
+
                             case 6:
                             case 7:
                             case 8:
@@ -919,6 +923,7 @@ namespace Mangos.World.Objects
                             case 39:
                                 GrayLevel = (byte)Math.Round(Character.Level - Math.Floor(Character.Level / 10.0) - 5.0);
                                 break;
+
                             case 40:
                             case 41:
                             case 42:
@@ -941,6 +946,7 @@ namespace Mangos.World.Objects
                             case 59:
                                 GrayLevel = (byte)Math.Round(Character.Level - Math.Floor(Character.Level / 5.0) - 1.0);
                                 break;
+
                             default:
                                 GrayLevel = (byte)(Character.Level - 9);
                                 break;
@@ -960,26 +966,31 @@ namespace Mangos.World.Objects
                                 case 7:
                                     ZD = 5;
                                     break;
+
                                 case 8:
                                 case 9:
                                     ZD = 6;
                                     break;
+
                                 case 10:
                                 case 11:
                                     ZD = 7;
                                     break;
+
                                 case 12:
                                 case 13:
                                 case 14:
                                 case 15:
                                     ZD = 8;
                                     break;
+
                                 case 16:
                                 case 17:
                                 case 18:
                                 case 19:
                                     ZD = 9;
                                     break;
+
                                 case 20:
                                 case 21:
                                 case 22:
@@ -992,6 +1003,7 @@ namespace Mangos.World.Objects
                                 case 29:
                                     ZD = 11;
                                     break;
+
                                 case 30:
                                 case 31:
                                 case 32:
@@ -1004,6 +1016,7 @@ namespace Mangos.World.Objects
                                 case 39:
                                     ZD = 12;
                                     break;
+
                                 case 40:
                                 case 41:
                                 case 42:
@@ -1011,6 +1024,7 @@ namespace Mangos.World.Objects
                                 case 44:
                                     ZD = 13;
                                     break;
+
                                 case 45:
                                 case 46:
                                 case 47:
@@ -1018,6 +1032,7 @@ namespace Mangos.World.Objects
                                 case 49:
                                     ZD = 14;
                                     break;
+
                                 case 50:
                                 case 51:
                                 case 52:
@@ -1025,6 +1040,7 @@ namespace Mangos.World.Objects
                                 case 54:
                                     ZD = 15;
                                     break;
+
                                 case 55:
                                 case 56:
                                 case 57:
@@ -1032,6 +1048,7 @@ namespace Mangos.World.Objects
                                 case 59:
                                     ZD = 16;
                                     break;
+
                                 default:
                                     ZD = 17;
                                     break;

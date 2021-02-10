@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -98,6 +98,7 @@ namespace Mangos.World.Player
                         objCharacter.Stamina.Base += gainStat(objCharacter.Level, 2.3E-05, 0.003345, 0.56005, -0.562058);
                         objCharacter.Spirit.Base += gainStat(objCharacter.Level, 5.9E-05, 0.004044, 1.04, -1.488504);
                         break;
+
                     case Classes.CLASS_HUNTER:
                         if (objCharacter.Level <= 13)
                         {
@@ -121,6 +122,7 @@ namespace Mangos.World.Player
                         objCharacter.Stamina.Base += gainStat(objCharacter.Level, 3.1E-05, 0.00448, 0.78004, -0.800471);
                         objCharacter.Spirit.Base += gainStat(objCharacter.Level, 1.7E-05, 0.003803, 0.536846, -0.490026);
                         break;
+
                     case Classes.CLASS_MAGE:
                         if (objCharacter.Level <= 25)
                         {
@@ -144,6 +146,7 @@ namespace Mangos.World.Player
                         objCharacter.Stamina.Base += gainStat(objCharacter.Level, 6E-06, 0.002031, 0.27836, -0.340077);
                         objCharacter.Spirit.Base += gainStat(objCharacter.Level, 3.9E-05, 0.006981, 1.09009, -1.00607);
                         break;
+
                     case Classes.CLASS_PALADIN:
                         if (objCharacter.Level <= 14)
                         {
@@ -167,6 +170,7 @@ namespace Mangos.World.Player
                         objCharacter.Stamina.Base += gainStat(objCharacter.Level, 3.8E-05, 0.005145, 0.871006, -0.832029);
                         objCharacter.Spirit.Base += gainStat(objCharacter.Level, 3.2E-05, 0.003025, 0.61589, -0.640307);
                         break;
+
                     case Classes.CLASS_PRIEST:
                         if (objCharacter.Level <= 22)
                         {
@@ -194,6 +198,7 @@ namespace Mangos.World.Player
                         objCharacter.Stamina.Base += gainStat(objCharacter.Level, 2.4E-05, 0.000981, 0.364935, -0.5709);
                         objCharacter.Spirit.Base += gainStat(objCharacter.Level, 4E-05, 0.007416, 1.125108, -1.003045);
                         break;
+
                     case Classes.CLASS_ROGUE:
                         if (objCharacter.Level <= 15)
                         {
@@ -209,6 +214,7 @@ namespace Mangos.World.Player
                         objCharacter.Stamina.Base += gainStat(objCharacter.Level, 3.2E-05, 0.003025, 0.61589, -0.640307);
                         objCharacter.Spirit.Base += gainStat(objCharacter.Level, 2.4E-05, 0.000981, 0.364935, -0.5709);
                         break;
+
                     case Classes.CLASS_SHAMAN:
                         if (objCharacter.Level <= 16)
                         {
@@ -232,6 +238,7 @@ namespace Mangos.World.Player
                         objCharacter.Stamina.Base += gainStat(objCharacter.Level, 2E-05, 0.00603, 0.80957, -0.80922);
                         objCharacter.Spirit.Base += gainStat(objCharacter.Level, 3.8E-05, 0.005145, 0.871006, -0.832029);
                         break;
+
                     case Classes.CLASS_WARLOCK:
                         if (objCharacter.Level <= 17)
                         {
@@ -255,6 +262,7 @@ namespace Mangos.World.Player
                         objCharacter.Stamina.Base += gainStat(objCharacter.Level, 2.1E-05, 0.003009, 0.486493, -0.400003);
                         objCharacter.Spirit.Base += gainStat(objCharacter.Level, 4E-05, 0.006404, 1.038791, -1.039076);
                         break;
+
                     case Classes.CLASS_WARRIOR:
                         if (objCharacter.Level <= 14)
                         {
@@ -313,10 +321,13 @@ namespace Mangos.World.Player
                 case Classes.CLASS_WARLOCK:
                 case Classes.CLASS_DRUID:
                     return ManaTypes.TYPE_MANA;
+
                 case Classes.CLASS_ROGUE:
                     return ManaTypes.TYPE_ENERGY;
+
                 case Classes.CLASS_WARRIOR:
                     return ManaTypes.TYPE_RAGE;
+
                 default:
                     return ManaTypes.TYPE_MANA;
             }

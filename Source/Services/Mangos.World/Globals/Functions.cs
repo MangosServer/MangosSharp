@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -428,6 +428,7 @@ namespace Mangos.World.Globals
                 case 4:
                 case 7:
                     return false;
+
                 default:
                     return true;
             }
@@ -628,12 +629,14 @@ namespace Mangos.World.Globals
                         packet.AddUInt32(0u);
                         packet.AddUInt64(SenderGUID);
                         break;
+
                     case ChatMsg.CHAT_MSG_SAY:
                     case ChatMsg.CHAT_MSG_PARTY:
                     case ChatMsg.CHAT_MSG_YELL:
                         packet.AddUInt64(SenderGUID);
                         packet.AddUInt64(SenderGUID);
                         break;
+
                     case ChatMsg.CHAT_MSG_RAID:
                     case ChatMsg.CHAT_MSG_GUILD:
                     case ChatMsg.CHAT_MSG_OFFICER:
@@ -649,11 +652,13 @@ namespace Mangos.World.Globals
                     case ChatMsg.CHAT_MSG_RAID_WARNING:
                         packet.AddUInt64(SenderGUID);
                         break;
+
                     case ChatMsg.CHAT_MSG_MONSTER_SAY:
                     case ChatMsg.CHAT_MSG_MONSTER_YELL:
                     case ChatMsg.CHAT_MSG_MONSTER_EMOTE:
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Use Creature.SendChatMessage() for this message type - {0}!", msgType);
                         break;
+
                     default:
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Unknown chat message type - {0}!", msgType);
                         break;

@@ -1,16 +1,16 @@
 ﻿//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -21,7 +21,7 @@ using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
 
-// Example AI for combat. 
+// Example AI for combat.
 // TODO: Fix AoE spells on AIs and then insert it as an example into this.
 namespace Mangos.World.Scripts.Examples
 {
@@ -52,7 +52,7 @@ namespace Mangos.World.Scripts.Examples
             }
         }
 
-        public void CastKnockdown() // This is where the spell is brought into actual usage. 
+        public void CastKnockdown() // This is where the spell is brought into actual usage.
         {
             for (int i = 0; i <= 3; i++) // I believe this number is capped by the amount of spells from 0-any number. We'll make it 0 to 3 here just to be safe. You should do the same.
             {

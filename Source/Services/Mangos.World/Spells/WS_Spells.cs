@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -623,6 +623,7 @@ namespace Mangos.World.Spells
                                         TargetsInfected.Add(Targets.goTarget);
                                     }
                                     break;
+
                                 case SpellImplicitTargets.TARGET_INFRONT:
                                     if ((CustomAttributs & (true ? 1u : 0u)) != 0)
                                     {
@@ -659,6 +660,7 @@ namespace Mangos.World.Spells
                                         }
                                     }
                                     break;
+
                                 case SpellImplicitTargets.TARGET_SELECTED_GAMEOBJECT:
                                 case SpellImplicitTargets.TARGET_GAMEOBJECT_AND_ITEM:
                                     if (Targets.goTarget != null)
@@ -666,6 +668,7 @@ namespace Mangos.World.Spells
                                         TargetsInfected.Add(Targets.goTarget);
                                     }
                                     break;
+
                                 case SpellImplicitTargets.TARGET_SELF:
                                 case SpellImplicitTargets.TARGET_DUEL_VS_PLAYER:
                                 case SpellImplicitTargets.TARGET_MASTER:
@@ -676,12 +679,14 @@ namespace Mangos.World.Spells
                                         TargetsInfected.Add(Caster);
                                     }
                                     break;
+
                                 case SpellImplicitTargets.TARGET_NONCOMBAT_PET:
                                     if (Caster is WS_PlayerData.CharacterObject object3 && object3.NonCombatPet != null)
                                     {
                                         TargetsInfected.Add(object3.NonCombatPet);
                                     }
                                     break;
+
                                 case SpellImplicitTargets.TARGET_SELECTED_FRIEND:
                                 case SpellImplicitTargets.TARGET_SINGLE_PARTY:
                                 case SpellImplicitTargets.TARGET_SINGLE_FRIEND_2:
@@ -691,6 +696,7 @@ namespace Mangos.World.Spells
                                         TargetsInfected.Add(Targets.unitTarget);
                                     }
                                     break;
+
                                 default:
                                     if (Targets.unitTarget != null)
                                     {
@@ -704,6 +710,7 @@ namespace Mangos.World.Spells
                                         TargetsInfected.Add(Caster);
                                     }
                                     break;
+
                                 case SpellImplicitTargets.TARGET_NOTHING:
                                 case SpellImplicitTargets.TARGET_PET:
                                 case SpellImplicitTargets.TARGET_EFFECT_SELECT:
@@ -766,6 +773,7 @@ namespace Mangos.World.Spells
                                 case 0:
                                     newTargets.Add(Target, SpellMissInfo.SPELL_MISS_NONE);
                                     break;
+
                                 case 1:
                                     {
                                         WS_Base.BaseUnit baseUnit3 = baseUnit;
@@ -845,13 +853,16 @@ namespace Mangos.World.Spells
                             case 89:
                                 CustomAttributs |= 16u;
                                 break;
+
                             case 8:
                             case 20:
                                 CustomAttributs |= 8u;
                                 break;
+
                             case 26:
                                 CustomAttributs = CustomAttributs | 0x20u | 0x2000u;
                                 break;
+
                             case 33:
                                 CustomAttributs |= 8192u;
                                 break;
@@ -865,6 +876,7 @@ namespace Mangos.World.Spells
                             case SpellEffects_Names.SPELL_EFFECT_WEAPON_DAMAGE:
                                 CustomAttributs |= 128u;
                                 break;
+
                             case SpellEffects_Names.SPELL_EFFECT_CHARGE:
                                 if (Speed == 0f && SpellFamilyName == 0)
                                 {
@@ -900,12 +912,14 @@ namespace Mangos.World.Spells
                     case 26029:
                         CustomAttributs |= 2u;
                         break;
+
                     case 24340:
                     case 26558:
                     case 26789:
                     case 28884:
                         CustomAttributs |= 4u;
                         break;
+
                     case 8122:
                     case 8124:
                     case 10888:
@@ -1116,6 +1130,7 @@ namespace Mangos.World.Spells
                                     characterObject.GroupUpdateFlag |= 16u;
                                     characterObject.SendCharacterUpdate();
                                     break;
+
                                 case -2:
                                     if ((unchecked((uint)AttributesEx) & 2u) != 0)
                                     {
@@ -1129,6 +1144,7 @@ namespace Mangos.World.Spells
                                     characterObject.GroupUpdateFlag |= 2u;
                                     characterObject.SendCharacterUpdate();
                                     break;
+
                                 case 3:
                                     if ((unchecked((uint)AttributesEx) & 2u) != 0)
                                     {
@@ -1498,24 +1514,28 @@ namespace Mangos.World.Spells
                                 return SpellFailedReason.SPELL_FAILED_NO_POWER;
                             }
                             break;
+
                         case 1:
                             if (ManaCost > Character.Rage.Current)
                             {
                                 return SpellFailedReason.SPELL_FAILED_NO_POWER;
                             }
                             break;
+
                         case -2:
                             if (ManaCost > Character.Life.Current)
                             {
                                 return SpellFailedReason.SPELL_FAILED_NO_POWER;
                             }
                             break;
+
                         case 3:
                             if (ManaCost > Character.Energy.Current)
                             {
                                 return SpellFailedReason.SPELL_FAILED_NO_POWER;
                             }
                             break;
+
                         default:
                             return SpellFailedReason.SPELL_FAILED_UNKNOWN;
                     }
@@ -1619,6 +1639,7 @@ namespace Mangos.World.Spells
                                         return SpellFailedReason.SPELL_FAILED_BAD_TARGETS;
                                     }
                                     break;
+
                                 case SpellEffects_Names.SPELL_EFFECT_SCHOOL_DAMAGE:
                                     if (SpellVisual == 7250)
                                     {
@@ -1632,12 +1653,14 @@ namespace Mangos.World.Spells
                                         }
                                     }
                                     break;
+
                                 case SpellEffects_Names.SPELL_EFFECT_CHARGE:
                                     if (Character.IsRooted)
                                     {
                                         return SpellFailedReason.SPELL_FAILED_ROOTED;
                                     }
                                     break;
+
                                 case SpellEffects_Names.SPELL_EFFECT_SUMMON_OBJECT:
                                     if (SpellEffects[j].MiscValue == 35591)
                                     {
@@ -1911,32 +1934,39 @@ namespace Mangos.World.Spells
                     {
                         default:
                             return;
+
                         case SpellEffects_Names.SPELL_EFFECT_MANA_DRAIN:
                             packet.AddPackGUID(UnitTargetGUID);
                             packet.AddInt32(0);
                             packet.AddInt32(0);
                             packet.AddSingle(0f);
                             break;
+
                         case SpellEffects_Names.SPELL_EFFECT_ADD_EXTRA_ATTACKS:
                             packet.AddPackGUID(UnitTargetGUID);
                             packet.AddInt32(0);
                             break;
+
                         case SpellEffects_Names.SPELL_EFFECT_INTERRUPT_CAST:
                             packet.AddPackGUID(UnitTargetGUID);
                             packet.AddInt32(0);
                             break;
+
                         case SpellEffects_Names.SPELL_EFFECT_DURABILITY_DAMAGE:
                             packet.AddPackGUID(UnitTargetGUID);
                             packet.AddInt32(0);
                             packet.AddInt32(0);
                             break;
+
                         case SpellEffects_Names.SPELL_EFFECT_OPEN_LOCK:
                         case SpellEffects_Names.SPELL_EFFECT_OPEN_LOCK_ITEM:
                             packet.AddPackGUID(ItemTargetGUID);
                             break;
+
                         case SpellEffects_Names.SPELL_EFFECT_CREATE_ITEM:
                             packet.AddInt32(SpellEffects[i].ItemType);
                             break;
+
                         case SpellEffects_Names.SPELL_EFFECT_SUMMON:
                         case SpellEffects_Names.SPELL_EFFECT_SUMMON_WILD:
                         case SpellEffects_Names.SPELL_EFFECT_SUMMON_GUARDIAN:
@@ -1976,9 +2006,11 @@ namespace Mangos.World.Spells
                                 packet.AddInt8(0);
                             }
                             break;
+
                         case SpellEffects_Names.SPELL_EFFECT_FEED_PET:
                             packet.AddInt32(Targets.itemTarget.ItemEntry);
                             break;
+
                         case SpellEffects_Names.SPELL_EFFECT_DISMISS_PET:
                             packet.AddPackGUID(UnitTargetGUID);
                             break;
@@ -2162,26 +2194,31 @@ namespace Mangos.World.Spells
                         case 33:
                         case 95:
                             return true;
+
                         case 2:
                         case 3:
                         case 25:
                         case 60:
                             return true;
+
                         case 12:
                         case 26:
                         case 27:
                         case 128:
                             return true;
+
                         case 43:
                         case 53:
                         case 64:
                         case 89:
                             return true;
+
                         case 56:
                         case 81:
                         case 153:
                         case 162:
                             return true;
+
                         case 13:
                         case 29:
                         case 80:
@@ -2191,6 +2228,7 @@ namespace Mangos.World.Spells
                                 return true;
                             }
                             return false;
+
                         default:
                             return false;
                     }
@@ -3009,6 +3047,7 @@ namespace Mangos.World.Spells
                     case WS_Base.BaseUnit _:
                         realCaster = (WS_Base.BaseUnit)Caster;
                         break;
+
                     case WS_DynamicObjects.DynamicObjectObject _:
                         realCaster = ((WS_DynamicObjects.DynamicObjectObject)Caster).Caster;
                         break;
@@ -3142,6 +3181,7 @@ namespace Mangos.World.Spells
                             ((WS_Base.BaseUnit)Caster).Mana.Current += Damage;
                             TargetPower = Unit.Mana.Current;
                             break;
+
                         case 1:
                             if (Unit is WS_PlayerData.CharacterObject object1 && Caster is WS_PlayerData.CharacterObject object2)
                             {
@@ -3154,6 +3194,7 @@ namespace Mangos.World.Spells
                                 TargetPower = object1.Rage.Current;
                             }
                             break;
+
                         case 3:
                             if (Unit is WS_PlayerData.CharacterObject object3 && Caster is WS_PlayerData.CharacterObject object4)
                             {
@@ -3166,6 +3207,7 @@ namespace Mangos.World.Spells
                                 TargetPower = object3.Energy.Current;
                             }
                             break;
+
                         default:
                             Unit.Mana.Current -= Damage;
                             ((WS_Base.BaseUnit)Caster).Mana.Current += Damage;
@@ -3203,18 +3245,21 @@ namespace Mangos.World.Spells
                     case 0:
                         CasterPower = ((WS_Base.BaseUnit)Caster).Mana.Current;
                         break;
+
                     case 1:
                         if (Caster is WS_PlayerData.CharacterObject @object)
                         {
                             CasterPower = @object.Rage.Current;
                         }
                         break;
+
                     case 3:
                         if (Caster is WS_PlayerData.CharacterObject object1)
                         {
                             CasterPower = object1.Energy.Current;
                         }
                         break;
+
                     default:
                         CasterPower = ((WS_Base.BaseUnit)Caster).Mana.Current;
                         break;
@@ -3797,9 +3842,11 @@ namespace Mangos.World.Spells
                                 case 10:
                                     Duration = 0;
                                     break;
+
                                 default:
                                     Duration = 600000;
                                     break;
+
                                 case 11:
                                 case 12:
                                 case 13:
@@ -3836,6 +3883,7 @@ namespace Mangos.World.Spells
                                             case WS_PlayerData.CharacterObject _:
                                                 ((WS_PlayerData.CharacterObject)auraTarget).GroupUpdateFlag = ((WS_PlayerData.CharacterObject)auraTarget).GroupUpdateFlag | 0x200u;
                                                 break;
+
                                             case WS_Pets.PetObject _ when ((WS_Pets.PetObject)auraTarget).Owner is WS_PlayerData.CharacterObject @object:
                                                 @object.GroupUpdateFlag |= 0x40000u;
                                                 break;
@@ -4213,6 +4261,7 @@ namespace Mangos.World.Spells
                         }
 
                         break;
+
                     case WS_Creatures.CreatureObject _:
                         ((WS_Creatures.CreatureObject)Unit).StopCasting();
                         break;
@@ -4286,6 +4335,7 @@ namespace Mangos.World.Spells
                 case WS_PlayerData.CharacterObject _:
                     ((WS_PlayerData.CharacterObject)Caster).Teleport(selectedX, selectedY, selectedZ, Caster.orientation, checked((int)Caster.MapID));
                     break;
+
                 default:
                     ((WS_Creatures.CreatureObject)Caster).MoveToInstant(selectedX, selectedY, selectedZ, Caster.orientation);
                     break;
@@ -4994,6 +5044,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     if (Caster is WS_PlayerData.CharacterObject @object)
                     {
@@ -5002,6 +5053,7 @@ namespace Mangos.World.Spells
                         @object.SendCharacterUpdate();
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Caster is WS_PlayerData.CharacterObject object1)
@@ -5020,6 +5072,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     if (Target is WS_PlayerData.CharacterObject @object)
                     {
@@ -5027,6 +5080,7 @@ namespace Mangos.World.Spells
                         @object.SendCharacterUpdate();
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Target is WS_PlayerData.CharacterObject object1)
@@ -5046,9 +5100,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         Target.SchoolImmunity = (byte)(Target.SchoolImmunity | (1 << EffectInfo.MiscValue));
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.SchoolImmunity = (byte)(Target.SchoolImmunity & ~(1 << EffectInfo.MiscValue));
@@ -5065,10 +5121,12 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         Target.MechanicImmunity = (uint)(Target.MechanicImmunity | (1 << EffectInfo.MiscValue));
                         Target.RemoveAurasByMechanic(EffectInfo.MiscValue);
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.MechanicImmunity = (uint)(Target.MechanicImmunity & ~(1 << EffectInfo.MiscValue));
@@ -5085,9 +5143,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         Target.DispellImmunity = (uint)(Target.DispellImmunity | (1 << EffectInfo.MiscValue));
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.DispellImmunity = (uint)(Target.DispellImmunity & ~(1 << EffectInfo.MiscValue));
@@ -5102,6 +5162,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     if (Target is WS_PlayerData.CharacterObject @object)
                     {
@@ -5109,6 +5170,7 @@ namespace Mangos.World.Spells
                         @object.SendCharacterUpdate();
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Target is WS_PlayerData.CharacterObject object1)
@@ -5126,6 +5188,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     if (Target is WS_PlayerData.CharacterObject @object)
                     {
@@ -5133,6 +5196,7 @@ namespace Mangos.World.Spells
                         @object.SendCharacterUpdate();
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Target is WS_PlayerData.CharacterObject object1)
@@ -5150,6 +5214,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     return;
+
                 case AuraAction.AURA_ADD:
                     {
                         ref float size2 = ref Target.Size;
@@ -5193,6 +5258,7 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         if (Target is WS_PlayerData.CharacterObject @object && @object.Skills.ContainsKey(EffectInfo.MiscValue))
                         {
@@ -5203,6 +5269,7 @@ namespace Mangos.World.Spells
                             characterObject2.SendCharacterUpdate();
                         }
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         if (Target is WS_PlayerData.CharacterObject object1 && object1.Skills.ContainsKey(EffectInfo.MiscValue))
@@ -5250,6 +5317,7 @@ namespace Mangos.World.Spells
                             }
                         }
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         if (Caster is WS_PlayerData.CharacterObject)
@@ -5277,6 +5345,7 @@ namespace Mangos.World.Spells
                             }
                         }
                         break;
+
                     case AuraAction.AURA_UPDATE:
                         if (SpellID == 43265 || unchecked((uint)(SpellID - 49936)) <= 2u)
                         {
@@ -5304,9 +5373,11 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_ADD:
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     {
                         if (Caster is WS_DynamicObjects.DynamicObjectObject @object)
@@ -5341,9 +5412,11 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_ADD:
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     {
                         int Damage;
@@ -5368,9 +5441,11 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_ADD:
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     {
                         ManaTypes Power = (ManaTypes)EffectInfo.MiscValue;
@@ -5400,9 +5475,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_ADD:
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         break;
+
                     case AuraAction.AURA_UPDATE:
                         {
                             int Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
@@ -5429,9 +5506,11 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_ADD:
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     {
                         ManaTypes Power = (ManaTypes)EffectInfo.MiscValue;
@@ -5459,9 +5538,11 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_ADD:
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     {
                         SpellTargets Targets = new SpellTargets();
@@ -5484,9 +5565,11 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_ADD:
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     {
                         int Damage;
@@ -5526,6 +5609,7 @@ namespace Mangos.World.Spells
                     }
                 case AuraAction.AURA_ADD:
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     break;
@@ -5556,6 +5640,7 @@ namespace Mangos.World.Spells
                     }
                 case AuraAction.AURA_ADD:
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     break;
@@ -5574,6 +5659,7 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         {
                             int Damage2 = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
@@ -5611,6 +5697,7 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         {
                             int Damage = EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
@@ -5666,6 +5753,7 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         if (EffectInfo.MiscValue == 0)
                         {
@@ -5674,6 +5762,7 @@ namespace Mangos.World.Spells
                             ((WS_PlayerData.CharacterObject)Target).UpdateManaRegen();
                         }
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         {
@@ -5698,6 +5787,7 @@ namespace Mangos.World.Spells
                     }
                     Target.Model = WorldServiceLocator._WorldServer.CREATURESDatabase[EffectInfo.MiscValue].GetFirstModel;
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Target is WS_PlayerData.CharacterObject @object)
@@ -5709,6 +5799,7 @@ namespace Mangos.World.Spells
                         Target.Model = ((WS_Creatures.CreatureObject)Target).CreatureInfo.GetRandomModel;
                     }
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     return;
             }
@@ -5741,6 +5832,7 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         {
                             Target.Invisibility = InvisibilityLevel.DEAD;
@@ -5774,11 +5866,13 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         return;
+
                     case AuraAction.AURA_ADD:
                         ((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 = ((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 | 0x4000;
                         Target.Invisibility = InvisibilityLevel.INIVISIBILITY;
                         Target.Invisibility_Value += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         ((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 = ((WS_PlayerData.CharacterObject)Target).cPlayerFieldBytes2 & -16385;
@@ -5805,10 +5899,12 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         return;
+
                     case AuraAction.AURA_ADD:
                         Target.Invisibility = InvisibilityLevel.STEALTH;
                         Target.Invisibility_Value += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.Invisibility = InvisibilityLevel.VISIBLE;
@@ -5829,9 +5925,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         Target.Invisibility_Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.Invisibility_Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
@@ -5848,9 +5946,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         return;
+
                     case AuraAction.AURA_ADD:
                         Target.CanSeeInvisibility_Invisibility += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.CanSeeInvisibility_Invisibility -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
@@ -5873,9 +5973,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         return;
+
                     case AuraAction.AURA_ADD:
                         Target.CanSeeInvisibility_Stealth += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.CanSeeInvisibility_Stealth -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
@@ -5896,9 +5998,11 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     return;
+
                 case AuraAction.AURA_ADD:
                     Target.CanSeeStealth = true;
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     Target.CanSeeStealth = false;
@@ -5922,6 +6026,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     if (Target is WS_PlayerData.CharacterObject @object)
                     {
@@ -5931,6 +6036,7 @@ namespace Mangos.World.Spells
                         @object.SendCharacterUpdate();
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Target is WS_PlayerData.CharacterObject object1)
@@ -5956,12 +6062,14 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         if (!Target.AbsorbSpellLeft.ContainsKey(SpellID))
                         {
                             Target.AbsorbSpellLeft.Add(SpellID, (uint)EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) + ((uint)EffectInfo.MiscValue << 23));
                         }
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         if (Target.AbsorbSpellLeft.ContainsKey(SpellID))
@@ -6015,6 +6123,7 @@ namespace Mangos.World.Spells
                         Target.Model = ((WS_Creatures.CreatureObject)Target).CreatureInfo.GetRandomModel;
                     }
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     return;
             }
@@ -6178,9 +6287,11 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_ADD:
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     break;
             }
@@ -6204,6 +6315,7 @@ namespace Mangos.World.Spells
                         speedMod2 = (float)(speedMod2 * (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Target is WS_PlayerData.CharacterObject object2)
@@ -6222,6 +6334,7 @@ namespace Mangos.World.Spells
                         speedMod = (float)(speedMod / (EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) / 100.0 + 1.0));
                     }
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     break;
             }
@@ -6254,6 +6367,7 @@ namespace Mangos.World.Spells
                         }
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Target is WS_PlayerData.CharacterObject object2)
@@ -6277,6 +6391,7 @@ namespace Mangos.World.Spells
                         }
                     }
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     break;
             }
@@ -6427,6 +6542,7 @@ namespace Mangos.World.Spells
                     Target.Mount = 0;
                     Target.RemoveAurasByInterruptFlag(64);
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     return;
             }
@@ -6563,6 +6679,7 @@ namespace Mangos.World.Spells
                         object1.StopMoving();
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Target is WS_PlayerData.CharacterObject object2)
@@ -6574,6 +6691,7 @@ namespace Mangos.World.Spells
                         object3.StopMoving();
                     }
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     return;
             }
@@ -6620,6 +6738,7 @@ namespace Mangos.World.Spells
                         }
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     Target.cUnitFlags &= -262145;
@@ -6628,6 +6747,7 @@ namespace Mangos.World.Spells
                         object2.SetMoveUnroot();
                     }
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     return;
             }
@@ -6662,11 +6782,13 @@ namespace Mangos.World.Spells
                     Target.cUnitFlags |= 0x800000;
                     response.AddInt8(0);
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     Target.cUnitFlags &= -8388609;
                     response.AddInt8(1);
                     break;
+
                 case AuraAction.AURA_UPDATE:
                     return;
             }
@@ -6677,6 +6799,7 @@ namespace Mangos.World.Spells
                     ((WS_PlayerData.CharacterObject)Target).SendCharacterUpdate();
                     ((WS_PlayerData.CharacterObject)Target).client.Send(ref response);
                     break;
+
                 default:
                     {
                         Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
@@ -6703,6 +6826,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     {
                         Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_FEATHER_FALL);
@@ -6729,6 +6853,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     {
                         Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_FEATHER_FALL);
@@ -6755,6 +6880,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     {
                         Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_WATER_WALK);
@@ -6781,6 +6907,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     {
                         Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_SET_HOVER);
@@ -6809,9 +6936,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         @object.underWaterBreathing = true;
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         @object.underWaterBreathing = false;
@@ -6875,6 +7004,7 @@ namespace Mangos.World.Spells
                     default:
                         num = (Action == AuraAction.AURA_REMOVEBYDURATION) ? 1 : 0;
                         break;
+
                     case AuraAction.AURA_REMOVE:
                         num = 1;
                         break;
@@ -6940,6 +7070,7 @@ namespace Mangos.World.Spells
                     default:
                         num = (Action == AuraAction.AURA_REMOVEBYDURATION) ? 1 : 0;
                         break;
+
                     case AuraAction.AURA_REMOVE:
                         num = 1;
                         break;
@@ -7458,9 +7589,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         return;
+
                     case AuraAction.AURA_ADD:
                         Target.Life.Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.Life.Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
@@ -7495,6 +7628,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     return;
+
                 case AuraAction.AURA_ADD:
                     {
                         ref float modifier2 = ref Target.Life.Modifier;
@@ -7537,6 +7671,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     return;
+
                 case AuraAction.AURA_ADD:
                     if (EffectInfo.MiscValue != (int)Target.ManaType)
                     {
@@ -7554,9 +7689,11 @@ namespace Mangos.World.Spells
                             case ManaTypes.TYPE_ENERGY:
                                 ((WS_PlayerData.CharacterObject)Target).Energy.Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
+
                             case ManaTypes.TYPE_MANA:
                                 ((WS_PlayerData.CharacterObject)Target).Mana.Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
+
                             case ManaTypes.TYPE_RAGE:
                                 ((WS_PlayerData.CharacterObject)Target).Rage.Bonus += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
@@ -7581,9 +7718,11 @@ namespace Mangos.World.Spells
                             case ManaTypes.TYPE_ENERGY:
                                 ((WS_PlayerData.CharacterObject)Target).Energy.Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
+
                             case ManaTypes.TYPE_MANA:
                                 ((WS_PlayerData.CharacterObject)Target).Mana.Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
+
                             case ManaTypes.TYPE_RAGE:
                                 ((WS_PlayerData.CharacterObject)Target).Rage.Bonus -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                                 break;
@@ -7623,6 +7762,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     {
                         DamageTypes i = DamageTypes.DMG_PHYSICAL;
@@ -7681,6 +7821,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     {
                         byte i = 0;
@@ -7741,6 +7882,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     return;
+
                 case AuraAction.AURA_ADD:
                     {
                         byte i = 0;
@@ -7830,6 +7972,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     return;
+
                 case AuraAction.AURA_ADD:
                     {
                         byte i = 0;
@@ -7921,6 +8064,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     return;
+
                 case AuraAction.AURA_ADD:
                     {
                         byte i = 0;
@@ -8010,9 +8154,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         return;
+
                     case AuraAction.AURA_ADD:
                         Target.AttackPowerMods += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.AttackPowerMods -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
@@ -8041,9 +8187,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         return;
+
                     case AuraAction.AURA_ADD:
                         Target.AttackPowerModsRanged += EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.AttackPowerModsRanged -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) * StackCount;
@@ -8072,9 +8220,11 @@ namespace Mangos.World.Spells
                     {
                         case AuraAction.AURA_UPDATE:
                             break;
+
                         case AuraAction.AURA_ADD:
                             @object.healing.PositiveBonus += Value;
                             break;
+
                         case AuraAction.AURA_REMOVE:
                         case AuraAction.AURA_REMOVEBYDURATION:
                             @object.healing.PositiveBonus -= Value;
@@ -8093,9 +8243,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         @object.healing.Modifier += Value;
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         @object.healing.Modifier -= Value;
@@ -8114,6 +8266,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     return;
+
                 case AuraAction.AURA_ADD:
                     {
                         DamageTypes i = DamageTypes.DMG_PHYSICAL;
@@ -8181,6 +8334,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     return;
+
                 case AuraAction.AURA_ADD:
                     {
                         DamageTypes i = DamageTypes.DMG_PHYSICAL;
@@ -8224,6 +8378,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     if (Target is WS_Creatures.CreatureObject @object && @object.CreatureInfo.CreatureType == 1)
                     {
@@ -8240,6 +8395,7 @@ namespace Mangos.World.Spells
                         packet.Dispose();
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Target is WS_Creatures.CreatureObject object1 && object1.CreatureInfo.CreatureType == 1)
@@ -8266,6 +8422,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     Target.Spell_Silenced = true;
                     if (Target is WS_Creatures.CreatureObject @object && @object.aiScript != null)
@@ -8275,6 +8432,7 @@ namespace Mangos.World.Spells
                         aiScript.OnGenerateHate(ref Attacker, 1);
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     Target.Spell_Silenced = false;
@@ -8288,9 +8446,11 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     Target.Spell_Pacifyed = true;
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     Target.Spell_Pacifyed = false;
@@ -8306,9 +8466,11 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         @object.Spell_Language = (LANGUAGES)EffectInfo.MiscValue;
                         break;
+
                     case AuraAction.AURA_REMOVE:
                     case AuraAction.AURA_REMOVEBYDURATION:
                         @object.Spell_Language = (LANGUAGES)(-1);
@@ -8327,6 +8489,7 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     if (Target.Level <= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0))
                     {
@@ -8416,6 +8579,7 @@ namespace Mangos.World.Spells
                             case WS_Creatures.CreatureObject _:
                                 ((WS_Creatures.CreatureObject)Target).aiScript.Reset();
                                 break;
+
                             case WS_PlayerData.CharacterObject object1:
                                 {
                                     Packets.PacketClass packet3 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
@@ -8428,6 +8592,7 @@ namespace Mangos.World.Spells
                         }
                     }
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     {
@@ -8516,6 +8681,7 @@ namespace Mangos.World.Spells
                             case WS_Creatures.CreatureObject _:
                                 ((WS_Creatures.CreatureObject)Target).aiScript.State = AIState.AI_ATTACKING;
                                 break;
+
                             case WS_PlayerData.CharacterObject object1:
                                 {
                                     Packets.PacketClass packet4 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
@@ -8537,8 +8703,10 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     break;
+
                 case AuraAction.AURA_ADD:
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     break;
@@ -8552,9 +8720,11 @@ namespace Mangos.World.Spells
             {
                 case AuraAction.AURA_UPDATE:
                     return;
+
                 case AuraAction.AURA_ADD:
                     Value = (Target is not WS_PlayerData.CharacterObject) ? EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0) : EffectInfo.GetValue(Target.Level, 0);
                     break;
+
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     checked
@@ -8599,6 +8769,7 @@ namespace Mangos.World.Spells
                 {
                     case AuraAction.AURA_UPDATE:
                         break;
+
                     case AuraAction.AURA_ADD:
                         {
                             WS_Creatures_AI.TBaseAI aiScript2 = @object.aiScript;
@@ -9069,10 +9240,13 @@ namespace Mangos.World.Spells
                     case GameObjectType.GAMEOBJECT_TYPE_DOOR:
                     case GameObjectType.GAMEOBJECT_TYPE_BUTTON:
                         return;
+
                     case GameObjectType.GAMEOBJECT_TYPE_QUESTGIVER:
                         return;
+
                     case GameObjectType.GAMEOBJECT_TYPE_SPELL_FOCUS:
                         return;
+
                     case GameObjectType.GAMEOBJECT_TYPE_GOOBER:
                         return;
                 }

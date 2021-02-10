@@ -25,7 +25,7 @@ namespace Mangos.Realm.Network.Handlers
     {
         public Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, Client clientModel)
         {
-            // TODO: data parameter is never used		
+            // TODO: data parameter is never used
             return Task.CompletedTask;
         }
     }

@@ -1,16 +1,16 @@
 ﻿//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -61,6 +61,7 @@ namespace Mangos.Common.Globals
 
         // TODO: Is this correct? The amount of time since last pvp action until you go out of combat again
         public readonly int DEFAULT_PVP_COMBAT_TIME = 6000; // 6 seconds
+
         public readonly int DEFAULT_LOCK_TIMEOUT = 2000;
         public readonly int DEFAULT_INSTANCE_EXPIRE_TIME = 3600;              // 1 hour
         public readonly int DEFAULT_BATTLEFIELD_EXPIRE_TIME = 3600 * 24;      // 24 hours
@@ -90,6 +91,7 @@ namespace Mangos.Common.Globals
 
         // New Auto Detection Build
         public readonly int Required_Build_1_12_1 = 5875;
+
         public readonly int Required_Build_1_12_2 = 6005;
         public readonly int Required_Build_1_12_3 = 6141;
         public readonly int ConnectionSleepTime = 100;
@@ -144,12 +146,14 @@ namespace Mangos.Common.Globals
 
         // VMAPS
         public readonly string VMAP_MAGIC = "VMAP_2.0";
+
         public readonly float VMAP_MAX_CAN_FALL_DISTANCE = 10.0f;
         public readonly float VMAP_INVALID_HEIGHT = -100000.0f; // for check
         public readonly float VMAP_INVALID_HEIGHT_VALUE = -200000.0f; // real assigned value in unknown height case
 
         // MAPS
         public readonly float SIZE = 533.3333f;
+
         public readonly int RESOLUTION_WATER = 128 - 1;
         public readonly int RESOLUTION_FLAGS = 16 - 1;
         public readonly int RESOLUTION_TERRAIN = 16 - 1;

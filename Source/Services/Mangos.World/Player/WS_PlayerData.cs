@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -551,15 +551,19 @@ namespace Mangos.World.Player
                             case Classes.CLASS_WARRIOR:
                             case Classes.CLASS_PALADIN:
                                 return Level * 3 + Strength.Base * 3 - 20;
+
                             case Classes.CLASS_SHAMAN:
                                 return Level * 2 + Strength.Base * 2 - 20;
+
                             case Classes.CLASS_PRIEST:
                             case Classes.CLASS_MAGE:
                             case Classes.CLASS_WARLOCK:
                                 return Strength.Base - 10;
+
                             case Classes.CLASS_HUNTER:
                             case Classes.CLASS_ROGUE:
                                 return Level * 2 + Strength.Base + Agility.Base - 20;
+
                             case Classes.CLASS_DRUID:
                                 if (ShapeshiftForm == ShapeshiftForm.FORM_CAT)
                                 {
@@ -574,6 +578,7 @@ namespace Mangos.World.Player
                                     return (int)Math.Round(Level * 1.5 + Agility.Base + Strength.Base * 2 - 20.0);
                                 }
                                 return Strength.Base * 2 - 20;
+
                             default:
                                 return 0;
                         }
@@ -592,27 +597,30 @@ namespace Mangos.World.Player
                             case Classes.CLASS_WARRIOR:
                             case Classes.CLASS_ROGUE:
                                 return Level + Agility.Base - 10;
+
                             case Classes.CLASS_HUNTER:
                                 return Level * 2 + Agility.Base - 10;
+
                             case Classes.CLASS_PALADIN:
                             case Classes.CLASS_PRIEST:
                             case Classes.CLASS_SHAMAN:
                             case Classes.CLASS_MAGE:
                             case Classes.CLASS_WARLOCK:
                                 return Agility.Base - 10;
+
                             case Classes.CLASS_DRUID:
                                 if ((ShapeshiftForm == ShapeshiftForm.FORM_CAT) | (ShapeshiftForm == ShapeshiftForm.FORM_BEAR) | (ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR) | (ShapeshiftForm == ShapeshiftForm.FORM_MOONKIN))
                                 {
                                     return 0;
                                 }
                                 return Agility.Base - 10;
+
                             default:
                                 return 0;
                         }
                     }
                 }
             }
-
 
             public short GetAttackTime(WeaponAttackType weaponAttackType)
             {
@@ -759,6 +767,7 @@ namespace Mangos.World.Player
                         case Races.RACE_NIGHT_ELF:
                         case Races.RACE_GNOME:
                             return false;
+
                         default:
                             return true;
                     }
@@ -776,6 +785,7 @@ namespace Mangos.World.Player
                         case Races.RACE_NIGHT_ELF:
                         case Races.RACE_GNOME:
                             return 469;
+
                         default:
                             return 67;
                     }
@@ -1077,6 +1087,7 @@ namespace Mangos.World.Player
                         }
 
                         break;
+
                     case WS_GameObjects.GameObjectObject _ when ((WS_GameObjects.GameObjectObject)objCharacter).Despawned:
                         return false;
                 }
@@ -2143,26 +2154,31 @@ namespace Mangos.World.Player
                             LearnSpell(3919);
                             LearnSpell(3920);
                             break;
+
                         case 3908:
                             LearnSpell(2387);
                             LearnSpell(2963);
                             break;
+
                         case 7411:
                             LearnSpell(7418);
                             LearnSpell(7421);
                             LearnSpell(13262);
                             break;
+
                         case 2259:
                             LearnSpell(2329);
                             LearnSpell(7183);
                             LearnSpell(2330);
                             break;
+
                         case 2018:
                             LearnSpell(2663);
                             LearnSpell(12260);
                             LearnSpell(2660);
                             LearnSpell(3115);
                             break;
+
                         case 2108:
                             LearnSpell(2152);
                             LearnSpell(9058);
@@ -2171,25 +2187,31 @@ namespace Mangos.World.Player
                             LearnSpell(7126);
                             LearnSpell(2881);
                             break;
+
                         case 2550:
                             LearnSpell(818);
                             LearnSpell(2540);
                             LearnSpell(2538);
                             break;
+
                         case 3273:
                             LearnSpell(3275);
                             break;
+
                         case 7620:
                             LearnSpell(7738);
                             break;
+
                         case 2575:
                             LearnSpell(2580);
                             LearnSpell(2656);
                             LearnSpell(2657);
                             break;
+
                         case 2366:
                             LearnSpell(2383);
                             break;
+
                         case 264:
                             if (!HaveSpell(75))
                             {
@@ -2197,6 +2219,7 @@ namespace Mangos.World.Player
                             }
                             LearnSkill(45, 1, (short)maxSkill);
                             break;
+
                         case 266:
                             if (!HaveSpell(75))
                             {
@@ -2204,6 +2227,7 @@ namespace Mangos.World.Player
                             }
                             LearnSkill(46, 1, (short)maxSkill);
                             break;
+
                         case 5011:
                             if (!HaveSpell(75))
                             {
@@ -2211,104 +2235,137 @@ namespace Mangos.World.Player
                             }
                             LearnSkill(226, 1, (short)maxSkill);
                             break;
+
                         case 2567:
                             LearnSpell(2764);
                             LearnSkill(176, 1, (short)maxSkill);
                             break;
+
                         case 5009:
                             LearnSpell(5019);
                             LearnSkill(228, 1, (short)maxSkill);
                             break;
+
                         case 9078:
                             LearnSkill(415);
                             break;
+
                         case 9077:
                             LearnSkill(414);
                             break;
+
                         case 8737:
                             LearnSkill(413);
                             break;
+
                         case 750:
                             LearnSkill(293);
                             break;
+
                         case 9116:
                             LearnSkill(433);
                             break;
+
                         case 674:
                             LearnSkill(118);
                             break;
+
                         case 196:
                             LearnSkill(44, 1, (short)maxSkill);
                             break;
+
                         case 197:
                             LearnSkill(172, 1, (short)maxSkill);
                             break;
+
                         case 227:
                             LearnSkill(136, 1, (short)maxSkill);
                             break;
+
                         case 198:
                             LearnSkill(54, 1, (short)maxSkill);
                             break;
+
                         case 199:
                             LearnSkill(160, 1, (short)maxSkill);
                             break;
+
                         case 201:
                             LearnSkill(43, 1, (short)maxSkill);
                             break;
+
                         case 202:
                             LearnSkill(55, 1, (short)maxSkill);
                             break;
+
                         case 1180:
                             LearnSkill(173, 1, (short)maxSkill);
                             break;
+
                         case 15590:
                             LearnSkill(473, 1, (short)maxSkill);
                             break;
+
                         case 200:
                             LearnSkill(229, 1, (short)maxSkill);
                             break;
+
                         case 3386:
                             LearnSkill(227, 1, (short)maxSkill);
                             break;
+
                         case 2842:
                             LearnSkill(40, 1, (short)maxSkill);
                             break;
+
                         case 668:
                             LearnSkill(98, 300, 300);
                             break;
+
                         case 669:
                             LearnSkill(109, 300, 300);
                             break;
+
                         case 670:
                             LearnSkill(115, 300, 300);
                             break;
+
                         case 671:
                             LearnSkill(113, 300, 300);
                             break;
+
                         case 672:
                             LearnSkill(111, 300, 300);
                             break;
+
                         case 813:
                             LearnSkill(137, 300, 300);
                             break;
+
                         case 814:
                             LearnSkill(138, 300, 300);
                             break;
+
                         case 815:
                             LearnSkill(139, 300, 300);
                             break;
+
                         case 816:
                             LearnSkill(140, 300, 300);
                             break;
+
                         case 817:
                             LearnSkill(141, 300, 300);
                             break;
+
                         case 7340:
                             LearnSkill(313, 300, 300);
                             break;
+
                         case 7341:
                             LearnSkill(315, 300, 300);
                             break;
+
                         case 17737:
                             LearnSkill(673, 300, 300);
                             break;
@@ -3452,6 +3509,7 @@ namespace Mangos.World.Player
                                     return InventoryChangeFailure.EQUIP_ITEM_REPUTATION_NOT_ENOUGH;
                                 }
                                 return InventoryChangeFailure.EQUIP_ERR_OK;
+
                             case 19:
                             case 20:
                             case 21:
@@ -3465,6 +3523,7 @@ namespace Mangos.World.Player
                                     return InventoryChangeFailure.EQUIP_ERR_NONEMPTY_BAG_OVER_OTHER_BAG;
                                 }
                                 return InventoryChangeFailure.EQUIP_ERR_OK;
+
                             case 23:
                             case 24:
                             case 25:
@@ -3490,6 +3549,7 @@ namespace Mangos.World.Player
                                     return InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
                                 }
                                 return InventoryChangeFailure.EQUIP_ERR_OK;
+
                             case 39:
                             case 40:
                             case 41:
@@ -3523,6 +3583,7 @@ namespace Mangos.World.Player
                                     return InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
                                 }
                                 return InventoryChangeFailure.EQUIP_ERR_OK;
+
                             case 63:
                             case 64:
                             case 65:
@@ -3542,6 +3603,7 @@ namespace Mangos.World.Player
                                     return InventoryChangeFailure.EQUIP_ERR_NONEMPTY_BAG_OVER_OTHER_BAG;
                                 }
                                 return InventoryChangeFailure.EQUIP_ERR_OK;
+
                             case 69:
                             case 70:
                             case 71:
@@ -3591,6 +3653,7 @@ namespace Mangos.World.Player
                                     return InventoryChangeFailure.EQUIP_ERR_ITEM_DOESNT_GO_TO_SLOT;
                                 }
                                 return InventoryChangeFailure.EQUIP_ERR_OK;
+
                             default:
                                 return InventoryChangeFailure.EQUIP_ERR_ITEM_CANT_BE_EQUIPPED;
                         }
@@ -4343,6 +4406,7 @@ namespace Mangos.World.Player
                             case 1:
                                 Life.Bonus += Item.ItemInfo.ItemBonusStatValue[k];
                                 break;
+
                             case 3:
                                 {
                                     Agility.Base += Item.ItemInfo.ItemBonusStatValue[k];
@@ -4403,9 +4467,11 @@ namespace Mangos.World.Player
                             case 17:
                                 AttackTimeBase[2] = (short)Item.ItemInfo.Delay;
                                 break;
+
                             case 15:
                                 AttackTimeBase[0] = (short)Item.ItemInfo.Delay;
                                 break;
+
                             case 16:
                                 AttackTimeBase[1] = (short)Item.ItemInfo.Delay;
                                 break;
@@ -4483,6 +4549,7 @@ namespace Mangos.World.Player
                             case 1:
                                 Life.Bonus -= Item.ItemInfo.ItemBonusStatValue[k];
                                 break;
+
                             case 3:
                                 {
                                     Agility.Base -= Item.ItemInfo.ItemBonusStatValue[k];
@@ -4543,6 +4610,7 @@ namespace Mangos.World.Player
                             case 17:
                                 AttackTimeBase[2] = 0;
                                 break;
+
                             case 15:
                                 if (Classe == Classes.CLASS_ROGUE)
                                 {
@@ -4553,6 +4621,7 @@ namespace Mangos.World.Player
                                     AttackTimeBase[0] = 2000;
                                 }
                                 break;
+
                             case 16:
                                 AttackTimeBase[1] = 0;
                                 break;
@@ -5017,22 +5086,27 @@ namespace Mangos.World.Player
                         {
                             default:
                                 return;
+
                             case ChangeSpeedType.RUN:
                                 packet = new Packets.PacketClass(Opcodes.SMSG_FORCE_RUN_SPEED_CHANGE);
                                 RunSpeed = NewSpeed;
                                 break;
+
                             case ChangeSpeedType.RUNBACK:
                                 packet = new Packets.PacketClass(Opcodes.SMSG_FORCE_RUN_BACK_SPEED_CHANGE);
                                 RunBackSpeed = NewSpeed;
                                 break;
+
                             case ChangeSpeedType.SWIM:
                                 packet = new Packets.PacketClass(Opcodes.SMSG_FORCE_SWIM_SPEED_CHANGE);
                                 SwimSpeed = NewSpeed;
                                 break;
+
                             case ChangeSpeedType.SWIMBACK:
                                 packet = new Packets.PacketClass(Opcodes.SMSG_FORCE_SWIM_BACK_SPEED_CHANGE);
                                 SwimBackSpeed = NewSpeed;
                                 break;
+
                             case ChangeSpeedType.TURNRATE:
                                 packet = new Packets.PacketClass(Opcodes.SMSG_FORCE_TURN_RATE_CHANGE);
                                 TurnRate = NewSpeed;
@@ -5266,11 +5340,14 @@ namespace Mangos.World.Player
                     case ReputationRank.Hated:
                     case ReputationRank.Hostile:
                         return TReaction.HOSTILE;
+
                     default:
                         return TReaction.FIGHT_SUPPORT;
+
                     case ReputationRank.Friendly:
                     case ReputationRank.Honored:
                         return TReaction.FRIENDLY;
+
                     case ReputationRank.Unfriendly:
                     case ReputationRank.Neutral:
                         return TReaction.NEUTRAL;
@@ -5588,6 +5665,7 @@ namespace Mangos.World.Player
                     {
                         default:
                             return;
+
                         case ManaTypes.TYPE_MANA:
                             if (Mana.Current == Mana.Maximum)
                             {
@@ -5596,6 +5674,7 @@ namespace Mangos.World.Player
                             Mana.Current += Damage;
                             SetUpdateFlag(23, Mana.Current);
                             break;
+
                         case ManaTypes.TYPE_RAGE:
                             if (Rage.Current == Rage.Maximum)
                             {
@@ -5604,6 +5683,7 @@ namespace Mangos.World.Player
                             Rage.Current += Damage;
                             SetUpdateFlag(24, Rage.Current);
                             break;
+
                         case ManaTypes.TYPE_ENERGY:
                             if (Energy.Current == Energy.Maximum)
                             {
@@ -5612,6 +5692,7 @@ namespace Mangos.World.Player
                             Energy.Current += Damage;
                             SetUpdateFlag(26, Energy.Current);
                             break;
+
                         case ManaTypes.TYPE_FOCUS:
                             return;
                     }
