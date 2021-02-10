@@ -1,16 +1,16 @@
 ﻿//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -36,39 +36,51 @@ namespace Mangos.World.Gossip
                     case Gossips.Darnassus:
                         OnGossipHello_Darnassus(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.DunMorogh:
                         OnGossipHello_DunMorogh(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.Durotar:
                         OnGossipHello_Durotar(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.ElwynnForest:
                         OnGossipHello_ElwynnForest(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.Ironforge:
                         OnGossipHello_Ironforge(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.Mulgore:
                         OnGossipHello_Mulgore(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.Orgrimmar:
                         OnGossipHello_Orgrimmar(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.Stormwind:
                         OnGossipHello_Stormwind(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.Teldrassil:
                         OnGossipHello_Teldrassil(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.Thunderbluff:
                         OnGossipHello_Thunderbluff(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.Tirisfall:
                         OnGossipHello_Tirisfall(ref objCharacter, cGUID);
                         break;
+
                     case Gossips.Undercity:
                         OnGossipHello_Undercity(ref objCharacter, cGUID);
                         break;
+
                     default:
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Unknown gossip [{0}].", Gossip);
                         break;
@@ -83,39 +95,51 @@ namespace Mangos.World.Gossip
                     case Gossips.Darnassus:
                         OnGossipSelect_Darnassus(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.DunMorogh:
                         OnGossipSelect_DunMorogh(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.Durotar:
                         OnGossipSelect_Durotar(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.ElwynnForest:
                         OnGossipSelect_ElwynnForest(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.Ironforge:
                         OnGossipSelect_Ironforge(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.Mulgore:
                         OnGossipSelect_Mulgore(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.Orgrimmar:
                         OnGossipSelect_Orgrimmar(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.Stormwind:
                         OnGossipSelect_Stormwind(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.Teldrassil:
                         OnGossipSelect_Teldrassil(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.Thunderbluff:
                         OnGossipSelect_Thunderbluff(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.Tirisfall:
                         OnGossipSelect_Tirisfall(ref objCharacter, cGUID, selected);
                         break;
+
                     case Gossips.Undercity:
                         OnGossipSelect_Undercity(ref objCharacter, cGUID, selected);
                         break;
+
                     default:
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Unknown gossip [{0}].", Gossip);
                         break;
@@ -128,25 +152,35 @@ namespace Mangos.World.Gossip
                 {
                     case 3084:
                         return Gossips.Thunderbluff;
+
                     case 4262:
                         return Gossips.Darnassus;
+
                     case 3296:
                         return Gossips.Orgrimmar;
+
                     case 68:
                     case 1976:
                         return Gossips.Stormwind;
+
                     case 1423:
                         return Gossips.ElwynnForest;
+
                     case 5595:
                         return Gossips.Ironforge;
+
                     case 727:
                         return Gossips.DunMorogh;
+
                     case 5953:
                         return Gossips.Durotar;
+
                     case 3571:
                         return Gossips.Teldrassil;
+
                     case 5624:
                         return Gossips.Undercity;
+
                     case 1496:
                     case 1652:
                     case 1738:
@@ -157,6 +191,7 @@ namespace Mangos.World.Gossip
                     case 1746:
                     case 5725:
                         return Gossips.Tirisfall;
+
                     default:
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Creature Entry [{0}] was not found in guard table.", Entry);
                         return Gossips.Thunderbluff;

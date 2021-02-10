@@ -1,21 +1,20 @@
 ﻿//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-
 
 namespace Mangos.WoWFakeClient
 {
@@ -402,6 +401,7 @@ namespace Mangos.WoWFakeClient
 
         // CMSG_PET_CAST_SPELL_OBSOLETE                    = 378 'OBSOLETE
         SMSG_PET_MODE = 378,
+
         CMSG_GOSSIP_HELLO = 379,
         CMSG_GOSSIP_SELECT_OPTION = 380,
         SMSG_GOSSIP_MESSAGE = 381,
@@ -513,6 +513,7 @@ namespace Mangos.WoWFakeClient
 
         // CMSG_SCREENSHOT                                = 487 'OBSOLETE
         SMSG_INVALID_PROMOTION_CODE = 487,
+
         MSG_GM_BIND_OTHER = 488,
         MSG_GM_SUMMON = 489,
         SMSG_ITEM_TIME_UPDATE = 490,
@@ -727,6 +728,7 @@ namespace Mangos.WoWFakeClient
 
         // SMSG_SPELL_REFLECTED                            = 699 'OBSOLETE
         SMSG_MEETINGSTONE_JOINFAILED = 699,
+
         SMSG_PLAYER_SKINNED = 700,
         SMSG_DURABILITY_DAMAGE_DEATH = 701,
         CMSG_SET_EXPLORATION = 702,
@@ -835,6 +837,7 @@ namespace Mangos.WoWFakeClient
 
         // unofficial opcodes:
         SMSG_COMPRESSED_MOVE = 0x2FB,                // 763
+
         SMSG_OUTDOORPVP_NOTIFY = 0x33B              // 827
     }
 }

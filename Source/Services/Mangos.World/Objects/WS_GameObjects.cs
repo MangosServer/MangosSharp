@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -650,6 +650,7 @@ namespace Mangos.World.Objects
                     case GameObjectType.GAMEOBJECT_TYPE_BUTTON:
                         OpenDoor();
                         return;
+
                     case GameObjectType.GAMEOBJECT_TYPE_QUESTGIVER:
                         return;
                 }
@@ -1016,10 +1017,12 @@ namespace Mangos.World.Objects
                             WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMenu(ref client.Character, GameObjectGUID, "Available quests", qm);
                         }
                         break;
+
                     case GameObjectType.GAMEOBJECT_TYPE_DOOR:
                     case GameObjectType.GAMEOBJECT_TYPE_BUTTON:
                         GO.OpenDoor();
                         break;
+
                     case GameObjectType.GAMEOBJECT_TYPE_CHAIR:
                         {
                             Packets.PacketClass StandState = new Packets.PacketClass(Opcodes.CMSG_STANDSTATECHANGE);
@@ -1061,6 +1064,7 @@ namespace Mangos.World.Objects
                             client.Character.CastOnSelf((int)GO.GetSound(1));
                         }
                         break;
+
                     case GameObjectType.GAMEOBJECT_TYPE_SPELLCASTER:
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Clicked a spellcaster.");
                         GO.Flags = 2;
@@ -1076,6 +1080,7 @@ namespace Mangos.World.Objects
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Casted spellcaster spell.");
                         client.Character.CastOnSelf((int)GO.GetSound(0));
                         break;
+
                     case GameObjectType.GAMEOBJECT_TYPE_MEETINGSTONE:
                         if (client.Character.Level < GO.GetSound(0))
                         {
@@ -1090,6 +1095,7 @@ namespace Mangos.World.Objects
                             client.Character.CastOnSelf(23598);
                         }
                         break;
+
                     case GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE:
                         if (GO.Owner != client.Character.GUID)
                         {

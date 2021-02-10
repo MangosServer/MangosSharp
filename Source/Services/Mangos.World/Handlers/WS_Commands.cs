@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -1136,34 +1136,42 @@ namespace Mangos.World.Handlers
                     case "DW":
                         Race = Races.RACE_DWARF;
                         break;
+
                     case "GNOME":
                     case "GN":
                         Race = Races.RACE_GNOME;
                         break;
+
                     case "HUMAN":
                     case "HU":
                         Race = Races.RACE_HUMAN;
                         break;
+
                     case "NIGHTELF":
                     case "NE":
                         Race = Races.RACE_NIGHT_ELF;
                         break;
+
                     case "ORC":
                     case "OR":
                         Race = Races.RACE_ORC;
                         break;
+
                     case "TAUREN":
                     case "TA":
                         Race = Races.RACE_TAUREN;
                         break;
+
                     case "TROLL":
                     case "TR":
                         Race = Races.RACE_TROLL;
                         break;
+
                     case "UNDEAD":
                     case "UN":
                         Race = Races.RACE_UNDEAD;
                         break;
+
                     default:
                         objCharacter.CommandResponse("Unknown race. Use DW, GN, HU, NE, OR, TA, TR, UN for race.");
                         return true;

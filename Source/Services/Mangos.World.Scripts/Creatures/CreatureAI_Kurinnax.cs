@@ -1,16 +1,16 @@
 ﻿//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -29,16 +29,20 @@ namespace Mangos.World.Scripts.Creatures
     {
         private const int AI_UPDATE = 1000;
         private const int wound_cooldown = 8000;
-        // private const summon_player_cooldown As Integer = 5000 
+
+        // private const summon_player_cooldown As Integer = 5000
         // Private Const summon_player_cooldown2 As Integer = 5001
         // Not sure if has correct core support or on cooldowns.
         private const int Thrash_Cooldown = 9000;
+
         private const int Wide_Slash_Cooldown = 10000;
         private const int Spell_Frenzy = 26527;
         private const int Spell_Mortal_Wound = 25646;
+
         // Private Const Spell_Summon_1 As Integer = 20477 'Unused until we figure out how this works and what it does.
         // Private Const Spell_Summon_2 As Integer = 26446 'Same as above, unused until more is figured out.
         private const int spell_Thrash = 3391;
+
         private const int Spell_Wide_Slash = 25814;
         public int phase;
         public int Next_Mortal_Wound;

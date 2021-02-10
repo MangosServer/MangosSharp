@@ -1,16 +1,16 @@
 ﻿//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -29,6 +29,7 @@ namespace Mangos.World.Scripts.Creatures
         // TODO: Implement proper zombie chow summons. Fix decimate. Fix him going underground. Fix mortal wound a debuff instead of dispellable buff. Fix terrifying roar.
         // Reference: https://github.com/mangoszero/scripts/blob/master/scripts/eastern_kingdoms/naxxramas/boss_gluth.cpp
         private const int AI_UPDATE = 1000;
+
         private const int Mortal_Wound_CD = 10000;
         private const int Decimate_CD = 110000;
         private const int Frenzy_CD = 25000;
@@ -188,6 +189,7 @@ namespace Mangos.World.Scripts.Creatures
                 }
             }
         }
+
         // Gluth falls under Naxxramas without this. Not perfect but much better than before. Please note this was tested on a server with no vmaps/maps and that may be why he falls under Naxxramas.
         public override void OnLeaveCombat(bool Reset = true)
         {

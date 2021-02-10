@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -327,15 +327,19 @@ namespace Mangos.World.Handlers
                         case Opcodes.CMSG_FORCE_RUN_SPEED_CHANGE_ACK:
                             client.Character.RunSpeed = newSpeed;
                             break;
+
                         case Opcodes.CMSG_FORCE_RUN_BACK_SPEED_CHANGE_ACK:
                             client.Character.RunBackSpeed = newSpeed;
                             break;
+
                         case Opcodes.CMSG_FORCE_SWIM_BACK_SPEED_CHANGE_ACK:
                             client.Character.SwimBackSpeed = newSpeed;
                             break;
+
                         case Opcodes.CMSG_FORCE_SWIM_SPEED_CHANGE_ACK:
                             client.Character.SwimSpeed = newSpeed;
                             break;
+
                         case Opcodes.CMSG_FORCE_TURN_RATE_CHANGE_ACK:
                             client.Character.TurnRate = newSpeed;
                             break;

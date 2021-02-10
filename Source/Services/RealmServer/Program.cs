@@ -19,7 +19,6 @@
 using Autofac;
 using Mangos.Realm;
 using RealmServer.Modules;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 

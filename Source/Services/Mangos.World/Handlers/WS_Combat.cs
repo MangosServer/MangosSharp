@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -628,12 +628,15 @@ namespace Mangos.World.Handlers
                 case WeaponAttackType.BASE_ATTACK:
                     WepSlot = 15;
                     break;
+
                 case WeaponAttackType.OFF_ATTACK:
                     WepSlot = 16;
                     break;
+
                 case WeaponAttackType.RANGED_ATTACK:
                     WepSlot = 17;
                     break;
+
                 default:
                     return 0f;
             }
@@ -676,6 +679,7 @@ namespace Mangos.World.Handlers
                     }
                     Weapon = ((WS_PlayerData.CharacterObject)objCharacter).Items[15];
                     break;
+
                 case WeaponAttackType.OFF_ATTACK:
                     if (!((WS_PlayerData.CharacterObject)objCharacter).Items.ContainsKey(16))
                     {
@@ -683,6 +687,7 @@ namespace Mangos.World.Handlers
                     }
                     Weapon = ((WS_PlayerData.CharacterObject)objCharacter).Items[16];
                     break;
+
                 case WeaponAttackType.RANGED_ATTACK:
                     if (!((WS_PlayerData.CharacterObject)objCharacter).Items.ContainsKey(17))
                     {
@@ -690,6 +695,7 @@ namespace Mangos.World.Handlers
                     }
                     Weapon = ((WS_PlayerData.CharacterObject)objCharacter).Items[17];
                     break;
+
                 default:
                     return 0f;
             }
@@ -705,10 +711,12 @@ namespace Mangos.World.Handlers
             {
                 case INVENTORY_TYPES.INVTYPE_TWOHAND_WEAPON:
                     return 3.3f;
+
                 case INVENTORY_TYPES.INVTYPE_RANGED:
                 case INVENTORY_TYPES.INVTYPE_THROWN:
                 case INVENTORY_TYPES.INVTYPE_RANGEDRIGHT:
                     return 2.8f;
+
                 default:
                     if (Weapon.ItemInfo.SubClass == ITEM_SUBCLASS.ITEM_SUBCLASS_DAGGER)
                     {
@@ -734,10 +742,12 @@ namespace Mangos.World.Handlers
                 {
                     default:
                         return;
+
                     case WeaponAttackType.BASE_ATTACK:
                     case WeaponAttackType.OFF_ATTACK:
                         BaseValue = objCharacter.AttackPower + objCharacter.AttackPowerMods;
                         break;
+
                     case WeaponAttackType.RANGED_ATTACK:
                         BaseValue = objCharacter.AttackPowerRanged + objCharacter.AttackPowerModsRanged;
                         break;
@@ -770,12 +780,14 @@ namespace Mangos.World.Handlers
                     objCharacter.SetUpdateFlag(134, objCharacter.Damage.Minimum);
                     objCharacter.SetUpdateFlag(135, objCharacter.Damage.Maximum);
                     break;
+
                 case WeaponAttackType.OFF_ATTACK:
                     objCharacter.OffHandDamage.Minimum = MinDamage;
                     objCharacter.OffHandDamage.Maximum = MaxDamage;
                     objCharacter.SetUpdateFlag(136, objCharacter.OffHandDamage.Minimum);
                     objCharacter.SetUpdateFlag(137, objCharacter.OffHandDamage.Maximum);
                     break;
+
                 case WeaponAttackType.RANGED_ATTACK:
                     objCharacter.RangedDamage.Minimum = MinDamage;
                     objCharacter.RangedDamage.Maximum = MaxDamage;
@@ -1031,14 +1043,17 @@ namespace Mangos.World.Handlers
                             case Classes.CLASS_HUNTER:
                                 combatDodgeAgilityBonus = (int)(@object.Agility.Base / 26.5f);
                                 break;
+
                             case Classes.CLASS_ROGUE:
                                 combatDodgeAgilityBonus = (int)(@object.Agility.Base / 14.5f);
                                 break;
+
                             case Classes.CLASS_PALADIN:
                             case Classes.CLASS_MAGE:
                             case Classes.CLASS_WARLOCK:
                                 combatDodgeAgilityBonus = (int)(@object.Agility.Base / 19.5f);
                                 break;
+
                             default:
                                 combatDodgeAgilityBonus = (int)(@object.Agility.Base / 20.0);
                                 break;
@@ -1104,27 +1119,35 @@ namespace Mangos.World.Handlers
                             case Classes.CLASS_ROGUE:
                                 baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 29.0);
                                 break;
+
                             case Classes.CLASS_DRUID:
                                 baseCrit = (float)(0.92000001668930054 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
                                 break;
+
                             case Classes.CLASS_HUNTER:
                                 baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 33.0);
                                 break;
+
                             case Classes.CLASS_MAGE:
                                 baseCrit = (float)(3.2000000476837158 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.44);
                                 break;
+
                             case Classes.CLASS_PALADIN:
                                 baseCrit = (float)(0.699999988079071 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.77);
                                 break;
+
                             case Classes.CLASS_PRIEST:
                                 baseCrit = (float)(3.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
                                 break;
+
                             case Classes.CLASS_SHAMAN:
                                 baseCrit = (float)(1.7000000476837158 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.7);
                                 break;
+
                             case Classes.CLASS_WARLOCK:
                                 baseCrit = (float)(2.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
                                 break;
+
                             case Classes.CLASS_WARRIOR:
                                 baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
                                 break;
@@ -1213,6 +1236,7 @@ namespace Mangos.World.Handlers
                         case SHEATHE_SLOT.SHEATHE_NONE:
                             tmpSkill = 162;
                             break;
+
                         case SHEATHE_SLOT.SHEATHE_WEAPON:
                             if (DualWield && characterObject.Items.ContainsKey(16))
                             {
@@ -1223,6 +1247,7 @@ namespace Mangos.World.Handlers
                                 tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.Items[15].ItemEntry].GetReqSkill;
                             }
                             break;
+
                         case SHEATHE_SLOT.SHEATHE_RANGED:
                             if (characterObject.Items.ContainsKey(17))
                             {
@@ -1260,6 +1285,7 @@ namespace Mangos.World.Handlers
             {
                 case SHEATHE_SLOT.SHEATHE_NONE:
                     return objCharacter.GetAttackTime(WeaponAttackType.BASE_ATTACK);
+
                 case SHEATHE_SLOT.SHEATHE_WEAPON:
                     if (combatDualWield)
                     {
@@ -1274,8 +1300,10 @@ namespace Mangos.World.Handlers
                         return objCharacter.GetAttackTime(WeaponAttackType.OFF_ATTACK);
                     }
                     return objCharacter.GetAttackTime(WeaponAttackType.BASE_ATTACK);
+
                 case SHEATHE_SLOT.SHEATHE_RANGED:
                     return objCharacter.GetAttackTime(WeaponAttackType.RANGED_ATTACK);
+
                 default:
                     {
                         int GetAttackTime = default;
@@ -1297,6 +1325,7 @@ namespace Mangos.World.Handlers
                             result.DamageType = DamageTypes.DMG_PHYSICAL;
                             result.Damage = WorldServiceLocator._WorldServer.Rnd.Next(characterObject.BaseUnarmedDamage, characterObject.BaseUnarmedDamage + 1);
                             break;
+
                         case SHEATHE_SLOT.SHEATHE_WEAPON:
                             if (DualWield)
                             {
@@ -1311,6 +1340,7 @@ namespace Mangos.World.Handlers
                                 result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.Damage.Minimum), (int)Math.Round(characterObject.Damage.Maximum + 1f)) + characterObject.BaseUnarmedDamage;
                             }
                             break;
+
                         case SHEATHE_SLOT.SHEATHE_RANGED:
                             result.HitInfo = 10;
                             result.DamageType = DamageTypes.DMG_PHYSICAL;

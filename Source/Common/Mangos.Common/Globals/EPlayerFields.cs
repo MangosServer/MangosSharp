@@ -1,21 +1,20 @@
 ﻿//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-
 
 namespace Mangos.Common.Globals
 {
@@ -23,6 +22,7 @@ namespace Mangos.Common.Globals
     {
         // PLAYER_SELECTION = EUnitFields.UNIT_END + &H0                                 ' 0x0B6 - Size: 2 - Type: GUID - Flags: PUBLIC
         PLAYER_DUEL_ARBITER = EUnitFields.UNIT_END + 0x0,                              // 0x0B8 - Size: 2 - Type: GUID - Flags: PUBLIC
+
         PLAYER_FLAGS = EUnitFields.UNIT_END + 0x2,                                     // 0x0BA - Size: 1 - Type: INT - Flags: PUBLIC
         PLAYER_GUILDID = EUnitFields.UNIT_END + 0x3,                                   // 0x0BB - Size: 1 - Type: INT - Flags: PUBLIC
         PLAYER_GUILDRANK = EUnitFields.UNIT_END + 0x4,                                 // 0x0BC - Size: 1 - Type: INT - Flags: PUBLIC
@@ -34,6 +34,7 @@ namespace Mangos.Common.Globals
         PLAYER_QUEST_LOG_1_1 = EUnitFields.UNIT_END + 0xA,                             // 0x0C2 - Size: 1 - Type: INT - Flags: GROUP_ONLY
         PLAYER_QUEST_LOG_1_2 = EUnitFields.UNIT_END + 0xB,                             // 0x0C3 - Size: 2 - Type: INT - Flags: PRIVATE
         PLAYER_QUEST_LOG_1_3 = EUnitFields.UNIT_END + 0xC,
+
         // PLAYER_QUEST_LOG_2_1 = EUnitFields.UNIT_END + &HF                             ' 0x0C5 - Size: 1 - Type: INT - Flags: GROUP_ONLY
         // PLAYER_QUEST_LOG_2_2 = EUnitFields.UNIT_END + &H10                            ' 0x0C6 - Size: 2 - Type: INT - Flags: PRIVATE
         // PLAYER_QUEST_LOG_3_1 = EUnitFields.UNIT_END + &H12                            ' 0x0C8 - Size: 1 - Type: INT - Flags: GROUP_ONLY
@@ -73,12 +74,14 @@ namespace Mangos.Common.Globals
         // PLAYER_QUEST_LOG_20_1 = EUnitFields.UNIT_END + &H45                           ' 0x0FB - Size: 1 - Type: INT - Flags: GROUP_ONLY
         // PLAYER_QUEST_LOG_20_2 = EUnitFields.UNIT_END + &H46                           ' 0x0FC - Size: 2 - Type: INT - Flags: PRIVATE
         PLAYER_QUEST_LOG_LAST_1 = EUnitFields.UNIT_END + 0x43,
+
         PLAYER_QUEST_LOG_LAST_2 = EUnitFields.UNIT_END + 0x44,
         PLAYER_QUEST_LOG_LAST_3 = EUnitFields.UNIT_END + 0x45,
         PLAYER_VISIBLE_ITEM_1_CREATOR = EUnitFields.UNIT_END + 0x46,                   // 0x0FE - Size: 2 - Type: GUID - Flags: PUBLIC
         PLAYER_VISIBLE_ITEM_1_0 = EUnitFields.UNIT_END + 0x48,                         // 0x100 - Size: 8 - Type: INT - Flags: PUBLIC
         PLAYER_VISIBLE_ITEM_1_PROPERTIES = EUnitFields.UNIT_END + 0x50,                // 0x108 - Size: 1 - Type: TWO_SHORT - Flags: PUBLIC
         PLAYER_VISIBLE_ITEM_1_PAD = EUnitFields.UNIT_END + 0x51,                       // 0x109 - Size: 1 - Type: INT - Flags: PUBLIC
+
         // PLAYER_VISIBLE_ITEM_2_CREATOR = EUnitFields.UNIT_END + &H54                   ' 0x10A - Size: 2 - Type: GUID - Flags: PUBLIC
         // PLAYER_VISIBLE_ITEM_2_0 = EUnitFields.UNIT_END + &H56                         ' 0x10C - Size: 8 - Type: INT - Flags: PUBLIC
         // PLAYER_VISIBLE_ITEM_2_PROPERTIES = EUnitFields.UNIT_END + &H5E                ' 0x114 - Size: 1 - Type: TWO_SHORT - Flags: PUBLIC
@@ -152,6 +155,7 @@ namespace Mangos.Common.Globals
         // PLAYER_VISIBLE_ITEM_19_PROPERTIES = EUnitFields.UNIT_END + &H12A              ' 0x1E0 - Size: 1 - Type: TWO_SHORT - Flags: PUBLIC
         // PLAYER_VISIBLE_ITEM_19_PAD = EUnitFields.UNIT_END + &H12B                     ' 0x1E1 - Size: 1 - Type: INT - Flags: PUBLIC
         PLAYER_VISIBLE_ITEM_LAST_CREATOR = EUnitFields.UNIT_END + 0x11E,
+
         PLAYER_VISIBLE_ITEM_LAST_0 = EUnitFields.UNIT_END + 0x120,
         PLAYER_VISIBLE_ITEM_LAST_PROPERTIES = EUnitFields.UNIT_END + 0x128,
         PLAYER_VISIBLE_ITEM_LAST_PAD = EUnitFields.UNIT_END + 0x129,

@@ -1,16 +1,16 @@
 //
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
-//  
+//
 //  This program is free software. You can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation. either version 2 of the License, or
 //  (at your option) any later version.
-//  
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY. Without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -309,71 +309,101 @@ namespace Mangos.World.Objects
                             {
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_MISC_WEAPON:
                                     return 0;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_CONSUMABLE:
                                     return 196;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_FOOD:
                                     return 197;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID:
                                     return 264;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_POTION:
                                     return 266;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_SCROLL:
                                     return 198;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_BANDAGE:
                                     return 199;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_HEALTHSTONE:
                                     return 200;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_COMBAT_EFFECT:
                                     return 201;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_SWORD:
                                     return 202;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_STAFF:
                                     return 227;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_EXOTIC:
                                     return 262;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_EXOTIC2:
                                     return 263;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_FIST_WEAPON:
                                     return 15590;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_DAGGER:
                                     return 1180;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_THROWN:
                                     return 2567;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_SPEAR:
                                     return 3386;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_CROSSBOW:
                                     return 5011;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_WAND:
                                     return 5009;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_FISHING_POLE:
                                     return 7738;
                             }
                             break;
+
                         case ITEM_CLASS.ITEM_CLASS_ARMOR:
                             switch (SubClass)
                             {
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_CONSUMABLE:
                                     return 0;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_FOOD:
                                     return 9078;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID:
                                     return 9077;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_POTION:
                                     return 8737;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_SCROLL:
                                     return 750;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_HEALTHSTONE:
                                     return 9116;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_BANDAGE:
                                     return 9124;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_COMBAT_EFFECT:
                                     return 27762;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_WEAPON_obsolete:
                                     return 27763;
+
                                 case ITEM_SUBCLASS.ITEM_SUBCLASS_TWOHAND_SWORD:
                                     return 27764;
                             }
                             break;
+
                         default:
                             return 0;
                     }
