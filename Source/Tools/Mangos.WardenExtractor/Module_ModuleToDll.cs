@@ -172,7 +172,7 @@ namespace Mangos.WardenExtractor
                 return;
             }
 
-            byte[] DecompressedData = new ZipService().DeCompress(CompressedData);
+            byte[] DecompressedData = ZipService.DeCompress(CompressedData);
             FileStream fs3 = new FileStream(@"dlls\" + ModName.Replace(Path.GetExtension(ModName), "") + ".before.dll", FileMode.Create, FileAccess.Write, FileShare.None);
             fs3.Write(DecompressedData, 0, DecompressedData.Length);
             fs3.Close();
@@ -190,7 +190,7 @@ namespace Mangos.WardenExtractor
             string RC4Key = Console.ReadLine();
             byte[] Key = Program.ParseKey(RC4Key);
             Key = Program.RC4.Init(Key);
-            byte[] CompressedData = new ZipService().Compress(DllData, 0, DllData.Length);
+            byte[] CompressedData = ZipService.Compress(DllData, 0, DllData.Length);
             MemoryStream mw = new MemoryStream();
             BinaryWriter bw = new BinaryWriter(mw);
             bw.Write(DllData.Length); // Uncompressed buffer

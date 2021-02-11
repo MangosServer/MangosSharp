@@ -342,7 +342,7 @@ namespace Mangos.WoWFakeClient
                     return false;
                 }
 
-                byte[] DecompressedData = new ZipService().DeCompress(CompressedData);
+                byte[] DecompressedData = ZipService.DeCompress(CompressedData);
                 MemoryStream ms = new MemoryStream(DecompressedData);
                 BinaryReader br = new BinaryReader(ms);
                 ModuleData = PrepairModule(ref br);
