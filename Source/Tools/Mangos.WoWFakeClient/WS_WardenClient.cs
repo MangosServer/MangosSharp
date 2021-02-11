@@ -29,7 +29,6 @@ namespace Mangos.WoWFakeClient
 {
     public static class WS_WardenClient
     {
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         public enum MaievResponse : byte
         {
@@ -47,9 +46,6 @@ namespace Mangos.WoWFakeClient
             MAIEV_MODULE_UNK = 3,
             MAIEV_MODULE_SEED = 5
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         public static void InitWarden()
         {
@@ -111,8 +107,6 @@ namespace Mangos.WoWFakeClient
             }
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public static int ModuleLength;
 
         public static void On_SMSG_WARDEN_DATA(ref Packets.PacketClass Packet)
@@ -304,8 +298,6 @@ namespace Mangos.WoWFakeClient
             Worldserver.Send(Packet);
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public static WardenMaiev Maiev = new WardenMaiev();
 
         public class WardenMaiev
@@ -319,7 +311,6 @@ namespace Mangos.WoWFakeClient
             public byte[] ModKeyIn = Array.Empty<byte>();
             public byte[] ModKeyOut = Array.Empty<byte>();
 
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
             public bool LoadModule(string Name, ref byte[] Data, byte[] Key)
             {
@@ -407,9 +398,6 @@ namespace Mangos.WoWFakeClient
 
                 return true;
             }
-
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
             [DllImport("kernel32.dll", EntryPoint = "LoadLibraryA")]
             private static extern int LoadLibrary(string lpLibFileName);
@@ -543,9 +531,6 @@ namespace Mangos.WoWFakeClient
                 }
                 while (true);
             }
-
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
             public delegate void SendPacketDelegate(int ptrPacket, int dwSize);
 
@@ -683,16 +668,10 @@ namespace Mangos.WoWFakeClient
                 return true;
             }
 
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
-
             private void Unload_Module()
             {
                 free(m_Mod);
             }
-
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
             [StructLayout(LayoutKind.Explicit, Size = 0x1C)]
             private struct FuncList
@@ -841,12 +820,7 @@ namespace Mangos.WoWFakeClient
                 Buffer.BlockCopy(KeyData, 0, ModKeyOut, 0, 258);
                 Buffer.BlockCopy(KeyData, 258, ModKeyIn, 0, 258);
             }
-
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         [DllImport("kernel32.dll")]
         private static extern int GlobalLock(int hMem);
@@ -881,7 +855,5 @@ namespace Mangos.WoWFakeClient
             GlobalUnlock(tmpHandle);
             Marshal.FreeHGlobal(new IntPtr(tmpHandle));
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
     }
 }

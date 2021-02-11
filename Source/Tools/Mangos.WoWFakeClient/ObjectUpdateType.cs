@@ -47,9 +47,9 @@ namespace Mangos.WoWFakeClient
         // 8 bytes - GUID
         UPDATETYPE_NEAR_OBJECTS = 5 // looks like 4 & 5 do the same thing
 
-                                    // 4 bytes - Count
-                                    // Loop Count Times:
-                                    // 1 byte  - MASK
-                                    // 8 bytes - GUID
+        // 4 bytes - Count
+        // Loop Count Times:
+        // 1 byte  - MASK
+        // 8 bytes - GUID
     }
 }
