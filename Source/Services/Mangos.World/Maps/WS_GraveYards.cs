@@ -43,31 +43,25 @@ namespace Mangos.World.Maps
 
             private float _locationPosZ;
 
-            private int _locationMapID;
-
             public int X
             {
                 get => checked((int)Math.Round(_locationPosX));
-                set => _locationPosX = X;
+                set => _locationPosX = value;
             }
 
             public int Y
             {
                 get => checked((int)Math.Round(_locationPosY));
-                set => _locationPosY = Y;
+                set => _locationPosY = value;
             }
 
             public int Z
             {
                 get => checked((int)Math.Round(_locationPosZ));
-                set => _locationPosZ = Z;
+                set => _locationPosZ = value;
             }
 
-            public int Map
-            {
-                get => _locationMapID;
-                set => _locationMapID = Map;
-            }
+            public int Map { get; set; }
 
             public TGraveyard(float locationPosX, float locationPosY, float locationPosZ, int locationMapID)
             {
@@ -75,7 +69,7 @@ namespace Mangos.World.Maps
                 _locationPosX = locationPosX;
                 _locationPosY = locationPosY;
                 _locationPosZ = locationPosZ;
-                _locationMapID = locationMapID;
+                Map = locationMapID;
             }
         }
 
