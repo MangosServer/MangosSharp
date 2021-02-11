@@ -55,10 +55,7 @@ namespace Mangos.Cluster.Globals
             Data[3] = (byte)(Conversions.ToShort(opcode) / 256);
         }
 
-        public PacketClass(byte[] rawdata)
-        {
-            Data = rawdata;
-        }
+        public PacketClass(byte[] rawdata) => Data = rawdata;
 
         // Public Sub AddBitArray(ByVal buffer As BitArray, ByVal Len As Integer)
         // ReDim Preserve Data(Data.Length - 1 + Len)

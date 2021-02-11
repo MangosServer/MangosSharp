@@ -32,9 +32,7 @@ namespace Mangos.Realm.Network
             RS_REALMLIST_Handler RS_REALMLIST_Handler,
             CMD_XFER_CANCEL_Handler CMD_XFER_CANCEL_Handler,
             CMD_XFER_ACCEPT_Handler CMD_XFER_ACCEPT_Handler,
-            On_CMD_XFER_RESUME_Handler On_CMD_XFER_RESUME_Handler)
-        {
-            handlers = new Dictionary<AuthCMD, IPacketHandler>
+            On_CMD_XFER_RESUME_Handler On_CMD_XFER_RESUME_Handler) => handlers = new Dictionary<AuthCMD, IPacketHandler>
             {
                 [AuthCMD.CMD_AUTH_LOGON_CHALLENGE] = RS_LOGON_CHALLENGE_Handler,
                 [AuthCMD.CMD_AUTH_RECONNECT_CHALLENGE] = RS_LOGON_CHALLENGE_Handler,
@@ -44,7 +42,6 @@ namespace Mangos.Realm.Network
                 [AuthCMD.CMD_XFER_ACCEPT] = CMD_XFER_ACCEPT_Handler,
                 [AuthCMD.CMD_XFER_RESUME] = On_CMD_XFER_RESUME_Handler
             };
-        }
 
         public IPacketHandler GetPacketHandler(byte opcode)
         {

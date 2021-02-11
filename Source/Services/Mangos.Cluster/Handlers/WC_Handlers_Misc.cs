@@ -28,10 +28,7 @@ namespace Mangos.Cluster.Handlers
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WcHandlersMisc(ClusterServiceLocator clusterServiceLocator)
-        {
-            _clusterServiceLocator = clusterServiceLocator;
-        }
+        public WcHandlersMisc(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
         public void On_CMSG_QUERY_TIME(PacketClass packet, ClientClass client)
         {

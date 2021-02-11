@@ -41,10 +41,7 @@ namespace Mangos.Cluster.Handlers
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WcHandlerCharacter(ClusterServiceLocator clusterServiceLocator)
-        {
-            _clusterServiceLocator = clusterServiceLocator;
-        }
+        public WcHandlerCharacter(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
         public class CharacterObject : IDisposable
         {

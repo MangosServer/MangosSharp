@@ -28,10 +28,7 @@ namespace Mangos.DataStores
 
         private Dictionary<string, DataStore> dataStores;
 
-        public DataStoreProvider()
-        {
-            dataStores = new Dictionary<string, DataStore>();
-        }
+        public DataStoreProvider() => dataStores = new Dictionary<string, DataStore>();
 
         public async ValueTask<DataStore> GetDataStoreAsync(string dbcFileName)
         {

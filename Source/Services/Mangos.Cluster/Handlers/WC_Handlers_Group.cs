@@ -36,10 +36,7 @@ namespace Mangos.Cluster.Handlers
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WcHandlersGroup(ClusterServiceLocator clusterServiceLocator)
-        {
-            _clusterServiceLocator = clusterServiceLocator;
-        }
+        public WcHandlersGroup(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
         // Used as counter for unique Group.ID
         private long _groupCounter = 1L;

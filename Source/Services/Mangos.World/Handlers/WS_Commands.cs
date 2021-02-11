@@ -53,10 +53,7 @@ namespace Mangos.World.Handlers
 
             public ChatCommandDelegate CommandDelegate;
 
-            public ChatCommand()
-            {
-                CommandAccess = AccessLevel.GameMaster;
-            }
+            public ChatCommand() => CommandAccess = AccessLevel.GameMaster;
         }
 
         public delegate bool ChatCommandDelegate(ref WS_PlayerData.CharacterObject objCharacter, string Message);
@@ -67,10 +64,7 @@ namespace Mangos.World.Handlers
 
         public Dictionary<string, ChatCommand> ChatCommands;
 
-        public WS_Commands()
-        {
-            ChatCommands = new Dictionary<string, ChatCommand>();
-        }
+        public WS_Commands() => ChatCommands = new Dictionary<string, ChatCommand>();
 
         public void RegisterChatCommands()
         {

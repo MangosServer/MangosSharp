@@ -25,10 +25,7 @@ namespace Mangos.Realm.Network.Responses
         public AccountState AccountState { get; }
         public byte[] M2 { get; }
 
-        public AUTH_LOGON_PROOF(AccountState accountState)
-        {
-            AccountState = accountState;
-        }
+        public AUTH_LOGON_PROOF(AccountState accountState) => AccountState = accountState;
 
         public AUTH_LOGON_PROOF(AccountState accountState, byte[] m2)
         {

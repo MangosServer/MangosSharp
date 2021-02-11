@@ -187,10 +187,7 @@ namespace Mangos.World.DataStores
         {
             public int CinematicID;
 
-            public TCharClass(int Cinematic)
-            {
-                CinematicID = Cinematic;
-            }
+            public TCharClass(int Cinematic) => CinematicID = Cinematic;
         }
 
         public class TFaction
@@ -366,10 +363,7 @@ namespace Mangos.World.DataStores
 
             public int[] Enchant_ID;
 
-            public TItemRandomPropertiesInfo()
-            {
-                Enchant_ID = new int[4];
-            }
+            public TItemRandomPropertiesInfo() => Enchant_ID = new int[4];
         }
 
         public class TBattleground

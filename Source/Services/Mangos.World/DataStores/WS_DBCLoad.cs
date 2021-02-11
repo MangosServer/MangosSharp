@@ -38,10 +38,7 @@ namespace Mangos.World.DataStores
     {
         private readonly DataStoreProvider dataStoreProvider;
 
-        public WS_DBCLoad(DataStoreProvider dataStoreProvider)
-        {
-            this.dataStoreProvider = dataStoreProvider;
-        }
+        public WS_DBCLoad(DataStoreProvider dataStoreProvider) => this.dataStoreProvider = dataStoreProvider;
 
         public async Task InitializeSpellRadiusAsync()
         {

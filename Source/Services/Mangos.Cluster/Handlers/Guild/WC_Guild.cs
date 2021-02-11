@@ -34,10 +34,7 @@ namespace Mangos.Cluster.Handlers.Guild
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WcGuild(ClusterServiceLocator clusterServiceLocator)
-        {
-            _clusterServiceLocator = clusterServiceLocator;
-        }
+        public WcGuild(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
         public Dictionary<uint, Guild> GuilDs = new Dictionary<uint, Guild>();
 

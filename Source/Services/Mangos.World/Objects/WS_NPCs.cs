@@ -392,10 +392,7 @@ namespace Mangos.World.Objects
 
         private readonly int[] DbcBankBagSlotPrices;
 
-        public WS_NPCs()
-        {
-            DbcBankBagSlotPrices = new int[13];
-        }
+        public WS_NPCs() => DbcBankBagSlotPrices = new int[13];
 
         public void On_CMSG_TRAINER_LIST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {

@@ -26,10 +26,7 @@ namespace Mangos.Cluster.Network
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WcNetwork(ClusterServiceLocator clusterServiceLocator)
-        {
-            _clusterServiceLocator = clusterServiceLocator;
-        }
+        public WcNetwork(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
         public WorldServerClass WorldServer => _clusterServiceLocator.WorldServerClass;
 

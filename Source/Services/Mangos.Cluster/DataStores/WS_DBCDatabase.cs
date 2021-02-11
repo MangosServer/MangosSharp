@@ -293,10 +293,7 @@ namespace Mangos.Cluster.DataStores
         {
             public int CinematicId;
 
-            public CharClass(int cinematic)
-            {
-                CinematicId = cinematic;
-            }
+            public CharClass(int cinematic) => CinematicId = cinematic;
         }
     }
 }

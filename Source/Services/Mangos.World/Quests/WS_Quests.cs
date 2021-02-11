@@ -2442,9 +2442,6 @@ namespace Mangos.World.Quests
             }
         }
 
-        public WS_Quests()
-        {
-            _quests = new Collection();
-        }
+        public WS_Quests() => _quests = new Collection();
     }
 }

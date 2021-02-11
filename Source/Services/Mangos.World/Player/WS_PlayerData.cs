@@ -355,94 +355,49 @@ namespace Mangos.World.Player
 
             public byte HairColor
             {
-                get
-                {
-                    return checked((byte)((cPlayerBytes & -16777216) >> 24));
-                }
-                set
-                {
-                    cPlayerBytes = (cPlayerBytes & 0xFFFFFF) | (value << 24);
-                }
+                get => checked((byte)((cPlayerBytes & -16777216) >> 24));
+                set => cPlayerBytes = (cPlayerBytes & 0xFFFFFF) | (value << 24);
             }
 
             public byte HairStyle
             {
-                get
-                {
-                    return checked((byte)((cPlayerBytes & 0xFF0000) >> 16));
-                }
-                set
-                {
-                    cPlayerBytes = (cPlayerBytes & -16711681) | (value << 16);
-                }
+                get => checked((byte)((cPlayerBytes & 0xFF0000) >> 16));
+                set => cPlayerBytes = (cPlayerBytes & -16711681) | (value << 16);
             }
 
             public byte Face
             {
-                get
-                {
-                    return checked((byte)((cPlayerBytes & 0xFF00) >> 8));
-                }
-                set
-                {
-                    cPlayerBytes = (cPlayerBytes & -65281) | (value << 8);
-                }
+                get => checked((byte)((cPlayerBytes & 0xFF00) >> 8));
+                set => cPlayerBytes = (cPlayerBytes & -65281) | (value << 8);
             }
 
             public byte Skin
             {
-                get
-                {
-                    return checked((byte)((cPlayerBytes & 0xFF) >> 0));
-                }
-                set
-                {
-                    cPlayerBytes = (cPlayerBytes & -256) | (value << 0);
-                }
+                get => checked((byte)((cPlayerBytes & 0xFF) >> 0));
+                set => cPlayerBytes = (cPlayerBytes & -256) | (value << 0);
             }
 
             public XPSTATE RestState
             {
-                get
-                {
-                    return (XPSTATE)checked((byte)((cPlayerBytes2 & -16777216) >> 24));
-                }
-                set
-                {
-                    cPlayerBytes2 = (cPlayerBytes2 & 0xFFFFFF) | (int)((uint)value << 24);
-                }
+                get => (XPSTATE)checked((byte)((cPlayerBytes2 & -16777216) >> 24));
+                set => cPlayerBytes2 = (cPlayerBytes2 & 0xFFFFFF) | (int)((uint)value << 24);
             }
 
             public byte Items_AvailableBankSlots
             {
-                get
-                {
-                    return checked((byte)((cPlayerBytes2 & 0xFF0000) >> 16));
-                }
-                set
-                {
-                    cPlayerBytes2 = (cPlayerBytes2 & -16711681) | (value << 16);
-                }
+                get => checked((byte)((cPlayerBytes2 & 0xFF0000) >> 16));
+                set => cPlayerBytes2 = (cPlayerBytes2 & -16711681) | (value << 16);
             }
 
             public byte FacialHair
             {
-                get
-                {
-                    return checked((byte)((cPlayerBytes2 & 0xFF) >> 0));
-                }
-                set
-                {
-                    cPlayerBytes2 = (cPlayerBytes2 & -256) | (value << 0);
-                }
+                get => checked((byte)((cPlayerBytes2 & 0xFF) >> 0));
+                set => cPlayerBytes2 = (cPlayerBytes2 & -256) | (value << 0);
             }
 
             public override Genders Gender
             {
-                get
-                {
-                    return (Genders)checked((byte)((cBytes0 & 0xFF0000) >> 16));
-                }
+                get => (Genders)checked((byte)((cBytes0 & 0xFF0000) >> 16));
                 set
                 {
                     cBytes0 = (cBytes0 & -16711681) | (int)((uint)value << 16);
@@ -452,38 +407,20 @@ namespace Mangos.World.Player
 
             public PlayerHonorRank HonorRank
             {
-                get
-                {
-                    return (PlayerHonorRank)checked((byte)((cPlayerBytes3 & -16777216) >> 24));
-                }
-                set
-                {
-                    cPlayerBytes3 = (cPlayerBytes3 & 0xFFFFFF) | (int)((uint)value << 24);
-                }
+                get => (PlayerHonorRank)checked((byte)((cPlayerBytes3 & -16777216) >> 24));
+                set => cPlayerBytes3 = (cPlayerBytes3 & 0xFFFFFF) | (int)((uint)value << 24);
             }
 
             public PlayerHonorRank HonorHighestRank
             {
-                get
-                {
-                    return (PlayerHonorRank)checked((byte)((cPlayerFieldBytes & -16777216) >> 24));
-                }
-                set
-                {
-                    cPlayerFieldBytes = (cPlayerFieldBytes & 0xFFFFFF) | (int)((uint)value << 24);
-                }
+                get => (PlayerHonorRank)checked((byte)((cPlayerFieldBytes & -16777216) >> 24));
+                set => cPlayerFieldBytes = (cPlayerFieldBytes & 0xFFFFFF) | (int)((uint)value << 24);
             }
 
             public byte HonorBar
             {
-                get
-                {
-                    return checked((byte)((cPlayerFieldBytes2 & 0xFF) >> 0));
-                }
-                set
-                {
-                    cPlayerFieldBytes2 = (cPlayerFieldBytes2 & -256) | (value << 0);
-                }
+                get => checked((byte)((cPlayerFieldBytes2 & 0xFF) >> 0));
+                set => cPlayerFieldBytes2 = (cPlayerFieldBytes2 & -256) | (value << 0);
             }
 
             public WS_Base.BaseUnit GetTarget
@@ -662,10 +599,7 @@ namespace Mangos.World.Player
 
             public bool isPvP
             {
-                get
-                {
-                    return (cUnitFlags & 0x1000) != 0;
-                }
+                get => (cUnitFlags & 0x1000) != 0;
                 set
                 {
                     if (value)
@@ -685,10 +619,7 @@ namespace Mangos.World.Player
 
             public bool AFK
             {
-                get
-                {
-                    return (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_AFK) != 0;
-                }
+                get => (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_AFK) != 0;
                 set
                 {
                     if (value)
@@ -706,10 +637,7 @@ namespace Mangos.World.Player
 
             public bool DND
             {
-                get
-                {
-                    return (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_DND) != 0;
-                }
+                get => (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_DND) != 0;
                 set
                 {
                     if (value)
@@ -727,10 +655,7 @@ namespace Mangos.World.Player
 
             public bool GM
             {
-                get
-                {
-                    return (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_GM) != 0;
-                }
+                get => (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_GM) != 0;
                 set
                 {
                     if (value)
