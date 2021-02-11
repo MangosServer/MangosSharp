@@ -56,10 +56,7 @@ namespace Mangos.World.Player
 
             public short Current
             {
-                get
-                {
-                    return _Current;
-                }
+                get => _Current;
                 set
                 {
                     if (value <= Maximum)
@@ -130,10 +127,7 @@ namespace Mangos.World.Player
 
             public int Current
             {
-                get
-                {
-                    return checked((int)Math.Round(_Current * Modifier));
-                }
+                get => checked((int)Math.Round(_Current * Modifier));
                 set
                 {
                     if (value <= Maximum)
@@ -192,10 +186,7 @@ namespace Mangos.World.Player
 
             public int RealBase
             {
-                get
-                {
-                    return checked(Base - PositiveBonus + NegativeBonus);
-                }
+                get => checked(Base - PositiveBonus + NegativeBonus);
                 set
                 {
                     checked

@@ -84,10 +84,7 @@ namespace Mangos.Common.Legacy
                 return SQLTypeServerRet;
             }
 
-            set
-            {
-                v_SQLType = value;
-            }
+            set => v_SQLType = value;
         }
 
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
@@ -101,10 +98,7 @@ namespace Mangos.Common.Legacy
                 return SQLHostRet;
             }
 
-            set
-            {
-                v_SQLHost = value;
-            }
+            set => v_SQLHost = value;
         }
 
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
@@ -118,10 +112,7 @@ namespace Mangos.Common.Legacy
                 return SQLPortRet;
             }
 
-            set
-            {
-                v_SQLPort = value;
-            }
+            set => v_SQLPort = value;
         }
 
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
@@ -135,10 +126,7 @@ namespace Mangos.Common.Legacy
                 return SQLUserRet;
             }
 
-            set
-            {
-                v_SQLUser = value;
-            }
+            set => v_SQLUser = value;
         }
 
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
@@ -152,10 +140,7 @@ namespace Mangos.Common.Legacy
                 return SQLPassRet;
             }
 
-            set
-            {
-                v_SQLPass = value;
-            }
+            set => v_SQLPass = value;
         }
 
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
@@ -169,10 +154,7 @@ namespace Mangos.Common.Legacy
                 return SQLDBNameRet;
             }
 
-            set
-            {
-                v_SQLDBName = value;
-            }
+            set => v_SQLDBName = value;
         }
 
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */

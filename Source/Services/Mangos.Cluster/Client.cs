@@ -22,9 +22,6 @@ namespace Mangos.Cluster
     {
         public PacketEncryptionState PacketEncryption { get; }
 
-        public Client()
-        {
-            PacketEncryption = new PacketEncryptionState();
-        }
+        public Client() => PacketEncryption = new PacketEncryptionState();
     }
 }

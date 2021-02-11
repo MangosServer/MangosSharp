@@ -27,10 +27,7 @@ namespace Mangos.World.Globals
         {
             public int UpdatesCount
             {
-                get
-                {
-                    return BitConverter.ToInt32(Data, 4);
-                }
+                get => BitConverter.ToInt32(Data, 4);
                 set
                 {
                     checked

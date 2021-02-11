@@ -264,50 +264,26 @@ namespace Mangos.World.Objects
 
             public virtual ManaTypes ManaType
             {
-                get
-                {
-                    return (ManaTypes)((cBytes0 & -16777216) >> 24);
-                }
-                set
-                {
-                    cBytes0 = (cBytes0 & 0xFFFFFF) | ((int)value << 24);
-                }
+                get => (ManaTypes)((cBytes0 & -16777216) >> 24);
+                set => cBytes0 = (cBytes0 & 0xFFFFFF) | ((int)value << 24);
             }
 
             public virtual Genders Gender
             {
-                get
-                {
-                    return (Genders)checked((byte)((cBytes0 & 0xFF0000) >> 16));
-                }
-                set
-                {
-                    cBytes0 = (cBytes0 & -16711681) | (int)((uint)value << 16);
-                }
+                get => (Genders)checked((byte)((cBytes0 & 0xFF0000) >> 16));
+                set => cBytes0 = (cBytes0 & -16711681) | (int)((uint)value << 16);
             }
 
             public virtual Classes Classe
             {
-                get
-                {
-                    return (Classes)checked((byte)((cBytes0 & 0xFF00) >> 8));
-                }
-                set
-                {
-                    cBytes0 = (cBytes0 & -65281) | (int)((uint)value << 8);
-                }
+                get => (Classes)checked((byte)((cBytes0 & 0xFF00) >> 8));
+                set => cBytes0 = (cBytes0 & -65281) | (int)((uint)value << 8);
             }
 
             public virtual Races Race
             {
-                get
-                {
-                    return (Races)checked((byte)((cBytes0 & 0xFF) >> 0));
-                }
-                set
-                {
-                    cBytes0 = (cBytes0 & -256) | (int)((uint)value << 0);
-                }
+                get => (Races)checked((byte)((cBytes0 & 0xFF) >> 0));
+                set => cBytes0 = (cBytes0 & -256) | (int)((uint)value << 0);
             }
 
             public string UnitName => this switch
@@ -319,38 +295,20 @@ namespace Mangos.World.Objects
 
             public virtual byte StandState
             {
-                get
-                {
-                    return checked((byte)((cBytes1 & 0xFF) >> 0));
-                }
-                set
-                {
-                    cBytes1 = (cBytes1 & -256) | (value << 0);
-                }
+                get => checked((byte)((cBytes1 & 0xFF) >> 0));
+                set => cBytes1 = (cBytes1 & -256) | (value << 0);
             }
 
             public virtual byte PetLoyalty
             {
-                get
-                {
-                    return checked((byte)((cBytes1 & 0xFF00) >> 8));
-                }
-                set
-                {
-                    cBytes1 = (cBytes1 & -65281) | (value << 8);
-                }
+                get => checked((byte)((cBytes1 & 0xFF00) >> 8));
+                set => cBytes1 = (cBytes1 & -65281) | (value << 8);
             }
 
             public virtual ShapeshiftForm ShapeshiftForm
             {
-                get
-                {
-                    return (ShapeshiftForm)checked((byte)((cBytes1 & 0xFF0000) >> 16));
-                }
-                set
-                {
-                    cBytes1 = (cBytes1 & -16711681) | (int)((uint)value << 16);
-                }
+                get => (ShapeshiftForm)checked((byte)((cBytes1 & 0xFF0000) >> 16));
+                set => cBytes1 = (cBytes1 & -16711681) | (int)((uint)value << 16);
             }
 
             public virtual bool IsDead => Life.Current == 0;

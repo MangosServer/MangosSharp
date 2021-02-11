@@ -37,10 +37,7 @@ namespace Mangos.Cluster.Globals
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public Functions(ClusterServiceLocator clusterServiceLocator)
-        {
-            _clusterServiceLocator = clusterServiceLocator;
-        }
+        public Functions(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
         public int ToInteger(bool value)
         {

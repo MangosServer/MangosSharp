@@ -29,10 +29,7 @@ namespace Mangos.Cluster.Handlers
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WcHandlersChat(ClusterServiceLocator clusterServiceLocator)
-        {
-            _clusterServiceLocator = clusterServiceLocator;
-        }
+        public WcHandlersChat(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
         public void On_CMSG_CHAT_IGNORED(PacketClass packet, ClientClass client)
         {

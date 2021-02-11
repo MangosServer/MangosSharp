@@ -33,10 +33,7 @@ namespace Mangos.Cluster.Handlers
     {
         private readonly ClusterServiceLocator _clusterServiceLocator;
 
-        public WcHandlersGuild(ClusterServiceLocator clusterServiceLocator)
-        {
-            _clusterServiceLocator = clusterServiceLocator;
-        }
+        public WcHandlersGuild(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
         public void On_CMSG_GUILD_QUERY(PacketClass packet, ClientClass client)
         {

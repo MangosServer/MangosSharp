@@ -26,10 +26,7 @@ namespace Mangos.Realm.Network.Handlers
     {
         private readonly CMD_XFER_RESUME_Reader CMD_XFER_RESUME_Reader;
 
-        public On_CMD_XFER_RESUME_Handler(CMD_XFER_RESUME_Reader CMD_XFER_RESUME_Reader)
-        {
-            this.CMD_XFER_RESUME_Reader = CMD_XFER_RESUME_Reader;
-        }
+        public On_CMD_XFER_RESUME_Handler(CMD_XFER_RESUME_Reader CMD_XFER_RESUME_Reader) => this.CMD_XFER_RESUME_Reader = CMD_XFER_RESUME_Reader;
 
         public async Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, Client clientModel)
         {

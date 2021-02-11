@@ -22,9 +22,6 @@ namespace Mangos.Realm.Network.Requests
     {
         public byte[] Unk { get; }
 
-        public RS_REALMLIST(byte[] unk)
-        {
-            Unk = unk;
-        }
+        public RS_REALMLIST(byte[] unk) => Unk = unk;
     }
 }

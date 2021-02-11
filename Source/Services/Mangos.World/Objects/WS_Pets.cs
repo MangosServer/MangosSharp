@@ -92,10 +92,7 @@ namespace Mangos.World.Objects
         public class PetAI : WS_Creatures_AI.DefaultAI
         {
             public PetAI(ref WS_Creatures.CreatureObject Creature)
-                : base(ref Creature)
-            {
-                AllowedMove = false;
-            }
+                : base(ref Creature) => AllowedMove = false;
         }
 
         public int[] LevelUpLoyalty;

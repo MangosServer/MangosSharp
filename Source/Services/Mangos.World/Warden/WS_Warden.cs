@@ -29,10 +29,7 @@ namespace Mangos.World.Warden
     {
         public WardenMaiev Maiev;
 
-        public WS_Warden()
-        {
-            Maiev = new WardenMaiev();
-        }
+        public WS_Warden() => Maiev = new WardenMaiev();
 
         private int VarPtr(ref object obj)
         {

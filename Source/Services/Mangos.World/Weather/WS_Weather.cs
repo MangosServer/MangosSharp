@@ -27,10 +27,7 @@ namespace Mangos.World.Weather
     {
         public Dictionary<int, WeatherZone> WeatherZones;
 
-        public WS_Weather()
-        {
-            WeatherZones = new Dictionary<int, WeatherZone>();
-        }
+        public WS_Weather() => WeatherZones = new Dictionary<int, WeatherZone>();
 
         public void SendWeather(int ZoneID, ref WS_Network.ClientClass client)
         {
