@@ -184,7 +184,6 @@ namespace Mangos.Cluster.Handlers
                 }
             }
 
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
             private bool _disposedValue; // To detect redundant calls
 
             // IDisposable
@@ -252,8 +251,6 @@ namespace Mangos.Cluster.Handlers
                 Dispose(true);
                 GC.SuppressFinalize(this);
             }
-
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
 
             public void Transfer(float posX, float posY, float posZ, float ori, int thisMap)
             {

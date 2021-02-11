@@ -26,7 +26,6 @@ namespace Mangos.Common.Legacy.Logging
         public string[] L = { "N", "D", "I", "U", "S", "W", "F", "C", "DB" };
         public LogType LogLevel = LogType.NETWORK;
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         private bool _disposedValue; // To detect redundant calls
 
         // IDisposable
@@ -48,8 +47,6 @@ namespace Mangos.Common.Legacy.Logging
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
 
         /// <summary>
         /// Writes the text to the console, typically does not privide a carridge return. (Overridable)

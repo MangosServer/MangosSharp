@@ -463,7 +463,6 @@ namespace Mangos.Cluster.Globals
         // Return CType(BitConverter.ToUInt64(GUID, 0), ULong)
         // End Function
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         private bool _disposedValue; // To detect redundant calls
 
         // IDisposable
@@ -485,7 +484,5 @@ namespace Mangos.Cluster.Globals
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
     }
 }

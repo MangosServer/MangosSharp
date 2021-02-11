@@ -36,8 +36,6 @@ namespace Mangos.Cluster.Handlers
 
         public WcHandlersSocial(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         public void LoadIgnoreList(WcHandlerCharacter.CharacterObject objCharacter)
         {
             // DONE: Query DB
@@ -147,9 +145,6 @@ namespace Mangos.Cluster.Handlers
 
             friendpacket.Dispose();
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         public void On_CMSG_WHO(PacketClass packet, ClientClass client)
         {
@@ -541,7 +536,5 @@ namespace Mangos.Cluster.Handlers
             SendFriendList(client, client.Character);
             SendIgnoreList(client, client.Character);
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
     }
 }

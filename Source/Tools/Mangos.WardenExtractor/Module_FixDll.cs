@@ -26,8 +26,6 @@ namespace Mangos.WardenExtractor
 {
     public static class Module_FixDll
     {
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */    // http://www.openrce.org/reference_library/files/reference/PE%20Format.pdf
-
         public static void FixNormalDll(ref byte[] Data)
         {
             MemoryStream ms = new MemoryStream();
@@ -404,9 +402,6 @@ namespace Mangos.WardenExtractor
             public int Pointer;
             public int RawSize;
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         private static Instruction ParseInstuction(ref byte[] Data, ref int Position)
         {
@@ -1069,7 +1064,6 @@ namespace Mangos.WardenExtractor
             }
         }
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         public static ushort[] ONE_BYTE_OPCODE_MODREF_REQUIREMENT = { 0xF0F0, 0xF0F0, 0xF0F0, 0xF0F0, 0x0, 0x0, 0x3050, 0x0, 0xFFFF, 0x0, 0x0, 0x0, 0xCF00, 0xF000, 0x0, 0x303 };
         public static ushort[] TWO_BYTE_OPCODE_MODREF_REQUIREMENT = { 0xB000, 0x0, 0xF000, 0xF000, 0xFFFF, 0x0, 0xFFF3, 0x7E03, 0x0, 0xFFFF, 0x1C1D, 0xFF3F, 0xC100, 0x74DD, 0x64DD, 0x74EE };
         public static ushort[] ONE_BYTE_OPCODE_DISPLACEMENT_SIZE_BYTE = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xFFFF, 0x0, 0x0, 0xA000, 0x0, 0x0, 0x0, 0xF010, 0x0 };
@@ -1089,6 +1083,5 @@ namespace Mangos.WardenExtractor
         public const byte MOD_FIELD_10 = 0x80;
         public const byte MOD_FIELD_11 = 0xC0;
         public const byte OPCODE_FIELD_MASK = 0x38;
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped EndRegionDirectiveTrivia */
     }
 }

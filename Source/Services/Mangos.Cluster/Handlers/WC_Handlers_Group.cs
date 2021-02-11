@@ -75,7 +75,6 @@ namespace Mangos.Cluster.Handlers
                 objCharacter.GetWorld.ClientSetGroup(objCharacter.Client.Index, Id);
             }
 
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
             private bool _disposedValue; // To detect redundant calls
 
             // IDisposable
@@ -127,8 +126,6 @@ namespace Mangos.Cluster.Handlers
                 Dispose(true);
                 GC.SuppressFinalize(this);
             }
-
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
 
             public void Join(WcHandlerCharacter.CharacterObject objCharacter)
             {

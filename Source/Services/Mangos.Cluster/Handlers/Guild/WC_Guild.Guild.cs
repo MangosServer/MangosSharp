@@ -86,7 +86,6 @@ namespace Mangos.Cluster.Handlers.Guild
                 _clusterServiceLocator.WcGuild.GuilDs.Add(Id, this);
             }
 
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
             private bool _disposedValue; // To detect redundant calls
 
             // IDisposable
@@ -109,8 +108,6 @@ namespace Mangos.Cluster.Handlers.Guild
                 Dispose(true);
                 GC.SuppressFinalize(this);
             }
-
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
         }
     }
 }

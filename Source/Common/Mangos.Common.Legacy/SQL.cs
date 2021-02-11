@@ -28,8 +28,6 @@ namespace Mangos.Common.Legacy
     {
         private MySqlConnection MySQLConn;
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         public enum EMessages
         {
             ID_Error = 0,
@@ -40,10 +38,6 @@ namespace Mangos.Common.Legacy
 
         public delegate void SQLMessageEventHandler(EMessages MessageID, string OutBuf);
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */    // #Region "Version Info <Update VInfo and rvDate as needed>"
-                                                              // Private VInfo As String = "2.1.0a"
-                                                              // Private rvDate As String = "9:36 PM, Wednesday, September, 25, 2006"
-
         // <Description("Class info version/last date updated.")> _
         // Public ReadOnly Property Class_Version_Info() As String
         // Get
@@ -52,7 +46,6 @@ namespace Mangos.Common.Legacy
         // End Property
         // #End Region
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */    // SQL Host name/password/etc..
         private string v_SQLHost = "localhost";
         private string v_SQLPort = "3306";
         private string v_SQLUser = "";
@@ -73,8 +66,6 @@ namespace Mangos.Common.Legacy
 
         private DB_Type v_SQLType;
 
-        /* TODO ERROR: Skipped RegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         [Description("SQL Server selection.")]
         public DB_Type SQLTypeServer
         {
@@ -86,8 +77,6 @@ namespace Mangos.Common.Legacy
 
             set => v_SQLType = value;
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         [Description("SQL Host name.")]
         public string SQLHost
@@ -101,8 +90,6 @@ namespace Mangos.Common.Legacy
             set => v_SQLHost = value;
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         [Description("SQL Host port.")]
         public string SQLPort
         {
@@ -114,8 +101,6 @@ namespace Mangos.Common.Legacy
 
             set => v_SQLPort = value;
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         [Description("SQL User name.")]
         public string SQLUser
@@ -129,8 +114,6 @@ namespace Mangos.Common.Legacy
             set => v_SQLUser = value;
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         [Description("SQL Password.")]
         public string SQLPass
         {
@@ -143,8 +126,6 @@ namespace Mangos.Common.Legacy
             set => v_SQLPass = value;
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         [Description("SQL Database name.")]
         public string SQLDBName
         {
@@ -156,8 +137,6 @@ namespace Mangos.Common.Legacy
 
             set => v_SQLDBName = value;
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         [Description("Start up the SQL connection.")]
         public int Connect()
@@ -214,8 +193,6 @@ namespace Mangos.Common.Legacy
             return (int)ReturnState.Success;
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         [Description("Restart the SQL connection.")]
         public void Restart()
         {
@@ -248,8 +225,6 @@ namespace Mangos.Common.Legacy
             }
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         private bool _disposedValue; // To detect redundant calls
 
         // IDisposable
@@ -282,13 +257,8 @@ namespace Mangos.Common.Legacy
             GC.SuppressFinalize(this);
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
         private string mQuery = "";
         private DataTable mResult;
-
-        /* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         [Description("SQLQuery. EG.: (SELECT * FROM db_accounts WHERE account = 'name';')")]
         public bool QuerySQL(string SQLQuery)
@@ -305,8 +275,6 @@ namespace Mangos.Common.Legacy
             return false;
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         [Description("SQLGet. Used after the query to get a section value")]
         public string GetSQL(string TableSection)
         {
@@ -318,24 +286,17 @@ namespace Mangos.Common.Legacy
             return mResult;
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         [Description("SQLInsert. EG.: (INSERT INTO db_textpage (pageid, text, nextpageid, wdbversion, checksum) VALUES ('pageid DWORD', 'pagetext STRING', 'nextpage DWORD', 'version DWORD', 'checksum DWORD')")]
         public void InsertSQL(string SQLInsertionQuery)
         {
             Insert(SQLInsertionQuery);
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         [Description("SQLUpdate. EG.: (UPDATE db_textpage SET pagetext='pagetextstring' WHERE pageid = 'pageiddword';")]
         public void UpdateSQL(string SQLUpdateQuery)
         {
             Update(SQLUpdateQuery);
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped EndRegionDirectiveTrivia */
-        /* TODO ERROR: Skipped RegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         public int Query(string sqlquery, ref DataTable Result)
         {
@@ -401,8 +362,6 @@ namespace Mangos.Common.Legacy
 
             return ExitCode;
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
 
         public void Insert(string sqlquery)
         {
@@ -503,8 +462,6 @@ namespace Mangos.Common.Legacy
             }
         }
 
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped RegionDirectiveTrivia */
-
         public void Update(string sqlquery)
         {
             switch (v_SQLType)
@@ -557,7 +514,5 @@ namespace Mangos.Common.Legacy
                 }
             }
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia *//* TODO ERROR: Skipped EndRegionDirectiveTrivia */
     }
 }

@@ -205,7 +205,5 @@ namespace Mangos.WardenExtractor
                 }
             }
         }
-
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
     }
 }

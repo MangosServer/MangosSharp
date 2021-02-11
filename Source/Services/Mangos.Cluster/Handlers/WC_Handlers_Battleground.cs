@@ -122,7 +122,6 @@ namespace Mangos.Cluster.Handlers
                 _bfTimer = new Timer(Update, null, 20000, 20000);
             }
 
-            /* TODO ERROR: Skipped RegionDirectiveTrivia */
             private bool _disposedValue; // To detect redundant calls
 
             // IDisposable
@@ -148,8 +147,6 @@ namespace Mangos.Cluster.Handlers
                 Dispose(true);
                 GC.SuppressFinalize(this);
             }
-
-            /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
 
             /// <summary>
             /// Updates the specified state.
