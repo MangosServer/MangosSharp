@@ -35,12 +35,12 @@ namespace Mangos.Cluster.Network
         public int MsTime()
         {
             // DONE: Calculate the clusters timeGetTime("")
-            return _clusterServiceLocator.NativeMethods.timeGetTime("") - _lastPing;
+            return Common.Legacy.NativeMethods.timeGetTime("") - _lastPing;
         }
 
         public Dictionary<uint, DateTime> LastConnections = new Dictionary<uint, DateTime>();
 
-        public uint Ip2Int(string ip)
+        public static uint Ip2Int(string ip)
         {
             if (ip.Split(".").Length != 4)
             {

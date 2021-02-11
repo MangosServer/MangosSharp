@@ -42,7 +42,7 @@ namespace Mangos.World.Auction
 
         public int AuctionTax;
 
-        public AuctionHouses GetAuctionSide(ulong GUID)
+        public static AuctionHouses GetAuctionSide(ulong GUID)
         {
             if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().GlobalAuction)
             {
@@ -79,7 +79,7 @@ namespace Mangos.World.Auction
             });
         }
 
-        public void AuctionCreateMail(MailAuctionAction MailAction, AuctionHouses AuctionLocation, ulong ReceiverGUID, int ItemID, ref Packets.PacketClass packet)
+        public static void AuctionCreateMail(MailAuctionAction MailAction, AuctionHouses AuctionLocation, ulong ReceiverGUID, int ItemID, ref Packets.PacketClass packet)
         {
             string queryString = "INSERT INTO characters_mail (";
             string valuesString = ") VALUES (";
@@ -123,7 +123,7 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).Dispose();
         }
 
-        public void AuctionListAddItem(ref Packets.PacketClass packet, ref DataRow row)
+        public static void AuctionListAddItem(ref Packets.PacketClass packet, ref DataRow row)
         {
             packet.AddUInt32(row.As<uint>("auction_id"));
             uint itemId = row.As<uint>("auction_itemId");
@@ -145,7 +145,7 @@ namespace Mangos.World.Auction
             }
         }
 
-        public void SendAuctionCommandResult(ref WS_Network.ClientClass client, int AuctionID, AuctionAction AuctionAction, AuctionError AuctionError, int BidError)
+        public static void SendAuctionCommandResult(ref WS_Network.ClientClass client, int AuctionID, AuctionAction AuctionAction, AuctionError AuctionError, int BidError)
         {
             Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32(AuctionID);
@@ -156,7 +156,7 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).Dispose();
         }
 
-        public void SendAuctionBidderNotification(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void SendAuctionBidderNotification(ref WS_PlayerData.CharacterObject objCharacter)
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
@@ -170,7 +170,7 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).Dispose();
         }
 
-        public void SendAuctionOwnerNotification(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void SendAuctionOwnerNotification(ref WS_PlayerData.CharacterObject objCharacter)
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
@@ -184,7 +184,7 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).Dispose();
         }
 
-        public void SendAuctionRemovedNotification(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void SendAuctionRemovedNotification(ref WS_PlayerData.CharacterObject objCharacter)
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
@@ -333,7 +333,7 @@ namespace Mangos.World.Auction
             ulong GUID = packet.GetUInt64();
             checked
             {
-                int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
+                int MailTime = (int)(Globals.Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                 int AuctionID = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_REMOVE_ITEM [GUID={2} AuctionID={3}]", client.IP, client.Port, GUID, AuctionID);
                 DataTable MySQLQuery = new DataTable();
@@ -361,7 +361,7 @@ namespace Mangos.World.Auction
             ulong cGUID = packet.GetUInt64();
             checked
             {
-                int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
+                int MailTime = (int)(Globals.Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                 int AuctionID = packet.GetInt32();
                 int Bid = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_PLACE_BID [AuctionID={2} Bid={3}]", client.IP, client.Port, AuctionID, Bid);

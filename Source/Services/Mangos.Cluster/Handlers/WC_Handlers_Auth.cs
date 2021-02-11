@@ -171,7 +171,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Addons info reading
             byte[] decompressBuffer = new byte[packet.Data.Length - packet.Offset + 1];
             Array.Copy(packet.Data, packet.Offset, decompressBuffer, 0, packet.Data.Length - packet.Offset);
-            packet.Data = _clusterServiceLocator.GlobalZip.DeCompress(decompressBuffer);
+            packet.Data = Zip.ZipService.DeCompress(decompressBuffer);
             packet.Offset = 0;
             // DumpPacket(packet.Data)
 
@@ -223,7 +223,7 @@ namespace Mangos.Cluster.Handlers
             addOnsEnable.Dispose();
         }
 
-        public void On_CMSG_PING(PacketClass packet, ClientClass client)
+        public static void On_CMSG_PING(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length - 1 < 9)
             {

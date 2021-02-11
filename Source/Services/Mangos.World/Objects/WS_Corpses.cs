@@ -200,7 +200,7 @@ namespace Mangos.World.Objects
                 Model = 0;
                 Guild = 0;
                 Items = new int[19];
-                GUID = WorldServiceLocator._WS_Corpses.GetNewGUID();
+                GUID = GetNewGUID();
                 checked
                 {
                     Bytes1 = unchecked((int)((uint)Character.Race << 8)) + unchecked((int)((uint)Character.Gender << 16)) + (Character.Skin << 24);
@@ -284,7 +284,7 @@ namespace Mangos.World.Objects
                 WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                 if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
                 {
-                    WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+                    Handlers.WS_CharMovement.MAP_Load(CellX, CellY, MapID);
                 }
                 WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Add(GUID);
                 Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
@@ -377,7 +377,7 @@ namespace Mangos.World.Objects
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private ulong GetNewGUID()
+        private static ulong GetNewGUID()
         {
             ref ulong corpseGUIDCounter = ref WorldServiceLocator._WorldServer.CorpseGUIDCounter;
             corpseGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(corpseGUIDCounter), 1m));

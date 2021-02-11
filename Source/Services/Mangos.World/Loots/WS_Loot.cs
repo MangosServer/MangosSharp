@@ -105,7 +105,7 @@ namespace Mangos.World.Loots
             {
                 if (client.Character.IsInGroup)
                 {
-                    List<WS_Base.BaseUnit> members = WorldServiceLocator._WS_Spells.GetPartyMembersAroundMe(ref client.Character, 100f);
+                    List<WS_Base.BaseUnit> members = Spells.WS_Spells.GetPartyMembersAroundMe(ref client.Character, 100f);
                     int copper2 = LootTable[client.Character.lootGUID].Money / members.Count + 1;
                     LootTable[client.Character.lootGUID].Money = 0;
                     Packets.PacketClass sharePcket = new Packets.PacketClass(Opcodes.SMSG_LOOT_MONEY_NOTIFY);
@@ -336,7 +336,7 @@ namespace Mangos.World.Loots
             client.Character.lootGUID = 0uL;
         }
 
-        public void SendEmptyLoot(ulong GUID, LootType LootType, ref WS_Network.ClientClass client)
+        public static void SendEmptyLoot(ulong GUID, LootType LootType, ref WS_Network.ClientClass client)
         {
             Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_LOOT_RESPONSE);
             response.AddUInt64(GUID);

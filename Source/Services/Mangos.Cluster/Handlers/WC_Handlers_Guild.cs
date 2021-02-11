@@ -68,7 +68,7 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_CREATE [{2}]", client.IP, client.Port, guildName);
             if (client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_ALREADY_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_ALREADY_IN_GUILD);
                 return;
             }
 
@@ -84,7 +84,7 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_INFO", client.IP, client.Port);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
@@ -118,13 +118,13 @@ namespace Mangos.Cluster.Handlers
 
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildLeader)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -147,19 +147,19 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_ADD_RANK [{2}]", client.IP, client.Port, newRankName);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildLeader)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
             if (_clusterServiceLocator.Functions.ValidateGuildName(newRankName) == false)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
                 return;
             }
 
@@ -176,7 +176,7 @@ namespace Mangos.Cluster.Handlers
                 }
             }
 
-            _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
+            Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
         }
 
         public void On_CMSG_GUILD_DEL_RANK(PacketClass packet, ClientClass client)
@@ -185,13 +185,13 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_DEL_RANK", client.IP, client.Port);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildLeader)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -208,7 +208,7 @@ namespace Mangos.Cluster.Handlers
                 }
             }
 
-            _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
+            Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
         }
 
         public void On_CMSG_GUILD_LEADER(PacketClass packet, ClientClass client)
@@ -226,16 +226,16 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            playerName = _clusterServiceLocator.Functions.CapitalizeName(playerName);
+            playerName = Globals.Functions.CapitalizeName(playerName);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildLeader)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -244,13 +244,13 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid, char_guildId, char_guildrank FROM characters WHERE char_name = '" + playerName + "';", ref mySqlQuery);
             if (mySqlQuery.Rows.Count == 0)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
             }
 
             if (mySqlQuery.Rows[0].As<uint>("char_guildId") != client.Character.Guild.Id)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
                 return;
             }
 
@@ -297,13 +297,13 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_SAVE_GUILD_EMBLEM [{2},{3}] [{4}:{5}:{6}:{7}:{8}]", client.IP, client.Port, unk0, unk1, tEmblemStyle, tEmblemColor, tBorderStyle, tBorderColor, tBackgroundColor);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildLeader)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
 
                 // TODO: Check if you have enough money
@@ -339,13 +339,13 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_DISBAND", client.IP, client.Port);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildLeader)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -396,13 +396,13 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_MOTD", client.IP, client.Port);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_SETMOTD))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -437,13 +437,13 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_SET_OFFICER_NOTE [{2}]", client.IP, client.Port, playerName);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_EOFFNOTE))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -469,13 +469,13 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_SET_PUBLIC_NOTE [{2}]", client.IP, client.Port, playerName);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_EPNOTE))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -498,18 +498,18 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            playerName = _clusterServiceLocator.Functions.CapitalizeName(playerName);
+            playerName = Globals.Functions.CapitalizeName(playerName);
 
             // DONE: Player1 checks
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_REMOVE))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -520,20 +520,20 @@ namespace Mangos.Cluster.Handlers
             // DONE: Removed checks
             if (q.Rows.Count == 0)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
             }
 
             if (!_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
             }
 
             WcHandlerCharacter.CharacterObject objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
             if (objCharacter.IsGuildLeader)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_LEADER_LEAVE);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_LEADER_LEAVE);
                 return;
             }
 
@@ -557,17 +557,17 @@ namespace Mangos.Cluster.Handlers
             }
 
             packet.GetInt16();
-            string playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
+            string playerName = Globals.Functions.CapitalizeName(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_PROMOTE [{2}]", client.IP, client.Port, playerName);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_PROMOTE))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -578,32 +578,32 @@ namespace Mangos.Cluster.Handlers
             // DONE: Promoted checks
             if (q.Rows.Count == 0)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
                 return;
             }
 
             if (!_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
             }
 
             WcHandlerCharacter.CharacterObject objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
             if (objCharacter.Guild.Id != client.Character.Guild.Id)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
                 return;
             }
 
             if (objCharacter.GuildRank <= client.Character.GuildRank)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
             if (objCharacter.GuildRank == _clusterServiceLocator.GlobalConstants.GUILD_RANK_MIN)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_INTERNAL);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_INTERNAL);
                 return;
             }
 
@@ -632,17 +632,17 @@ namespace Mangos.Cluster.Handlers
             }
 
             packet.GetInt16();
-            string playerName = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
+            string playerName = Globals.Functions.CapitalizeName(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GUILD_DEMOTE [{2}]", client.IP, client.Port, playerName);
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_PROMOTE))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -653,39 +653,39 @@ namespace Mangos.Cluster.Handlers
             // DONE: Demoted checks
             if (q.Rows.Count == 0)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
                 return;
             }
 
             if (!_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
             }
 
             WcHandlerCharacter.CharacterObject objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
             if (objCharacter.Guild.Id != client.Character.Guild.Id)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD_S, playerName);
                 return;
             }
 
             if (objCharacter.GuildRank <= client.Character.GuildRank)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
             if (objCharacter.GuildRank == _clusterServiceLocator.GlobalConstants.GUILD_RANK_MAX)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_INTERNAL);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_INTERNAL);
                 return;
             }
 
             // DONE: Max defined rank check
             if (string.IsNullOrEmpty(Strings.Trim(client.Character.Guild.Ranks[objCharacter.GuildRank + 1])))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_INTERNAL);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_INTERNAL);
                 return;
             }
 
@@ -721,13 +721,13 @@ namespace Mangos.Cluster.Handlers
             // DONE: Inviter checks
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (!client.Character.IsGuildRightSet(GuildRankRights.GR_RIGHT_INVITE))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
                 return;
             }
 
@@ -738,32 +738,32 @@ namespace Mangos.Cluster.Handlers
             // DONE: Invited checks
             if (q.Rows.Count == 0)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NAME_INVALID);
                 return;
             }
 
             if (!_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(q.Rows[0].As<ulong>("char_guid")))
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_PLAYER_NOT_FOUND, playerName);
                 return;
             }
 
             WcHandlerCharacter.CharacterObject objCharacter = _clusterServiceLocator.WorldCluster.CharacteRs[q.Rows[0].As<ulong>("char_guid")];
             if (objCharacter.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.ALREADY_IN_GUILD, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.ALREADY_IN_GUILD, playerName);
                 return;
             }
 
             if (objCharacter.Side != client.Character.Side)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NOT_ALLIED, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.GUILD_NOT_ALLIED, playerName);
                 return;
             }
 
             if (objCharacter.GuildInvited != 0L)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.ALREADY_INVITED_TO_GUILD, playerName);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_INVITE_S, GuildError.ALREADY_INVITED_TO_GUILD, playerName);
                 return;
             }
 
@@ -793,7 +793,7 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WcGuild.BroadcastToGuild(response, client.Character.Guild, notTo: argnotTo);
             response.Dispose();
             _clusterServiceLocator.WcGuild.SendGuildRoster(client.Character);
-            _clusterServiceLocator.WcGuild.SendGuildMotd(client.Character);
+            Guild.WcGuild.SendGuildMotd(client.Character);
         }
 
         public void On_CMSG_GUILD_DECLINE(PacketClass packet, ClientClass client)
@@ -817,18 +817,18 @@ namespace Mangos.Cluster.Handlers
             // DONE: Checks
             if (!client.Character.IsInGuild)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PLAYER_NOT_IN_GUILD);
                 return;
             }
 
             if (client.Character.IsGuildLeader)
             {
-                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_LEADER_LEAVE);
+                Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_LEADER_LEAVE);
                 return;
             }
 
             _clusterServiceLocator.WcGuild.RemoveCharacterFromGuild(client.Character);
-            _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_PLAYER_NO_MORE_IN_GUILD, client.Character.Name);
+            Guild.WcGuild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_PLAYER_NO_MORE_IN_GUILD, client.Character.Name);
             PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.LEFT);
             response.AddInt8(1);

@@ -163,7 +163,7 @@ namespace Mangos.World.Server
                 Dispose();
             }
 
-            private void UpdateSpells(ref WS_Base.BaseUnit objCharacter)
+            private static void UpdateSpells(ref WS_Base.BaseUnit objCharacter)
             {
                 if (objCharacter is WS_Totems.TotemObject @object)
                 {
@@ -214,7 +214,7 @@ namespace Mangos.World.Server
                                             {
                                                 WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
                                                 WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)objCharacter;
-                                                Targets = wS_Spells.GetPartyMembersAroundMe(ref objCharacter2, objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius);
+                                                Targets = WS_Spells.GetPartyMembersAroundMe(ref objCharacter2, objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius);
                                                 break;
                                             }
 
@@ -224,7 +224,7 @@ namespace Mangos.World.Server
                                                 ref WS_Base.BaseUnit caster2 = ref ((WS_Totems.TotemObject)objCharacter).Caster;
                                                 ref WS_Base.BaseUnit reference = ref caster2;
                                                 WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)caster2;
-                                                List<WS_Base.BaseUnit> partyMembersAtPoint = wS_Spells2.GetPartyMembersAtPoint(ref objCharacter2, objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius, objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ);
+                                                List<WS_Base.BaseUnit> partyMembersAtPoint = WS_Spells.GetPartyMembersAtPoint(ref objCharacter2, objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius, objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ);
                                                 reference = objCharacter2;
                                                 Targets = partyMembersAtPoint;
                                                 break;

@@ -20,7 +20,7 @@ namespace Mangos.Common.Legacy
 {
     public class Functions
     {
-        public string UppercaseFirstLetter(string val)
+        public static string UppercaseFirstLetter(string val)
         {
             if (string.IsNullOrEmpty(val))
             {
@@ -32,7 +32,7 @@ namespace Mangos.Common.Legacy
             return new string(array);
         }
 
-        public string LowercaseFirstLetter(string val)
+        public static string LowercaseFirstLetter(string val)
         {
             if (string.IsNullOrEmpty(val))
             {

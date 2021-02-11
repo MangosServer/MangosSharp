@@ -26,7 +26,7 @@ namespace Mangos.World.Globals
 {
     public partial class Packets
     {
-        public void DumpPacket(byte[] data, WS_Network.ClientClass client = null, int start = 0)
+        public static void DumpPacket(byte[] data, WS_Network.ClientClass client = null, int start = 0)
         {
             string buffer = "";
             checked

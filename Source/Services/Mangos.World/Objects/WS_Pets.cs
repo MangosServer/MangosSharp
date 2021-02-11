@@ -71,7 +71,7 @@ namespace Mangos.World.Objects
                 ref WS_Base.BaseUnit owner = ref Owner;
                 WS_PlayerData.CharacterObject Caster = (WS_PlayerData.CharacterObject)owner;
                 WS_Base.BaseUnit Pet = this;
-                wS_Pets.SendPetInitialize(ref Caster, ref Pet);
+                SendPetInitialize(ref Caster, ref Pet);
                 owner = Caster;
             }
 
@@ -136,13 +136,13 @@ namespace Mangos.World.Objects
             SendPetNameQuery(ref client, PetGUID, PetNumber);
         }
 
-        public void On_CMSG_REQUEST_PET_INFO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_REQUEST_PET_INFO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_REQUEST_PET_INFO");
-            WorldServiceLocator._Packets.DumpPacket(packet.Data, client, 6);
+            Packets.DumpPacket(packet.Data, client, 6);
         }
 
-        public void On_CMSG_PET_ACTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PET_ACTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong PetGUID = packet.GetUInt64();
@@ -152,20 +152,20 @@ namespace Mangos.World.Objects
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_ACTION [GUID={0:X} Spell={1} Flag={2:X} Target={3:X}]", PetGUID, SpellID, SpellFlag, TargetGUID);
         }
 
-        public void On_CMSG_PET_CANCEL_AURA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PET_CANCEL_AURA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_CANCEL_AURA");
-            WorldServiceLocator._Packets.DumpPacket(packet.Data, client, 6);
+            Packets.DumpPacket(packet.Data, client, 6);
         }
 
-        public void On_CMSG_PET_ABANDON(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PET_ABANDON(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong PetGUID = packet.GetUInt64();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_ABANDON [GUID={0:X}]", PetGUID);
         }
 
-        public void On_CMSG_PET_RENAME(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PET_RENAME(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong PetGUID = packet.GetUInt64();
@@ -173,7 +173,7 @@ namespace Mangos.World.Objects
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_RENAME [GUID={0:X} Name={1}]", PetGUID, PetName);
         }
 
-        public void On_CMSG_PET_SET_ACTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PET_SET_ACTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong PetGUID = packet.GetUInt64();
@@ -183,38 +183,38 @@ namespace Mangos.World.Objects
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_SET_ACTION [GUID={0:X} Pos={1} Spell={2} Action={3}]", PetGUID, Position, SpellID, ActionState);
         }
 
-        public void On_CMSG_PET_SPELL_AUTOCAST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PET_SPELL_AUTOCAST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_SPELL_AUTOCAST");
-            WorldServiceLocator._Packets.DumpPacket(packet.Data, client, 6);
+            Packets.DumpPacket(packet.Data, client, 6);
         }
 
-        public void On_CMSG_PET_STOP_ATTACK(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PET_STOP_ATTACK(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_STOP_ATTACK");
-            WorldServiceLocator._Packets.DumpPacket(packet.Data, client, 6);
+            Packets.DumpPacket(packet.Data, client, 6);
         }
 
-        public void On_CMSG_PET_UNLEARN(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PET_UNLEARN(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_UNLEARN");
-            WorldServiceLocator._Packets.DumpPacket(packet.Data, client, 6);
+            Packets.DumpPacket(packet.Data, client, 6);
         }
 
-        public void SendPetNameQuery(ref WS_Network.ClientClass client, ulong PetGUID, int PetNumber)
+        public static void SendPetNameQuery(ref WS_Network.ClientClass client, ulong PetGUID, int PetNumber)
         {
             if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(PetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[PetGUID] is PetObject @object)
             {
                 Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_PET_NAME_QUERY_RESPONSE);
                 response.AddInt32(PetNumber);
                 response.AddString(@object.PetName);
-                response.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
+                response.AddInt32(NativeMethods.timeGetTime(""));
                 client.Send(ref response);
                 response.Dispose();
             }
         }
 
-        public void LoadPet(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void LoadPet(ref WS_PlayerData.CharacterObject objCharacter)
         {
             if (objCharacter.Pet != null)
             {
@@ -251,7 +251,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void SendPetInitialize(ref WS_PlayerData.CharacterObject Caster, ref WS_Base.BaseUnit Pet)
+        public static void SendPetInitialize(ref WS_PlayerData.CharacterObject Caster, ref WS_Base.BaseUnit Pet)
         {
             if (Pet is WS_Creatures.CreatureObject or WS_PlayerData.CharacterObject)
             {

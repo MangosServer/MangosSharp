@@ -34,7 +34,7 @@ namespace Mangos.Cluster.Handlers
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUERY_TIME", client.IP, client.Port);
             PacketClass response = new PacketClass(Opcodes.SMSG_QUERY_TIME_RESPONSE);
-            response.AddInt32(_clusterServiceLocator.NativeMethods.timeGetTime("")); // GetTimestamp(Now))
+            response.AddInt32(Common.Legacy.NativeMethods.timeGetTime("")); // GetTimestamp(Now))
             client.Send(response);
             response.Dispose();
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_QUERY_TIME_RESPONSE", client.IP, client.Port);

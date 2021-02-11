@@ -31,7 +31,7 @@ namespace Mangos.World.Warden
 
         public WS_Warden() => Maiev = new WardenMaiev();
 
-        private int VarPtr(ref object obj)
+        private static int VarPtr(ref object obj)
         {
             return GCHandle.Alloc(RuntimeHelpers.GetObjectValue(obj), GCHandleType.Pinned).AddrOfPinnedObject().ToInt32();
         }
@@ -43,7 +43,7 @@ namespace Mangos.World.Warden
             return pData;
         }
 
-        private int Malloc(int length)
+        private static int Malloc(int length)
         {
             checked
             {
@@ -54,14 +54,14 @@ namespace Mangos.World.Warden
             }
         }
 
-        private void Free(int ptr)
+        private static void Free(int ptr)
         {
             int tmpHandle = Marshal.ReadInt32(new IntPtr(checked(ptr - 4)));
             NativeMethods.GlobalUnlock(tmpHandle, "");
             Marshal.FreeHGlobal(new IntPtr(tmpHandle));
         }
 
-        public void SendWardenPacket(ref WS_PlayerData.CharacterObject objCharacter, ref Packets.PacketClass Packet)
+        public static void SendWardenPacket(ref WS_PlayerData.CharacterObject objCharacter, ref Packets.PacketClass Packet)
         {
             byte[] b = new byte[checked(Packet.Data.Length - 4 - 1 + 1)];
             Buffer.BlockCopy(Packet.Data, 4, b, 0, b.Length);

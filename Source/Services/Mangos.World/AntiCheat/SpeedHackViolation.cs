@@ -47,7 +47,7 @@ namespace Mangos.World.AntiCheat
             LastMessage = "";
         }
 
-        public float PlayerMoveDistance(float posX, float positionX, float posY, float positionY, float posZ, float positionZ)
+        public static float PlayerMoveDistance(float posX, float positionX, float posY, float positionY, float posZ, float positionZ)
         {
             return (float)Math.Sqrt(Math.Pow(Math.Abs(posX - positionX), 2.0) + Math.Pow(Math.Abs(posY - positionY), 2.0) + Math.Pow(Math.Abs(posZ - positionZ), 2.0));
         }

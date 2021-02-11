@@ -25,7 +25,7 @@ namespace Mangos.World.Handlers
 {
     public class WS_Handlers_Gamemaster
     {
-        public void On_CMSG_WORLD_TELEPORT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_WORLD_TELEPORT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_WORLD_TELEPORT", client.IP, client.Port);
             if (client.Access >= AccessLevel.GameMaster)

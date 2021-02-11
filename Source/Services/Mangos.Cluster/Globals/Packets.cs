@@ -140,7 +140,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        private bool IgnorePacket(Opcodes opcode)
+        private static bool IgnorePacket(Opcodes opcode)
         {
             if (string.Format("{0}", opcode).StartsWith("MSG_MOVE"))
             {
@@ -162,7 +162,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        private string FormatPacketStr(string str)
+        private static string FormatPacketStr(string str)
         {
             for (int i = 0, loopTo = str.Length - 1; i <= loopTo; i++)
             {

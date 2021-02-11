@@ -302,11 +302,11 @@ namespace Mangos.World.Handlers
             objCharacter.WardenData.Scan = new WS_Warden.WardenScan(ref objCharacter);
             objCharacter.WardenData.xorByte = 0;
             objCharacter.WardenData.K = i;
-            WorldServiceLocator._Functions.RAND_bytes(ref objCharacter.WardenData.Seed, 16);
+            Functions.RAND_bytes(ref objCharacter.WardenData.Seed, 16);
             MaievSendModule(ref objCharacter);
         }
 
-        public void MaievSendModule(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void MaievSendModule(ref WS_PlayerData.CharacterObject objCharacter)
         {
             if (!objCharacter.WardenData.Ready)
             {
@@ -318,10 +318,10 @@ namespace Mangos.World.Handlers
             r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.WardenModule);
             r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.ModuleKey);
             r.AddUInt32(checked((uint)WorldServiceLocator._WS_Warden.Maiev.ModuleSize));
-            WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
+            WS_Warden.SendWardenPacket(ref objCharacter, ref r);
         }
 
-        public void MaievSendTransfer(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void MaievSendTransfer(ref WS_PlayerData.CharacterObject objCharacter)
         {
             if (!objCharacter.WardenData.Ready)
             {
@@ -344,7 +344,7 @@ namespace Mangos.World.Handlers
                     }
                     while (i <= 500);
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [data]", objCharacter.client.IP, objCharacter.client.Port);
-                    WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
+                    WS_Warden.SendWardenPacket(ref objCharacter, ref r);
                 }
                 if (size > 0)
                 {
@@ -357,12 +357,12 @@ namespace Mangos.World.Handlers
                         r2.AddInt8((byte)file.ReadByte());
                     }
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [done]", objCharacter.client.IP, objCharacter.client.Port);
-                    WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r2);
+                    WS_Warden.SendWardenPacket(ref objCharacter, ref r2);
                 }
             }
         }
 
-        public void MaievSendUnk(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void MaievSendUnk(ref WS_PlayerData.CharacterObject objCharacter)
         {
             Packets.PacketClass unk = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
             try
@@ -427,7 +427,7 @@ namespace Mangos.World.Handlers
                     0,
                     1
                 });
-                WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref unk);
+                WS_Warden.SendWardenPacket(ref objCharacter, ref unk);
             }
             finally
             {
@@ -435,7 +435,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void MaievSendCheck(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void MaievSendCheck(ref WS_PlayerData.CharacterObject objCharacter)
         {
             if (!objCharacter.WardenData.Ready)
             {
@@ -445,7 +445,7 @@ namespace Mangos.World.Handlers
             Packets.PacketClass packet = objCharacter.WardenData.Scan.GetPacket();
             try
             {
-                WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref packet);
+                WS_Warden.SendWardenPacket(ref objCharacter, ref packet);
             }
             finally
             {
@@ -453,12 +453,12 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void MaievSendSeed(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void MaievSendSeed(ref WS_PlayerData.CharacterObject objCharacter)
         {
             Packets.PacketClass r = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
             r.AddInt8(5);
             r.AddByteArray(objCharacter.WardenData.Seed);
-            WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
+            WS_Warden.SendWardenPacket(ref objCharacter, ref r);
         }
 
         public void MaievResult(ref WS_PlayerData.CharacterObject objCharacter, ref Packets.PacketClass Packet)
@@ -478,7 +478,7 @@ namespace Mangos.World.Handlers
             objCharacter.WardenData.Scan.HandleResponse(ref Packet);
         }
 
-        public bool ControlChecksum(uint checkSum, byte[] data)
+        public static bool ControlChecksum(uint checkSum, byte[] data)
         {
             SHA1Managed sha1 = new SHA1Managed();
             byte[] hash = sha1.ComputeHash(data);
@@ -497,7 +497,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        private byte[] FixWardenSHA(byte[] hash)
+        private static byte[] FixWardenSHA(byte[] hash)
         {
             checked
             {

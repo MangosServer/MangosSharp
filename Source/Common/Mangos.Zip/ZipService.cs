@@ -23,7 +23,7 @@ namespace Mangos.Zip
 {
     public class ZipService
     {
-        public byte[] Compress(byte[] data, int offset, int length)
+        public static byte[] Compress(byte[] data, int offset, int length)
         {
             using MemoryStream outputStream = new MemoryStream();
             using DeflaterOutputStream compressordStream = new DeflaterOutputStream(outputStream);
@@ -32,7 +32,7 @@ namespace Mangos.Zip
             return outputStream.ToArray();
         }
 
-        public byte[] DeCompress(byte[] data)
+        public static byte[] DeCompress(byte[] data)
         {
             using MemoryStream outputStream = new MemoryStream();
             using MemoryStream compressedStream = new MemoryStream(data);

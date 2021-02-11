@@ -108,7 +108,7 @@ namespace Mangos.World.Network
                                 }
                                 else
                                 {
-                                    int start = WorldServiceLocator._NativeMethods.timeGetTime("");
+                                    int start = NativeMethods.timeGetTime("");
                                     checked
                                     {
                                         try
@@ -117,9 +117,9 @@ namespace Mangos.World.Network
                                             ClientClass client = this;
                                             handlePacket(ref packet, ref client);
 
-                                            if (WorldServiceLocator._NativeMethods.timeGetTime("") - start > 100)
+                                            if (NativeMethods.timeGetTime("") - start > 100)
                                             {
-                                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Packet processing took too long: {0}, {1}ms", packet.OpCode, WorldServiceLocator._NativeMethods.timeGetTime("") - start);
+                                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Packet processing took too long: {0}, {1}ms", packet.OpCode, NativeMethods.timeGetTime("") - start);
                                             }
                                         }
                                         catch (Exception ex3)
@@ -253,7 +253,7 @@ namespace Mangos.World.Network
                 }
             }
 
-            private void SetError(Exception ex, string message, LogType logType)
+            private static void SetError(Exception ex, string message, LogType logType)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(logType, message, ex);
             }
@@ -271,7 +271,7 @@ namespace Mangos.World.Network
                     Packets packets4 = WorldServiceLocator._Packets;
                     byte[] data4 = packet.Data;
                     ClientClass client = this;
-                    packets4.DumpPacket(data4, client);
+                    Globals.Packets.DumpPacket(data4, client);
                 }
                 catch (Exception ex)
                 {

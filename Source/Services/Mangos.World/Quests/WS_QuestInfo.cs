@@ -439,7 +439,7 @@ namespace Mangos.World.Quests
             if (ZoneOrSort < 0)
             {
                 WS_Quests tmpQuest = new WS_Quests();
-                byte reqSort = tmpQuest.ClassByQuestSort(checked(-ZoneOrSort));
+                byte reqSort = WS_Quests.ClassByQuestSort(checked(-ZoneOrSort));
                 if (reqSort > 0 && reqSort != (uint)objCharacter.Classe)
                 {
                     retValue = false;

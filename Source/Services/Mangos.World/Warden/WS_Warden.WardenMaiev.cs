@@ -330,7 +330,7 @@ namespace Mangos.World.Warden
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Signature fail on Warden Module.");
                         return false;
                     }
-                    byte[] DecompressedData = WorldServiceLocator._GlobalZip.DeCompress(CompressedData);
+                    byte[] DecompressedData = Zip.ZipService.DeCompress(CompressedData);
                     if (!PrepairModule(ref DecompressedData))
                     {
                         return false;
@@ -353,7 +353,7 @@ namespace Mangos.World.Warden
                 }
             }
 
-            public bool CheckSignature(byte[] Signature, byte[] Data, int DataLen)
+            public static bool CheckSignature(byte[] Signature, byte[] Data, int DataLen)
             {
                 BigInteger power = new BigInteger(new byte[4]
                 {
@@ -671,7 +671,7 @@ namespace Mangos.World.Warden
                         dwModuleSize = Header.dwModuleSize;
                         if (dwModuleSize < int.MaxValue)
                         {
-                            m_Mod = WorldServiceLocator._WS_Warden.Malloc(dwModuleSize);
+                            m_Mod = Malloc(dwModuleSize);
                             if (m_Mod != 0)
                             {
                                 Marshal.Copy(data, 0, (IntPtr)m_Mod, 40);
@@ -850,13 +850,13 @@ namespace Mangos.World.Warden
                     Console.WriteLine("  ReleaseMemory: 0x{0:X}", myFunctionList.fpReleaseMemory);
                     Console.WriteLine("  SetRC4Data: 0x{0:X}", myFunctionList.fpSetRC4Data);
                     Console.WriteLine("  GetRC4Data: 0x{0:X}", myFunctionList.fpGetRC4Data);
-                    myFuncList = new IntPtr(WorldServiceLocator._WS_Warden.Malloc(28));
+                    myFuncList = new IntPtr(Malloc(28));
                     Marshal.StructureToPtr(myFunctionList, myFuncList, fDeleteOld: false);
                     pFuncList = myFuncList.ToInt32();
                     WS_Warden wS_Warden = WorldServiceLocator._WS_Warden;
                     ref int reference = ref pFuncList;
                     object obj = reference;
-                    int num = wS_Warden.VarPtr(ref obj);
+                    int num = VarPtr(ref obj);
                     reference = Conversions.ToInteger(obj);
                     ppFuncList = num;
                     Console.WriteLine("Initializing module");
@@ -890,7 +890,7 @@ namespace Mangos.World.Warden
 
             private void Unload_Module()
             {
-                WorldServiceLocator._WS_Warden.Free(m_Mod);
+                Free(m_Mod);
             }
 
             private void SendPacket(int ptrPacket, int dwSize)
@@ -918,13 +918,13 @@ namespace Mangos.World.Warden
             private int AllocateMem(int dwSize)
             {
                 Console.WriteLine("Warden.AllocateMem() Size={0}", dwSize);
-                return WorldServiceLocator._WS_Warden.Malloc(dwSize);
+                return Malloc(dwSize);
             }
 
             private void FreeMemory(int dwMemory)
             {
                 Console.WriteLine("Warden.FreeMemory() Memory={0}", dwMemory);
-                WorldServiceLocator._WS_Warden.Free(dwMemory);
+                Free(dwMemory);
             }
 
             private int SetRC4Data(int lpKeys, int dwSize)
@@ -953,7 +953,7 @@ namespace Mangos.World.Warden
                 m_RC4 = 0;
                 int pK = WorldServiceLocator._WS_Warden.ByteArrPtr(ref K);
                 GenerateRC4Keys(m_ModMem, pK, K.Length);
-                WorldServiceLocator._WS_Warden.Free(pK);
+                Free(pK);
             }
 
             public int HandlePacket(byte[] PacketData)
@@ -962,12 +962,12 @@ namespace Mangos.World.Warden
                 int BytesRead = 0;
                 WS_Warden wS_Warden = WorldServiceLocator._WS_Warden;
                 object obj = BytesRead;
-                int num = wS_Warden.VarPtr(ref obj);
+                int num = VarPtr(ref obj);
                 BytesRead = Conversions.ToInteger(obj);
                 BytesRead = num;
                 int pPacket = WorldServiceLocator._WS_Warden.ByteArrPtr(ref PacketData);
                 PacketHandler(m_ModMem, pPacket, PacketData.Length, BytesRead);
-                WorldServiceLocator._WS_Warden.Free(pPacket);
+                Free(pPacket);
                 return Marshal.ReadInt32(new IntPtr(BytesRead));
             }
 

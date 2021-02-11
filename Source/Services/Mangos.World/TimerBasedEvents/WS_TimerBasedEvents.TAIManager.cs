@@ -50,7 +50,7 @@ namespace Mangos.World.Server
                 {
                     return;
                 }
-                int StartTime = WorldServiceLocator._NativeMethods.timeGetTime("");
+                int StartTime = Common.Legacy.NativeMethods.timeGetTime("");
                 AIManagerWorking = true;
                 try
                 {

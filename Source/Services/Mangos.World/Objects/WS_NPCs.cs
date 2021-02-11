@@ -75,7 +75,7 @@ namespace Mangos.World.Objects
                             Functions functions = WorldServiceLocator._Functions;
                             WS_PlayerData.CharacterObject characterObject;
                             int Classe = (int)(characterObject = objCharacter).Classe;
-                            string className = functions.GetClassName(ref Classe);
+                            string className = Functions.GetClassName(ref Classe);
                             characterObject.Classe = (Classes)checked((byte)Classe);
                             gossipMenu.AddMenu("I am interested in " + className + " training.", 3);
                             objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_TRAINER);
@@ -260,7 +260,7 @@ namespace Mangos.World.Objects
                     }
                     if ((creatureInfo.cNpcFlags & 2) == 2)
                     {
-                        QuestMenu qMenu = WorldServiceLocator._WorldServer.ALLQUESTS.GetQuestMenu(ref objCharacter, cGuid);
+                        QuestMenu qMenu = WS_Quests.GetQuestMenu(ref objCharacter, cGuid);
                         if (qMenu.IDs.Count == 0 && npcMenu.Menus.Count == 0)
                         {
                             return;
@@ -283,7 +283,7 @@ namespace Mangos.World.Objects
                                         if (objCharacter.TalkQuests[i] != null && objCharacter.TalkQuests[i].ID == questID)
                                         {
                                             objCharacter.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
-                                            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestRequireItems(ref objCharacter.client, ref objCharacter.TalkCurrentQuest, cGuid, ref objCharacter.TalkQuests[i]);
+                                            WS_Quests.SendQuestRequireItems(ref objCharacter.client, ref objCharacter.TalkCurrentQuest, cGuid, ref objCharacter.TalkQuests[i]);
                                             break;
                                         }
                                         i = checked(i + 1);
@@ -293,7 +293,7 @@ namespace Mangos.World.Objects
                                 else
                                 {
                                     objCharacter.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
-                                    WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestDetails(ref objCharacter.client, ref objCharacter.TalkCurrentQuest, cGuid, acceptActive: true);
+                                    WS_Quests.SendQuestDetails(ref objCharacter.client, ref objCharacter.TalkCurrentQuest, cGuid, acceptActive: true);
                                 }
                             }
                             else
@@ -342,31 +342,31 @@ namespace Mangos.World.Objects
                 }
                 else if (Conversions.ToBoolean(Conversions.ToBoolean(Operators.CompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_VENDOR, TextCompare: false)) || Conversions.ToBoolean(Operators.CompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_ARMORER, TextCompare: false)) || Conversions.ToBoolean(Operators.CompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_STABLEPET, TextCompare: false))))
                 {
-                    WorldServiceLocator._WS_NPCs.SendListInventory(ref objCharacter, cGUID);
+                    SendListInventory(ref objCharacter, cGUID);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_TRAINER, TextCompare: false))
                 {
-                    WorldServiceLocator._WS_NPCs.SendTrainerList(ref objCharacter, cGUID);
+                    SendTrainerList(ref objCharacter, cGUID);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_TAXIVENDOR, TextCompare: false))
                 {
-                    WorldServiceLocator._WS_Handlers_Taxi.SendTaxiMenu(ref objCharacter, cGUID);
+                    Handlers.WS_Handlers_Taxi.SendTaxiMenu(ref objCharacter, cGUID);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_INNKEEPER, TextCompare: false))
                 {
-                    WorldServiceLocator._WS_NPCs.SendBindPointConfirm(ref objCharacter, cGUID);
+                    SendBindPointConfirm(ref objCharacter, cGUID);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_BANKER, TextCompare: false))
                 {
-                    WorldServiceLocator._WS_NPCs.SendShowBank(ref objCharacter, cGUID);
+                    SendShowBank(ref objCharacter, cGUID);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_ARENACHARTER, TextCompare: false))
                 {
-                    WorldServiceLocator._WS_Guilds.SendPetitionActivate(ref objCharacter, cGUID);
+                    Social.WS_Guilds.SendPetitionActivate(ref objCharacter, cGUID);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_TABARDVENDOR, TextCompare: false))
                 {
-                    WorldServiceLocator._WS_Guilds.SendTabardActivate(ref objCharacter, cGUID);
+                    Social.WS_Guilds.SendTabardActivate(ref objCharacter, cGUID);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_AUCTIONEER, TextCompare: false))
                 {
@@ -374,7 +374,7 @@ namespace Mangos.World.Objects
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_TALENTWIPE, TextCompare: false))
                 {
-                    WorldServiceLocator._WS_NPCs.SendTalentWipeConfirm(ref objCharacter, 0);
+                    SendTalentWipeConfirm(ref objCharacter, 0);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_GOSSIP, TextCompare: false))
                 {
@@ -382,7 +382,7 @@ namespace Mangos.World.Objects
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_QUESTGIVER, TextCompare: false))
                 {
-                    QuestMenu qMenu = WorldServiceLocator._WorldServer.ALLQUESTS.GetQuestMenu(ref objCharacter, cGUID);
+                    QuestMenu qMenu = WS_Quests.GetQuestMenu(ref objCharacter, cGUID);
                     WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMenu(ref objCharacter, cGUID, "I have some tasks for you, $N.", qMenu);
                 }
             }
@@ -405,7 +405,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_TRAINER_BUY_SPELL(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_TRAINER_BUY_SPELL(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -486,7 +486,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        private void SendTrainerList(ref WS_PlayerData.CharacterObject objCharacter, ulong cGuid)
+        private static void SendTrainerList(ref WS_PlayerData.CharacterObject objCharacter, ulong cGuid)
         {
             DataTable spellSqlQuery = new DataTable();
             CreatureInfo creatureInfo = WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].CreatureInfo;
@@ -596,7 +596,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_SELL_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SELL_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -698,7 +698,7 @@ namespace Mangos.World.Objects
                     if (WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].StackCount > count)
                     {
                         WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].StackCount -= count;
-                        ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(itemGuid);
+                        ItemObject tmpItem = WS_Items.LoadItemByGUID(itemGuid);
                         ref ulong itemGuidCounter = ref WorldServiceLocator._WorldServer.itemGuidCounter;
                         itemGuidCounter = Convert.ToUInt64(decimal.Add(new decimal(itemGuidCounter), 1m));
                         tmpItem.GUID = WorldServiceLocator._WorldServer.itemGuidCounter;
@@ -778,7 +778,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_BUY_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_BUY_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -870,7 +870,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_BUY_ITEM_IN_SLOT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_BUY_ITEM_IN_SLOT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -1008,7 +1008,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_BUYBACK_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_BUYBACK_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -1067,13 +1067,13 @@ namespace Mangos.World.Objects
                 }
                 else
                 {
-                    WorldServiceLocator._WS_Items.SendInventoryChangeFailure(ref client.Character, InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL, 0uL, 0uL);
+                    WS_Items.SendInventoryChangeFailure(ref client.Character, InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL, 0uL, 0uL);
                     client.Character.ItemSETSLOT(ref tmpItem, 0, (byte)slot);
                 }
             }
         }
 
-        public void On_CMSG_REPAIR_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_REPAIR_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -1122,7 +1122,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        private void SendListInventory(ref WS_PlayerData.CharacterObject objCharacter, ulong guid)
+        private static void SendListInventory(ref WS_PlayerData.CharacterObject objCharacter, ulong guid)
         {
             try
             {
@@ -1192,7 +1192,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_AUTOBANK_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_AUTOBANK_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -1242,7 +1242,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_AUTOSTORE_BANK_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_AUTOSTORE_BANK_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -1334,7 +1334,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        private void SendShowBank(ref WS_PlayerData.CharacterObject objCharacter, ulong guid)
+        private static void SendShowBank(ref WS_PlayerData.CharacterObject objCharacter, ulong guid)
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SHOW_BANK);
             try
@@ -1348,7 +1348,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        private void SendBindPointConfirm(ref WS_PlayerData.CharacterObject objCharacter, ulong guid)
+        private static void SendBindPointConfirm(ref WS_PlayerData.CharacterObject objCharacter, ulong guid)
         {
             objCharacter.SendGossipComplete();
             objCharacter.ZoneCheck();
@@ -1365,7 +1365,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_BINDER_ACTIVATE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_BINDER_ACTIVATE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
             {
@@ -1392,7 +1392,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        private void SendTalentWipeConfirm(ref WS_PlayerData.CharacterObject objCharacter, int cost)
+        private static void SendTalentWipeConfirm(ref WS_PlayerData.CharacterObject objCharacter, int cost)
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_TALENT_WIPE_CONFIRM);
             try
@@ -1407,7 +1407,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_MSG_TALENT_WIPE_CONFIRM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_MSG_TALENT_WIPE_CONFIRM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {

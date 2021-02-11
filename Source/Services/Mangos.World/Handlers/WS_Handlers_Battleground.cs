@@ -26,7 +26,7 @@ namespace Mangos.World.Handlers
 {
     public class WS_Handlers_Battleground
     {
-        public void On_CMSG_BATTLEMASTER_HELLO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_BATTLEMASTER_HELLO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) < 13)
             {
@@ -46,7 +46,7 @@ namespace Mangos.World.Handlers
             }
             if (WorldServiceLocator._WS_DBCDatabase.Battlegrounds[BGType].MinLevel > (uint)client.Character.Level || WorldServiceLocator._WS_DBCDatabase.Battlegrounds[BGType].MaxLevel < (uint)client.Character.Level)
             {
-                WorldServiceLocator._Functions.SendMessageNotification(ref client, "You don't meet Battleground level requirements");
+                Functions.SendMessageNotification(ref client, "You don't meet Battleground level requirements");
                 return;
             }
             Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_BATTLEFIELD_LIST);
@@ -69,7 +69,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetUInt32();
         }

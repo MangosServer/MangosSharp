@@ -132,7 +132,7 @@ namespace Mangos.World.Objects
             private readonly byte TransportAt;
 
             public TransportObject(int ID_, string Name, int Period_)
-                : base(ID_, WorldServiceLocator._WS_Transports.GetNewGUID())
+                : base(ID_, GetNewGUID())
             {
                 TransportName = "";
                 Passengers = new List<WS_Base.BaseUnit>();
@@ -228,7 +228,7 @@ namespace Mangos.World.Objects
                             }
                             else
                             {
-                                PathPoints[j].DistFromPrev = WorldServiceLocator._WS_Combat.GetDistance(PathPoints[j].X, PathPoints[j - 1].X, PathPoints[j].Y, PathPoints[j - 1].Y, PathPoints[j].Z, PathPoints[j - 1].Z);
+                                PathPoints[j].DistFromPrev = WS_Combat.GetDistance(PathPoints[j].X, PathPoints[j - 1].X, PathPoints[j].Y, PathPoints[j - 1].Y, PathPoints[j].Z, PathPoints[j - 1].Z);
                             }
                             if (PathPoints[j].ActionFlag == 2)
                             {
@@ -713,7 +713,7 @@ namespace Mangos.World.Objects
                                     {
                                         WS_Handlers_Misc wS_Handlers_Misc = WorldServiceLocator._WS_Handlers_Misc;
                                         WS_PlayerData.CharacterObject Character = (WS_PlayerData.CharacterObject)tmpUnit;
-                                        wS_Handlers_Misc.CharacterResurrect(ref Character);
+                                        WS_Handlers_Misc.CharacterResurrect(ref Character);
                                         break;
                                     }
 
@@ -784,14 +784,14 @@ namespace Mangos.World.Objects
             }
         }
 
-        private ulong GetNewGUID()
+        private static ulong GetNewGUID()
         {
             ref ulong transportGUIDCounter = ref WorldServiceLocator._WorldServer.TransportGUIDCounter;
             transportGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(transportGUIDCounter), 1m));
             return WorldServiceLocator._WorldServer.TransportGUIDCounter;
         }
 
-        public void LoadTransports()
+        public static void LoadTransports()
         {
             try
             {

@@ -54,7 +54,7 @@ namespace Mangos.World.AI
 
             public override void DoMove()
             {
-                float distanceToSpawn = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
+                float distanceToSpawn = Handlers.WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
                 checked
                 {
                     if (aiTarget == null)

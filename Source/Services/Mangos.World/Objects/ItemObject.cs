@@ -217,7 +217,7 @@ namespace Mangos.World.Objects
         public bool IsSoulBound => (_flags & 1) == 1;
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private ulong GetNewGUID()
+        private static ulong GetNewGUID()
         {
             ref ulong itemGuidCounter = ref WorldServiceLocator._WorldServer.itemGuidCounter;
             itemGuidCounter = Convert.ToUInt64(decimal.Add(new decimal(itemGuidCounter), 1m));

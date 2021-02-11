@@ -28,7 +28,7 @@ namespace Mangos.World.Handlers
 {
     public class WS_Handlers_Chat
     {
-        public byte GetChatFlag(WS_PlayerData.CharacterObject objCharacter)
+        public static byte GetChatFlag(WS_PlayerData.CharacterObject objCharacter)
         {
             if (objCharacter.GM)
             {
@@ -45,7 +45,7 @@ namespace Mangos.World.Handlers
             return 0;
         }
 
-        public void On_CMSG_MESSAGECHAT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_MESSAGECHAT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MESSAGECHAT", client.IP, client.Port);
             if (checked(packet.Data.Length - 1) < 14 && client.Character != null)
@@ -71,7 +71,7 @@ namespace Mangos.World.Handlers
                         if (Message3.StartsWith(WorldServiceLocator._ConfigurationProvider.GetConfiguration().CommandCharacter) && client.Character.Access > AccessLevel.Player)
                         {
                             Message3 = Message3.Remove(0, 1);
-                            Packets.PacketClass toCommand = WorldServiceLocator._Functions.BuildChatMessage(2147483647uL, Message3, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
+                            Packets.PacketClass toCommand = Functions.BuildChatMessage(2147483647uL, Message3, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
                             try
                             {
                                 client.Send(ref toCommand);
@@ -128,7 +128,7 @@ namespace Mangos.World.Handlers
 
                 default:
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Unknown chat message [msgType={2}, msgLanguage={3}]", client.IP, client.Port, msgType, msgLanguage);
-                    WorldServiceLocator._Packets.DumpPacket(packet.Data, client);
+                    Packets.DumpPacket(packet.Data, client);
                     break;
             }
         }

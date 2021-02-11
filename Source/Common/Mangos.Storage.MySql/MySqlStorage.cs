@@ -69,7 +69,7 @@ namespace Mangos.Storage.MySql
             return resources;
         }
 
-        private string GetEmbeddedSqlResourcebody(Assembly assembly, string resource)
+        private static string GetEmbeddedSqlResourcebody(Assembly assembly, string resource)
         {
             using Stream stream = assembly.GetManifestResourceStream(resource);
             using StreamReader reader = new StreamReader(stream);
@@ -85,7 +85,7 @@ namespace Mangos.Storage.MySql
             throw new Exception($"Unknown sql query '{query}'");
         }
 
-        private string GetEmbeddedSqlResourceName(string queriesCatalog, string resource)
+        private static string GetEmbeddedSqlResourceName(string queriesCatalog, string resource)
         {
             return Regex.Split(resource, $"{queriesCatalog}.(.*).sql")[1];
         }

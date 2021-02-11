@@ -591,7 +591,7 @@ namespace Mangos.World.DataStores
             {
                 if (TaxiNode.Value.MapID == map)
                 {
-                    float tmp = WorldServiceLocator._WS_Combat.GetDistance(x, TaxiNode.Value.x, y, TaxiNode.Value.y);
+                    float tmp = Handlers.WS_Combat.GetDistance(x, TaxiNode.Value.x, y, TaxiNode.Value.y);
                     float minDistance = 1E+08f;
                     if (tmp < minDistance)
                     {
@@ -615,7 +615,7 @@ namespace Mangos.World.DataStores
             return null;
         }
 
-        private void InitializeXpTableFromDb()
+        private static void InitializeXpTableFromDb()
         {
             DataTable result = null;
             try
@@ -846,16 +846,16 @@ namespace Mangos.World.DataStores
         public async Task InitializeLoadDBCsAsync()
         {
             InitializeXpTableFromDb();
-            WorldServiceLocator._WS_DBCLoad.LoadLootStores();
-            WorldServiceLocator._WS_DBCLoad.LoadWeather();
+            WS_DBCLoad.LoadLootStores();
+            WS_DBCLoad.LoadWeather();
             InitializeBattlemasters();
             InitializeBattlegrounds();
             InitializeTeleportCoords();
-            WorldServiceLocator._WS_DBCLoad.LoadCreatureMovements();
-            WorldServiceLocator._WS_DBCLoad.LoadCreatureEquipTable();
-            WorldServiceLocator._WS_DBCLoad.LoadCreatureModelInfo();
-            WorldServiceLocator._WS_DBCLoad.LoadQuestStartersAndFinishers();
-            WorldServiceLocator._WS_DBCLoad.InitializeSpellChains();
+            WS_DBCLoad.LoadCreatureMovements();
+            WS_DBCLoad.LoadCreatureEquipTable();
+            WS_DBCLoad.LoadCreatureModelInfo();
+            WS_DBCLoad.LoadQuestStartersAndFinishers();
+            WS_DBCLoad.InitializeSpellChains();
 
             await Task.WhenAll(
                 WorldServiceLocator._WS_Maps.InitializeMapsAsync(),
@@ -888,7 +888,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WS_DBCLoad.InitializeSpellFocusObjectAsync(),
                 WorldServiceLocator._WS_DBCLoad.InitializeSpellsAsync(),
                 WorldServiceLocator._WS_DBCLoad.InitializeSpellShapeShiftAsync(),
-                WorldServiceLocator._WS_DBCLoad.LoadCreatureGossipAsync()
+                WS_DBCLoad.LoadCreatureGossipAsync()
                 );
         }
     }

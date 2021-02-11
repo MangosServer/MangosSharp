@@ -22,7 +22,7 @@ namespace Mangos.Common.Legacy
 {
     public class NativeMethods
     {
-        public int timeGetTime(string dummy)
+        public static int timeGetTime(string dummy)
         {
             return Environment.TickCount;
         }

@@ -242,7 +242,7 @@ namespace Mangos.Cluster.Handlers.Guild
                     response.AddInt32(members.Rows[i].As<int>("char_zone_id"));
                     // 0 = < 1 hour / 0.1 = 2.4 hours / 1 = 24 hours (1 day)
                     // (Time logged out / 86400) = Days offline
-                    float daysOffline = (float)((_clusterServiceLocator.Functions.GetTimestamp(DateAndTime.Now) - members.Rows[i].As<uint>("char_logouttime")) / (double)DateInterval.Day);
+                    float daysOffline = (float)((Globals.Functions.GetTimestamp(DateAndTime.Now) - members.Rows[i].As<uint>("char_logouttime")) / (double)DateInterval.Day);
                     response.AddSingle(daysOffline); // Days offline
                     response.AddString(members.Rows[i].As<string>("char_guildPNote"));
                     if (officer)
@@ -260,7 +260,7 @@ namespace Mangos.Cluster.Handlers.Guild
             response.Dispose();
         }
 
-        public void SendGuildResult(ClientClass client, GuildCommand command, GuildError result, string text = "")
+        public static void SendGuildResult(ClientClass client, GuildCommand command, GuildError result, string text = "")
         {
             PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_COMMAND_RESULT);
             response.AddInt32((int)command);
@@ -306,7 +306,7 @@ namespace Mangos.Cluster.Handlers.Guild
         }
 
         // Members Options
-        public void SendGuildMotd(WcHandlerCharacter.CharacterObject objCharacter)
+        public static void SendGuildMotd(WcHandlerCharacter.CharacterObject objCharacter)
         {
             if (objCharacter.IsInGuild)
             {

@@ -68,7 +68,7 @@ namespace Mangos.World.Battlegrounds
                 Dispose();
             }
 
-            public void Update(object State)
+            public static void Update(object State)
             {
             }
 

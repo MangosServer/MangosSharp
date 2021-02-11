@@ -95,7 +95,7 @@ namespace Mangos.World.Globals
             Regex_Guild = new Regex("^[a-z A-Z]+$");
         }
 
-        public int ToInteger(bool Value)
+        public static int ToInteger(bool Value)
         {
             if (Value)
             {
@@ -104,7 +104,7 @@ namespace Mangos.World.Globals
             return 0;
         }
 
-        public string ToHex(byte[] bBytes, int start = 0)
+        public static string ToHex(byte[] bBytes, int start = 0)
         {
             if (bBytes.Length == 0)
             {
@@ -122,7 +122,7 @@ namespace Mangos.World.Globals
             }
         }
 
-        public char[] ByteToCharArray(byte[] bBytes)
+        public static char[] ByteToCharArray(byte[] bBytes)
         {
             if (bBytes.Length == 0)
             {
@@ -140,7 +140,7 @@ namespace Mangos.World.Globals
             }
         }
 
-        public int[] ByteToIntArray(byte[] bBytes)
+        public static int[] ByteToIntArray(byte[] bBytes)
         {
             if (bBytes.Length == 0)
             {
@@ -158,7 +158,7 @@ namespace Mangos.World.Globals
             }
         }
 
-        public byte[] IntToByteArray(int[] bInt)
+        public static byte[] IntToByteArray(int[] bInt)
         {
             if (bInt.Length == 0)
             {
@@ -177,7 +177,7 @@ namespace Mangos.World.Globals
             }
         }
 
-        public byte[] Concat(byte[] a, byte[] b)
+        public static byte[] Concat(byte[] a, byte[] b)
         {
             checked
             {
@@ -196,7 +196,7 @@ namespace Mangos.World.Globals
             }
         }
 
-        public bool HaveFlag(uint value, byte flagPos)
+        public static bool HaveFlag(uint value, byte flagPos)
         {
             checked
             {
@@ -210,12 +210,12 @@ namespace Mangos.World.Globals
             return false;
         }
 
-        public bool HaveFlags(int value, int flags)
+        public static bool HaveFlags(int value, int flags)
         {
             return (value & flags) == flags;
         }
 
-        public void SetFlag(ref uint value, byte flagPos, bool flagValue)
+        public static void SetFlag(ref uint value, byte flagPos, bool flagValue)
         {
             if (flagValue)
             {
@@ -227,7 +227,7 @@ namespace Mangos.World.Globals
             }
         }
 
-        public DateTime GetNextDay(DayOfWeek iDay, int Hour = 0)
+        public static DateTime GetNextDay(DayOfWeek iDay, int Hour = 0)
         {
             checked
             {
@@ -240,18 +240,18 @@ namespace Mangos.World.Globals
             }
         }
 
-        public DateTime GetNextDate(int Days, int Hours = 0)
+        public static DateTime GetNextDate(int Days, int Hours = 0)
         {
             return DateAndTime.Today.AddDays(Days).AddHours(Hours);
         }
 
-        public uint GetTimestamp(DateTime fromDateTime)
+        public static uint GetTimestamp(DateTime fromDateTime)
         {
             DateTime startDate = new DateTime(621355968000000000L);
             return checked((uint)Math.Round(Math.Abs(fromDateTime.Subtract(startDate).TotalSeconds)));
         }
 
-        public DateTime GetDateFromTimestamp(uint unixTimestamp)
+        public static DateTime GetDateFromTimestamp(uint unixTimestamp)
         {
             DateTime startDate = new DateTime(621355968000000000L);
             if ((ulong)unixTimestamp == 0)
@@ -262,7 +262,7 @@ namespace Mangos.World.Globals
             return startDate.Add(timeSpan);
         }
 
-        public string GetTimeLeftString(uint seconds)
+        public static string GetTimeLeftString(uint seconds)
         {
             if (seconds < 60L)
             {
@@ -279,18 +279,18 @@ namespace Mangos.World.Globals
             return Conversions.ToString(seconds / 86400L) + "d " + Conversions.ToString(seconds / 3600L % 24) + "h " + Conversions.ToString(seconds / 60L % 60) + "m " + Conversions.ToString(seconds % 60L) + "s";
         }
 
-        public string EscapeString(string s)
+        public static string EscapeString(string s)
         {
             return s.Replace("\"", "").Replace("'", "");
         }
 
-        public string CapitalizeName(ref string Name)
+        public static string CapitalizeName(ref string Name)
         {
             if (Name.Length > 1)
             {
-                return WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Strings.Left(Name, 1)) + WorldServiceLocator._CommonFunctions.LowercaseFirstLetter(Strings.Right(Name, checked(Name.Length - 1)));
+                return Common.Legacy.Functions.UppercaseFirstLetter(Strings.Left(Name, 1)) + Common.Legacy.Functions.LowercaseFirstLetter(Strings.Right(Name, checked(Name.Length - 1)));
             }
-            return WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Name);
+            return Common.Legacy.Functions.UppercaseFirstLetter(Name);
         }
 
         public bool ValidateName(string strName)
@@ -311,7 +311,7 @@ namespace Mangos.World.Globals
             return Regex_Guild.IsMatch(strName);
         }
 
-        public string FixName(string strName)
+        public static string FixName(string strName)
         {
             return strName.Replace("\"", "'").Replace("<", "").Replace(">", "")
                 .Replace("*", "")
@@ -322,7 +322,7 @@ namespace Mangos.World.Globals
                 .Replace("?", "");
         }
 
-        public void RAND_bytes(ref byte[] bBytes, int length)
+        public static void RAND_bytes(ref byte[] bBytes, int length)
         {
             checked
             {
@@ -339,12 +339,12 @@ namespace Mangos.World.Globals
             }
         }
 
-        public float MathLerp(float value1, float value2, float amount)
+        public static float MathLerp(float value1, float value2, float amount)
         {
             return value1 + (value2 - value1) * amount;
         }
 
-        public void Ban_Account(string Name, string Reason)
+        public static void Ban_Account(string Name, string Reason)
         {
             DataTable account = new DataTable();
             DataTable bannedAccount = new DataTable();
@@ -370,7 +370,7 @@ namespace Mangos.World.Globals
             }
         }
 
-        public string GetClassName(ref int Classe)
+        public static string GetClassName(ref int Classe)
         {
             return Classe switch
             {
@@ -387,7 +387,7 @@ namespace Mangos.World.Globals
             };
         }
 
-        public string GetRaceName(ref int Race)
+        public static string GetRaceName(ref int Race)
         {
             return Race switch
             {
@@ -403,7 +403,7 @@ namespace Mangos.World.Globals
             };
         }
 
-        public int GetRaceModel(Races Race, int Gender)
+        public static int GetRaceModel(Races Race, int Gender)
         {
             return checked(Race switch
             {
@@ -419,7 +419,7 @@ namespace Mangos.World.Globals
             });
         }
 
-        public bool GetCharacterSide(byte Race)
+        public static bool GetCharacterSide(byte Race)
         {
             switch (Race)
             {
@@ -434,7 +434,7 @@ namespace Mangos.World.Globals
             }
         }
 
-        public bool IsContinentMap(int Map)
+        public static bool IsContinentMap(int Map)
         {
             if ((uint)Map <= 1u)
             {
@@ -443,7 +443,7 @@ namespace Mangos.World.Globals
             return false;
         }
 
-        public string SetColor(string Message, byte Red, byte Green, byte Blue)
+        public static string SetColor(string Message, byte Red, byte Green, byte Blue)
         {
             string SetColor = "|cFF";
             SetColor = (Red >= 16) ? (SetColor + Conversion.Hex(Red)) : (SetColor + "0" + Conversion.Hex(Red));
@@ -452,7 +452,7 @@ namespace Mangos.World.Globals
             return SetColor + Message + "|r";
         }
 
-        public bool RollChance(float Chance)
+        public static bool RollChance(float Chance)
         {
             int nChance = checked((int)Math.Round(Chance * 100f));
             if (WorldServiceLocator._WorldServer.Rnd.Next(1, 10001) <= nChance)
@@ -468,7 +468,7 @@ namespace Mangos.World.Globals
             client.Send(ref packet);
         }
 
-        public void SendMessageNotification(ref WS_Network.ClientClass client, string Message)
+        public static void SendMessageNotification(ref WS_Network.ClientClass client, string Message)
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_NOTIFICATION);
             try
@@ -508,7 +508,7 @@ namespace Mangos.World.Globals
             WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
         }
 
-        public void SendAccountMD5(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
+        public static void SendAccountMD5(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             bool FoundData = false;
             Packets.PacketClass SMSG_ACCOUNT_DATA_TIMES = new Packets.PacketClass(Opcodes.SMSG_ACCOUNT_DATA_MD5);
@@ -534,7 +534,7 @@ namespace Mangos.World.Globals
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_ACCOUNT_DATA_MD5", client.IP, client.Port);
         }
 
-        public void SendTriggerCinematic(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
+        public static void SendTriggerCinematic(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_TRIGGER_CINEMATIC);
             try
@@ -554,11 +554,11 @@ namespace Mangos.World.Globals
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC", client.IP, client.Port);
         }
 
-        public void SendTimeSyncReq(ref WS_Network.ClientClass client)
+        public static void SendTimeSyncReq(ref WS_Network.ClientClass client)
         {
         }
 
-        public void SendGameTime(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
+        public static void SendGameTime(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Packets.PacketClass SMSG_LOGIN_SETTIMESPEED = new Packets.PacketClass(Opcodes.SMSG_LOGIN_SETTIMESPEED);
             checked
@@ -584,7 +584,7 @@ namespace Mangos.World.Globals
             }
         }
 
-        public void SendProficiency(ref WS_Network.ClientClass client, byte ProficiencyType, int ProficiencyFlags)
+        public static void SendProficiency(ref WS_Network.ClientClass client, byte ProficiencyType, int ProficiencyFlags)
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SET_PROFICIENCY);
             try
@@ -600,7 +600,7 @@ namespace Mangos.World.Globals
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_SET_PROFICIENCY", client.IP, client.Port);
         }
 
-        public void SendCorpseReclaimDelay(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character, int Seconds = 30)
+        public static void SendCorpseReclaimDelay(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character, int Seconds = 30)
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_CORPSE_RECLAIM_DELAY);
             try
@@ -615,7 +615,7 @@ namespace Mangos.World.Globals
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CORPSE_RECLAIM_DELAY [{2}s]", client.IP, client.Port, Seconds);
         }
 
-        public Packets.PacketClass BuildChatMessage(ulong SenderGUID, string Message, ChatMsg msgType, LANGUAGES msgLanguage, byte Flag = 0, string msgChannel = "Global")
+        public static Packets.PacketClass BuildChatMessage(ulong SenderGUID, string Message, ChatMsg msgType, LANGUAGES msgLanguage, byte Flag = 0, string msgChannel = "Global")
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MESSAGECHAT);
             try
@@ -676,7 +676,7 @@ namespace Mangos.World.Globals
             return packet;
         }
 
-        public Packets.PacketClass BuildPartyMemberStatsOffline(ulong GUID)
+        public static Packets.PacketClass BuildPartyMemberStatsOffline(ulong GUID)
         {
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PARTY_MEMBER_STATS_FULL);
             packet.AddPackGUID(GUID);

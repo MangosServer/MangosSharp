@@ -77,7 +77,7 @@ namespace Mangos.World.Objects
                 Radius = 0f;
                 CastTime = 0;
                 Bytes = 1;
-                GUID = WorldServiceLocator._WS_DynamicObjects.GetNewGUID();
+                GUID = GetNewGUID();
                 WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs.Add(GUID, this);
                 Caster = Caster_;
                 SpellID = SpellID_;
@@ -89,7 +89,7 @@ namespace Mangos.World.Objects
                 instance = Caster.instance;
                 Duration = Duration_;
                 Radius = Radius_;
-                CastTime = WorldServiceLocator._NativeMethods.timeGetTime("");
+                CastTime = Common.Legacy.NativeMethods.timeGetTime("");
             }
 
             public void FillAllUpdateFlags(ref Packets.UpdateClass Update)
@@ -112,7 +112,7 @@ namespace Mangos.World.Objects
                 WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                 if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
                 {
-                    WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+                    Handlers.WS_CharMovement.MAP_Load(CellX, CellY, MapID);
                 }
                 try
                 {
@@ -237,7 +237,7 @@ namespace Mangos.World.Objects
                         }
                         continue;
                     }
-                    List<WS_Base.BaseUnit> Targets = WorldServiceLocator._WS_Spells.GetEnemyAtPoint(ref Caster, positionX, positionY, positionZ, Effect.GetRadius);
+                    List<WS_Base.BaseUnit> Targets = WS_Spells.GetEnemyAtPoint(ref Caster, positionX, positionY, positionZ, Effect.GetRadius);
                     foreach (WS_Base.BaseUnit item in Targets)
                     {
                         WS_Base.BaseUnit Target = item;
@@ -281,7 +281,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        private ulong GetNewGUID()
+        private static ulong GetNewGUID()
         {
             ref ulong dynamicObjectsGUIDCounter = ref WorldServiceLocator._WorldServer.DynamicObjectsGUIDCounter;
             dynamicObjectsGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(dynamicObjectsGUIDCounter), 1m));

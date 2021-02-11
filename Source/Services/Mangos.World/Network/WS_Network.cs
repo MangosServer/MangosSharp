@@ -32,7 +32,7 @@ namespace Mangos.World.Network
 
         public int MsTime()
         {
-            return checked(WC_MsTime + (WorldServiceLocator._NativeMethods.timeGetTime("") - LastPing));
+            return checked(WC_MsTime + (Common.Legacy.NativeMethods.timeGetTime("") - LastPing));
         }
     }
 }

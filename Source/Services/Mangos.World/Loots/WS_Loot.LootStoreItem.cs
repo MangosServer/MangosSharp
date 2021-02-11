@@ -70,7 +70,7 @@ namespace Mangos.World.Loots
                 {
                     return true;
                 }
-                return WorldServiceLocator._Functions.RollChance(Chance);
+                return Globals.Functions.RollChance(Chance);
             }
         }
     }

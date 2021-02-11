@@ -203,7 +203,7 @@ namespace Mangos.World.Quests
                 ObjectivesDeliver = Quest.ObjectivesDeliver;
                 if (Quest.TimeLimit > 0)
                 {
-                    TimeEnd = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + Quest.TimeLimit);
+                    TimeEnd = (int)(Functions.GetTimestamp(DateAndTime.Now) + Quest.TimeLimit);
                 }
             }
         }
@@ -352,7 +352,7 @@ namespace Mangos.World.Quests
                 Progress[index]++;
                 IsCompleted();
                 objCharacter.TalkUpdateQuest(Slot);
-                WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
+                WS_Quests.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
             }
         }
 
@@ -363,7 +363,7 @@ namespace Mangos.World.Quests
                 Progress[index]++;
                 IsCompleted();
                 objCharacter.TalkUpdateQuest(Slot);
-                WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
+                WS_Quests.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
             }
         }
 
@@ -372,7 +372,7 @@ namespace Mangos.World.Quests
             Explored = true;
             IsCompleted();
             objCharacter.TalkUpdateQuest(Slot);
-            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageComplete(ref objCharacter.client, ID);
+            WS_Quests.SendQuestMessageComplete(ref objCharacter.client, ID);
         }
 
         public void AddEmote(WS_PlayerData.CharacterObject objCharacter, byte index)
@@ -382,7 +382,7 @@ namespace Mangos.World.Quests
                 Progress[index]++;
                 IsCompleted();
                 objCharacter.TalkUpdateQuest(Slot);
-                WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageComplete(ref objCharacter.client, ID);
+                WS_Quests.SendQuestMessageComplete(ref objCharacter.client, ID);
             }
         }
 
@@ -402,7 +402,7 @@ namespace Mangos.World.Quests
                 IsCompleted();
                 objCharacter.TalkUpdateQuest(Slot);
                 int ItemCount = Count - 1;
-                WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddItem(ref objCharacter.client, ObjectivesItem[index], ItemCount);
+                WS_Quests.SendQuestMessageAddItem(ref objCharacter.client, ObjectivesItem[index], ItemCount);
             }
         }
 

@@ -88,7 +88,7 @@ namespace Mangos.World.Maps
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: {0} Maps initialized.", Maps.Count);
         }
 
-        public float ValidateMapCoord(float coord)
+        public static float ValidateMapCoord(float coord)
         {
             if (coord > 32f * WorldServiceLocator._Global_Constants.SIZE)
             {
@@ -155,9 +155,9 @@ namespace Mangos.World.Maps
                     }
                     try
                     {
-                        float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), MapTile_LocalY), xNormalized);
-                        float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(MapTile_LocalY + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), (byte)(MapTile_LocalY + 1)), xNormalized);
-                        return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
+                        float topHeight = Globals.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), MapTile_LocalY), xNormalized);
+                        float bottomHeight = Globals.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(MapTile_LocalY + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), (byte)(MapTile_LocalY + 1)), xNormalized);
+                        return Globals.Functions.MathLerp(topHeight, bottomHeight, yNormalized);
                     }
                     catch (Exception projectError)
                     {
@@ -231,7 +231,7 @@ namespace Mangos.World.Maps
             }
         }
 
-        public bool IsOutsideOfMap(ref WS_Base.BaseObject objCharacter)
+        public static bool IsOutsideOfMap(ref WS_Base.BaseObject objCharacter)
         {
             return false;
         }
@@ -275,9 +275,9 @@ namespace Mangos.World.Maps
                     }
                     try
                     {
-                        float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
-                        float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
-                        return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
+                        float topHeight = Globals.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
+                        float bottomHeight = Globals.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
+                        return Globals.Functions.MathLerp(topHeight, bottomHeight, yNormalized);
                     }
                     catch (Exception projectError)
                     {
@@ -563,7 +563,7 @@ namespace Mangos.World.Maps
             }
         }
 
-        public void UnloadSpawns(byte TileX, byte TileY, uint TileMap)
+        public static void UnloadSpawns(byte TileX, byte TileY, uint TileMap)
         {
             checked
             {
@@ -622,7 +622,7 @@ namespace Mangos.World.Maps
             }
         }
 
-        public void SendTransferAborted(ref WS_Network.ClientClass client, int Map, TransferAbortReason Reason)
+        public static void SendTransferAborted(ref WS_Network.ClientClass client, int Map, TransferAbortReason Reason)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRANSFER_ABORTED [{2}:{3}]", client.IP, client.Port, Map, Reason);
             Packets.PacketClass p = new Packets.PacketClass(Opcodes.SMSG_TRANSFER_ABORTED);

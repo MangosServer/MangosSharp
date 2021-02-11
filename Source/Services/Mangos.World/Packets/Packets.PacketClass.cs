@@ -83,7 +83,7 @@ namespace Mangos.World.Globals
                 if (OpCode == Opcodes.SMSG_UPDATE_OBJECT && Data.Length >= 200)
                 {
                     int uncompressedSize = Data.Length;
-                    byte[] compressedBuffer = WorldServiceLocator._GlobalZip.Compress(Data, 4, checked(Data.Length - 4));
+                    byte[] compressedBuffer = Zip.ZipService.Compress(Data, 4, checked(Data.Length - 4));
                     if (compressedBuffer.Length != 0)
                     {
                         Data = new byte[4];
@@ -376,7 +376,7 @@ namespace Mangos.World.Globals
                         Offset++;
                     }
                     Offset++;
-                    return WorldServiceLocator._Functions.EscapeString(Encoding.UTF8.GetString(Data, start, i));
+                    return Functions.EscapeString(Encoding.UTF8.GetString(Data, start, i));
                 }
             }
 
@@ -387,7 +387,7 @@ namespace Mangos.World.Globals
                 {
                     int start = Offset + 1;
                     Offset += thisLength + 1;
-                    return WorldServiceLocator._Functions.EscapeString(Encoding.UTF8.GetString(Data, start, thisLength));
+                    return Functions.EscapeString(Encoding.UTF8.GetString(Data, start, thisLength));
                 }
             }
 

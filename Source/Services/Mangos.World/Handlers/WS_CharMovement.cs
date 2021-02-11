@@ -159,9 +159,9 @@ namespace Mangos.World.Handlers
                     {
                         int areaFlag = exploreFlag % 32;
                         byte areaFlagOffset = (byte)(exploreFlag / 32);
-                        if (!WorldServiceLocator._Functions.HaveFlag(client.Character.ZonesExplored[areaFlagOffset], (byte)areaFlag))
+                        if (!Globals.Functions.HaveFlag(client.Character.ZonesExplored[areaFlagOffset], (byte)areaFlag))
                         {
-                            WorldServiceLocator._Functions.SetFlag(ref client.Character.ZonesExplored[areaFlagOffset], (byte)areaFlag, flagValue: true);
+                            Globals.Functions.SetFlag(ref client.Character.ZonesExplored[areaFlagOffset], (byte)areaFlag, flagValue: true);
                             int GainedXP = WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level * 10;
                             GainedXP = WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level * 10;
                             Packets.PacketClass SMSG_EXPLORATION_EXPERIENCE = new Packets.PacketClass(Opcodes.SMSG_EXPLORATION_EXPERIENCE);
@@ -171,7 +171,7 @@ namespace Mangos.World.Handlers
                             SMSG_EXPLORATION_EXPERIENCE.Dispose();
                             client.Character.SetUpdateFlag(1111 + areaFlagOffset, client.Character.ZonesExplored[areaFlagOffset]);
                             client.Character.AddXP(GainedXP, 0);
-                            WorldServiceLocator._WorldServer.ALLQUESTS.OnQuestExplore(ref client.Character, exploreFlag);
+                            Quests.WS_Quests.OnQuestExplore(ref client.Character, exploreFlag);
                         }
                     }
                 }
@@ -219,7 +219,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void OnControlledMovementPacket(ref Packets.PacketClass packet, ref WS_Base.BaseUnit Controlled, ref WS_PlayerData.CharacterObject Controller)
+        public static void OnControlledMovementPacket(ref Packets.PacketClass packet, ref WS_Base.BaseUnit Controlled, ref WS_PlayerData.CharacterObject Controller)
         {
             int MovementFlags = packet.GetInt32();
             uint Time = packet.GetUInt32();
@@ -285,7 +285,7 @@ namespace Mangos.World.Handlers
             OnMovementPacket(ref packet, ref client);
         }
 
-        public void OnChangeSpeed(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void OnChangeSpeed(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong GUID = packet.GetUInt64();
@@ -348,7 +348,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void SendAreaTriggerMessage(ref WS_Network.ClientClass client, string Text)
+        public static void SendAreaTriggerMessage(ref WS_Network.ClientClass client, string Text)
         {
             Packets.PacketClass p = new Packets.PacketClass(Opcodes.SMSG_AREA_TRIGGER_MESSAGE);
             p.AddInt32(Text.Length);
@@ -373,7 +373,7 @@ namespace Mangos.World.Handlers
                 WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT entry, quest FROM quest_relations WHERE actor=2 and role=0 and entry = {triggerID};", ref q);
                 if (q.Rows.Count > 0)
                 {
-                    WorldServiceLocator._WorldServer.ALLQUESTS.OnQuestExplore(ref client.Character, triggerID);
+                    Quests.WS_Quests.OnQuestExplore(ref client.Character, triggerID);
                     return;
                 }
                 q.Clear();
@@ -407,7 +407,7 @@ namespace Mangos.World.Handlers
                     }
                     if (client.Character.corpseMapID == tMap)
                     {
-                        WorldServiceLocator._WS_Handlers_Misc.CharacterResurrect(ref client.Character);
+                        WS_Handlers_Misc.CharacterResurrect(ref client.Character);
                         goto IL_029d;
                     }
                     WorldServiceLocator._WorldServer.AllGraveYards.GoToNearestGraveyard(ref client.Character, Alive: false, Teleport: true);
@@ -445,7 +445,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_MOVE_TIME_SKIPPED(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_MOVE_TIME_SKIPPED(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
         }
 
@@ -548,7 +548,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_ZONEUPDATE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_ZONEUPDATE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -585,7 +585,7 @@ namespace Mangos.World.Handlers
             client.Character.ZoneCheck();
             WS_Maps wS_Maps = WorldServiceLocator._WS_Maps;
             WS_Base.BaseObject objCharacter = client.Character;
-            if (wS_Maps.IsOutsideOfMap(ref objCharacter))
+            if (WS_Maps.IsOutsideOfMap(ref objCharacter))
             {
                 if (!client.Character.outsideMapID_)
                 {
@@ -600,7 +600,7 @@ namespace Mangos.World.Handlers
             }
             if (client.Character.IsInDuel)
             {
-                WorldServiceLocator._WS_Spells.CheckDuelDistance(ref client.Character);
+                WS_Spells.CheckDuelDistance(ref client.Character);
             }
             ulong[] array = client.Character.creaturesNear.ToArray();
             foreach (ulong cGUID in array)
@@ -633,7 +633,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void MAP_Load(byte x, byte y, uint Map)
+        public static void MAP_Load(byte x, byte y, uint Map)
         {
             short i = -1;
             checked
@@ -659,7 +659,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void MAP_UnLoad(byte x, byte y, int Map)
+        public static void MAP_UnLoad(byte x, byte y, int Map)
         {
             checked
             {
@@ -687,7 +687,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void RemoveFromWorld(ref WS_PlayerData.CharacterObject Character)
+        public static void RemoveFromWorld(ref WS_PlayerData.CharacterObject Character)
         {
             if (!WorldServiceLocator._WS_Maps.Maps.ContainsKey(Character.MapID))
             {
@@ -1020,7 +1020,7 @@ namespace Mangos.World.Handlers
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void UpdatePlayersInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
+        public static void UpdatePlayersInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
         {
             WS_Maps.TMapTile tMapTile = MapTile;
             ulong[] list = tMapTile.PlayersHere.ToArray();
@@ -1077,7 +1077,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void UpdateCreaturesAndGameObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
+        public static void UpdateCreaturesAndGameObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
         {
             Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
             WS_Maps.TMapTile tMapTile = MapTile;
@@ -1204,7 +1204,7 @@ namespace Mangos.World.Handlers
             packet.Dispose();
         }
 
-        public void UpdateCreaturesInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
+        public static void UpdateCreaturesInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
         {
             WS_Maps.TMapTile tMapTile = MapTile;
             ulong[] list = tMapTile.CreaturesHere.ToArray();
@@ -1240,7 +1240,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void UpdateGameObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
+        public static void UpdateGameObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
         {
             WS_Maps.TMapTile tMapTile = MapTile;
             ulong[] list = tMapTile.GameObjectsHere.ToArray();
@@ -1287,7 +1287,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void UpdateCorpseObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
+        public static void UpdateCorpseObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
         {
             WS_Maps.TMapTile tMapTile = MapTile;
             ulong[] list = tMapTile.CorpseObjectsHere.ToArray();

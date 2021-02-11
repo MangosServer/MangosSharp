@@ -36,7 +36,7 @@ namespace Mangos.World.Player
             XPTable = new int[checked(DEFAULT_MAX_LEVEL + 1)];
         }
 
-        public int CalculateStartingLIFE(ref WS_PlayerData.CharacterObject objCharacter, int baseLIFE)
+        public static int CalculateStartingLIFE(ref WS_PlayerData.CharacterObject objCharacter, int baseLIFE)
         {
             checked
             {
@@ -48,7 +48,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public int CalculateStartingMANA(ref WS_PlayerData.CharacterObject objCharacter, int baseMANA)
+        public static int CalculateStartingMANA(ref WS_PlayerData.CharacterObject objCharacter, int baseMANA)
         {
             checked
             {
@@ -60,7 +60,7 @@ namespace Mangos.World.Player
             }
         }
 
-        private int gainStat(int level, double a3, double a2, double a1, double a0)
+        private static int gainStat(int level, double a3, double a2, double a1, double a0)
         {
             return checked((int)Math.Round(a3 * level * level * level + a2 * level * level + a1 * level + a0) - (int)Math.Round(a3 * (level - 1) * (level - 1) * (level - 1) + a2 * (level - 1) * (level - 1) + a1 * (level - 1) + a0));
         }
@@ -309,7 +309,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public ManaTypes GetClassManaType(Classes Classe)
+        public static ManaTypes GetClassManaType(Classes Classe)
         {
             switch (Classe)
             {
@@ -333,7 +333,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public void InitializeReputations(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void InitializeReputations(ref WS_PlayerData.CharacterObject objCharacter)
         {
             byte i = 0;
             do
@@ -354,7 +354,7 @@ namespace Mangos.World.Player
                         byte j = 0;
                         do
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)tmpFactionInfo.Value.flags[j], (byte)((int)objCharacter.Race - 1)))
+                            if (Globals.Functions.HaveFlag((uint)tmpFactionInfo.Value.flags[j], (byte)((int)objCharacter.Race - 1)))
                             {
                                 objCharacter.Reputation[i].Flags = tmpFactionInfo.Value.rep_flags[j];
                                 objCharacter.Reputation[i].Value = tmpFactionInfo.Value.rep_stats[j];

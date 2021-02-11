@@ -282,7 +282,7 @@ namespace Mangos.DBCReader
             ProgressBar.Value = 0;
         }
 
-        private bool IsValidString(string str)
+        private static bool IsValidString(string str)
         {
             char[] chars = str.ToCharArray();
             char[] accepted = @" ():.,'-*_?\/<>;$%".ToCharArray();
@@ -398,7 +398,7 @@ namespace Mangos.DBCReader
             ProgressBar.Value = 0;
         }
 
-        private string GetString(ref byte[] Data, int Index)
+        private static string GetString(ref byte[] Data, int Index)
         {
             int i;
             int loopTo = Data.Length - 1;

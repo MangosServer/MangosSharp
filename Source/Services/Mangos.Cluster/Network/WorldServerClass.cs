@@ -165,9 +165,9 @@ namespace Mangos.Cluster.Network
                         {
                             if (!sentPingTo.ContainsKey(WorldsInfo[w.Key]))
                             {
-                                myTime = _clusterServiceLocator.NativeMethods.timeGetTime("");
+                                myTime = NativeMethods.timeGetTime("");
                                 serverTime = w.Value.Ping(myTime, WorldsInfo[w.Key].Latency);
-                                latency = Math.Abs(myTime - _clusterServiceLocator.NativeMethods.timeGetTime(""));
+                                latency = Math.Abs(myTime - NativeMethods.timeGetTime(""));
                                 WorldsInfo[w.Key].Latency = latency;
                                 sentPingTo[WorldsInfo[w.Key]] = latency;
                                 _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.NETWORK, "Map {0:000} ping: {1}ms", w.Key, latency);
@@ -331,7 +331,7 @@ namespace Mangos.Cluster.Network
             if (!_clusterServiceLocator.WcNetwork.WorldServer.Worlds.ContainsKey(mapId))
             {
                 // We don't create new continents
-                if (_clusterServiceLocator.Functions.IsContinentMap((int)mapId))
+                if (Globals.Functions.IsContinentMap((int)mapId))
                 {
                     _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, "[{0:000000}] Requested Instance Map [{1}] is a continent", client.Index, mapId);
                     client.Send(new PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));

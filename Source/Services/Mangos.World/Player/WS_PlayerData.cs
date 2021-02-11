@@ -447,7 +447,7 @@ namespace Mangos.World.Player
 
             public float GetRageConversion => (float)(0.0091107836 * Level * Level + 3.225598133 * Level + 4.2652911);
 
-            public float GetHitFactor(bool MainHand = true, bool Critical = false)
+            public static float GetHitFactor(bool MainHand = true, bool Critical = false)
             {
                 float HitFactor = 1.75f;
                 if (MainHand)
@@ -615,7 +615,7 @@ namespace Mangos.World.Player
 
             public bool isResting => (cPlayerFlags & PlayerFlags.PLAYER_FLAGS_RESTING) != 0;
 
-            public bool IsInCombat => inCombatWith.Count > 0 || checked(WorldServiceLocator._NativeMethods.timeGetTime("") - lastPvpAction) < WorldServiceLocator._Global_Constants.DEFAULT_PVP_COMBAT_TIME;
+            public bool IsInCombat => inCombatWith.Count > 0 || checked(NativeMethods.timeGetTime("") - lastPvpAction) < WorldServiceLocator._Global_Constants.DEFAULT_PVP_COMBAT_TIME;
 
             public bool AFK
             {
@@ -872,7 +872,7 @@ namespace Mangos.World.Player
                     {
                         return true;
                     }
-                    if (WorldServiceLocator._Functions.HaveFlags((int)cPlayerFlags, 128) && WorldServiceLocator._Functions.HaveFlags((int)characterObject.cPlayerFlags, 128))
+                    if (Globals.Functions.HaveFlags((int)cPlayerFlags, 128) && Globals.Functions.HaveFlags((int)characterObject.cPlayerFlags, 128))
                     {
                         return false;
                     }
@@ -920,7 +920,7 @@ namespace Mangos.World.Player
                     {
                         return false;
                     }
-                    if (WorldServiceLocator._Functions.HaveFlags((int)cPlayerFlags, 128) && WorldServiceLocator._Functions.HaveFlags((int)characterObject.cPlayerFlags, 128))
+                    if (Globals.Functions.HaveFlags((int)cPlayerFlags, 128) && Globals.Functions.HaveFlags((int)characterObject.cPlayerFlags, 128))
                     {
                         return true;
                     }
@@ -948,7 +948,7 @@ namespace Mangos.World.Player
             {
                 if (Unit is CharacterObject)
                 {
-                    lastPvpAction = WorldServiceLocator._NativeMethods.timeGetTime("");
+                    lastPvpAction = NativeMethods.timeGetTime("");
                 }
                 else
                 {
@@ -978,14 +978,14 @@ namespace Mangos.World.Player
                     {
                         WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                         CharacterObject objCharacter = this;
-                        wS_Combat.SetPlayerOutOfCombat(ref objCharacter);
+                        WS_Combat.SetPlayerOutOfCombat(ref objCharacter);
                     }
                 }
                 else if (IsInCombat)
                 {
                     WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
                     CharacterObject objCharacter = this;
-                    wS_Combat2.SetPlayerInCombat(ref objCharacter);
+                    WS_Combat.SetPlayerInCombat(ref objCharacter);
                 }
             }
 
@@ -1436,16 +1436,16 @@ namespace Mangos.World.Player
                 SetUpdateFlag(128, GetAttackTime(WeaponAttackType.RANGED_ATTACK));
                 WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_Base.BaseUnit objCharacter = this;
-                SetUpdateFlag(1106, wS_Combat.GetBasePercentBlock(ref objCharacter, 0));
+                SetUpdateFlag(1106, WS_Combat.GetBasePercentBlock(ref objCharacter, 0));
                 WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
                 objCharacter = this;
-                SetUpdateFlag(1107, wS_Combat2.GetBasePercentDodge(ref objCharacter, 0));
+                SetUpdateFlag(1107, WS_Combat.GetBasePercentDodge(ref objCharacter, 0));
                 WS_Combat wS_Combat3 = WorldServiceLocator._WS_Combat;
                 objCharacter = this;
-                SetUpdateFlag(1108, wS_Combat3.GetBasePercentParry(ref objCharacter, 0));
+                SetUpdateFlag(1108, WS_Combat.GetBasePercentParry(ref objCharacter, 0));
                 WS_Combat wS_Combat4 = WorldServiceLocator._WS_Combat;
                 objCharacter = this;
-                SetUpdateFlag(1109, wS_Combat4.GetBasePercentCrit(ref objCharacter, 0));
+                SetUpdateFlag(1109, WS_Combat.GetBasePercentCrit(ref objCharacter, 0));
                 SetUpdateFlag(1176, Copper);
                 SetUpdateFlag(150, Strength.Base);
                 SetUpdateFlag(151, Agility.Base);
@@ -1521,10 +1521,10 @@ namespace Mangos.World.Player
                 SetUpdateFlag(168, AttackPowerRanged);
                 WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_Base.BaseUnit objCharacter = this;
-                SetUpdateFlag(1109, wS_Combat.GetBasePercentCrit(ref objCharacter, 0));
+                SetUpdateFlag(1109, WS_Combat.GetBasePercentCrit(ref objCharacter, 0));
                 WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
                 objCharacter = this;
-                SetUpdateFlag(1110, wS_Combat2.GetBasePercentCrit(ref objCharacter, 0));
+                SetUpdateFlag(1110, WS_Combat.GetBasePercentCrit(ref objCharacter, 0));
                 byte i2 = 0;
                 checked
                 {
@@ -1584,13 +1584,13 @@ namespace Mangos.World.Player
                     while (n <= 24u);
                     WS_Combat wS_Combat3 = WorldServiceLocator._WS_Combat;
                     objCharacter = this;
-                    SetUpdateFlag(1106, wS_Combat3.GetBasePercentBlock(ref objCharacter, 0));
+                    SetUpdateFlag(1106, WS_Combat.GetBasePercentBlock(ref objCharacter, 0));
                     WS_Combat wS_Combat4 = WorldServiceLocator._WS_Combat;
                     objCharacter = this;
-                    SetUpdateFlag(1107, wS_Combat4.GetBasePercentDodge(ref objCharacter, 0));
+                    SetUpdateFlag(1107, WS_Combat.GetBasePercentDodge(ref objCharacter, 0));
                     WS_Combat wS_Combat5 = WorldServiceLocator._WS_Combat;
                     objCharacter = this;
-                    SetUpdateFlag(1108, wS_Combat5.GetBasePercentParry(ref objCharacter, 0));
+                    SetUpdateFlag(1108, WS_Combat.GetBasePercentParry(ref objCharacter, 0));
                     byte b = (byte)WorldServiceLocator._Global_Constants.PLAYER_EXPLORED_ZONES_SIZE;
                     byte m = 0;
                     while (m <= (uint)b)
@@ -1844,7 +1844,7 @@ namespace Mangos.World.Player
 
             public void SendChatMessage(ref CharacterObject Sender, string Message, ChatMsg msgType, int msgLanguage, string ChannelName = "Global", bool SendToMe = false)
             {
-                Packets.PacketClass packet = WorldServiceLocator._Functions.BuildChatMessage(Sender.GUID, Message, msgType, (LANGUAGES)msgLanguage, WorldServiceLocator._WS_Handlers_Chat.GetChatFlag(Sender), ChannelName);
+                Packets.PacketClass packet = Globals.Functions.BuildChatMessage(Sender.GUID, Message, msgType, (LANGUAGES)msgLanguage, WS_Handlers_Chat.GetChatFlag(Sender), ChannelName);
                 SendToNearPlayers(ref packet, 0uL, SendToMe);
                 packet.Dispose();
             }
@@ -1865,7 +1865,7 @@ namespace Mangos.World.Player
                 string[] array = Messages;
                 foreach (string Msg in array)
                 {
-                    Packets.PacketClass packet = WorldServiceLocator._Functions.BuildChatMessage(2147483647uL, Msg, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
+                    Packets.PacketClass packet = Globals.Functions.BuildChatMessage(2147483647uL, Msg, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
                     client.Send(ref packet);
                     packet.Dispose();
                 }
@@ -1917,7 +1917,7 @@ namespace Mangos.World.Player
                     try
                     {
                         packet.AddInt32((int)GUID);
-                        uint curTime = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+                        uint curTime = Globals.Functions.GetTimestamp(DateAndTime.Now);
                         foreach (KeyValuePair<int, WS_Spells.CharacterSpell> Spell in Spells)
                         {
                             WS_Spells.SpellInfo SpellInfo = WorldServiceLocator._WS_Spells.SPELLs[Spell.Key];
@@ -1952,7 +1952,7 @@ namespace Mangos.World.Player
                 {
                     WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
                     CharacterObject Caster = this;
-                    wS_Spells.SendChannelUpdate(ref Caster, 0);
+                    WS_Spells.SendChannelUpdate(ref Caster, 0);
                 }
                 if (client.Character.spellCasted[(int)SpellType] == null)
                 {
@@ -1979,7 +1979,7 @@ namespace Mangos.World.Player
                     character = (CharacterObject)Caster2;
                     if (!OK)
                     {
-                        WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_INTERRUPTED, ref client, SpellID);
+                        WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_INTERRUPTED, ref client, SpellID);
                     }
                     client.Character.RemoveAuraBySpell(SpellID);
                     WS_DynamicObjects.DynamicObjectObject[] DynamicObjects = client.Character.dynamicObjects.ToArray();
@@ -2683,7 +2683,7 @@ namespace Mangos.World.Player
                     {
                         WS_Quests aLLQUESTS = WorldServiceLocator._WorldServer.ALLQUESTS;
                         CharacterObject objCharacter = this;
-                        aLLQUESTS.OnQuestItemAdd(ref objCharacter, tmpEntry, tmpCount);
+                        WS_Quests.OnQuestItemAdd(ref objCharacter, tmpEntry, tmpCount);
                         return true;
                     }
                     return false;
@@ -2695,7 +2695,7 @@ namespace Mangos.World.Player
                 byte Slot = WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL;
                 checked
                 {
-                    int OldestTime = (int)WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+                    int OldestTime = (int)Globals.Functions.GetTimestamp(DateAndTime.Now);
                     byte OldestSlot = WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL;
                     byte i = 69;
                     do
@@ -2725,7 +2725,7 @@ namespace Mangos.World.Player
                         Slot = OldestSlot;
                     }
                     byte eSlot = (byte)unchecked((uint)(Slot - 69));
-                    BuyBackTimeStamp[eSlot] = (int)WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+                    BuyBackTimeStamp[eSlot] = (int)Globals.Functions.GetTimestamp(DateAndTime.Now);
                     SetUpdateFlag(1238 + eSlot, BuyBackTimeStamp[eSlot]);
                     SetUpdateFlag(1226 + eSlot, Item.ItemInfo.SellPrice * Item.StackCount);
                     ItemSETSLOT(ref Item, 0, Slot);
@@ -2965,7 +2965,7 @@ namespace Mangos.World.Player
                 while (bag <= 22u);
                 WS_Items wS_Items = WorldServiceLocator._WS_Items;
                 CharacterObject objCharacter = this;
-                wS_Items.SendInventoryChangeFailure(ref objCharacter, InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL, 0uL, 0uL);
+                WS_Items.SendInventoryChangeFailure(ref objCharacter, InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL, 0uL, 0uL);
                 return false;
             }
 
@@ -3039,7 +3039,7 @@ namespace Mangos.World.Player
                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "{0} - {1} - {2}", Items[dstBag].ItemInfo.ObjectClass, Items[dstBag].ItemInfo.SubClass, Item.ItemInfo.BagFamily);
                             WS_Items wS_Items = WorldServiceLocator._WS_Items;
                             objCharacter = this;
-                            wS_Items.SendInventoryChangeFailure(ref objCharacter, InventoryChangeFailure.EQUIP_ERR_ITEM_DOESNT_GO_INTO_BAG, Item.GUID, 0uL);
+                            WS_Items.SendInventoryChangeFailure(ref objCharacter, InventoryChangeFailure.EQUIP_ERR_ITEM_DOESNT_GO_INTO_BAG, Item.GUID, 0uL);
                             return false;
                         }
                         if (Item.ItemInfo.Stackable > 1)
@@ -3084,7 +3084,7 @@ namespace Mangos.World.Player
                     }
                     WS_Items wS_Items2 = WorldServiceLocator._WS_Items;
                     objCharacter = this;
-                    wS_Items2.SendInventoryChangeFailure(ref objCharacter, InventoryChangeFailure.EQUIP_ERR_BAG_FULL, Item.GUID, 0uL);
+                    WS_Items.SendInventoryChangeFailure(ref objCharacter, InventoryChangeFailure.EQUIP_ERR_BAG_FULL, Item.GUID, 0uL);
                     return false;
                 }
             }
@@ -3364,11 +3364,11 @@ namespace Mangos.World.Player
                                 }
                                 checked
                                 {
-                                    if (!WorldServiceLocator._Functions.HaveFlag(ItemInfo.AvailableClasses, (byte)((int)Classe - 1)))
+                                    if (!Globals.Functions.HaveFlag(ItemInfo.AvailableClasses, (byte)((int)Classe - 1)))
                                     {
                                         return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
                                     }
-                                    if (!WorldServiceLocator._Functions.HaveFlag(ItemInfo.AvailableRaces, (byte)((int)Race - 1)))
+                                    if (!Globals.Functions.HaveFlag(ItemInfo.AvailableRaces, (byte)((int)Race - 1)))
                                     {
                                         return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM2;
                                     }
@@ -3860,7 +3860,7 @@ namespace Mangos.World.Player
                 {
                     WS_Items wS_Items = WorldServiceLocator._WS_Items;
                     CharacterObject objCharacter = this;
-                    wS_Items.SendInventoryChangeFailure(ref objCharacter, InventoryChangeFailure.EQUIP_ERR_YOU_ARE_DEAD, ItemGetGUID(srcBag, srcSlot), ItemGetGUID(dstBag, dstSlot));
+                    WS_Items.SendInventoryChangeFailure(ref objCharacter, InventoryChangeFailure.EQUIP_ERR_YOU_ARE_DEAD, ItemGetGUID(srcBag, srcSlot), ItemGetGUID(dstBag, dstSlot));
                     return;
                 }
                 byte errCode = 21;
@@ -3868,7 +3868,7 @@ namespace Mangos.World.Player
                 {
                     WS_Items wS_Items2 = WorldServiceLocator._WS_Items;
                     CharacterObject objCharacter = this;
-                    wS_Items2.SendInventoryChangeFailure(ref objCharacter, (InventoryChangeFailure)errCode, Items[srcSlot].GUID, 0uL);
+                    WS_Items.SendInventoryChangeFailure(ref objCharacter, (InventoryChangeFailure)errCode, Items[srcSlot].GUID, 0uL);
                     return;
                 }
                 checked
@@ -4217,7 +4217,7 @@ namespace Mangos.World.Player
                         {
                             WS_Items wS_Items3 = WorldServiceLocator._WS_Items;
                             CharacterObject objCharacter = this;
-                            wS_Items3.SendInventoryChangeFailure(ref objCharacter, (InventoryChangeFailure)errCode, ItemGetGUID(srcBag, srcSlot), ItemGetGUID(dstBag, dstSlot));
+                            WS_Items.SendInventoryChangeFailure(ref objCharacter, (InventoryChangeFailure)errCode, ItemGetGUID(srcBag, srcSlot), ItemGetGUID(dstBag, dstSlot));
                         }
                     }
                 }
@@ -4814,7 +4814,7 @@ namespace Mangos.World.Player
                     }
                     WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                     CharacterObject Character = this;
-                    wS_CharMovement.RemoveFromWorld(ref Character);
+                    WS_CharMovement.RemoveFromWorld(ref Character);
                     if (OnTransport is not null and WS_Transports.TransportObject @object)
                     {
                         WS_Transports.TransportObject obj = @object;
@@ -5296,7 +5296,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int points = WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0)));
+                    int points = Globals.Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (Globals.Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (Globals.Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (Globals.Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0)));
                     if (Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Flags > 0)
                     {
                         points += Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Value;
@@ -5322,7 +5322,7 @@ namespace Mangos.World.Player
                 }
                 checked
                 {
-                    int points = WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (WorldServiceLocator._Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0)));
+                    int points = Globals.Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[0], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[0] : (Globals.Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[1], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[1] : (Globals.Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[2], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[2] : (Globals.Functions.HaveFlag((uint)WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].flags[3], (byte)((int)Race - 1)) ? WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].rep_stats[3] : 0)));
                     if (Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Flags > 0)
                     {
                         points += Reputation[WorldServiceLocator._WS_DBCDatabase.FactionInfo[FactionID].VisibleID].Value;
@@ -5426,7 +5426,7 @@ namespace Mangos.World.Player
                     WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
                     ref CharacterObject duelPartner = ref DuelPartner;
                     CharacterObject Loser = this;
-                    wS_Spells.DuelComplete(ref duelPartner, ref Loser);
+                    WS_Spells.DuelComplete(ref duelPartner, ref Loser);
                     return;
                 }
                 checked
@@ -5663,7 +5663,7 @@ namespace Mangos.World.Player
                         {
                             WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
                             ref CharacterObject duelPartner = ref DuelPartner;
-                            wS_Spells.DuelComplete(ref duelPartner, ref _character);
+                            WS_Spells.DuelComplete(ref duelPartner, ref _character);
                         }
                         else if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(DuelArbiter))
                         {
@@ -5703,7 +5703,7 @@ namespace Mangos.World.Player
                 {
                     if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
                     {
-                        WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+                        WS_CharMovement.MAP_Load(CellX, CellY, MapID);
                     }
                 }
                 catch (Exception ex2)
@@ -5716,32 +5716,32 @@ namespace Mangos.World.Player
                 WS_PlayerHelper wS_PlayerHelper = WorldServiceLocator._WS_PlayerHelper;
                 ref WS_Network.ClientClass reference = ref client;
                 CharacterObject Character = this;
-                wS_PlayerHelper.SendBindPointUpdate(ref reference, ref Character);
+                WS_PlayerHelper.SendBindPointUpdate(ref reference, ref Character);
                 WS_PlayerHelper wS_PlayerHelper2 = WorldServiceLocator._WS_PlayerHelper;
                 ref WS_Network.ClientClass reference2 = ref client;
                 Character = this;
-                wS_PlayerHelper2.Send_SMSG_SET_REST_START(ref reference2, ref Character);
+                WS_PlayerHelper.Send_SMSG_SET_REST_START(ref reference2, ref Character);
                 WS_PlayerHelper wS_PlayerHelper3 = WorldServiceLocator._WS_PlayerHelper;
                 ref WS_Network.ClientClass reference3 = ref client;
                 Character = this;
-                wS_PlayerHelper3.SendTutorialFlags(ref reference3, ref Character);
+                WS_PlayerHelper.SendTutorialFlags(ref reference3, ref Character);
                 SendProficiencies();
                 WS_PlayerHelper wS_PlayerHelper4 = WorldServiceLocator._WS_PlayerHelper;
                 ref WS_Network.ClientClass reference4 = ref client;
                 Character = this;
-                wS_PlayerHelper4.SendInitialSpells(ref reference4, ref Character);
+                WS_PlayerHelper.SendInitialSpells(ref reference4, ref Character);
                 WS_PlayerHelper wS_PlayerHelper5 = WorldServiceLocator._WS_PlayerHelper;
                 ref WS_Network.ClientClass reference5 = ref client;
                 Character = this;
-                wS_PlayerHelper5.SendFactions(ref reference5, ref Character);
+                WS_PlayerHelper.SendFactions(ref reference5, ref Character);
                 WS_PlayerHelper wS_PlayerHelper6 = WorldServiceLocator._WS_PlayerHelper;
                 ref WS_Network.ClientClass reference6 = ref client;
                 Character = this;
-                wS_PlayerHelper6.SendActionButtons(ref reference6, ref Character);
+                WS_PlayerHelper.SendActionButtons(ref reference6, ref Character);
                 WS_PlayerHelper wS_PlayerHelper7 = WorldServiceLocator._WS_PlayerHelper;
                 ref WS_Network.ClientClass reference7 = ref client;
                 Character = this;
-                wS_PlayerHelper7.SendInitWorldStates(ref reference7, ref Character);
+                WS_PlayerHelper.SendInitWorldStates(ref reference7, ref Character);
                 Life.Current = Life.Maximum;
                 Mana.Current = Mana.Maximum;
                 FillAllUpdateFlags();
@@ -5749,7 +5749,7 @@ namespace Mangos.World.Player
                 WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                 Character = this;
                 wS_CharMovement.AddToWorld(ref Character);
-                WorldServiceLocator._Functions.SendTimeSyncReq(ref client);
+                Globals.Functions.SendTimeSyncReq(ref client);
                 UpdateAuraDurations();
                 FullyLoggedIn = true;
                 UpdateManaRegen();
@@ -5896,7 +5896,7 @@ namespace Mangos.World.Player
                     {
                         ProficiencyFlags += 256;
                     }
-                    WorldServiceLocator._Functions.SendProficiency(ref client, 4, ProficiencyFlags);
+                    Globals.Functions.SendProficiency(ref client, 4, ProficiencyFlags);
                     ProficiencyFlags = 0;
                     if (HaveSpell(196))
                     {
@@ -5978,7 +5978,7 @@ namespace Mangos.World.Player
                     {
                         ProficiencyFlags += 1048576;
                     }
-                    WorldServiceLocator._Functions.SendProficiency(ref client, 2, ProficiencyFlags);
+                    Globals.Functions.SendProficiency(ref client, 2, ProficiencyFlags);
                 }
             }
 
@@ -6020,7 +6020,7 @@ namespace Mangos.World.Player
                     {
                         WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                         CharacterObject Character = this;
-                        wS_CharMovement.RemoveFromWorld(ref Character);
+                        WS_CharMovement.RemoveFromWorld(ref Character);
                     }
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.USER, "Character {0} disposed.", Name);
                     foreach (KeyValuePair<byte, ItemObject> item in Items)
@@ -6099,7 +6099,7 @@ namespace Mangos.World.Player
                                 {
                                     CharManagementHandler charManagementHandler = WorldServiceLocator._CharManagementHandler;
                                     CharacterObject objCharacter = this;
-                                    if (charManagementHandler.CanUseAmmo(ref objCharacter, slot.Value.ItemEntry) == InventoryChangeFailure.EQUIP_ERR_OK)
+                                    if (CharManagementHandler.CanUseAmmo(ref objCharacter, slot.Value.ItemEntry) == InventoryChangeFailure.EQUIP_ERR_OK)
                                     {
                                         AmmoID = slot.Value.ItemEntry;
                                         AmmoDPS = WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].Damage[0].Minimum;
@@ -6516,7 +6516,7 @@ namespace Mangos.World.Player
                 }
                 if (Model == 0)
                 {
-                    Model = WorldServiceLocator._Functions.GetRaceModel(Race, (int)Gender);
+                    Model = Globals.Functions.GetRaceModel(Race, (int)Gender);
                 }
                 RestBonus = MySQLQuery.Rows[0].As<int>("char_xp_rested");
                 if (RestBonus > 0)
@@ -6546,7 +6546,7 @@ namespace Mangos.World.Player
                 WatchedFactionIndex = MySQLQuery.Rows[0].As<byte>("char_watchedFactionIndex");
                 LoginTransport = MySQLQuery.Rows[0].As<ulong>("char_transportGuid");
                 DataTable SpellQuery = new DataTable();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("UPDATE characters_spells SET cooldown = 0, cooldownitem = 0 WHERE guid = {0} AND cooldown > 0 AND cooldown < {1}; \r\n                SELECT * FROM characters_spells WHERE guid = {0}; \r\n                UPDATE characters_spells SET cooldown = 0, cooldownitem = 0 WHERE guid = {0} AND cooldown > 0 AND cooldown < {1};", GUID, WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)), ref SpellQuery);
+                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("UPDATE characters_spells SET cooldown = 0, cooldownitem = 0 WHERE guid = {0} AND cooldown > 0 AND cooldown < {1}; \r\n                SELECT * FROM characters_spells WHERE guid = {0}; \r\n                UPDATE characters_spells SET cooldown = 0, cooldownitem = 0 WHERE guid = {0} AND cooldown > 0 AND cooldown < {1};", GUID, Globals.Functions.GetTimestamp(DateAndTime.Now)), ref SpellQuery);
                 IEnumerator enumerator = default;
                 try
                 {
@@ -6587,7 +6587,7 @@ namespace Mangos.World.Player
                     tmp = Strings.Split(MySQLQuery.Rows[0].As<string>("char_auraList"));
                     if (tmp.Length > 0)
                     {
-                        uint currentTimestamp = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+                        uint currentTimestamp = Globals.Functions.GetTimestamp(DateAndTime.Now);
                         int num2 = tmp.Length - 1;
                         for (int i3 = 0; i3 <= num2; i3++)
                         {
@@ -6723,7 +6723,7 @@ namespace Mangos.World.Player
                             DataRow row = (DataRow)enumerator2.Current;
                             if (Operators.ConditionalCompareObjectNotEqual(row["item_slot"], WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL, TextCompare: false))
                             {
-                                ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(row.As<long, ulong>("item_guid"), this, row.As<byte>("item_slot") < 19u);
+                                ItemObject tmpItem = WS_Items.LoadItemByGUID(row.As<long, ulong>("item_guid"), this, row.As<byte>("item_slot") < 19u);
                                 Items[row.As<byte>("item_slot")] = tmpItem;
                                 if (row.As<byte, uint>("item_slot") < 23u)
                                 {
@@ -6746,7 +6746,7 @@ namespace Mangos.World.Player
                     Initialize();
                     WS_Pets wS_Pets = WorldServiceLocator._WS_Pets;
                     Character_ = this;
-                    wS_Pets.LoadPet(ref Character_);
+                    WS_Pets.LoadPet(ref Character_);
                     MySQLQuery.Clear();
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM corpse WHERE player = {GUID};", ref MySQLQuery);
                     if (MySQLQuery.Rows.Count > 0)
@@ -7006,7 +7006,7 @@ namespace Mangos.World.Player
                             long expire = 0L;
                             if (ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
                             {
-                                expire = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + ActiveSpells[i].SpellDuration / 1000;
+                                expire = Globals.Functions.GetTimestamp(DateAndTime.Now) + ActiveSpells[i].SpellDuration / 1000;
                             }
                             temp.Add($"{i}:{ActiveSpells[i].SpellID}:{expire}");
                         }
@@ -7081,7 +7081,7 @@ namespace Mangos.World.Player
                 {
                     WS_Group wS_Group = WorldServiceLocator._WS_Group;
                     CharacterObject objCharacter = this;
-                    Packets.PacketClass Packet = wS_Group.BuildPartyMemberStats(ref objCharacter, GroupUpdateFlag);
+                    Packets.PacketClass Packet = WS_Group.BuildPartyMemberStats(ref objCharacter, GroupUpdateFlag);
                     GroupUpdateFlag = 0u;
                     if (Packet != null)
                     {
@@ -7096,7 +7096,7 @@ namespace Mangos.World.Player
                 {
                     WS_Group wS_Group = WorldServiceLocator._WS_Group;
                     CharacterObject objCharacter = this;
-                    Packets.PacketClass Packet = wS_Group.BuildPartyMemberStats(ref objCharacter, checked((uint)Flag));
+                    Packets.PacketClass Packet = WS_Group.BuildPartyMemberStats(ref objCharacter, checked((uint)Flag));
                     if (Packet != null)
                     {
                         Group.Broadcast(Packet);
@@ -7125,7 +7125,7 @@ namespace Mangos.World.Player
                     {
                         if (TalkQuests[i] == null)
                         {
-                            WorldServiceLocator._WorldServer.ALLQUESTS.CreateQuest(ref TalkQuests[i], ref Quest);
+                            WS_Quests.CreateQuest(ref TalkQuests[i], ref Quest);
                             if (TalkQuests[i] is WS_QuestsBaseScripted obj)
                             {
                                 CharacterObject objCharacter = this;
@@ -7215,7 +7215,7 @@ namespace Mangos.World.Player
                 {
                     if (TalkQuests[QuestSlot].TimeEnd > 0)
                     {
-                        int tmpTimer = (int)(TalkQuests[QuestSlot].TimeEnd - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now));
+                        int tmpTimer = (int)(TalkQuests[QuestSlot].TimeEnd - Globals.Functions.GetTimestamp(DateAndTime.Now));
                     }
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_quests SET quest_status = {2} WHERE char_guid = {0} AND quest_id = {1};", GUID, TalkQuests[QuestSlot].ID, tmpProgress));
                     SetUpdateFlag(199 + QuestSlot * 3, tmpProgress);

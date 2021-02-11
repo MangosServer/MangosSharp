@@ -86,7 +86,7 @@ namespace Mangos.World.Loots
             {
                 if (Items.Count == 0)
                 {
-                    WorldServiceLocator._WS_Loot.SendEmptyLoot(GUID, LootType, ref client);
+                    SendEmptyLoot(GUID, LootType, ref client);
                     return;
                 }
                 if (decimal.Compare(new decimal(LootOwner), 0m) != 0 && client.Character.GUID != LootOwner)

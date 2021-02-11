@@ -63,7 +63,7 @@ namespace Mangos.Loggers.Console
             }
         }
 
-        private string Format(string format, object[] args)
+        private static string Format(string format, object[] args)
         {
             return string.Format("[{0}] {1}", DateTime.Now, string.Format(format, args));
         }

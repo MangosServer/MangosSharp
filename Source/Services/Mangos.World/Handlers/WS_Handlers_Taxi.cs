@@ -32,7 +32,7 @@ namespace Mangos.World.Handlers
 {
     public class WS_Handlers_Taxi
     {
-        private void SendActivateTaxiReply(ref WS_Network.ClientClass client, ActivateTaxiReplies reply)
+        private static void SendActivateTaxiReply(ref WS_Network.ClientClass client, ActivateTaxiReplies reply)
         {
             Packets.PacketClass taxiFailed = new Packets.PacketClass(Opcodes.SMSG_ACTIVATETAXIREPLY);
             try
@@ -46,7 +46,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        private void SendTaxiStatus(ref WS_PlayerData.CharacterObject objCharacter, ulong cGuid)
+        private static void SendTaxiStatus(ref WS_PlayerData.CharacterObject objCharacter, ulong cGuid)
         {
             if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGuid))
             {
@@ -73,7 +73,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void SendTaxiMenu(ref WS_PlayerData.CharacterObject objCharacter, ulong cGuid)
+        public static void SendTaxiMenu(ref WS_PlayerData.CharacterObject objCharacter, ulong cGuid)
         {
             if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGuid))
             {
@@ -383,12 +383,12 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_MOVE_SPLINE_DONE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_MOVE_SPLINE_DONE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MOVE_SPLINE_DONE", client.IP, client.Port);
         }
 
-        private void TaxiLand(WS_PlayerData.CharacterObject character)
+        private static void TaxiLand(WS_PlayerData.CharacterObject character)
         {
             character.TaxiNodes.Clear();
             character.Mount = 0;
@@ -399,7 +399,7 @@ namespace Mangos.World.Handlers
             character.SendCharacterUpdate();
         }
 
-        private void TaxiTake(WS_PlayerData.CharacterObject character, int mount)
+        private static void TaxiTake(WS_PlayerData.CharacterObject character, int mount)
         {
             character.Mount = mount;
             character.cUnitFlags |= 4;
@@ -460,7 +460,7 @@ namespace Mangos.World.Handlers
                         foreach (KeyValuePair<int, WS_DBCDatabase.TTaxiPathNode> taxiPathNode in WorldServiceLocator._WS_DBCDatabase.TaxiPathNodes[path])
                         {
                             waypointNodes.Add(taxiPathNode.Value.Seq, taxiPathNode.Value);
-                            totalDistance += WorldServiceLocator._WS_Combat.GetDistance(lastX, taxiPathNode.Value.x, lastY, taxiPathNode.Value.y, lastZ, taxiPathNode.Value.z);
+                            totalDistance += WS_Combat.GetDistance(lastX, taxiPathNode.Value.x, lastY, taxiPathNode.Value.y, lastZ, taxiPathNode.Value.z);
                             lastX = taxiPathNode.Value.x;
                             lastY = taxiPathNode.Value.y;
                             lastZ = taxiPathNode.Value.z;
@@ -475,7 +475,7 @@ namespace Mangos.World.Handlers
                             SMSG_MONSTER_MOVE.AddSingle(character.positionX);
                             SMSG_MONSTER_MOVE.AddSingle(character.positionY);
                             SMSG_MONSTER_MOVE.AddSingle(character.positionZ);
-                            SMSG_MONSTER_MOVE.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
+                            SMSG_MONSTER_MOVE.AddInt32(Common.Legacy.NativeMethods.timeGetTime(""));
                             SMSG_MONSTER_MOVE.AddInt8(0);
                             SMSG_MONSTER_MOVE.AddInt32(768);
                             SMSG_MONSTER_MOVE.AddInt32((int)(totalDistance / WorldServiceLocator._Global_Constants.UNIT_NORMAL_TAXI_SPEED * 1000f));
@@ -496,7 +496,7 @@ namespace Mangos.World.Handlers
                         int num2 = waypointNodes.Count - 1;
                         for (int i = 0; i <= num2; i++)
                         {
-                            float moveDistance = WorldServiceLocator._WS_Combat.GetDistance(lastX, waypointNodes[i].x, lastY, waypointNodes[i].y, lastZ, waypointNodes[i].z);
+                            float moveDistance = WS_Combat.GetDistance(lastX, waypointNodes[i].x, lastY, waypointNodes[i].y, lastZ, waypointNodes[i].z);
                             lastX = waypointNodes[i].x;
                             lastY = waypointNodes[i].y;
                             lastZ = waypointNodes[i].z;
@@ -507,7 +507,7 @@ namespace Mangos.World.Handlers
                                 p.AddSingle(character.positionX);
                                 p.AddSingle(character.positionY);
                                 p.AddSingle(character.positionZ);
-                                p.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
+                                p.AddInt32(Common.Legacy.NativeMethods.timeGetTime(""));
                                 p.AddInt8(0);
                                 p.AddInt32(768);
                                 p.AddInt32((int)(totalDistance / WorldServiceLocator._Global_Constants.UNIT_NORMAL_TAXI_SPEED * 1000f));

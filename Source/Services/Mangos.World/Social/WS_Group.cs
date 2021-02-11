@@ -125,7 +125,7 @@ namespace Mangos.World.Social
             _lastLooter = 0uL;
         }
 
-        public Packets.PacketClass BuildPartyMemberStats(ref WS_PlayerData.CharacterObject objCharacter, uint flag)
+        public static Packets.PacketClass BuildPartyMemberStats(ref WS_PlayerData.CharacterObject objCharacter, uint flag)
         {
             Opcodes opCode = Opcodes.SMSG_PARTY_MEMBER_STATS;
             if (flag is 1015 or 524279)

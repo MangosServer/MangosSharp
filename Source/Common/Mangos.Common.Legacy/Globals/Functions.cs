@@ -143,7 +143,7 @@ namespace Mangos.Common.Legacy.Globals
             return (uint)(guid & mangosGlobalConstants.GUID_MASK_LOW);
         }
 
-        public int GetShapeshiftModel(ShapeshiftForm form, Races race, int model)
+        public static int GetShapeshiftModel(ShapeshiftForm form, Races race, int model)
         {
             switch (form)
             {
@@ -270,7 +270,7 @@ namespace Mangos.Common.Legacy.Globals
             return default;
         }
 
-        public ManaTypes GetShapeshiftManaType(ShapeshiftForm form, ManaTypes manaType)
+        public static ManaTypes GetShapeshiftManaType(ShapeshiftForm form, ManaTypes manaType)
         {
             switch (form)
             {

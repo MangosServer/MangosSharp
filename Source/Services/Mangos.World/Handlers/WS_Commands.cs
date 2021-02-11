@@ -87,7 +87,7 @@ namespace Mangos.World.Handlers
                                 CommandDelegate = (ChatCommandDelegate)Delegate.CreateDelegate(typeof(ChatCommandDelegate), WorldServiceLocator._WS_Commands, tmpMethod)
                             };
                             ChatCommand cmd = chatCommand;
-                            ChatCommands.Add(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(info.cmdName), cmd);
+                            ChatCommands.Add(Common.Legacy.Functions.UppercaseFirstLetter(info.cmdName), cmd);
                         }
                     }
                 }
@@ -100,9 +100,9 @@ namespace Mangos.World.Handlers
             {
                 string[] tmp = Strings.Split(Message, " ", 2);
                 ChatCommand Command = null;
-                if (ChatCommands.ContainsKey(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(tmp[0])))
+                if (ChatCommands.ContainsKey(Common.Legacy.Functions.UppercaseFirstLetter(tmp[0])))
                 {
-                    Command = ChatCommands[WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(tmp[0])];
+                    Command = ChatCommands[Common.Legacy.Functions.UppercaseFirstLetter(tmp[0])];
                 }
                 string Arguments = "";
                 if (tmp.Length == 2)
@@ -142,7 +142,7 @@ namespace Mangos.World.Handlers
         {
             if (Operators.CompareString(Strings.Trim(Message), "", TextCompare: false) != 0)
             {
-                ChatCommand Command2 = ChatCommands[Strings.Trim(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Message))];
+                ChatCommand Command2 = ChatCommands[Strings.Trim(Common.Legacy.Functions.UppercaseFirstLetter(Message))];
                 if (Command2 == null)
                 {
                     objCharacter.CommandResponse("Unknown command.");
@@ -163,7 +163,7 @@ namespace Mangos.World.Handlers
                 {
                     if (Command.Value.CommandAccess <= objCharacter.Access)
                     {
-                        cmdList = cmdList + WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Command.Key) + Environment.NewLine;
+                        cmdList = cmdList + Common.Legacy.Functions.UppercaseFirstLetter(Command.Key) + Environment.NewLine;
                     }
                 }
                 cmdList = cmdList + Environment.NewLine + "Use help #command for usage information about particular command.";
@@ -173,7 +173,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("castspell", "castspell #spellid #target - Selected unit will start casting spell. Target can be ME or SELF.", AccessLevel.Developer)]
-        public bool cmdCastSpellMe(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdCastSpellMe(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             string[] tmp = Strings.Split(Message, " ", 2);
             if (tmp.Length < 2)
@@ -181,7 +181,7 @@ namespace Mangos.World.Handlers
                 return false;
             }
             int SpellID = Conversions.ToInteger(tmp[0]);
-            string Target = WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(tmp[1]);
+            string Target = Common.Legacy.Functions.UppercaseFirstLetter(tmp[1]);
             if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
             {
                 if (Operators.CompareString(Target, "ME", TextCompare: false) != 0)
@@ -229,7 +229,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("control", "control - Takes or removes control over the selected unit.", AccessLevel.Admin)]
-        public bool cmdControl(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdControl(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (objCharacter.MindControl != null)
             {
@@ -286,13 +286,13 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("createguild", "createguild #guildname - Creates a guild.", AccessLevel.Developer)]
-        public bool cmdCreateGuild(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdCreateGuild(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             return true;
         }
 
         [ChatCommand("cast", "cast #spellid - You will start casting spell on selected target.", AccessLevel.Developer)]
-        public bool cmdCastSpell(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdCastSpell(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             string[] tmp = Strings.Split(Message, " ", 2);
             int SpellID = Conversions.ToInteger(tmp[0]);
@@ -336,7 +336,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("save", "save - Saves selected character.", AccessLevel.Developer)]
-        public bool cmdSave(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdSave(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) != 0 && WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID))
             {
@@ -352,7 +352,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("spawndata", "spawndata - Tells you the spawn in memory information.", AccessLevel.Developer)]
-        public bool cmdSpawns(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdSpawns(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             objCharacter.CommandResponse("Spawns loaded in server memory:");
             objCharacter.CommandResponse("-------------------------------");
@@ -362,7 +362,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("gobjectnear", "gobjectnear - Tells you the near objects count.", AccessLevel.Developer)]
-        public bool cmdNear(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdNear(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             objCharacter.CommandResponse("Near objects:");
             objCharacter.CommandResponse("-------------------------------");
@@ -376,16 +376,16 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("npcai", "npcai #enable/disable - Enables/Disables  Creature AI updating.", AccessLevel.Developer)]
-        public bool cmdAI(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdAI(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Message), "ENABLE", TextCompare: false) == 0)
+            if (Operators.CompareString(Common.Legacy.Functions.UppercaseFirstLetter(Message), "ENABLE", TextCompare: false) == 0)
             {
                 WorldServiceLocator._WS_TimerBasedEvents.AIManager.AIManagerTimer.Change(1000, 1000);
                 objCharacter.CommandResponse("AI is enabled.");
             }
             else
             {
-                if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Message), "DISABLE", TextCompare: false) != 0)
+                if (Operators.CompareString(Common.Legacy.Functions.UppercaseFirstLetter(Message), "DISABLE", TextCompare: false) != 0)
                 {
                     return false;
                 }
@@ -396,7 +396,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("npcaistate", "npcaistate - Shows debug information about AI state of selected creature.", AccessLevel.Developer)]
-        public bool cmdAIState(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdAIState(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -414,7 +414,7 @@ namespace Mangos.World.Handlers
                 return false;
             }
             WS_Creatures.CreatureObject creatureObject = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
-            objCharacter.CommandResponse(string.Format("Information for creature [{0}]:{1}ai = {2}{1}state = {3}{1}maxdist = {4}", creatureObject.Name, Environment.NewLine, creatureObject.aiScript, creatureObject.aiScript.State.ToString(), creatureObject.MaxDistance));
+            objCharacter.CommandResponse(string.Format("Information for creature [{0}]:{1}ai = {2}{1}state = {3}{1}maxdist = {4}", creatureObject.Name, Environment.NewLine, creatureObject.aiScript, creatureObject.aiScript.State.ToString(), WS_Creatures.CreatureObject.MaxDistance));
             objCharacter.CommandResponse("Hate table:");
             foreach (KeyValuePair<WS_Base.BaseUnit, int> u in creatureObject.aiScript.aiHateTable)
             {
@@ -425,7 +425,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("notifymessage", "notify #message - Send text message to all players on the server.")]
-        public bool cmdNotificationMessage(ref WS_PlayerData.CharacterObject objCharacter, string Text)
+        public static bool cmdNotificationMessage(ref WS_PlayerData.CharacterObject objCharacter, string Text)
         {
             if (Operators.CompareString(Text, "", TextCompare: false) == 0)
             {
@@ -440,7 +440,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("nullchar", " - Set's Character Object to Null, forcing an NullReferenceException to throw on actions peformed after issuing this command.", AccessLevel.Developer)]
-        public bool cmdNullChar(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdNullChar(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             Thread.Sleep(5000);
             objCharacter = null;
@@ -448,7 +448,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("servermessage", "servermessage #type #text - Send text message to all players on the server.")]
-        public bool cmdServerMessage(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdServerMessage(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             string[] tmp = Strings.Split(Message, " ", 2);
             if (tmp.Length != 2)
@@ -467,7 +467,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("say", "say #text - Target NPC will say this.")]
-        public bool cmdSay(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdSay(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (Operators.CompareString(Message, "", TextCompare: false) == 0)
             {
@@ -486,7 +486,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("resetfactions", "resetfactions - Resets character reputation standings.", AccessLevel.Admin)]
-        public bool cmdResetFactions(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdResetFactions(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
@@ -494,20 +494,20 @@ namespace Mangos.World.Handlers
                 Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
                 ulong targetGUID;
                 WS_PlayerData.CharacterObject objCharacter2 = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
-                wS_Player_Initializator.InitializeReputations(ref objCharacter2);
+                WS_Player_Initializator.InitializeReputations(ref objCharacter2);
                 cHARACTERs[targetGUID] = objCharacter2;
                 WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SaveCharacter();
             }
             else
             {
-                WorldServiceLocator._WS_Player_Initializator.InitializeReputations(ref objCharacter);
+                WS_Player_Initializator.InitializeReputations(ref objCharacter);
                 objCharacter.SaveCharacter();
             }
             return true;
         }
 
         [ChatCommand("skillmaster", "skillmaster - Get all spells and skills maxed out for your level.", AccessLevel.Developer)]
-        public bool cmdGetMax(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdGetMax(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             checked
             {
@@ -522,7 +522,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("setlevel", "setlevel #level - Set the level of selected character.", AccessLevel.Developer)]
-        public bool cmdSetLevel(ref WS_PlayerData.CharacterObject objCharacter, string tLevel)
+        public static bool cmdSetLevel(ref WS_PlayerData.CharacterObject objCharacter, string tLevel)
         {
             if (!Versioned.IsNumeric(tLevel))
             {
@@ -547,7 +547,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("addxp", "addxp #amount - Add X experience points to selected character.", AccessLevel.Developer)]
-        public bool cmdAddXP(ref WS_PlayerData.CharacterObject objCharacter, string tXP)
+        public static bool cmdAddXP(ref WS_PlayerData.CharacterObject objCharacter, string tXP)
         {
             if (!Versioned.IsNumeric(tXP))
             {
@@ -566,7 +566,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("addrestedxp", "addrestedxp #amount - Add X rested bonus experience points to selected character.", AccessLevel.Developer)]
-        public bool cmdAddRestedXP(ref WS_PlayerData.CharacterObject objCharacter, string tXP)
+        public static bool cmdAddRestedXP(ref WS_PlayerData.CharacterObject objCharacter, string tXP)
         {
             if (!Versioned.IsNumeric(tXP))
             {
@@ -592,7 +592,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("playsound", "playsound - Plays a specific sound for every player around you.", AccessLevel.Developer)]
-        public bool cmdPlaySound(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdPlaySound(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (!int.TryParse(Message, out int soundID))
             {
@@ -603,7 +603,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("combatlist", "combatlist - Lists everyone in your targets combatlist.", AccessLevel.Developer)]
-        public bool cmdCombatList(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdCombatList(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             ulong[] combatList = Array.Empty<ulong>();
             combatList = (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0 || !WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID)) ? objCharacter.inCombatWith.ToArray() : WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].inCombatWith.ToArray();
@@ -617,7 +617,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("cooldownlist", "cooldownlist - Lists all cooldowns of your target.")]
-        public bool cmdCooldownList(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdCooldownList(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             WS_Base.BaseUnit targetUnit = null;
             if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID))
@@ -648,7 +648,7 @@ namespace Mangos.World.Handlers
                 case WS_PlayerData.CharacterObject _:
                     {
                         string sCooldowns = "";
-                        uint timeNow = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+                        uint timeNow = Globals.Functions.GetTimestamp(DateAndTime.Now);
                         foreach (KeyValuePair<int, WS_Spells.CharacterSpell> Spell in ((WS_PlayerData.CharacterObject)targetUnit).Spells)
                         {
                             if (Spell.Value.Cooldown != 0)
@@ -660,7 +660,7 @@ namespace Mangos.World.Handlers
                                 }
                                 if (timeLeft > 0L)
                                 {
-                                    sCooldowns = sCooldowns + "* Spell: " + Conversions.ToString(Spell.Key) + " - TimeLeft: " + WorldServiceLocator._Functions.GetTimeLeftString(timeLeft) + " sec - Item: " + Conversions.ToString(Spell.Value.CooldownItem) + Environment.NewLine;
+                                    sCooldowns = sCooldowns + "* Spell: " + Conversions.ToString(Spell.Key) + " - TimeLeft: " + Globals.Functions.GetTimeLeftString(timeLeft) + " sec - Item: " + Conversions.ToString(Spell.Value.CooldownItem) + Environment.NewLine;
                                 }
                             }
                         }
@@ -676,7 +676,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("clearcooldowns", "clearcooldowns - Clears all cooldowns of your target.", AccessLevel.Developer)]
-        public bool cmdClearCooldowns(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdClearCooldowns(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             WS_Base.BaseUnit targetUnit = null;
             if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID))
@@ -698,7 +698,7 @@ namespace Mangos.World.Handlers
             {
                 case WS_PlayerData.CharacterObject _:
                     {
-                        uint timeNow = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+                        uint timeNow = Globals.Functions.GetTimestamp(DateAndTime.Now);
                         List<int> cooldownSpells = new List<int>();
                         foreach (KeyValuePair<int, WS_Spells.CharacterSpell> Spell in ((WS_PlayerData.CharacterObject)targetUnit).Spells)
                         {
@@ -730,7 +730,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("additem", "additem #itemid #count (optional) - Add chosen items with item amount to selected character.")]
-        public bool cmdAddItem(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdAddItem(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             string[] tmp = Strings.Split(Message, " ", 2);
             if (tmp.Length < 1)
@@ -780,7 +780,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("additemset", "additemset #item - Add the items in the item set with id X to selected character.")]
-        public bool cmdAddItemSet(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdAddItemSet(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             string[] tmp = Strings.Split(Message, " ", 2);
             if (tmp.Length < 1)
@@ -833,7 +833,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("addmoney", "addmoney #amount - Add chosen copper to your character or selected character.")]
-        public bool cmdAddMoney(ref WS_PlayerData.CharacterObject objCharacter, string tCopper)
+        public static bool cmdAddMoney(ref WS_PlayerData.CharacterObject objCharacter, string tCopper)
         {
             if (Operators.CompareString(tCopper, "", TextCompare: false) == 0)
             {
@@ -858,7 +858,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("learnskill", "learnskill #id #current #max - Add skill id X with value Y of Z to selected character.", AccessLevel.Developer)]
-        public bool cmdLearnSkill(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdLearnSkill(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (Operators.CompareString(Message, "", TextCompare: false) == 0)
             {
@@ -890,7 +890,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("learnSpell", "learnSpell #id - Add chosen spell to selected character.", AccessLevel.Developer)]
-        public bool cmdLearnSpell(ref WS_PlayerData.CharacterObject objCharacter, string tID)
+        public static bool cmdLearnSpell(ref WS_PlayerData.CharacterObject objCharacter, string tID)
         {
             if (Operators.CompareString(tID, "", TextCompare: false) == 0)
             {
@@ -925,7 +925,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("unlearnspell", "unlearnspell #id - Remove chosen spell from selected character.", AccessLevel.Developer)]
-        public bool cmdUnlearnSpell(ref WS_PlayerData.CharacterObject objCharacter, string tID)
+        public static bool cmdUnlearnSpell(ref WS_PlayerData.CharacterObject objCharacter, string tID)
         {
             if (Operators.CompareString(tID, "", TextCompare: false) == 0)
             {
@@ -952,14 +952,14 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("showtaxi", "showtaxi - Unlock all taxi locations.", AccessLevel.Developer)]
-        public bool cmdShowTaxi(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdShowTaxi(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             objCharacter.TaxiZones.SetAll(value: true);
             return true;
         }
 
         [ChatCommand("setcharacterspeed", "setcharacterspeed #value - Change your character travel speed.")]
-        public bool cmdSetCharacterSpeed(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdSetCharacterSpeed(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (Operators.CompareString(Message, "", TextCompare: false) == 0)
             {
@@ -975,7 +975,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("setreputation", "setreputation #faction #value - Change your reputation standings.")]
-        public bool cmdSetReputation(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdSetReputation(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (Operators.CompareString(Message, "", TextCompare: false) == 0)
             {
@@ -988,7 +988,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("changemodel", "changemodel #id - Will morph you into specified model ID.")]
-        public bool cmdModel(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdModel(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (!int.TryParse(Message, out int value) || value < 0)
             {
@@ -1007,7 +1007,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("mount", "mount #id - Will mount you to specified model ID.")]
-        public bool cmdMount(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdMount(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (!int.TryParse(Message, out int value) || value < 0)
             {
@@ -1019,7 +1019,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("hurt", "hurt - Hurts a selected character.")]
-        public bool cmdHurt(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdHurt(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1038,7 +1038,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("root", "root - Instantly root selected character.")]
-        public bool cmdRoot(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdRoot(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1054,7 +1054,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("unroot", "unroot - Instantly unroot selected character.")]
-        public bool cmdUnRoot(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdUnRoot(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1070,7 +1070,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("revive", "revive - Instantly revive selected character.")]
-        public bool cmdRevive(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdRevive(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1083,7 +1083,7 @@ namespace Mangos.World.Handlers
                 Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
                 ulong targetGUID;
                 WS_PlayerData.CharacterObject Character = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
-                wS_Handlers_Misc.CharacterResurrect(ref Character);
+                WS_Handlers_Misc.CharacterResurrect(ref Character);
                 cHARACTERs[targetGUID] = Character;
                 return true;
             }
@@ -1091,7 +1091,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("gotogy", "gotogy - Instantly teleports selected character to nearest graveyard.")]
-        public bool cmdGoToGraveyard(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdGoToGraveyard(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1112,7 +1112,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("tostart", "tostart #race - Instantly teleports selected character to specified race start location.")]
-        public bool cmdGoToStart(ref WS_PlayerData.CharacterObject objCharacter, string StringRace)
+        public static bool cmdGoToStart(ref WS_PlayerData.CharacterObject objCharacter, string StringRace)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1124,7 +1124,7 @@ namespace Mangos.World.Handlers
                 DataTable Info = new DataTable();
                 WS_PlayerData.CharacterObject Character = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID];
                 Races Race;
-                switch (WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(StringRace))
+                switch (Common.Legacy.Functions.UppercaseFirstLetter(StringRace))
                 {
                     case "DWARF":
                     case "DW":
@@ -1180,7 +1180,7 @@ namespace Mangos.World.Handlers
         [ChatCommand("summon", "summon #name - Instantly teleports the player to you.")]
         public bool cmdSummon(ref WS_PlayerData.CharacterObject objCharacter, string Name)
         {
-            ulong GUID = GetGUID(WorldServiceLocator._Functions.CapitalizeName(ref Name));
+            ulong GUID = GetGUID(Globals.Functions.CapitalizeName(ref Name));
             checked
             {
                 if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID))
@@ -1204,7 +1204,7 @@ namespace Mangos.World.Handlers
         [ChatCommand("appear", "appear #name - Instantly teleports you to the player.")]
         public bool cmdAppear(ref WS_PlayerData.CharacterObject objCharacter, string Name)
         {
-            ulong GUID = GetGUID(WorldServiceLocator._Functions.CapitalizeName(ref Name));
+            ulong GUID = GetGUID(Globals.Functions.CapitalizeName(ref Name));
             checked
             {
                 if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID))
@@ -1228,7 +1228,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("los", "los #on/off - Enables/Disables line of sight calculation.", AccessLevel.Developer)]
-        public bool cmdLineOfSight(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdLineOfSight(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (Operators.CompareString(Message.ToUpper(), "on", TextCompare: false) == 0)
             {
@@ -1248,7 +1248,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("gps", "gps - Tells you where you are located.")]
-        public bool cmdGPS(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdGPS(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             objCharacter.CommandResponse("X: " + Conversions.ToString(objCharacter.positionX));
             objCharacter.CommandResponse("Y: " + Conversions.ToString(objCharacter.positionY));
@@ -1259,7 +1259,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("SetInstance", "SETINSTANCE <ID> - Sets you into another instance.", AccessLevel.Admin)]
-        public bool cmdSetInstance(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdSetInstance(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (!int.TryParse(Message, out int instanceID))
             {
@@ -1274,7 +1274,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("port", "port #x #y #z #orientation #map - Teleports Character To Given Coordinates.")]
-        public bool cmdPort(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdPort(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (Operators.CompareString(Message, "", TextCompare: false) == 0)
             {
@@ -1298,13 +1298,13 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("teleport", "teleport #locationname - Teleports character to given location name.")]
-        public bool CmdPortByName(ref WS_PlayerData.CharacterObject objCharacter, string location)
+        public static bool CmdPortByName(ref WS_PlayerData.CharacterObject objCharacter, string location)
         {
             if (Operators.CompareString(location, "", TextCompare: false) == 0)
             {
                 return false;
             }
-            if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(location), "LIST", TextCompare: false) == 0)
+            if (Operators.CompareString(Common.Legacy.Functions.UppercaseFirstLetter(location), "LIST", TextCompare: false) == 0)
             {
                 string cmdList = "Listing of available locations:" + Environment.NewLine;
                 DataTable listSqlQuery = new DataTable();
@@ -1381,7 +1381,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("kick", "kick #name (optional) - Kick selected player or character with name specified if found.")]
-        public bool cmdKick(ref WS_PlayerData.CharacterObject objCharacter, string Name)
+        public static bool cmdKick(ref WS_PlayerData.CharacterObject objCharacter, string Name)
         {
             if (Operators.CompareString(Name, "", TextCompare: false) == 0)
             {
@@ -1405,7 +1405,7 @@ namespace Mangos.World.Handlers
                 WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                 foreach (KeyValuePair<ulong, WS_PlayerData.CharacterObject> Character in WorldServiceLocator._WorldServer.CHARACTERs)
                 {
-                    if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Character.Value.Name), Name, TextCompare: false) == 0)
+                    if (Operators.CompareString(Common.Legacy.Functions.UppercaseFirstLetter(Character.Value.Name), Name, TextCompare: false) == 0)
                     {
                         WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                         Character.Value.Logout();
@@ -1421,7 +1421,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("forcerename", "forcerename - Force selected player to change his name next time on char enum.")]
-        public bool cmdForceRename(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdForceRename(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1440,7 +1440,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("bancharacter", "bancharacter - Selected player won't be able to login next time with this character.")]
-        public bool cmdBanChar(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdBanChar(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1459,7 +1459,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("banaccount", "banaccount #account - Ban specified account from server.")]
-        public bool cmdBan(ref WS_PlayerData.CharacterObject objCharacter, string Name)
+        public static bool cmdBan(ref WS_PlayerData.CharacterObject objCharacter, string Name)
         {
             if (Operators.CompareString(Name, "", TextCompare: false) == 0)
             {
@@ -1493,7 +1493,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("unban", "unban #account - Remove ban of specified account from server.", AccessLevel.Admin)]
-        public bool cmdUnBan(ref WS_PlayerData.CharacterObject objCharacter, string Name)
+        public static bool cmdUnBan(ref WS_PlayerData.CharacterObject objCharacter, string Name)
         {
             if (Operators.CompareString(Name, "", TextCompare: false) == 0)
             {
@@ -1527,28 +1527,28 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("setgm", "set gm #flag #invisibility - Toggles gameMaster status. You can use values like On/Off.")]
-        public bool cmdSetGM(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdSetGM(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             string[] tmp = Strings.Split(Message, " ", 2);
             string value1 = tmp[0];
             string value2 = tmp[1];
-            if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(value1), "off", TextCompare: false) == 0)
+            if (Operators.CompareString(Common.Legacy.Functions.UppercaseFirstLetter(value1), "off", TextCompare: false) == 0)
             {
                 objCharacter.GM = false;
                 objCharacter.CommandResponse("GameMaster Flag turned off.");
             }
-            else if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(value1), "on", TextCompare: false) == 0)
+            else if (Operators.CompareString(Common.Legacy.Functions.UppercaseFirstLetter(value1), "on", TextCompare: false) == 0)
             {
                 objCharacter.GM = true;
                 objCharacter.CommandResponse("GameMaster Flag turned on.");
             }
-            if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(value2), "off", TextCompare: false) == 0)
+            if (Operators.CompareString(Common.Legacy.Functions.UppercaseFirstLetter(value2), "off", TextCompare: false) == 0)
             {
                 objCharacter.Invisibility = InvisibilityLevel.VISIBLE;
                 objCharacter.CanSeeInvisibility = InvisibilityLevel.VISIBLE;
                 objCharacter.CommandResponse("GameMaster Invisibility turned off.");
             }
-            else if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(value1), "on", TextCompare: false) == 0)
+            else if (Operators.CompareString(Common.Legacy.Functions.UppercaseFirstLetter(value1), "on", TextCompare: false) == 0)
             {
                 objCharacter.Invisibility = InvisibilityLevel.GM;
                 objCharacter.CanSeeInvisibility = InvisibilityLevel.GM;
@@ -1561,7 +1561,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("setweather", "setweather #type #intensity - Change weather in current zone. Intensity is float value!", AccessLevel.Developer)]
-        public bool cmdSetWeather(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdSetWeather(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             string[] tmp = Strings.Split(Message, " ", 2);
             int Type = Conversions.ToInteger(tmp[0]);
@@ -1580,7 +1580,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("remove", "remove #id - Delete selected creature or gameobject.", AccessLevel.Developer)]
-        public bool cmdDeleteObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdDeleteObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1611,7 +1611,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("turn", "turn - Selected creature or game object will turn to your position.", AccessLevel.Developer)]
-        public bool cmdTurnObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdTurnObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1643,7 +1643,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("npcadd", "npcadd #id - Spawn creature at your position.", AccessLevel.Developer)]
-        public bool cmdAddCreature(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdAddCreature(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             WS_Creatures.CreatureObject tmpCr = new WS_Creatures.CreatureObject(Conversions.ToInteger(Message), objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation, checked((int)objCharacter.MapID));
             tmpCr.AddToWorld();
@@ -1652,7 +1652,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("npccome", "npccome - Selected creature will come to your position.", AccessLevel.Developer)]
-        public bool cmdComeCreature(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdComeCreature(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1680,7 +1680,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("kill", "kill - Selected creature or character will die.")]
-        public bool cmdKillCreature(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdKillCreature(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
             {
@@ -1707,11 +1707,11 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("gobjecttarget", "gobjecttarget - Nearest game object will be selected.", AccessLevel.Developer)]
-        public bool cmdTargetGameObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdTargetGameObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             WS_GameObjects wS_GameObjects = WorldServiceLocator._WS_GameObjects;
             WS_Base.BaseUnit unit = objCharacter;
-            WS_GameObjects.GameObjectObject closestGameobject = wS_GameObjects.GetClosestGameobject(ref unit);
+            WS_GameObjects.GameObjectObject closestGameobject = WS_GameObjects.GetClosestGameobject(ref unit);
             objCharacter = (WS_PlayerData.CharacterObject)unit;
             WS_GameObjects.GameObjectObject targetGO = closestGameobject;
             if (targetGO == null)
@@ -1727,7 +1727,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("activatego", "activatego - Activates your targetted game object.", AccessLevel.Developer)]
-        public bool cmdActivateGameObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdActivateGameObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (!WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(objCharacter.TargetGUID))
             {
@@ -1748,7 +1748,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("gobjectadd", "gobjectadd #id - Spawn game object at your position.", AccessLevel.Developer)]
-        public bool cmdAddGameObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdAddGameObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             WS_GameObjects.GameObjectObject tmpGO = new WS_GameObjects.GameObjectObject(Conversions.ToInteger(Message), objCharacter.MapID, objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation);
             tmpGO.Rotations[2] = (float)Math.Sin(tmpGO.orientation / 2f);
@@ -1759,7 +1759,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("createaccount", "createaccount #account #password #email - Add a New account using Name, Password, And Email.", AccessLevel.Admin)]
-        public bool cmdCreateAccount(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdCreateAccount(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (Operators.CompareString(Message, "", TextCompare: false) == 0)
             {
@@ -1791,7 +1791,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("changepassword", "changepassword #account #password - Changes the password of an account.", AccessLevel.Admin)]
-        public bool cmdChangePassword(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdChangePassword(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (Operators.CompareString(Message, "", TextCompare: false) == 0)
             {
@@ -1830,7 +1830,7 @@ namespace Mangos.World.Handlers
         }
 
         [ChatCommand("setaccess", "setaccess #account #level - Sets the account to a specific access level.", AccessLevel.Admin)]
-        public bool cmdSetAccess(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        public static bool cmdSetAccess(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
             if (Operators.CompareString(Message, "", TextCompare: false) == 0)
             {
@@ -1879,7 +1879,7 @@ namespace Mangos.World.Handlers
             return true;
         }
 
-        public ulong GetGUID(string Name)
+        public static ulong GetGUID(string Name)
         {
             DataTable MySQLQuery = new DataTable();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT char_guid FROM characters WHERE char_name = \"{Name}\";", ref MySQLQuery);
@@ -1890,15 +1890,15 @@ namespace Mangos.World.Handlers
             return 0uL;
         }
 
-        public void SystemMessage(string Message)
+        public static void SystemMessage(string Message)
         {
-            Packets.PacketClass packet = WorldServiceLocator._Functions.BuildChatMessage(0uL, "System Message: " + Message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL, 0, "");
+            Packets.PacketClass packet = Globals.Functions.BuildChatMessage(0uL, "System Message: " + Message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL, 0, "");
             packet.UpdateLength();
             WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
             packet.Dispose();
         }
 
-        public bool SetUpdateValue(ulong GUID, int Index, int Value, WS_Network.ClientClass client)
+        public static bool SetUpdateValue(ulong GUID, int Index, int Value, WS_Network.ClientClass client)
         {
             bool noErrors = true;
             try

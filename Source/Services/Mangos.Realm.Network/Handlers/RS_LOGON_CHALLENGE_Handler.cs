@@ -156,7 +156,7 @@ namespace Mangos.Realm.Network.Handlers
             }
         }
 
-        private byte[] GetPasswordHashFromString(string sha_pass_hash)
+        private static byte[] GetPasswordHashFromString(string sha_pass_hash)
         {
             byte[] hash = new byte[20];
             for (int i = 0; i < 40; i += 2)

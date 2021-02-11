@@ -64,17 +64,17 @@ namespace Mangos.World.Maps
                                 switch (ID)
                                 {
                                     case 249:
-                                        return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(5, 3).Subtract(DateAndTime.Now).TotalSeconds);
+                                        return (int)Math.Round(Globals.Functions.GetNextDate(5, 3).Subtract(DateAndTime.Now).TotalSeconds);
 
                                     case 309:
                                     case 509:
-                                        return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(3, 3).Subtract(DateAndTime.Now).TotalSeconds);
+                                        return (int)Math.Round(Globals.Functions.GetNextDate(3, 3).Subtract(DateAndTime.Now).TotalSeconds);
 
                                     case 409:
                                     case 469:
                                     case 531:
                                     case 533:
-                                        return (int)Math.Round(WorldServiceLocator._Functions.GetNextDay(DayOfWeek.Tuesday, 3).Subtract(DateAndTime.Now).TotalSeconds);
+                                        return (int)Math.Round(Globals.Functions.GetNextDay(DayOfWeek.Tuesday, 3).Subtract(DateAndTime.Now).TotalSeconds);
                                 }
                                 break;
                         }

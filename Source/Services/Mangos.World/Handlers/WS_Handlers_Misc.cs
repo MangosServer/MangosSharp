@@ -35,7 +35,7 @@ namespace Mangos.World.Handlers
 {
     public class WS_Handlers_Misc
     {
-        public void On_CMSG_NAME_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_NAME_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_TUTORIAL_FLAG(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_TUTORIAL_FLAG(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -158,7 +158,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_TUTORIAL_CLEAR(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_TUTORIAL_CLEAR(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TUTORIAL_CLEAR", client.IP, client.Port);
             int i = 0;
@@ -171,7 +171,7 @@ namespace Mangos.World.Handlers
             client.Character.SaveCharacter();
         }
 
-        public void On_CMSG_TUTORIAL_RESET(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_TUTORIAL_RESET(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TUTORIAL_RESET", client.IP, client.Port);
             int i = 0;
@@ -184,7 +184,7 @@ namespace Mangos.World.Handlers
             client.Character.SaveCharacter();
         }
 
-        public void On_CMSG_TOGGLE_HELM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_TOGGLE_HELM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TOGGLE_HELM", client.IP, client.Port);
             if ((client.Character.cPlayerFlags & PlayerFlags.PLAYER_FLAGS_HIDE_HELM) != 0)
@@ -199,7 +199,7 @@ namespace Mangos.World.Handlers
             client.Character.SendCharacterUpdate();
         }
 
-        public void On_CMSG_TOGGLE_CLOAK(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_TOGGLE_CLOAK(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TOGGLE_CLOAK", client.IP, client.Port);
             if ((client.Character.cPlayerFlags & PlayerFlags.PLAYER_FLAGS_HIDE_CLOAK) != 0)
@@ -214,7 +214,7 @@ namespace Mangos.World.Handlers
             client.Character.SendCharacterUpdate();
         }
 
-        public void On_CMSG_SET_ACTIONBAR_TOGGLES(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SET_ACTIONBAR_TOGGLES(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             byte ActionBar = packet.GetInt8();
@@ -224,7 +224,7 @@ namespace Mangos.World.Handlers
             client.Character.SendCharacterUpdate();
         }
 
-        public void On_CMSG_MOUNTSPECIAL_ANIM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_MOUNTSPECIAL_ANIM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MOUNTSPECIAL_ANIM", client.IP, client.Port);
             Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_MOUNTSPECIAL_ANIM);
@@ -239,7 +239,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_EMOTE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_EMOTE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 9)
             {
@@ -260,7 +260,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_TEXT_EMOTE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_TEXT_EMOTE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -280,7 +280,7 @@ namespace Mangos.World.Handlers
                     Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                     ulong key;
                     WS_Creatures.CreatureObject creature = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
-                    aLLQUESTS.OnQuestDoEmote(ref character, ref creature, TextEmote);
+                    WS_Quests.OnQuestDoEmote(ref character, ref creature, TextEmote);
                     wORLD_CREATUREs[key] = creature;
                     if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript is not null and WS_Creatures_AI.GuardAI)
                     {
@@ -329,7 +329,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_MSG_CORPSE_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_MSG_CORPSE_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (decimal.Compare(new decimal(client.Character.corpseGUID), 0m) != 0)
             {
@@ -385,7 +385,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void CharacterRepop(ref WS_Network.ClientClass client)
+        public static void CharacterRepop(ref WS_Network.ClientClass client)
         {
             try
             {
@@ -399,7 +399,7 @@ namespace Mangos.World.Handlers
                 character.cDynamicFlags = 0;
                 character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_DEAD;
                 character = null;
-                WorldServiceLocator._Functions.SendCorpseReclaimDelay(ref client, ref client.Character);
+                Globals.Functions.SendCorpseReclaimDelay(ref client, ref client.Character);
                 client.Character.StopMirrorTimer(MirrorTimer.FATIGUE);
                 client.Character.StopMirrorTimer(MirrorTimer.DROWNING);
                 if (client.Character.underWaterTimer != null)
@@ -452,7 +452,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void CharacterResurrect(ref WS_PlayerData.CharacterObject Character)
+        public static void CharacterResurrect(ref WS_PlayerData.CharacterObject Character)
         {
             if (Character.repopTimer != null)
             {
@@ -502,7 +502,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_TOGGLE_PVP(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_TOGGLE_PVP(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TOGGLE_PVP", client.IP, client.Port);
             client.Character.isPvP = !client.Character.isPvP;
@@ -510,7 +510,7 @@ namespace Mangos.World.Handlers
             client.Character.SendCharacterUpdate();
         }
 
-        public void On_MSG_INSPECT_HONOR_STATS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_MSG_INSPECT_HONOR_STATS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) < 13)
             {
@@ -548,33 +548,33 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_MOVE_FALL_RESET(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_MOVE_FALL_RESET(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MOVE_FALL_RESET", client.IP, client.Port);
             Packets packets = WorldServiceLocator._Packets;
             byte[] data = packet.Data;
             WS_Network.ClientClass client2 = null;
-            packets.DumpPacket(data, client2);
+            Packets.DumpPacket(data, client2);
         }
 
-        public void On_CMSG_BATTLEFIELD_STATUS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_BATTLEFIELD_STATUS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEFIELD_STATUS", client.IP, client.Port);
         }
 
-        public void On_CMSG_SET_ACTIVE_MOVER(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SET_ACTIVE_MOVER(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong GUID = packet.GetUInt64();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTIVE_MOVER [GUID={2:X}]", client.IP, client.Port, GUID);
         }
 
-        public void On_CMSG_MEETINGSTONE_INFO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_MEETINGSTONE_INFO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MEETINGSTONE_INFO", client.IP, client.Port);
         }
 
-        public void On_CMSG_SET_FACTION_ATWAR(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SET_FACTION_ATWAR(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             int faction = packet.GetInt32();
@@ -605,7 +605,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_SET_FACTION_INACTIVE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SET_FACTION_INACTIVE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             int faction = packet.GetInt32();
@@ -616,7 +616,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_SET_WATCHED_FACTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SET_WATCHED_FACTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             int faction = packet.GetInt32();
@@ -633,7 +633,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_MSG_PVP_LOG_DATA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_MSG_PVP_LOG_DATA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (WorldServiceLocator._WS_Maps.Maps[client.Character.MapID].IsBattleGround)
             {

@@ -438,7 +438,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_CANCEL_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_CANCEL_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (client == null || client.Character == null)
             {
@@ -469,7 +469,7 @@ namespace Mangos.World.Handlers
             client.Character.tradeInfo.Dispose();
         }
 
-        public void On_CMSG_SET_TRADE_GOLD(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SET_TRADE_GOLD(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             uint gold = packet.GetUInt32();
@@ -489,7 +489,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_SET_TRADE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SET_TRADE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             byte slot = packet.GetInt8();
@@ -522,7 +522,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_CLEAR_TRADE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_CLEAR_TRADE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             byte slot = packet.GetInt8();
@@ -539,7 +539,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_INITIATE_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_INITIATE_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong targetGUID = packet.GetUInt64();
@@ -745,7 +745,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_BEGIN_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_BEGIN_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BEGIN_TRADE", client.IP, client.Port);
             checked
@@ -766,7 +766,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_UNACCEPT_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_UNACCEPT_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_UNACCEPT_TRADE", client.IP, client.Port);
             Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_TRADE_STATUS);
@@ -790,18 +790,18 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_ACCEPT_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_ACCEPT_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ACCEPT_TRADE", client.IP, client.Port);
             client.Character.tradeInfo.DoTrade(ref client.Character);
         }
 
-        public void On_CMSG_IGNORE_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_IGNORE_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_IGNORE_TRADE", client.IP, client.Port);
         }
 
-        public void On_CMSG_BUSY_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_BUSY_TRADE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BUSY_TRADE", client.IP, client.Port);
         }

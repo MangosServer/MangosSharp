@@ -54,7 +54,7 @@ namespace Mangos.World.AI
 
             public override bool IsMoving()
             {
-                if (checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer)
+                if (checked(Common.Legacy.NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer)
                 {
                     return State switch
                     {
