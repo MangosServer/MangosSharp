@@ -39,7 +39,7 @@ namespace Mangos.Realm.Network
         {
             Client clientModel = new Client((IPEndPoint)clientSocket.RemoteEndPoint);
 
-            return new RealmTcpClient(logger, router, clientModel);
+            return await Task.FromResult(new RealmTcpClient(logger, router, clientModel)).ConfigureAwait(false);
         }
     }
 }

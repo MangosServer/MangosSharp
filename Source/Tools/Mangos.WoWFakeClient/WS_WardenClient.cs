@@ -29,7 +29,6 @@ namespace Mangos.WoWFakeClient
 {
     public static class WS_WardenClient
     {
-
         public enum MaievResponse : byte
         {
             MAIEV_RESPONSE_FAILED_OR_MISSING = 0x0,          // The module was either currupt or not in the cache request transfer
@@ -310,7 +309,6 @@ namespace Mangos.WoWFakeClient
             public byte[] KeyOut = Array.Empty<byte>();
             public byte[] ModKeyIn = Array.Empty<byte>();
             public byte[] ModKeyOut = Array.Empty<byte>();
-
 
             public bool LoadModule(string Name, ref byte[] Data, byte[] Key)
             {

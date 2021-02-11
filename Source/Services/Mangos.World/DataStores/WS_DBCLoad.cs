@@ -1133,7 +1133,7 @@ namespace Mangos.World.DataStores
             }
         }
 
-        public async Task LoadCreatureGossipAsync()
+        public Task LoadCreatureGossipAsync()
         {
             try
             {
@@ -1170,6 +1170,8 @@ namespace Mangos.World.DataStores
                 Console.ForegroundColor = ConsoleColor.Gray;
                 ProjectData.ClearProjectError();
             }
+
+            return Task.CompletedTask;
         }
 
         public async Task LoadCreatureFamilyDbcAsync()
