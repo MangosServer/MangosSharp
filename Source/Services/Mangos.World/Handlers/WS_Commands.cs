@@ -1883,11 +1883,7 @@ namespace Mangos.World.Handlers
         {
             DataTable MySQLQuery = new DataTable();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT char_guid FROM characters WHERE char_name = \"{Name}\";", ref MySQLQuery);
-            if (MySQLQuery.Rows.Count > 0)
-            {
-                return MySQLQuery.Rows[0].As<ulong>("char_guid");
-            }
-            return 0uL;
+            return MySQLQuery.Rows.Count > 0 ? MySQLQuery.Rows[0].As<ulong>("char_guid") : 0uL;
         }
 
         public void SystemMessage(string Message)

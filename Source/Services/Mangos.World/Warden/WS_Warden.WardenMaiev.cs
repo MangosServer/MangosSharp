@@ -791,11 +791,7 @@ namespace Mangos.World.Warden
                                     }
                                     bUnload = false;
                                 }
-                                if (bUnload)
-                                {
-                                    return false;
-                                }
-                                return true;
+                                return !bUnload;
                             }
                             return false;
                         }

@@ -98,12 +98,7 @@ namespace Mangos.Cluster.Handlers
             {
                 get
                 {
-                    if (Group is null)
-                    {
-                        return false;
-                    }
-
-                    return ReferenceEquals(Group.Members[Group.Leader], this);
+                    return Group is not null && ReferenceEquals(Group.Members[Group.Leader], this);
                 }
             }
 
@@ -428,12 +423,7 @@ namespace Mangos.Cluster.Handlers
             {
                 DataTable q = new DataTable();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", _clusterServiceLocator.Functions.EscapeString(name)), ref q);
-                if (q.Rows.Count > 0)
-                {
-                    return q.Rows[0].As<ulong>("char_guid");
-                }
-
-                return 0UL;
+                return q.Rows.Count > 0 ? q.Rows[0].As<ulong>("char_guid") : 0UL;
             }
 
             return guid;
@@ -448,12 +438,7 @@ namespace Mangos.Cluster.Handlers
 
             DataTable q = new DataTable();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_guid = \"{0}\";", guid), ref q);
-            if (q.Rows.Count > 0)
-            {
-                return q.Rows[0].As<string>("char_name");
-            }
-
-            return "";
+            return q.Rows.Count > 0 ? q.Rows[0].As<string>("char_name") : "";
         }
     }
 }

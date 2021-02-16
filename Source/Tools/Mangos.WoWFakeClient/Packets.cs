@@ -80,12 +80,7 @@ namespace Mangos.WoWFakeClient
             {
                 get
                 {
-                    if (Realm)
-                    {
-                        return Data[1] + Data[2] * 256;
-                    }
-
-                    return Data[1] + Data[0] * 256;
+                    return Realm ? Data[1] + Data[2] * 256 : Data[1] + Data[0] * 256;
                 }
             }
 
@@ -93,12 +88,7 @@ namespace Mangos.WoWFakeClient
             {
                 get
                 {
-                    if (Realm)
-                    {
-                        return Data[0];
-                    }
-
-                    return Data[2] + Data[3] * 256;
+                    return Realm ? Data[0] : Data[2] + Data[3] * 256;
                 }
             }
 

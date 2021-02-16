@@ -306,11 +306,7 @@ namespace Mangos.World.Globals
         {
             Type ty = ass.GetType("Scripts." + MyModule);
             MethodInfo mi = ty.GetMethod(MyMethod);
-            if (mi is null)
-            {
-                return false;
-            }
-            return true;
+            return mi is not null;
         }
 
         public void LoadAssemblyObject(string dllLocation)

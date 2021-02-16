@@ -59,11 +59,7 @@ namespace Mangos.World.AI
             public virtual bool IsMoving()
             {
                 AIState state = State;
-                if ((uint)(state - 2) <= 4u)
-                {
-                    return true;
-                }
-                return false;
+                return (uint)(state - 2) <= 4u;
             }
 
             public virtual bool IsRunning()

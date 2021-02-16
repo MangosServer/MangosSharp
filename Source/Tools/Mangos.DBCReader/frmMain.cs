@@ -410,12 +410,7 @@ namespace Mangos.DBCReader
                 }
             }
 
-            if (i == Index)
-            {
-                return "";
-            }
-
-            return Encoding.ASCII.GetString(Data, Index, i - Index);
+            return i == Index ? "" : Encoding.ASCII.GetString(Data, Index, i - Index);
         }
 
         private void cmdSearch_Click(object sender, EventArgs e)

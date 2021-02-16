@@ -67,11 +67,7 @@ namespace Mangos.World.Loots
                             }
                         }
                     }
-                    if (EqualChanced.Count > 0)
-                    {
-                        return EqualChanced[WorldServiceLocator._WorldServer.Rnd.Next(0, EqualChanced.Count)];
-                    }
-                    return null;
+                    return EqualChanced.Count > 0 ? EqualChanced[WorldServiceLocator._WorldServer.Rnd.Next(0, EqualChanced.Count)] : null;
                 }
             }
 

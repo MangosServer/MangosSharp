@@ -169,11 +169,7 @@ namespace Mangos.World.Objects
                         modelIDs[current] = ModelH2;
                         current++;
                     }
-                    if (current == 0)
-                    {
-                        return 0;
-                    }
-                    return modelIDs[WorldServiceLocator._WorldServer.Rnd.Next(0, current)];
+                    return current == 0 ? 0 : modelIDs[WorldServiceLocator._WorldServer.Rnd.Next(0, current)];
                 }
             }
         }
@@ -194,11 +190,7 @@ namespace Mangos.World.Objects
                 {
                     return ModelH1;
                 }
-                if (ModelH2 != 0)
-                {
-                    return ModelH2;
-                }
-                return 0;
+                return ModelH2 != 0 ? ModelH2 : 0;
             }
         }
 

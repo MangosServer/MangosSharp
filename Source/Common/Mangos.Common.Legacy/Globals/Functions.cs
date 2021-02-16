@@ -40,92 +40,47 @@ namespace Mangos.Common.Legacy.Globals
 
         public bool GuidIsCreature(ulong guid)
         {
-            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_UNIT)
-            {
-                return true;
-            }
-
-            return false;
+            return GuidHigh2(guid) == mangosGlobalConstants.GUID_UNIT;
         }
 
         public bool GuidIsPet(ulong guid)
         {
-            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_PET)
-            {
-                return true;
-            }
-
-            return false;
+            return GuidHigh2(guid) == mangosGlobalConstants.GUID_PET;
         }
 
         public bool GuidIsItem(ulong guid)
         {
-            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_ITEM)
-            {
-                return true;
-            }
-
-            return false;
+            return GuidHigh2(guid) == mangosGlobalConstants.GUID_ITEM;
         }
 
         public bool GuidIsGameObject(ulong guid)
         {
-            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_GAMEOBJECT)
-            {
-                return true;
-            }
-
-            return false;
+            return GuidHigh2(guid) == mangosGlobalConstants.GUID_GAMEOBJECT;
         }
 
         public bool GuidIsDnyamicObject(ulong guid)
         {
-            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_DYNAMICOBJECT)
-            {
-                return true;
-            }
-
-            return false;
+            return GuidHigh2(guid) == mangosGlobalConstants.GUID_DYNAMICOBJECT;
         }
 
         public bool GuidIsTransport(ulong guid)
         {
-            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_TRANSPORT)
-            {
-                return true;
-            }
-
-            return false;
+            return GuidHigh2(guid) == mangosGlobalConstants.GUID_TRANSPORT;
         }
 
         public bool GuidIsMoTransport(ulong guid)
         {
-            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_MO_TRANSPORT)
-            {
-                return true;
-            }
-
-            return false;
+            return GuidHigh2(guid) == mangosGlobalConstants.GUID_MO_TRANSPORT;
         }
 
         public bool GuidIsCorpse(ulong guid)
         {
-            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_CORPSE)
-            {
-                return true;
-            }
-
-            return false;
+            return GuidHigh2(guid) == mangosGlobalConstants.GUID_CORPSE;
         }
 
         public bool GuidIsPlayer(ulong guid)
         {
-            if (GuidHigh2(guid) == mangosGlobalConstants.GUID_PLAYER)
-            {
-                return true;
-            }
-
-            return false;
+            return GuidHigh2(guid) == mangosGlobalConstants.GUID_PLAYER;
         }
 
         public ulong GuidHigh2(ulong guid)
@@ -235,12 +190,7 @@ namespace Mangos.Common.Legacy.Globals
 
                 case ShapeshiftForm.FORM_GHOUL:
                     {
-                        if (race == Races.RACE_NIGHT_ELF)
-                        {
-                            return 10045;
-                        }
-
-                        return model;
+                        return race == Races.RACE_NIGHT_ELF ? 10045 : model;
                     }
 
                 case ShapeshiftForm.FORM_CREATUREBEAR:

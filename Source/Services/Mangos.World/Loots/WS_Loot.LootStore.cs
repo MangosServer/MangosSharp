@@ -43,11 +43,7 @@ namespace Mangos.World.Loots
 
             public LootTemplate GetLoot(int Entry)
             {
-                if (Templates.ContainsKey(Entry))
-                {
-                    return Templates[Entry];
-                }
-                return CreateTemplate(Entry);
+                return Templates.ContainsKey(Entry) ? Templates[Entry] : CreateTemplate(Entry);
             }
 
             private LootTemplate CreateTemplate(int Entry)

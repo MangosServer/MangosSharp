@@ -25,22 +25,12 @@ namespace Mangos.Common.Legacy
     {
         public static T As<T>(this DataRow row, int column)
         {
-            if (row == null || row[column] == null)
-            {
-                throw new Exception("Null data row.");
-            }
-
-            return (T)Convert.ChangeType(row[column], typeof(T));
+            return row == null || row[column] == null ? throw new Exception("Null data row.") : (T)Convert.ChangeType(row[column], typeof(T));
         }
 
         public static T As<T>(this DataRow row, string field)
         {
-            if (row == null || row[field] == null)
-            {
-                throw new Exception("Null data row.");
-            }
-
-            return (T)Convert.ChangeType(row[field], typeof(T));
+            return row == null || row[field] == null ? throw new Exception("Null data row.") : (T)Convert.ChangeType(row[field], typeof(T));
         }
 
         /// <typeparam name="T1">Cast1</typeparam>

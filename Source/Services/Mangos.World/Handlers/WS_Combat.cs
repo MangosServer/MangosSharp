@@ -701,11 +701,7 @@ namespace Mangos.World.Handlers
             }
             if (Weapon == null || Weapon.ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_WEAPON)
             {
-                if (AttackType == WeaponAttackType.RANGED_ATTACK)
-                {
-                    return 0f;
-                }
-                return 2.4f;
+                return AttackType == WeaponAttackType.RANGED_ATTACK ? 0f : 2.4f;
             }
             switch (Weapon.ItemInfo.InventoryType)
             {
@@ -1091,17 +1087,9 @@ namespace Mangos.World.Handlers
                 {
                     if (characterObject.Items.ContainsKey(16) && characterObject.Items[16].ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON)
                     {
-                        if (skillDiference > 10)
-                        {
-                            return 24f - skillDiference * 0.1f;
-                        }
-                        return 24f - skillDiference * 0.2f;
+                        return skillDiference > 10 ? 24f - skillDiference * 0.1f : 24f - skillDiference * 0.2f;
                     }
-                    if (skillDiference > 10)
-                    {
-                        return 5f - skillDiference * 0.1f;
-                    }
-                    return 5f - skillDiference * 0.2f;
+                    return skillDiference > 10 ? 5f - skillDiference * 0.1f : 5f - skillDiference * 0.2f;
                 }
             }
             return 5f - skillDiference * 0.04f;
@@ -1200,11 +1188,9 @@ namespace Mangos.World.Handlers
             float angle2 = GetOrientation(Object1.positionX, x2, Object1.positionY, y2);
             float lowAngle = Object1.orientation - (float)Math.PI / 3f;
             float hiAngle = Object1.orientation + (float)Math.PI / 3f;
-            if (lowAngle < 0f)
-            {
-                return (angle2 >= Math.PI * 2.0 + lowAngle && angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle);
-            }
-            return angle2 >= lowAngle && angle2 <= hiAngle;
+            return lowAngle < 0f
+                ? (angle2 >= Math.PI * 2.0 + lowAngle && angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle)
+                : angle2 >= lowAngle && angle2 <= hiAngle;
         }
 
         public bool IsInBackOf(ref WS_Base.BaseObject Object1, ref WS_Base.BaseObject Object2)
@@ -1217,11 +1203,9 @@ namespace Mangos.World.Handlers
             float angle2 = GetOrientation(x2, Object1.positionX, y2, Object1.positionY);
             float lowAngle = Object1.orientation - (float)Math.PI / 3f;
             float hiAngle = Object1.orientation + (float)Math.PI / 3f;
-            if (lowAngle < 0f)
-            {
-                return (angle2 >= Math.PI * 2.0 + lowAngle && angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle);
-            }
-            return angle2 >= lowAngle && angle2 <= hiAngle;
+            return lowAngle < 0f
+                ? (angle2 >= Math.PI * 2.0 + lowAngle && angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle)
+                : angle2 >= lowAngle && angle2 <= hiAngle;
         }
 
         public int GetSkillWeapon(ref WS_Base.BaseUnit objCharacter, bool DualWield)
@@ -1289,11 +1273,9 @@ namespace Mangos.World.Handlers
                 case SHEATHE_SLOT.SHEATHE_WEAPON:
                     if (combatDualWield)
                     {
-                        if (objCharacter.GetAttackTime(WeaponAttackType.OFF_ATTACK) == 0)
-                        {
-                            return objCharacter.GetAttackTime(WeaponAttackType.BASE_ATTACK);
-                        }
-                        return objCharacter.GetAttackTime(WeaponAttackType.OFF_ATTACK);
+                        return objCharacter.GetAttackTime(WeaponAttackType.OFF_ATTACK) == 0
+                            ? objCharacter.GetAttackTime(WeaponAttackType.BASE_ATTACK)
+                            : objCharacter.GetAttackTime(WeaponAttackType.OFF_ATTACK);
                     }
                     if (objCharacter.GetAttackTime(WeaponAttackType.BASE_ATTACK) == 0)
                     {

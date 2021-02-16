@@ -187,11 +187,9 @@ namespace Mangos.World.Maps
                 byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
                 byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX));
                 byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY));
-                if (Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
-                {
-                    return 0f;
-                }
-                return Maps[(uint)Map].Tiles[MapTileX, MapTileY].WaterLevel[MapTile_LocalX, MapTile_LocalY];
+                return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
+                    ? 0f
+                    : Maps[(uint)Map].Tiles[MapTileX, MapTileY].WaterLevel[MapTile_LocalX, MapTile_LocalY];
             }
         }
 
@@ -205,11 +203,9 @@ namespace Mangos.World.Maps
                 byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
                 byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX));
                 byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY));
-                if (Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
-                {
-                    return 0;
-                }
-                return Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaTerrain[MapTile_LocalX, MapTile_LocalY];
+                return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
+                    ? 0
+                    : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaTerrain[MapTile_LocalX, MapTile_LocalY];
             }
         }
 
@@ -223,11 +219,9 @@ namespace Mangos.World.Maps
                 byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
                 byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX));
                 byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY));
-                if (Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
-                {
-                    return 0;
-                }
-                return Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaFlag[MapTile_LocalX, MapTile_LocalY];
+                return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
+                    ? 0
+                    : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaFlag[MapTile_LocalX, MapTile_LocalY];
             }
         }
 
@@ -258,11 +252,7 @@ namespace Mangos.World.Maps
                         if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
                         {
                             float VMapHeight2 = GetVMapHeight(Map, x, y, z + 5f);
-                            if (VMapHeight2 != WorldServiceLocator._Global_Constants.VMAP_INVALID_HEIGHT_VALUE)
-                            {
-                                return VMapHeight2;
-                            }
-                            return 0f;
+                            return VMapHeight2 != WorldServiceLocator._Global_Constants.VMAP_INVALID_HEIGHT_VALUE ? VMapHeight2 : 0f;
                         }
                         if (Math.Abs(Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY] - z) >= 2f)
                         {

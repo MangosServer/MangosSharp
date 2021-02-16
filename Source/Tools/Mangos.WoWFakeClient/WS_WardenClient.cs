@@ -352,12 +352,7 @@ namespace Mangos.WoWFakeClient
                 ms.Dispose();
                 br = null;
                 Console.WriteLine("[WARDEN] Successfully prepaired Warden Module.");
-                if (!InitModule(ref ModuleData))
-                {
-                    return false;
-                }
-
-                return true;
+                return InitModule(ref ModuleData);
             }
 
             public bool CheckSignature(byte[] Signature, byte[] Data, int DataLen)

@@ -435,11 +435,9 @@ namespace Mangos.World.Player
                     {
                         return WorldServiceLocator._WorldServer.CHARACTERs[TargetGUID];
                     }
-                    if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPet(TargetGUID))
-                    {
-                        return WorldServiceLocator._WorldServer.WORLD_CREATUREs[TargetGUID];
-                    }
-                    return null;
+                    return WorldServiceLocator._CommonGlobalFunctions.GuidIsPet(TargetGUID)
+                        ? WorldServiceLocator._WorldServer.WORLD_CREATUREs[TargetGUID]
+                        : null;
                 }
             }
 
@@ -876,11 +874,7 @@ namespace Mangos.World.Player
                     {
                         return false;
                     }
-                    if (Team == characterObject.Team)
-                    {
-                        return true;
-                    }
-                    return !characterObject.isPvP;
+                    return Team == characterObject.Team || !characterObject.isPvP;
                 }
                 if (Unit is WS_Creatures.CreatureObject creatureObject)
                 {
@@ -924,11 +918,7 @@ namespace Mangos.World.Player
                     {
                         return true;
                     }
-                    if (Team == characterObject.Team)
-                    {
-                        return false;
-                    }
-                    return characterObject.isPvP;
+                    return Team != characterObject.Team && characterObject.isPvP;
                 }
                 if (Unit is WS_Creatures.CreatureObject creatureObject)
                 {
@@ -1019,11 +1009,7 @@ namespace Mangos.World.Player
                 float distance = WorldServiceLocator._WS_Combat.GetDistance(this, objCharacter);
                 if (Group != null && objCharacter is CharacterObject @object && @object.Group == Group)
                 {
-                    if (distance > objCharacter.VisibleDistance)
-                    {
-                        return false;
-                    }
-                    return true;
+                    return distance <= objCharacter.VisibleDistance;
                 }
                 if (DEAD && corpseGUID != 0)
                 {
@@ -1057,11 +1043,7 @@ namespace Mangos.World.Player
                         {
                             return false;
                         }
-                        if (objCharacter.Invisibility == InvisibilityLevel.STEALTH && !CanSeeStealth)
-                        {
-                            return false;
-                        }
-                        return true;
+                        return objCharacter.Invisibility != InvisibilityLevel.STEALTH || CanSeeStealth;
                     }
                     if (objCharacter.Invisibility != InvisibilityLevel.DEAD)
                     {
@@ -1072,11 +1054,7 @@ namespace Mangos.World.Player
                 {
                     if (objCharacter.Invisibility != InvisibilityLevel.INIVISIBILITY)
                     {
-                        if (objCharacter.CanSeeInvisibility_Invisibility >= Invisibility_Value)
-                        {
-                            return true;
-                        }
-                        return false;
+                        return objCharacter.CanSeeInvisibility_Invisibility >= Invisibility_Value;
                     }
                     if (Invisibility_Value < objCharacter.Invisibility_Value)
                     {
@@ -1114,11 +1092,7 @@ namespace Mangos.World.Player
                         return false;
                     }
                 }
-                if (distance > objCharacter.VisibleDistance)
-                {
-                    return false;
-                }
-                return true;
+                return distance <= objCharacter.VisibleDistance;
             }
 
             public void SetUpdateFlag(int pos, int value)
@@ -2361,11 +2335,7 @@ namespace Mangos.World.Player
 
             public bool HaveSkill(int SkillID, int SkillValue = 0)
             {
-                if (Skills.ContainsKey(SkillID))
-                {
-                    return Skills[SkillID].Current >= SkillValue;
-                }
-                return false;
+                return Skills.ContainsKey(SkillID) && Skills[SkillID].Current >= SkillValue;
             }
 
             public void UpdateSkill(int SkillID, float SpeedMod = 0f)
@@ -3467,11 +3437,7 @@ namespace Mangos.World.Player
                             case 38:
                                 if (ItemInfo.IsContainer)
                                 {
-                                    if (Item.IsFree)
-                                    {
-                                        return InventoryChangeFailure.EQUIP_ERR_OK;
-                                    }
-                                    return InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
+                                    return Item.IsFree ? InventoryChangeFailure.EQUIP_ERR_OK : InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
                                 }
                                 return InventoryChangeFailure.EQUIP_ERR_OK;
 
@@ -3501,11 +3467,7 @@ namespace Mangos.World.Player
                             case 62:
                                 if (ItemInfo.IsContainer)
                                 {
-                                    if (Item.IsFree)
-                                    {
-                                        return InventoryChangeFailure.EQUIP_ERR_OK;
-                                    }
-                                    return InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
+                                    return Item.IsFree ? InventoryChangeFailure.EQUIP_ERR_OK : InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
                                 }
                                 return InventoryChangeFailure.EQUIP_ERR_OK;
 
@@ -3589,21 +3551,15 @@ namespace Mangos.World.Player
                     }
                     if (ItemInfo.IsContainer)
                     {
-                        if (Item.IsFree)
-                        {
-                            return InventoryChangeFailure.EQUIP_ERR_OK;
-                        }
-                        return InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
+                        return Item.IsFree ? InventoryChangeFailure.EQUIP_ERR_OK : InventoryChangeFailure.EQUIP_ERR_CAN_ONLY_DO_WITH_EMPTY_BAGS;
                     }
                     if (Items[dstBag].ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_QUIVER)
                     {
                         if (ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_PROJECTILE)
                         {
-                            if (Items[dstBag].ItemInfo.SubClass != ItemInfo.SubClass)
-                            {
-                                return InventoryChangeFailure.EQUIP_ERR_ITEM_DOESNT_GO_INTO_BAG;
-                            }
-                            return InventoryChangeFailure.EQUIP_ERR_OK;
+                            return Items[dstBag].ItemInfo.SubClass != ItemInfo.SubClass
+                                ? InventoryChangeFailure.EQUIP_ERR_ITEM_DOESNT_GO_INTO_BAG
+                                : InventoryChangeFailure.EQUIP_ERR_OK;
                         }
                         return InventoryChangeFailure.EQUIP_ERR_ONLY_AMMO_CAN_GO_HERE;
                     }
@@ -4243,11 +4199,7 @@ namespace Mangos.World.Player
             {
                 byte srcBag = default;
                 byte srcSlot = client.Character.ItemGetSLOTBAG(GUID, ref srcBag);
-                if (srcSlot == WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL)
-                {
-                    return null;
-                }
-                return ItemGET(srcBag, srcSlot);
+                return srcSlot == WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL ? null : ItemGET(srcBag, srcSlot);
             }
 
             public ulong ItemGetGUID(byte srcBag, byte srcSlot)
@@ -5352,11 +5304,7 @@ namespace Mangos.World.Player
                     {
                         return ReputationRank.Unfriendly;
                     }
-                    if (num > -42000)
-                    {
-                        return ReputationRank.Hostile;
-                    }
-                    return ReputationRank.Hated;
+                    return num > -42000 ? ReputationRank.Hostile : ReputationRank.Hated;
                 }
             }
 
@@ -5394,11 +5342,7 @@ namespace Mangos.World.Player
             public float GetDiscountMod(int FactionID)
             {
                 ReputationRank Rank = GetReputation(FactionID);
-                if (Rank >= ReputationRank.Honored)
-                {
-                    return 0.9f;
-                }
-                return 1f;
+                return Rank >= ReputationRank.Honored ? 0.9f : 1f;
             }
 
             public override void Die(ref WS_Base.BaseUnit Attacker)

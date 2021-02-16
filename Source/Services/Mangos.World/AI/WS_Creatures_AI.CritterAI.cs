@@ -54,17 +54,14 @@ namespace Mangos.World.AI
 
             public override bool IsMoving()
             {
-                if (checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer)
-                {
-                    return State switch
-                    {
-                        AIState.AI_MOVE_FOR_ATTACK => true,
-                        AIState.AI_MOVING => true,
-                        AIState.AI_WANDERING => true,
-                        _ => false,
-                    };
-                }
-                return false;
+                return checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer
+&& (State switch
+{
+    AIState.AI_MOVE_FOR_ATTACK => true,
+    AIState.AI_MOVING => true,
+    AIState.AI_WANDERING => true,
+    _ => false,
+});
             }
 
             public override void Pause(int Time)

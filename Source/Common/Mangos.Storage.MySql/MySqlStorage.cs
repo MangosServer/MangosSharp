@@ -78,11 +78,7 @@ namespace Mangos.Storage.MySql
 
         private string GetQuery(string query)
         {
-            if (queries.ContainsKey(query))
-            {
-                return queries[query];
-            }
-            throw new Exception($"Unknown sql query '{query}'");
+            return queries.ContainsKey(query) ? queries[query] : throw new Exception($"Unknown sql query '{query}'");
         }
 
         private string GetEmbeddedSqlResourceName(string queriesCatalog, string resource)

@@ -268,11 +268,7 @@ namespace Mangos.World.Handlers
             {
                 return InventoryChangeFailure.EQUIP_ERR_YOU_MUST_REACH_LEVEL_N;
             }
-            if (objCharacter.HavePassiveAura(46699))
-            {
-                return InventoryChangeFailure.EQUIP_ERR_BAG_FULL6;
-            }
-            return InventoryChangeFailure.EQUIP_ERR_OK;
+            return objCharacter.HavePassiveAura(46699) ? InventoryChangeFailure.EQUIP_ERR_BAG_FULL6 : InventoryChangeFailure.EQUIP_ERR_OK;
         }
 
         public bool CheckAmmoCompatibility(ref WS_PlayerData.CharacterObject objCharacter, int AmmoID)

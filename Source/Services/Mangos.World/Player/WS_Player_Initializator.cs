@@ -40,11 +40,9 @@ namespace Mangos.World.Player
         {
             checked
             {
-                if (objCharacter.Stamina.Base < 20)
-                {
-                    return baseLIFE + (objCharacter.Stamina.Base - 20);
-                }
-                return baseLIFE + 10 * (objCharacter.Stamina.Base - 20);
+                return objCharacter.Stamina.Base < 20
+                    ? baseLIFE + (objCharacter.Stamina.Base - 20)
+                    : baseLIFE + 10 * (objCharacter.Stamina.Base - 20);
             }
         }
 
@@ -52,11 +50,9 @@ namespace Mangos.World.Player
         {
             checked
             {
-                if (objCharacter.Intellect.Base < 20)
-                {
-                    return baseMANA + (objCharacter.Intellect.Base - 20);
-                }
-                return baseMANA + 15 * (objCharacter.Intellect.Base - 20);
+                return objCharacter.Intellect.Base < 20
+                    ? baseMANA + (objCharacter.Intellect.Base - 20)
+                    : baseMANA + 15 * (objCharacter.Intellect.Base - 20);
             }
         }
 

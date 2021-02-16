@@ -50,11 +50,7 @@ namespace Mangos.World.Globals
             {
                 get
                 {
-                    if (Information.UBound(Data) > 2)
-                    {
-                        return (Opcodes)checked(Data[2] + Data[3] * 256);
-                    }
-                    return Opcodes.MSG_NULL_ACTION;
+                    return Information.UBound(Data) > 2 ? (Opcodes)checked(Data[2] + Data[3] * 256) : Opcodes.MSG_NULL_ACTION;
                 }
             }
 
@@ -475,11 +471,7 @@ namespace Mangos.World.Globals
             public byte[] GetByteArray()
             {
                 int lengthLoc = checked(Data.Length - Offset);
-                if (lengthLoc <= 0)
-                {
-                    return Array.Empty<byte>();
-                }
-                return GetByteArray(lengthLoc);
+                return lengthLoc <= 0 ? Array.Empty<byte>() : GetByteArray(lengthLoc);
             }
 
             private byte[] GetByteArray(int lengthLoc)

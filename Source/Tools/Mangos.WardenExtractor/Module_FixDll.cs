@@ -587,12 +587,9 @@ namespace Mangos.WardenExtractor
 
         private static bool IsModrefRequired(ref Instruction Instr)
         {
-            if (Instr.Two_Bytes)
-            {
-                return IsBitSetInTable(Instr.Opcode, TWO_BYTE_OPCODE_MODREF_REQUIREMENT);
-            }
-
-            return IsBitSetInTable(Instr.Opcode, ONE_BYTE_OPCODE_MODREF_REQUIREMENT);
+            return Instr.Two_Bytes
+                ? IsBitSetInTable(Instr.Opcode, TWO_BYTE_OPCODE_MODREF_REQUIREMENT)
+                : IsBitSetInTable(Instr.Opcode, ONE_BYTE_OPCODE_MODREF_REQUIREMENT);
         }
 
         private static int FindDisplacementDataSize(ref Instruction Instr)
@@ -968,12 +965,7 @@ namespace Mangos.WardenExtractor
             {
                 get
                 {
-                    if (AddressSizeOverwritten)
-                    {
-                        return 16;
-                    }
-
-                    return 32;
+                    return AddressSizeOverwritten ? 16 : 32;
                 }
             }
 
@@ -981,12 +973,7 @@ namespace Mangos.WardenExtractor
             {
                 get
                 {
-                    if (OperandSizeOverwritten)
-                    {
-                        return 16;
-                    }
-
-                    return 32;
+                    return OperandSizeOverwritten ? 16 : 32;
                 }
             }
 

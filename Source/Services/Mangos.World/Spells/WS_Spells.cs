@@ -184,11 +184,9 @@ namespace Mangos.World.Spells
             {
                 get
                 {
-                    if (WorldServiceLocator._WS_Spells.SpellDuration.ContainsKey(DurationIndex))
-                    {
-                        return WorldServiceLocator._WS_Spells.SpellDuration[DurationIndex];
-                    }
-                    return 0;
+                    return WorldServiceLocator._WS_Spells.SpellDuration.ContainsKey(DurationIndex)
+                        ? WorldServiceLocator._WS_Spells.SpellDuration[DurationIndex]
+                        : 0;
                 }
             }
 
@@ -196,11 +194,9 @@ namespace Mangos.World.Spells
             {
                 get
                 {
-                    if (WorldServiceLocator._WS_Spells.SpellRange.ContainsKey(rangeIndex))
-                    {
-                        return checked((int)Math.Round(WorldServiceLocator._WS_Spells.SpellRange[rangeIndex]));
-                    }
-                    return 0;
+                    return WorldServiceLocator._WS_Spells.SpellRange.ContainsKey(rangeIndex)
+                        ? (int)Math.Round(WorldServiceLocator._WS_Spells.SpellRange[rangeIndex])
+                        : 0;
                 }
             }
 
@@ -208,11 +204,9 @@ namespace Mangos.World.Spells
             {
                 get
                 {
-                    if (WorldServiceLocator._WS_Spells.SpellFocusObject.ContainsKey(FocusObjectIndex))
-                    {
-                        return WorldServiceLocator._WS_Spells.SpellFocusObject[FocusObjectIndex];
-                    }
-                    return Conversions.ToString(0);
+                    return WorldServiceLocator._WS_Spells.SpellFocusObject.ContainsKey(FocusObjectIndex)
+                        ? WorldServiceLocator._WS_Spells.SpellFocusObject[FocusObjectIndex]
+                        : Conversions.ToString(0);
                 }
             }
 
@@ -220,11 +214,9 @@ namespace Mangos.World.Spells
             {
                 get
                 {
-                    if (WorldServiceLocator._WS_Spells.SpellCastTime.ContainsKey(SpellCastTimeIndex))
-                    {
-                        return WorldServiceLocator._WS_Spells.SpellCastTime[SpellCastTimeIndex];
-                    }
-                    return 0;
+                    return WorldServiceLocator._WS_Spells.SpellCastTime.ContainsKey(SpellCastTimeIndex)
+                        ? WorldServiceLocator._WS_Spells.SpellCastTime[SpellCastTimeIndex]
+                        : 0;
                 }
             }
 
@@ -242,11 +234,7 @@ namespace Mangos.World.Spells
                     {
                         return true;
                     }
-                    if (SpellEffects[2] != null && SpellEffects[2].ApplyAuraIndex != 0)
-                    {
-                        return true;
-                    }
-                    return false;
+                    return SpellEffects[2] != null && SpellEffects[2].ApplyAuraIndex != 0;
                 }
             }
 
@@ -262,11 +250,7 @@ namespace Mangos.World.Spells
                     {
                         return true;
                     }
-                    if (SpellEffects[2] != null && SpellEffects[2].IsAOE)
-                    {
-                        return true;
-                    }
-                    return false;
+                    return SpellEffects[2] != null && SpellEffects[2].IsAOE;
                 }
             }
 
@@ -282,11 +266,7 @@ namespace Mangos.World.Spells
                     {
                         return true;
                     }
-                    if (SpellEffects[2] != null && SpellEffects[2].ID == SpellEffects_Names.SPELL_EFFECT_DISPEL)
-                    {
-                        return true;
-                    }
-                    return false;
+                    return SpellEffects[2] != null && SpellEffects[2].ID == SpellEffects_Names.SPELL_EFFECT_DISPEL;
                 }
             }
 
@@ -2153,11 +2133,9 @@ namespace Mangos.World.Spells
             {
                 get
                 {
-                    if (WorldServiceLocator._WS_Spells.SpellRadius.ContainsKey(RadiusIndex))
-                    {
-                        return WorldServiceLocator._WS_Spells.SpellRadius[RadiusIndex];
-                    }
-                    return 0f;
+                    return WorldServiceLocator._WS_Spells.SpellRadius.ContainsKey(RadiusIndex)
+                        ? WorldServiceLocator._WS_Spells.SpellRadius[RadiusIndex]
+                        : 0f;
                 }
             }
 
@@ -3572,11 +3550,7 @@ namespace Mangos.World.Spells
 
         public SpellFailedReason SPELL_EFFECT_DISENCHANT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
-            if (Caster is not WS_PlayerData.CharacterObject)
-            {
-                return SpellFailedReason.SPELL_FAILED_ERROR;
-            }
-            return SpellFailedReason.SPELL_NO_ERROR;
+            return Caster is not WS_PlayerData.CharacterObject ? SpellFailedReason.SPELL_FAILED_ERROR : SpellFailedReason.SPELL_NO_ERROR;
         }
 
         public SpellFailedReason SPELL_EFFECT_PROFICIENCY(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)

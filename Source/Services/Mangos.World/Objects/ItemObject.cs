@@ -76,11 +76,7 @@ namespace Mangos.World.Objects
         {
             get
             {
-                if (Items.Count > 0)
-                {
-                    return false;
-                }
-                return true;
+                return Items.Count <= 0;
             }
         }
 

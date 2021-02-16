@@ -143,11 +143,7 @@ namespace Mangos.World.Objects
                 get
                 {
                     byte creatureFamily = CreatureInfo.CreatureFamily;
-                    if (creatureFamily == byte.MaxValue)
-                    {
-                        return false;
-                    }
-                    return true;
+                    return creatureFamily != byte.MaxValue;
                 }
             }
 
@@ -159,11 +155,9 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    if (aiScript != null)
-                    {
-                        return Life.Current == 0 || aiScript.State == AIState.AI_DEAD || aiScript.State == AIState.AI_RESPAWN;
-                    }
-                    return Life.Current == 0;
+                    return aiScript != null
+                        ? Life.Current == 0 || aiScript.State == AIState.AI_DEAD || aiScript.State == AIState.AI_RESPAWN
+                        : Life.Current == 0;
                 }
             }
 
@@ -171,11 +165,7 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    if (aiScript != null && aiScript.State == AIState.AI_MOVING_TO_SPAWN)
-                    {
-                        return true;
-                    }
-                    return false;
+                    return aiScript != null && aiScript.State == AIState.AI_MOVING_TO_SPAWN;
                 }
             }
 
@@ -185,11 +175,9 @@ namespace Mangos.World.Objects
                 {
                     checked
                     {
-                        if (WorldServiceLocator._WS_DBCDatabase.CreatureGossip.ContainsKey(GUID - WorldServiceLocator._Global_Constants.GUID_UNIT))
-                        {
-                            return WorldServiceLocator._WS_DBCDatabase.CreatureGossip[GUID - WorldServiceLocator._Global_Constants.GUID_UNIT];
-                        }
-                        return 16777215;
+                        return WorldServiceLocator._WS_DBCDatabase.CreatureGossip.ContainsKey(GUID - WorldServiceLocator._Global_Constants.GUID_UNIT)
+                            ? WorldServiceLocator._WS_DBCDatabase.CreatureGossip[GUID - WorldServiceLocator._Global_Constants.GUID_UNIT]
+                            : 16777215;
                     }
                 }
             }

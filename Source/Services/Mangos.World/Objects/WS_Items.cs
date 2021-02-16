@@ -162,11 +162,7 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    if (ContainerSlots > 0)
-                    {
-                        return true;
-                    }
-                    return false;
+                    return ContainerSlots > 0;
                 }
             }
 
@@ -290,11 +286,7 @@ namespace Mangos.World.Objects
                     {
                         return WorldServiceLocator._WS_Items.ItemWeaponSkills[(uint)SubClass];
                     }
-                    if (ObjectClass == ITEM_CLASS.ITEM_CLASS_ARMOR)
-                    {
-                        return WorldServiceLocator._WS_Items.ItemArmorSkills[(uint)SubClass];
-                    }
-                    return 0;
+                    return ObjectClass == ITEM_CLASS.ITEM_CLASS_ARMOR ? WorldServiceLocator._WS_Items.ItemArmorSkills[(uint)SubClass] : 0;
                 }
             }
 
@@ -777,11 +769,9 @@ namespace Mangos.World.Objects
         {
             checked
             {
-                if (WorldServiceLocator._WorldServer.WORLD_ITEMs.ContainsKey(guid + WorldServiceLocator._Global_Constants.GUID_ITEM))
-                {
-                    return WorldServiceLocator._WorldServer.WORLD_ITEMs[guid + WorldServiceLocator._Global_Constants.GUID_ITEM];
-                }
-                return new ItemObject(guid, owner, equipped);
+                return WorldServiceLocator._WorldServer.WORLD_ITEMs.ContainsKey(guid + WorldServiceLocator._Global_Constants.GUID_ITEM)
+                    ? WorldServiceLocator._WorldServer.WORLD_ITEMs[guid + WorldServiceLocator._Global_Constants.GUID_ITEM]
+                    : new ItemObject(guid, owner, equipped);
             }
         }
 

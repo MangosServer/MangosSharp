@@ -64,11 +64,7 @@ namespace Mangos.World.Handlers
         {
             DataTable q = new DataTable();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT MAX(instance) FROM characters_instances WHERE map = {Map};", ref q);
-            if (q.Rows[0][0] != DBNull.Value)
-            {
-                return checked((uint)(q.Rows[0].As<int>(0) + 1));
-            }
-            return 0u;
+            return q.Rows[0][0] != DBNull.Value ? (uint)(q.Rows[0].As<int>(0) + 1) : 0u;
         }
 
         public void InstanceMapSpawn(uint Map, uint Instance)

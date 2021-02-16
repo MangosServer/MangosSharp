@@ -97,11 +97,7 @@ namespace Mangos.World.Globals
 
         public int ToInteger(bool Value)
         {
-            if (Value)
-            {
-                return 1;
-            }
-            return 0;
+            return Value ? 1 : 0;
         }
 
         public string ToHex(byte[] bBytes, int start = 0)
@@ -203,11 +199,7 @@ namespace Mangos.World.Globals
                 value >>= flagPos;
                 value = (uint)(value % 2L);
             }
-            if ((ulong)value == 1)
-            {
-                return true;
-            }
-            return false;
+            return (ulong)value == 1;
         }
 
         public bool HaveFlags(int value, int flags)
@@ -272,11 +264,9 @@ namespace Mangos.World.Globals
             {
                 return Conversions.ToString(seconds / 60L) + "m " + Conversions.ToString(seconds % 60L) + "s";
             }
-            if (seconds < 86400L)
-            {
-                return Conversions.ToString(seconds / 3600L) + "h " + Conversions.ToString(seconds / 60L % 60) + "m " + Conversions.ToString(seconds % 60L) + "s";
-            }
-            return Conversions.ToString(seconds / 86400L) + "d " + Conversions.ToString(seconds / 3600L % 24) + "h " + Conversions.ToString(seconds / 60L % 60) + "m " + Conversions.ToString(seconds % 60L) + "s";
+            return seconds < 86400L
+                ? Conversions.ToString(seconds / 3600L) + "h " + Conversions.ToString(seconds / 60L % 60) + "m " + Conversions.ToString(seconds % 60L) + "s"
+                : Conversions.ToString(seconds / 86400L) + "d " + Conversions.ToString(seconds / 3600L % 24) + "h " + Conversions.ToString(seconds / 60L % 60) + "m " + Conversions.ToString(seconds % 60L) + "s";
         }
 
         public string EscapeString(string s)
@@ -286,29 +276,19 @@ namespace Mangos.World.Globals
 
         public string CapitalizeName(ref string Name)
         {
-            if (Name.Length > 1)
-            {
-                return WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Strings.Left(Name, 1)) + WorldServiceLocator._CommonFunctions.LowercaseFirstLetter(Strings.Right(Name, checked(Name.Length - 1)));
-            }
-            return WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Name);
+            return Name.Length > 1
+                ? WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Strings.Left(Name, 1)) + WorldServiceLocator._CommonFunctions.LowercaseFirstLetter(Strings.Right(Name, checked(Name.Length - 1)))
+                : WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Name);
         }
 
         public bool ValidateName(string strName)
         {
-            if (strName.Length is < 2 or > 16)
-            {
-                return false;
-            }
-            return Regex_AZ.IsMatch(strName);
+            return strName.Length is not < 2 and not > 16 && Regex_AZ.IsMatch(strName);
         }
 
         public bool ValidateGuildName(string strName)
         {
-            if (strName.Length is < 2 or > 16)
-            {
-                return false;
-            }
-            return Regex_Guild.IsMatch(strName);
+            return strName.Length is not < 2 and not > 16 && Regex_Guild.IsMatch(strName);
         }
 
         public string FixName(string strName)
@@ -436,11 +416,7 @@ namespace Mangos.World.Globals
 
         public bool IsContinentMap(int Map)
         {
-            if ((uint)Map <= 1u)
-            {
-                return true;
-            }
-            return false;
+            return (uint)Map <= 1u;
         }
 
         public string SetColor(string Message, byte Red, byte Green, byte Blue)
@@ -455,11 +431,7 @@ namespace Mangos.World.Globals
         public bool RollChance(float Chance)
         {
             int nChance = checked((int)Math.Round(Chance * 100f));
-            if (WorldServiceLocator._WorldServer.Rnd.Next(1, 10001) <= nChance)
-            {
-                return true;
-            }
-            return false;
+            return WorldServiceLocator._WorldServer.Rnd.Next(1, 10001) <= nChance;
         }
 
         public void SendMessageMOTD(ref WS_Network.ClientClass client, string Message)
