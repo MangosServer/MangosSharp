@@ -42,7 +42,7 @@ namespace Mangos.World.Player
             {
                 return objCharacter.Stamina.Base < 20
                     ? baseLIFE + (objCharacter.Stamina.Base - 20)
-                    : baseLIFE + 10 * (objCharacter.Stamina.Base - 20);
+                    : baseLIFE + (10 * (objCharacter.Stamina.Base - 20));
             }
         }
 
@@ -52,13 +52,13 @@ namespace Mangos.World.Player
             {
                 return objCharacter.Intellect.Base < 20
                     ? baseMANA + (objCharacter.Intellect.Base - 20)
-                    : baseMANA + 15 * (objCharacter.Intellect.Base - 20);
+                    : baseMANA + (15 * (objCharacter.Intellect.Base - 20));
             }
         }
 
         private int gainStat(int level, double a3, double a2, double a1, double a0)
         {
-            return checked((int)Math.Round(a3 * level * level * level + a2 * level * level + a1 * level + a0) - (int)Math.Round(a3 * (level - 1) * (level - 1) * (level - 1) + a2 * (level - 1) * (level - 1) + a1 * (level - 1) + a0));
+            return checked((int)Math.Round((a3 * level * level * level) + (a2 * level * level) + (a1 * level) + a0) - (int)Math.Round((a3 * (level - 1) * (level - 1) * (level - 1)) + (a2 * (level - 1) * (level - 1)) + (a1 * (level - 1)) + a0));
         }
 
         public void CalculateOnLevelUP(ref WS_PlayerData.CharacterObject objCharacter)

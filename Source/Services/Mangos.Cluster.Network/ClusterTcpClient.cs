@@ -54,7 +54,7 @@ namespace Mangos.Cluster.Network
                     while (!cancellationToken.IsCancellationRequested)
                     {
                         await ReadEncodedPacketHeaderToBufferAsync(reader, buffer);
-                        int length = buffer[1] + buffer[0] * 256 + 2;
+                        int length = buffer[1] + (buffer[0] * 256) + 2;
                         await reader.ReadToArrayAsync(buffer, 6, length - 6);
 
                         PacketClass packet = new PacketClass(buffer);
@@ -84,7 +84,7 @@ namespace Mangos.Cluster.Network
             for (int i = 0; i < 6; i++)
             {
                 byte tmp = data[i];
-                data[i] = (byte)(client.PacketEncryption.Hash[key[1]] ^ (256 + data[i] - key[0]) % 256);
+                data[i] = (byte)(client.PacketEncryption.Hash[key[1]] ^ ((256 + data[i] - key[0]) % 256));
                 key[0] = tmp;
                 key[1] = (byte)((key[1] + 1) % 40);
             }

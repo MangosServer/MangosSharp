@@ -333,7 +333,7 @@ namespace Mangos.Extractor
                 f.Seek(FIELD_TYPE_OFFSET, SeekOrigin.Begin);
                 for (int i = 0, loopTo = Names.Count - 1; i <= loopTo; i++)
                 {
-                    f.Seek(FIELD_TYPE_OFFSET + i * 5 * 4 + Offset, SeekOrigin.Begin);
+                    f.Seek(FIELD_TYPE_OFFSET + (i * 5 * 4) + Offset, SeekOrigin.Begin);
                     f.Read(Buffer, 0, 4);
                     Temp = BitConverter.ToInt32(Buffer, 0);
                     if (Temp < 0xFFFF)

@@ -144,7 +144,7 @@ namespace Mangos.World.Globals
             }
             checked
             {
-                int[] bInt = new int[checked(bBytes.Length - 1) / 4 + 1];
+                int[] bInt = new int[(checked(bBytes.Length - 1) / 4) + 1];
                 int num = bBytes.Length - 1;
                 for (int i = 0; i <= num; i += 4)
                 {
@@ -162,7 +162,7 @@ namespace Mangos.World.Globals
             }
             checked
             {
-                byte[] bBytes = new byte[bInt.Length * 4 - 1 + 1];
+                byte[] bBytes = new byte[(bInt.Length * 4) - 1 + 1];
                 int num = bInt.Length - 1;
                 for (int i = 0; i <= num; i++)
                 {
@@ -321,7 +321,7 @@ namespace Mangos.World.Globals
 
         public float MathLerp(float value1, float value2, float amount)
         {
-            return value1 + (value2 - value1) * amount;
+            return value1 + ((value2 - value1) * amount);
         }
 
         public void Ban_Account(string Name, string Reason)

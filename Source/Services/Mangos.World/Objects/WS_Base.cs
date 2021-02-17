@@ -948,7 +948,7 @@ namespace Mangos.World.Objects
                     if (!IsHeal)
                     {
                         float DamageReduction = GetDamageReduction(ref Caster, DamageType, Damage);
-                        Damage = (int)Math.Round(Damage - Damage * DamageReduction);
+                        Damage = (int)Math.Round(Damage - (Damage * DamageReduction));
                         if (Damage > 0)
                         {
                             Resist = (int)Math.Round(GetResist(ref Caster, DamageType, Damage));
@@ -1015,7 +1015,7 @@ namespace Mangos.World.Objects
                 checked
                 {
                     int leveldiff = Level - Caster.Level;
-                    int modHitChance = (leveldiff >= 3) ? (94 - (leveldiff - 2) * lchance) : (96 - leveldiff);
+                    int modHitChance = (leveldiff >= 3) ? (94 - ((leveldiff - 2) * lchance)) : (96 - leveldiff);
                     modHitChance += Caster.GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT, (int)Spell.SchoolMask);
                     modHitChance += GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, (int)Spell.SchoolMask);
                     if (Spell.IsAOE)
@@ -1075,7 +1075,7 @@ namespace Mangos.World.Objects
                 int attackerWeaponSkill = obj.GetWeaponSkill(attType2, ref Victim);
                 checked
                 {
-                    int skillDiff = attackerWeaponSkill - Level * 5;
+                    int skillDiff = attackerWeaponSkill - (Level * 5);
                     int fullSkillDiff = attackerWeaponSkill - GetDefenceSkill(ref Caster);
                     int roll = WorldServiceLocator._WorldServer.Rnd.Next(0, 10001);
                     int missChance = 0;
@@ -1178,7 +1178,7 @@ namespace Mangos.World.Objects
                     float DamageReduction;
                     if (School == DamageTypes.DMG_PHYSICAL)
                     {
-                        DamageReduction = (float)(Resistances[0].Base / (double)(Resistances[0].Base + 400 + 85 * Level));
+                        DamageReduction = (float)(Resistances[0].Base / (double)(Resistances[0].Base + 400 + (85 * Level)));
                     }
                     else
                     {

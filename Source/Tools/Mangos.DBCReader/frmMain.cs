@@ -122,7 +122,7 @@ namespace Mangos.DBCReader
                 {
                     if (notFloat.Contains(j) == false)
                     {
-                        tmpOffset = 20 + i * RowLength + j * 4;
+                        tmpOffset = 20 + (i * RowLength) + (j * 4);
                         tmpSng = Math.Abs(BitConverter.ToSingle(Data, tmpOffset));
                         if (tmpSng < 50000f) // Only allow floats to be between 0 and 50000 (negative and positive)
                         {
@@ -162,11 +162,11 @@ namespace Mangos.DBCReader
                     {
                         if (notString.Contains(j) == false && IsFloat.Contains(j) == false)
                         {
-                            tmpOffset = 20 + i * RowLength + j * 4;
+                            tmpOffset = 20 + (i * RowLength) + (j * 4);
                             tmpInt = BitConverter.ToInt32(Data, tmpOffset);
                             if (tmpInt >= 0 && tmpInt < StringPartLength)
                             {
-                                tmpOffset = 20 + Rows * RowLength + tmpInt;
+                                tmpOffset = 20 + (Rows * RowLength) + tmpInt;
                                 if (tmpInt > 0 && Data[tmpOffset - 1] > 0)
                                 {
                                     if (IsString.Contains(j))
@@ -242,7 +242,7 @@ namespace Mangos.DBCReader
                 for (j = 0; j <= loopTo5; j++)
                 {
                     tmpTag[j] = 0;
-                    tmpOffset = 20 + i * RowLength + j * 4;
+                    tmpOffset = 20 + (i * RowLength) + (j * 4);
                     if (IsFloat.Contains(j))
                     {
                         tmpStr[j] = BitConverter.ToSingle(Data, tmpOffset).ToString();
@@ -251,7 +251,7 @@ namespace Mangos.DBCReader
                     {
                         tmpOffset = BitConverter.ToInt32(Data, tmpOffset);
                         tmpTag[j] = tmpOffset;
-                        tmpStr[j] = GetString(ref Data, 20 + Rows * RowLength + tmpOffset);
+                        tmpStr[j] = GetString(ref Data, 20 + (Rows * RowLength) + tmpOffset);
                     }
                     else
                     {
@@ -278,7 +278,7 @@ namespace Mangos.DBCReader
             }
 
             StringData = new byte[StringPartLength];
-            Array.Copy(Data, 20 + Rows * RowLength, StringData, 0, StringData.Length);
+            Array.Copy(Data, 20 + (Rows * RowLength), StringData, 0, StringData.Length);
             ProgressBar.Value = 0;
         }
 

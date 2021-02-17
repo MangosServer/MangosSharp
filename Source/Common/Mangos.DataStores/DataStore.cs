@@ -75,12 +75,12 @@ namespace Mangos.DataStores
         {
             return column >= Columns
                 ? throw new ApplicationException("DBC: Column index outside file definition.")
-                : GetRowOffset(row) + column * 4;
+                : GetRowOffset(row) + (column * 4);
         }
 
         private int GetRowOffset(int row)
         {
-            return row >= Rows ? throw new ApplicationException("DBC: Row index outside file definition.") : 20 + row * RowLength;
+            return row >= Rows ? throw new ApplicationException("DBC: Row index outside file definition.") : 20 + (row * RowLength);
         }
     }
 }

@@ -196,7 +196,7 @@ namespace Mangos.World.AI
                         {
                             Dictionary<WS_Base.BaseUnit, int> aiHateTable;
                             WS_Base.BaseUnit key;
-                            (aiHateTable = this.aiHateTable)[key = Attacker] = (int)Math.Round(aiHateTable[key] + HateValue * Attacker.Spell_ThreatModifier);
+                            (aiHateTable = this.aiHateTable)[key = Attacker] = (int)Math.Round(aiHateTable[key] + (HateValue * Attacker.Spell_ThreatModifier));
                         }
                     }
                 }
@@ -548,8 +548,8 @@ namespace Mangos.World.AI
                         float angle2 = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 6.2831854820251465);
                         aiCreature.SetToRealPosition();
                         aiCreature.orientation = angle2;
-                        selectedX2 = (float)(aiCreature.positionX + Math.Cos(angle2) * distance2);
-                        selectedY2 = (float)(aiCreature.positionY + Math.Sin(angle2) * distance2);
+                        selectedX2 = (float)(aiCreature.positionX + (Math.Cos(angle2) * distance2));
+                        selectedY2 = (float)(aiCreature.positionY + (Math.Sin(angle2) * distance2));
                         selectedZ2 = WorldServiceLocator._WS_Maps.GetZCoord(selectedX2, selectedY2, aiCreature.positionZ, aiCreature.MapID);
                         MoveTries = checked(MoveTries + 1);
                         if (!(Math.Abs(aiCreature.positionZ - selectedZ2) > 5f))
@@ -624,8 +624,8 @@ namespace Mangos.World.AI
                 State = AIState.AI_MOVE_FOR_ATTACK;
                 float angle = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, aiTarget.positionX, aiCreature.positionY, aiTarget.positionY);
                 aiCreature.orientation = angle;
-                float selectedX = (float)(aiCreature.positionX + Math.Cos(angle) * distance);
-                float selectedY = (float)(aiCreature.positionY + Math.Sin(angle) * distance);
+                float selectedX = (float)(aiCreature.positionX + (Math.Cos(angle) * distance));
+                float selectedY = (float)(aiCreature.positionY + (Math.Sin(angle) * distance));
                 float selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
                 if (aiCreature.CanMoveTo(selectedX, selectedY, selectedZ))
                 {
@@ -654,8 +654,8 @@ namespace Mangos.World.AI
                     ResetFinished = true;
                     return;
                 }
-                float selectedX = (float)(aiCreature.positionX + Math.Cos(angle) * distance);
-                float selectedY = (float)(aiCreature.positionY + Math.Sin(angle) * distance);
+                float selectedX = (float)(aiCreature.positionX + (Math.Cos(angle) * distance));
+                float selectedY = (float)(aiCreature.positionY + (Math.Sin(angle) * distance));
                 float selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
                 aiTimer = checked(aiCreature.MoveTo(selectedX, selectedY, selectedZ, 0f, ResetRun) - 50);
             }

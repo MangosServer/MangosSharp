@@ -90,7 +90,7 @@ namespace Mangos.Cluster.Globals
                 return Array.Empty<int>();
             }
 
-            int[] bInt = new int[(bBytes.Length - 1) / 4 + 1];
+            int[] bInt = new int[((bBytes.Length - 1) / 4) + 1];
             for (int i = 0, loopTo = bBytes.Length - 1; i <= loopTo; i += 4)
             {
                 bInt[i / 4] = BitConverter.ToInt32(bBytes, i);
@@ -156,7 +156,7 @@ namespace Mangos.Cluster.Globals
             }
             else
             {
-                value = value & 0x0U << flagPos & 0xFFFFFFFFU;
+                value = value & (0x0U << flagPos) & 0xFFFFFFFFU;
             }
         }
 
@@ -210,12 +210,12 @@ namespace Mangos.Cluster.Globals
 
             if (seconds < 3600L)
             {
-                return seconds / 60L + "m " + seconds % 60L + "s";
+                return (seconds / 60L) + "m " + (seconds % 60L) + "s";
             }
 
             return seconds < 86400L
-                ? seconds / 3600L + "h " + seconds / 60L % 60L + "m " + seconds % 60L + "s"
-                : seconds / 86400L + "d " + seconds / 3600L % 24L + "h " + seconds / 60L % 60L + "m " + seconds % 60L + "s";
+                ? (seconds / 3600L) + "h " + (seconds / 60L % 60L) + "m " + (seconds % 60L) + "s"
+                : (seconds / 86400L) + "d " + (seconds / 3600L % 24L) + "h " + (seconds / 60L % 60L) + "m " + (seconds % 60L) + "s";
         }
 
         public string EscapeString(string s)
@@ -268,7 +268,7 @@ namespace Mangos.Cluster.Globals
 
         public float MathLerp(float value1, float value2, float amount)
         {
-            return value1 + (value2 - value1) * amount;
+            return value1 + ((value2 - value1) * amount);
         }
 
         public void Ban_Account(string name, string reason)

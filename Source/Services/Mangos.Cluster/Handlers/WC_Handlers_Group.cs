@@ -768,7 +768,7 @@ namespace Mangos.Cluster.Handlers
             if (client.Character.IsInGroup)
             {
                 int j;
-                int loopTo = (subGroup + 1) * _clusterServiceLocator.GlobalConstants.GROUP_SUBGROUPSIZE - 1;
+                int loopTo = ((subGroup + 1) * _clusterServiceLocator.GlobalConstants.GROUP_SUBGROUPSIZE) - 1;
                 for (j = subGroup * _clusterServiceLocator.GlobalConstants.GROUP_SUBGROUPSIZE; j <= loopTo; j++)
                 {
                     if (client.Character.Group.Members[j] is null)

@@ -152,7 +152,7 @@ namespace Mangos.World.Handlers
                     packet.GetInt16();
                     int Flag = packet.GetInt32();
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TUTORIAL_FLAG [flag={2}]", client.IP, client.Port, Flag);
-                    client.Character.TutorialFlags[Flag / 8] = (byte)(client.Character.TutorialFlags[Flag / 8] + (1 << 7 - Flag % 8));
+                    client.Character.TutorialFlags[Flag / 8] = (byte)(client.Character.TutorialFlags[Flag / 8] + (1 << (7 - (Flag % 8))));
                     client.Character.SaveCharacter();
                 }
             }

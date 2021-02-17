@@ -53,9 +53,9 @@ namespace Mangos.WoWFakeClient
                     }
 
                     buffer += "|  " + BitConverter.ToString(data, j, data.Length % 16).Replace("-", " ");
-                    buffer += new string(' ', (16 - data.Length % 16) * 3);
+                    buffer += new string(' ', (16 - (data.Length % 16)) * 3);
                     buffer += " |  " + Encoding.ASCII.GetString(data, j, data.Length % 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?");
-                    buffer += new string(' ', 16 - data.Length % 16);
+                    buffer += new string(' ', 16 - (data.Length % 16));
                     buffer += " |" + Constants.vbCrLf;
                 }
 
@@ -80,7 +80,7 @@ namespace Mangos.WoWFakeClient
             {
                 get
                 {
-                    return Realm ? Data[1] + Data[2] * 256 : Data[1] + Data[0] * 256;
+                    return Realm ? Data[1] + (Data[2] * 256) : Data[1] + (Data[0] * 256);
                 }
             }
 
@@ -88,7 +88,7 @@ namespace Mangos.WoWFakeClient
             {
                 get
                 {
-                    return Realm ? Data[0] : Data[2] + Data[3] * 256;
+                    return Realm ? Data[0] : Data[2] + (Data[3] * 256);
                 }
             }
 
@@ -152,7 +152,7 @@ namespace Mangos.WoWFakeClient
                 }
 
                 Data[^2] = Conversions.ToByte(buffer & 255);
-                Data[^1] = Conversions.ToByte(buffer >> 8 & 255);
+                Data[^1] = Conversions.ToByte((buffer >> 8) & 255);
             }
 
             public void AddInt32(int buffer, int position = 0)
@@ -169,9 +169,9 @@ namespace Mangos.WoWFakeClient
                 }
 
                 Data[position] = Conversions.ToByte(buffer & 255);
-                Data[position + 1] = Conversions.ToByte(buffer >> 8 & 255);
-                Data[position + 2] = Conversions.ToByte(buffer >> 16 & 255);
-                Data[position + 3] = Conversions.ToByte(buffer >> 24 & 255);
+                Data[position + 1] = Conversions.ToByte((buffer >> 8) & 255);
+                Data[position + 2] = Conversions.ToByte((buffer >> 16) & 255);
+                Data[position + 3] = Conversions.ToByte((buffer >> 24) & 255);
             }
 
             public void AddInt64(long buffer)
@@ -184,13 +184,13 @@ namespace Mangos.WoWFakeClient
                 }
 
                 Data[^8] = Conversions.ToByte(buffer & 255L);
-                Data[^7] = Conversions.ToByte(buffer >> 8 & 255L);
-                Data[^6] = Conversions.ToByte(buffer >> 16 & 255L);
-                Data[^5] = Conversions.ToByte(buffer >> 24 & 255L);
-                Data[^4] = Conversions.ToByte(buffer >> 32 & 255L);
-                Data[^3] = Conversions.ToByte(buffer >> 40 & 255L);
-                Data[^2] = Conversions.ToByte(buffer >> 48 & 255L);
-                Data[^1] = Conversions.ToByte(buffer >> 56 & 255L);
+                Data[^7] = Conversions.ToByte((buffer >> 8) & 255L);
+                Data[^6] = Conversions.ToByte((buffer >> 16) & 255L);
+                Data[^5] = Conversions.ToByte((buffer >> 24) & 255L);
+                Data[^4] = Conversions.ToByte((buffer >> 32) & 255L);
+                Data[^3] = Conversions.ToByte((buffer >> 40) & 255L);
+                Data[^2] = Conversions.ToByte((buffer >> 48) & 255L);
+                Data[^1] = Conversions.ToByte((buffer >> 56) & 255L);
             }
 
             public void AddString(string buffer, bool EndZero = true, bool Reversed = false)
@@ -330,7 +330,7 @@ namespace Mangos.WoWFakeClient
                 }
 
                 Data[Position] = Conversions.ToByte(buffer & 255);
-                Data[Position + 1] = Conversions.ToByte(buffer >> 8 & 255);
+                Data[Position + 1] = Conversions.ToByte((buffer >> 8) & 255);
             }
 
             public void AddUInt32(uint buffer)
@@ -343,9 +343,9 @@ namespace Mangos.WoWFakeClient
                 }
 
                 Data[^4] = Conversions.ToByte(buffer & 255L);
-                Data[^3] = Conversions.ToByte(buffer >> 8 & 255L);
-                Data[^2] = Conversions.ToByte(buffer >> 16 & 255L);
-                Data[^1] = Conversions.ToByte(buffer >> 24 & 255L);
+                Data[^3] = Conversions.ToByte((buffer >> 8) & 255L);
+                Data[^2] = Conversions.ToByte((buffer >> 16) & 255L);
+                Data[^1] = Conversions.ToByte((buffer >> 24) & 255L);
             }
 
             public void AddUInt64(ulong buffer)

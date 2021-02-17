@@ -422,8 +422,8 @@ namespace Mangos.World.Objects
                     if ((Forced || aiScript.IsMoving()) && LastMove > 0 && timeDiff < LastMove_Time)
                     {
                         float distance = (aiScript.State is not AIState.AI_MOVING and not AIState.AI_WANDERING) ? (timeDiff / 1000f * (CreatureInfo.RunSpeed * SpeedMod)) : (timeDiff / 1000f * (CreatureInfo.WalkSpeed * SpeedMod));
-                        positionX = (float)(OldX + Math.Cos(orientation) * distance);
-                        positionY = (float)(OldY + Math.Sin(orientation) * distance);
+                        positionX = (float)(OldX + (Math.Cos(orientation) * distance));
+                        positionY = (float)(OldY + (Math.Sin(orientation) * distance));
                         positionZ = WorldServiceLocator._WS_Maps.GetZCoord(positionX, positionY, positionZ, MapID);
                     }
                     else if (!PositionUpdated && timeDiff >= LastMove_Time)
@@ -485,17 +485,17 @@ namespace Mangos.World.Objects
                         if (Flying)
                         {
                             SMSG_MONSTER_MOVE.AddInt32(768);
-                            TimeToMove = (int)Math.Round(moveDist / (CreatureInfo.RunSpeed * SpeedMod) * 1000f + 0.5f);
+                            TimeToMove = (int)Math.Round((moveDist / (CreatureInfo.RunSpeed * SpeedMod) * 1000f) + 0.5f);
                         }
                         else if (Running)
                         {
                             SMSG_MONSTER_MOVE.AddInt32(256);
-                            TimeToMove = (int)Math.Round(moveDist / (CreatureInfo.RunSpeed * SpeedMod) * 1000f + 0.5f);
+                            TimeToMove = (int)Math.Round((moveDist / (CreatureInfo.RunSpeed * SpeedMod) * 1000f) + 0.5f);
                         }
                         else
                         {
                             SMSG_MONSTER_MOVE.AddInt32(0);
-                            TimeToMove = (int)Math.Round(moveDist / (CreatureInfo.WalkSpeed * SpeedMod) * 1000f + 0.5f);
+                            TimeToMove = (int)Math.Round((moveDist / (CreatureInfo.WalkSpeed * SpeedMod) * 1000f) + 0.5f);
                         }
                         orientation = WorldServiceLocator._WS_Combat.GetOrientation(positionX, x, positionY, y);
                         OldX = positionX;
@@ -855,11 +855,11 @@ namespace Mangos.World.Objects
             {
                 checked
                 {
-                    int XP = Level * 5 + 45;
+                    int XP = (Level * 5) + 45;
                     int lvlDifference = Character.Level - Level;
                     if (lvlDifference > 0)
                     {
-                        XP = (int)Math.Round(XP * (1.0 + 0.05 * (Level - Character.Level)));
+                        XP = (int)Math.Round(XP * (1.0 + (0.05 * (Level - Character.Level))));
                     }
                     else if (lvlDifference < 0)
                     {
@@ -1041,7 +1041,7 @@ namespace Mangos.World.Objects
                                     ZD = 17;
                                     break;
                             }
-                            XP = (int)Math.Round(XP * (1.0 - (Character.Level - Level) / (double)ZD));
+                            XP = (int)Math.Round(XP * (1.0 - ((Character.Level - Level) / (double)ZD)));
                         }
                         else
                         {

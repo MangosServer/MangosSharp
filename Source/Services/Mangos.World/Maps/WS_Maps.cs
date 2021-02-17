@@ -105,29 +105,29 @@ namespace Mangos.World.Maps
         {
             checked
             {
-                MapTileX = (byte)(32f - ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE);
-                MapTileY = (byte)(32f - ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE);
+                MapTileX = (byte)(32f - (ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE));
+                MapTileY = (byte)(32f - (ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE));
             }
         }
 
         public byte GetMapTileX(float x)
         {
-            return checked((byte)(32f - ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE));
+            return checked((byte)(32f - (ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE)));
         }
 
         public byte GetMapTileY(float y)
         {
-            return checked((byte)(32f - ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE));
+            return checked((byte)(32f - (ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE)));
         }
 
         public byte GetSubMapTileX(float x)
         {
-            return checked((byte)(RESOLUTION_ZMAP * (32f - ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE - Conversion.Fix(32f - ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE))));
+            return checked((byte)(RESOLUTION_ZMAP * (32f - (ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE) - Conversion.Fix(32f - (ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE)))));
         }
 
         public byte GetSubMapTileY(float y)
         {
-            return checked((byte)(RESOLUTION_ZMAP * (32f - ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE - Conversion.Fix(32f - ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE))));
+            return checked((byte)(RESOLUTION_ZMAP * (32f - (ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE) - Conversion.Fix(32f - (ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE)))));
         }
 
         public float GetZCoord(float x, float y, uint Map)
@@ -138,16 +138,16 @@ namespace Mangos.World.Maps
                 {
                     x = ValidateMapCoord(x);
                     y = ValidateMapCoord(y);
-                    byte MapTileX = (byte)(32f - x / WorldServiceLocator._Global_Constants.SIZE);
-                    byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
-                    byte MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX));
-                    byte MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY));
+                    byte MapTileX = (byte)(32f - (x / WorldServiceLocator._Global_Constants.SIZE));
+                    byte MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
+                    byte MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
+                    byte MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
                     float xNormalized;
                     float yNormalized;
                     unchecked
                     {
-                        xNormalized = RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX) - MapTile_LocalX;
-                        yNormalized = RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY) - MapTile_LocalY;
+                        xNormalized = (RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX)) - MapTile_LocalX;
+                        yNormalized = (RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY)) - MapTile_LocalY;
                         if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
                         {
                             return 0f;
@@ -183,10 +183,10 @@ namespace Mangos.World.Maps
             y = ValidateMapCoord(y);
             checked
             {
-                byte MapTileX = (byte)(32f - x / WorldServiceLocator._Global_Constants.SIZE);
-                byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
-                byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX));
-                byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY));
+                byte MapTileX = (byte)(32f - (x / WorldServiceLocator._Global_Constants.SIZE));
+                byte MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
+                byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
+                byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
                 return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
                     ? 0f
                     : Maps[(uint)Map].Tiles[MapTileX, MapTileY].WaterLevel[MapTile_LocalX, MapTile_LocalY];
@@ -199,10 +199,10 @@ namespace Mangos.World.Maps
             y = ValidateMapCoord(y);
             checked
             {
-                byte MapTileX = (byte)(32f - x / WorldServiceLocator._Global_Constants.SIZE);
-                byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
-                byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX));
-                byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY));
+                byte MapTileX = (byte)(32f - (x / WorldServiceLocator._Global_Constants.SIZE));
+                byte MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
+                byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
+                byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
                 return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
                     ? 0
                     : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaTerrain[MapTile_LocalX, MapTile_LocalY];
@@ -215,10 +215,10 @@ namespace Mangos.World.Maps
             y = ValidateMapCoord(y);
             checked
             {
-                byte MapTileX = (byte)(32f - x / WorldServiceLocator._Global_Constants.SIZE);
-                byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
-                byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX));
-                byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY));
+                byte MapTileX = (byte)(32f - (x / WorldServiceLocator._Global_Constants.SIZE));
+                byte MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
+                byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
+                byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
                 return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
                     ? 0
                     : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaFlag[MapTile_LocalX, MapTile_LocalY];
@@ -239,16 +239,16 @@ namespace Mangos.World.Maps
                     x = ValidateMapCoord(x);
                     y = ValidateMapCoord(y);
                     z = ValidateMapCoord(z);
-                    byte MapTileX = (byte)(32f - x / WorldServiceLocator._Global_Constants.SIZE);
-                    byte MapTileY = (byte)(32f - y / WorldServiceLocator._Global_Constants.SIZE);
-                    byte MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX));
-                    byte MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY));
+                    byte MapTileX = (byte)(32f - (x / WorldServiceLocator._Global_Constants.SIZE));
+                    byte MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
+                    byte MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
+                    byte MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
                     float xNormalized;
                     float yNormalized;
                     unchecked
                     {
-                        xNormalized = RESOLUTION_ZMAP * (32f - x / WorldServiceLocator._Global_Constants.SIZE - MapTileX) - MapTile_LocalX;
-                        yNormalized = RESOLUTION_ZMAP * (32f - y / WorldServiceLocator._Global_Constants.SIZE - MapTileY) - MapTile_LocalY;
+                        xNormalized = (RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX)) - MapTile_LocalX;
+                        yNormalized = (RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY)) - MapTile_LocalY;
                         if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
                         {
                             float VMapHeight2 = GetVMapHeight(Map, x, y, z + 5f);

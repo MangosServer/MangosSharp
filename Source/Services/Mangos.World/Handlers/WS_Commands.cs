@@ -514,7 +514,7 @@ namespace Mangos.World.Handlers
                 foreach (KeyValuePair<int, WS_PlayerHelper.TSkill> skill in objCharacter.Skills)
                 {
                     skill.Value.Current = (short)skill.Value.Maximum;
-                    objCharacter.SetUpdateFlag(718 + objCharacter.SkillsPositions[skill.Key] * 3 + 1, objCharacter.Skills[skill.Key].GetSkill);
+                    objCharacter.SetUpdateFlag(718 + (objCharacter.SkillsPositions[skill.Key] * 3) + 1, objCharacter.Skills[skill.Key].GetSkill);
                 }
                 objCharacter.SendCharacterUpdate(toNear: false);
                 return true;
@@ -1029,7 +1029,7 @@ namespace Mangos.World.Handlers
             if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
                 WS_PlayerHelper.TStatBar life;
-                (life = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life).Current = checked((int)Math.Round(life.Current - WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Maximum * 0.1));
+                (life = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life).Current = checked((int)Math.Round(life.Current - (WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Maximum * 0.1)));
                 WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(22, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Current);
                 WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SendCharacterUpdate();
                 return true;

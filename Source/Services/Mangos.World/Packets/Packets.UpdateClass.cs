@@ -55,11 +55,11 @@ namespace Mangos.World.Globals
                 {
                     if (UpdateData.ContainsKey(pos))
                     {
-                        UpdateData[pos] = Conversions.ToInteger(UpdateData[pos]) | (value << 8 * index);
+                        UpdateData[pos] = Conversions.ToInteger(UpdateData[pos]) | (value << (8 * index));
                     }
                     else
                     {
-                        UpdateData[pos] = value << 8 * index;
+                        UpdateData[pos] = value << (8 * index);
                     }
                 }
             }

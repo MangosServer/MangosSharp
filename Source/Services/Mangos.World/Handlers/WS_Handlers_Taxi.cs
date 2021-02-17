@@ -226,7 +226,7 @@ namespace Mangos.World.Handlers
                 {
                     if (taxiPath.Value.TFrom == srcNode && taxiPath.Value.TTo == dstNode)
                     {
-                        totalCost = (int)Math.Round(totalCost + taxiPath.Value.Price * discountMod);
+                        totalCost = (int)Math.Round(totalCost + (taxiPath.Value.Price * discountMod));
                         break;
                     }
                 }
@@ -260,7 +260,7 @@ namespace Mangos.World.Handlers
                     ulong guid = packet.GetUInt64();
                     int totalCost = packet.GetInt32();
                     int nodeCount = packet.GetInt32();
-                    if (nodeCount <= 0 || packet.Data.Length - 1 < 21 + 4 * nodeCount)
+                    if (nodeCount <= 0 || packet.Data.Length - 1 < 21 + (4 * nodeCount))
                     {
                         return;
                     }
@@ -353,7 +353,7 @@ namespace Mangos.World.Handlers
                     {
                         if (taxiPath.Value.TFrom == srcNode && taxiPath.Value.TTo == dstNode)
                         {
-                            totalCost = (int)Math.Round(totalCost + taxiPath.Value.Price * discountMod);
+                            totalCost = (int)Math.Round(totalCost + (taxiPath.Value.Price * discountMod));
                             break;
                         }
                     }

@@ -419,7 +419,7 @@ namespace Mangos.WoWFakeClient
                 byte[] tmpBytes = br.ReadBytes(40);
                 bw.Write(tmpBytes, 0, tmpBytes.Length);
                 br2.BaseStream.Position = 0x24L;
-                int source_location = 0x28 + br2.ReadInt32() * 12;
+                int source_location = 0x28 + (br2.ReadInt32() * 12);
                 br.BaseStream.Position = 0x28L;
                 int destination_location = br.ReadInt32();
                 br.BaseStream.Position = 0x0L;
@@ -457,7 +457,7 @@ namespace Mangos.WoWFakeClient
                     br2.BaseStream.Position = source_location;
                     byte tmpByte1 = br2.ReadByte();
                     byte tmpByte2 = br2.ReadByte();
-                    destination_location += tmpByte2 | tmpByte1 << 8;
+                    destination_location += tmpByte2 | (tmpByte1 << 8);
                     source_location += 2;
                     br2.BaseStream.Position = destination_location;
                     int address = br2.ReadInt32() + m_Mod;
@@ -474,7 +474,7 @@ namespace Mangos.WoWFakeClient
                 for (counter = 0; counter <= loopTo; counter++)
                 {
                     br2.BaseStream.Position = 0x1CL;
-                    int proc_start = br2.ReadInt32() + counter * 8;
+                    int proc_start = br2.ReadInt32() + (counter * 8);
                     br2.BaseStream.Position = proc_start;
                     library = getNTString(ref br2, br2.ReadInt32());
                     // Console.WriteLine("  Library: {0}", library)
@@ -605,7 +605,7 @@ namespace Mangos.WoWFakeClient
 
                 br.BaseStream.Position = 0x10L;
                 A = br.ReadInt32();
-                br.BaseStream.Position = A + B * 4;
+                br.BaseStream.Position = A + (B * 4);
                 A = br.ReadInt32() + m_Mod;
                 InitPointer = A;
                 Console.WriteLine("Initialize Function is mapped at 0x{0:X}", InitPointer);

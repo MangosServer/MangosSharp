@@ -106,7 +106,7 @@ namespace Mangos.World.Loots
                 if (client.Character.IsInGroup)
                 {
                     List<WS_Base.BaseUnit> members = WorldServiceLocator._WS_Spells.GetPartyMembersAroundMe(ref client.Character, 100f);
-                    int copper2 = LootTable[client.Character.lootGUID].Money / members.Count + 1;
+                    int copper2 = (LootTable[client.Character.lootGUID].Money / members.Count) + 1;
                     LootTable[client.Character.lootGUID].Money = 0;
                     Packets.PacketClass sharePcket = new Packets.PacketClass(Opcodes.SMSG_LOOT_MONEY_NOTIFY);
                     sharePcket.AddInt32(copper2);

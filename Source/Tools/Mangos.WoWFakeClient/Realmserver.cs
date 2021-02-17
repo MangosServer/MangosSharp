@@ -459,8 +459,8 @@ namespace Mangos.WoWFakeClient
                 Buffer.BlockCopy(bo, 1, buffer1, 0, bo.Length);
             }
 
-            byte[] buffer2 = new byte[(int)(bo.Length / 2d - 1d + 1)];
-            byte[] buffer3 = new byte[(int)(bo.Length / 2d - 1d + 1)];
+            byte[] buffer2 = new byte[(int)((bo.Length / 2d) - 1d + 1)];
+            byte[] buffer3 = new byte[(int)((bo.Length / 2d) - 1d + 1)];
             int num1 = 0;
             int num2 = 1;
             int num3;

@@ -245,11 +245,11 @@ namespace Mangos.World.Objects
                     {
                         if (Items.ContainsKey(i))
                         {
-                            update.SetUpdateFlag(50 + i * 2, (long)Items[i].GUID);
+                            update.SetUpdateFlag(50 + (i * 2), (long)Items[i].GUID);
                         }
                         else
                         {
-                            update.SetUpdateFlag(50 + i * 2, 0);
+                            update.SetUpdateFlag(50 + (i * 2), 0);
                         }
                         i = (byte)unchecked((uint)(i + 1));
                     }
@@ -286,9 +286,9 @@ namespace Mangos.World.Objects
                 update.SetUpdateFlag(44, RandomProperties);
                 foreach (KeyValuePair<byte, WS_Items.TEnchantmentInfo> enchant in Enchantments)
                 {
-                    update.SetUpdateFlag(22 + enchant.Key * 3, enchant.Value.ID);
-                    update.SetUpdateFlag(22 + enchant.Key * 3 + 1, enchant.Value.Duration);
-                    update.SetUpdateFlag(22 + enchant.Key * 3 + 2, enchant.Value.Charges);
+                    update.SetUpdateFlag(22 + (enchant.Key * 3), enchant.Value.ID);
+                    update.SetUpdateFlag(22 + (enchant.Key * 3) + 1, enchant.Value.Duration);
+                    update.SetUpdateFlag(22 + (enchant.Key * 3) + 2, enchant.Value.Charges);
                 }
                 update.SetUpdateFlag(45, ItemText);
                 update.SetUpdateFlag(46, Durability);
@@ -757,9 +757,9 @@ namespace Mangos.World.Objects
                         packet.AddInt32(1);
                         packet.AddInt8(0);
                         Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_ITEM);
-                        tmpUpdate.SetUpdateFlag(22 + slot * 3, 0);
-                        tmpUpdate.SetUpdateFlag(22 + slot * 3 + 1, 0);
-                        tmpUpdate.SetUpdateFlag(22 + slot * 3 + 2, 0);
+                        tmpUpdate.SetUpdateFlag(22 + (slot * 3), 0);
+                        tmpUpdate.SetUpdateFlag(22 + (slot * 3) + 1, 0);
+                        tmpUpdate.SetUpdateFlag(22 + (slot * 3) + 2, 0);
                         ItemObject updateObject = this;
                         tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                         WorldServiceLocator._WorldServer.CHARACTERs[OwnerGUID].client.Send(ref packet);
