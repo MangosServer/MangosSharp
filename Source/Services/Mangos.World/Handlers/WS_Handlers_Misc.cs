@@ -582,14 +582,7 @@ namespace Mangos.World.Handlers
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_FACTION_ATWAR [faction={2:X} enabled={3}]", client.IP, client.Port, faction, enabled);
             if (enabled <= 1)
             {
-                if (enabled == 1)
-                {
-                    client.Character.Reputation[faction].Flags = client.Character.Reputation[faction].Flags | 2;
-                }
-                else
-                {
-                    client.Character.Reputation[faction].Flags = client.Character.Reputation[faction].Flags & -3;
-                }
+                client.Character.Reputation[faction].Flags = enabled == 1 ? client.Character.Reputation[faction].Flags | 2 : client.Character.Reputation[faction].Flags & -3;
                 Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_SET_FACTION_STANDING);
                 try
                 {

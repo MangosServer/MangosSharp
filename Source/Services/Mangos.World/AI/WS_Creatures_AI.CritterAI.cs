@@ -245,14 +245,7 @@ namespace Mangos.World.AI
                             }
                         }
                     }
-                    if (aiCreature.CanMoveTo(selectedX, selectedY, selectedZ))
-                    {
-                        aiTimer = aiCreature.MoveTo(selectedX, selectedY, selectedZ, 0f, DoRun);
-                    }
-                    else
-                    {
-                        aiTimer = 3000;
-                    }
+                    aiTimer = aiCreature.CanMoveTo(selectedX, selectedY, selectedZ) ? aiCreature.MoveTo(selectedX, selectedY, selectedZ, 0f, DoRun) : 3000;
                 }
             }
         }

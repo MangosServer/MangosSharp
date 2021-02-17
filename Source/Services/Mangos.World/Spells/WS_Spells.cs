@@ -5764,14 +5764,9 @@ namespace Mangos.World.Spells
 
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
-                    if (Target is WS_PlayerData.CharacterObject @object)
-                    {
-                        Target.Model = WorldServiceLocator._Functions.GetRaceModel(@object.Race, (int)@object.Gender);
-                    }
-                    else
-                    {
-                        Target.Model = ((WS_Creatures.CreatureObject)Target).CreatureInfo.GetRandomModel;
-                    }
+                    Target.Model = Target is WS_PlayerData.CharacterObject @object
+                        ? WorldServiceLocator._Functions.GetRaceModel(@object.Race, (int)@object.Gender)
+                        : ((WS_Creatures.CreatureObject)Target).CreatureInfo.GetRandomModel;
                     break;
 
                 case AuraAction.AURA_UPDATE:
@@ -6501,14 +6496,9 @@ namespace Mangos.World.Spells
                             CreatureInfo creature = new CreatureInfo(EffectInfo.MiscValue);
                             WorldServiceLocator._WorldServer.CREATURESDatabase.Add(EffectInfo.MiscValue, creature);
                         }
-                        if (WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue))
-                        {
-                            Target.Mount = WorldServiceLocator._WorldServer.CREATURESDatabase[EffectInfo.MiscValue].GetFirstModel;
-                        }
-                        else
-                        {
-                            Target.Mount = 0;
-                        }
+                        Target.Mount = WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue)
+                            ? WorldServiceLocator._WorldServer.CREATURESDatabase[EffectInfo.MiscValue].GetFirstModel
+                            : 0;
                         break;
                     }
                 case AuraAction.AURA_REMOVE:

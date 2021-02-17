@@ -4489,14 +4489,7 @@ namespace Mangos.World.Player
                                 break;
 
                             case 15:
-                                if (Classe == Classes.CLASS_ROGUE)
-                                {
-                                    AttackTimeBase[0] = 1900;
-                                }
-                                else
-                                {
-                                    AttackTimeBase[0] = 2000;
-                                }
+                                AttackTimeBase[0] = Classe == Classes.CLASS_ROGUE ? 1900 : 2000;
                                 break;
 
                             case 16:
@@ -4793,14 +4786,9 @@ namespace Mangos.World.Player
                     return;
                 }
                 AreaID = WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].ID;
-                if (WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].Zone == 0)
-                {
-                    ZoneID = WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].ID;
-                }
-                else
-                {
-                    ZoneID = WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].Zone;
-                }
+                ZoneID = WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].Zone == 0
+                    ? WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].ID
+                    : WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].Zone;
                 GroupUpdateFlag |= 128u;
                 if (WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].IsCity())
                 {
@@ -4877,14 +4865,7 @@ namespace Mangos.World.Player
                 AreaID = WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].ID;
                 if (WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].Zone == 0)
                 {
-                    if (ZoneID == 0)
-                    {
-                        ZoneID = WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].ID;
-                    }
-                    else
-                    {
-                        ZoneID = WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].Zone;
-                    }
+                    ZoneID = ZoneID == 0 ? WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].ID : WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].Zone;
                 }
                 GroupUpdateFlag |= 128u;
                 if (WorldServiceLocator._WS_Maps.AreaTable[ZoneFlag].IsCity())
@@ -6449,14 +6430,9 @@ namespace Mangos.World.Player
 
                 {
                     Faction = WorldServiceLocator._WS_DBCDatabase.CharRaces[MySQLQuery.Rows[0].As<int>("char_race")].FactionID;
-                    if (Gender == Genders.GENDER_MALE)
-                    {
-                        Model = WorldServiceLocator._WS_DBCDatabase.CharRaces[MySQLQuery.Rows[0].As<int>("char_race")].ModelMale;
-                    }
-                    else
-                    {
-                        Model = WorldServiceLocator._WS_DBCDatabase.CharRaces[MySQLQuery.Rows[0].As<int>("char_race")].ModelFemale;
-                    }
+                    Model = Gender == Genders.GENDER_MALE
+                        ? WorldServiceLocator._WS_DBCDatabase.CharRaces[MySQLQuery.Rows[0].As<int>("char_race")].ModelMale
+                        : WorldServiceLocator._WS_DBCDatabase.CharRaces[MySQLQuery.Rows[0].As<int>("char_race")].ModelFemale;
                 }
                 if (Model == 0)
                 {

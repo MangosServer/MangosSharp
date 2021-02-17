@@ -255,38 +255,10 @@ namespace Mangos.World.Objects
             Race = MySQLQuery.Rows[0].As<byte>("TrainerRace");
             Leader = MySQLQuery.Rows[0].As<byte>("RacialLeader");
 
-            if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell1"])))
-            {
-                Spells[0] = MySQLQuery.Rows[0].As<int>("spell1");
-            }
-            else
-            {
-                Spells[0] = 0;
-            }
-            if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell2"])))
-            {
-                Spells[1] = MySQLQuery.Rows[0].As<int>("spell2");
-            }
-            else
-            {
-                Spells[1] = 0;
-            }
-            if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell3"])))
-            {
-                Spells[2] = MySQLQuery.Rows[0].As<int>("spell3");
-            }
-            else
-            {
-                Spells[2] = 0;
-            }
-            if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell4"])))
-            {
-                Spells[3] = MySQLQuery.Rows[0].As<int>("spell4");
-            }
-            else
-            {
-                Spells[3] = 0;
-            }
+            Spells[0] = !Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell1"])) ? MySQLQuery.Rows[0].As<int>("spell1") : 0;
+            Spells[1] = !Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell2"])) ? MySQLQuery.Rows[0].As<int>("spell2") : 0;
+            Spells[2] = !Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell3"])) ? MySQLQuery.Rows[0].As<int>("spell3") : 0;
+            Spells[3] = !Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell4"])) ? MySQLQuery.Rows[0].As<int>("spell4") : 0;
             PetSpellDataID = MySQLQuery.Rows[0].As<int>("PetSpellDataId");
             LootID = MySQLQuery.Rows[0].As<int>("LootId");
             SkinLootID = MySQLQuery.Rows[0].As<int>("SkinningLootId");
@@ -320,13 +292,9 @@ namespace Mangos.World.Objects
             {
                 TalkScript = null;
             }
-            else if (cNpcFlags == 1)
-            {
-                TalkScript = new WS_NPCs.TDefaultTalk();
-            }
             else
             {
-                TalkScript = new WS_NPCs.TDefaultTalk();
+                TalkScript = cNpcFlags == 1 ? new WS_NPCs.TDefaultTalk() : new WS_NPCs.TDefaultTalk();
             }
         }
 

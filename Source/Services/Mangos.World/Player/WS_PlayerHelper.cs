@@ -101,14 +101,7 @@ namespace Mangos.World.Player
             {
                 checked
                 {
-                    if ((short)unchecked(Current + Incrementator) < Base)
-                    {
-                        Current = (short)unchecked(Current + Incrementator);
-                    }
-                    else
-                    {
-                        Current = Base;
-                    }
+                    Current = (short)unchecked(Current + Incrementator) < Base ? (short)unchecked(Current + Incrementator) : Base;
                 }
             }
         }
@@ -130,14 +123,7 @@ namespace Mangos.World.Player
                 get => checked((int)Math.Round(_Current * Modifier));
                 set
                 {
-                    if (value <= Maximum)
-                    {
-                        _Current = value;
-                    }
-                    else
-                    {
-                        _Current = Maximum;
-                    }
+                    _Current = value <= Maximum ? value : Maximum;
                     if (_Current < 0)
                     {
                         _Current = 0;

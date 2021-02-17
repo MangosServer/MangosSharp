@@ -315,14 +315,7 @@ namespace Mangos.World.Objects
 
         private void InitializeBag()
         {
-            if (WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].IsContainer)
-            {
-                Items = new Dictionary<byte, ItemObject>();
-            }
-            else
-            {
-                Items = null;
-            }
+            Items = WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry].IsContainer ? new Dictionary<byte, ItemObject>() : null;
         }
 
         public bool GenerateLoot()

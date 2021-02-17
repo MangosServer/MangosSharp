@@ -467,14 +467,7 @@ namespace Mangos.World.Network
                     WorldServiceLocator._WS_Group.Groups[GroupID].DungeonDifficulty = (GroupDungeonDifficulty)Difficulty;
                     WorldServiceLocator._WS_Group.Groups[GroupID].LootMethod = (GroupLootMethod)Method;
                     WorldServiceLocator._WS_Group.Groups[GroupID].LootThreshold = (GroupLootThreshold)Threshold;
-                    if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Master))
-                    {
-                        WorldServiceLocator._WS_Group.Groups[GroupID].LocalLootMaster = WorldServiceLocator._WorldServer.CHARACTERs[Master];
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WS_Group.Groups[GroupID].LocalLootMaster = null;
-                    }
+                    WorldServiceLocator._WS_Group.Groups[GroupID].LocalLootMaster = WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Master) ? WorldServiceLocator._WorldServer.CHARACTERs[Master] : null;
                 }
             }
 

@@ -113,13 +113,9 @@ namespace Mangos.World.Weather
                         {
                             CurrentWeather = WeatherType.WEATHER_SNOW;
                         }
-                        else if (r < chance3)
-                        {
-                            CurrentWeather = WeatherType.WEATHER_SANDSTORM;
-                        }
                         else
                         {
-                            CurrentWeather = WeatherType.WEATHER_FINE;
+                            CurrentWeather = r < chance3 ? WeatherType.WEATHER_SANDSTORM : WeatherType.WEATHER_FINE;
                         }
                         if (CurrentWeather == WeatherType.WEATHER_FINE)
                         {
@@ -132,14 +128,9 @@ namespace Mangos.World.Weather
                         else
                         {
                             r = WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
-                            if (r < 50)
-                            {
-                                Intensity = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.33329999446868896) + 0.3334f;
-                            }
-                            else
-                            {
-                                Intensity = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.33329999446868896) + 0.6667f;
-                            }
+                            Intensity = r < 50
+                                ? (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.33329999446868896) + 0.3334f
+                                : (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.33329999446868896) + 0.6667f;
                         }
                         return CurrentWeather != oldWeather || Intensity != oldIntensity;
                     }

@@ -142,14 +142,9 @@ namespace Mangos.Extractor
             // Replace lowercase object with Object (used in f.ex Gameobject -> GameObject)
             if (tmp.IndexOf("object", StringComparison.OrdinalIgnoreCase) > 0)
             {
-                if (tmp.Length > tmp.IndexOf("object", StringComparison.OrdinalIgnoreCase) + 6)
-                {
-                    tmp = tmp.Substring(0, tmp.IndexOf("object")) + "Object" + tmp.Substring(tmp.IndexOf("object") + 6);
-                }
-                else
-                {
-                    tmp = tmp.Substring(0, tmp.IndexOf("object")) + "Object";
-                }
+                tmp = tmp.Length > tmp.IndexOf("object", StringComparison.OrdinalIgnoreCase) + 6
+                    ? tmp.Substring(0, tmp.IndexOf("object")) + "Object" + tmp.Substring(tmp.IndexOf("object") + 6)
+                    : tmp.Substring(0, tmp.IndexOf("object")) + "Object";
             }
 
             return tmp;

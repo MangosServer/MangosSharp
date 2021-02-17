@@ -187,14 +187,7 @@ namespace Mangos.Cluster.Handlers
                                 client.Character.Dnd = false;
                             }
 
-                            if (client.Character.Afk)
-                            {
-                                client.Character.ChatFlag = ChatFlag.FLAGS_AFK;
-                            }
-                            else
-                            {
-                                client.Character.ChatFlag = ChatFlag.FLAGS_NONE;
-                            }
+                            client.Character.ChatFlag = client.Character.Afk ? ChatFlag.FLAGS_AFK : ChatFlag.FLAGS_NONE;
                             // DONE: Pass the packet to the world server so it also knows about it
                             client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
                         }
@@ -223,14 +216,7 @@ namespace Mangos.Cluster.Handlers
                                 client.Character.Afk = false;
                             }
 
-                            if (client.Character.Dnd)
-                            {
-                                client.Character.ChatFlag = ChatFlag.FLAGS_DND;
-                            }
-                            else
-                            {
-                                client.Character.ChatFlag = ChatFlag.FLAGS_NONE;
-                            }
+                            client.Character.ChatFlag = client.Character.Dnd ? ChatFlag.FLAGS_DND : ChatFlag.FLAGS_NONE;
                             // DONE: Pass the packet to the world server so it also knows about it
                             client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
                         }

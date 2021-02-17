@@ -94,13 +94,9 @@ namespace Mangos.WardenExtractor
                 {
                     newSection.RawSize = 0x200;
                 }
-                else if (type == 2)
-                {
-                    newSection.RawSize = 0x800;
-                }
                 else
                 {
-                    newSection.RawSize = len;
+                    newSection.RawSize = type == 2 ? 0x800 : len;
                 }
 
                 Sections.Add(newSection);
@@ -743,14 +739,7 @@ namespace Mangos.WardenExtractor
             {
                 case 1:
                     {
-                        if (Instr.Opcode == 0x81)
-                        {
-                            immediate_size = operand_size_32 ? 4 : 2;
-                        }
-                        else
-                        {
-                            immediate_size = 1;
-                        }
+                        immediate_size = Instr.Opcode == 0x81 ? operand_size_32 ? 4 : 2 : 1;
 
                         break;
                     }

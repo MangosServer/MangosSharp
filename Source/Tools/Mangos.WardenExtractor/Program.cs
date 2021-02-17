@@ -124,14 +124,7 @@ namespace Mangos.WardenExtractor
             {
                 try
                 {
-                    if (i + 1 >= str.Length - 1)
-                    {
-                        bBytes[Conversion.Int(i / 2)] = Conversions.ToByte("&H" + str[i]);
-                    }
-                    else
-                    {
-                        bBytes[Conversion.Int(i / 2)] = Conversions.ToByte("&H" + str[i] + str[i + 1]);
-                    }
+                    bBytes[Conversion.Int(i / 2)] = i + 1 >= str.Length - 1 ? Conversions.ToByte("&H" + str[i]) : Conversions.ToByte("&H" + str[i] + str[i + 1]);
                 }
                 catch (Exception e)
                 {

@@ -120,14 +120,9 @@ namespace Mangos.Cluster.Handlers
                             ChannelFlags = (byte)(ChannelFlags | (byte)CHANNEL_FLAG.CHANNEL_FLAG_CITY);
                         }
 
-                        if (((ChatChannelsFlags)withBlock.Flags & ChatChannelsFlags.FLAG_LFG) == ChatChannelsFlags.FLAG_LFG)
-                        {
-                            ChannelFlags = (byte)(ChannelFlags | (byte)CHANNEL_FLAG.CHANNEL_FLAG_LFG);
-                        }
-                        else
-                        {
-                            ChannelFlags = (byte)((CHANNEL_FLAG)ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_NOT_LFG);
-                        }
+                        ChannelFlags = ((ChatChannelsFlags)withBlock.Flags & ChatChannelsFlags.FLAG_LFG) == ChatChannelsFlags.FLAG_LFG
+                            ? (byte)(ChannelFlags | (byte)CHANNEL_FLAG.CHANNEL_FLAG_LFG)
+                            : (byte)((CHANNEL_FLAG)ChannelFlags | CHANNEL_FLAG.CHANNEL_FLAG_NOT_LFG);
                     }
                 }
                 else
@@ -554,13 +549,11 @@ namespace Mangos.Cluster.Handlers
                 {
                     p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, character.Guid, default, default);
                 }
-                else if (Owner > 0m)
-                {
-                    p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_WHO_OWNER, character.Guid, default, _clusterServiceLocator.WorldCluster.CharacteRs[Owner].Name);
-                }
                 else
                 {
-                    p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_WHO_OWNER, character.Guid, default, "Nobody");
+                    p = Owner > 0m
+                        ? BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_WHO_OWNER, character.Guid, default, _clusterServiceLocator.WorldCluster.CharacteRs[Owner].Name)
+                        : BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_WHO_OWNER, character.Guid, default, "Nobody");
                 }
 
                 character.Client.Send(p);
@@ -604,16 +597,9 @@ namespace Mangos.Cluster.Handlers
                 else
                 {
                     Announce = !Announce;
-                    PacketClass packet;
-                    if (Announce)
-                    {
-                        packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_ENABLE_ANNOUNCE, character.Guid, default, default);
-                    }
-                    else
-                    {
-                        packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_DISABLE_ANNOUNCE, character.Guid, default, default);
-                    }
-
+                    PacketClass packet = Announce
+                        ? BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_ENABLE_ANNOUNCE, character.Guid, default, default)
+                        : BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_DISABLE_ANNOUNCE, character.Guid, default, default);
                     Broadcast(packet);
                     packet.Dispose();
                 }
@@ -636,16 +622,9 @@ namespace Mangos.Cluster.Handlers
                 else
                 {
                     Moderate = !Moderate;
-                    PacketClass packet;
-                    if (Announce)
-                    {
-                        packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_MODERATED, character.Guid, default, default);
-                    }
-                    else
-                    {
-                        packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_UNMODERATED, character.Guid, default, default);
-                    }
-
+                    PacketClass packet = Announce
+                        ? BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_MODERATED, character.Guid, default, default)
+                        : BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_UNMODERATED, character.Guid, default, default);
                     Broadcast(packet);
                     packet.Dispose();
                 }

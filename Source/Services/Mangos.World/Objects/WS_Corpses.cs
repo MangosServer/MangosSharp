@@ -217,26 +217,14 @@ namespace Mangos.World.Objects
                     Character.corpsePositionY = positionY;
                     Character.corpsePositionZ = positionZ;
                     Character.corpseMapID = (int)MapID;
-                    if (Character.isPvP)
-                    {
-                        Character.corpseCorpseType = CorpseType.CORPSE_RESURRECTABLE_PVP;
-                    }
-                    else
-                    {
-                        Character.corpseCorpseType = CorpseType.CORPSE_RESURRECTABLE_PVE;
-                    }
+                    Character.corpseCorpseType = Character.isPvP ? CorpseType.CORPSE_RESURRECTABLE_PVP : CorpseType.CORPSE_RESURRECTABLE_PVE;
                     Character.corpseCorpseType = CorpseType;
                     byte i = 0;
                     do
                     {
-                        if (Character.Items.ContainsKey(i))
-                        {
-                            Items[i] = Character.Items[i].ItemInfo.Model + unchecked((int)((uint)Character.Items[i].ItemInfo.InventoryType << 24));
-                        }
-                        else
-                        {
-                            Items[i] = 0;
-                        }
+                        Items[i] = Character.Items.ContainsKey(i)
+                            ? Character.Items[i].ItemInfo.Model + unchecked((int)((uint)Character.Items[i].ItemInfo.InventoryType << 24))
+                            : 0;
                         i = (byte)unchecked((uint)(i + 1));
                     }
                     while (i <= 18u);

@@ -757,14 +757,9 @@ namespace Mangos.World.DataStores
                 try
                 {
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT MAX(item_guid) FROM characters_inventory;", ref MySQLQuery);
-                    if (MySQLQuery.Rows[0][0] != DBNull.Value)
-                    {
-                        WorldServiceLocator._WorldServer.itemGuidCounter = Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_ITEM));
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.itemGuidCounter = Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_ITEM)));
-                    }
+                    WorldServiceLocator._WorldServer.itemGuidCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                        ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_ITEM))
+                        : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_ITEM)));
                 }
                 catch (Exception ex5)
                 {
@@ -777,14 +772,9 @@ namespace Mangos.World.DataStores
                 try
                 {
                     WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT MAX(guid) FROM creature;", ref MySQLQuery);
-                    if (MySQLQuery.Rows[0][0] != DBNull.Value)
-                    {
-                        WorldServiceLocator._WorldServer.CreatureGUIDCounter = Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_UNIT));
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.CreatureGUIDCounter = Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_UNIT)));
-                    }
+                    WorldServiceLocator._WorldServer.CreatureGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                        ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_UNIT))
+                        : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_UNIT)));
                 }
                 catch (Exception ex6)
                 {
@@ -797,14 +787,9 @@ namespace Mangos.World.DataStores
                 try
                 {
                     WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT MAX(guid) FROM gameobject;", ref MySQLQuery);
-                    if (MySQLQuery.Rows[0][0] != DBNull.Value)
-                    {
-                        WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT));
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT)));
-                    }
+                    WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                        ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT))
+                        : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT)));
                 }
                 catch (Exception ex7)
                 {
@@ -817,14 +802,9 @@ namespace Mangos.World.DataStores
                 try
                 {
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT MAX(guid) FROM corpse", ref MySQLQuery);
-                    if (MySQLQuery.Rows[0][0] != DBNull.Value)
-                    {
-                        WorldServiceLocator._WorldServer.CorpseGUIDCounter = Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_CORPSE));
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.CorpseGUIDCounter = Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_CORPSE)));
-                    }
+                    WorldServiceLocator._WorldServer.CorpseGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                        ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_CORPSE))
+                        : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_CORPSE)));
                 }
                 catch (Exception ex8)
                 {
