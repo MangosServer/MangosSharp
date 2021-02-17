@@ -419,7 +419,7 @@ namespace Mangos.World.Objects
                 if (aiScript != null && (Forced || aiScript.State != AIState.AI_MOVING_TO_SPAWN))
                 {
                     int timeDiff = checked(WorldServiceLocator._NativeMethods.timeGetTime("") - LastMove);
-                    if ((Forced || aiScript.IsMoving()) && LastMove > 0 && timeDiff < LastMove_Time)
+                    if ((Forced || aiScript.IsMoving) && LastMove > 0 && timeDiff < LastMove_Time)
                     {
                         float distance = (aiScript.State is not AIState.AI_MOVING and not AIState.AI_WANDERING) ? (timeDiff / 1000f * (CreatureInfo.RunSpeed * SpeedMod)) : (timeDiff / 1000f * (CreatureInfo.WalkSpeed * SpeedMod));
                         positionX = (float)(OldX + (Math.Cos(orientation) * distance));
@@ -438,7 +438,7 @@ namespace Mangos.World.Objects
 
             public void StopMoving()
             {
-                if (aiScript != null && !aiScript.InCombat())
+                if (aiScript != null && !aiScript.InCombat)
                 {
                     aiScript.Pause(10000);
                     SetToRealPosition(Forced: true);
@@ -569,7 +569,7 @@ namespace Mangos.World.Objects
             public void TurnTo(float orientation_)
             {
                 orientation = orientation_;
-                if (SeenBy.Count > 0 && (aiScript == null || !aiScript.IsMoving()))
+                if (SeenBy.Count > 0 && (aiScript == null || !aiScript.IsMoving))
                 {
                     Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_MOVE_HEARTBEAT);
                     try

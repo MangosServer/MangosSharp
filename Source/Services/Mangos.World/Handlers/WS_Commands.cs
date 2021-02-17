@@ -1665,7 +1665,7 @@ namespace Mangos.World.Handlers
                 return true;
             }
             WS_Creatures.CreatureObject creature = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
-            if (creature.aiScript != null && creature.aiScript.InCombat())
+            if (creature.aiScript != null && creature.aiScript.InCombat)
             {
                 objCharacter.CommandResponse("Creature is in combat. It has to be out of combat first.");
                 return true;

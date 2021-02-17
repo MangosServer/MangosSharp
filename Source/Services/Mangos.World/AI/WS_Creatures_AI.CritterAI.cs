@@ -52,17 +52,14 @@ namespace Mangos.World.AI
                 aiTarget = null;
             }
 
-            public override bool IsMoving()
-            {
-                return checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer
+            public override bool IsMoving => checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer
                 && (State switch
                 {
-                AIState.AI_MOVE_FOR_ATTACK => true,
-                AIState.AI_MOVING => true,
-                AIState.AI_WANDERING => true,
-                _ => false,
+                    AIState.AI_MOVE_FOR_ATTACK => true,
+                    AIState.AI_MOVING => true,
+                    AIState.AI_WANDERING => true,
+                    _ => false,
                 });
-            }
 
             public override void Pause(int Time)
             {

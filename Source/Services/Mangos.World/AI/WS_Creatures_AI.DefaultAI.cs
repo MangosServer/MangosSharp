@@ -97,9 +97,7 @@ namespace Mangos.World.AI
                 aiTarget = null;
             }
 
-            public override bool IsMoving()
-            {
-                return checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer
+            public override bool IsMoving => checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer
                 && (State switch
                 {
                     AIState.AI_MOVE_FOR_ATTACK => true,
@@ -107,7 +105,6 @@ namespace Mangos.World.AI
                     AIState.AI_WANDERING => true,
                     _ => false,
                 });
-            }
 
             public override void Pause(int Time)
             {
@@ -183,7 +180,7 @@ namespace Mangos.World.AI
                         {
                             @object.AddToCombat(aiCreature);
                         }
-                        if (!InCombat())
+                        if (!InCombat)
                         {
                             aiHateTable.Add(Attacker, (int)Math.Round(HateValue * Attacker.Spell_ThreatModifier));
                             OnEnterCombat();
@@ -253,13 +250,10 @@ namespace Mangos.World.AI
                         State = AIState.AI_ATTACKING;
                     }
                 }
-                catch (Exception ex2)
+                catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex2);
-                    Exception ex = ex2;
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error selecting target.{0}{1}", Environment.NewLine, ex.ToString());
                     Reset();
-                    ProjectData.ClearProjectError();
                 }
                 if (aiTarget == null)
                 {
@@ -269,12 +263,14 @@ namespace Mangos.World.AI
 
             protected bool CheckTarget()
             {
-                if (aiTarget == null)
+                switch (aiTarget)
                 {
-                    Reset();
-                    return true;
+                    case null:
+                        Reset();
+                        return true;
+                    default:
+                        return false;
                 }
-                return false;
             }
 
             public override void DoThink()
@@ -333,14 +329,15 @@ namespace Mangos.World.AI
                                 }
                                 State = AIState.AI_RESPAWN;
                                 int RespawnTime = aiCreature.SpawnTime;
-                                if (RespawnTime > 0)
+                                switch (RespawnTime)
                                 {
-                                    aiTimer = RespawnTime * 1000;
-                                    aiCreature.Despawn();
-                                }
-                                else
-                                {
-                                    aiCreature.Destroy();
+                                    case > 0:
+                                        aiTimer = RespawnTime * 1000;
+                                        aiCreature.Despawn();
+                                        break;
+                                    default:
+                                        aiCreature.Destroy();
+                                        break;
                                 }
                                 break;
                             }
@@ -446,85 +443,82 @@ namespace Mangos.World.AI
                         if (nextAttack <= 0)
                         {
                             nextAttack = 0;
-                            WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                             ref WS_Creatures.CreatureObject reference = ref aiCreature;
                             ref WS_Creatures.CreatureObject reference2 = ref reference;
                             WS_Base.BaseObject Object = reference;
                             ref WS_Base.BaseUnit aiTarget = ref this.aiTarget;
                             ref WS_Base.BaseUnit reference3 = ref aiTarget;
                             WS_Base.BaseObject Object2 = aiTarget;
-                            bool flag = wS_Combat.IsInFrontOf(ref Object, ref Object2);
+                            bool flag = WorldServiceLocator._WS_Combat.IsInFrontOf(ref Object, ref Object2);
                             reference3 = (WS_Base.BaseUnit)Object2;
                             reference2 = (WS_Creatures.CreatureObject)Object;
                             if (!flag)
                             {
-                                WS_Creatures.CreatureObject creatureObject = aiCreature;
                                 ref WS_Base.BaseUnit aiTarget2 = ref this.aiTarget;
                                 reference3 = ref aiTarget2;
                                 Object2 = aiTarget2;
-                                creatureObject.TurnTo(ref Object2);
+                                aiCreature.TurnTo(ref Object2);
                                 reference3 = (WS_Base.BaseUnit)Object2;
                             }
-                            WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
                             ref WS_Creatures.CreatureObject reference4 = ref aiCreature;
                             reference2 = ref reference4;
                             WS_Base.BaseUnit Attacker = reference4;
-                            WS_Combat.DamageInfo damageInfo2 = wS_Combat2.CalculateDamage(ref Attacker, ref this.aiTarget, DualWield: false, Ranged: false);
                             reference2 = (WS_Creatures.CreatureObject)Attacker;
-                            WS_Combat.DamageInfo damageInfo = damageInfo2;
-                            WS_Combat wS_Combat3 = WorldServiceLocator._WS_Combat;
+                            WS_Combat.DamageInfo damageInfo = WorldServiceLocator._WS_Combat.CalculateDamage(ref Attacker, ref this.aiTarget, DualWield: false, Ranged: false);
                             ref WS_Creatures.CreatureObject reference5 = ref aiCreature;
                             reference2 = ref reference5;
                             Object2 = reference5;
                             ref WS_Base.BaseUnit aiTarget3 = ref this.aiTarget;
                             reference3 = ref aiTarget3;
                             Object = aiTarget3;
-                            WS_Combat.DamageInfo damageInfo3 = damageInfo;
                             WS_Network.ClientClass client = null;
-                            wS_Combat3.SendAttackerStateUpdate(ref Object2, ref Object, damageInfo3, client);
+                            WorldServiceLocator._WS_Combat.SendAttackerStateUpdate(Attacker: ref Object2, Victim: ref Object, damageInfo, client);
                             reference3 = (WS_Base.BaseUnit)Object;
                             reference2 = (WS_Creatures.CreatureObject)Object2;
-                            WS_Base.BaseUnit aiTarget4 = this.aiTarget;
-                            int getDamage = damageInfo.GetDamage;
                             ref WS_Creatures.CreatureObject reference6 = ref aiCreature;
                             reference2 = ref reference6;
                             Attacker = reference6;
-                            aiTarget4.DealDamage(getDamage, Attacker);
+                            this.aiTarget.DealDamage(damageInfo.GetDamage, Attacker);
                             reference2 = (WS_Creatures.CreatureObject)Attacker;
                             nextAttack = WorldServiceLocator._WorldServer.CREATURESDatabase[aiCreature.ID].BaseAttackTime;
                             aiTimer = 1000;
                         }
                     }
-                    catch (Exception ex2)
+                    catch (Exception ex)
                     {
-                        ProjectData.SetProjectError(ex2);
-                        Exception ex = ex2;
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WS_Creatures:DoAttack failed - Guid: {1} ID: {2}  {0}", ex.Message);
                         Reset();
-                        ProjectData.ClearProjectError();
                     }
                 }
             }
 
             public override void DoMove()
             {
-                if (aiTarget == null)
+                switch (aiTarget)
                 {
-                    float distanceToSpawn = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
-                    if (!IsWaypoint && aiCreature.SpawnID > 0 && distanceToSpawn > aiCreature.MaxDistance)
-                    {
-                        GoBackToSpawn();
-                        return;
-                    }
-                }
-                else
-                {
-                    float distanceToLastHit = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, LastHitX, aiCreature.positionY, LastHitY, aiCreature.positionZ, LastHitZ);
-                    if (distanceToLastHit > aiCreature.MaxDistance)
-                    {
-                        OnLeaveCombat();
-                        return;
-                    }
+                    case null:
+                        {
+                            float distanceToSpawn = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
+                            if (!IsWaypoint && aiCreature.SpawnID > 0 && distanceToSpawn > aiCreature.MaxDistance)
+                            {
+                                GoBackToSpawn();
+                                return;
+                            }
+
+                            break;
+                        }
+
+                    default:
+                        {
+                            float distanceToLastHit = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, LastHitX, aiCreature.positionY, LastHitY, aiCreature.positionZ, LastHitZ);
+                            if (distanceToLastHit > aiCreature.MaxDistance)
+                            {
+                                OnLeaveCombat();
+                                return;
+                            }
+
+                            break;
+                        }
                 }
                 if (aiCreature.IsRooted)
                 {
@@ -554,10 +548,9 @@ namespace Mangos.World.AI
                         MoveTries = checked(MoveTries + 1);
                         if (!(Math.Abs(aiCreature.positionZ - selectedZ2) > 5f))
                         {
-                            WS_Maps wS_Maps = WorldServiceLocator._WS_Maps;
                             ref WS_Creatures.CreatureObject reference = ref aiCreature;
                             WS_Base.BaseObject obj = reference;
-                            bool flag = wS_Maps.IsInLineOfSight(ref obj, selectedX2, selectedY2, selectedZ2 + 1f);
+                            bool flag = WorldServiceLocator._WS_Maps.IsInLineOfSight(ref obj, selectedX2, selectedY2, selectedZ2 + 1f);
                             reference = (WS_Creatures.CreatureObject)obj;
                             if (flag)
                             {
