@@ -538,68 +538,19 @@ namespace Mangos.World.Player
         public void SendInitWorldStates(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Character.ZoneCheck();
-            ushort NumberOfFields;
-            switch (Character.ZoneID)
+            var NumberOfFields = Character.ZoneID switch
             {
-                case 0:
-                case 1:
-                case 4:
-                case 8:
-                case 10:
-                case 11:
-                case 12:
-                case 36:
-                case 38:
-                case 40:
-                case 41:
-                case 51:
-                case 267:
-                case 1519:
-                case 1537:
-                case 2257:
-                case 2918:
-                    NumberOfFields = 6;
-                    break;
-
-                case 2597:
-                    NumberOfFields = 81;
-                    break;
-
-                case 3277:
-                    NumberOfFields = 14;
-                    break;
-
-                case 3358:
-                case 3820:
-                    NumberOfFields = 38;
-                    break;
-
-                case 3483:
-                    NumberOfFields = 22;
-                    break;
-
-                case 3519:
-                    NumberOfFields = 36;
-                    break;
-
-                case 3521:
-                    NumberOfFields = 35;
-                    break;
-
-                case 3698:
-                case 3702:
-                case 3968:
-                    NumberOfFields = 9;
-                    break;
-
-                case 3703:
-                    NumberOfFields = 9;
-                    break;
-
-                default:
-                    NumberOfFields = 10;
-                    break;
-            }
+                0 or 1 or 4 or 8 or 10 or 11 or 12 or 36 or 38 or 40 or 41 or 51 or 267 or 1519 or 1537 or 2257 or 2918 => 6,
+                2597 => 81,
+                3277 => 14,
+                3358 or 3820 => 38,
+                3483 => 22,
+                3519 => 36,
+                3521 => 35,
+                3698 or 3702 or 3968 => 9,
+                3703 => 9,
+                _ => 10,
+            };
             Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_INIT_WORLD_STATES);
             try
             {

@@ -401,17 +401,11 @@ namespace Mangos.World.Globals
 
         public bool GetCharacterSide(byte Race)
         {
-            switch (Race)
+            return Race switch
             {
-                case 1:
-                case 3:
-                case 4:
-                case 7:
-                    return false;
-
-                default:
-                    return true;
-            }
+                1 or 3 or 4 or 7 => false,
+                _ => true,
+            };
         }
 
         public bool IsContinentMap(int Map)

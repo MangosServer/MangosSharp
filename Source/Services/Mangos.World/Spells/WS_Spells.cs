@@ -3801,38 +3801,12 @@ namespace Mangos.World.Spells
                         int Duration = SPELLs[SpellID].GetDuration;
                         if (SpellID == 15007)
                         {
-                            switch (auraTarget.Level)
+                            Duration = auraTarget.Level switch
                             {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                case 5:
-                                case 6:
-                                case 7:
-                                case 8:
-                                case 9:
-                                case 10:
-                                    Duration = 0;
-                                    break;
-
-                                default:
-                                    Duration = 600000;
-                                    break;
-
-                                case 11:
-                                case 12:
-                                case 13:
-                                case 14:
-                                case 15:
-                                case 16:
-                                case 17:
-                                case 18:
-                                case 19:
-                                    Duration = (auraTarget.Level - 10) * 60 * 1000;
-                                    break;
-                            }
+                                0 or 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 or 10 => 0,
+                                11 or 12 or 13 or 14 or 15 or 16 or 17 or 18 or 19 => (auraTarget.Level - 10) * 60 * 1000,
+                                _ => 600000,
+                            };
                         }
                         int num = AuraStart;
                         int num2 = AuraEnd;

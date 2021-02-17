@@ -1033,27 +1033,13 @@ namespace Mangos.World.Handlers
                 {
                     if (@object.combatDodge > 0)
                     {
-                        int combatDodgeAgilityBonus;
-                        switch (@object.Classe)
+                        var combatDodgeAgilityBonus = @object.Classe switch
                         {
-                            case Classes.CLASS_HUNTER:
-                                combatDodgeAgilityBonus = (int)(@object.Agility.Base / 26.5f);
-                                break;
-
-                            case Classes.CLASS_ROGUE:
-                                combatDodgeAgilityBonus = (int)(@object.Agility.Base / 14.5f);
-                                break;
-
-                            case Classes.CLASS_PALADIN:
-                            case Classes.CLASS_MAGE:
-                            case Classes.CLASS_WARLOCK:
-                                combatDodgeAgilityBonus = (int)(@object.Agility.Base / 19.5f);
-                                break;
-
-                            default:
-                                combatDodgeAgilityBonus = (int)(@object.Agility.Base / 20.0);
-                                break;
-                        }
+                            Classes.CLASS_HUNTER => (int)(@object.Agility.Base / 26.5f),
+                            Classes.CLASS_ROGUE => (int)(@object.Agility.Base / 14.5f),
+                            Classes.CLASS_PALADIN or Classes.CLASS_MAGE or Classes.CLASS_WARLOCK => (int)(@object.Agility.Base / 19.5f),
+                            _ => (int)(@object.Agility.Base / 20.0),
+                        };
                         return @object.combatDodge + combatDodgeAgilityBonus - (skillDiference * 0.04f);
                     }
                 }

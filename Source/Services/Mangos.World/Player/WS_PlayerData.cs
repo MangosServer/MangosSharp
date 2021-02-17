@@ -683,17 +683,11 @@ namespace Mangos.World.Player
             {
                 get
                 {
-                    switch (Race)
+                    return Race switch
                     {
-                        case Races.RACE_HUMAN:
-                        case Races.RACE_DWARF:
-                        case Races.RACE_NIGHT_ELF:
-                        case Races.RACE_GNOME:
-                            return false;
-
-                        default:
-                            return true;
-                    }
+                        Races.RACE_HUMAN or Races.RACE_DWARF or Races.RACE_NIGHT_ELF or Races.RACE_GNOME => false,
+                        _ => true,
+                    };
                 }
             }
 
@@ -701,17 +695,11 @@ namespace Mangos.World.Player
             {
                 get
                 {
-                    switch (Race)
+                    return Race switch
                     {
-                        case Races.RACE_HUMAN:
-                        case Races.RACE_DWARF:
-                        case Races.RACE_NIGHT_ELF:
-                        case Races.RACE_GNOME:
-                            return 469;
-
-                        default:
-                            return 67;
-                    }
+                        Races.RACE_HUMAN or Races.RACE_DWARF or Races.RACE_NIGHT_ELF or Races.RACE_GNOME => 469,
+                        _ => 67,
+                    };
                 }
             }
 
@@ -5193,23 +5181,13 @@ namespace Mangos.World.Player
                 {
                     return TReaction.HOSTILE;
                 }
-                switch (GetReputation(WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[FactionID].FactionID))
+                return (GetReputation(WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[FactionID].FactionID)) switch
                 {
-                    case ReputationRank.Hated:
-                    case ReputationRank.Hostile:
-                        return TReaction.HOSTILE;
-
-                    default:
-                        return TReaction.FIGHT_SUPPORT;
-
-                    case ReputationRank.Friendly:
-                    case ReputationRank.Honored:
-                        return TReaction.FRIENDLY;
-
-                    case ReputationRank.Unfriendly:
-                    case ReputationRank.Neutral:
-                        return TReaction.NEUTRAL;
-                }
+                    ReputationRank.Hated or ReputationRank.Hostile => TReaction.HOSTILE,
+                    ReputationRank.Friendly or ReputationRank.Honored => TReaction.FRIENDLY,
+                    ReputationRank.Unfriendly or ReputationRank.Neutral => TReaction.NEUTRAL,
+                    _ => TReaction.FIGHT_SUPPORT,
+                };
             }
 
             public int GetReputationValue(int FactionTemplateID)

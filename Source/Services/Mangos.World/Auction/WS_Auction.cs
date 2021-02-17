@@ -48,21 +48,12 @@ namespace Mangos.World.Auction
             {
                 return AuctionHouses.AUCTION_UNDEFINED;
             }
-            switch (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.Faction)
+            return WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.Faction switch
             {
-                case 29:
-                case 68:
-                case 104:
-                    return AuctionHouses.AUCTION_HORDE;
-
-                case 12:
-                case 55:
-                case 79:
-                    return AuctionHouses.AUCTION_ALLIANCE;
-
-                default:
-                    return AuctionHouses.AUCTION_NEUTRAL;
-            }
+                29 or 68 or 104 => AuctionHouses.AUCTION_HORDE,
+                12 or 55 or 79 => AuctionHouses.AUCTION_ALLIANCE,
+                _ => AuctionHouses.AUCTION_NEUTRAL,
+            };
         }
 
         public int GetAuctionDeposit(ulong GUID, int Price, int ItemCount, int Time)

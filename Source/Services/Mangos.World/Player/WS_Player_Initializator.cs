@@ -307,26 +307,13 @@ namespace Mangos.World.Player
 
         public ManaTypes GetClassManaType(Classes Classe)
         {
-            switch (Classe)
+            return Classe switch
             {
-                case Classes.CLASS_PALADIN:
-                case Classes.CLASS_HUNTER:
-                case Classes.CLASS_PRIEST:
-                case Classes.CLASS_SHAMAN:
-                case Classes.CLASS_MAGE:
-                case Classes.CLASS_WARLOCK:
-                case Classes.CLASS_DRUID:
-                    return ManaTypes.TYPE_MANA;
-
-                case Classes.CLASS_ROGUE:
-                    return ManaTypes.TYPE_ENERGY;
-
-                case Classes.CLASS_WARRIOR:
-                    return ManaTypes.TYPE_RAGE;
-
-                default:
-                    return ManaTypes.TYPE_MANA;
-            }
+                Classes.CLASS_PALADIN or Classes.CLASS_HUNTER or Classes.CLASS_PRIEST or Classes.CLASS_SHAMAN or Classes.CLASS_MAGE or Classes.CLASS_WARLOCK or Classes.CLASS_DRUID => ManaTypes.TYPE_MANA,
+                Classes.CLASS_ROGUE => ManaTypes.TYPE_ENERGY,
+                Classes.CLASS_WARRIOR => ManaTypes.TYPE_RAGE,
+                _ => ManaTypes.TYPE_MANA,
+            };
         }
 
         public void InitializeReputations(ref WS_PlayerData.CharacterObject objCharacter)
