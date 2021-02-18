@@ -256,17 +256,14 @@ namespace Mangos.World.Globals
 
         public string GetTimeLeftString(uint seconds)
         {
-            if (seconds < 60L)
+            return seconds switch
             {
-                return Conversions.ToString(seconds) + "s";
-            }
-            if (seconds < 3600L)
-            {
-                return Conversions.ToString(seconds / 60L) + "m " + Conversions.ToString(seconds % 60L) + "s";
-            }
-            return seconds < 86400L
+                < 60 => Conversions.ToString(seconds) + "s",
+                < 3600 => Conversions.ToString(seconds / 60L) + "m " + Conversions.ToString(seconds % 60L) + "s",
+                _ => seconds < 86400L
                 ? Conversions.ToString(seconds / 3600L) + "h " + Conversions.ToString(seconds / 60L % 60) + "m " + Conversions.ToString(seconds % 60L) + "s"
-                : Conversions.ToString(seconds / 86400L) + "d " + Conversions.ToString(seconds / 3600L % 24) + "h " + Conversions.ToString(seconds / 60L % 60) + "m " + Conversions.ToString(seconds % 60L) + "s";
+                : Conversions.ToString(seconds / 86400L) + "d " + Conversions.ToString(seconds / 3600L % 24) + "h " + Conversions.ToString(seconds / 60L % 60) + "m " + Conversions.ToString(seconds % 60L) + "s"
+            };
         }
 
         public string EscapeString(string s)
@@ -329,24 +326,31 @@ namespace Mangos.World.Globals
             DataTable account = new DataTable();
             DataTable bannedAccount = new DataTable();
             WorldServiceLocator._WorldServer.AccountDatabase.Query($"SELECT id, username FROM account WHERE username = {Name};", ref account);
-            if (account.Rows.Count > 0)
+            switch (account.Rows.Count)
             {
-                int accID = Conversions.ToInteger(account.Rows[0]["id"]);
-                WorldServiceLocator._WorldServer.AccountDatabase.Query($"SELECT id, active FROM account_banned WHERE id = {accID};", ref bannedAccount);
-                if (bannedAccount.Rows.Count > 0)
-                {
-                    WorldServiceLocator._WorldServer.AccountDatabase.Update("UPDATE account_banned SET active = 1 WHERE id = '" + Conversions.ToString(accID) + "';");
-                }
-                else
-                {
-                    string tempBanDate = Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongDate) + " " + Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongTime);
-                    WorldServiceLocator._WorldServer.AccountDatabase.Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP('{1}'), UNIX_TIMESTAMP('{2}'), '{3}', '{4}', active = 1);", accID, tempBanDate, "0000-00-00 00:00:00", Name, Reason));
-                }
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Account [{0}] banned by server. Reason: [{1}].", Name, Reason);
-            }
-            else
-            {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Account [{0}] NOT Found in Database.", Name);
+                case > 0:
+                    {
+                        int accID = Conversions.ToInteger(account.Rows[0]["id"]);
+                        WorldServiceLocator._WorldServer.AccountDatabase.Query($"SELECT id, active FROM account_banned WHERE id = {accID};", ref bannedAccount);
+                        switch (bannedAccount.Rows.Count)
+                        {
+                            case > 0:
+                                WorldServiceLocator._WorldServer.AccountDatabase.Update("UPDATE account_banned SET active = 1 WHERE id = '" + Conversions.ToString(accID) + "';");
+                                break;
+                            default:
+                                {
+                                    string tempBanDate = Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongDate) + " " + Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongTime);
+                                    WorldServiceLocator._WorldServer.AccountDatabase.Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP('{1}'), UNIX_TIMESTAMP('{2}'), '{3}', '{4}', active = 1);", accID, tempBanDate, "0000-00-00 00:00:00", Name, Reason));
+                                    break;
+                                }
+                        }
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Account [{0}] banned by server. Reason: [{1}].", Name, Reason);
+                        break;
+                    }
+
+                default:
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Account [{0}] NOT Found in Database.", Name);
+                    break;
             }
         }
 
@@ -522,6 +526,7 @@ namespace Mangos.World.Globals
 
         public void SendTimeSyncReq(ref WS_Network.ClientClass client)
         {
+            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SendTimeSyncReq", client.IP, client.Port);
         }
 
         public void SendGameTime(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
@@ -633,11 +638,9 @@ namespace Mangos.World.Globals
                 packet.AddString(Message);
                 packet.AddInt8(Flag);
             }
-            catch (Exception ex2)
+            catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex2);
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "failed chat message type - {0}!", msgType);
-                ProjectData.ClearProjectError();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "failed chat message type - {0}!", msgType, ex);
             }
             return packet;
         }
