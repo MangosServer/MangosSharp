@@ -557,7 +557,7 @@ namespace Mangos.World.Player
                 packet.AddUInt32(Character.MapID);
                 packet.AddInt32(Character.ZoneID);
                 packet.AddInt32(Character.AreaID);
-                packet.AddUInt16(NumberOfFields);
+                packet.AddUInt16((ushort)NumberOfFields);
                 packet.AddUInt32(2264u);
                 packet.AddUInt32(0u);
                 packet.AddUInt32(2263u);

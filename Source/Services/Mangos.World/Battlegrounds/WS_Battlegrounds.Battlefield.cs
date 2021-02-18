@@ -90,8 +90,7 @@ namespace Mangos.World.Battlegrounds
                     throw new ArgumentNullException(nameof(p));
                 }
 
-                WS_PlayerData.CharacterObject[] array = MembersTeam1.ToArray();
-                foreach (WS_PlayerData.CharacterObject objCharacter in array)
+                foreach (WS_PlayerData.CharacterObject objCharacter in MembersTeam1.ToArray())
                 {
                     objCharacter.client.SendMultiplyPackets(ref p);
                 }
