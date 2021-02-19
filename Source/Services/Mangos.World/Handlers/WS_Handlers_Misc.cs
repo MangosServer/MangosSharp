@@ -47,99 +47,102 @@ namespace Mangos.World.Handlers
                 ulong GUID = packet.GetUInt64();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY [GUID={2:X}]", client.IP, client.Port, GUID);
                 Packets.PacketClass SMSG_NAME_QUERY_RESPONSE = new Packets.PacketClass(Opcodes.SMSG_NAME_QUERY_RESPONSE);
-                if (GUID == int.MaxValue)
+                switch (GUID)
                 {
-                    try
-                    {
-                        SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
-                        SMSG_NAME_QUERY_RESPONSE.AddString("System");
-                        SMSG_NAME_QUERY_RESPONSE.AddInt32(1);
-                        SMSG_NAME_QUERY_RESPONSE.AddInt32(1);
-                        SMSG_NAME_QUERY_RESPONSE.AddInt32(1);
-                        client.Send(ref SMSG_NAME_QUERY_RESPONSE);
-                    }
-                    finally
-                    {
-                        SMSG_NAME_QUERY_RESPONSE.Dispose();
-                    }
-                }
-                else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(GUID))
-                {
-                    if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID))
-                    {
+                    case int.MaxValue:
                         try
                         {
                             SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
-                            SMSG_NAME_QUERY_RESPONSE.AddString(WorldServiceLocator._WorldServer.CHARACTERs[GUID].Name);
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Race);
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Gender);
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Classe);
+                            SMSG_NAME_QUERY_RESPONSE.AddString("System");
+                            SMSG_NAME_QUERY_RESPONSE.AddInt32(1);
+                            SMSG_NAME_QUERY_RESPONSE.AddInt32(1);
+                            SMSG_NAME_QUERY_RESPONSE.AddInt32(1);
                             client.Send(ref SMSG_NAME_QUERY_RESPONSE);
                         }
                         finally
                         {
                             SMSG_NAME_QUERY_RESPONSE.Dispose();
                         }
-                        return;
-                    }
-                    DataTable MySQLQuery = new DataTable();
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT char_name, char_race, char_class, char_gender FROM characters WHERE char_guid = \"{GUID}\";", ref MySQLQuery);
-                    if (MySQLQuery.Rows.Count > 0)
-                    {
-                        try
+                        break;
+                    default:
+                        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(GUID))
                         {
-                            SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
-                            SMSG_NAME_QUERY_RESPONSE.AddString(MySQLQuery.Rows[0].As<string>("char_name"));
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32(MySQLQuery.Rows[0].As<int>("char_race"));
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32(MySQLQuery.Rows[0].As<int>("char_gender"));
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32(MySQLQuery.Rows[0].As<int>("char_class"));
-                            client.Send(ref SMSG_NAME_QUERY_RESPONSE);
+                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID))
+                            {
+                                try
+                                {
+                                    SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
+                                    SMSG_NAME_QUERY_RESPONSE.AddString(WorldServiceLocator._WorldServer.CHARACTERs[GUID].Name);
+                                    SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Race);
+                                    SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Gender);
+                                    SMSG_NAME_QUERY_RESPONSE.AddInt32((int)WorldServiceLocator._WorldServer.CHARACTERs[GUID].Classe);
+                                    client.Send(ref SMSG_NAME_QUERY_RESPONSE);
+                                }
+                                finally
+                                {
+                                    SMSG_NAME_QUERY_RESPONSE.Dispose();
+                                }
+                                return;
+                            }
+                            DataTable MySQLQuery = new DataTable();
+                            WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT char_name, char_race, char_class, char_gender FROM characters WHERE char_guid = \"{GUID}\";", ref MySQLQuery);
+                            switch (MySQLQuery.Rows.Count)
+                            {
+                                case > 0:
+                                    try
+                                    {
+                                        SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
+                                        SMSG_NAME_QUERY_RESPONSE.AddString(MySQLQuery.Rows[0].As<string>("char_name"));
+                                        SMSG_NAME_QUERY_RESPONSE.AddInt32(MySQLQuery.Rows[0].As<int>("char_race"));
+                                        SMSG_NAME_QUERY_RESPONSE.AddInt32(MySQLQuery.Rows[0].As<int>("char_gender"));
+                                        SMSG_NAME_QUERY_RESPONSE.AddInt32(MySQLQuery.Rows[0].As<int>("char_class"));
+                                        client.Send(ref SMSG_NAME_QUERY_RESPONSE);
+                                    }
+                                    finally
+                                    {
+                                        SMSG_NAME_QUERY_RESPONSE.Dispose();
+                                    }
+                                    break;
+                                default:
+                                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_NAME_QUERY_RESPONSE [Character GUID={2:X} not found]", client.IP, client.Port, GUID);
+                                    break;
+                            }
+                            MySQLQuery.Dispose();
                         }
-                        finally
+                        else
                         {
-                            SMSG_NAME_QUERY_RESPONSE.Dispose();
+                            if (!WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
+                            {
+                                return;
+                            }
+                            if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID))
+                            {
+                                try
+                                {
+                                    SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
+                                    SMSG_NAME_QUERY_RESPONSE.AddString(WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Name);
+                                    SMSG_NAME_QUERY_RESPONSE.AddInt32(0);
+                                    SMSG_NAME_QUERY_RESPONSE.AddInt32(0);
+                                    SMSG_NAME_QUERY_RESPONSE.AddInt32(0);
+                                    client.Send(ref SMSG_NAME_QUERY_RESPONSE);
+                                }
+                                finally
+                                {
+                                    SMSG_NAME_QUERY_RESPONSE.Dispose();
+                                }
+                            }
+                            else
+                            {
+                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_NAME_QUERY_RESPONSE [Creature GUID={2:X} not found]", client.IP, client.Port, GUID);
+                            }
                         }
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_NAME_QUERY_RESPONSE [Character GUID={2:X} not found]", client.IP, client.Port, GUID);
-                    }
-                    MySQLQuery.Dispose();
-                }
-                else
-                {
-                    if (!WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
-                    {
-                        return;
-                    }
-                    if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID))
-                    {
-                        try
-                        {
-                            SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID);
-                            SMSG_NAME_QUERY_RESPONSE.AddString(WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Name);
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32(0);
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32(0);
-                            SMSG_NAME_QUERY_RESPONSE.AddInt32(0);
-                            client.Send(ref SMSG_NAME_QUERY_RESPONSE);
-                        }
-                        finally
-                        {
-                            SMSG_NAME_QUERY_RESPONSE.Dispose();
-                        }
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_NAME_QUERY_RESPONSE [Creature GUID={2:X} not found]", client.IP, client.Port, GUID);
-                    }
+
+                        break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                ProjectData.SetProjectError(ex);
-                Exception e = ex;
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at name query.{0}", Environment.NewLine + e);
-                ProjectData.ClearProjectError();
             }
         }
 
@@ -275,13 +278,12 @@ namespace Mangos.World.Handlers
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TEXT_EMOTE [TextEmote={2} Unk={3}]", client.IP, client.Port, TextEmote, Unk);
                 if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID))
                 {
-                    WS_Quests aLLQUESTS = WorldServiceLocator._WorldServer.ALLQUESTS;
                     ref WS_PlayerData.CharacterObject character = ref client.Character;
-                    Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                     ulong key;
-                    WS_Creatures.CreatureObject creature = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
-                    aLLQUESTS.OnQuestDoEmote(ref character, ref creature, TextEmote);
-                    wORLD_CREATUREs[key] = creature;
+                    Dictionary<ulong, WS_Creatures.CreatureObject> WORLD_CREATUREs;
+                    WS_Creatures.CreatureObject creature = (WORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
+                    WorldServiceLocator._WorldServer.ALLQUESTS.OnQuestDoEmote(ref character, ref creature, TextEmote);
+                    WORLD_CREATUREs[key] = creature;
                     if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript is not null and WS_Creatures_AI.GuardAI)
                     {
                         ((WS_Creatures_AI.GuardAI)WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].aiScript).OnEmote(TextEmote);
@@ -289,15 +291,18 @@ namespace Mangos.World.Handlers
                 }
                 if (WorldServiceLocator._WS_DBCDatabase.EmotesText.ContainsKey(TextEmote))
                 {
-                    if (WorldServiceLocator._WS_DBCDatabase.EmotesState[WorldServiceLocator._WS_DBCDatabase.EmotesText[TextEmote]] == 0)
+                    switch (WorldServiceLocator._WS_DBCDatabase.EmotesState[WorldServiceLocator._WS_DBCDatabase.EmotesText[TextEmote]])
                     {
-                        client.Character.DoEmote(WorldServiceLocator._WS_DBCDatabase.EmotesText[TextEmote]);
-                    }
-                    else if (WorldServiceLocator._WS_DBCDatabase.EmotesState[WorldServiceLocator._WS_DBCDatabase.EmotesText[TextEmote]] == 2)
-                    {
-                        client.Character.cEmoteState = WorldServiceLocator._WS_DBCDatabase.EmotesText[TextEmote];
-                        client.Character.SetUpdateFlag(148, client.Character.cEmoteState);
-                        client.Character.SendCharacterUpdate();
+                        case 0:
+                            client.Character.DoEmote(WorldServiceLocator._WS_DBCDatabase.EmotesText[TextEmote]);
+                            break;
+                        case 2:
+                            client.Character.cEmoteState = WorldServiceLocator._WS_DBCDatabase.EmotesText[TextEmote];
+                            client.Character.SetUpdateFlag(148, client.Character.cEmoteState);
+                            client.Character.SendCharacterUpdate();
+                            break;
+                        default:
+                            break;
                     }
                 }
                 string secondName = "";
@@ -389,16 +394,15 @@ namespace Mangos.World.Handlers
         {
             try
             {
-                WS_PlayerData.CharacterObject character = client.Character;
-                character.Mana.Current = 0;
-                character.Rage.Current = 0;
-                character.Energy.Current = 0;
-                character.Life.Current = 1;
-                character.DEAD = true;
-                character.cUnitFlags = 8;
-                character.cDynamicFlags = 0;
-                character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_DEAD;
-                character = null;
+                client.Character.Mana.Current = 0;
+                client.Character.Rage.Current = 0;
+                client.Character.Energy.Current = 0;
+                client.Character.Life.Current = 1;
+                client.Character.DEAD = true;
+                client.Character.cUnitFlags = 8;
+                client.Character.cDynamicFlags = 0;
+                client.Character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_DEAD;
+                client.Character = null;
                 WorldServiceLocator._Functions.SendCorpseReclaimDelay(ref client, ref client.Character);
                 client.Character.StopMirrorTimer(MirrorTimer.FATIGUE);
                 client.Character.StopMirrorTimer(MirrorTimer.DROWNING);
@@ -415,8 +419,7 @@ namespace Mangos.World.Handlers
                 WorldServiceLocator._WS_CharMovement.UpdateCell(ref client.Character);
                 checked
                 {
-                    int num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1;
-                    for (int i = 0; i <= num; i++)
+                    for (int i = 0; i <= WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1; i++)
                     {
                         if (client.Character.ActiveSpells[i] != null)
                         {
@@ -443,12 +446,9 @@ namespace Mangos.World.Handlers
                 client.Character.SendCharacterUpdate();
                 WorldServiceLocator._WorldServer.AllGraveYards.GoToNearestGraveyard(ref client.Character, Alive: false, Teleport: true);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                ProjectData.SetProjectError(ex);
-                Exception e = ex;
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error on repop: {0}", e.ToString());
-                ProjectData.ClearProjectError();
             }
         }
 
@@ -551,10 +551,8 @@ namespace Mangos.World.Handlers
         public void On_CMSG_MOVE_FALL_RESET(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MOVE_FALL_RESET", client.IP, client.Port);
-            Packets packets = WorldServiceLocator._Packets;
-            byte[] data = packet.Data;
             WS_Network.ClientClass client2 = null;
-            packets.DumpPacket(data, client2);
+            WorldServiceLocator._Packets.DumpPacket(packet.Data, client2);
         }
 
         public void On_CMSG_BATTLEFIELD_STATUS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)

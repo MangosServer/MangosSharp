@@ -36,8 +36,8 @@ namespace Mangos.World.Handlers
         public void InstanceMapUpdate()
         {
             DataTable q = new DataTable();
-            uint t = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE expire < {t};", ref q);
+            uint TimeStamp = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE expire < {TimeStamp};", ref q);
             IEnumerator enumerator = default;
             try
             {
@@ -69,9 +69,9 @@ namespace Mangos.World.Handlers
 
         public void InstanceMapSpawn(uint Map, uint Instance)
         {
-            short x = 0;
             checked
             {
+                short x = 0;
                 do
                 {
                     short y = 0;
@@ -98,12 +98,12 @@ namespace Mangos.World.Handlers
 
         public void InstanceMapExpire(uint Map, uint Instance)
         {
-            bool empty = true;
             checked
             {
                 try
                 {
                     short x = 0;
+                    bool empty = true;
                     do
                     {
                         short y = 0;
@@ -111,8 +111,7 @@ namespace Mangos.World.Handlers
                         {
                             if (WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x, y] != null)
                             {
-                                ulong[] array = WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x, y].PlayersHere.ToArray();
-                                foreach (ulong GUID7 in array)
+                                foreach (ulong GUID7 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x, y].PlayersHere.ToArray())
                                 {
                                     if (WorldServiceLocator._WorldServer.CHARACTERs[GUID7].instance == Instance)
                                     {
@@ -147,32 +146,28 @@ namespace Mangos.World.Handlers
                             {
                                 if (WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3] != null)
                                 {
-                                    ulong[] array2 = WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].CreaturesHere.ToArray();
-                                    foreach (ulong GUID3 in array2)
+                                    foreach (ulong GUID3 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].CreaturesHere.ToArray())
                                     {
                                         if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID3].instance == Instance)
                                         {
                                             WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID3].Destroy();
                                         }
                                     }
-                                    ulong[] array3 = WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].GameObjectsHere.ToArray();
-                                    foreach (ulong GUID4 in array3)
+                                    foreach (ulong GUID4 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].GameObjectsHere.ToArray())
                                     {
                                         if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID4].instance == Instance)
                                         {
                                             WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID4].Destroy(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID4]);
                                         }
                                     }
-                                    ulong[] array4 = WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].CorpseObjectsHere.ToArray();
-                                    foreach (ulong GUID5 in array4)
+                                    foreach (ulong GUID5 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].CorpseObjectsHere.ToArray())
                                     {
                                         if (WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID5].instance == Instance)
                                         {
                                             WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID5].Destroy();
                                         }
                                     }
-                                    ulong[] array5 = WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].DynamicObjectsHere.ToArray();
-                                    foreach (ulong GUID6 in array5)
+                                    foreach (ulong GUID6 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].DynamicObjectsHere.ToArray())
                                     {
                                         if (WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs[GUID6].instance == Instance)
                                         {
@@ -198,16 +193,14 @@ namespace Mangos.World.Handlers
                         {
                             if (WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x2, y2] != null)
                             {
-                                ulong[] array6 = WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x2, y2].CreaturesHere.ToArray();
-                                foreach (ulong GUID in array6)
+                                foreach (ulong GUID in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x2, y2].CreaturesHere.ToArray())
                                 {
                                     if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].instance == Instance)
                                     {
                                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Respawn();
                                     }
                                 }
-                                ulong[] array7 = WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x2, y2].GameObjectsHere.ToArray();
-                                foreach (ulong GUID2 in array7)
+                                foreach (ulong GUID2 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x2, y2].GameObjectsHere.ToArray())
                                 {
                                     if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2].instance == Instance)
                                     {
@@ -222,12 +215,9 @@ namespace Mangos.World.Handlers
                     }
                     while (x2 <= 63);
                 }
-                catch (Exception ex2)
+                catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex2);
-                    Exception ex = ex2;
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error expiring map instance.{0}{1}", Environment.NewLine, ex.ToString());
-                    ProjectData.ClearProjectError();
                 }
             }
         }
@@ -237,7 +227,7 @@ namespace Mangos.World.Handlers
             if (WorldServiceLocator._WS_Maps.Maps[objCharacter.MapID].Type == MapTypes.MAP_COMMON)
             {
                 objCharacter.instance = 0u;
-                objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor("You are not in instance.", 0, 0, byte.MaxValue));
+                objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor("You are not in instance.", 200, 0, byte.MaxValue));
                 return;
             }
             InstanceMapUpdate();
@@ -246,7 +236,7 @@ namespace Mangos.World.Handlers
             if (q.Rows.Count > 0)
             {
                 objCharacter.instance = Conversions.ToUInteger(q.Rows[0]["instance"]);
-                objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 0, 0, byte.MaxValue));
+                objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 0, 200, byte.MaxValue));
                 SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, Conversions.ToInteger(Operators.SubtractObject(q.Rows[0]["expire"], WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))));
                 return;
             }
@@ -256,7 +246,7 @@ namespace Mangos.World.Handlers
                 if (q.Rows.Count > 0)
                 {
                     objCharacter.instance = Conversions.ToUInteger(q.Rows[0]["instance"]);
-                    objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 0, 0, byte.MaxValue));
+                    objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 245, 245, byte.MaxValue));
                     SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, Conversions.ToInteger(Operators.SubtractObject(q.Rows[0]["expire"], WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))));
                     return;
                 }
@@ -271,7 +261,7 @@ namespace Mangos.World.Handlers
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update($"INSERT INTO characters_instances_group (group_id, map, instance, expire) VALUES ({objCharacter.Group.ID}, {objCharacter.MapID}, {instanceNewID}, {instanceNewResetTime});");
                 }
                 InstanceMapSpawn(objCharacter.MapID, (uint)instanceNewID);
-                objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 0, 0, byte.MaxValue));
+                objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 245, 245, byte.MaxValue));
                 SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) - instanceNewResetTime));
             }
         }
@@ -334,12 +324,14 @@ namespace Mangos.World.Handlers
         {
             if (Time < 0)
             {
-                Time = checked(-Time);
+                _ = checked(-Time); // Time Discard (Unused)
             }
             else if (Time is <= 60 or >= 3600)
             {
                 switch (Time)
                 {
+                    default:
+                        break;
                 }
             }
         }
