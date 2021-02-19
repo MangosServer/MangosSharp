@@ -24,6 +24,7 @@ using Mangos.Configuration.Xml;
 using Mangos.SignalR;
 using Mangos.World.Globals;
 using Mangos.World.Maps;
+using Mangos.World.Handlers;
 using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
@@ -53,6 +54,28 @@ namespace Mangos.World
         public Dictionary<uint, WS_Network.ClientClass> CLIENTs;
 
         public Dictionary<ulong, WS_PlayerData.CharacterObject> CHARACTERs;
+
+        public Dictionary<ulong, CharManagementHandler> CHARMANAGEMENTHANDLERs;
+
+        public Dictionary<ulong, WS_CharMovement> CHARMOVEMENTs;
+
+        public Dictionary<ulong, WS_Combat> COMBATs;
+
+        public Dictionary<ulong, WS_Handlers_Battleground> BATTLEGROUNDs;
+
+        public Dictionary<ulong, WS_Handlers_Chat> CHATs;
+
+        public Dictionary<ulong, WS_Handlers_Gamemaster> GAMEMASTERs;
+
+        public Dictionary<ulong, WS_Handlers_Instance> INSTANCEs;
+
+        public Dictionary<ulong, WS_Handlers_Misc> MISCs;
+
+        public Dictionary<ulong, WS_Handlers_Taxi> TAXIs;
+
+        public Dictionary<ulong, WS_Handlers_Trade> TRADEs;
+
+        //public Dictionary<ulong, WS_Handlers_Warden> WARDENs;
 
         public System.Threading.ReaderWriterLock CHARACTERs_Lock;
 

@@ -191,12 +191,9 @@ namespace Mangos.World.Handlers
                     client.Character.SetMoveUnroot();
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                ProjectData.SetProjectError(ex);
-                Exception e = ex;
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while trying to cancel logout.{0}", Environment.NewLine + e);
-                ProjectData.ClearProjectError();
             }
         }
 

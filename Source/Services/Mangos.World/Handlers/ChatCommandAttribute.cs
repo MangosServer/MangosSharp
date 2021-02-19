@@ -26,44 +26,26 @@ namespace Mangos.World.Handlers
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
     public class ChatCommandAttribute : Attribute
     {
-        [CompilerGenerated]
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly string _cmdName;
+        public string GetcmdName { get; private set; }
 
-        [CompilerGenerated]
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly string _cmdHelp;
+        public void SetcmdName(string value) => GetcmdName = value;
 
-        [CompilerGenerated]
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly AccessLevel _cmdAccess;
+        public string GetcmdHelp { get; private set; }
 
-        public string cmdName
-        {
-            get;
-            set;
-        }
+        public void SetcmdHelp(string value) => GetcmdHelp = value;
 
-        public string cmdHelp
-        {
-            get;
-            set;
-        }
+        public AccessLevel GetcmdAccess { get; private set; }
 
-        public AccessLevel cmdAccess
-        {
-            get;
-            set;
-        }
+        public void SetcmdAccess(AccessLevel value) => GetcmdAccess = value;
 
         public ChatCommandAttribute(string cmdName, string cmdHelp = "No information available.", AccessLevel cmdAccess = AccessLevel.GameMaster)
         {
-            this.cmdName = "";
-            this.cmdHelp = "No information available.";
-            this.cmdAccess = AccessLevel.GameMaster;
-            this.cmdName = cmdName;
-            this.cmdHelp = cmdHelp;
-            this.cmdAccess = cmdAccess;
+            SetcmdName("");
+            SetcmdHelp("No information available.");
+            SetcmdAccess(AccessLevel.GameMaster);
+            SetcmdName(cmdName);
+            SetcmdHelp(cmdHelp);
+            SetcmdAccess(cmdAccess);
         }
     }
 }

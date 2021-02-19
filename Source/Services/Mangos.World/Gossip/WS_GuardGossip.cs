@@ -200,8 +200,8 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_Stormwind(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
                 objCharacter.TalkMenuTypes.Clear();
+                GossipMenu npcMenu = new GossipMenu();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_AUCTIONHOUSE);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_STORMWIND_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_DEEPRUNTRAM);

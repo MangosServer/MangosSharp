@@ -4985,6 +4985,36 @@ namespace Mangos.World.Player
                 }
             }
 
+            public void SplineStartSwim()
+            {
+                Packets.PacketClass SMSG_SPLINE_MOVE_START_SWIM = new Packets.PacketClass(Opcodes.SMSG_SPLINE_MOVE_START_SWIM);
+                try
+                {
+                    SMSG_SPLINE_MOVE_START_SWIM.AddPackGUID(GUID);
+                    SMSG_SPLINE_MOVE_START_SWIM.AddInt32(1);
+                    SendToNearPlayers(ref SMSG_SPLINE_MOVE_START_SWIM);
+                }
+                finally
+                {
+                    SMSG_SPLINE_MOVE_START_SWIM.Dispose();
+                }
+            }
+
+            public void SplineStopSwim()
+            {
+                Packets.PacketClass SMSG_SPLINE_MOVE_STOP_SWIM = new Packets.PacketClass(Opcodes.SMSG_SPLINE_MOVE_STOP_SWIM);
+                try
+                {
+                    SMSG_SPLINE_MOVE_STOP_SWIM.AddPackGUID(GUID);
+                    SMSG_SPLINE_MOVE_STOP_SWIM.AddInt32(0);
+                    SendToNearPlayers(ref SMSG_SPLINE_MOVE_STOP_SWIM);
+                }
+                finally
+                {
+                    SMSG_SPLINE_MOVE_STOP_SWIM.Dispose();
+                }
+            }
+
             public void SetLandWalk()
             {
                 Packets.PacketClass SMSG_MOVE_LAND_WALK = new Packets.PacketClass(Opcodes.SMSG_MOVE_LAND_WALK);
