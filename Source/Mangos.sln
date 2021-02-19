@@ -78,15 +78,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Configuration"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorldCluster", "Services\WorldCluster\WorldCluster.csproj", "{1C33ECF2-7D8F-4EAB-824F-375B200C9E03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangos.Cluster.Configuration", "Services\Mangos.Cluster.Configuration\Mangos.Cluster.Configuration.csproj", "{64A97B9F-FB45-44EA-9723-F4EBD7F41D9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Configuration", "Services\Mangos.Cluster.Configuration\Mangos.Cluster.Configuration.csproj", "{64A97B9F-FB45-44EA-9723-F4EBD7F41D9C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Storage", "Services\Mangos.Cluster.Storage\Mangos.Cluster.Storage.csproj", "{E182F827-2D18-444E-9023-AC485E7DCE81}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Storage.MySql", "Services\Mangos.Cluster.Storage.MySql\Mangos.Cluster.Storage.MySql.csproj", "{AF692FEF-C973-4F38-8180-7946F3587671}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangos.Realm.Network", "Services\Mangos.Realm.Network\Mangos.Realm.Network.csproj", "{2C5C22D6-CAD7-48FA-A318-F16A540BEEE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Network", "Services\Mangos.Realm.Network\Mangos.Realm.Network.csproj", "{2C5C22D6-CAD7-48FA-A318-F16A540BEEE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangos.Cluster.Network", "Services\Mangos.Cluster.Network\Mangos.Cluster.Network.csproj", "{6D77F314-5722-41F1-839A-026BF782F19C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Network", "Services\Mangos.Cluster.Network\Mangos.Cluster.Network.csproj", "{6D77F314-5722-41F1-839A-026BF782F19C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
