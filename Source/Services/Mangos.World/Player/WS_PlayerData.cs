@@ -4685,14 +4685,14 @@ namespace Mangos.World.Player
                 }
             }
 
-            public void Teleport(float posX, float posY, float posZ, float ori, int map)
+            public void Teleport(float posX, float posY, float posZ, float posO, int map)
             {
                 if (MapID != map)
                 {
-                    Transfer(posX, posY, posZ, ori, map);
+                    Transfer(posX, posY, posZ, posO, map);
                     return;
                 }
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: Player Teleport: X[{0}], Y[{1}], Z[{2}], O[{3}]", posX, posY, posZ, ori);
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: Player Teleport: X[{0}], Y[{1}], Z[{2}], O[{3}]", posX, posY, posZ, posO);
                 charMovementFlags = 0;
                 Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_MOVE_TELEPORT_ACK);
                 try
@@ -4704,7 +4704,7 @@ namespace Mangos.World.Player
                     packet.AddSingle(posX);
                     packet.AddSingle(posY);
                     packet.AddSingle(posZ);
-                    packet.AddSingle(ori);
+                    packet.AddSingle(posO);
                     packet.AddInt32(0);
                     client.Send(ref packet);
                 }
@@ -4715,7 +4715,7 @@ namespace Mangos.World.Player
                 positionX = posX;
                 positionY = posY;
                 positionZ = posZ;
-                orientation = ori;
+                orientation = posO;
                 WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                 CharacterObject Character = this;
                 wS_CharMovement.MoveCell(ref Character);

@@ -63,11 +63,11 @@ namespace Mangos.World.Handlers
                 case ChatMsg.CHAT_MSG_WHISPER:
                 case ChatMsg.CHAT_MSG_EMOTE:
                     {
-                        string Message3 = packet.GetString();
-                        if (Message3.StartsWith(WorldServiceLocator._ConfigurationProvider.GetConfiguration().CommandCharacter) && client.Character.Access > AccessLevel.Player)
+                        string MessageString = packet.GetString();
+                        if (MessageString.StartsWith(WorldServiceLocator._ConfigurationProvider.GetConfiguration().CommandCharacter) && client.Character.Access > AccessLevel.Player)
                         {
-                            Message3 = Message3.Remove(0, 1);
-                            Packets.PacketClass toCommand = WorldServiceLocator._Functions.BuildChatMessage(2147483647uL, Message3, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
+                            MessageString = MessageString.Remove(0, 1);
+                            Packets.PacketClass toCommand = WorldServiceLocator._Functions.BuildChatMessage(2147483647uL, MessageString, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
                             try
                             {
                                 client.Send(ref toCommand);
@@ -76,18 +76,18 @@ namespace Mangos.World.Handlers
                             {
                                 toCommand.Dispose();
                             }
-                            WorldServiceLocator._WS_Commands.OnCommand(ref client, Message3);
+                            WorldServiceLocator._WS_Commands.OnCommand(ref client, MessageString);
                         }
                         else
                         {
-                            client.Character.SendChatMessage(ref client.Character, Message3, msgType, (int)msgLanguage, "", SendToMe: true);
+                            client.Character.SendChatMessage(ref client.Character, MessageString, msgType, (int)msgLanguage, "", SendToMe: true);
                         }
                         break;
                     }
                 case ChatMsg.CHAT_MSG_AFK:
                     {
-                        string Message = packet.GetString();
-                        if ((Operators.CompareString(Message, "", TextCompare: false) == 0 || !client.Character.AFK) && !client.Character.IsInCombat)
+                        string MessageString = packet.GetString();
+                        if ((Operators.CompareString(MessageString, "", TextCompare: false) == 0 || !client.Character.AFK) && !client.Character.IsInCombat)
                         {
                             client.Character.AFK = !client.Character.AFK;
                             if (client.Character.AFK && client.Character.DND)
@@ -101,8 +101,8 @@ namespace Mangos.World.Handlers
                     }
                 case ChatMsg.CHAT_MSG_DND:
                     {
-                        string Message2 = packet.GetString();
-                        if (Operators.CompareString(Message2, "", TextCompare: false) == 0 || !client.Character.DND)
+                        string MessageString = packet.GetString();
+                        if (Operators.CompareString(MessageString, "", TextCompare: false) == 0 || !client.Character.DND)
                         {
                             client.Character.DND = !client.Character.DND;
                             if (client.Character.DND && client.Character.AFK)
