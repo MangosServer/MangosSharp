@@ -4970,6 +4970,35 @@ namespace Mangos.World.Player
                 }
             }
 
+            public void ShowBank()
+            {
+                Packets.PacketClass SMSG_SHOW_BANK = new Packets.PacketClass(Opcodes.SMSG_SHOW_BANK);
+                try
+                {
+                    SMSG_SHOW_BANK.AddUInt64(TargetGUID);
+                    SendToNearPlayers(ref SMSG_SHOW_BANK);
+                }
+                finally
+                {
+                    SMSG_SHOW_BANK.Dispose();
+                }
+            }
+
+            public void SetHover()
+            {
+                Packets.PacketClass SMSG_MOVE_SET_HOVER = new Packets.PacketClass(Opcodes.SMSG_MOVE_SET_HOVER);
+                try
+                {
+                    SMSG_MOVE_SET_HOVER.AddPackGUID(TargetGUID);
+                    SMSG_MOVE_SET_HOVER.AddInt32(0);
+                    SendToNearPlayers(ref SMSG_MOVE_SET_HOVER);
+                }
+                finally
+                {
+                    SMSG_MOVE_SET_HOVER.Dispose();
+                }
+            }
+
             public void SetWaterWalk()
             {
                 Packets.PacketClass SMSG_MOVE_WATER_WALK = new Packets.PacketClass(Opcodes.SMSG_MOVE_WATER_WALK);

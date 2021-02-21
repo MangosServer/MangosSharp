@@ -287,6 +287,8 @@ namespace Mangos.World.Handlers
                     }
                 case (MaievResponse)3:
                     break;
+                default:
+                    break;
             }
         }
 

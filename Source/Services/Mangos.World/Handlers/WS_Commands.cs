@@ -1008,6 +1008,38 @@ namespace Mangos.World.Handlers
             return true;
         }
 
+        [ChatCommand("hover", "hover - Allows the selected character to hover in air.")]
+        public bool cmdHover(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        {
+            if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
+            {
+                objCharacter.CommandResponse("Select target first!");
+                return true;
+            }
+            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+            {
+                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetHover();
+                return true;
+            }
+            return true;
+        }
+
+        [ChatCommand("bank", "bank - Pops open bank tab on selected character")]
+        public bool cmdBank(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        {
+            if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0)
+            {
+                objCharacter.CommandResponse("Select target first!");
+                return true;
+            }
+            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+            {
+                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].ShowBank();
+                return true;
+            }
+            return true;
+        }
+
         [ChatCommand("hurt", "hurt - Hurts a selected character.")]
         public bool cmdHurt(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
