@@ -69,7 +69,7 @@ The repository of as much information as we can pack in. Details regarding the D
 
 Found an issue or something which doesn't seem right, please log it in the relevant section of the Bug Tracker.
 
-* [**Bug Tracker**](https://www.getmangos.eu/bug-tracker/others/mangos-sharpe/)
+* [**Bug Tracker**](https://www.getmangos.eu/bug-tracker/others/mangos-sharp/)
 
 **Installation Guides**
 ----
