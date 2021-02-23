@@ -56,8 +56,7 @@ namespace Mangos.World.Loots
                     }
                     checked
                     {
-                        int num = Items.Count - 1;
-                        for (int i = 0; i <= num; i++)
+                        for (int i = 0; i <= Items.Count - 1; i++)
                         {
                             if (Items[i] != null)
                             {
@@ -104,8 +103,8 @@ namespace Mangos.World.Loots
                 response.AddUInt64(GUID);
                 response.AddInt8((byte)LootType);
                 response.AddInt32(Money);
-                byte b2;
                 byte i;
+                byte b2;
                 checked
                 {
                     response.AddInt8((byte)Items.Count);
@@ -113,30 +112,31 @@ namespace Mangos.World.Loots
                     byte j = 0;
                     while (j <= (uint)b)
                     {
-                        if (Items[j] == null)
+                        switch (Items[j])
                         {
-                            response.AddInt8(j);
-                            response.AddInt32(0);
-                            response.AddInt32(0);
-                            response.AddInt32(0);
-                            response.AddUInt64(0uL);
-                            response.AddInt8(0);
-                        }
-                        else
-                        {
-                            response.AddInt8(j);
-                            response.AddInt32(Items[j].ItemID);
-                            response.AddInt32(Items[j].ItemCount);
-                            response.AddInt32(Items[j].ItemModel);
-                            response.AddUInt64(0uL);
-                            if (client.Character.IsInGroup && client.Character.Group.LootMethod == GroupLootMethod.LOOT_MASTER && client.Character.Group.LocalLootMaster != null && client.Character.Group.LocalLootMaster != client.Character)
-                            {
-                                response.AddInt8(2);
-                            }
-                            else
-                            {
+                            case null:
+                                response.AddInt8(j);
+                                response.AddInt32(0);
+                                response.AddInt32(0);
+                                response.AddInt32(0);
+                                response.AddUInt64(0uL);
                                 response.AddInt8(0);
-                            }
+                                break;
+                            default:
+                                response.AddInt8(j);
+                                response.AddInt32(Items[j].ItemID);
+                                response.AddInt32(Items[j].ItemCount);
+                                response.AddInt32(Items[j].ItemModel);
+                                response.AddUInt64(0uL);
+                                if (client.Character.IsInGroup && client.Character.Group.LootMethod == GroupLootMethod.LOOT_MASTER && client.Character.Group.LocalLootMaster != null && client.Character.Group.LocalLootMaster != client.Character)
+                                {
+                                    response.AddInt8(2);
+                                }
+                                else
+                                {
+                                    response.AddInt8(0);
+                                }
+                                break;
                         }
                         j = (byte)unchecked((uint)(j + 1));
                     }
@@ -234,12 +234,9 @@ namespace Mangos.World.Loots
                         response.Dispose();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Exception e = ex;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error getting loot.{0}", Environment.NewLine + e);
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Error getting loot.{0}", Environment.NewLine + e);
                 }
             }
 

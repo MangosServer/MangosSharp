@@ -52,14 +52,13 @@ namespace Mangos.World.Loots
                 {
                     if (ExplicitlyChanced.Count > 0)
                     {
-                        float rollChance = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 100.0);
-                        int num = ExplicitlyChanced.Count - 1;
-                        for (int i = 0; i <= num; i++)
+                        for (int i = 0; i <= ExplicitlyChanced.Count - 1; i++)
                         {
                             if (ExplicitlyChanced[i].Chance >= 100f)
                             {
                                 return ExplicitlyChanced[i];
                             }
+                            float rollChance = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 100.0);
                             rollChance -= ExplicitlyChanced[i].Chance;
                             if (rollChance <= 0f)
                             {

@@ -36,17 +36,18 @@ namespace Mangos.World.Loots
 
             public void AddItem(ref LootStoreItem Item)
             {
-                if (Item.Group > 0 && Item.MinCountOrRef > 0)
+                switch (Item.Group)
                 {
-                    if (!Groups.ContainsKey(Item.Group))
-                    {
-                        Groups.Add(Item.Group, new LootGroup());
-                    }
-                    Groups[Item.Group].AddItem(ref Item);
-                }
-                else
-                {
-                    Items.Add(Item);
+                    case > 0 when Item.MinCountOrRef > 0:
+                        if (!Groups.ContainsKey(Item.Group))
+                        {
+                            Groups.Add(Item.Group, new LootGroup());
+                        }
+                        Groups[Item.Group].AddItem(ref Item);
+                        break;
+                    default:
+                        Items.Add(Item);
+                        break;
                 }
             }
 
@@ -62,8 +63,7 @@ namespace Mangos.World.Loots
                 }
                 checked
                 {
-                    int num = Items.Count - 1;
-                    for (int i = 0; i <= num; i++)
+                    for (int i = 0; i <= Items.Count - 1; i++)
                     {
                         if (!Items[i].Roll())
                         {
@@ -83,12 +83,12 @@ namespace Mangos.World.Loots
                         }
                         else
                         {
-                            List<LootItem> items = Loot.Items;
-                            List<LootStoreItem> items2;
                             int index;
+                            List<LootStoreItem> items2;
                             LootStoreItem Item = (items2 = Items)[index = i];
-                            LootItem item = new LootItem(ref Item);
                             items2[index] = Item;
+                            List<LootItem> items = Loot.Items;
+                            LootItem item = new LootItem(ref Item);
                             items.Add(item);
                         }
                     }
