@@ -5,8 +5,8 @@ Build Status:<br><b>Windows:</b> Coming Soon
  <b>Codacy Status:</b> 
 [<img src='https://api.codacy.com/project/badge/Grade/f77c3dbb9e124188b0cf4ec6da878721' border=0 valign="middle"/>](https://app.codacy.com/gh/MangosServer/MangosSharp/dashboard)
 <br>
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/mangosserver/mangossharp.svg)](http://isitmaintained.com/project/mangosserver/mangossharp "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/mangosserver/mangossharp.svg)](http://isitmaintained.com/project/mangosserver/mangossharp "Percentage of issues still open")
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/mangosserver/mangossharp.svg)](http://isitmaintained.com/project/mangosserver/mangossharp "Average time to resolve an issue")
 [<img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat"/>](http://makeapullrequest.com)
 
 
