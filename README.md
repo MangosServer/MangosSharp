@@ -4,7 +4,7 @@
 Build Status:<br><b>Linux/MAC:</b> Coming Soon
 <b>Windows:</b> Coming Soon
  <b>Codacy Status:</b> 
-[<img src='https://api.codacy.com/project/badge/Grade/895a7434531a456ba12410ac585717c8' border=0 valign="middle"/>](https://app.codacy.com/gh/mangoszero/server/dashboard)
+[<img src='https://api.codacy.com/project/badge/Grade/f77c3dbb9e124188b0cf4ec6da878721' border=0 valign="middle"/>](https://app.codacy.com/gh/MangosServer/MangosSharp/dashboard)
 
 ---
 
