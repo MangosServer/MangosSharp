@@ -1,16 +1,13 @@
 [<img src='https://www.getmangos.eu/!assets_mangos/currentlogo.gif' width="48" border=0>](https://www.getmangos.eu)
 [<img src='https://www.getmangos.eu/!assets_mangos/logo.png' border=0>](https://www.getmangos.eu)
 
-Build Status:<br><b>Windows:</b> 
-[<img src='https://github.com/MangosServer/MangosSharp/actions/workflows/dotnet.yml/badge.svg' border=0 valign="middle"/>](https://github.com/MangosServer/MangosSharp/actions/workflows/dotnet.yml)
- <b>Codacy Status:</b> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>Build Status:</b>
+Windows: [<img src='https://github.com/MangosServer/MangosSharp/actions/workflows/dotnet.yml/badge.svg' border=0 valign="middle"/>](https://github.com/MangosServer/MangosSharp/actions/workflows/dotnet.yml)
+ <br><b>Repository Status:</b> 
 [<img src='https://api.codacy.com/project/badge/Grade/f77c3dbb9e124188b0cf4ec6da878721' border=0 valign="middle"/>](https://app.codacy.com/gh/MangosServer/MangosSharp/dashboard)
 [<img src='https://www.codefactor.io/repository/github/mangosserver/mangossharp/badge' border=0 valign="middle"/>](https://www.codefactor.io/repository/github/mangosserver/mangossharp)
-<br>
-[![Discord](https://img.shields.io/discord/286167585270005763.svg)](https://discord.gg/fPxMjHS8xs "Our community hub on Discord")
-[<img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat"/>](http://makeapullrequest.com)
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/mangosserver/mangossharp.svg)](http://isitmaintained.com/project/mangosserver/mangossharp "Percentage of issues still open")
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/mangosserver/mangossharp.svg)](http://isitmaintained.com/project/mangosserver/mangossharp "Average time to resolve an issue")
+[<img src='https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat' border=0 valign="middle"/>](http://makeapullrequest.com)
+[<img src='https://img.shields.io/discord/286167585270005763.svg' border=0 valign="middle"/>](https://discord.gg/fPxMjHS8xs "Our community hub on Discord")
 
 ---
 
@@ -18,7 +15,7 @@ Build Status:<br><b>Windows:</b>
  **MangosSharp0 - Vanilla WoW server**
 ===
 
-**Mangos** is an open source project written in [C#][7]. It's fast and stores game data in 
+**MangosSharp** is an open source project written in [C#][7]. It's fast and stores game data in 
 [MySQL][40] or [MariaDB][41].
 
 If you liked the original incarnation of [World of Warcraft][2] and still want to play it,
@@ -60,7 +57,10 @@ We welcome anyone who is interested in enjoying older versions of wow or contrib
 
 **Discord Server**
 ----
-[![Widget for the Discord API guild](https://discord.com/api/guilds/286167585270005763/widget.png?style=banner2)](https://discord.gg/CzXcBXq) 
+
+We also have a Discord server where many of us hang out and discuss Mangos related stuff.
+
+* [**Discord Server**](https://discord.gg/fPxMjHS8xs) 
 
 **Main Wiki**
 ----
@@ -125,9 +125,6 @@ World of Warcraft, and all related art, images, and lore are copyright [Blizzard
 [6]: http://www.wowpedia.org/Patch_1.12.3 "Vanilla WoW · Patch 1.12.3 release notes"
 [7]: http://www.cppreference.com/ "C / C++ reference"
 [10]: https://getmangos.eu/ "mangos · project site"
-[12]: https://github.com/mangosserver "MaNGOS Sharp · github organization"
-[13]: https://github.com/mangosserver/mangosSharp "MaNGOS Sharp · server repository"
-[15]: https://github.com/mangoszero/database "MaNGOS Zero · content database repository"
 [16]: https://travis-ci.org/mangoszero/server "Travis CI · Linux/MAC build status"
 [17]: https://ci.appveyor.com/ "AppVeyor Scan · Windows build status"
 [19]: http://www.cmake.org/ "CMake · Cross Platform Make"
@@ -142,7 +139,6 @@ World of Warcraft, and all related art, images, and lore are copyright [Blizzard
 [34]: http://git-scm.com/ "Git · Distributed version control system"
 [35]: http://windows.github.com/ "github · windows client"
 [36]: http://www.sourcetreeapp.com/ "SourceTree · Free Mercurial and Git Client for Windows/Mac"
-
 [40]: http://www.mysql.com/ "MySQL · The world's most popular open source database"
 [41]: http://www.mariadb.org/ "MariaDB · An enhanced, drop-in replacement for MySQL"
 [43]: http://www.dre.vanderbilt.edu/~schmidt/ACE.html "ACE · The ADAPTIVE Communication Environment"
