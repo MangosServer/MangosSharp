@@ -12,8 +12,4 @@
   <ItemGroup>
     <EmbeddedResource Include="Queries\*.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.2" />
-    <PackageReference Include="MySql.Data" Version="8.0.23" />
-  </ItemGroup>
 </Project>
