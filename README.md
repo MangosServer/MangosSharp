@@ -2,7 +2,7 @@
 [<img src='https://www.getmangos.eu/!assets_mangos/logo.png' border=0>](https://www.getmangos.eu)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>Build Status:</b>
-Windows: [<img src='https://github.com/MangosServer/MangosSharp/actions/workflows/dotnet.yml/badge.svg' border=0 valign="middle"/>](https://github.com/MangosServer/MangosSharp/actions/workflows/dotnet.yml)
+Windows: [<img src='https://github.com/MangosServer/MangosSharp/actions/workflows/dotnet.yml/badge.svg' border=0 valign="middle"/>](https://github.com/MangosServer/MangosSharp/actions/workflows/build.yml)
  <br><b>Repository Status:</b> 
 [<img src='https://api.codacy.com/project/badge/Grade/f77c3dbb9e124188b0cf4ec6da878721' border=0 valign="middle"/>](https://app.codacy.com/gh/MangosServer/MangosSharp/dashboard)
 [<img src='https://www.codefactor.io/repository/github/mangosserver/mangossharp/badge' border=0 valign="middle"/>](https://www.codefactor.io/repository/github/mangosserver/mangossharp)
