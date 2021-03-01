@@ -159,19 +159,17 @@ namespace Mangos.World.Maps
                         float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(MapTile_LocalY + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), (byte)(MapTile_LocalY + 1)), xNormalized);
                         return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
                     }
-                    catch (Exception projectError)
+                    catch (Exception ex)
                     {
-                        ProjectData.SetProjectError(projectError);
                         float GetZCoord = Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY];
-                        ProjectData.ClearProjectError();
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "GetHeight threw an Exception : GetZCoord {0}, {1}", GetZCoord, ex);
                         return GetZCoord;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex2)
                 {
-                    ProjectData.SetProjectError(ex);
                     float GetZCoord = 0f;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "GetZCoord threw an Exception : Coord X {0} Coord Y {1} Coord Z {2}, {3}", x, y, GetZCoord, ex2);
                     return GetZCoord;
                 }
             }
@@ -269,21 +267,17 @@ namespace Mangos.World.Maps
                         float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
                         return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
                     }
-                    catch (Exception projectError)
+                    catch (Exception ex)
                     {
-                        ProjectData.SetProjectError(projectError);
                         float GetZCoord = Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY];
-                        ProjectData.ClearProjectError();
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "GetZCoord threw an Exception : Coord X {0} Coord Y {1} Coord Z {2}, {3}", x, y, GetZCoord, ex);
                         return GetZCoord;
                     }
                 }
                 catch (Exception ex2)
                 {
-                    ProjectData.SetProjectError(ex2);
-                    Exception ex = ex2;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, ex.ToString());
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, ex2.ToString());
                     float GetZCoord = z;
-                    ProjectData.ClearProjectError();
                     return GetZCoord;
                 }
             }
@@ -426,12 +420,9 @@ namespace Mangos.World.Maps
                                 tmpCr.AddToWorld();
                             }
                         }
-                        catch (Exception ex5)
+                        catch (Exception ex4)
                         {
-                            ProjectData.SetProjectError(ex5);
-                            Exception ex4 = ex5;
                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating creature [{0}].{1}{2}", row["id"], Environment.NewLine, ex4.ToString());
-                            ProjectData.ClearProjectError();
                         }
                     }
                 }
@@ -464,12 +455,9 @@ namespace Mangos.World.Maps
                                 tmpGo.AddToWorld();
                             }
                         }
-                        catch (Exception ex6)
+                        catch (Exception ex3)
                         {
-                            ProjectData.SetProjectError(ex6);
-                            Exception ex3 = ex6;
                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating gameobject [{0}].{1}{2}", row["id"], Environment.NewLine, ex3.ToString());
-                            ProjectData.ClearProjectError();
                         }
                     }
                 }

@@ -42,6 +42,7 @@ using System.Runtime.CompilerServices;
 
 //using Microsoft.VisualBasic.CompilerServices;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Mangos.World
 {
@@ -366,7 +367,7 @@ namespace Mangos.World
             DateTime dateTimeStarted = DateTime.Now;
             Log.WriteLine(LogType.INFORMATION, "[{0}] World Server Starting...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
             AppDomain currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += GenericExceptionHandler;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(GenericExceptionHandler);
             LoadConfig();
             Console.ForegroundColor = ConsoleColor.Gray;
             AccountDatabase.SQLMessage += AccountSQLEventHandler;
@@ -514,13 +515,25 @@ namespace Mangos.World
             }
         }
 
-        private void GenericExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        private async void GenericExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception EX = (Exception)e.ExceptionObject;
-            Log.WriteLine(LogType.CRITICAL, EX + Environment.NewLine);
-            Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'WorldServer-Error-yyyy-mmm-d-h-mm.log' file has been created. Check your log folder for more information.");
-            new StreamWriter(new FileStream(string.Format("WorldServer-Error-{0}.log", Strings.Format(DateAndTime.Now, "yyyy-MMM-d-H-mm")), FileMode.Create)).Write(EX.ToString());
-            new StreamWriter(new FileStream(string.Format("WorldServer-Error-{0}.log", Strings.Format(DateAndTime.Now, "yyyy-MMM-d-H-mm")), FileMode.Create)).Close();
+            try
+            {
+                Exception EX = (Exception)e.ExceptionObject;
+                Log.WriteLine(LogType.CRITICAL, EX + Environment.NewLine);
+                Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'WorldServer-Error-yyyy-mmm-d-h-mm.log' file has been created. Check your log folder for more information.");
+                string filename = @"""""""""WorldServer-Error-"" + ""{(DateTime.Now, "" + ""yyyy-MMM-d-H-mm"" + "")}.log""""""""";
+                filename = @"{filename}";
+                await new StreamWriter(new FileStream(filename, FileMode.Append)).WriteAsync(EX.Message + EX.StackTrace);
+                //await new StreamWriter(new FileStream(filename, FileMode.Append)).DisposeAsync();
+                //new StreamWriter(new FileStream(filename, FileMode.Append)).Close();
+
+            }
+            finally
+            {
+                Thread.Sleep(5000); //Wait 5 Seconds to Ensure logs are created and the Operator has a chance to view the Exception in Console.
+                Environment.FailFast("An Unhandled Exception has occured and the Server has Crashed!"); //Named event log and Ensure the Server closes out at all times.
+            }
         }
     }
 }
