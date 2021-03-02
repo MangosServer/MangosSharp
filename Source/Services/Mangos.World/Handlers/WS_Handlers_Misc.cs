@@ -394,6 +394,11 @@ namespace Mangos.World.Handlers
         {
             try
             {
+                if (client.Character != null)
+                {
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1} Account:{2} CharName:{3} CharGUID:{4}] Client is Null!", client.IP, client.Port, client.Account, client.Character.UnitName, client.Character.GUID);
+                    return;
+                }
                 client.Character.Mana.Current = 0;
                 client.Character.Rage.Current = 0;
                 client.Character.Energy.Current = 0;
