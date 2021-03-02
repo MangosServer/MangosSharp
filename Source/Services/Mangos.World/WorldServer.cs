@@ -23,8 +23,8 @@ using Mangos.Common.Legacy.Logging;
 using Mangos.Configuration.Xml;
 using Mangos.SignalR;
 using Mangos.World.Globals;
-using Mangos.World.Maps;
 using Mangos.World.Handlers;
+using Mangos.World.Maps;
 using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
@@ -39,10 +39,9 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-
+using System.Threading;
 //using Microsoft.VisualBasic.CompilerServices;
 using System.Threading.Tasks;
-using System.Threading;
 
 namespace Mangos.World
 {

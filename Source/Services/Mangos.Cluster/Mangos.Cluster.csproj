@@ -2,6 +2,7 @@
   <Import Project="../../Mangos.props" />
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Linq.Async" Version="5.0.0" />

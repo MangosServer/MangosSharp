@@ -20,11 +20,9 @@ using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.Handlers;
-using Mangos.World.Maps;
 using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 
@@ -97,7 +95,7 @@ namespace Mangos.World.AI
                 aiTarget = null;
             }
 
-            public override bool IsMoving => checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer
+            public override bool IsMoving => checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature?.LastMove) < aiTimer
                 && (State switch
                 {
                     AIState.AI_MOVE_FOR_ATTACK => true,
@@ -115,7 +113,7 @@ namespace Mangos.World.AI
             {
                 if (!aiCreature.IsDead)
                 {
-                    aiCreature.SetToRealPosition();
+                    aiCreature?.SetToRealPosition();
                     ResetX = aiCreature.positionX;
                     ResetY = aiCreature.positionY;
                     ResetZ = aiCreature.positionZ;
@@ -131,25 +129,25 @@ namespace Mangos.World.AI
                 {
                     if (Victim.Key is WS_PlayerData.CharacterObject @object)
                     {
-                        @object.RemoveFromCombat(aiCreature);
+                        @object?.RemoveFromCombat(aiCreature);
                     }
                 }
                 if (aiCreature.DestroyAtNoCombat)
                 {
-                    aiCreature.Destroy();
+                    aiCreature?.Destroy();
                     return;
                 }
                 aiTarget = null;
-                aiHateTable.Clear();
-                aiHateTableRemove.Clear();
-                aiCreature.SendTargetUpdate(0uL);
+                aiHateTable?.Clear();
+                aiHateTableRemove?.Clear();
+                aiCreature?.SendTargetUpdate(0uL);
                 if (Reset)
                 {
                     State = AIState.AI_MOVING_TO_SPAWN;
                     aiCreature.Life.Current = aiCreature.Life.Maximum;
                     WS_Creatures.CreatureObject creatureObject = aiCreature;
                     WS_Base.BaseUnit Attacker = null;
-                    creatureObject.Heal(0, Attacker);
+                    creatureObject?.Heal(0, Attacker);
                     if (ResetX == 0f && ResetY == 0f && ResetZ == 0f)
                     {
                         ResetX = aiCreature.SpawnX;
@@ -172,27 +170,27 @@ namespace Mangos.World.AI
                 {
                     if (Attacker != aiCreature && State != AIState.AI_DEAD && State != AIState.AI_RESPAWN && State != AIState.AI_MOVING_TO_SPAWN)
                     {
-                        aiCreature.SetToRealPosition();
+                        aiCreature?.SetToRealPosition();
                         LastHitX = aiCreature.positionX;
                         LastHitY = aiCreature.positionY;
                         LastHitZ = aiCreature.positionZ;
                         if (Attacker is WS_PlayerData.CharacterObject @object)
                         {
-                            @object.AddToCombat(aiCreature);
+                            @object?.AddToCombat(aiCreature);
                         }
                         if (!InCombat)
                         {
-                            aiHateTable.Add(Attacker, (int)Math.Round(HateValue * Attacker.Spell_ThreatModifier));
+                            aiHateTable?.Add(Attacker, (int)Math.Round(HateValue * Attacker.Spell_ThreatModifier));
                             OnEnterCombat();
                         }
                         else if (!aiHateTable.ContainsKey(Attacker))
                         {
-                            aiHateTable.Add(Attacker, (int)Math.Round(HateValue * Attacker.Spell_ThreatModifier));
+                            aiHateTable?.Add(Attacker, (int)Math.Round(HateValue * Attacker.Spell_ThreatModifier));
                         }
                         else
                         {
-                            Dictionary<WS_Base.BaseUnit, int> aiHateTable;
                             WS_Base.BaseUnit key;
+                            Dictionary<WS_Base.BaseUnit, int> aiHateTable;
                             (aiHateTable = this.aiHateTable)[key = Attacker] = (int)Math.Round(aiHateTable[key] + (HateValue * Attacker.Spell_ThreatModifier));
                         }
                     }
@@ -220,16 +218,16 @@ namespace Mangos.World.AI
             {
                 try
                 {
-                    int max = -1;
                     WS_Base.BaseUnit tmpTarget = null;
                     foreach (KeyValuePair<WS_Base.BaseUnit, int> Victim in aiHateTable)
                     {
+                        int max = -1;
                         if (Victim.Key.IsDead)
                         {
-                            aiHateTableRemove.Add(Victim.Key);
+                            aiHateTableRemove?.Add(Victim.Key);
                             if (Victim.Key is WS_PlayerData.CharacterObject @object)
                             {
-                                @object.RemoveFromCombat(aiCreature);
+                                @object?.RemoveFromCombat(aiCreature);
                             }
                         }
                         else if (Victim.Value > max)
@@ -240,13 +238,13 @@ namespace Mangos.World.AI
                     }
                     foreach (WS_Base.BaseUnit VictimRemove in aiHateTableRemove)
                     {
-                        aiHateTable.Remove(VictimRemove);
+                        aiHateTable?.Remove(VictimRemove);
                     }
                     if (tmpTarget != null && aiTarget != tmpTarget)
                     {
                         aiTarget = tmpTarget;
-                        aiCreature.TurnTo(aiTarget.positionX, aiTarget.positionY);
-                        aiCreature.SendTargetUpdate(tmpTarget.GUID);
+                        aiCreature?.TurnTo(aiTarget.positionX, aiTarget.positionY);
+                        aiCreature?.SendTargetUpdate(tmpTarget.GUID);
                         State = AIState.AI_ATTACKING;
                     }
                 }
@@ -314,7 +312,7 @@ namespace Mangos.World.AI
                     {
                         case AIState.AI_DEAD:
                             {
-                                if (aiHateTable.Count > 0)
+                                if (aiHateTable?.Count > 0)
                                 {
                                     OnLeaveCombat(Reset: false);
                                     aiTimer = WorldServiceLocator._WS_Creatures.CorpseDecay[aiCreature.CreatureInfo.Elite] * 1000;
@@ -333,17 +331,17 @@ namespace Mangos.World.AI
                                 {
                                     case > 0:
                                         aiTimer = RespawnTime * 1000;
-                                        aiCreature.Despawn();
+                                        aiCreature?.Despawn();
                                         break;
                                     default:
-                                        aiCreature.Destroy();
+                                        aiCreature?.Destroy();
                                         break;
                                 }
                                 break;
                             }
                         case AIState.AI_RESPAWN:
                             State = AIState.AI_WANDERING;
-                            aiCreature.Respawn();
+                            aiCreature?.Respawn();
                             aiTimer = 10000;
                             break;
 
@@ -392,7 +390,7 @@ namespace Mangos.World.AI
                             break;
 
                         default:
-                            aiCreature.SendChatMessage("Unknown AI mode!", ChatMsg.CHAT_MSG_MONSTER_SAY, LANGUAGES.LANG_GLOBAL);
+                            aiCreature?.SendChatMessage("Unknown AI mode!", ChatMsg.CHAT_MSG_MONSTER_SAY, LANGUAGES.LANG_GLOBAL);
                             State = AIState.AI_DO_NOTHING;
                             break;
                     }
@@ -424,7 +422,7 @@ namespace Mangos.World.AI
                     {
                         if (aiTarget != null && aiTarget.IsDead)
                         {
-                            aiHateTable.Remove(aiTarget);
+                            aiHateTable?.Remove(aiTarget);
                             aiTarget = null;
                             SelectTarget();
                         }
@@ -457,7 +455,7 @@ namespace Mangos.World.AI
                                 ref WS_Base.BaseUnit aiTarget2 = ref this.aiTarget;
                                 reference3 = ref aiTarget2;
                                 Object2 = aiTarget2;
-                                aiCreature.TurnTo(ref Object2);
+                                aiCreature?.TurnTo(ref Object2);
                                 reference3 = (WS_Base.BaseUnit)Object2;
                             }
                             ref WS_Creatures.CreatureObject reference4 = ref aiCreature;
@@ -499,7 +497,7 @@ namespace Mangos.World.AI
                     case null:
                         {
                             float distanceToSpawn = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
-                            if (!IsWaypoint && aiCreature.SpawnID > 0 && distanceToSpawn > aiCreature.MaxDistance)
+                            if (!IsWaypoint && aiCreature?.SpawnID > 0 && distanceToSpawn > aiCreature?.MaxDistance)
                             {
                                 GoBackToSpawn();
                                 return;
@@ -511,7 +509,7 @@ namespace Mangos.World.AI
                     default:
                         {
                             float distanceToLastHit = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, LastHitX, aiCreature.positionY, LastHitY, aiCreature.positionZ, LastHitZ);
-                            if (distanceToLastHit > aiCreature.MaxDistance)
+                            if (distanceToLastHit > aiCreature?.MaxDistance)
                             {
                                 OnLeaveCombat();
                                 return;
@@ -538,12 +536,12 @@ namespace Mangos.World.AI
                             GoBackToSpawn();
                             return;
                         }
-                        float distance2 = (float)(3.0 * aiCreature.CreatureInfo.WalkSpeed);
+                        float distance2 = (float)(3.0 * aiCreature?.CreatureInfo?.WalkSpeed);
                         float angle2 = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 6.2831854820251465);
-                        aiCreature.SetToRealPosition();
+                        aiCreature?.SetToRealPosition();
                         aiCreature.orientation = angle2;
-                        selectedX2 = (float)(aiCreature.positionX + (Math.Cos(angle2) * distance2));
-                        selectedY2 = (float)(aiCreature.positionY + (Math.Sin(angle2) * distance2));
+                        selectedX2 = (float)(aiCreature?.positionX + (Math.Cos(angle2) * distance2));
+                        selectedY2 = (float)(aiCreature?.positionY + (Math.Sin(angle2) * distance2));
                         selectedZ2 = WorldServiceLocator._WS_Maps.GetZCoord(selectedX2, selectedY2, aiCreature.positionZ, aiCreature.MapID);
                         MoveTries = checked(MoveTries + 1);
                         if (!(Math.Abs(aiCreature.positionZ - selectedZ2) > 5f))
@@ -574,10 +572,10 @@ namespace Mangos.World.AI
                 {
                     return;
                 }
-                aiCreature.SetToRealPosition();
+                aiCreature?.SetToRealPosition();
                 if (aiTarget is WS_Creatures.CreatureObject object1)
                 {
-                    object1.SetToRealPosition();
+                    object1?.SetToRealPosition();
                 }
                 float distance = 1000f * aiCreature.CreatureInfo.RunSpeed;
                 float distanceToTarget = WorldServiceLocator._WS_Combat.GetDistance(aiCreature, aiTarget);
@@ -591,11 +589,11 @@ namespace Mangos.World.AI
                     }
                     destDist *= 0.5f;
                     float NearX = aiTarget.positionX;
-                    NearX = (!(aiTarget.positionX > aiCreature.positionX)) ? (NearX + destDist) : (NearX - destDist);
+                    NearX = (!(aiTarget?.positionX > aiCreature?.positionX)) ? (NearX + destDist) : (NearX - destDist);
                     float NearY = aiTarget.positionY;
-                    NearY = (!(aiTarget.positionY > aiCreature.positionY)) ? (NearY + destDist) : (NearY - destDist);
+                    NearY = (!(aiTarget?.positionY > aiCreature?.positionY)) ? (NearY + destDist) : (NearY - destDist);
                     float NearZ = WorldServiceLocator._WS_Maps.GetZCoord(NearX, NearY, aiCreature.positionZ, aiCreature.MapID);
-                    if ((NearZ > aiTarget.positionZ + 2f) || (NearZ < aiTarget.positionZ - 2f))
+                    if ((NearZ > aiTarget?.positionZ + 2f) || (NearZ < aiTarget?.positionZ - 2f))
                     {
                         NearZ = aiTarget.positionZ;
                     }
@@ -605,10 +603,10 @@ namespace Mangos.World.AI
                         aiTimer = aiCreature.MoveTo(NearX, NearY, NearZ, 0f, Running: true);
                         return;
                     }
-                    aiHateTable.Remove(aiTarget);
+                    aiHateTable?.Remove(aiTarget);
                     if (aiTarget is WS_PlayerData.CharacterObject object2)
                     {
-                        object2.RemoveFromCombat(aiCreature);
+                        object2?.RemoveFromCombat(aiCreature);
                     }
                     SelectTarget();
                     CheckTarget();
@@ -617,18 +615,18 @@ namespace Mangos.World.AI
                 State = AIState.AI_MOVE_FOR_ATTACK;
                 float angle = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, aiTarget.positionX, aiCreature.positionY, aiTarget.positionY);
                 aiCreature.orientation = angle;
-                float selectedX = (float)(aiCreature.positionX + (Math.Cos(angle) * distance));
-                float selectedY = (float)(aiCreature.positionY + (Math.Sin(angle) * distance));
+                float selectedX = (float)(aiCreature?.positionX + (Math.Cos(angle) * distance));
+                float selectedY = (float)(aiCreature?.positionY + (Math.Sin(angle) * distance));
                 float selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
                 if (aiCreature.CanMoveTo(selectedX, selectedY, selectedZ))
                 {
                     aiTimer = aiCreature.MoveTo(selectedX, selectedY, selectedZ, 0f, Running: true);
                     return;
                 }
-                aiHateTable.Remove(aiTarget);
+                aiHateTable?.Remove(aiTarget);
                 if (aiTarget is WS_PlayerData.CharacterObject @object)
                 {
-                    @object.RemoveFromCombat(aiCreature);
+                    @object?.RemoveFromCombat(aiCreature);
                 }
                 SelectTarget();
                 CheckTarget();
@@ -636,8 +634,8 @@ namespace Mangos.World.AI
 
             protected void DoMoveReset()
             {
-                float distance = (!ResetRun) ? ((float)(3.0 * aiCreature.CreatureInfo.WalkSpeed)) : ((float)(3.0 * aiCreature.CreatureInfo.RunSpeed));
-                aiCreature.SetToRealPosition(Forced: true);
+                float distance = (!ResetRun) ? ((float)(3.0 * aiCreature?.CreatureInfo?.WalkSpeed)) : ((float)(3.0 * aiCreature?.CreatureInfo?.RunSpeed));
+                aiCreature?.SetToRealPosition(Forced: true);
                 float angle = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, ResetX, aiCreature.positionY, ResetY);
                 aiCreature.orientation = angle;
                 float tmpDist = WorldServiceLocator._WS_Combat.GetDistance(aiCreature, ResetX, ResetY, ResetZ);
@@ -647,8 +645,8 @@ namespace Mangos.World.AI
                     ResetFinished = true;
                     return;
                 }
-                float selectedX = (float)(aiCreature.positionX + (Math.Cos(angle) * distance));
-                float selectedY = (float)(aiCreature.positionY + (Math.Sin(angle) * distance));
+                float selectedX = (float)(aiCreature?.positionX + (Math.Cos(angle) * distance));
+                float selectedY = (float)(aiCreature?.positionY + (Math.Sin(angle) * distance));
                 float selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
                 aiTimer = checked(aiCreature.MoveTo(selectedX, selectedY, selectedZ, 0f, ResetRun) - 50);
             }

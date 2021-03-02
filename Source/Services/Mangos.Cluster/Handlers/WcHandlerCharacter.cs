@@ -94,13 +94,7 @@ namespace Mangos.Cluster.Handlers
 
             public bool IsInGroup => Group is object && GroupInvitedFlag == false;
 
-            public bool IsGroupLeader
-            {
-                get
-                {
-                    return Group is not null && ReferenceEquals(Group.Members[Group.Leader], this);
-                }
-            }
+            public bool IsGroupLeader => Group is not null && ReferenceEquals(Group.Members[Group.Leader], this);
 
             public bool IsInRaid => Group is object && Group.Type == GroupType.RAID;
 

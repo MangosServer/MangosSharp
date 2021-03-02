@@ -538,7 +538,7 @@ namespace Mangos.World.Player
         public void SendInitWorldStates(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Character.ZoneCheck();
-            var NumberOfFields = Character.ZoneID switch
+            int NumberOfFields = Character.ZoneID switch
             {
                 0 or 1 or 4 or 8 or 10 or 11 or 12 or 36 or 38 or 40 or 41 or 51 or 267 or 1519 or 1537 or 2257 or 2918 => 6,
                 2597 => 81,

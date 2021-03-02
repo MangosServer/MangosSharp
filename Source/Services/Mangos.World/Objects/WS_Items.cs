@@ -158,13 +158,7 @@ namespace Mangos.World.Objects
 
             public int RandomSuffix;
 
-            public bool IsContainer
-            {
-                get
-                {
-                    return ContainerSlots > 0;
-                }
-            }
+            public bool IsContainer => ContainerSlots > 0;
 
             public byte[] GetSlots => InventoryType switch
             {

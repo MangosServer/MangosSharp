@@ -180,45 +180,21 @@ namespace Mangos.World.Spells
 
             public SpellSchoolMask SchoolMask => (SpellSchoolMask)(1 << School);
 
-            public int GetDuration
-            {
-                get
-                {
-                    return WorldServiceLocator._WS_Spells.SpellDuration.ContainsKey(DurationIndex)
+            public int GetDuration => WorldServiceLocator._WS_Spells.SpellDuration.ContainsKey(DurationIndex)
                         ? WorldServiceLocator._WS_Spells.SpellDuration[DurationIndex]
                         : 0;
-                }
-            }
 
-            public int GetRange
-            {
-                get
-                {
-                    return WorldServiceLocator._WS_Spells.SpellRange.ContainsKey(rangeIndex)
+            public int GetRange => WorldServiceLocator._WS_Spells.SpellRange.ContainsKey(rangeIndex)
                         ? (int)Math.Round(WorldServiceLocator._WS_Spells.SpellRange[rangeIndex])
                         : 0;
-                }
-            }
 
-            public string GetFocusObject
-            {
-                get
-                {
-                    return WorldServiceLocator._WS_Spells.SpellFocusObject.ContainsKey(FocusObjectIndex)
+            public string GetFocusObject => WorldServiceLocator._WS_Spells.SpellFocusObject.ContainsKey(FocusObjectIndex)
                         ? WorldServiceLocator._WS_Spells.SpellFocusObject[FocusObjectIndex]
                         : Conversions.ToString(0);
-                }
-            }
 
-            public int GetCastTime
-            {
-                get
-                {
-                    return WorldServiceLocator._WS_Spells.SpellCastTime.ContainsKey(SpellCastTimeIndex)
+            public int GetCastTime => WorldServiceLocator._WS_Spells.SpellCastTime.ContainsKey(SpellCastTimeIndex)
                         ? WorldServiceLocator._WS_Spells.SpellCastTime[SpellCastTimeIndex]
                         : 0;
-                }
-            }
 
             public int GetManaCost(int level, int Mana) => checked((int)Math.Round(manaCost + (manaCostPerlevel * level) + (Mana * (manaCostPercent / 100.0))));
 
@@ -2129,15 +2105,9 @@ namespace Mangos.World.Spells
 
             public float DamageMultiplier;
 
-            public float GetRadius
-            {
-                get
-                {
-                    return WorldServiceLocator._WS_Spells.SpellRadius.ContainsKey(RadiusIndex)
+            public float GetRadius => WorldServiceLocator._WS_Spells.SpellRadius.ContainsKey(RadiusIndex)
                         ? WorldServiceLocator._WS_Spells.SpellRadius[RadiusIndex]
                         : 0f;
-                }
-            }
 
             public int GetValue(int Level, int ComboPoints)
             {

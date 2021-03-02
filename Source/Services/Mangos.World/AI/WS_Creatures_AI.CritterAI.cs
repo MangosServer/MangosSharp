@@ -19,7 +19,6 @@
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
-using Mangos.World.Maps;
 using Mangos.World.Objects;
 using System;
 
@@ -111,7 +110,7 @@ namespace Mangos.World.AI
                     {
                         State = AIState.AI_DEAD;
                     }
-                    if (aiCreature.IsStunned)
+                    if ((bool)(aiCreature?.IsStunned))
                     {
                         aiTimer = 1000;
                         return;
@@ -129,22 +128,22 @@ namespace Mangos.World.AI
                                 }
                                 State = AIState.AI_RESPAWN;
                                 WasAlive = true;
-                                int RespawnTime = aiCreature.SpawnTime;
+                                int RespawnTime = (int)(aiCreature?.SpawnTime);
                                 switch (RespawnTime)
                                 {
                                     case > 0:
                                         aiTimer = RespawnTime * 1000;
-                                        aiCreature.Despawn();
+                                        aiCreature?.Despawn();
                                         break;
                                     default:
-                                        aiCreature.Destroy();
+                                        aiCreature?.Destroy();
                                         break;
                                 }
                                 break;
                             }
                         case AIState.AI_RESPAWN:
                             State = AIState.AI_WANDERING;
-                            aiCreature.Respawn();
+                            aiCreature?.Respawn();
                             aiTimer = 10000;
                             break;
 
@@ -178,7 +177,7 @@ namespace Mangos.World.AI
                             break;
 
                         default:
-                            aiCreature.SendChatMessage("Unknown AI mode!", ChatMsg.CHAT_MSG_MONSTER_SAY, LANGUAGES.LANG_GLOBAL);
+                            aiCreature?.SendChatMessage("Unknown AI mode!", ChatMsg.CHAT_MSG_MONSTER_SAY, LANGUAGES.LANG_GLOBAL);
                             State = AIState.AI_DO_NOTHING;
                             break;
                     }
@@ -187,7 +186,7 @@ namespace Mangos.World.AI
 
             public override void DoMove()
             {
-                if (aiCreature.IsRooted)
+                if ((bool)(aiCreature?.IsRooted))
                 {
                     aiTimer = 1000;
                     return;
@@ -203,7 +202,7 @@ namespace Mangos.World.AI
                     {
                         if (MoveTries > 5)
                         {
-                            aiCreature.MoveToInstant(aiCreature.SpawnX, aiCreature.SpawnY, aiCreature.SpawnZ, aiCreature.orientation);
+                            aiCreature?.MoveToInstant(aiCreature.SpawnX, aiCreature.SpawnY, aiCreature.SpawnZ, aiCreature.orientation);
                             return;
                         }
                         DoRun = false;
@@ -221,21 +220,20 @@ namespace Mangos.World.AI
                                     break;
                             }
                         }
-                        float distance = (!DoRun) ? ((float)(3.0 * aiCreature.CreatureInfo.WalkSpeed)) : ((float)(3.0 * aiCreature.CreatureInfo.RunSpeed * aiCreature.SpeedMod));
+                        float distance = (!DoRun) ? ((float)(3.0 * aiCreature?.CreatureInfo?.WalkSpeed)) : ((float)(3.0 * aiCreature?.CreatureInfo?.RunSpeed * aiCreature?.SpeedMod));
                         float angle = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 6.2831854820251465);
-                        aiCreature.SetToRealPosition();
+                        aiCreature?.SetToRealPosition();
                         aiCreature.orientation = angle;
-                        selectedX = (float)(aiCreature.positionX + (Math.Cos(angle) * distance));
-                        selectedY = (float)(aiCreature.positionY + (Math.Sin(angle) * distance));
+                        selectedX = (float)(aiCreature?.positionX + (Math.Cos(angle) * distance));
+                        selectedY = (float)(aiCreature?.positionY + (Math.Sin(angle) * distance));
                         selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
                         MoveTries = (byte)(MoveTries + 1);
                         if (!(Math.Abs(aiCreature.positionZ - selectedZ) > 5f))
                         {
-                            WS_Maps wS_Maps = WorldServiceLocator._WS_Maps;
                             ref WS_Creatures.CreatureObject reference = ref aiCreature;
                             WS_Base.BaseObject obj = reference;
-                            bool flag = wS_Maps.IsInLineOfSight(ref obj, selectedX, selectedY, selectedZ + 2f);
                             reference = (WS_Creatures.CreatureObject)obj;
+                            bool flag = WorldServiceLocator._WS_Maps.IsInLineOfSight(ref obj, selectedX, selectedY, selectedZ + 2f);
                             if (flag)
                             {
                                 break;
