@@ -440,6 +440,36 @@ namespace Mangos.World.Handlers
             return true;
         }
 
+        void PerformOverflow()
+        {
+            PerformOverflow();
+        }
+        [ChatCommand("overflow", " - PH.", AccessLevel.Developer)]
+        public bool cmdOverflow(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        {
+            PerformOverflow();
+            return true;
+        }
+
+        [ChatCommand("threadpoolexception", " - PH.", AccessLevel.Developer)]
+        public bool cmdThreadPoolException(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        {
+            ThreadPool.QueueUserWorkItem(_ => throw new Exception());
+            return true;
+        }
+
+        [ChatCommand("stresstest", " - Causes a huge CPU Spike, simulating very high load, leak situations.", AccessLevel.Developer)]
+        public bool cmdStressTest(ref WS_PlayerData.CharacterObject objCharacter, string Message)
+        {
+            var hexString = "XYZ";
+            for (var i = 0; i < hexString.Length;)
+            {
+                i = 0; //Dummy var to prevent empty statement warning when below is commented
+                //WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, hexString.Substring(0, 1)); // Spams console with X
+            }
+            return true;
+        }
+
         [ChatCommand("servermessage", "servermessage #type #text - Send text message to all players on the server.")]
         public bool cmdServerMessage(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
