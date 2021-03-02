@@ -933,7 +933,7 @@ namespace Mangos.World.Objects
                         }
                         if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].IsAOE)
                         {
-                            SpellDamageBenefit = SpellDamageBenefit / 3;
+                            SpellDamageBenefit /= 3;
                         }
                     }
                     Damage += SpellDamageBenefit;

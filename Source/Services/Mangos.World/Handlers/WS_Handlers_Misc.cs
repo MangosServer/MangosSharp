@@ -406,7 +406,7 @@ namespace Mangos.World.Handlers
                 client.Character.DEAD = true;
                 client.Character.cUnitFlags = 8;
                 client.Character.cDynamicFlags = 0;
-                client.Character.cPlayerFlags = client.Character.cPlayerFlags | PlayerFlags.PLAYER_FLAGS_DEAD;
+                client.Character.cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_DEAD;
                 client.Character = null;
                 WorldServiceLocator._Functions.SendCorpseReclaimDelay(ref client, ref client.Character);
                 client.Character.StopMirrorTimer(MirrorTimer.FATIGUE);
