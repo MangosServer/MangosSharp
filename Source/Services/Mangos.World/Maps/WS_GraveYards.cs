@@ -102,18 +102,17 @@ namespace Mangos.World.Maps
                     Graveyards.Clear();
                     DataStore tmpDBC = await dataStoreProvider.GetDataStoreAsync("WorldSafeLocs.dbc");
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading.... {0} Graveyard Locations", tmpDBC.Rows - 1);
-                    int num = tmpDBC.Rows - 1;
-                    for (int i = 0; i <= num; i++)
+                    for (int i = 0; i <= tmpDBC.Rows - 1; i++)
                     {
-                        int locationIndex = tmpDBC.ReadInt(i, 0);
                         int locationMapID = tmpDBC.ReadInt(i, 1);
-                        float locationPosX = tmpDBC.ReadFloat(i, 2);
-                        float locationPosY = tmpDBC.ReadFloat(i, 3);
-                        float locationPosZ = tmpDBC.ReadFloat(i, 4);
                         if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Contains(locationMapID.ToString()))
                         {
+                            int locationIndex = tmpDBC.ReadInt(i, 0);
+                            float locationPosX = tmpDBC.ReadFloat(i, 2);
+                            float locationPosY = tmpDBC.ReadFloat(i, 3);
+                            float locationPosZ = tmpDBC.ReadFloat(i, 4);
                             Graveyards.Add(locationIndex, new TGraveyard(locationPosX, locationPosY, locationPosZ, locationMapID));
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "         : Map: {0}  X: {1}  Y: {2}  Z: {3}", locationMapID, locationPosX, locationPosY, locationPosZ);
+                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, ": Map: {0}  X: {1}  Y: {2}  Z: {3}", locationMapID, locationPosX, locationPosY, locationPosZ);
                         }
                     }
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Finished loading Graveyard Locations", tmpDBC.Rows - 1);
@@ -121,24 +120,20 @@ namespace Mangos.World.Maps
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : WorldSafeLocs missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "DBC File : WorldSafeLocs is Missing", ex);
                 }
             }
         }
 
         public void GoToNearestGraveyard(ref WS_PlayerData.CharacterObject Character, bool Alive, bool Teleport)
         {
-            DataTable GraveQuery = new DataTable();
-            bool foundNear = false;
-            float distNear = 0f;
-            TGraveyard entryNear = default;
-            TGraveyard entryFar = default;
             checked
             {
+                DataTable GraveQuery = new DataTable();
+                bool foundNear = false;
+                float distNear = 0f;
+                TGraveyard entryNear = default;
+                TGraveyard entryFar = default;
                 if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsDungeon | WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsBattleGround | WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsRaid)
                 {
                     Character.ZoneCheckInstance();

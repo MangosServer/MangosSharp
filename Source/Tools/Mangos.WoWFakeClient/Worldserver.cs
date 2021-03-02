@@ -119,7 +119,7 @@ namespace Mangos.WoWFakeClient
                             }
 
                             // Calculate Length from packet
-                            int PacketLen = Buffer[1] + Buffer[0] * 256 + 2;
+                            int PacketLen = Buffer[1] + (Buffer[0] * 256) + 2;
                             if (bytes < PacketLen)
                             {
                                 Console.WriteLine("[{0}][World] Bad Packet length [{1}][{2}] bytes", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"), bytes, PacketLen);
@@ -251,7 +251,7 @@ namespace Mangos.WoWFakeClient
             int T;
             for (T = 0; T <= 5; T++)
             {
-                Buffer[T] = (byte)(((Realmserver.SS_Hash[Key[3]] ^ Buffer[T]) & 0xFF) + Key[2] & 0xFF);
+                Buffer[T] = (byte)((((Realmserver.SS_Hash[Key[3]] ^ Buffer[T]) & 0xFF) + Key[2]) & 0xFF);
                 Key[2] = Buffer[T];
                 Key[3] = (byte)((Key[3] + 1) % 40);
             }
@@ -269,7 +269,7 @@ namespace Mangos.WoWFakeClient
                 A = Key[0];
                 Key[0] = Buffer[T];
                 B = Buffer[T];
-                B = (byte)(B - A & 0xFF);
+                B = (byte)((B - A) & 0xFF);
                 d = Key[1];
                 A = Realmserver.SS_Hash[d];
                 A = (byte)((A ^ B) & 0xFF);

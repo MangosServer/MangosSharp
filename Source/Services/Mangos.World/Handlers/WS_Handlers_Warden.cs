@@ -146,29 +146,29 @@ namespace Mangos.World.Handlers
                     int i = 1;
                     do
                     {
-                        val = val + key[checked(i * 4 - 4)] + @base[position % @base.Length];
+                        val = val + key[checked((i * 4) - 4)] + @base[position % @base.Length];
                         val &= 0xFF;
                         position++;
-                        byte temp = key[i * 4 - 4];
-                        key[i * 4 - 4] = key[val & 0xFF];
+                        byte temp = key[(i * 4) - 4];
+                        key[(i * 4) - 4] = key[val & 0xFF];
                         key[val & 0xFF] = temp;
-                        val = val + key[checked(i * 4 - 3)] + @base[position % @base.Length];
+                        val = val + key[checked((i * 4) - 3)] + @base[position % @base.Length];
                         val &= 0xFF;
                         position++;
-                        temp = key[i * 4 - 3];
-                        key[i * 4 - 3] = key[val & 0xFF];
+                        temp = key[(i * 4) - 3];
+                        key[(i * 4) - 3] = key[val & 0xFF];
                         key[val & 0xFF] = temp;
-                        val = val + key[checked(i * 4 - 2)] + @base[position % @base.Length];
+                        val = val + key[checked((i * 4) - 2)] + @base[position % @base.Length];
                         val &= 0xFF;
                         position++;
-                        temp = key[i * 4 - 2];
-                        key[i * 4 - 2] = key[val & 0xFF];
+                        temp = key[(i * 4) - 2];
+                        key[(i * 4) - 2] = key[val & 0xFF];
                         key[val & 0xFF] = temp;
-                        val = val + key[checked(i * 4 - 1)] + @base[position % @base.Length];
+                        val = val + key[checked((i * 4) - 1)] + @base[position % @base.Length];
                         val &= 0xFF;
                         position++;
-                        temp = key[i * 4 - 1];
-                        key[i * 4 - 1] = key[val & 0xFF];
+                        temp = key[(i * 4) - 1];
+                        key[(i * 4) - 1] = key[val & 0xFF];
                         key[val & 0xFF] = temp;
                         i++;
                     }
@@ -286,6 +286,8 @@ namespace Mangos.World.Handlers
                         break;
                     }
                 case (MaievResponse)3:
+                    break;
+                default:
                     break;
             }
         }

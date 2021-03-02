@@ -142,14 +142,9 @@ namespace Mangos.Extractor
             // Replace lowercase object with Object (used in f.ex Gameobject -> GameObject)
             if (tmp.IndexOf("object", StringComparison.OrdinalIgnoreCase) > 0)
             {
-                if (tmp.Length > tmp.IndexOf("object", StringComparison.OrdinalIgnoreCase) + 6)
-                {
-                    tmp = tmp.Substring(0, tmp.IndexOf("object")) + "Object" + tmp.Substring(tmp.IndexOf("object") + 6);
-                }
-                else
-                {
-                    tmp = tmp.Substring(0, tmp.IndexOf("object")) + "Object";
-                }
+                tmp = tmp.Length > tmp.IndexOf("object", StringComparison.OrdinalIgnoreCase) + 6
+                    ? tmp.Substring(0, tmp.IndexOf("object")) + "Object" + tmp.Substring(tmp.IndexOf("object") + 6)
+                    : tmp.Substring(0, tmp.IndexOf("object")) + "Object";
             }
 
             return tmp;
@@ -333,7 +328,7 @@ namespace Mangos.Extractor
                 f.Seek(FIELD_TYPE_OFFSET, SeekOrigin.Begin);
                 for (int i = 0, loopTo = Names.Count - 1; i <= loopTo; i++)
                 {
-                    f.Seek(FIELD_TYPE_OFFSET + i * 5 * 4 + Offset, SeekOrigin.Begin);
+                    f.Seek(FIELD_TYPE_OFFSET + (i * 5 * 4) + Offset, SeekOrigin.Begin);
                     f.Read(Buffer, 0, 4);
                     Temp = BitConverter.ToInt32(Buffer, 0);
                     if (Temp < 0xFFFF)

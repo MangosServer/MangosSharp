@@ -215,11 +215,7 @@ namespace Mangos.World.Objects
                 get
                 {
                     GameObjectType type = ObjectInfo.Type;
-                    if (type == GameObjectType.GAMEOBJECT_TYPE_CHEST)
-                    {
-                        return (ulong)GetSound(3) == 1;
-                    }
-                    return false;
+                    return type == GameObjectType.GAMEOBJECT_TYPE_CHEST && (ulong)GetSound(3) == 1;
                 }
             }
 

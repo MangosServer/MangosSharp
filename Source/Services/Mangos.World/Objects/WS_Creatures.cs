@@ -121,20 +121,11 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    switch (CreatureInfo.CreatureFamily)
+                    return CreatureInfo.CreatureFamily switch
                     {
-                        case 3:
-                        case 10:
-                        case 11:
-                        case 12:
-                        case 20:
-                        case 21:
-                        case 27:
-                            return false;
-
-                        default:
-                            return true;
-                    }
+                        3 or 10 or 11 or 12 or 20 or 21 or 27 => false,
+                        _ => true,
+                    };
                 }
             }
 
@@ -143,11 +134,7 @@ namespace Mangos.World.Objects
                 get
                 {
                     byte creatureFamily = CreatureInfo.CreatureFamily;
-                    if (creatureFamily == byte.MaxValue)
-                    {
-                        return false;
-                    }
-                    return true;
+                    return creatureFamily != byte.MaxValue;
                 }
             }
 
@@ -159,11 +146,9 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    if (aiScript != null)
-                    {
-                        return Life.Current == 0 || aiScript.State == AIState.AI_DEAD || aiScript.State == AIState.AI_RESPAWN;
-                    }
-                    return Life.Current == 0;
+                    return aiScript != null
+                        ? Life.Current == 0 || aiScript.State == AIState.AI_DEAD || aiScript.State == AIState.AI_RESPAWN
+                        : Life.Current == 0;
                 }
             }
 
@@ -171,11 +156,7 @@ namespace Mangos.World.Objects
             {
                 get
                 {
-                    if (aiScript != null && aiScript.State == AIState.AI_MOVING_TO_SPAWN)
-                    {
-                        return true;
-                    }
-                    return false;
+                    return aiScript != null && aiScript.State == AIState.AI_MOVING_TO_SPAWN;
                 }
             }
 
@@ -185,11 +166,9 @@ namespace Mangos.World.Objects
                 {
                     checked
                     {
-                        if (WorldServiceLocator._WS_DBCDatabase.CreatureGossip.ContainsKey(GUID - WorldServiceLocator._Global_Constants.GUID_UNIT))
-                        {
-                            return WorldServiceLocator._WS_DBCDatabase.CreatureGossip[GUID - WorldServiceLocator._Global_Constants.GUID_UNIT];
-                        }
-                        return 16777215;
+                        return WorldServiceLocator._WS_DBCDatabase.CreatureGossip.ContainsKey(GUID - WorldServiceLocator._Global_Constants.GUID_UNIT)
+                            ? WorldServiceLocator._WS_DBCDatabase.CreatureGossip[GUID - WorldServiceLocator._Global_Constants.GUID_UNIT]
+                            : 16777215;
                     }
                 }
             }
@@ -431,11 +410,11 @@ namespace Mangos.World.Objects
                 if (aiScript != null && (Forced || aiScript.State != AIState.AI_MOVING_TO_SPAWN))
                 {
                     int timeDiff = checked(WorldServiceLocator._NativeMethods.timeGetTime("") - LastMove);
-                    if ((Forced || aiScript.IsMoving()) && LastMove > 0 && timeDiff < LastMove_Time)
+                    if ((Forced || aiScript.IsMoving) && LastMove > 0 && timeDiff < LastMove_Time)
                     {
                         float distance = (aiScript.State is not AIState.AI_MOVING and not AIState.AI_WANDERING) ? (timeDiff / 1000f * (CreatureInfo.RunSpeed * SpeedMod)) : (timeDiff / 1000f * (CreatureInfo.WalkSpeed * SpeedMod));
-                        positionX = (float)(OldX + Math.Cos(orientation) * distance);
-                        positionY = (float)(OldY + Math.Sin(orientation) * distance);
+                        positionX = (float)(OldX + (Math.Cos(orientation) * distance));
+                        positionY = (float)(OldY + (Math.Sin(orientation) * distance));
                         positionZ = WorldServiceLocator._WS_Maps.GetZCoord(positionX, positionY, positionZ, MapID);
                     }
                     else if (!PositionUpdated && timeDiff >= LastMove_Time)
@@ -450,7 +429,7 @@ namespace Mangos.World.Objects
 
             public void StopMoving()
             {
-                if (aiScript != null && !aiScript.InCombat())
+                if (aiScript != null && !aiScript.InCombat)
                 {
                     aiScript.Pause(10000);
                     SetToRealPosition(Forced: true);
@@ -497,17 +476,17 @@ namespace Mangos.World.Objects
                         if (Flying)
                         {
                             SMSG_MONSTER_MOVE.AddInt32(768);
-                            TimeToMove = (int)Math.Round(moveDist / (CreatureInfo.RunSpeed * SpeedMod) * 1000f + 0.5f);
+                            TimeToMove = (int)Math.Round((moveDist / (CreatureInfo.RunSpeed * SpeedMod) * 1000f) + 0.5f);
                         }
                         else if (Running)
                         {
                             SMSG_MONSTER_MOVE.AddInt32(256);
-                            TimeToMove = (int)Math.Round(moveDist / (CreatureInfo.RunSpeed * SpeedMod) * 1000f + 0.5f);
+                            TimeToMove = (int)Math.Round((moveDist / (CreatureInfo.RunSpeed * SpeedMod) * 1000f) + 0.5f);
                         }
                         else
                         {
                             SMSG_MONSTER_MOVE.AddInt32(0);
-                            TimeToMove = (int)Math.Round(moveDist / (CreatureInfo.WalkSpeed * SpeedMod) * 1000f + 0.5f);
+                            TimeToMove = (int)Math.Round((moveDist / (CreatureInfo.WalkSpeed * SpeedMod) * 1000f) + 0.5f);
                         }
                         orientation = WorldServiceLocator._WS_Combat.GetOrientation(positionX, x, positionY, y);
                         OldX = positionX;
@@ -581,7 +560,7 @@ namespace Mangos.World.Objects
             public void TurnTo(float orientation_)
             {
                 orientation = orientation_;
-                if (SeenBy.Count > 0 && (aiScript == null || !aiScript.IsMoving()))
+                if (SeenBy.Count > 0 && (aiScript == null || !aiScript.IsMoving))
                 {
                     Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_MOVE_HEARTBEAT);
                     try
@@ -867,193 +846,39 @@ namespace Mangos.World.Objects
             {
                 checked
                 {
-                    int XP = Level * 5 + 45;
+                    int XP = (Level * 5) + 45;
                     int lvlDifference = Character.Level - Level;
                     if (lvlDifference > 0)
                     {
-                        XP = (int)Math.Round(XP * (1.0 + 0.05 * (Level - Character.Level)));
+                        XP = (int)Math.Round(XP * (1.0 + (0.05 * (Level - Character.Level))));
                     }
                     else if (lvlDifference < 0)
                     {
-                        byte GrayLevel;
-                        switch (Character.Level)
+                        var GrayLevel = Character.Level switch
                         {
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-                            case 4:
-                            case 5:
-                                GrayLevel = 0;
-                                break;
-
-                            case 6:
-                            case 7:
-                            case 8:
-                            case 9:
-                            case 10:
-                            case 11:
-                            case 12:
-                            case 13:
-                            case 14:
-                            case 15:
-                            case 16:
-                            case 17:
-                            case 18:
-                            case 19:
-                            case 20:
-                            case 21:
-                            case 22:
-                            case 23:
-                            case 24:
-                            case 25:
-                            case 26:
-                            case 27:
-                            case 28:
-                            case 29:
-                            case 30:
-                            case 31:
-                            case 32:
-                            case 33:
-                            case 34:
-                            case 35:
-                            case 36:
-                            case 37:
-                            case 38:
-                            case 39:
-                                GrayLevel = (byte)Math.Round(Character.Level - Math.Floor(Character.Level / 10.0) - 5.0);
-                                break;
-
-                            case 40:
-                            case 41:
-                            case 42:
-                            case 43:
-                            case 44:
-                            case 45:
-                            case 46:
-                            case 47:
-                            case 48:
-                            case 49:
-                            case 50:
-                            case 51:
-                            case 52:
-                            case 53:
-                            case 54:
-                            case 55:
-                            case 56:
-                            case 57:
-                            case 58:
-                            case 59:
-                                GrayLevel = (byte)Math.Round(Character.Level - Math.Floor(Character.Level / 5.0) - 1.0);
-                                break;
-
-                            default:
-                                GrayLevel = (byte)(Character.Level - 9);
-                                break;
-                        }
+                            0 or 1 or 2 or 3 or 4 or 5 => 0,
+                            6 or 7 or 8 or 9 or 10 or 11 or 12 or 13 or 14 or 15 or 16 or 17 or 18 or 19 or 20 or 21 or 22 or 23 or 24 or 25 or 26 or 27 or 28 or 29 or 30 or 31 or 32 or 33 or 34 or 35 or 36 or 37 or 38 or 39 => (byte)Math.Round(Character.Level - Math.Floor(Character.Level / 10.0) - 5.0),
+                            40 or 41 or 42 or 43 or 44 or 45 or 46 or 47 or 48 or 49 or 50 or 51 or 52 or 53 or 54 or 55 or 56 or 57 or 58 or 59 => (byte)Math.Round(Character.Level - Math.Floor(Character.Level / 5.0) - 1.0),
+                            _ => (byte)(Character.Level - 9),
+                        };
                         if (Level > (uint)GrayLevel)
                         {
-                            int ZD;
-                            switch (Character.Level)
+                            var ZD = Character.Level switch
                             {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                case 5:
-                                case 6:
-                                case 7:
-                                    ZD = 5;
-                                    break;
-
-                                case 8:
-                                case 9:
-                                    ZD = 6;
-                                    break;
-
-                                case 10:
-                                case 11:
-                                    ZD = 7;
-                                    break;
-
-                                case 12:
-                                case 13:
-                                case 14:
-                                case 15:
-                                    ZD = 8;
-                                    break;
-
-                                case 16:
-                                case 17:
-                                case 18:
-                                case 19:
-                                    ZD = 9;
-                                    break;
-
-                                case 20:
-                                case 21:
-                                case 22:
-                                case 23:
-                                case 24:
-                                case 25:
-                                case 26:
-                                case 27:
-                                case 28:
-                                case 29:
-                                    ZD = 11;
-                                    break;
-
-                                case 30:
-                                case 31:
-                                case 32:
-                                case 33:
-                                case 34:
-                                case 35:
-                                case 36:
-                                case 37:
-                                case 38:
-                                case 39:
-                                    ZD = 12;
-                                    break;
-
-                                case 40:
-                                case 41:
-                                case 42:
-                                case 43:
-                                case 44:
-                                    ZD = 13;
-                                    break;
-
-                                case 45:
-                                case 46:
-                                case 47:
-                                case 48:
-                                case 49:
-                                    ZD = 14;
-                                    break;
-
-                                case 50:
-                                case 51:
-                                case 52:
-                                case 53:
-                                case 54:
-                                    ZD = 15;
-                                    break;
-
-                                case 55:
-                                case 56:
-                                case 57:
-                                case 58:
-                                case 59:
-                                    ZD = 16;
-                                    break;
-
-                                default:
-                                    ZD = 17;
-                                    break;
-                            }
-                            XP = (int)Math.Round(XP * (1.0 - (Character.Level - Level) / (double)ZD));
+                                0 or 1 or 2 or 3 or 4 or 5 or 6 or 7 => 5,
+                                8 or 9 => 6,
+                                10 or 11 => 7,
+                                12 or 13 or 14 or 15 => 8,
+                                16 or 17 or 18 or 19 => 9,
+                                20 or 21 or 22 or 23 or 24 or 25 or 26 or 27 or 28 or 29 => 11,
+                                30 or 31 or 32 or 33 or 34 or 35 or 36 or 37 or 38 or 39 => 12,
+                                40 or 41 or 42 or 43 or 44 => 13,
+                                45 or 46 or 47 or 48 or 49 => 14,
+                                50 or 51 or 52 or 53 or 54 => 15,
+                                55 or 56 or 57 or 58 or 59 => 16,
+                                _ => 17,
+                            };
+                            XP = (int)Math.Round(XP * (1.0 - ((Character.Level - Level) / (double)ZD)));
                         }
                         else
                         {

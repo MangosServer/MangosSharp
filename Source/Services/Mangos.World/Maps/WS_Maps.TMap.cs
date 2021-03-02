@@ -77,6 +77,8 @@ namespace Mangos.World.Maps
                                         return (int)Math.Round(WorldServiceLocator._Functions.GetNextDay(DayOfWeek.Tuesday, 3).Subtract(DateAndTime.Now).TotalSeconds);
                                 }
                                 break;
+                            default:
+                                break;
                         }
                         return WorldServiceLocator._Global_Constants.DEFAULT_INSTANCE_EXPIRE_TIME;
                     }
@@ -111,11 +113,9 @@ namespace Mangos.World.Maps
                     while (x <= 63);
                     try
                     {
-                        int num = mapDataStore.Rows - 1;
-                        for (int i = 0; i <= num; i++)
+                        for (int i = 0; i <= mapDataStore.Rows - 1; i++)
                         {
-                            int tmpMap = mapDataStore.ReadInt(i, 0);
-                            if (tmpMap == Map)
+                            if (mapDataStore.ReadInt(i, 0) == Map)
                             {
                                 ID = Map;
                                 Type = (MapTypes)mapDataStore.ReadInt(i, 2);

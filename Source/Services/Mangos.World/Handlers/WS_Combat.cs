@@ -519,7 +519,7 @@ namespace Mangos.World.Handlers
                     }
                     if (Character.Classe == Classes.CLASS_WARRIOR || (Character.Classe == Classes.CLASS_DRUID && (Character.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || Character.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR)))
                     {
-                        Character.Rage.Increment((int)((7.5 * damageInfo.Damage / Character.GetRageConversion + Character.GetHitFactor((damageInfo.HitInfo & 4) == 0, (damageInfo.HitInfo & 0x200) != 0) * WorldServiceLocator._WS_Combat.GetAttackTime(ref Character, ref combatDualWield)) / 2.0));
+                        Character.Rage.Increment((int)(((7.5 * damageInfo.Damage / Character.GetRageConversion) + (Character.GetHitFactor((damageInfo.HitInfo & 4) == 0, (damageInfo.HitInfo & 0x200) != 0) * WorldServiceLocator._WS_Combat.GetAttackTime(ref Character, ref combatDualWield))) / 2.0));
                         Character.SetUpdateFlag(24, Character.Rage.Current);
                         Character.SendCharacterUpdate();
                     }
@@ -596,14 +596,14 @@ namespace Mangos.World.Handlers
                         Character = (WS_PlayerData.CharacterObject)Attacker;
                         if (((WS_PlayerData.CharacterObject)Victim2).Classe == Classes.CLASS_WARRIOR)
                         {
-                            ((WS_PlayerData.CharacterObject)Victim2).Rage.Increment((int)(damageInfo.Damage / (double)(((WS_PlayerData.CharacterObject)Victim2).Level * 4) * 25.0 + 10.0));
+                            ((WS_PlayerData.CharacterObject)Victim2).Rage.Increment((int)((damageInfo.Damage / (double)(((WS_PlayerData.CharacterObject)Victim2).Level * 4) * 25.0) + 10.0));
                             ((WS_PlayerData.CharacterObject)Victim2).SetUpdateFlag(24, ((WS_PlayerData.CharacterObject)Victim2).Rage.Current);
                             Character.SendCharacterUpdate();
                         }
                     }
                     if (Character.Classe == Classes.CLASS_WARRIOR || (Character.Classe == Classes.CLASS_DRUID && (Character.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || Character.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR)))
                     {
-                        Character.Rage.Increment((int)(damageInfo.Damage / (double)(Character.Level * 4) * 75.0 + 10.0));
+                        Character.Rage.Increment((int)((damageInfo.Damage / (double)(Character.Level * 4) * 75.0) + 10.0));
                         Character.SetUpdateFlag(24, Character.Rage.Current);
                         Character.SendCharacterUpdate();
                     }
@@ -701,11 +701,7 @@ namespace Mangos.World.Handlers
             }
             if (Weapon == null || Weapon.ItemInfo.ObjectClass != ITEM_CLASS.ITEM_CLASS_WEAPON)
             {
-                if (AttackType == WeaponAttackType.RANGED_ATTACK)
-                {
-                    return 0f;
-                }
-                return 2.4f;
+                return AttackType == WeaponAttackType.RANGED_ATTACK ? 0f : 2.4f;
             }
             switch (Weapon.ItemInfo.InventoryType)
             {
@@ -767,8 +763,8 @@ namespace Mangos.World.Handlers
             }
             else if (objCharacter.ShapeshiftForm is ShapeshiftForm.FORM_BEAR or ShapeshiftForm.FORM_DIREBEAR or ShapeshiftForm.FORM_CAT)
             {
-                WepMin = (float)(WepMin + objCharacter.Level * 0.85 * AttSpeed);
-                WepMax = (float)(WepMax + objCharacter.Level * 0.85 * AttSpeed);
+                WepMin = (float)(WepMin + (objCharacter.Level * 0.85 * AttSpeed));
+                WepMax = (float)(WepMax + (objCharacter.Level * 0.85 * AttSpeed));
             }
             float MinDamage = (BaseValue + WepMin) * BasePercent;
             float MaxDamage = (BaseValue + WepMax) * BasePercent;
@@ -864,7 +860,7 @@ namespace Mangos.World.Handlers
                 short chanceToCrushingBlow = 0;
                 if (Attacker is WS_Creatures.CreatureObject && Victim is WS_PlayerData.CharacterObject && Ability == null && Attacker.Level > Victim.Level + 2)
                 {
-                    chanceToCrushingBlow = (short)Math.Round(skillDiference * 2f - 15f);
+                    chanceToCrushingBlow = (short)Math.Round((skillDiference * 2f) - 15f);
                 }
                 if (chanceToMiss > 60f)
                 {
@@ -918,7 +914,7 @@ namespace Mangos.World.Handlers
                 }
                 float DamageReduction = Victim.GetDamageReduction(ref Attacker, result.DamageType, result.Damage);
                 ref int damage = ref result.Damage;
-                damage = (int)Math.Round(damage - result.Damage * DamageReduction);
+                damage = (int)Math.Round(damage - (result.Damage * DamageReduction));
                 float roll = (float)(WorldServiceLocator._WorldServer.Rnd.Next(0, 10000) / 100.0);
                 float num = roll;
                 if (num < chanceToMiss)
@@ -965,7 +961,7 @@ namespace Mangos.World.Handlers
                 {
                     if (Victim is WS_PlayerData.CharacterObject object3)
                     {
-                        result.Blocked = (int)Math.Round(object3.combatBlockValue + object3.Strength.Base / 20.0);
+                        result.Blocked = (int)Math.Round(object3.combatBlockValue + (object3.Strength.Base / 20.0));
                         if (object3.combatBlockValue != 0)
                         {
                             WS_Base.BaseObject Unit = Victim;
@@ -997,7 +993,7 @@ namespace Mangos.World.Handlers
                 }
                 else if (num < chanceToMiss + chanceToDodge + chanceToParry + chanceToGlancingBlow + chanceToBlock + chanceToCrit + chanceToCrushingBlow)
                 {
-                    result.Damage = result.Damage * 3 >> 1;
+                    result.Damage = (result.Damage * 3) >> 1;
                     result.HitInfo |= 2;
                     result.HitInfo |= 32768;
                 }
@@ -1037,28 +1033,14 @@ namespace Mangos.World.Handlers
                 {
                     if (@object.combatDodge > 0)
                     {
-                        int combatDodgeAgilityBonus;
-                        switch (@object.Classe)
+                        var combatDodgeAgilityBonus = @object.Classe switch
                         {
-                            case Classes.CLASS_HUNTER:
-                                combatDodgeAgilityBonus = (int)(@object.Agility.Base / 26.5f);
-                                break;
-
-                            case Classes.CLASS_ROGUE:
-                                combatDodgeAgilityBonus = (int)(@object.Agility.Base / 14.5f);
-                                break;
-
-                            case Classes.CLASS_PALADIN:
-                            case Classes.CLASS_MAGE:
-                            case Classes.CLASS_WARLOCK:
-                                combatDodgeAgilityBonus = (int)(@object.Agility.Base / 19.5f);
-                                break;
-
-                            default:
-                                combatDodgeAgilityBonus = (int)(@object.Agility.Base / 20.0);
-                                break;
-                        }
-                        return @object.combatDodge + combatDodgeAgilityBonus - skillDiference * 0.04f;
+                            Classes.CLASS_HUNTER => (int)(@object.Agility.Base / 26.5f),
+                            Classes.CLASS_ROGUE => (int)(@object.Agility.Base / 14.5f),
+                            Classes.CLASS_PALADIN or Classes.CLASS_MAGE or Classes.CLASS_WARLOCK => (int)(@object.Agility.Base / 19.5f),
+                            _ => (int)(@object.Agility.Base / 20.0),
+                        };
+                        return @object.combatDodge + combatDodgeAgilityBonus - (skillDiference * 0.04f);
                     }
                 }
             }
@@ -1069,7 +1051,7 @@ namespace Mangos.World.Handlers
         {
             return objCharacter switch
             {
-                WS_PlayerData.CharacterObject _ when ((WS_PlayerData.CharacterObject)objCharacter).combatParry > 0 => ((WS_PlayerData.CharacterObject)objCharacter).combatParry - skillDiference * 0.04f,
+                WS_PlayerData.CharacterObject _ when ((WS_PlayerData.CharacterObject)objCharacter).combatParry > 0 => ((WS_PlayerData.CharacterObject)objCharacter).combatParry - (skillDiference * 0.04f),
                 _ => 0f
             };
         }
@@ -1078,7 +1060,7 @@ namespace Mangos.World.Handlers
         {
             return objCharacter switch
             {
-                WS_PlayerData.CharacterObject _ when ((WS_PlayerData.CharacterObject)objCharacter).combatBlock > 0 => ((WS_PlayerData.CharacterObject)objCharacter).combatBlock - skillDiference * 0.04f,
+                WS_PlayerData.CharacterObject _ when ((WS_PlayerData.CharacterObject)objCharacter).combatBlock > 0 => ((WS_PlayerData.CharacterObject)objCharacter).combatBlock - (skillDiference * 0.04f),
                 _ => 0f
             };
         }
@@ -1091,20 +1073,12 @@ namespace Mangos.World.Handlers
                 {
                     if (characterObject.Items.ContainsKey(16) && characterObject.Items[16].ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON)
                     {
-                        if (skillDiference > 10)
-                        {
-                            return 24f - skillDiference * 0.1f;
-                        }
-                        return 24f - skillDiference * 0.2f;
+                        return skillDiference > 10 ? 24f - (skillDiference * 0.1f) : 24f - (skillDiference * 0.2f);
                     }
-                    if (skillDiference > 10)
-                    {
-                        return 5f - skillDiference * 0.1f;
-                    }
-                    return 5f - skillDiference * 0.2f;
+                    return skillDiference > 10 ? 5f - (skillDiference * 0.1f) : 5f - (skillDiference * 0.2f);
                 }
             }
-            return 5f - skillDiference * 0.04f;
+            return 5f - (skillDiference * 0.04f);
         }
 
         public float GetBasePercentCrit(ref WS_Base.BaseUnit objCharacter, int skillDiference)
@@ -1117,46 +1091,46 @@ namespace Mangos.World.Handlers
                         switch (((WS_PlayerData.CharacterObject)objCharacter).Classe)
                         {
                             case Classes.CLASS_ROGUE:
-                                baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 29.0);
+                                baseCrit = (float)(0.0 + (((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 29.0));
                                 break;
 
                             case Classes.CLASS_DRUID:
-                                baseCrit = (float)(0.92000001668930054 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+                                baseCrit = (float)(0.92000001668930054 + (((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0));
                                 break;
 
                             case Classes.CLASS_HUNTER:
-                                baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 33.0);
+                                baseCrit = (float)(0.0 + (((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 33.0));
                                 break;
 
                             case Classes.CLASS_MAGE:
-                                baseCrit = (float)(3.2000000476837158 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.44);
+                                baseCrit = (float)(3.2000000476837158 + (((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.44));
                                 break;
 
                             case Classes.CLASS_PALADIN:
-                                baseCrit = (float)(0.699999988079071 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.77);
+                                baseCrit = (float)(0.699999988079071 + (((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.77));
                                 break;
 
                             case Classes.CLASS_PRIEST:
-                                baseCrit = (float)(3.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+                                baseCrit = (float)(3.0 + (((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0));
                                 break;
 
                             case Classes.CLASS_SHAMAN:
-                                baseCrit = (float)(1.7000000476837158 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.7);
+                                baseCrit = (float)(1.7000000476837158 + (((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 19.7));
                                 break;
 
                             case Classes.CLASS_WARLOCK:
-                                baseCrit = (float)(2.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+                                baseCrit = (float)(2.0 + (((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0));
                                 break;
 
                             case Classes.CLASS_WARRIOR:
-                                baseCrit = (float)(0.0 + ((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0);
+                                baseCrit = (float)(0.0 + (((WS_PlayerData.CharacterObject)objCharacter).Agility.Base / 20.0));
                                 break;
                         }
-                        return baseCrit + ((WS_PlayerData.CharacterObject)objCharacter).combatCrit + skillDiference * 0.2f;
+                        return baseCrit + ((WS_PlayerData.CharacterObject)objCharacter).combatCrit + (skillDiference * 0.2f);
                     }
 
                 default:
-                    return 5f + skillDiference * 0.2f;
+                    return 5f + (skillDiference * 0.2f);
             }
         }
 
@@ -1172,12 +1146,12 @@ namespace Mangos.World.Handlers
 
         public float GetDistance(float x1, float x2, float y1, float y2, float z1, float z2)
         {
-            return (float)Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2));
+            return (float)Math.Sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2)));
         }
 
         public float GetDistance(float x1, float x2, float y1, float y2)
         {
-            return (float)Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+            return (float)Math.Sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
         }
 
         public float GetOrientation(float x1, float x2, float y1, float y2)
@@ -1185,7 +1159,7 @@ namespace Mangos.World.Handlers
             float angle = (float)Math.Atan2(y2 - y1, x2 - x1);
             if (angle < 0f)
             {
-                angle = (float)(angle + Math.PI * 2.0);
+                angle = (float)(angle + (Math.PI * 2.0));
             }
             return angle;
         }
@@ -1198,13 +1172,11 @@ namespace Mangos.World.Handlers
         public bool IsInFrontOf(ref WS_Base.BaseObject Object1, float x2, float y2)
         {
             float angle2 = GetOrientation(Object1.positionX, x2, Object1.positionY, y2);
-            float lowAngle = Object1.orientation - (float)Math.PI / 3f;
-            float hiAngle = Object1.orientation + (float)Math.PI / 3f;
-            if (lowAngle < 0f)
-            {
-                return (angle2 >= Math.PI * 2.0 + lowAngle && angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle);
-            }
-            return angle2 >= lowAngle && angle2 <= hiAngle;
+            float lowAngle = Object1.orientation - ((float)Math.PI / 3f);
+            float hiAngle = Object1.orientation + ((float)Math.PI / 3f);
+            return lowAngle < 0f
+                ? (angle2 >= (Math.PI * 2.0) + lowAngle && angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle)
+                : angle2 >= lowAngle && angle2 <= hiAngle;
         }
 
         public bool IsInBackOf(ref WS_Base.BaseObject Object1, ref WS_Base.BaseObject Object2)
@@ -1215,13 +1187,11 @@ namespace Mangos.World.Handlers
         public bool IsInBackOf(ref WS_Base.BaseObject Object1, float x2, float y2)
         {
             float angle2 = GetOrientation(x2, Object1.positionX, y2, Object1.positionY);
-            float lowAngle = Object1.orientation - (float)Math.PI / 3f;
-            float hiAngle = Object1.orientation + (float)Math.PI / 3f;
-            if (lowAngle < 0f)
-            {
-                return (angle2 >= Math.PI * 2.0 + lowAngle && angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle);
-            }
-            return angle2 >= lowAngle && angle2 <= hiAngle;
+            float lowAngle = Object1.orientation - ((float)Math.PI / 3f);
+            float hiAngle = Object1.orientation + ((float)Math.PI / 3f);
+            return lowAngle < 0f
+                ? (angle2 >= (Math.PI * 2.0) + lowAngle && angle2 <= Math.PI * 2.0) || (angle2 >= 0f && angle2 <= hiAngle)
+                : angle2 >= lowAngle && angle2 <= hiAngle;
         }
 
         public int GetSkillWeapon(ref WS_Base.BaseUnit objCharacter, bool DualWield)
@@ -1289,11 +1259,9 @@ namespace Mangos.World.Handlers
                 case SHEATHE_SLOT.SHEATHE_WEAPON:
                     if (combatDualWield)
                     {
-                        if (objCharacter.GetAttackTime(WeaponAttackType.OFF_ATTACK) == 0)
-                        {
-                            return objCharacter.GetAttackTime(WeaponAttackType.BASE_ATTACK);
-                        }
-                        return objCharacter.GetAttackTime(WeaponAttackType.OFF_ATTACK);
+                        return objCharacter.GetAttackTime(WeaponAttackType.OFF_ATTACK) == 0
+                            ? objCharacter.GetAttackTime(WeaponAttackType.BASE_ATTACK)
+                            : objCharacter.GetAttackTime(WeaponAttackType.OFF_ATTACK);
                     }
                     if (objCharacter.GetAttackTime(WeaponAttackType.BASE_ATTACK) == 0)
                     {
@@ -1331,7 +1299,7 @@ namespace Mangos.World.Handlers
                             {
                                 result.HitInfo = 6;
                                 result.DamageType = DamageTypes.DMG_PHYSICAL;
-                                result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.OffHandDamage.Minimum / 2f), (int)Math.Round(characterObject.OffHandDamage.Maximum / 2f + 1f)) + characterObject.BaseUnarmedDamage;
+                                result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.OffHandDamage.Minimum / 2f), (int)Math.Round((characterObject.OffHandDamage.Maximum / 2f) + 1f)) + characterObject.BaseUnarmedDamage;
                             }
                             else
                             {

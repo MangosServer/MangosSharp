@@ -61,9 +61,9 @@ namespace Mangos.Cluster.Globals
                     }
 
                     buffer += "|  " + BitConverter.ToString(data, j, data.Length % 16).Replace("-", " ");
-                    buffer += new string(' ', (16 - data.Length % 16) * 3);
+                    buffer += new string(' ', (16 - (data.Length % 16)) * 3);
                     buffer += " |  " + Encoding.ASCII.GetString(data, j, data.Length % 16).Replace(Constants.vbTab, "?").Replace(Constants.vbBack, "?").Replace(Constants.vbCr, "?").Replace(Constants.vbFormFeed, "?").Replace(Constants.vbLf, "?");
-                    buffer += new string(' ', 16 - data.Length % 16);
+                    buffer += new string(' ', 16 - (data.Length % 16));
                     buffer += " |" + Constants.vbCrLf;
                 }
 

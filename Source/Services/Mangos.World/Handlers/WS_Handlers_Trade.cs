@@ -119,9 +119,9 @@ namespace Mangos.World.Handlers
                 {
                     return;
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_TRADE_STATUS_EXTENDED);
                 checked
                 {
+                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_TRADE_STATUS_EXTENDED);
                     try
                     {
                         packet.AddInt8(1);
@@ -133,42 +133,48 @@ namespace Mangos.World.Handlers
                         do
                         {
                             packet.AddInt8((byte)i);
-                            if (TargetSlots[i] > 0)
+                            switch (TargetSlots[i])
                             {
-                                byte mySlot = (byte)(TargetSlots[i] & 0xFF);
-                                byte myBag = (byte)(TargetSlots[i] >> 8);
-                                ItemObject myItem = null;
-                                myItem = (myBag != 0) ? Target.Items[myBag].Items[mySlot] : Target.Items[mySlot];
-                                packet.AddInt32(myItem.ItemEntry);
-                                packet.AddInt32(myItem.ItemInfo.Model);
-                                packet.AddInt32(myItem.StackCount);
-                                packet.AddInt32(0);
-                                packet.AddUInt64(myItem.GiftCreatorGUID);
-                                if (myItem.Enchantments.ContainsKey(0))
-                                {
-                                    packet.AddInt32(myItem.Enchantments[0].ID);
-                                }
-                                else
-                                {
-                                    packet.AddInt32(0);
-                                }
-                                packet.AddUInt64(myItem.CreatorGUID);
-                                packet.AddInt32(myItem.ChargesLeft);
-                                packet.AddInt32(0);
-                                packet.AddInt32(myItem.RandomProperties);
-                                packet.AddInt32(myItem.ItemInfo.Flags);
-                                packet.AddInt32(myItem.ItemInfo.Durability);
-                                packet.AddInt32(myItem.Durability);
-                            }
-                            else
-                            {
-                                int j = 0;
-                                do
-                                {
-                                    packet.AddInt32(0);
-                                    j++;
-                                }
-                                while (j <= 14);
+                                case > 0:
+                                    {
+                                        byte mySlot = (byte)(TargetSlots[i] & 0xFF);
+                                        byte myBag = (byte)(TargetSlots[i] >> 8);
+                                        ItemObject myItem = null;
+                                        myItem = (myBag != 0) ? Target.Items[myBag].Items[mySlot] : Target.Items[mySlot];
+                                        packet.AddInt32(myItem.ItemEntry);
+                                        packet.AddInt32(myItem.ItemInfo.Model);
+                                        packet.AddInt32(myItem.StackCount);
+                                        packet.AddInt32(0);
+                                        packet.AddUInt64(myItem.GiftCreatorGUID);
+                                        if (myItem.Enchantments.ContainsKey(0))
+                                        {
+                                            packet.AddInt32(myItem.Enchantments[0].ID);
+                                        }
+                                        else
+                                        {
+                                            packet.AddInt32(0);
+                                        }
+                                        packet.AddUInt64(myItem.CreatorGUID);
+                                        packet.AddInt32(myItem.ChargesLeft);
+                                        packet.AddInt32(0);
+                                        packet.AddInt32(myItem.RandomProperties);
+                                        packet.AddInt32(myItem.ItemInfo.Flags);
+                                        packet.AddInt32(myItem.ItemInfo.Durability);
+                                        packet.AddInt32(myItem.Durability);
+                                        break;
+                                    }
+
+                                default:
+                                    {
+                                        int j = 0;
+                                        do
+                                        {
+                                            packet.AddInt32(0);
+                                            j++;
+                                        }
+                                        while (j <= 14);
+                                        break;
+                                    }
                             }
                             i++;
                         }
@@ -188,9 +194,9 @@ namespace Mangos.World.Handlers
                 {
                     return;
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_TRADE_STATUS_EXTENDED);
                 checked
                 {
+                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_TRADE_STATUS_EXTENDED);
                     try
                     {
                         packet.AddInt8(1);
@@ -256,6 +262,7 @@ namespace Mangos.World.Handlers
                 Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_TRADE_STATUS);
                 try
                 {
+
                     response.AddInt32(4);
                     if (Trader == Who)
                     {
@@ -428,12 +435,9 @@ namespace Mangos.World.Handlers
                         Dispose();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Exception e = ex;
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error doing trade: {0}{1}", Environment.NewLine, e.ToString());
-                    ProjectData.ClearProjectError();
                 }
             }
         }
@@ -492,17 +496,17 @@ namespace Mangos.World.Handlers
         public void On_CMSG_SET_TRADE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
-            byte slot = packet.GetInt8();
             byte myBag = packet.GetInt8();
-            byte mySlot = packet.GetInt8();
             if (myBag == byte.MaxValue)
             {
                 myBag = 0;
             }
+            byte slot = packet.GetInt8();
             if (slot > 6)
             {
                 return;
             }
+            byte mySlot = packet.GetInt8();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_TRADE_ITEM [slot={2} myBag={3} mySlot={4}]", client.IP, client.Port, slot, myBag, mySlot);
             checked
             {
@@ -727,8 +731,8 @@ namespace Mangos.World.Handlers
                 return;
             }
             ref WS_PlayerData.CharacterObject character = ref client.Character;
-            Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
             ulong key;
+            Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
             WS_PlayerData.CharacterObject Target_ = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = targetGUID];
             TTradeInfo tTradeInfo = new TTradeInfo(ref character, ref Target_);
             cHARACTERs[key] = Target_;

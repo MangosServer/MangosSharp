@@ -66,11 +66,7 @@ namespace Mangos.World.Loots
 
             public bool Roll()
             {
-                if (Chance >= 100f)
-                {
-                    return true;
-                }
-                return WorldServiceLocator._Functions.RollChance(Chance);
+                return Chance >= 100f || WorldServiceLocator._Functions.RollChance(Chance);
             }
         }
     }

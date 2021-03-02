@@ -41,12 +41,7 @@ namespace Mangos.Cluster.Globals
 
         public int ToInteger(bool value)
         {
-            if (value)
-            {
-                return 1;
-            }
-
-            return 0;
+            return value ? 1 : 0;
         }
 
         public string ToHex(byte[] bBytes, int start = 0)
@@ -95,7 +90,7 @@ namespace Mangos.Cluster.Globals
                 return Array.Empty<int>();
             }
 
-            int[] bInt = new int[(bBytes.Length - 1) / 4 + 1];
+            int[] bInt = new int[((bBytes.Length - 1) / 4) + 1];
             for (int i = 0, loopTo = bBytes.Length - 1; i <= loopTo; i += 4)
             {
                 bInt[i / 4] = BitConverter.ToInt32(bBytes, i);
@@ -145,12 +140,7 @@ namespace Mangos.Cluster.Globals
         {
             value >>= flagPos;
             value = (uint)(value % 2L);
-            if (value == 1L)
-            {
-                return true;
-            }
-
-            return false;
+            return value == 1L;
         }
 
         public bool HaveFlags(int value, int flags)
@@ -166,7 +156,7 @@ namespace Mangos.Cluster.Globals
             }
             else
             {
-                value = value & 0x0U << flagPos & 0xFFFFFFFFU;
+                value = value & (0x0U << flagPos) & 0xFFFFFFFFU;
             }
         }
 
@@ -220,15 +210,12 @@ namespace Mangos.Cluster.Globals
 
             if (seconds < 3600L)
             {
-                return seconds / 60L + "m " + seconds % 60L + "s";
+                return (seconds / 60L) + "m " + (seconds % 60L) + "s";
             }
 
-            if (seconds < 86400L)
-            {
-                return seconds / 3600L + "h " + seconds / 60L % 60L + "m " + seconds % 60L + "s";
-            }
-
-            return seconds / 86400L + "d " + seconds / 3600L % 24L + "h " + seconds / 60L % 60L + "m " + seconds % 60L + "s";
+            return seconds < 86400L
+                ? (seconds / 3600L) + "h " + (seconds / 60L % 60L) + "m " + (seconds % 60L) + "s"
+                : (seconds / 86400L) + "d " + (seconds / 3600L % 24L) + "h " + (seconds / 60L % 60L) + "m " + (seconds % 60L) + "s";
         }
 
         public string EscapeString(string s)
@@ -245,24 +232,14 @@ namespace Mangos.Cluster.Globals
 
         public bool ValidateName(string strName)
         {
-            if (strName.Length is < 2 or > 16)
-            {
-                return false;
-            }
-
-            return _regexAz.IsMatch(strName);
+            return strName.Length is not < 2 and not > 16 && _regexAz.IsMatch(strName);
         }
 
         private readonly Regex _regexGuild = new Regex("^[a-z A-Z]+$");
 
         public bool ValidateGuildName(string strName)
         {
-            if (strName.Length is < 2 or > 16)
-            {
-                return false;
-            }
-
-            return _regexGuild.IsMatch(strName);
+            return strName.Length is not < 2 and not > 16 && _regexGuild.IsMatch(strName);
         }
 
         public string FixName(string strName)
@@ -291,7 +268,7 @@ namespace Mangos.Cluster.Globals
 
         public float MathLerp(float value1, float value2, float amount)
         {
-            return value1 + (value2 - value1) * amount;
+            return value1 + ((value2 - value1) * amount);
         }
 
         public void Ban_Account(string name, string reason)
@@ -555,12 +532,7 @@ namespace Mangos.Cluster.Globals
         public bool RollChance(float chance)
         {
             int nChance = (int)(chance * 100f);
-            if (_clusterServiceLocator.WorldCluster.Rnd.Next(1, 10001) <= nChance)
-            {
-                return true;
-            }
-
-            return false;
+            return _clusterServiceLocator.WorldCluster.Rnd.Next(1, 10001) <= nChance;
         }
 
         public void SendMessageMotd(ClientClass client, string message)

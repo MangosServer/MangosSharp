@@ -222,14 +222,9 @@ namespace Mangos.World.Objects
                         int num2 = PathPoints.Count - 1;
                         for (int j = 1; j <= num2; j++)
                         {
-                            if (PathPoints[j].ActionFlag == 1 || PathPoints[j].MapID != PathPoints[j - 1].MapID)
-                            {
-                                PathPoints[j].DistFromPrev = 0f;
-                            }
-                            else
-                            {
-                                PathPoints[j].DistFromPrev = WorldServiceLocator._WS_Combat.GetDistance(PathPoints[j].X, PathPoints[j - 1].X, PathPoints[j].Y, PathPoints[j - 1].Y, PathPoints[j].Z, PathPoints[j - 1].Z);
-                            }
+                            PathPoints[j].DistFromPrev = PathPoints[j].ActionFlag == 1 || PathPoints[j].MapID != PathPoints[j - 1].MapID
+                                ? 0f
+                                : WorldServiceLocator._WS_Combat.GetDistance(PathPoints[j].X, PathPoints[j - 1].X, PathPoints[j].Y, PathPoints[j - 1].Y, PathPoints[j].Z, PathPoints[j - 1].Z);
                             if (PathPoints[j].ActionFlag == 2)
                             {
                                 if (FirstStop == -1)
@@ -270,22 +265,12 @@ namespace Mangos.World.Objects
                         int num5 = PathPoints.Count - 1;
                         for (int l = 0; l <= num5; l++)
                         {
-                            if (PathPoints[l].DistSinceStop < 450f)
-                            {
-                                PathPoints[l].tFrom = (float)Math.Sqrt(2f * PathPoints[l].DistSinceStop);
-                            }
-                            else
-                            {
-                                PathPoints[l].tFrom = (PathPoints[l].DistSinceStop - 450f) / 30f + 30f;
-                            }
-                            if (PathPoints[l].DistUntilStop < 450f)
-                            {
-                                PathPoints[l].tTo = (float)Math.Sqrt(2f * PathPoints[l].DistUntilStop);
-                            }
-                            else
-                            {
-                                PathPoints[l].tTo = (PathPoints[l].DistUntilStop - 450f) / 30f + 30f;
-                            }
+                            PathPoints[l].tFrom = PathPoints[l].DistSinceStop < 450f
+                                ? (float)Math.Sqrt(2f * PathPoints[l].DistSinceStop)
+                                : ((PathPoints[l].DistSinceStop - 450f) / 30f) + 30f;
+                            PathPoints[l].tTo = PathPoints[l].DistUntilStop < 450f
+                                ? (float)Math.Sqrt(2f * PathPoints[l].DistUntilStop)
+                                : ((PathPoints[l].DistUntilStop - 450f) / 30f) + 30f;
                             PathPoints[l].tFrom *= 1000f;
                             PathPoints[l].tTo *= 1000f;
                         }
@@ -311,9 +296,9 @@ namespace Mangos.World.Objects
                                     tTo -= 100f;
                                     if (d > 0f)
                                     {
-                                        float newX = PathPoints[k].X + (PathPoints[k + 1].X - PathPoints[k].X) * d / PathPoints[k + 1].DistFromPrev;
-                                        float newY = PathPoints[k].Y + (PathPoints[k + 1].Y - PathPoints[k].Y) * d / PathPoints[k + 1].DistFromPrev;
-                                        float newZ = PathPoints[k].Z + (PathPoints[k + 1].Z - PathPoints[k].Z) * d / PathPoints[k + 1].DistFromPrev;
+                                        float newX = PathPoints[k].X + ((PathPoints[k + 1].X - PathPoints[k].X) * d / PathPoints[k + 1].DistFromPrev);
+                                        float newY = PathPoints[k].Y + ((PathPoints[k + 1].Y - PathPoints[k].Y) * d / PathPoints[k + 1].DistFromPrev);
+                                        float newZ = PathPoints[k].Z + ((PathPoints[k + 1].Z - PathPoints[k].Z) * d / PathPoints[k + 1].DistFromPrev);
                                         teleport = false;
                                         if (PathPoints[k].MapID != cM)
                                         {
@@ -339,7 +324,7 @@ namespace Mangos.World.Objects
                                 }
                                 t -= 100;
                             }
-                            t = (!(PathPoints[k + 1].tFrom > PathPoints[k + 1].tTo)) ? ((int)(t + (((long)PathPoints[k + 1].tTo) % 100))) : ((int)(t + (100 - ((long)PathPoints[k + 1].tTo) % 100)));
+                            t = (!(PathPoints[k + 1].tFrom > PathPoints[k + 1].tTo)) ? ((int)(t + (((long)PathPoints[k + 1].tTo) % 100))) : ((int)(t + (100 - (((long)PathPoints[k + 1].tTo) % 100))));
                             teleport = false;
                             if (PathPoints[k + 1].ActionFlag == 1 || PathPoints[k + 1].MapID != PathPoints[k].MapID)
                             {

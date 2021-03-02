@@ -79,10 +79,10 @@ namespace Mangos.World.Loots
                     response2.Dispose();
                     return;
                 }
-                int maxRoll = -1;
                 WS_PlayerData.CharacterObject looterCharacter = null;
                 checked
                 {
+                    int maxRoll = -1;
                     foreach (KeyValuePair<WS_PlayerData.CharacterObject, int> looter in Looters)
                     {
                         if (looter.Value == maxRollType)

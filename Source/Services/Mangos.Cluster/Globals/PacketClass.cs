@@ -30,7 +30,7 @@ namespace Mangos.Cluster.Globals
         public byte[] Data;
         public int Offset = 4;
 
-        public int Length => Data[1] + Data[0] * 256;
+        public int Length => Data[1] + (Data[0] * 256);
 
         public Opcodes OpCode
         {
@@ -38,7 +38,7 @@ namespace Mangos.Cluster.Globals
             {
                 if (Information.UBound(Data) > 2)
                 {
-                    return (Opcodes)(Data[2] + Data[3] * 256);
+                    return (Opcodes)(Data[2] + (Data[3] * 256));
                 }
 
                 // If it's a dodgy packet, change it to a null packet
@@ -82,7 +82,7 @@ namespace Mangos.Cluster.Globals
             Data[0] = (byte)((Data.Length - 2) / 256);
             Data[1] = (byte)((Data.Length - 2) % 256);
             Data[^2] = (byte)(buffer & 255);
-            Data[^1] = (byte)(buffer >> 8 & 255);
+            Data[^1] = (byte)((buffer >> 8) & 255);
         }
 
         public void AddInt32(int buffer, int position = 0)
@@ -96,9 +96,9 @@ namespace Mangos.Cluster.Globals
             }
 
             Data[position] = (byte)(buffer & 255);
-            Data[position + 1] = (byte)(buffer >> 8 & 255);
-            Data[position + 2] = (byte)(buffer >> 16 & 255);
-            Data[position + 3] = (byte)(buffer >> 24 & 255);
+            Data[position + 1] = (byte)((buffer >> 8) & 255);
+            Data[position + 2] = (byte)((buffer >> 16) & 255);
+            Data[position + 3] = (byte)((buffer >> 24) & 255);
         }
 
         public void AddInt64(long buffer)
@@ -107,13 +107,13 @@ namespace Mangos.Cluster.Globals
             Data[0] = (byte)((Data.Length - 2) / 256);
             Data[1] = (byte)((Data.Length - 2) % 256);
             Data[^8] = (byte)(buffer & 255L);
-            Data[^7] = (byte)(buffer >> 8 & 255L);
-            Data[^6] = (byte)(buffer >> 16 & 255L);
-            Data[^5] = (byte)(buffer >> 24 & 255L);
-            Data[^4] = (byte)(buffer >> 32 & 255L);
-            Data[^3] = (byte)(buffer >> 40 & 255L);
-            Data[^2] = (byte)(buffer >> 48 & 255L);
-            Data[^1] = (byte)(buffer >> 56 & 255L);
+            Data[^7] = (byte)((buffer >> 8) & 255L);
+            Data[^6] = (byte)((buffer >> 16) & 255L);
+            Data[^5] = (byte)((buffer >> 24) & 255L);
+            Data[^4] = (byte)((buffer >> 32) & 255L);
+            Data[^3] = (byte)((buffer >> 40) & 255L);
+            Data[^2] = (byte)((buffer >> 48) & 255L);
+            Data[^1] = (byte)((buffer >> 56) & 255L);
         }
 
         public void AddString(string buffer)
@@ -211,7 +211,7 @@ namespace Mangos.Cluster.Globals
             Data[0] = (byte)((Data.Length - 2) / 256);
             Data[1] = (byte)((Data.Length - 2) % 256);
             Data[^2] = (byte)(buffer & 255);
-            Data[^1] = (byte)(buffer >> 8 & 255);
+            Data[^1] = (byte)((buffer >> 8) & 255);
         }
 
         public void AddUInt32(uint buffer)
@@ -220,9 +220,9 @@ namespace Mangos.Cluster.Globals
             Data[0] = (byte)((Data.Length - 2) / 256);
             Data[1] = (byte)((Data.Length - 2) % 256);
             Data[^4] = (byte)(buffer & 255L);
-            Data[^3] = (byte)(buffer >> 8 & 255L);
-            Data[^2] = (byte)(buffer >> 16 & 255L);
-            Data[^1] = (byte)(buffer >> 24 & 255L);
+            Data[^3] = (byte)((buffer >> 8) & 255L);
+            Data[^2] = (byte)((buffer >> 16) & 255L);
+            Data[^1] = (byte)((buffer >> 24) & 255L);
         }
 
         public void AddUInt64(ulong buffer)

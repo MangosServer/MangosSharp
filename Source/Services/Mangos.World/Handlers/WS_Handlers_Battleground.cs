@@ -54,8 +54,8 @@ namespace Mangos.World.Handlers
             {
                 response.AddUInt64(client.Character.GUID);
                 response.AddInt32(BGType);
-                List<int> Battlegrounds = WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.BattlefieldList(BGType);
                 response.AddInt8(0);
+                List<int> Battlegrounds = WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.BattlefieldList(BGType);
                 response.AddInt32(Battlegrounds.Count);
                 foreach (int Instance in Battlegrounds)
                 {

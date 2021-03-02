@@ -44,8 +44,7 @@ namespace Mangos.World.AI
                     WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)Unit.Key;
                     if (characterObject.IsInGroup)
                     {
-                        ulong[] localMembers = characterObject.Group.LocalMembers.ToArray();
-                        ulong[] array = localMembers;
+                        ulong[] array = characterObject.Group.LocalMembers.ToArray();
                         foreach (ulong member in array)
                         {
                             if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(member) && WorldServiceLocator._WorldServer.CHARACTERs[member].MapID == characterObject.MapID && WorldServiceLocator._WorldServer.CHARACTERs[member].instance == characterObject.instance)

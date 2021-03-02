@@ -49,11 +49,7 @@ namespace Mangos.World.Maps
                 {
                     return Team == AreaTeam.AREATEAM_ALLY;
                 }
-                if (objCharacter.IsHorde)
-                {
-                    return Team == AreaTeam.AREATEAM_HORDE;
-                }
-                return false;
+                return objCharacter.IsHorde && Team == AreaTeam.AREATEAM_HORDE;
             }
 
             public bool IsCity()

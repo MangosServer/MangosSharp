@@ -94,13 +94,9 @@ namespace Mangos.WardenExtractor
                 {
                     newSection.RawSize = 0x200;
                 }
-                else if (type == 2)
-                {
-                    newSection.RawSize = 0x800;
-                }
                 else
                 {
-                    newSection.RawSize = len;
+                    newSection.RawSize = type == 2 ? 0x800 : len;
                 }
 
                 Sections.Add(newSection);
@@ -587,12 +583,9 @@ namespace Mangos.WardenExtractor
 
         private static bool IsModrefRequired(ref Instruction Instr)
         {
-            if (Instr.Two_Bytes)
-            {
-                return IsBitSetInTable(Instr.Opcode, TWO_BYTE_OPCODE_MODREF_REQUIREMENT);
-            }
-
-            return IsBitSetInTable(Instr.Opcode, ONE_BYTE_OPCODE_MODREF_REQUIREMENT);
+            return Instr.Two_Bytes
+                ? IsBitSetInTable(Instr.Opcode, TWO_BYTE_OPCODE_MODREF_REQUIREMENT)
+                : IsBitSetInTable(Instr.Opcode, ONE_BYTE_OPCODE_MODREF_REQUIREMENT);
         }
 
         private static int FindDisplacementDataSize(ref Instruction Instr)
@@ -746,14 +739,7 @@ namespace Mangos.WardenExtractor
             {
                 case 1:
                     {
-                        if (Instr.Opcode == 0x81)
-                        {
-                            immediate_size = operand_size_32 ? 4 : 2;
-                        }
-                        else
-                        {
-                            immediate_size = 1;
-                        }
+                        immediate_size = Instr.Opcode == 0x81 ? operand_size_32 ? 4 : 2 : 1;
 
                         break;
                     }
@@ -968,12 +954,7 @@ namespace Mangos.WardenExtractor
             {
                 get
                 {
-                    if (AddressSizeOverwritten)
-                    {
-                        return 16;
-                    }
-
-                    return 32;
+                    return AddressSizeOverwritten ? 16 : 32;
                 }
             }
 
@@ -981,12 +962,7 @@ namespace Mangos.WardenExtractor
             {
                 get
                 {
-                    if (OperandSizeOverwritten)
-                    {
-                        return 16;
-                    }
-
-                    return 32;
+                    return OperandSizeOverwritten ? 16 : 32;
                 }
             }
 

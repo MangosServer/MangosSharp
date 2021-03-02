@@ -41,11 +41,7 @@ namespace Mangos.Configuration.Xml
 
         public T GetConfiguration()
         {
-            if (configuration == null)
-            {
-                throw new Exception("Configuration isn't loaded");
-            }
-            return configuration;
+            return configuration == null ? throw new Exception("Configuration isn't loaded") : configuration;
         }
     }
 }

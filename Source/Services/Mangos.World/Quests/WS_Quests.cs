@@ -121,11 +121,7 @@ namespace Mangos.World.Quests
 
         public bool IsValidQuest(int questID)
         {
-            if (_quests.Contains(questID.ToString()))
-            {
-                return true;
-            }
-            return false;
+            return _quests.Contains(questID.ToString());
         }
 
         public string ReturnQuestNameById(int questId)

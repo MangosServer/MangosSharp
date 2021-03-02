@@ -124,14 +124,7 @@ namespace Mangos.WardenExtractor
             {
                 try
                 {
-                    if (i + 1 >= str.Length - 1)
-                    {
-                        bBytes[Conversion.Int(i / 2)] = Conversions.ToByte("&H" + str[i]);
-                    }
-                    else
-                    {
-                        bBytes[Conversion.Int(i / 2)] = Conversions.ToByte("&H" + str[i] + str[i + 1]);
-                    }
+                    bBytes[Conversion.Int(i / 2)] = i + 1 >= str.Length - 1 ? Conversions.ToByte("&H" + str[i]) : Conversions.ToByte("&H" + str[i] + str[i + 1]);
                 }
                 catch (Exception e)
                 {
@@ -162,29 +155,29 @@ namespace Mangos.WardenExtractor
                 key[257] = 0;
                 for (int i = 1; i <= 64; i++)
                 {
-                    val = val + key[i * 4 - 4] + @base[position % @base.Length];
+                    val = val + key[(i * 4) - 4] + @base[position % @base.Length];
                     val &= 0xFF;
                     position += 1;
-                    temp = key[i * 4 - 4];
-                    key[i * 4 - 4] = key[val & 0xFF];
+                    temp = key[(i * 4) - 4];
+                    key[(i * 4) - 4] = key[val & 0xFF];
                     key[val & 0xFF] = temp;
-                    val = val + key[i * 4 - 3] + @base[position % @base.Length];
+                    val = val + key[(i * 4) - 3] + @base[position % @base.Length];
                     val &= 0xFF;
                     position += 1;
-                    temp = key[i * 4 - 3];
-                    key[i * 4 - 3] = key[val & 0xFF];
+                    temp = key[(i * 4) - 3];
+                    key[(i * 4) - 3] = key[val & 0xFF];
                     key[val & 0xFF] = temp;
-                    val = val + key[i * 4 - 2] + @base[position % @base.Length];
+                    val = val + key[(i * 4) - 2] + @base[position % @base.Length];
                     val &= 0xFF;
                     position += 1;
-                    temp = key[i * 4 - 2];
-                    key[i * 4 - 2] = key[val & 0xFF];
+                    temp = key[(i * 4) - 2];
+                    key[(i * 4) - 2] = key[val & 0xFF];
                     key[val & 0xFF] = temp;
-                    val = val + key[i * 4 - 1] + @base[position % @base.Length];
+                    val = val + key[(i * 4) - 1] + @base[position % @base.Length];
                     val &= 0xFF;
                     position += 1;
-                    temp = key[i * 4 - 1];
-                    key[i * 4 - 1] = key[val & 0xFF];
+                    temp = key[(i * 4) - 1];
+                    key[(i * 4) - 1] = key[val & 0xFF];
                     key[val & 0xFF] = temp;
                 }
 
@@ -196,12 +189,12 @@ namespace Mangos.WardenExtractor
                 byte temp;
                 for (int i = 0, loopTo = data.Length - 1; i <= loopTo; i++)
                 {
-                    key[256] = (byte)(Conversions.ToInteger(key[256]) + 1 & 0xFF);
-                    key[257] = (byte)(Conversions.ToInteger(key[257]) + Conversions.ToInteger(key[key[256]]) & 0xFF);
+                    key[256] = (byte)((Conversions.ToInteger(key[256]) + 1) & 0xFF);
+                    key[257] = (byte)((Conversions.ToInteger(key[257]) + Conversions.ToInteger(key[key[256]])) & 0xFF);
                     temp = key[key[257] & 0xFF];
                     key[key[257] & 0xFF] = key[key[256] & 0xFF];
                     key[key[256] & 0xFF] = temp;
-                    data[i] = (byte)(data[i] ^ key[Conversions.ToInteger(key[key[257]]) + Conversions.ToInteger(key[key[256]]) & 0xFF]);
+                    data[i] = (byte)(data[i] ^ key[(Conversions.ToInteger(key[key[257]]) + Conversions.ToInteger(key[key[256]])) & 0xFF]);
                 }
             }
         }

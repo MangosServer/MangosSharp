@@ -16,6 +16,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Common.Enums.Global;
 using Mangos.World.Objects;
 using Microsoft.VisualBasic.CompilerServices;
 using System;
@@ -38,17 +39,16 @@ namespace Mangos.World.Loots
                 {
                     if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(ItemID))
                     {
-                        WS_Items.ItemInfo tmpItem = new WS_Items.ItemInfo(ItemID);
                         try
                         {
                             WorldServiceLocator._WorldServer.ITEMDatabase.Remove(ItemID);
+                            WS_Items.ItemInfo tmpItem = new WS_Items.ItemInfo(ItemID);
+                            WorldServiceLocator._WorldServer.ITEMDatabase.Add(ItemID, tmpItem);
                         }
-                        catch (Exception ex2)
+                        catch (Exception ex)
                         {
-                            ProjectData.SetProjectError(ex2);
-                            ProjectData.ClearProjectError();
+                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error on ItemModel [Item ID {0} : Exception {1}]", ItemID, ex);
                         }
-                        WorldServiceLocator._WorldServer.ITEMDatabase.Add(ItemID, tmpItem);
                     }
                     return WorldServiceLocator._WorldServer.ITEMDatabase[ItemID].Model;
                 }

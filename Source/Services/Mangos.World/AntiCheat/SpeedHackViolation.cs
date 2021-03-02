@@ -63,26 +63,31 @@ namespace Mangos.World.AntiCheat
             {
                 TotalOffset = GetTotalOffset(cTime, sTime);
                 float Distance = PlayerMoveDistance(posX, positionX, posY, positionY, posZ, positionZ);
-                if (TotalOffset is >= 235 and < 35000)
+                switch (TotalOffset)
                 {
-                    LastMessage = $"Time Hack | Offset: {TotalOffset}";
-                    LastViolation = ViolationType.AC_VIOLATION_SPEEDHACK_TIME;
-                }
-                else if (Distance >= RunSpeed)
-                {
-                    float Estimate = (float)(Distance * 1.54);
-                    LastMessage = $"Memory Hack | Distance: {Distance} Estimated Speed: {Estimate}";
-                    LastViolation = ViolationType.AC_VIOLATION_SPEEDHACK_MEM;
-                }
-                else if (Math.Abs(posZ - positionZ) >= 10f)
-                {
-                    LastMessage = $"Jump/Fly Hack | Z: {posZ}";
-                    LastViolation = ViolationType.AC_VIOLATION_MOVEMENT_Z;
-                }
-                else
-                {
-                    LastMessage = "";
-                    LastViolation = ViolationType.AC_VIOLATION_NONE;
+                    case >= 235 and < 35000:
+                        LastMessage = $"Time Hack | Offset: {TotalOffset}";
+                        LastViolation = ViolationType.AC_VIOLATION_SPEEDHACK_TIME;
+                        break;
+                    default:
+                        if (Distance >= RunSpeed)
+                        {
+                            float Estimate = (float)(Distance * 1.54);
+                            LastMessage = $"Memory Hack | Distance: {Distance} Estimated Speed: {Estimate}";
+                            LastViolation = ViolationType.AC_VIOLATION_SPEEDHACK_MEM;
+                        }
+                        else if (Math.Abs(posZ - positionZ) >= 10f)
+                        {
+                            LastMessage = $"Jump/Fly Hack | Z: {posZ}";
+                            LastViolation = ViolationType.AC_VIOLATION_MOVEMENT_Z;
+                        }
+                        else
+                        {
+                            LastMessage = "";
+                            LastViolation = ViolationType.AC_VIOLATION_NONE;
+                        }
+
+                        break;
                 }
             }
             LastClientTime = cTime;

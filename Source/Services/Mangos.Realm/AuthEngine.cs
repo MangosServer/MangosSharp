@@ -298,8 +298,8 @@ namespace Mangos.Realm
 
         private ArrayList Split(byte[] ByteBuffer)
         {
-            byte[] SplitBuffer1 = new byte[(int)(ByteBuffer.Length / 2d - 1d + 1)];
-            byte[] SplitBuffer2 = new byte[(int)(ByteBuffer.Length / 2d - 1d + 1)];
+            byte[] SplitBuffer1 = new byte[(int)((ByteBuffer.Length / 2d) - 1d + 1)];
+            byte[] SplitBuffer2 = new byte[(int)((ByteBuffer.Length / 2d) - 1d + 1)];
             ArrayList ReturnList = new ArrayList();
             int Counter = 0;
             for (int i = 0, loopTo = SplitBuffer1.Length - 1; i <= loopTo; i++)

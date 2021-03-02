@@ -498,11 +498,7 @@ namespace Mangos.World.Quests
 
         public bool SatisfyQuestLevel(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            if (objCharacter.Level < (uint)Level_Start)
-            {
-                return false;
-            }
-            return true;
+            return objCharacter.Level >= (uint)Level_Start;
         }
     }
 }

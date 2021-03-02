@@ -37,10 +37,7 @@ namespace Mangos.World.AI
 
             private bool _disposedValue;
 
-            public virtual bool InCombat()
-            {
-                return aiHateTable.Count > 0;
-            }
+            public virtual bool InCombat => aiHateTable.Count > 0;
 
             public void ResetThreatTable()
             {
@@ -56,25 +53,11 @@ namespace Mangos.World.AI
                 }
             }
 
-            public virtual bool IsMoving()
-            {
-                AIState state = State;
-                if ((uint)(state - 2) <= 4u)
-                {
-                    return true;
-                }
-                return false;
-            }
+            public virtual bool IsMoving => (uint)(State - 2) <= 4u;
 
-            public virtual bool IsRunning()
-            {
-                return State == AIState.AI_MOVE_FOR_ATTACK;
-            }
+            public virtual bool IsRunning => State == AIState.AI_MOVE_FOR_ATTACK;
 
-            public virtual void Reset()
-            {
-                State = AIState.AI_DO_NOTHING;
-            }
+            public virtual void Reset() => State = AIState.AI_DO_NOTHING;
 
             public virtual void Pause(int Time)
             {

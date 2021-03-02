@@ -52,20 +52,14 @@ namespace Mangos.World.AI
                 aiTarget = null;
             }
 
-            public override bool IsMoving()
-            {
-                if (checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer)
+            public override bool IsMoving => checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer
+                && (State switch
                 {
-                    return State switch
-                    {
-                        AIState.AI_MOVE_FOR_ATTACK => true,
-                        AIState.AI_MOVING => true,
-                        AIState.AI_WANDERING => true,
-                        _ => false,
-                    };
-                }
-                return false;
-            }
+                    AIState.AI_MOVE_FOR_ATTACK => true,
+                    AIState.AI_MOVING => true,
+                    AIState.AI_WANDERING => true,
+                    _ => false,
+                });
 
             public override void Pause(int Time)
             {
@@ -136,14 +130,15 @@ namespace Mangos.World.AI
                                 State = AIState.AI_RESPAWN;
                                 WasAlive = true;
                                 int RespawnTime = aiCreature.SpawnTime;
-                                if (RespawnTime > 0)
+                                switch (RespawnTime)
                                 {
-                                    aiTimer = RespawnTime * 1000;
-                                    aiCreature.Despawn();
-                                }
-                                else
-                                {
-                                    aiCreature.Destroy();
+                                    case > 0:
+                                        aiTimer = RespawnTime * 1000;
+                                        aiCreature.Despawn();
+                                        break;
+                                    default:
+                                        aiCreature.Destroy();
+                                        break;
                                 }
                                 break;
                             }
@@ -215,22 +210,23 @@ namespace Mangos.World.AI
                         if (State == AIState.AI_ATTACKING)
                         {
                             CombatTimer -= 1000;
-                            if (CombatTimer <= 0)
+                            switch (CombatTimer)
                             {
-                                CombatTimer = 0;
-                                State = AIState.AI_WANDERING;
-                            }
-                            else
-                            {
-                                DoRun = true;
+                                case <= 0:
+                                    CombatTimer = 0;
+                                    State = AIState.AI_WANDERING;
+                                    break;
+                                default:
+                                    DoRun = true;
+                                    break;
                             }
                         }
                         float distance = (!DoRun) ? ((float)(3.0 * aiCreature.CreatureInfo.WalkSpeed)) : ((float)(3.0 * aiCreature.CreatureInfo.RunSpeed * aiCreature.SpeedMod));
                         float angle = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 6.2831854820251465);
                         aiCreature.SetToRealPosition();
                         aiCreature.orientation = angle;
-                        selectedX = (float)(aiCreature.positionX + Math.Cos(angle) * distance);
-                        selectedY = (float)(aiCreature.positionY + Math.Sin(angle) * distance);
+                        selectedX = (float)(aiCreature.positionX + (Math.Cos(angle) * distance));
+                        selectedY = (float)(aiCreature.positionY + (Math.Sin(angle) * distance));
                         selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
                         MoveTries = (byte)(MoveTries + 1);
                         if (!(Math.Abs(aiCreature.positionZ - selectedZ) > 5f))
@@ -246,14 +242,7 @@ namespace Mangos.World.AI
                             }
                         }
                     }
-                    if (aiCreature.CanMoveTo(selectedX, selectedY, selectedZ))
-                    {
-                        aiTimer = aiCreature.MoveTo(selectedX, selectedY, selectedZ, 0f, DoRun);
-                    }
-                    else
-                    {
-                        aiTimer = 3000;
-                    }
+                    aiTimer = aiCreature.CanMoveTo(selectedX, selectedY, selectedZ) ? aiCreature.MoveTo(selectedX, selectedY, selectedZ, 0f, DoRun) : 3000;
                 }
             }
         }

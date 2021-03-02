@@ -123,11 +123,7 @@ namespace Mangos.World.Objects
                 {
                     return false;
                 }
-                if (Math.Sqrt(Math.Pow(objCharacter.positionX - positionX, 2.0) + Math.Pow(objCharacter.positionY - positionY, 2.0)) > objCharacter.VisibleDistance)
-                {
-                    return false;
-                }
-                return true;
+                return Math.Sqrt(Math.Pow(objCharacter.positionX - positionX, 2.0) + Math.Pow(objCharacter.positionY - positionY, 2.0)) <= objCharacter.VisibleDistance;
             }
 
             public void InvisibilityReset()
@@ -321,11 +317,7 @@ namespace Mangos.World.Objects
                     {
                         return WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID);
                     }
-                    if (this is WS_Creatures.CreatureObject)
-                    {
-                        return WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID);
-                    }
-                    return false;
+                    return this is WS_Creatures.CreatureObject && WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID);
                 }
             }
 
@@ -941,7 +933,7 @@ namespace Mangos.World.Objects
                         }
                         if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].IsAOE)
                         {
-                            SpellDamageBenefit = SpellDamageBenefit / 3;
+                            SpellDamageBenefit /= 3;
                         }
                     }
                     Damage += SpellDamageBenefit;
@@ -956,7 +948,7 @@ namespace Mangos.World.Objects
                     if (!IsHeal)
                     {
                         float DamageReduction = GetDamageReduction(ref Caster, DamageType, Damage);
-                        Damage = (int)Math.Round(Damage - Damage * DamageReduction);
+                        Damage = (int)Math.Round(Damage - (Damage * DamageReduction));
                         if (Damage > 0)
                         {
                             Resist = (int)Math.Round(GetResist(ref Caster, DamageType, Damage));
@@ -1023,7 +1015,7 @@ namespace Mangos.World.Objects
                 checked
                 {
                     int leveldiff = Level - Caster.Level;
-                    int modHitChance = (leveldiff >= 3) ? (94 - (leveldiff - 2) * lchance) : (96 - leveldiff);
+                    int modHitChance = (leveldiff >= 3) ? (94 - ((leveldiff - 2) * lchance)) : (96 - leveldiff);
                     modHitChance += Caster.GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT, (int)Spell.SchoolMask);
                     modHitChance += GetAuraModifierByMiscMask(AuraEffects_Names.SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, (int)Spell.SchoolMask);
                     if (Spell.IsAOE)
@@ -1066,11 +1058,7 @@ namespace Mangos.World.Objects
                     }
                     int tmp = 10000 - HitChance;
                     int rand = WorldServiceLocator._WorldServer.Rnd.Next(0, 10001);
-                    if (rand < tmp)
-                    {
-                        return SpellMissInfo.SPELL_MISS_RESIST;
-                    }
-                    return SpellMissInfo.SPELL_MISS_NONE;
+                    return rand < tmp ? SpellMissInfo.SPELL_MISS_RESIST : SpellMissInfo.SPELL_MISS_NONE;
                 }
             }
 
@@ -1087,7 +1075,7 @@ namespace Mangos.World.Objects
                 int attackerWeaponSkill = obj.GetWeaponSkill(attType2, ref Victim);
                 checked
                 {
-                    int skillDiff = attackerWeaponSkill - Level * 5;
+                    int skillDiff = attackerWeaponSkill - (Level * 5);
                     int fullSkillDiff = attackerWeaponSkill - GetDefenceSkill(ref Caster);
                     int roll = WorldServiceLocator._WorldServer.Rnd.Next(0, 10001);
                     int missChance = 0;
@@ -1121,11 +1109,7 @@ namespace Mangos.World.Objects
                         return SpellMissInfo.SPELL_MISS_RESIST;
                     }
                 }
-                if (((uint)Spell.Attributes & 0x200000u) != 0)
-                {
-                    return SpellMissInfo.SPELL_MISS_NONE;
-                }
-                return SpellMissInfo.SPELL_MISS_NONE;
+                return ((uint)Spell.Attributes & 0x200000u) != 0 ? SpellMissInfo.SPELL_MISS_NONE : SpellMissInfo.SPELL_MISS_NONE;
             }
 
             public int GetDefenceSkill(ref BaseUnit Attacker)
@@ -1194,7 +1178,7 @@ namespace Mangos.World.Objects
                     float DamageReduction;
                     if (School == DamageTypes.DMG_PHYSICAL)
                     {
-                        DamageReduction = (float)(Resistances[0].Base / (double)(Resistances[0].Base + 400 + 85 * Level));
+                        DamageReduction = (float)(Resistances[0].Base / (double)(Resistances[0].Base + 400 + (85 * Level)));
                     }
                     else
                     {

@@ -53,14 +53,7 @@ namespace Mangos.World.Globals
                 UpdateMask.Set(pos, value: true);
                 checked
                 {
-                    if (UpdateData.ContainsKey(pos))
-                    {
-                        UpdateData[pos] = Conversions.ToInteger(UpdateData[pos]) | (value << 8 * index);
-                    }
-                    else
-                    {
-                        UpdateData[pos] = value << 8 * index;
-                    }
+                    UpdateData[pos] = UpdateData.ContainsKey(pos) ? Conversions.ToInteger(UpdateData[pos]) | (value << (8 * index)) : (object)(value << (8 * index));
                 }
             }
 

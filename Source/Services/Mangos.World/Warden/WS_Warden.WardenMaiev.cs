@@ -675,7 +675,7 @@ namespace Mangos.World.Warden
                             if (m_Mod != 0)
                             {
                                 Marshal.Copy(data, 0, (IntPtr)m_Mod, 40);
-                                int index = 40 + Header.dwChunkCount * 3 * 4;
+                                int index = 40 + (Header.dwChunkCount * 3 * 4);
                                 int dwChunkDest = m_Mod + BitConverter.ToInt32(data, 40);
                                 int dwModuleEnd = m_Mod + dwModuleSize;
                                 bool bCopyChunk = true;
@@ -702,8 +702,8 @@ namespace Mangos.World.Warden
                                     if (dwValue < 0)
                                     {
                                         dwValue = (dwValue & 0x7F) << 8;
-                                        dwValue = dwValue + Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 1))) << 8;
-                                        dwValue = dwValue + Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 2))) << 8;
+                                        dwValue = (dwValue + Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 1)))) << 8;
+                                        dwValue = (dwValue + Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 2)))) << 8;
                                         dwValue += Marshal.ReadByte(new IntPtr(checked(pbRelocationTable + 3)));
                                         pbRelocationTable += 4;
                                         int old2 = Marshal.ReadInt32(new IntPtr(m_Mod + dwValue));
@@ -723,7 +723,7 @@ namespace Mangos.World.Warden
                                 int dwLibraryIndex = 0;
                                 while (dwLibraryIndex < Header.dwLibraryCount)
                                 {
-                                    object? obj2 = Marshal.PtrToStructure(new IntPtr(m_Mod + Header.dwLibraryTable + dwLibraryIndex * 8), typeof(CLibraryEntry));
+                                    object? obj2 = Marshal.PtrToStructure(new IntPtr(m_Mod + Header.dwLibraryTable + (dwLibraryIndex * 8)), typeof(CLibraryEntry));
                                     CLibraryEntry pLibraryTable = (obj2 != null) ? ((CLibraryEntry)obj2) : default;
                                     string procLib = Marshal.PtrToStringAnsi(new IntPtr(m_Mod + pLibraryTable.dwFileName));
                                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "    Library: {0}", procLib);
@@ -768,7 +768,7 @@ namespace Mangos.World.Warden
                                 }
                                 for (int dwIndex = 0; dwIndex < Header.dwChunkCount; dwIndex++)
                                 {
-                                    int pdwChunk2 = m_Mod + (10 + dwIndex * 3 * 4) * 4;
+                                    int pdwChunk2 = m_Mod + ((10 + (dwIndex * 3 * 4)) * 4);
                                     uint dwOldProtect = 0u;
                                     int lpAddress = m_Mod + Marshal.ReadInt32(new IntPtr(pdwChunk2));
                                     int dwSize = Marshal.ReadInt32(new IntPtr(pdwChunk2 + 4));
@@ -791,11 +791,7 @@ namespace Mangos.World.Warden
                                     }
                                     bUnload = false;
                                 }
-                                if (bUnload)
-                                {
-                                    return false;
-                                }
-                                return true;
+                                return !bUnload;
                             }
                             return false;
                         }
@@ -822,7 +818,7 @@ namespace Mangos.World.Warden
                     {
                         return false;
                     }
-                    int fInit = Marshal.ReadInt32(new IntPtr(m_Mod + Header.dwProcedureTable + dwProcedureDiff * 4));
+                    int fInit = Marshal.ReadInt32(new IntPtr(m_Mod + Header.dwProcedureTable + (dwProcedureDiff * 4)));
                     InitPointer = m_Mod + fInit;
                     Console.WriteLine("Initialize Function is mapped at 0x{0:X}", InitPointer);
                     SendPacketD = SendPacket;

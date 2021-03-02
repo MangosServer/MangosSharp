@@ -31,7 +31,7 @@ namespace Mangos.World.Handlers
             if (client.Access >= AccessLevel.GameMaster)
             {
                 packet.GetInt16();
-                int Time = packet.GetInt32();
+                //int Time = packet.GetInt32(); //What is the purpose of "Time" for this packet?
                 uint Map = packet.GetUInt32();
                 float X = packet.GetFloat();
                 float Y = packet.GetFloat();

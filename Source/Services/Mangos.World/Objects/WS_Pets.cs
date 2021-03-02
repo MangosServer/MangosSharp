@@ -234,14 +234,7 @@ namespace Mangos.World.Objects
                     XP = row.As<int>("exp"),
                     PetName = row.As<string>("name")
                 };
-                if (row.As<byte>("renamed") == 0)
-                {
-                    objCharacter.Pet.Renamed = false;
-                }
-                else
-                {
-                    objCharacter.Pet.Renamed = true;
-                }
+                objCharacter.Pet.Renamed = row.As<byte>("renamed") != 0;
                 objCharacter.Pet.Faction = objCharacter.Faction;
                 objCharacter.Pet.positionX = objCharacter.positionX;
                 objCharacter.Pet.positionY = objCharacter.positionY;

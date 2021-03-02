@@ -58,11 +58,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : SpellRadius missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: SpellRadius is Missing.", ex);
                 }
             }
         }
@@ -85,11 +81,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : SpellCastTimes missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: SpellCastTimes is Missing.", ex);
                 }
             }
         }
@@ -112,11 +104,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : SpellRanges missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: SpellRanges is Missing.", ex);
                 }
             }
         }
@@ -141,11 +129,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : SpellShapeshiftForms missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: SpellShapeShiftForms is Missing.", ex);
                 }
             }
         }
@@ -168,11 +152,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : SpellFocusObjects missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: SpellFocusObjects is Missing.", ex);
                 }
             }
         }
@@ -195,11 +175,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : SpellDurations missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: SpellDurations is Missing.", ex);
                 }
             }
         }
@@ -286,33 +262,32 @@ namespace Mangos.World.DataStores
                                 if (spellDBC.ReadInt(i, 61 + k) != 0)
                                 {
                                     WS_Spells.SpellEffect[] spellEffects = WorldServiceLocator._WS_Spells.SPELLs[id].SpellEffects;
-                                    int num2 = k;
-                                    Dictionary<int, WS_Spells.SpellInfo> sPELLs;
                                     int key;
-                                    WS_Spells.SpellInfo Spell = (sPELLs = WorldServiceLocator._WS_Spells.SPELLs)[key = id];
-                                    WS_Spells.SpellEffect spellEffect = new WS_Spells.SpellEffect(ref Spell);
-                                    sPELLs[key] = Spell;
-                                    WS_Spells.SpellEffect spellEffect2 = spellEffect;
-
-                                    spellEffect2.ID = (SpellEffects_Names)spellDBC.ReadInt(i, 61 + k);
-                                    spellEffect2.valueDie = spellDBC.ReadInt(i, 64 + k);
-                                    spellEffect2.diceBase = spellDBC.ReadInt(i, 67 + k);
-                                    spellEffect2.dicePerLevel = spellDBC.ReadFloat(i, 70 + k);
-                                    spellEffect2.valuePerLevel = (int)spellDBC.ReadFloat(i, 73 + k);
-                                    spellEffect2.valueBase = spellDBC.ReadInt(i, 76 + k);
-                                    spellEffect2.Mechanic = spellDBC.ReadInt(i, 79 + k);
-                                    spellEffect2.implicitTargetA = spellDBC.ReadInt(i, 82 + k);
-                                    spellEffect2.implicitTargetB = spellDBC.ReadInt(i, 85 + k);
-                                    spellEffect2.RadiusIndex = spellDBC.ReadInt(i, 88 + k);
-                                    spellEffect2.ApplyAuraIndex = spellDBC.ReadInt(i, 91 + k);
-                                    spellEffect2.Amplitude = spellDBC.ReadInt(i, 94 + k);
-                                    spellEffect2.MultipleValue = spellDBC.ReadInt(i, 97 + k);
-                                    spellEffect2.ChainTarget = spellDBC.ReadInt(i, 100 + k);
-                                    spellEffect2.ItemType = spellDBC.ReadInt(i, 103 + k);
-                                    spellEffect2.MiscValue = spellDBC.ReadInt(i, 106 + k);
-                                    spellEffect2.TriggerSpell = spellDBC.ReadInt(i, 109 + k);
-                                    spellEffect2.valuePerComboPoint = spellDBC.ReadInt(i, 112 + k);
-                                    spellEffects[num2] = spellEffect2;
+                                    Dictionary<int, WS_Spells.SpellInfo> Spells;
+                                    WS_Spells.SpellInfo Spell = (Spells = WorldServiceLocator._WS_Spells.SPELLs)[key = id];
+                                    Spells[key] = Spell;
+                                    WS_Spells.SpellEffect spellEffect2 = new WS_Spells.SpellEffect(ref Spell)
+                                    {
+                                        ID = (SpellEffects_Names)spellDBC.ReadInt(i, 61 + k),
+                                        valueDie = spellDBC.ReadInt(i, 64 + k),
+                                        diceBase = spellDBC.ReadInt(i, 67 + k),
+                                        dicePerLevel = spellDBC.ReadFloat(i, 70 + k),
+                                        valuePerLevel = (int)spellDBC.ReadFloat(i, 73 + k),
+                                        valueBase = spellDBC.ReadInt(i, 76 + k),
+                                        Mechanic = spellDBC.ReadInt(i, 79 + k),
+                                        implicitTargetA = spellDBC.ReadInt(i, 82 + k),
+                                        implicitTargetB = spellDBC.ReadInt(i, 85 + k),
+                                        RadiusIndex = spellDBC.ReadInt(i, 88 + k),
+                                        ApplyAuraIndex = spellDBC.ReadInt(i, 91 + k),
+                                        Amplitude = spellDBC.ReadInt(i, 94 + k),
+                                        MultipleValue = spellDBC.ReadInt(i, 97 + k),
+                                        ChainTarget = spellDBC.ReadInt(i, 100 + k),
+                                        ItemType = spellDBC.ReadInt(i, 103 + k),
+                                        MiscValue = spellDBC.ReadInt(i, 106 + k),
+                                        TriggerSpell = spellDBC.ReadInt(i, 109 + k),
+                                        valuePerComboPoint = spellDBC.ReadInt(i, 112 + k)
+                                    };
+                                    spellEffects[k] = spellEffect2;
                                 }
                                 else
                                 {
@@ -349,21 +324,14 @@ namespace Mangos.World.DataStores
                         }
                         catch (Exception ex)
                         {
-                            ProjectData.SetProjectError(ex);
-                            Exception e2 = ex;
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Line {0} caused error: {1}", i, e2.ToString());
-                            ProjectData.ClearProjectError();
+                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Line {0} caused error: {1}", i, ex.ToString());
                         }
                     }
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Spells initialized.", spellDBC.Rows - 1);
                 }
                 catch (DirectoryNotFoundException ex2)
                 {
-                    ProjectData.SetProjectError(ex2);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : Spells missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: Spell is Missing.", ex2);
                 }
             }
         }
@@ -395,11 +363,7 @@ namespace Mangos.World.DataStores
             }
             catch (DirectoryNotFoundException ex)
             {
-                ProjectData.SetProjectError(ex);
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Database : SpellChains missing.");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                ProjectData.ClearProjectError();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Database: SpellChains is Missing.", ex);
             }
         }
 
@@ -430,11 +394,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : TaxiNodes missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: TaxiNodes is Missing.", ex);
                 }
             }
         }
@@ -459,11 +419,8 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("DBC File : TaxiPath missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: TaxiPath is Missing.", ex);
                 }
             }
         }
@@ -499,11 +456,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : TaxiPathNode missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: TaxiPathNode is Missing.", ex);
                 }
             }
         }
@@ -526,11 +479,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : SkillLines missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: SkillLine is Missing.", ex);
                 }
             }
         }
@@ -566,11 +515,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : SkillLineAbility missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: SkillLineAbility is Missing.", ex);
                 }
             }
         }
@@ -606,11 +551,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : Locks missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: Lock is Missing.", ex);
                 }
             }
         }
@@ -655,11 +596,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : AreaTable missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: AreaTable is Missing.", ex);
                 }
             }
         }
@@ -686,11 +623,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : Emotes missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: Emotes is Missing.", ex);
                 }
             }
         }
@@ -717,11 +650,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : EmotesText missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: EmotesText is Missing.", ex);
                 }
             }
         }
@@ -759,11 +688,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : Factions missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: Faction is Missing.", ex);
                 }
             }
         }
@@ -797,11 +722,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : FactionsTemplates missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: FactionTemplate is Missing.", ex);
                 }
             }
         }
@@ -830,11 +751,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : CharRaces missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: ChrRaces is Missing.", ex);
                 }
             }
         }
@@ -857,11 +774,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : CharRaces missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: ChrClasses is Missing.", ex);
                 }
             }
         }
@@ -888,11 +801,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : DurabilityCosts missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: DurabilityCosts is Missing.", ex);
                 }
             }
         }
@@ -927,11 +836,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : Talents missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: Talent is Missing.", ex);
                 }
             }
         }
@@ -954,11 +859,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : TalentTab missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: TalentTab is Missing.", ex);
                 }
             }
         }
@@ -984,11 +885,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : AuctionHouse missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: AuctionHouse is Missing.", ex);
                 }
             }
         }
@@ -1021,11 +918,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : SpellItemEnchantments missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: SpellItemEnchantment is Missing.", ex);
                 }
             }
         }
@@ -1061,11 +954,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : ItemSet missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: ItemSet is Missing.", ex);
                 }
             }
         }
@@ -1092,11 +981,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : ItemDisplayInfo missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: ItemDisplayInfo is Missing.", ex);
                 }
             }
         }
@@ -1124,16 +1009,12 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : ItemRandomProperties missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: ItemRandomProperties is Missing.", ex);
                 }
             }
         }
 
-        public async Task LoadCreatureGossipAsync()
+        public void LoadCreatureGossip()
         {
             try
             {
@@ -1164,11 +1045,7 @@ namespace Mangos.World.DataStores
             }
             catch (DirectoryNotFoundException ex)
             {
-                ProjectData.SetProjectError(ex);
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Database : npc_gossip missing.");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                ProjectData.ClearProjectError();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Datanase: npc_gossip is Missing.", ex);
             }
         }
 
@@ -1196,11 +1073,7 @@ namespace Mangos.World.DataStores
                 }
                 catch (DirectoryNotFoundException ex)
                 {
-                    ProjectData.SetProjectError(ex);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("DBC File : CreatureFamily missing.");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DBC File: CreatureFamily is Missing.", ex);
                 }
             }
         }
@@ -1237,11 +1110,7 @@ namespace Mangos.World.DataStores
             }
             catch (DirectoryNotFoundException ex)
             {
-                ProjectData.SetProjectError(ex);
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Database : Waypoint_Data missing.");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                ProjectData.ClearProjectError();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Database: Waypoint_Data is Missing.", ex);
             }
         }
 
@@ -1267,12 +1136,7 @@ namespace Mangos.World.DataStores
                             }
                             catch (DataException ex)
                             {
-                                ProjectData.SetProjectError(ex);
-                                DataException e2 = ex;
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine($"Creature_Equip_Template_raw : Unable to equip items {entry} for Creature ");
-                                Console.ForegroundColor = ConsoleColor.Gray;
-                                ProjectData.ClearProjectError();
+                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, $"Creature_Equip_Template_raw: Unable to equip items {entry} for Creature ", entry, ex);
                             }
                         }
                     }
@@ -1288,11 +1152,7 @@ namespace Mangos.World.DataStores
             }
             catch (DataException ex2)
             {
-                ProjectData.SetProjectError(ex2);
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Database : Creature_Equip_Template_raw missing.");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                ProjectData.ClearProjectError();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Database: Creature_Equip_Template_raw is Missing.", ex2);
             }
         }
 
@@ -1327,11 +1187,7 @@ namespace Mangos.World.DataStores
             }
             catch (DirectoryNotFoundException ex)
             {
-                ProjectData.SetProjectError(ex);
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Database : Creature_Model_Info missing.");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                ProjectData.ClearProjectError();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Database: Creature_Model_Info is Missing.", ex);
             }
         }
 
@@ -1437,6 +1293,10 @@ namespace Mangos.World.DataStores
                         WorldServiceLocator._WorldServer.GameobjectQuestFinishers[entry].Add(quest);
                     }
                 }
+                catch (DirectoryNotFoundException ex)
+                {
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Database: Quest_Relations is Missing.", ex);
+                }
                 finally
                 {
                     if (enumerator4 is IDisposable)
@@ -1499,11 +1359,7 @@ namespace Mangos.World.DataStores
             }
             catch (DirectoryNotFoundException ex)
             {
-                ProjectData.SetProjectError(ex);
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Database : TransportQuery missing.");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                ProjectData.ClearProjectError();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Database: Game_Weather is Missing.", ex);
             }
         }
     }

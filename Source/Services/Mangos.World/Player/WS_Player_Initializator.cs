@@ -40,11 +40,9 @@ namespace Mangos.World.Player
         {
             checked
             {
-                if (objCharacter.Stamina.Base < 20)
-                {
-                    return baseLIFE + (objCharacter.Stamina.Base - 20);
-                }
-                return baseLIFE + 10 * (objCharacter.Stamina.Base - 20);
+                return objCharacter.Stamina.Base < 20
+                    ? baseLIFE + (objCharacter.Stamina.Base - 20)
+                    : baseLIFE + (10 * (objCharacter.Stamina.Base - 20));
             }
         }
 
@@ -52,17 +50,15 @@ namespace Mangos.World.Player
         {
             checked
             {
-                if (objCharacter.Intellect.Base < 20)
-                {
-                    return baseMANA + (objCharacter.Intellect.Base - 20);
-                }
-                return baseMANA + 15 * (objCharacter.Intellect.Base - 20);
+                return objCharacter.Intellect.Base < 20
+                    ? baseMANA + (objCharacter.Intellect.Base - 20)
+                    : baseMANA + (15 * (objCharacter.Intellect.Base - 20));
             }
         }
 
         private int gainStat(int level, double a3, double a2, double a1, double a0)
         {
-            return checked((int)Math.Round(a3 * level * level * level + a2 * level * level + a1 * level + a0) - (int)Math.Round(a3 * (level - 1) * (level - 1) * (level - 1) + a2 * (level - 1) * (level - 1) + a1 * (level - 1) + a0));
+            return checked((int)Math.Round((a3 * level * level * level) + (a2 * level * level) + (a1 * level) + a0) - (int)Math.Round((a3 * (level - 1) * (level - 1) * (level - 1)) + (a2 * (level - 1) * (level - 1)) + (a1 * (level - 1)) + a0));
         }
 
         public void CalculateOnLevelUP(ref WS_PlayerData.CharacterObject objCharacter)
@@ -311,26 +307,13 @@ namespace Mangos.World.Player
 
         public ManaTypes GetClassManaType(Classes Classe)
         {
-            switch (Classe)
+            return Classe switch
             {
-                case Classes.CLASS_PALADIN:
-                case Classes.CLASS_HUNTER:
-                case Classes.CLASS_PRIEST:
-                case Classes.CLASS_SHAMAN:
-                case Classes.CLASS_MAGE:
-                case Classes.CLASS_WARLOCK:
-                case Classes.CLASS_DRUID:
-                    return ManaTypes.TYPE_MANA;
-
-                case Classes.CLASS_ROGUE:
-                    return ManaTypes.TYPE_ENERGY;
-
-                case Classes.CLASS_WARRIOR:
-                    return ManaTypes.TYPE_RAGE;
-
-                default:
-                    return ManaTypes.TYPE_MANA;
-            }
+                Classes.CLASS_PALADIN or Classes.CLASS_HUNTER or Classes.CLASS_PRIEST or Classes.CLASS_SHAMAN or Classes.CLASS_MAGE or Classes.CLASS_WARLOCK or Classes.CLASS_DRUID => ManaTypes.TYPE_MANA,
+                Classes.CLASS_ROGUE => ManaTypes.TYPE_ENERGY,
+                Classes.CLASS_WARRIOR => ManaTypes.TYPE_RAGE,
+                _ => ManaTypes.TYPE_MANA,
+            };
         }
 
         public void InitializeReputations(ref WS_PlayerData.CharacterObject objCharacter)

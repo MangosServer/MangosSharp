@@ -144,16 +144,11 @@ namespace Mangos.Realm.Network.Handlers
 
         private async Task<AccountState> GetAccountStateAsync(AccountInfoEntity accountInfo)
         {
-            if (accountInfo != null)
-            {
-                return await accountStorage.IsBannedAccountAsync(accountInfo.id)
+            return accountInfo != null
+                ? await accountStorage.IsBannedAccountAsync(accountInfo.id)
                     ? AccountState.LOGIN_BANNED
-                    : AccountState.LOGIN_OK;
-            }
-            else
-            {
-                return AccountState.LOGIN_UNKNOWN_ACCOUNT;
-            }
+                    : AccountState.LOGIN_OK
+                : AccountState.LOGIN_UNKNOWN_ACCOUNT;
         }
 
         private byte[] GetPasswordHashFromString(string sha_pass_hash)

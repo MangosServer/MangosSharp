@@ -85,12 +85,9 @@ namespace Mangos.World.Loots
                 client.Send(ref response);
                 response.Dispose();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                ProjectData.SetProjectError(ex);
-                Exception e = ex;
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error looting item.{0}", Environment.NewLine + e);
-                ProjectData.ClearProjectError();
             }
         }
 
@@ -106,9 +103,9 @@ namespace Mangos.World.Loots
                 if (client.Character.IsInGroup)
                 {
                     List<WS_Base.BaseUnit> members = WorldServiceLocator._WS_Spells.GetPartyMembersAroundMe(ref client.Character, 100f);
-                    int copper2 = LootTable[client.Character.lootGUID].Money / members.Count + 1;
                     LootTable[client.Character.lootGUID].Money = 0;
                     Packets.PacketClass sharePcket = new Packets.PacketClass(Opcodes.SMSG_LOOT_MONEY_NOTIFY);
+                    int copper2 = (LootTable[client.Character.lootGUID].Money / members.Count) + 1;
                     sharePcket.AddInt32(copper2);
                     foreach (WS_PlayerData.CharacterObject character in members)
                     {
@@ -184,13 +181,12 @@ namespace Mangos.World.Loots
             {
                 LootTable[GUID].SendRelease(ref client);
                 LootTable[GUID].LootOwner = 0uL;
-                LootType LootType = LootTable[GUID].LootType;
                 if (LootTable[GUID].IsEmpty)
                 {
                     LootTable[GUID].Dispose();
                     if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
                     {
-                        switch (LootType)
+                        switch (LootTable[GUID].LootType)
                         {
                             case LootType.LOOTTYPE_CORPSE:
                                 {
@@ -205,8 +201,8 @@ namespace Mangos.World.Loots
                                     Packets.UpdateClass UpdateData4 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                                     UpdateData4.SetUpdateFlag(143, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
                                     UpdateData4.SetUpdateFlag(46, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
-                                    Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                                     ulong key;
+                                    Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                                     WS_Creatures.CreatureObject updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
                                     UpdateData4.AddToPacket(ref response3, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                                     wORLD_CREATUREs[key] = updateObject;
@@ -217,6 +213,8 @@ namespace Mangos.World.Loots
                                 }
                             case LootType.LOOTTYPE_SKINNING:
                                 WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Despawn();
+                                break;
+                            default:
                                 break;
                         }
                     }
@@ -239,7 +237,7 @@ namespace Mangos.World.Loots
                 }
                 else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
                 {
-                    switch (LootType)
+                    switch (LootTable[GUID].LootType)
                     {
                         case LootType.LOOTTYPE_CORPSE:
                             {
@@ -267,6 +265,8 @@ namespace Mangos.World.Loots
                         case LootType.LOOTTYPE_SKINNING:
                             WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Despawn();
                             break;
+                        default:
+                            break;
                     }
                 }
                 else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(GUID))
@@ -283,8 +283,8 @@ namespace Mangos.World.Loots
                         response2.AddInt8(0);
                         Packets.UpdateClass UpdateData2 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                         UpdateData2.SetUpdateFlag(14, 0, (byte)WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].State);
-                        Dictionary<ulong, WS_GameObjects.GameObjectObject> wORLD_GAMEOBJECTs;
                         ulong key;
+                        Dictionary<ulong, WS_GameObjects.GameObjectObject> wORLD_GAMEOBJECTs;
                         WS_GameObjects.GameObjectObject updateObject2 = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
                         UpdateData2.AddToPacket(ref response2, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject2);
                         wORLD_GAMEOBJECTs[key] = updateObject2;
@@ -323,8 +323,8 @@ namespace Mangos.World.Loots
                     Packets.UpdateClass UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                     UpdateData.SetUpdateFlag(143, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
                     UpdateData.SetUpdateFlag(46, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
-                    Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                     ulong key;
+                    Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                     WS_Creatures.CreatureObject updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
                     UpdateData.AddToPacket(ref response, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                     wORLD_CREATUREs[key] = updateObject;
@@ -410,6 +410,8 @@ namespace Mangos.World.Loots
                         case 2:
                             response.AddInt8(249);
                             response.AddInt8(2);
+                            break;
+                        default:
                             break;
                     }
                     LootTable[GUID].GroupLootInfo[Slot].Broadcast(ref response);

@@ -645,11 +645,9 @@ namespace Mangos.World.DataStores
                 }
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: XPTable initialized.");
             }
-            catch (Exception ex2)
+            catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex2);
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "XPTable initialization failed.");
-                ProjectData.ClearProjectError();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "XPTable initialization failed.", ex);
             }
         }
 
@@ -757,89 +755,54 @@ namespace Mangos.World.DataStores
                 try
                 {
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT MAX(item_guid) FROM characters_inventory;", ref MySQLQuery);
-                    if (MySQLQuery.Rows[0][0] != DBNull.Value)
-                    {
-                        WorldServiceLocator._WorldServer.itemGuidCounter = Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_ITEM));
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.itemGuidCounter = Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_ITEM)));
-                    }
+                    WorldServiceLocator._WorldServer.itemGuidCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                        ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_ITEM))
+                        : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_ITEM)));
                 }
-                catch (Exception ex5)
+                catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex5);
-                    Exception ex4 = ex5;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading characters_inventory....");
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading characters_inventory....", ex);
                 }
                 MySQLQuery = new DataTable();
                 try
                 {
                     WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT MAX(guid) FROM creature;", ref MySQLQuery);
-                    if (MySQLQuery.Rows[0][0] != DBNull.Value)
-                    {
-                        WorldServiceLocator._WorldServer.CreatureGUIDCounter = Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_UNIT));
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.CreatureGUIDCounter = Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_UNIT)));
-                    }
+                    WorldServiceLocator._WorldServer.CreatureGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                        ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_UNIT))
+                        : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_UNIT)));
                 }
-                catch (Exception ex6)
+                catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex6);
-                    Exception ex3 = ex6;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading creatures....");
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading creatures....", ex);
                 }
                 MySQLQuery = new DataTable();
                 try
                 {
                     WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT MAX(guid) FROM gameobject;", ref MySQLQuery);
-                    if (MySQLQuery.Rows[0][0] != DBNull.Value)
-                    {
-                        WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT));
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT)));
-                    }
+                    WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                        ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT))
+                        : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT)));
                 }
-                catch (Exception ex7)
+                catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex7);
-                    Exception ex2 = ex7;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading gameobjects....");
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading gameobjects....", ex);
                 }
                 MySQLQuery = new DataTable();
                 try
                 {
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT MAX(guid) FROM corpse", ref MySQLQuery);
-                    if (MySQLQuery.Rows[0][0] != DBNull.Value)
-                    {
-                        WorldServiceLocator._WorldServer.CorpseGUIDCounter = Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_CORPSE));
-                    }
-                    else
-                    {
-                        WorldServiceLocator._WorldServer.CorpseGUIDCounter = Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_CORPSE)));
-                    }
+                    WorldServiceLocator._WorldServer.CorpseGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                        ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_CORPSE))
+                        : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_CORPSE)));
                 }
-                catch (Exception ex8)
+                catch (Exception ex)
                 {
-                    ProjectData.SetProjectError(ex8);
-                    Exception ex = ex8;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading corpse....");
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading corpse....", ex);
                 }
             }
-            catch (Exception ex9)
+            catch (Exception ex)
             {
-                ProjectData.SetProjectError(ex9);
-                Exception e = ex9;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Internal database initialization failed! [{0}]{1}{2}", e.Message, Environment.NewLine, e.ToString());
-                ProjectData.ClearProjectError();
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Internal database initialization failed! [{0}]{1}{2}", ex.Message, Environment.NewLine, ex.ToString());
             }
         }
 
@@ -856,6 +819,7 @@ namespace Mangos.World.DataStores
             WorldServiceLocator._WS_DBCLoad.LoadCreatureModelInfo();
             WorldServiceLocator._WS_DBCLoad.LoadQuestStartersAndFinishers();
             WorldServiceLocator._WS_DBCLoad.InitializeSpellChains();
+            WorldServiceLocator._WS_DBCLoad.LoadCreatureGossip();
 
             await Task.WhenAll(
                 WorldServiceLocator._WS_Maps.InitializeMapsAsync(),
@@ -887,8 +851,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WS_DBCLoad.InitializeSpellRangeAsync(),
                 WorldServiceLocator._WS_DBCLoad.InitializeSpellFocusObjectAsync(),
                 WorldServiceLocator._WS_DBCLoad.InitializeSpellsAsync(),
-                WorldServiceLocator._WS_DBCLoad.InitializeSpellShapeShiftAsync(),
-                WorldServiceLocator._WS_DBCLoad.LoadCreatureGossipAsync()
+                WorldServiceLocator._WS_DBCLoad.InitializeSpellShapeShiftAsync()
                 );
         }
     }

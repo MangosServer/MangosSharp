@@ -80,14 +80,14 @@ namespace Mangos.World.Handlers
             }
             if (client.Character.Pet != null && client.Character.Pet.FollowOwner)
             {
-                float angle = client.Character.orientation - (float)Math.PI / 2f;
+                float angle = client.Character.orientation - ((float)Math.PI / 2f);
                 if (angle < 0f)
                 {
                     angle += (float)Math.PI * 2f;
                 }
                 client.Character.Pet.SetToRealPosition();
-                float tmpX = (float)(client.Character.positionX + Math.Cos(angle) * 2.0);
-                float tmpY = (float)(client.Character.positionY + Math.Sin(angle) * 2.0);
+                float tmpX = (float)(client.Character.positionX + (Math.Cos(angle) * 2.0));
+                float tmpY = (float)(client.Character.positionY + (Math.Sin(angle) * 2.0));
                 client.Character.Pet.MoveTo(tmpX, tmpY, client.Character.positionZ, client.Character.orientation, Running: true);
             }
             if (((uint)client.Character.charMovementFlags & 0x2000000u) != 0)
@@ -481,12 +481,12 @@ namespace Mangos.World.Handlers
                         int safe_fall = client.Character.GetAuraModifier(AuraEffects_Names.SPELL_AURA_SAFE_FALL);
                         if (safe_fall > 0)
                         {
-                            FallTime = (FallTime > safe_fall * 10) ? (FallTime - safe_fall * 10) : 0;
+                            FallTime = (FallTime > safe_fall * 10) ? (FallTime - (safe_fall * 10)) : 0;
                         }
                         if (FallTime > 1100)
                         {
                             float FallPerc = (float)(FallTime / 1100.0);
-                            int FallDamage = (int)Math.Round((FallPerc * FallPerc - 1f) / 9f * client.Character.Life.Maximum);
+                            int FallDamage = (int)Math.Round(((FallPerc * FallPerc) - 1f) / 9f * client.Character.Life.Maximum);
                             if (FallDamage > 0)
                             {
                                 if (FallDamage > client.Character.Life.Maximum)
@@ -605,7 +605,7 @@ namespace Mangos.World.Handlers
             ulong[] array = client.Character.creaturesNear.ToArray();
             foreach (ulong cGUID in array)
             {
-                if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript != null && (WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript is WS_Creatures_AI.DefaultAI || WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript is WS_Creatures_AI.GuardAI) && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript.InCombat() && !client.Character.inCombatWith.Contains(cGUID) && client.Character.GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) == TReaction.HOSTILE && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], client.Character) <= WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].AggroRange(client.Character))
+                if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript != null && (WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript is WS_Creatures_AI.DefaultAI || WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript is WS_Creatures_AI.GuardAI) && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript.InCombat&& !client.Character.inCombatWith.Contains(cGUID) && client.Character.GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) == TReaction.HOSTILE && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], client.Character) <= WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].AggroRange(client.Character))
                 {
                     WS_Creatures_AI.TBaseAI aiScript = WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript;
                     ref WS_PlayerData.CharacterObject character = ref client.Character;
