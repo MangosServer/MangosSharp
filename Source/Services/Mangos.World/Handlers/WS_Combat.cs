@@ -1033,7 +1033,7 @@ namespace Mangos.World.Handlers
                 {
                     if (@object.combatDodge > 0)
                     {
-                        var combatDodgeAgilityBonus = @object.Classe switch
+                        int combatDodgeAgilityBonus = @object.Classe switch
                         {
                             Classes.CLASS_HUNTER => (int)(@object.Agility.Base / 26.5f),
                             Classes.CLASS_ROGUE => (int)(@object.Agility.Base / 14.5f),
@@ -1471,6 +1471,11 @@ namespace Mangos.World.Handlers
             objCharacter.combatCanDualWield = false;
             objCharacter.cBytes2 = (objCharacter.cBytes2 & -256) | (int)State;
             objCharacter.SetUpdateFlag(164, objCharacter.cBytes2);
+            if (objCharacter != null)
+            {
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1} Account:{2} CharName:{3} CharGUID:{4}] Client is Null!", objCharacter.client.IP, objCharacter.client.Port, objCharacter.client.Account, objCharacter.client.Character.UnitName, objCharacter.client.Character.GUID);
+                return;
+            }
             switch (State)
             {
                 case SHEATHE_SLOT.SHEATHE_NONE:

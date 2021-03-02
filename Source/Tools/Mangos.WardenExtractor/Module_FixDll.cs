@@ -950,21 +950,9 @@ namespace Mangos.WardenExtractor
                 }
             }
 
-            public int EffectiveAddressSize
-            {
-                get
-                {
-                    return AddressSizeOverwritten ? 16 : 32;
-                }
-            }
+            public int EffectiveAddressSize => AddressSizeOverwritten ? 16 : 32;
 
-            public int EffectiveOperandSize
-            {
-                get
-                {
-                    return OperandSizeOverwritten ? 16 : 32;
-                }
-            }
+            public int EffectiveOperandSize => OperandSizeOverwritten ? 16 : 32;
 
             public byte[] GetBytes()
             {

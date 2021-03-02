@@ -679,29 +679,17 @@ namespace Mangos.World.Player
 
             public bool IsInDuel => DuelPartner != null;
 
-            public bool IsHorde
+            public bool IsHorde => Race switch
             {
-                get
-                {
-                    return Race switch
-                    {
-                        Races.RACE_HUMAN or Races.RACE_DWARF or Races.RACE_NIGHT_ELF or Races.RACE_GNOME => false,
-                        _ => true,
-                    };
-                }
-            }
+                Races.RACE_HUMAN or Races.RACE_DWARF or Races.RACE_NIGHT_ELF or Races.RACE_GNOME => false,
+                _ => true,
+            };
 
-            public int Team
+            public int Team => Race switch
             {
-                get
-                {
-                    return Race switch
-                    {
-                        Races.RACE_HUMAN or Races.RACE_DWARF or Races.RACE_NIGHT_ELF or Races.RACE_GNOME => 469,
-                        _ => 67,
-                    };
-                }
-            }
+                Races.RACE_HUMAN or Races.RACE_DWARF or Races.RACE_NIGHT_ELF or Races.RACE_GNOME => 469,
+                _ => 67,
+            };
 
             public short GetStat(byte Type)
             {
@@ -5496,7 +5484,7 @@ namespace Mangos.World.Player
                     ulong[] array = creaturesNear.ToArray();
                     foreach (ulong cGUID in array)
                     {
-                        if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript != null && WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].isGuard && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript.InCombat&& !inCombatWith.Contains(cGUID) && GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) == TReaction.FIGHT_SUPPORT && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], this) <= WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].AggroRange(this))
+                        if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript != null && WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].isGuard && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript.InCombat && !inCombatWith.Contains(cGUID) && GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) == TReaction.FIGHT_SUPPORT && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], this) <= WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].AggroRange(this))
                         {
                             WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].aiScript.OnGenerateHate(ref Attacker, Damage);
                         }

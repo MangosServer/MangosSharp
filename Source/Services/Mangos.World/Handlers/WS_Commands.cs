@@ -440,7 +440,7 @@ namespace Mangos.World.Handlers
             return true;
         }
 
-        void PerformOverflow()
+        private void PerformOverflow()
         {
             PerformOverflow();
         }
@@ -461,8 +461,8 @@ namespace Mangos.World.Handlers
         [ChatCommand("stresstest", " - Causes a huge CPU Spike, simulating very high load, leak situations.", AccessLevel.Developer)]
         public bool cmdStressTest(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            var hexString = "XYZ";
-            for (var i = 0; i < hexString.Length;)
+            string hexString = "XYZ";
+            for (int i = 0; i < hexString.Length;)
             {
                 i = 0; //Dummy var to prevent empty statement warning when below is commented
                 //WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, hexString.Substring(0, 1)); // Spams console with X
@@ -1526,7 +1526,7 @@ namespace Mangos.World.Handlers
                         WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                         Character.Value.Logout();
                         Character.Value.Dispose();
-                        objCharacter.CommandResponse($"Character [{Character.Value.Name}] kicked form server.");
+                        objCharacter.CommandResponse($"Character [{Character.Value.Name}] kicked from server.");
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "[{0}:{1}] Character [{3}] kicked by [{2}].", objCharacter.client.IP, objCharacter.client.Port, objCharacter.client.Character.Name, Name);
                         return true;
                     }

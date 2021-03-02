@@ -76,21 +76,9 @@ namespace Mangos.WoWFakeClient
             public int Offset = 4;
             private readonly bool Realm;
 
-            public int Length
-            {
-                get
-                {
-                    return Realm ? Data[1] + (Data[2] * 256) : Data[1] + (Data[0] * 256);
-                }
-            }
+            public int Length => Realm ? Data[1] + (Data[2] * 256) : Data[1] + (Data[0] * 256);
 
-            public int OpCode
-            {
-                get
-                {
-                    return Realm ? Data[0] : Data[2] + (Data[3] * 256);
-                }
-            }
+            public int OpCode => Realm ? Data[0] : Data[2] + (Data[3] * 256);
 
             public PacketClass(OPCODES opcode)
             {

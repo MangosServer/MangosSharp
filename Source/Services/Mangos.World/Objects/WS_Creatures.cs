@@ -117,17 +117,11 @@ namespace Mangos.World.Objects
 
             public float MaxDistance => 35f;
 
-            public bool isAbleToWalkOnWater
+            public bool isAbleToWalkOnWater => CreatureInfo.CreatureFamily switch
             {
-                get
-                {
-                    return CreatureInfo.CreatureFamily switch
-                    {
-                        3 or 10 or 11 or 12 or 20 or 21 or 27 => false,
-                        _ => true,
-                    };
-                }
-            }
+                3 or 10 or 11 or 12 or 20 or 21 or 27 => false,
+                _ => true,
+            };
 
             public bool isAbleToWalkOnGround
             {
@@ -142,23 +136,11 @@ namespace Mangos.World.Objects
 
             public bool isGuard => (CreatureInfo.cNpcFlags & 0x40) == 64;
 
-            public override bool IsDead
-            {
-                get
-                {
-                    return aiScript != null
+            public override bool IsDead => aiScript != null
                         ? Life.Current == 0 || aiScript.State == AIState.AI_DEAD || aiScript.State == AIState.AI_RESPAWN
                         : Life.Current == 0;
-                }
-            }
 
-            public bool Evade
-            {
-                get
-                {
-                    return aiScript != null && aiScript.State == AIState.AI_MOVING_TO_SPAWN;
-                }
-            }
+            public bool Evade => aiScript != null && aiScript.State == AIState.AI_MOVING_TO_SPAWN;
 
             public int NPCTextID
             {
@@ -854,7 +836,7 @@ namespace Mangos.World.Objects
                     }
                     else if (lvlDifference < 0)
                     {
-                        var GrayLevel = Character.Level switch
+                        int GrayLevel = Character.Level switch
                         {
                             0 or 1 or 2 or 3 or 4 or 5 => 0,
                             6 or 7 or 8 or 9 or 10 or 11 or 12 or 13 or 14 or 15 or 16 or 17 or 18 or 19 or 20 or 21 or 22 or 23 or 24 or 25 or 26 or 27 or 28 or 29 or 30 or 31 or 32 or 33 or 34 or 35 or 36 or 37 or 38 or 39 => (byte)Math.Round(Character.Level - Math.Floor(Character.Level / 10.0) - 5.0),
@@ -863,7 +845,7 @@ namespace Mangos.World.Objects
                         };
                         if (Level > (uint)GrayLevel)
                         {
-                            var ZD = Character.Level switch
+                            int ZD = Character.Level switch
                             {
                                 0 or 1 or 2 or 3 or 4 or 5 or 6 or 7 => 5,
                                 8 or 9 => 6,

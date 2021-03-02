@@ -72,13 +72,7 @@ namespace Mangos.World.Objects
 
         public WS_Items.ItemInfo ItemInfo => WorldServiceLocator._WorldServer.ITEMDatabase[ItemEntry];
 
-        public bool IsFree
-        {
-            get
-            {
-                return Items.Count <= 0;
-            }
-        }
+        public bool IsFree => Items.Count <= 0;
 
         public bool IsRanged => ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON && (ItemInfo.SubClass == ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID || ItemInfo.SubClass == ITEM_SUBCLASS.ITEM_SUBCLASS_CROSSBOW || ItemInfo.SubClass == ITEM_SUBCLASS.ITEM_SUBCLASS_POTION);
 

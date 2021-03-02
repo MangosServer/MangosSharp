@@ -46,13 +46,7 @@ namespace Mangos.World.Globals
                 }
             }
 
-            public Opcodes OpCode
-            {
-                get
-                {
-                    return Information.UBound(Data) > 2 ? (Opcodes)checked(Data[2] + (Data[3] * 256)) : Opcodes.MSG_NULL_ACTION;
-                }
-            }
+            public Opcodes OpCode => Information.UBound(Data) > 2 ? (Opcodes)checked(Data[2] + (Data[3] * 256)) : Opcodes.MSG_NULL_ACTION;
 
             public PacketClass(Opcodes opcode)
             {
