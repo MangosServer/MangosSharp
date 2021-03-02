@@ -19,7 +19,6 @@
 using Mangos.Common.Enums.Global;
 using Mangos.World.DataStores;
 using Mangos.World.Objects;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 
 namespace Mangos.World.AI
@@ -69,13 +68,13 @@ namespace Mangos.World.AI
                                     }
                                     catch (Exception ex)
                                     {
-                                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] waypoints are damaged.", ex, aiCreature.GUID - WorldServiceLocator._Global_Constants.GUID_UNIT);
+                                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] waypoints are damaged.", ex, aiCreature?.GUID - WorldServiceLocator._Global_Constants.GUID_UNIT);
                                         aiCreature.ResetAI();
                                     }
 
                                     break;
                                 }
-                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] is missing waypoints.", aiCreature.GUID - WorldServiceLocator._Global_Constants.GUID_UNIT);
+                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] is missing waypoints.", aiCreature?.GUID - WorldServiceLocator._Global_Constants.GUID_UNIT);
                                 aiCreature.ResetAI();
                                 return;
                             }

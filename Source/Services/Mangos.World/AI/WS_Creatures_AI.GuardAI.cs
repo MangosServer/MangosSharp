@@ -41,24 +41,24 @@ namespace Mangos.World.AI
                 switch (emote)
                 {
                     case 58:
-                        aiCreature.DoEmote(2);
+                        aiCreature?.DoEmote(2);
                         break;
 
                     case 101:
-                        aiCreature.DoEmote(3);
+                        aiCreature?.DoEmote(3);
                         break;
 
                     case 78:
-                        aiCreature.DoEmote(66);
+                        aiCreature?.DoEmote(66);
                         break;
 
                     case 84:
-                        aiCreature.DoEmote(23);
+                        aiCreature?.DoEmote(23);
                         break;
 
                     case 22:
                     case 77:
-                        aiCreature.DoEmote(25);
+                        aiCreature?.DoEmote(25);
                         break;
                     default:
                         break;

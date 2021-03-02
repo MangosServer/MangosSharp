@@ -44,12 +44,12 @@ namespace Mangos.World.AI
                 List<WS_Base.BaseUnit> tmpUnits = new List<WS_Base.BaseUnit>();
                 foreach (KeyValuePair<WS_Base.BaseUnit, int> item in aiHateTable)
                 {
-                    tmpUnits.Add(item.Key);
+                    tmpUnits?.Add(item.Key);
                 }
-                aiHateTable.Clear();
+                aiHateTable?.Clear();
                 foreach (WS_Base.BaseUnit Victim in tmpUnits)
                 {
-                    aiHateTable.Add(Victim, 0);
+                    aiHateTable?.Add(Victim, 0);
                 }
             }
 
