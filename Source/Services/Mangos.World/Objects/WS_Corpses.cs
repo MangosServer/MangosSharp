@@ -217,7 +217,7 @@ namespace Mangos.World.Objects
                     Character.corpsePositionY = positionY;
                     Character.corpsePositionZ = positionZ;
                     Character.corpseMapID = (int)MapID;
-                    Character.corpseCorpseType = Character.isPvP ? CorpseType.CORPSE_RESURRECTABLE_PVP : CorpseType.CORPSE_RESURRECTABLE_PVE;
+                    Character.corpseCorpseType = Character.IsPvP ? CorpseType.CORPSE_RESURRECTABLE_PVP : CorpseType.CORPSE_RESURRECTABLE_PVE;
                     Character.corpseCorpseType = CorpseType;
                     byte i = 0;
                     do
@@ -269,10 +269,10 @@ namespace Mangos.World.Objects
 
             public void AddToWorld()
             {
-                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                 if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
                 {
-                    WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+                    Handlers.WS_CharMovement.MAP_Load(CellX, CellY, MapID);
                 }
                 WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Add(GUID);
                 Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
@@ -342,7 +342,7 @@ namespace Mangos.World.Objects
 
             public void RemoveFromWorld()
             {
-                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                 WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Remove(GUID);
                 if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].PlayersHere.Count <= 0)
                 {

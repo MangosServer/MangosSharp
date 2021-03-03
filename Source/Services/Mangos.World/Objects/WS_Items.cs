@@ -759,7 +759,7 @@ namespace Mangos.World.Objects
             };
         }
 
-        public ItemObject LoadItemByGUID(ulong guid, WS_PlayerData.CharacterObject owner = null, bool equipped = false)
+        public static ItemObject LoadItemByGUID(ulong guid, WS_PlayerData.CharacterObject owner = null, bool equipped = false)
         {
             checked
             {
@@ -769,7 +769,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void SendItemInfo(ref WS_Network.ClientClass client, int itemID)
+        public static void SendItemInfo(ref WS_Network.ClientClass client, int itemID)
         {
             Packets.PacketClass response = new(Opcodes.SMSG_ITEM_QUERY_SINGLE_RESPONSE);
             ItemInfo item = WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(itemID) ? WorldServiceLocator._WorldServer.ITEMDatabase[itemID] : new ItemInfo(itemID);
@@ -890,7 +890,7 @@ namespace Mangos.World.Objects
             response.Dispose();
         }
 
-        public void On_CMSG_ITEM_QUERY_SINGLE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_ITEM_QUERY_SINGLE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 9)
             {
@@ -900,7 +900,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_ITEM_NAME_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_ITEM_NAME_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 9)
             {
@@ -916,7 +916,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_SWAP_INV_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SWAP_INV_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 7)
             {
@@ -928,7 +928,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_AUTOEQUIP_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_AUTOEQUIP_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) < 7)
             {
@@ -1025,7 +1025,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_AUTOSTORE_BAG_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_AUTOSTORE_BAG_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 8)
             {
@@ -1056,7 +1056,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_SWAP_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SWAP_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 9)
             {
@@ -1078,7 +1078,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_SPLIT_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SPLIT_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 10)
             {
@@ -1104,7 +1104,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_READ_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_READ_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) < 7)
             {
@@ -1148,7 +1148,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_PAGE_TEXT_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PAGE_TEXT_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 17)
             {
@@ -1181,7 +1181,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_WRAP_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_WRAP_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 9)
             {
@@ -1208,7 +1208,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_DESTROYITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_DESTROYITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -1278,7 +1278,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_USE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_USE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             try
             {
@@ -1344,7 +1344,7 @@ namespace Mangos.World.Objects
                     {
                         if (itemInfo.Spells[i].SpellCharges > 0 && WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].ChargesLeft == 0)
                         {
-                            WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_NO_CHARGES_REMAIN, ref client, itemInfo.Spells[i].SpellID);
+                            WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_NO_CHARGES_REMAIN, ref client, itemInfo.Spells[i].SpellID);
                             break;
                         }
                         ref WS_PlayerData.CharacterObject character2 = ref client.Character;
@@ -1368,7 +1368,7 @@ namespace Mangos.World.Objects
                             }
                             else
                             {
-                                WorldServiceLocator._WS_Spells.SendCastResult((SpellFailedReason)castResult, ref client, itemInfo.Spells[i].SpellID);
+                                WS_Spells.SendCastResult((SpellFailedReason)castResult, ref client, itemInfo.Spells[i].SpellID);
                             }
                         }
                         catch (Exception ex2)
@@ -1376,7 +1376,7 @@ namespace Mangos.World.Objects
                             ProjectData.SetProjectError(ex2);
                             Exception e = ex2;
                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error casting spell {0}.{1}", itemInfo.Spells[i].SpellID, Environment.NewLine + e);
-                            WorldServiceLocator._WS_Spells.SendCastResult((SpellFailedReason)castResult, ref client, itemInfo.Spells[i].SpellID);
+                            WS_Spells.SendCastResult((SpellFailedReason)castResult, ref client, itemInfo.Spells[i].SpellID);
                             ProjectData.ClearProjectError();
                         }
                         break;
@@ -1397,7 +1397,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_OPEN_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_OPEN_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) < 7)
             {
@@ -1425,7 +1425,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void SendInventoryChangeFailure(ref WS_PlayerData.CharacterObject objCharacter, InventoryChangeFailure errorCode, ulong guid1, ulong guid2)
+        public static void SendInventoryChangeFailure(ref WS_PlayerData.CharacterObject objCharacter, InventoryChangeFailure errorCode, ulong guid1, ulong guid2)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
             packet.AddInt8((byte)errorCode);

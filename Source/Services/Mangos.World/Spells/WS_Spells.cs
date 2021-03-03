@@ -409,21 +409,19 @@ namespace Mangos.World.Spells
                                         List<WS_Base.BaseUnit> EnemyTargets2;
                                         if ((unchecked((uint)Targets.targetMask) & 0x40u) != 0)
                                         {
-                                            WS_Spells wS_Spells6 = WorldServiceLocator._WS_Spells;
                                             WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
-                                            List<WS_Base.BaseUnit> enemyAroundMe = wS_Spells6.GetEnemyAtPoint(ref objCharacter, Targets.dstX, Targets.dstY, Targets.dstZ, SpellEffects[Index].GetRadius);
+                                            List<WS_Base.BaseUnit> enemyAroundMe = GetEnemyAtPoint(ref objCharacter, Targets.dstX, Targets.dstY, Targets.dstZ, SpellEffects[Index].GetRadius);
                                             Caster = objCharacter;
                                             EnemyTargets2 = enemyAroundMe;
                                         }
                                         else if (Caster is WS_DynamicObjects.DynamicObjectObject object1)
                                         {
-                                            EnemyTargets2 = WorldServiceLocator._WS_Spells.GetEnemyAtPoint(ref object1.Caster, Caster.positionX, Caster.positionY, Caster.positionZ, SpellEffects[Index].GetRadius);
+                                            EnemyTargets2 = GetEnemyAtPoint(ref object1.Caster, Caster.positionX, Caster.positionY, Caster.positionZ, SpellEffects[Index].GetRadius);
                                         }
                                         else
                                         {
-                                            WS_Spells wS_Spells7 = WorldServiceLocator._WS_Spells;
                                             WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
-                                            List<WS_Base.BaseUnit> enemyAroundMe = wS_Spells7.GetEnemyAtPoint(ref objCharacter, Caster.positionX, Caster.positionY, Caster.positionZ, SpellEffects[Index].GetRadius);
+                                            List<WS_Base.BaseUnit> enemyAroundMe = GetEnemyAtPoint(ref objCharacter, Caster.positionX, Caster.positionY, Caster.positionZ, SpellEffects[Index].GetRadius);
                                             Caster = objCharacter;
                                             EnemyTargets2 = enemyAroundMe;
                                         }
@@ -438,9 +436,8 @@ namespace Mangos.World.Spells
                                     }
                                 case SpellImplicitTargets.TARGET_ALL_FRIENDLY_UNITS_AROUND_CASTER:
                                     {
-                                        WS_Spells wS_Spells5 = WorldServiceLocator._WS_Spells;
                                         WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
-                                        List<WS_Base.BaseUnit> enemyAroundMe = wS_Spells5.GetEnemyAroundMe(ref objCharacter, SpellEffects[Index].GetRadius, Ref);
+                                        List<WS_Base.BaseUnit> enemyAroundMe = GetEnemyAroundMe(ref objCharacter, SpellEffects[Index].GetRadius, Ref);
                                         Caster = objCharacter;
                                         List<WS_Base.BaseUnit> EnemyTargets6 = enemyAroundMe;
                                         foreach (WS_Base.BaseUnit EnemyTarget5 in EnemyTargets6)
@@ -454,9 +451,8 @@ namespace Mangos.World.Spells
                                     }
                                 case SpellImplicitTargets.TARGET_ALL_PARTY:
                                     {
-                                        WS_Spells wS_Spells10 = WorldServiceLocator._WS_Spells;
                                         WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)Caster;
-                                        List<WS_Base.BaseUnit> enemyAroundMe = wS_Spells10.GetPartyMembersAroundMe(ref objCharacter2, 9999999f);
+                                        List<WS_Base.BaseUnit> enemyAroundMe = GetPartyMembersAroundMe(ref objCharacter2, 9999999f);
                                         Caster = objCharacter2;
                                         List<WS_Base.BaseUnit> PartyTargets2 = enemyAroundMe;
                                         foreach (WS_Base.BaseUnit PartyTarget2 in PartyTargets2)
@@ -477,10 +473,9 @@ namespace Mangos.World.Spells
                                         {
                                             case WS_Totems.TotemObject object2:
                                                 {
-                                                    WS_Spells wS_Spells8 = WorldServiceLocator._WS_Spells;
                                                     ref WS_Base.BaseUnit caster = ref object2.Caster;
                                                     WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)caster;
-                                                    List<WS_Base.BaseUnit> enemyAroundMe = wS_Spells8.GetPartyMembersAtPoint(ref objCharacter2, SpellEffects[Index].GetRadius, Caster.positionX, Caster.positionY, Caster.positionZ);
+                                                    List<WS_Base.BaseUnit> enemyAroundMe = GetPartyMembersAtPoint(ref objCharacter2, SpellEffects[Index].GetRadius, Caster.positionX, Caster.positionY, Caster.positionZ);
                                                     caster = objCharacter2;
                                                     PartyTargets = enemyAroundMe;
                                                     break;
@@ -488,9 +483,8 @@ namespace Mangos.World.Spells
 
                                             default:
                                                 {
-                                                    WS_Spells wS_Spells9 = WorldServiceLocator._WS_Spells;
                                                     WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)Caster;
-                                                    List<WS_Base.BaseUnit> enemyAroundMe = wS_Spells9.GetPartyMembersAroundMe(ref objCharacter2, SpellEffects[Index].GetRadius);
+                                                    List<WS_Base.BaseUnit> enemyAroundMe = GetPartyMembersAroundMe(ref objCharacter2, SpellEffects[Index].GetRadius);
                                                     Caster = objCharacter2;
                                                     PartyTargets = enemyAroundMe;
                                                     break;
@@ -524,9 +518,8 @@ namespace Mangos.World.Spells
                                         byte j = 2;
                                         while (j <= (uint)b)
                                         {
-                                            WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
                                             WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
-                                            List<WS_Base.BaseUnit> enemyAroundMe = wS_Spells2.GetEnemyAroundMe(ref TargetUnit, 10f, objCharacter);
+                                            List<WS_Base.BaseUnit> enemyAroundMe = GetEnemyAroundMe(ref TargetUnit, 10f, objCharacter);
                                             Caster = objCharacter;
                                             List<WS_Base.BaseUnit> EnemyTargets = enemyAroundMe;
                                             TargetUnit = null;
@@ -559,9 +552,8 @@ namespace Mangos.World.Spells
                                     }
                                 case SpellImplicitTargets.TARGET_AROUND_CASTER_ENEMY:
                                     {
-                                        WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
                                         WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
-                                        List<WS_Base.BaseUnit> enemyAroundMe = wS_Spells.GetEnemyAroundMe(ref objCharacter, SpellEffects[Index].GetRadius, Ref);
+                                        List<WS_Base.BaseUnit> enemyAroundMe = GetEnemyAroundMe(ref objCharacter, SpellEffects[Index].GetRadius, Ref);
                                         Caster = objCharacter;
                                         List<WS_Base.BaseUnit> EnemyTargets3 = enemyAroundMe;
                                         foreach (WS_Base.BaseUnit EnemyTarget2 in EnemyTargets3)
@@ -583,9 +575,8 @@ namespace Mangos.World.Spells
                                 case SpellImplicitTargets.TARGET_INFRONT:
                                     if ((CustomAttributs & (true ? 1u : 0u)) != 0)
                                     {
-                                        WS_Spells wS_Spells3 = WorldServiceLocator._WS_Spells;
                                         WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
-                                        List<WS_Base.BaseUnit> enemyAroundMe = wS_Spells3.GetEnemyInBehindMe(ref objCharacter, SpellEffects[Index].GetRadius);
+                                        List<WS_Base.BaseUnit> enemyAroundMe = GetEnemyInBehindMe(ref objCharacter, SpellEffects[Index].GetRadius);
                                         Caster = objCharacter;
                                         List<WS_Base.BaseUnit> EnemyTargets5 = enemyAroundMe;
                                         foreach (WS_Base.BaseUnit EnemyTarget4 in EnemyTargets5)
@@ -602,9 +593,8 @@ namespace Mangos.World.Spells
                                         {
                                             break;
                                         }
-                                        WS_Spells wS_Spells4 = WorldServiceLocator._WS_Spells;
                                         WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
-                                        List<WS_Base.BaseUnit> enemyAroundMe = wS_Spells4.GetEnemyInFrontOfMe(ref objCharacter, SpellEffects[Index].GetRadius);
+                                        List<WS_Base.BaseUnit> enemyAroundMe = GetEnemyInFrontOfMe(ref objCharacter, SpellEffects[Index].GetRadius);
                                         Caster = objCharacter;
                                         List<WS_Base.BaseUnit> EnemyTargets4 = enemyAroundMe;
                                         foreach (WS_Base.BaseUnit EnemyTarget3 in EnemyTargets4)
@@ -722,7 +712,7 @@ namespace Mangos.World.Spells
                         {
                             newTargets.Add(Target, SpellMissInfo.SPELL_MISS_EVADE);
                         }
-                        else if (!(Caster is WS_PlayerData.CharacterObject object4) || !object4.GM)
+                        else if (!(Caster is WS_PlayerData.CharacterObject object4 && object4.GM))
                         {
                             switch (DamageType)
                             {
@@ -761,7 +751,7 @@ namespace Mangos.World.Spells
                 return newTargets;
             }
 
-            public List<WS_Base.BaseObject> GetHits(ref Dictionary<WS_Base.BaseObject, SpellMissInfo> Targets)
+            public static List<WS_Base.BaseObject> GetHits(ref Dictionary<WS_Base.BaseObject, SpellMissInfo> Targets)
             {
                 List<WS_Base.BaseObject> targetHits = new();
                 foreach (KeyValuePair<WS_Base.BaseObject, SpellMissInfo> Target in Targets)
@@ -981,15 +971,15 @@ namespace Mangos.World.Spells
                     {
                         if (((uint)Targets.targetMask & 2u) != 0 && Targets.unitTarget != null)
                         {
-                            SpellDistance = WorldServiceLocator._WS_Combat.GetDistance(Caster, Targets.unitTarget);
+                            SpellDistance = WS_Combat.GetDistance(Caster, Targets.unitTarget);
                         }
                         if (((uint)Targets.targetMask & 0x40u) != 0 && (Targets.dstX != 0f || Targets.dstY != 0f || Targets.dstZ != 0f))
                         {
-                            SpellDistance = WorldServiceLocator._WS_Combat.GetDistance(Caster, Targets.dstX, Targets.dstY, Targets.dstZ);
+                            SpellDistance = WS_Combat.GetDistance(Caster, Targets.dstX, Targets.dstY, Targets.dstZ);
                         }
                         if (((uint)Targets.targetMask & 0x800u) != 0 && Targets.goTarget != null)
                         {
-                            SpellDistance = WorldServiceLocator._WS_Combat.GetDistance(Caster, Targets.goTarget);
+                            SpellDistance = WS_Combat.GetDistance(Caster, Targets.goTarget);
                         }
                         if (SpellDistance > 0f)
                         {
@@ -1003,7 +993,7 @@ namespace Mangos.World.Spells
                         SpellCastError = CanCast(ref Character, Targets, FirstCheck: false);
                         if (SpellCastError != SpellFailedReason.SPELL_NO_ERROR)
                         {
-                            WorldServiceLocator._WS_Spells.SendCastResult(SpellCastError, ref object1.client, ID);
+                            SendCastResult(SpellCastError, ref object1.client, ID);
                             castParams.State = SpellCastState.SPELL_STATE_IDLE;
                             castParams.Dispose();
                             return;
@@ -1019,7 +1009,7 @@ namespace Mangos.World.Spells
                     {
                         if (object2.attackState.combatNextAttackSpell)
                         {
-                            WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_SPELL_IN_PROGRESS, ref object2.client, ID);
+                            SendCastResult(SpellFailedReason.SPELL_FAILED_SPELL_IN_PROGRESS, ref object2.client, ID);
                             castParams.Dispose();
                             return;
                         }
@@ -1175,7 +1165,7 @@ namespace Mangos.World.Spells
                         castParams.State = SpellCastState.SPELL_STATE_FINISHED;
                         if (Caster is WS_PlayerData.CharacterObject object4)
                         {
-                            WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_NO_ERROR, ref object4.client, ID);
+                            SendCastResult(SpellFailedReason.SPELL_NO_ERROR, ref object4.client, ID);
                         }
                         Dictionary<ulong, SpellMissInfo> tmpTargets = new();
                         byte j = 0;
@@ -1263,7 +1253,7 @@ namespace Mangos.World.Spells
                         {
                             case WS_PlayerData.CharacterObject _:
                                 {
-                                    WorldServiceLocator._WS_Spells.SendCastResult(SpellCastError, ref ((WS_PlayerData.CharacterObject)Caster).client, ID);
+                                    SendCastResult(SpellCastError, ref ((WS_PlayerData.CharacterObject)Caster).client, ID);
                                     WS_Base.BaseUnit Caster2 = (WS_Base.BaseUnit)Caster;
                                     SendInterrupted(0, ref Caster2);
                                     Caster = Caster2;
@@ -1370,10 +1360,9 @@ namespace Mangos.World.Spells
                 {
                     if (((uint)FacingCasterFlags & (true ? 1u : 0u)) != 0)
                     {
-                        WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                         WS_Base.BaseObject Object = Character;
                         WS_Base.BaseObject Object2 = Targets.unitTarget;
-                        bool flag = wS_Combat.IsInFrontOf(ref Object, ref Object2);
+                        bool flag = WS_Combat.IsInFrontOf(ref Object, ref Object2);
                         Character = (WS_PlayerData.CharacterObject)Object;
                         if (!flag)
                         {
@@ -1382,10 +1371,9 @@ namespace Mangos.World.Spells
                     }
                     if (((uint)FacingCasterFlags & 2u) != 0)
                     {
-                        WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
                         WS_Base.BaseObject Object2 = Character;
                         WS_Base.BaseObject Object = Targets.unitTarget;
-                        bool flag = wS_Combat2.IsInBackOf(ref Object2, ref Object);
+                        bool flag = WS_Combat.IsInBackOf(ref Object2, ref Object);
                         Character = (WS_PlayerData.CharacterObject)Object2;
                         if (!flag)
                         {
@@ -1646,11 +1634,10 @@ namespace Mangos.World.Spells
                 while (j <= 2u);
                 if (Targets.unitTarget != null)
                 {
-                    WS_Maps wS_Maps = WorldServiceLocator._WS_Maps;
                     WS_Base.BaseObject Object = Character;
                     ref WS_Base.BaseUnit unitTarget = ref Targets.unitTarget;
                     WS_Base.BaseObject Object2 = unitTarget;
-                    bool flag = wS_Maps.IsInLineOfSight(ref Object, ref Object2);
+                    bool flag = WS_Maps.IsInLineOfSight(ref Object, ref Object2);
                     unitTarget = (WS_Base.BaseUnit)Object2;
                     Character = (WS_PlayerData.CharacterObject)Object;
                     if (!flag)
@@ -1660,9 +1647,8 @@ namespace Mangos.World.Spells
                 }
                 else if (((uint)Targets.targetMask & 0x40u) != 0)
                 {
-                    WS_Maps wS_Maps2 = WorldServiceLocator._WS_Maps;
                     WS_Base.BaseObject Object2 = Character;
-                    bool flag = wS_Maps2.IsInLineOfSight(ref Object2, Targets.dstX, Targets.dstY, Targets.dstZ);
+                    bool flag = WS_Maps.IsInLineOfSight(ref Object2, Targets.dstX, Targets.dstY, Targets.dstZ);
                     Character = (WS_PlayerData.CharacterObject)Object2;
                     if (!flag)
                     {
@@ -1723,7 +1709,7 @@ namespace Mangos.World.Spells
                 updatePacket.Dispose();
             }
 
-            public void WriteAmmoToPacket(ref Packets.PacketClass Packet, ref WS_Base.BaseUnit Caster)
+            public static void WriteAmmoToPacket(ref Packets.PacketClass Packet, ref WS_Base.BaseUnit Caster)
             {
                 WS_Items.ItemInfo ItemInfo = null;
                 if (Caster is WS_PlayerData.CharacterObject characterObject)
@@ -2013,7 +1999,7 @@ namespace Mangos.World.Spells
                     {
                         return;
                     }
-                    objCharacter.Spells[ID].Cooldown = (uint)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + (Recovery / 1000));
+                    objCharacter.Spells[ID].Cooldown = (uint)(Functions.GetTimestamp(DateAndTime.Now) + (Recovery / 1000));
                     if (castItem != null)
                     {
                         objCharacter.Spells[ID].CooldownItem = castItem.ItemEntry;
@@ -2653,11 +2639,11 @@ namespace Mangos.World.Spells
 
         public SpellEffectHandler[] SPELL_EFFECTs;
 
-        private const int SLOT_NOT_FOUND = -1;
+        public const int SLOT_NOT_FOUND = -1;
 
-        private const int SLOT_CREATE_NEW = -2;
+        public const int SLOT_CREATE_NEW = -2;
 
-        private const int SLOT_NO_SPACE = int.MaxValue;
+        public const int SLOT_NO_SPACE = int.MaxValue;
 
         public const int AURAs_COUNT = 261;
 
@@ -2665,7 +2651,7 @@ namespace Mangos.World.Spells
 
         public const int DUEL_COUNTDOWN = 3000;
 
-        private const float DUEL_OUTOFBOUNDS_DISTANCE = 40f;
+        public const float DUEL_OUTOFBOUNDS_DISTANCE = 40f;
 
         public const byte DUEL_COUNTER_START = 10;
 
@@ -2684,7 +2670,7 @@ namespace Mangos.World.Spells
             AURAs = new ApplyAuraHandler[262];
         }
 
-        public void SendCastResult(SpellFailedReason result, ref WS_Network.ClientClass client, int id)
+        public static void SendCastResult(SpellFailedReason result, ref WS_Network.ClientClass client, int id)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_CAST_RESULT);
             packet.AddInt32(id);
@@ -2701,7 +2687,7 @@ namespace Mangos.World.Spells
             packet.Dispose();
         }
 
-        public void SendNonMeleeDamageLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int SchoolType, int Damage, int Resist, int Absorbed, bool CriticalHit)
+        public static void SendNonMeleeDamageLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int SchoolType, int Damage, int Resist, int Absorbed, bool CriticalHit)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_SPELLNONMELEEDAMAGELOG);
             packet.AddPackGUID(Target.GUID);
@@ -2726,7 +2712,7 @@ namespace Mangos.World.Spells
             Caster.SendToNearPlayers(ref packet);
         }
 
-        public void SendHealSpellLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int Damage, bool CriticalHit)
+        public static void SendHealSpellLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int Damage, bool CriticalHit)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_HEALSPELL_ON_PLAYER_OBSOLETE);
             packet.AddPackGUID(Target.GUID);
@@ -2744,11 +2730,11 @@ namespace Mangos.World.Spells
             Caster.SendToNearPlayers(ref packet);
         }
 
-        public void SendEnergizeSpellLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int Damage, int PowerType)
+        public static void SendEnergizeSpellLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int Damage, int PowerType)
         {
         }
 
-        public void SendPeriodicAuraLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int School, int Damage, int AuraIndex)
+        public static void SendPeriodicAuraLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int School, int Damage, int AuraIndex)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_PERIODICAURALOG);
             packet.AddPackGUID(Target.GUID);
@@ -2763,7 +2749,7 @@ namespace Mangos.World.Spells
             packet.Dispose();
         }
 
-        public void SendPlaySpellVisual(ref WS_Base.BaseUnit Caster, int SpellId)
+        public static void SendPlaySpellVisual(ref WS_Base.BaseUnit Caster, int SpellId)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_PLAY_SPELL_VISUAL);
             packet.AddUInt64(Caster.GUID);
@@ -2772,7 +2758,7 @@ namespace Mangos.World.Spells
             packet.Dispose();
         }
 
-        public void SendChannelUpdate(ref WS_PlayerData.CharacterObject Caster, int Time)
+        public static void SendChannelUpdate(ref WS_PlayerData.CharacterObject Caster, int Time)
         {
             Packets.PacketClass packet = new(Opcodes.MSG_CHANNEL_UPDATE);
             packet.AddInt32(Time);
@@ -2946,12 +2932,12 @@ namespace Mangos.World.Spells
             }
         }
 
-        public SpellFailedReason SPELL_EFFECT_NOTHING(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_NOTHING(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_BIND(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_BIND(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
@@ -2963,12 +2949,12 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_DUMMY(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_DUMMY(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_INSTAKILL(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_INSTAKILL(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
@@ -3082,7 +3068,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_TELEPORT_UNITS(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_TELEPORT_UNITS(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
@@ -3106,7 +3092,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_MANA_DRAIN(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_MANA_DRAIN(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             checked
             {
@@ -3277,7 +3263,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_ENERGIZE(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_ENERGIZE(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             int Damage = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
             foreach (WS_Base.BaseUnit Unit in Infected)
@@ -3293,7 +3279,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_ENERGIZE_PCT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_ENERGIZE_PCT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             int Damage = 0;
             foreach (WS_Base.BaseUnit Unit in Infected)
@@ -3416,7 +3402,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_PICKPOCKET(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_PICKPOCKET(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             if (Caster is not WS_PlayerData.CharacterObject)
             {
@@ -3467,7 +3453,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public SpellFailedReason SPELL_EFFECT_SKINNING(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_SKINNING(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             if (Caster is not WS_PlayerData.CharacterObject)
             {
@@ -3479,7 +3465,7 @@ namespace Mangos.World.Spells
                     {
                         using (WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)Target.unitTarget)
                         {
-                            if (creatureObject.IsDead && WorldServiceLocator._Functions.HaveFlags(creatureObject.cUnitFlags, 67108864))
+                            if (creatureObject.IsDead && Functions.HaveFlags(creatureObject.cUnitFlags, 67108864))
                             {
                                 creatureObject.cUnitFlags &= -67108865;
                                 if (creatureObject.CreatureInfo.SkinLootID > 0)
@@ -3518,12 +3504,12 @@ namespace Mangos.World.Spells
             }
         }
 
-        public SpellFailedReason SPELL_EFFECT_DISENCHANT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_DISENCHANT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             return Caster is not WS_PlayerData.CharacterObject ? SpellFailedReason.SPELL_FAILED_ERROR : SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_PROFICIENCY(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_PROFICIENCY(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
@@ -3535,7 +3521,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_LEARN_SPELL(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_LEARN_SPELL(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             if (SpellInfo.TriggerSpell != 0)
             {
@@ -3550,7 +3536,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_SKILL_STEP(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_SKILL_STEP(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             if (SpellInfo.MiscValue != 0)
             {
@@ -3566,7 +3552,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_DISPEL(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_DISPEL(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
@@ -3578,7 +3564,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_EVADE(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_EVADE(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
@@ -3586,7 +3572,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_DODGE(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_DODGE(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             checked
             {
@@ -3601,7 +3587,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public SpellFailedReason SPELL_EFFECT_PARRY(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_PARRY(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             checked
             {
@@ -3616,7 +3602,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public SpellFailedReason SPELL_EFFECT_BLOCK(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_BLOCK(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             checked
             {
@@ -3631,7 +3617,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public SpellFailedReason SPELL_EFFECT_DUAL_WIELD(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_DUAL_WIELD(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
@@ -3656,7 +3642,7 @@ namespace Mangos.World.Spells
                 WS_Base.BaseUnit Unit = item;
                 WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_Base.BaseUnit Attacker = (WS_Base.BaseUnit)Caster;
-                WS_Combat.DamageInfo damageInfo2 = wS_Combat.CalculateDamage(ref Attacker, ref Unit, Offhand, Ranged, SPELLs[SpellID], SpellInfo);
+                WS_Combat.DamageInfo damageInfo2 = WS_Combat.CalculateDamage(ref Attacker, ref Unit, Offhand, Ranged, SPELLs[SpellID], SpellInfo);
                 Caster = Attacker;
                 WS_Combat.DamageInfo damageInfo = damageInfo2;
                 if (((uint)damageInfo.HitInfo & 0x40u) != 0)
@@ -3691,7 +3677,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_WEAPON_DAMAGE_NOSCHOOL(ref SpellTargets target, ref WS_Base.BaseObject caster, ref SpellEffect spellInfo, int spellId, ref List<WS_Base.BaseObject> infected, ref ItemObject item)
+        public static SpellFailedReason SPELL_EFFECT_WEAPON_DAMAGE_NOSCHOOL(ref SpellTargets target, ref WS_Base.BaseObject caster, ref SpellEffect spellInfo, int spellId, ref List<WS_Base.BaseObject> infected, ref ItemObject item)
         {
             foreach (WS_Base.BaseUnit unit in infected)
             {
@@ -3717,7 +3703,7 @@ namespace Mangos.World.Spells
                 WS_Base.BaseUnit Unit = item;
                 WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_Base.BaseUnit Attacker = (WS_Base.BaseUnit)Caster;
-                WS_Combat.DamageInfo damageInfo2 = wS_Combat.CalculateDamage(ref Attacker, ref Unit, Offhand, Ranged, SPELLs[SpellID], SpellInfo);
+                WS_Combat.DamageInfo damageInfo2 = WS_Combat.CalculateDamage(ref Attacker, ref Unit, Offhand, Ranged, SPELLs[SpellID], SpellInfo);
                 Caster = Attacker;
                 WS_Combat.DamageInfo damageInfo = damageInfo2;
                 Attacker = (WS_Base.BaseUnit)Caster;
@@ -3732,7 +3718,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_HONOR(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_HONOR(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             checked
             {
@@ -3993,7 +3979,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public SpellFailedReason SPELL_EFFECT_RESURRECT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_RESURRECT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseObject Unit in Infected)
             {
@@ -4074,7 +4060,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_RESURRECT_NEW(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_RESURRECT_NEW(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseObject Unit in Infected)
             {
@@ -4152,7 +4138,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_TELEPORT_GRAVEYARD(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_TELEPORT_GRAVEYARD(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
@@ -4188,31 +4174,29 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_STEALTH(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_STEALTH(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
-                Functions functions = WorldServiceLocator._Functions;
                 ref int cBytes = ref Unit.cBytes1;
                 checked
                 {
                     uint value = (uint)cBytes;
-                    functions.SetFlag(ref value, 25, flagValue: true);
+                    Functions.SetFlag(ref value, 25, flagValue: true);
                     cBytes = (int)value;
                     Unit.Invisibility = InvisibilityLevel.INIVISIBILITY;
                 }
                 Unit.Invisibility_Value = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                 if (Unit is WS_PlayerData.CharacterObject @object)
                 {
-                    WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                     WS_PlayerData.CharacterObject Character = @object;
-                    wS_CharMovement.UpdateCell(ref Character);
+                    WS_CharMovement.UpdateCell(ref Character);
                 }
             }
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_DETECT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_DETECT(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
@@ -4220,15 +4204,14 @@ namespace Mangos.World.Spells
                 Unit.CanSeeInvisibility_Stealth = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                 if (Unit is WS_PlayerData.CharacterObject @object)
                 {
-                    WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                     WS_PlayerData.CharacterObject Character = @object;
-                    wS_CharMovement.UpdateCell(ref Character);
+                    WS_CharMovement.UpdateCell(ref Character);
                 }
             }
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_LEAP(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_LEAP(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             float selectedX = (float)(Caster.positionX + (Math.Cos(Caster.orientation) * SpellInfo.GetRadius));
             float selectedY = (float)(Caster.positionY + (Math.Sin(Caster.orientation) * SpellInfo.GetRadius));
@@ -4242,7 +4225,7 @@ namespace Mangos.World.Spells
             float hitX = default;
             float hitY = default;
             float hitZ = default;
-            if (WorldServiceLocator._WS_Maps.GetObjectHitPos(ref Caster, selectedX, selectedY, selectedZ + 2f, ref hitX, ref hitY, ref hitZ, -1f))
+            if (WS_Maps.GetObjectHitPos(ref Caster, selectedX, selectedY, selectedZ + 2f, ref hitX, ref hitY, ref hitZ, -1f))
             {
                 selectedX = hitX;
                 selectedY = hitY;
@@ -4261,7 +4244,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_SUMMON(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_SUMMON(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             return SpellFailedReason.SPELL_NO_ERROR;
         }
@@ -4430,7 +4413,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_ENCHANT_ITEM(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_ENCHANT_ITEM(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             if (Target.itemTarget == null)
             {
@@ -4530,7 +4513,7 @@ namespace Mangos.World.Spells
             {
                 NearZ = Target.unitTarget.positionZ;
             }
-            float moveDist = WorldServiceLocator._WS_Combat.GetDistance(Caster, NearX, NearY, NearZ);
+            float moveDist = WS_Combat.GetDistance(Caster, NearX, NearY, NearZ);
             double TimeToMove = checked((double)Math.Round(moveDist / SPELLs[SpellID].Speed * 1000f));
             Packets.PacketClass SMSG_MONSTER_MOVE = new(Opcodes.SMSG_MONSTER_MOVE);
             SMSG_MONSTER_MOVE.AddPackGUID(Caster.GUID);
@@ -4549,17 +4532,17 @@ namespace Mangos.World.Spells
             SMSG_MONSTER_MOVE.Dispose();
             if (Caster is WS_PlayerData.CharacterObject object1)
             {
-                WorldServiceLocator._WS_Combat.SendAttackStart(Caster.GUID, Target.unitTarget.GUID, object1.client);
+                WS_Combat.SendAttackStart(Caster.GUID, Target.unitTarget.GUID, object1.client);
                 object1.attackState.AttackStart(Target.unitTarget);
             }
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_KNOCK_BACK(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_KNOCK_BACK(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
-                float Direction = WorldServiceLocator._WS_Combat.GetOrientation(Caster.positionX, Unit.positionX, Caster.positionY, Unit.positionY);
+                float Direction = WS_Combat.GetOrientation(Caster.positionX, Unit.positionX, Caster.positionY, Unit.positionY);
                 Packets.PacketClass packet = new(Opcodes.SMSG_MOVE_KNOCK_BACK);
                 packet.AddPackGUID(Unit.GUID);
                 packet.AddInt32(0);
@@ -4614,7 +4597,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public SpellFailedReason SPELL_EFFECT_DUEL(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_DUEL(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             int implicitTargetA = SpellInfo.implicitTargetA;
             if (implicitTargetA == 25)
@@ -4663,7 +4646,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_FAILED_BAD_IMPLICIT_TARGETS;
         }
 
-        public SpellFailedReason SPELL_EFFECT_QUEST_COMPLETE(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+        public static SpellFailedReason SPELL_EFFECT_QUEST_COMPLETE(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
         {
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
@@ -4677,7 +4660,7 @@ namespace Mangos.World.Spells
             return SpellFailedReason.SPELL_NO_ERROR;
         }
 
-        public List<WS_Base.BaseUnit> GetEnemyAtPoint(ref WS_Base.BaseUnit objCharacter, float PosX, float PosY, float PosZ, float Distance)
+        public static List<WS_Base.BaseUnit> GetEnemyAtPoint(ref WS_Base.BaseUnit objCharacter, float PosX, float PosY, float PosZ, float Distance)
         {
             List<WS_Base.BaseUnit> result = new();
             switch (objCharacter)
@@ -4687,7 +4670,7 @@ namespace Mangos.World.Spells
                         ulong[] array = ((WS_PlayerData.CharacterObject)objCharacter).playersNear.ToArray();
                         foreach (ulong pGUID2 in array)
                         {
-                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && (((WS_PlayerData.CharacterObject)objCharacter).IsHorde != WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde || ((WS_PlayerData.CharacterObject)objCharacter).DuelPartner != null && ((WS_PlayerData.CharacterObject)objCharacter).DuelPartner == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], PosX, PosY, PosZ) < Distance)
+                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && (((WS_PlayerData.CharacterObject)objCharacter).IsHorde != WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde || ((WS_PlayerData.CharacterObject)objCharacter).DuelPartner != null && ((WS_PlayerData.CharacterObject)objCharacter).DuelPartner == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], PosX, PosY, PosZ) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]);
                             }
@@ -4695,7 +4678,7 @@ namespace Mangos.World.Spells
                         ulong[] array2 = ((WS_PlayerData.CharacterObject)objCharacter).creaturesNear.ToArray();
                         foreach (ulong cGUID in array2)
                         {
-                            if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && !(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID] is WS_Totems.TotemObject) && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && ((WS_PlayerData.CharacterObject)objCharacter).GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) <= TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], PosX, PosY, PosZ) < Distance)
+                            if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && !(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID] is WS_Totems.TotemObject) && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && ((WS_PlayerData.CharacterObject)objCharacter).GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) <= TReaction.NEUTRAL && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], PosX, PosY, PosZ) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID]);
                             }
@@ -4709,7 +4692,7 @@ namespace Mangos.World.Spells
                         ulong[] array3 = objCharacter.SeenBy.ToArray();
                         foreach (ulong pGUID in array3)
                         {
-                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) <= TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], PosX, PosY, PosZ) < Distance)
+                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) <= TReaction.NEUTRAL && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], PosX, PosY, PosZ) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID]);
                             }
@@ -4721,7 +4704,7 @@ namespace Mangos.World.Spells
             return result;
         }
 
-        public List<WS_Base.BaseUnit> GetEnemyAroundMe(ref WS_Base.BaseUnit objCharacter, float Distance, WS_Base.BaseUnit r = null)
+        public static List<WS_Base.BaseUnit> GetEnemyAroundMe(ref WS_Base.BaseUnit objCharacter, float Distance, WS_Base.BaseUnit r = null)
         {
             List<WS_Base.BaseUnit> result = new();
             if (r == null)
@@ -4735,7 +4718,7 @@ namespace Mangos.World.Spells
                         ulong[] array = ((WS_PlayerData.CharacterObject)r).playersNear.ToArray();
                         foreach (ulong pGUID2 in array)
                         {
-                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && (((WS_PlayerData.CharacterObject)r).IsHorde != WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde || ((WS_PlayerData.CharacterObject)r).DuelPartner != null && ((WS_PlayerData.CharacterObject)r).DuelPartner == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
+                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && (((WS_PlayerData.CharacterObject)r).IsHorde != WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde || ((WS_PlayerData.CharacterObject)r).DuelPartner != null && ((WS_PlayerData.CharacterObject)r).DuelPartner == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]);
                             }
@@ -4743,7 +4726,7 @@ namespace Mangos.World.Spells
                         ulong[] array2 = ((WS_PlayerData.CharacterObject)r).creaturesNear.ToArray();
                         foreach (ulong cGUID in array2)
                         {
-                            if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && !(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID] is WS_Totems.TotemObject) && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && ((WS_PlayerData.CharacterObject)r).GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) <= TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], objCharacter) < Distance)
+                            if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && !(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID] is WS_Totems.TotemObject) && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && ((WS_PlayerData.CharacterObject)r).GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) <= TReaction.NEUTRAL && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], objCharacter) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID]);
                             }
@@ -4757,7 +4740,7 @@ namespace Mangos.World.Spells
                         ulong[] array3 = r.SeenBy.ToArray();
                         foreach (ulong pGUID in array3)
                         {
-                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)r).Faction) <= TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
+                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)r).Faction) <= TReaction.NEUTRAL && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID]);
                             }
@@ -4769,7 +4752,7 @@ namespace Mangos.World.Spells
             return result;
         }
 
-        public List<WS_Base.BaseUnit> GetFriendAroundMe(ref WS_Base.BaseUnit objCharacter, float Distance)
+        public static List<WS_Base.BaseUnit> GetFriendAroundMe(ref WS_Base.BaseUnit objCharacter, float Distance)
         {
             List<WS_Base.BaseUnit> result = new();
             switch (objCharacter)
@@ -4779,7 +4762,7 @@ namespace Mangos.World.Spells
                         ulong[] array = ((WS_PlayerData.CharacterObject)objCharacter).playersNear.ToArray();
                         foreach (ulong pGUID2 in array)
                         {
-                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && ((WS_PlayerData.CharacterObject)objCharacter).IsHorde == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
+                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && ((WS_PlayerData.CharacterObject)objCharacter).IsHorde == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]);
                             }
@@ -4787,7 +4770,7 @@ namespace Mangos.World.Spells
                         ulong[] array2 = ((WS_PlayerData.CharacterObject)objCharacter).creaturesNear.ToArray();
                         foreach (ulong cGUID in array2)
                         {
-                            if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && !(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID] is WS_Totems.TotemObject) && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && ((WS_PlayerData.CharacterObject)objCharacter).GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) > TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], objCharacter) < Distance)
+                            if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && !(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID] is WS_Totems.TotemObject) && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && ((WS_PlayerData.CharacterObject)objCharacter).GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) > TReaction.NEUTRAL && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], objCharacter) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID]);
                             }
@@ -4801,7 +4784,7 @@ namespace Mangos.World.Spells
                         ulong[] array3 = objCharacter.SeenBy.ToArray();
                         foreach (ulong pGUID in array3)
                         {
-                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) > TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
+                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) > TReaction.NEUTRAL && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID]);
                             }
@@ -4813,7 +4796,7 @@ namespace Mangos.World.Spells
             return result;
         }
 
-        public List<WS_Base.BaseUnit> GetFriendPlayersAroundMe(ref WS_Base.BaseUnit objCharacter, float Distance)
+        public static List<WS_Base.BaseUnit> GetFriendPlayersAroundMe(ref WS_Base.BaseUnit objCharacter, float Distance)
         {
             List<WS_Base.BaseUnit> result = new();
             switch (objCharacter)
@@ -4823,7 +4806,7 @@ namespace Mangos.World.Spells
                         ulong[] array = ((WS_PlayerData.CharacterObject)objCharacter).playersNear.ToArray();
                         foreach (ulong pGUID2 in array)
                         {
-                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && ((WS_PlayerData.CharacterObject)objCharacter).IsHorde == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
+                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && ((WS_PlayerData.CharacterObject)objCharacter).IsHorde == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]);
                             }
@@ -4837,7 +4820,7 @@ namespace Mangos.World.Spells
                         ulong[] array2 = objCharacter.SeenBy.ToArray();
                         foreach (ulong pGUID in array2)
                         {
-                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) > TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
+                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) > TReaction.NEUTRAL && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
                             {
                                 result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID]);
                             }
@@ -4849,7 +4832,7 @@ namespace Mangos.World.Spells
             return result;
         }
 
-        public List<WS_Base.BaseUnit> GetPartyMembersAroundMe(ref WS_PlayerData.CharacterObject objCharacter, float distance)
+        public static List<WS_Base.BaseUnit> GetPartyMembersAroundMe(ref WS_PlayerData.CharacterObject objCharacter, float distance)
         {
             List<WS_Base.BaseUnit> list = new()
             {
@@ -4863,7 +4846,7 @@ namespace Mangos.World.Spells
             ulong[] array = objCharacter.Group.LocalMembers.ToArray();
             foreach (ulong GUID in array)
             {
-                if (objCharacter.playersNear.Contains(GUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID) && WorldServiceLocator._WS_Combat.GetDistance(objCharacter, WorldServiceLocator._WorldServer.CHARACTERs[GUID]) < distance)
+                if (objCharacter.playersNear.Contains(GUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID) && WS_Combat.GetDistance(objCharacter, WorldServiceLocator._WorldServer.CHARACTERs[GUID]) < distance)
                 {
                     result.Add(WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
                 }
@@ -4871,10 +4854,10 @@ namespace Mangos.World.Spells
             return result;
         }
 
-        public List<WS_Base.BaseUnit> GetPartyMembersAtPoint(ref WS_PlayerData.CharacterObject objCharacter, float Distance, float PosX, float PosY, float PosZ)
+        public static List<WS_Base.BaseUnit> GetPartyMembersAtPoint(ref WS_PlayerData.CharacterObject objCharacter, float Distance, float PosX, float PosY, float PosZ)
         {
             List<WS_Base.BaseUnit> result = new();
-            if (WorldServiceLocator._WS_Combat.GetDistance(objCharacter, PosX, PosY, PosZ) < Distance)
+            if (WS_Combat.GetDistance(objCharacter, PosX, PosY, PosZ) < Distance)
             {
                 result.Add(objCharacter);
             }
@@ -4885,7 +4868,7 @@ namespace Mangos.World.Spells
             ulong[] array = objCharacter.Group.LocalMembers.ToArray();
             foreach (ulong GUID in array)
             {
-                if (objCharacter.playersNear.Contains(GUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID) && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[GUID], PosX, PosY, PosZ) < Distance)
+                if (objCharacter.playersNear.Contains(GUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID) && WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[GUID], PosX, PosY, PosZ) < Distance)
                 {
                     result.Add(WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
                 }
@@ -4893,17 +4876,16 @@ namespace Mangos.World.Spells
             return result;
         }
 
-        public List<WS_Base.BaseUnit> GetEnemyInFrontOfMe(ref WS_Base.BaseUnit objCharacter, float Distance)
+        public static List<WS_Base.BaseUnit> GetEnemyInFrontOfMe(ref WS_Base.BaseUnit objCharacter, float Distance)
         {
             List<WS_Base.BaseUnit> result = new();
             WS_Base.BaseUnit r = null;
             List<WS_Base.BaseUnit> tmp = GetEnemyAroundMe(ref objCharacter, Distance, r);
             foreach (WS_Base.BaseUnit unit in tmp)
             {
-                WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_Base.BaseObject Object = objCharacter;
                 WS_Base.BaseObject Object2 = unit;
-                bool flag = wS_Combat.IsInFrontOf(ref Object, ref Object2);
+                bool flag = WS_Combat.IsInFrontOf(ref Object, ref Object2);
                 objCharacter = (WS_Base.BaseUnit)Object;
                 if (flag)
                 {
@@ -4913,17 +4895,16 @@ namespace Mangos.World.Spells
             return result;
         }
 
-        public List<WS_Base.BaseUnit> GetEnemyInBehindMe(ref WS_Base.BaseUnit objCharacter, float Distance)
+        public static List<WS_Base.BaseUnit> GetEnemyInBehindMe(ref WS_Base.BaseUnit objCharacter, float Distance)
         {
             List<WS_Base.BaseUnit> result = new();
             WS_Base.BaseUnit r = null;
             List<WS_Base.BaseUnit> tmp = GetEnemyAroundMe(ref objCharacter, Distance, r);
             foreach (WS_Base.BaseUnit unit in tmp)
             {
-                WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_Base.BaseObject Object = objCharacter;
                 WS_Base.BaseObject Object2 = unit;
-                bool flag = wS_Combat.IsInBackOf(ref Object, ref Object2);
+                bool flag = WS_Combat.IsInBackOf(ref Object, ref Object2);
                 objCharacter = (WS_Base.BaseUnit)Object;
                 if (flag)
                 {
@@ -4933,11 +4914,11 @@ namespace Mangos.World.Spells
             return result;
         }
 
-        public void SPELL_AURA_NONE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_NONE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
         }
 
-        public void SPELL_AURA_DUMMY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_DUMMY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Aura Dummy for spell {0}.", SpellID);
             AuraAction auraAction = Action;
@@ -4956,7 +4937,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_BIND_SIGHT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_BIND_SIGHT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -4984,7 +4965,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_FAR_SIGHT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_FAR_SIGHT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -5010,7 +4991,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_SCHOOL_IMMUNITY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_SCHOOL_IMMUNITY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -5031,7 +5012,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MECHANIC_IMMUNITY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MECHANIC_IMMUNITY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -5053,7 +5034,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_DISPEL_IMMUNITY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_DISPEL_IMMUNITY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -5074,7 +5055,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_TRACK_CREATURES(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_TRACK_CREATURES(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -5100,7 +5081,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_TRACK_RESOURCES(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_TRACK_RESOURCES(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -5126,7 +5107,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_SCALE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_SCALE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -5168,7 +5149,7 @@ namespace Mangos.World.Spells
             packet.Dispose();
         }
 
-        public void SPELL_AURA_MOD_SKILL(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_SKILL(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -5203,7 +5184,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_PERIODIC_DUMMY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_PERIODIC_DUMMY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -5353,7 +5334,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_PERIODIC_ENERGIZE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_PERIODIC_ENERGIZE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -5418,7 +5399,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_PERIODIC_MANA_LEECH(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_PERIODIC_MANA_LEECH(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -5534,7 +5515,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_PERIODIC_ENERGIZE_PERCENT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_PERIODIC_ENERGIZE_PERCENT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -5659,7 +5640,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_POWER_REGEN_PERCENT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_POWER_REGEN_PERCENT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_PlayerData.CharacterObject)
             {
@@ -5693,7 +5674,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_TRANSFORM(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_TRANSFORM(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -5709,7 +5690,7 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     Target.Model = Target is WS_PlayerData.CharacterObject @object
-                        ? WorldServiceLocator._Functions.GetRaceModel(@object.Race, (int)@object.Gender)
+                        ? Functions.GetRaceModel(@object.Race, (int)@object.Gender)
                         : ((WS_Creatures.CreatureObject)Target).CreatureInfo.GetRandomModel;
                     break;
 
@@ -5737,7 +5718,7 @@ namespace Mangos.World.Spells
             packet.Dispose();
         }
 
-        public void SPELL_AURA_GHOST(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_GHOST(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -5750,9 +5731,8 @@ namespace Mangos.World.Spells
                         {
                             Target.Invisibility = InvisibilityLevel.DEAD;
                             Target.CanSeeInvisibility = InvisibilityLevel.DEAD;
-                            WS_CharMovement wS_CharMovement2 = WorldServiceLocator._WS_CharMovement;
                             WS_PlayerData.CharacterObject Character = @object;
-                            wS_CharMovement2.UpdateCell(ref Character);
+                            WS_CharMovement.UpdateCell(ref Character);
                             Target = Character;
                             break;
                         }
@@ -5761,9 +5741,8 @@ namespace Mangos.World.Spells
                         {
                             Target.Invisibility = InvisibilityLevel.VISIBLE;
                             Target.CanSeeInvisibility = InvisibilityLevel.INIVISIBILITY;
-                            WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                             WS_PlayerData.CharacterObject Character = @object;
-                            wS_CharMovement.UpdateCell(ref Character);
+                            WS_CharMovement.UpdateCell(ref Character);
                             Target = Character;
                             break;
                         }
@@ -5771,7 +5750,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_INVISIBILITY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_INVISIBILITY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -5797,14 +5776,13 @@ namespace Mangos.World.Spells
                 {
                     @object.SetUpdateFlag(1260, @object.cPlayerFieldBytes2);
                     @object.SendCharacterUpdate();
-                    WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                     WS_PlayerData.CharacterObject Character = @object;
-                    wS_CharMovement.UpdateCell(ref Character);
+                    WS_CharMovement.UpdateCell(ref Character);
                 }
             }
         }
 
-        public void SPELL_AURA_MOD_STEALTH(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_STEALTH(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -5824,13 +5802,12 @@ namespace Mangos.World.Spells
                         Target.Invisibility_Value -= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                         break;
                 }
-                WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                 WS_PlayerData.CharacterObject Character = (WS_PlayerData.CharacterObject)Target;
-                wS_CharMovement.UpdateCell(ref Character);
+                WS_CharMovement.UpdateCell(ref Character);
             }
         }
 
-        public void SPELL_AURA_MOD_STEALTH_LEVEL(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_STEALTH_LEVEL(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -5851,7 +5828,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_INVISIBILITY_DETECTION(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_INVISIBILITY_DETECTION(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -5871,14 +5848,13 @@ namespace Mangos.World.Spells
                 }
                 if (Target is WS_PlayerData.CharacterObject @object)
                 {
-                    WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                     WS_PlayerData.CharacterObject Character = @object;
-                    wS_CharMovement.UpdateCell(ref Character);
+                    WS_CharMovement.UpdateCell(ref Character);
                 }
             }
         }
 
-        public void SPELL_AURA_MOD_DETECT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_DETECT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -5898,14 +5874,13 @@ namespace Mangos.World.Spells
                 }
                 if (Target is WS_PlayerData.CharacterObject @object)
                 {
-                    WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                     WS_PlayerData.CharacterObject Character = @object;
-                    wS_CharMovement.UpdateCell(ref Character);
+                    WS_CharMovement.UpdateCell(ref Character);
                 }
             }
         }
 
-        public void SPELL_AURA_DETECT_STEALTH(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_DETECT_STEALTH(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -5923,13 +5898,12 @@ namespace Mangos.World.Spells
             }
             if (Target is WS_PlayerData.CharacterObject @object)
             {
-                WS_CharMovement wS_CharMovement = WorldServiceLocator._WS_CharMovement;
                 WS_PlayerData.CharacterObject Character = @object;
-                wS_CharMovement.UpdateCell(ref Character);
+                WS_CharMovement.UpdateCell(ref Character);
             }
         }
 
-        public void SPELL_AURA_MOD_DISARM(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_DISARM(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_PlayerData.CharacterObject)
             {
@@ -5963,7 +5937,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_SCHOOL_ABSORB(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_SCHOOL_ABSORB(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Caster is not WS_Base.BaseUnit)
             {
@@ -5994,7 +5968,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_SHAPESHIFT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_SHAPESHIFT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6014,11 +5988,11 @@ namespace Mangos.World.Spells
                             obj3.RemoveAurasOfType(AuraEffects_Names.SPELL_AURA_MOD_DECREASE_SPEED, NotSpellID);
                         }
                         Target.ShapeshiftForm = (ShapeshiftForm)checked((byte)EffectInfo.MiscValue);
-                        Target.ManaType = WorldServiceLocator._CommonGlobalFunctions.GetShapeshiftManaType((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), Target.ManaType);
+                        Target.ManaType = Common.Legacy.Globals.Functions.GetShapeshiftManaType((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), Target.ManaType);
                         Target.Model = Target switch
                         {
-                            WS_PlayerData.CharacterObject _ => WorldServiceLocator._CommonGlobalFunctions.GetShapeshiftModel((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), ((WS_PlayerData.CharacterObject)Target).Race, Target.Model),
-                            _ => WorldServiceLocator._CommonGlobalFunctions.GetShapeshiftModel((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), 0, Target.Model),
+                            WS_PlayerData.CharacterObject _ => Common.Legacy.Globals.Functions.GetShapeshiftModel((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), ((WS_PlayerData.CharacterObject)Target).Race, Target.Model),
+                            _ => Common.Legacy.Globals.Functions.GetShapeshiftModel((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), 0, Target.Model),
                         };
                         break;
                     }
@@ -6028,7 +6002,7 @@ namespace Mangos.World.Spells
                     if (Target is WS_PlayerData.CharacterObject @object)
                     {
                         Target.ManaType = WorldServiceLocator._WS_Player_Initializator.GetClassManaType(@object.Classe);
-                        Target.Model = WorldServiceLocator._Functions.GetRaceModel(@object.Race, (int)@object.Gender);
+                        Target.Model = Functions.GetRaceModel(@object.Race, (int)@object.Gender);
                     }
                     else
                     {
@@ -6060,16 +6034,15 @@ namespace Mangos.World.Spells
                     characterObject.SetUpdateFlag(26, characterObject.Energy.Current);
                     characterObject.SetUpdateFlag(26, characterObject.Energy.Maximum);
                 }
-                WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_PlayerData.CharacterObject objCharacter = (WS_PlayerData.CharacterObject)Target;
-                wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
+                WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
                 characterObject.SetUpdateFlag(134, characterObject.Damage.Minimum);
                 characterObject.SetUpdateFlag(135, characterObject.Damage.Maximum);
                 characterObject.SendCharacterUpdate();
                 characterObject.GroupUpdateFlag |= 8u;
                 characterObject.GroupUpdateFlag |= 16u;
                 characterObject.GroupUpdateFlag |= 32u;
-                WorldServiceLocator._WS_PlayerHelper.InitializeTalentSpells((WS_PlayerData.CharacterObject)Target);
+                WS_PlayerHelper.InitializeTalentSpells((WS_PlayerData.CharacterObject)Target);
             }
             else
             {
@@ -6194,7 +6167,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_PROC_TRIGGER_SPELL(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_PROC_TRIGGER_SPELL(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6210,7 +6183,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_INCREASE_SPEED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_INCREASE_SPEED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6253,7 +6226,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_DECREASE_SPEED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_DECREASE_SPEED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6310,7 +6283,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_INCREASE_SPEED_ALWAYS(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_INCREASE_SPEED_ALWAYS(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -6337,7 +6310,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_INCREASE_MOUNTED_SPEED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_INCREASE_MOUNTED_SPEED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -6364,7 +6337,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_INCREASE_MOUNTED_SPEED_ALWAYS(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_INCREASE_MOUNTED_SPEED_ALWAYS(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -6391,7 +6364,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_INCREASE_SWIM_SPEED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_INCREASE_SWIM_SPEED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_PlayerData.CharacterObject)
             {
@@ -6424,7 +6397,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOUNTED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOUNTED(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6475,7 +6448,7 @@ namespace Mangos.World.Spells
             packet.Dispose();
         }
 
-        public void SPELL_AURA_MOD_HASTE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_HASTE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -6508,7 +6481,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_RANGED_HASTE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_RANGED_HASTE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -6536,7 +6509,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_RANGED_AMMO_HASTE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_RANGED_AMMO_HASTE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -6561,12 +6534,12 @@ namespace Mangos.World.Spells
                 }
                 WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_PlayerData.CharacterObject objCharacter = @object;
-                wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
+                WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
                 characterObject.SendCharacterUpdate(toNear: false);
             }
         }
 
-        public void SPELL_AURA_MOD_ROOT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_ROOT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6624,7 +6597,7 @@ namespace Mangos.World.Spells
             packet.Dispose();
         }
 
-        public void SPELL_AURA_MOD_STUN(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_STUN(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6680,7 +6653,7 @@ namespace Mangos.World.Spells
             packet.Dispose();
         }
 
-        public void SPELL_AURA_MOD_FEAR(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_FEAR(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             Packets.PacketClass response = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
             response.AddPackGUID(Target.GUID);
@@ -6728,7 +6701,7 @@ namespace Mangos.World.Spells
             response.Dispose();
         }
 
-        public void SPELL_AURA_SAFE_FALL(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_SAFE_FALL(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6755,7 +6728,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_FEATHER_FALL(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_FEATHER_FALL(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6782,7 +6755,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_WATER_WALK(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_WATER_WALK(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6809,7 +6782,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_HOVER(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_HOVER(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -6836,7 +6809,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_WATER_BREATHING(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_WATER_BREATHING(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -6857,7 +6830,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_ADD_FLAT_MODIFIER(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_ADD_FLAT_MODIFIER(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (!(Target is WS_PlayerData.CharacterObject) || EffectInfo.MiscValue > 32)
             {
@@ -6923,7 +6896,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_ADD_PCT_MODIFIER(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_ADD_PCT_MODIFIER(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (!(Target is WS_PlayerData.CharacterObject) || EffectInfo.MiscValue > 32)
             {
@@ -6989,7 +6962,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_STAT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_STAT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Action == AuraAction.AURA_UPDATE || !(Target is WS_PlayerData.CharacterObject))
             {
@@ -7161,15 +7134,12 @@ namespace Mangos.World.Spells
                 ((WS_PlayerData.CharacterObject)Target).GroupUpdateFlag = ((WS_PlayerData.CharacterObject)Target).GroupUpdateFlag | 4u | 0x20u;
                 ((WS_PlayerData.CharacterObject)Target).Resistances[0].Base += value * 2;
                 ((WS_PlayerData.CharacterObject)Target).UpdateManaRegen();
-                WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_PlayerData.CharacterObject objCharacter = (WS_PlayerData.CharacterObject)Target;
-                wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
-                WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
+                WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
                 objCharacter = (WS_PlayerData.CharacterObject)Target;
-                wS_Combat2.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
-                WS_Combat wS_Combat3 = WorldServiceLocator._WS_Combat;
+                WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
                 objCharacter = (WS_PlayerData.CharacterObject)Target;
-                wS_Combat3.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
+                WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
                 ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(150, ((WS_PlayerData.CharacterObject)Target).Strength.Base);
                 ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(151, ((WS_PlayerData.CharacterObject)Target).Agility.Base);
                 ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(152, ((WS_PlayerData.CharacterObject)Target).Stamina.Base);
@@ -7189,7 +7159,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_STAT_PERCENT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_STAT_PERCENT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Action != AuraAction.AURA_UPDATE && Target is WS_PlayerData.CharacterObject @object)
             {
@@ -7274,15 +7244,12 @@ namespace Mangos.World.Spells
                     @object.Resistances[0].Base += (@object.Agility.Base - OldAgi) * 2;
                     @object.GroupUpdateFlag = @object.GroupUpdateFlag | 4u | 0x20u;
                     @object.UpdateManaRegen();
-                    WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                     WS_PlayerData.CharacterObject objCharacter = @object;
-                    wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
-                    WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
+                    WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
                     objCharacter = @object;
-                    wS_Combat2.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
-                    WS_Combat wS_Combat3 = WorldServiceLocator._WS_Combat;
+                    WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
                     objCharacter = @object;
-                    wS_Combat3.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
+                    WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
                     @object.SetUpdateFlag(150, @object.Strength.Base);
                     @object.SetUpdateFlag(151, @object.Agility.Base);
                     @object.SetUpdateFlag(152, @object.Stamina.Base);
@@ -7303,7 +7270,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_TOTAL_STAT_PERCENTAGE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_TOTAL_STAT_PERCENTAGE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Action == AuraAction.AURA_UPDATE || !(Target is WS_PlayerData.CharacterObject))
             {
@@ -7461,15 +7428,12 @@ namespace Mangos.World.Spells
                 ((WS_PlayerData.CharacterObject)Target).Resistances[0].Base += (((WS_PlayerData.CharacterObject)Target).Agility.Base - OldAgi) * 2;
                 ((WS_PlayerData.CharacterObject)Target).GroupUpdateFlag = ((WS_PlayerData.CharacterObject)Target).GroupUpdateFlag | 4u | 0x20u;
                 ((WS_PlayerData.CharacterObject)Target).UpdateManaRegen();
-                WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_PlayerData.CharacterObject objCharacter = (WS_PlayerData.CharacterObject)Target;
-                wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
-                WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
+                WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
                 objCharacter = (WS_PlayerData.CharacterObject)Target;
-                wS_Combat2.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
-                WS_Combat wS_Combat3 = WorldServiceLocator._WS_Combat;
+                WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
                 objCharacter = (WS_PlayerData.CharacterObject)Target;
-                wS_Combat3.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
+                WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
                 ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(150, ((WS_PlayerData.CharacterObject)Target).Strength.Base);
                 ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(151, ((WS_PlayerData.CharacterObject)Target).Agility.Base);
                 ((WS_PlayerData.CharacterObject)Target).SetUpdateFlag(152, ((WS_PlayerData.CharacterObject)Target).Stamina.Base);
@@ -7489,7 +7453,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_INCREASE_HEALTH(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_INCREASE_HEALTH(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -7530,7 +7494,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_INCREASE_HEALTH_PERCENT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_INCREASE_HEALTH_PERCENT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -7573,7 +7537,7 @@ namespace Mangos.World.Spells
             UpdateData.Dispose();
         }
 
-        public void SPELL_AURA_MOD_INCREASE_ENERGY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_INCREASE_ENERGY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -7660,7 +7624,7 @@ namespace Mangos.World.Spells
             UpdateData.Dispose();
         }
 
-        public void SPELL_AURA_MOD_BASE_RESISTANCE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_BASE_RESISTANCE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_PlayerData.CharacterObject)
             {
@@ -7676,7 +7640,7 @@ namespace Mangos.World.Spells
                         DamageTypes i = DamageTypes.DMG_PHYSICAL;
                         do
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)i))
+                            if (Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)i))
                             {
                                 ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)i].Base;
                                 checked
@@ -7699,7 +7663,7 @@ namespace Mangos.World.Spells
                         DamageTypes j = DamageTypes.DMG_PHYSICAL;
                         do
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)j))
+                            if (Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)j))
                             {
                                 ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Resistances[(uint)j].Base;
                                 checked
@@ -7719,7 +7683,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_BASE_RESISTANCE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_BASE_RESISTANCE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_PlayerData.CharacterObject)
             {
@@ -7737,7 +7701,7 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
+                                if (Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                                 {
                                     ref int base3 = ref ((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                     base3 = (int)Math.Round(base3 / ((WS_PlayerData.CharacterObject)Target).Resistances[i].Modifier);
@@ -7761,7 +7725,7 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
+                                if (Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                                 {
                                     ref int @base = ref ((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                     @base = (int)Math.Round(@base / ((WS_PlayerData.CharacterObject)Target).Resistances[j].Modifier);
@@ -7780,7 +7744,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_RESISTANCE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_RESISTANCE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_PlayerData.CharacterObject)
             {
@@ -7798,7 +7762,7 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
+                                if (Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                                 {
                                     if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
@@ -7836,7 +7800,7 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
+                                if (Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                                 {
                                     if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
@@ -7870,7 +7834,7 @@ namespace Mangos.World.Spells
             ((WS_PlayerData.CharacterObject)Target).SendCharacterUpdate(toNear: false);
         }
 
-        public void SPELL_AURA_MOD_RESISTANCE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_RESISTANCE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_PlayerData.CharacterObject)
             {
@@ -7888,7 +7852,7 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
+                                if (Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                                 {
                                     short OldBase = (short)((WS_PlayerData.CharacterObject)Target).Resistances[i].Base;
                                     if (EffectInfo.GetValue(Target.Level, 0) > 0)
@@ -7927,7 +7891,7 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
+                                if (Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                                 {
                                     short OldBase2 = (short)((WS_PlayerData.CharacterObject)Target).Resistances[j].Base;
                                     if (EffectInfo.GetValue(Target.Level, 0) > 0)
@@ -7962,7 +7926,7 @@ namespace Mangos.World.Spells
             ((WS_PlayerData.CharacterObject)Target).SendCharacterUpdate(toNear: false);
         }
 
-        public void SPELL_AURA_MOD_RESISTANCE_EXCLUSIVE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_RESISTANCE_EXCLUSIVE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_PlayerData.CharacterObject)
             {
@@ -7980,7 +7944,7 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
+                                if (Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                                 {
                                     if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
@@ -8019,7 +7983,7 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
+                                if (Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                                 {
                                     if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
@@ -8054,7 +8018,7 @@ namespace Mangos.World.Spells
             ((WS_PlayerData.CharacterObject)Target).SendCharacterUpdate(toNear: false);
         }
 
-        public void SPELL_AURA_MOD_ATTACK_POWER(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_ATTACK_POWER(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -8076,18 +8040,16 @@ namespace Mangos.World.Spells
                 {
                     @object.SetUpdateFlag(165, @object.AttackPower);
                     @object.SetUpdateFlag(166, @object.AttackPowerMods);
-                    WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                     WS_PlayerData.CharacterObject objCharacter = @object;
-                    wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
-                    WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
+                    WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
                     objCharacter = @object;
-                    wS_Combat2.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
+                    WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
                     @object.SendCharacterUpdate(toNear: false);
                 }
             }
         }
 
-        public void SPELL_AURA_MOD_RANGED_ATTACK_POWER(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_RANGED_ATTACK_POWER(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             checked
             {
@@ -8109,15 +8071,14 @@ namespace Mangos.World.Spells
                 {
                     @object.SetUpdateFlag(168, @object.AttackPowerRanged);
                     @object.SetUpdateFlag(169, @object.AttackPowerModsRanged);
-                    WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                     WS_PlayerData.CharacterObject objCharacter = @object;
-                    wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
+                    WS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
                     @object.SendCharacterUpdate(toNear: false);
                 }
             }
         }
 
-        public void SPELL_AURA_MOD_HEALING_DONE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_HEALING_DONE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -8142,7 +8103,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_HEALING_DONE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_HEALING_DONE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -8164,7 +8125,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_DAMAGE_DONE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_DAMAGE_DONE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_PlayerData.CharacterObject)
             {
@@ -8182,7 +8143,7 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, (byte)i))
+                                if (Functions.HaveFlag((uint)EffectInfo.MiscValue, (byte)i))
                                 {
                                     if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
@@ -8209,7 +8170,7 @@ namespace Mangos.World.Spells
                         {
                             checked
                             {
-                                if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, (byte)j))
+                                if (Functions.HaveFlag((uint)EffectInfo.MiscValue, (byte)j))
                                 {
                                     if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                     {
@@ -8232,7 +8193,7 @@ namespace Mangos.World.Spells
             ((WS_PlayerData.CharacterObject)Target).SendCharacterUpdate(toNear: false);
         }
 
-        public void SPELL_AURA_MOD_DAMAGE_DONE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_DAMAGE_DONE_PCT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_PlayerData.CharacterObject)
             {
@@ -8248,7 +8209,7 @@ namespace Mangos.World.Spells
                         DamageTypes i = DamageTypes.DMG_PHYSICAL;
                         do
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)i))
+                            if (Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)i))
                             {
                                 ref float modifier2 = ref ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)i].Modifier;
                                 modifier2 = (float)(modifier2 + (EffectInfo.GetValue(Target.Level, 0) / 100.0));
@@ -8265,7 +8226,7 @@ namespace Mangos.World.Spells
                         DamageTypes j = DamageTypes.DMG_PHYSICAL;
                         do
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)j))
+                            if (Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)j))
                             {
                                 ref float modifier = ref ((WS_PlayerData.CharacterObject)Target).spellDamage[(uint)j].Modifier;
                                 modifier = (float)(modifier - (EffectInfo.GetValue(Target.Level, 0) / 100.0));
@@ -8280,7 +8241,7 @@ namespace Mangos.World.Spells
             ((WS_PlayerData.CharacterObject)Target).SendCharacterUpdate(toNear: false);
         }
 
-        public void SPELL_AURA_EMPATHY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_EMPATHY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -8324,7 +8285,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_SILENCE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_SILENCE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -8348,7 +8309,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_PACIFY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_PACIFY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -8366,7 +8327,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_LANGUAGE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_LANGUAGE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_PlayerData.CharacterObject @object)
             {
@@ -8387,7 +8348,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_POSSESS(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_POSSESS(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is not WS_Creatures.CreatureObject and not WS_PlayerData.CharacterObject)
             {
@@ -8605,7 +8566,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_THREAT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_THREAT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             switch (Action)
             {
@@ -8621,7 +8582,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_TOTAL_THREAT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_TOTAL_THREAT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             int Value = default;
             switch (Action)
@@ -8669,7 +8630,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SPELL_AURA_MOD_TAUNT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
+        public static void SPELL_AURA_MOD_TAUNT(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
             if (Target is WS_Creatures.CreatureObject @object)
             {
@@ -8699,13 +8660,13 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void CheckDuelDistance(ref WS_PlayerData.CharacterObject objCharacter)
+        public static void CheckDuelDistance(ref WS_PlayerData.CharacterObject objCharacter)
         {
             if (!WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(objCharacter.DuelArbiter))
             {
                 return;
             }
-            if (WorldServiceLocator._WS_Combat.GetDistance(objCharacter, WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.DuelArbiter]) > 40f)
+            if (WS_Combat.GetDistance(objCharacter, WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.DuelArbiter]) > 40f)
             {
                 if (objCharacter.DuelOutOfBounds == 11)
                 {
@@ -8724,7 +8685,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void DuelComplete(ref WS_PlayerData.CharacterObject Winner, ref WS_PlayerData.CharacterObject Loser)
+        public static void DuelComplete(ref WS_PlayerData.CharacterObject Winner, ref WS_PlayerData.CharacterObject Loser)
         {
             if (Winner == null || Loser == null)
             {
@@ -8797,7 +8758,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void On_CMSG_DUEL_ACCEPTED(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_DUEL_ACCEPTED(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
             {
@@ -8828,7 +8789,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void On_CMSG_DUEL_CANCELLED(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_DUEL_CANCELLED(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
             {
@@ -8848,7 +8809,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void On_CMSG_RESURRECT_RESPONSE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_RESURRECT_RESPONSE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) < 14)
             {
@@ -8915,7 +8876,7 @@ namespace Mangos.World.Spells
                 uint spellCooldown = client.Character.Spells[spellID].Cooldown;
                 if (spellCooldown >= 0)
                 {
-                    uint timeNow = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+                    uint timeNow = Functions.GetTimestamp(DateAndTime.Now);
                     if (timeNow < spellCooldown)
                     {
                         return;
@@ -8992,7 +8953,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void On_CMSG_CANCEL_CAST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_CANCEL_CAST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 9 && client.Character != null)
             {
@@ -9018,19 +8979,19 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void On_CMSG_CANCEL_AUTO_REPEAT_SPELL(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_CANCEL_AUTO_REPEAT_SPELL(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_AUTO_REPEAT_SPELL", client.IP, client.Port);
             client.Character.FinishSpell(CurrentSpellTypes.CURRENT_AUTOREPEAT_SPELL);
         }
 
-        public void On_CMSG_CANCEL_CHANNELLING(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_CANCEL_CHANNELLING(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_CHANNELLING", client.IP, client.Port);
             client.Character.FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL);
         }
 
-        public void On_CMSG_CANCEL_AURA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_CANCEL_AURA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 9)
             {
@@ -9139,7 +9100,7 @@ namespace Mangos.World.Spells
             }
         }
 
-        public void SendLoot(WS_PlayerData.CharacterObject Player, ulong GUID, LootType LootingType)
+        public static void SendLoot(WS_PlayerData.CharacterObject Player, ulong GUID, LootType LootingType)
         {
             if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(GUID))
             {

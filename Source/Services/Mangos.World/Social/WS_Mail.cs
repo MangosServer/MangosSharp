@@ -46,7 +46,7 @@ namespace Mangos.World.Social
                     ulong GameObjectGUID = packet.GetUInt64();
                     int MailID = packet.GetInt32();
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_RETURN_TO_SENDER [MailID={2}]", client.IP, client.Port, MailID);
-                    int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
+                    int MailTime = (int)(Globals.Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_mail SET mail_time = {1}, mail_read = 0, mail_receiver = (mail_receiver + mail_sender), mail_sender = (mail_receiver - mail_sender), mail_receiver = (mail_receiver - mail_sender) WHERE mail_id = {0};", MailID, MailTime));
                     Packets.PacketClass response = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(MailID);
@@ -86,7 +86,7 @@ namespace Mangos.World.Social
                     ulong GameObjectGUID = packet.GetUInt64();
                     int MailID = packet.GetInt32();
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_MARK_AS_READ [MailID={2}]", client.IP, client.Port, MailID);
-                    int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 259200L);
+                    int MailTime = (int)(Globals.Functions.GetTimestamp(DateAndTime.Now) + 259200L);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_mail SET mail_read = 1, mail_time = {1} WHERE mail_id = {0} AND mail_read < 2;", MailID, MailTime));
                 }
             }
@@ -96,7 +96,7 @@ namespace Mangos.World.Social
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_QUERY_NEXT_MAIL_TIME", client.IP, client.Port);
             DataTable MySQLQuery = new();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT COUNT(*) FROM characters_mail WHERE mail_read = 0 AND mail_receiver = {client.Character.GUID} AND mail_time > {WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)};", ref MySQLQuery);
+            WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT COUNT(*) FROM characters_mail WHERE mail_read = 0 AND mail_receiver = {client.Character.GUID} AND mail_time > {Globals.Functions.GetTimestamp(DateAndTime.Now)};", ref MySQLQuery);
             if (Operators.ConditionalCompareObjectGreater(MySQLQuery.Rows[0][0], 0, TextCompare: false))
             {
                 Packets.PacketClass response2 = new(Opcodes.MSG_QUERY_NEXT_MAIL_TIME);
@@ -130,7 +130,7 @@ namespace Mangos.World.Social
                 try
                 {
                     DataTable MySQLQuery = new();
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_id FROM characters_mail WHERE mail_time < {WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)};", ref MySQLQuery);
+                    WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_id FROM characters_mail WHERE mail_time < {Globals.Functions.GetTimestamp(DateAndTime.Now)};", ref MySQLQuery);
                     if (MySQLQuery.Rows.Count > 0)
                     {
                         byte b = (byte)(MySQLQuery.Rows.Count - 1);
@@ -174,7 +174,7 @@ namespace Mangos.World.Social
                             response.AddInt32(MySQLQuery.Rows[i].As<int>("mail_stationary"));
                             if (decimal.Compare(new decimal(MySQLQuery.Rows[i].As<ulong>("item_guid")), 0m) > 0)
                             {
-                                ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(MySQLQuery.Rows[i].As<ulong>("item_guid"));
+                                ItemObject tmpItem = WS_Items.LoadItemByGUID(MySQLQuery.Rows[i].As<ulong>("item_guid"));
                                 response.AddInt32(tmpItem.ItemEntry);
                                 if (tmpItem.Enchantments.ContainsKey(0))
                                 {
@@ -205,7 +205,7 @@ namespace Mangos.World.Social
                             response.AddUInt32(MySQLQuery.Rows[i].As<uint>("mail_money"));
                             response.AddUInt32(MySQLQuery.Rows[i].As<uint>("mail_COD"));
                             response.AddInt32(MySQLQuery.Rows[i].As<int>("mail_read"));
-                            response.AddSingle((float)((MySQLQuery.Rows[i].As<uint>("mail_time") - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) / 86400.0));
+                            response.AddSingle((float)((MySQLQuery.Rows[i].As<uint>("mail_time") - Globals.Functions.GetTimestamp(DateAndTime.Now)) / 86400.0));
                             response.AddInt32(0);
                             i = (byte)unchecked((uint)(i + 1));
                         }
@@ -266,7 +266,7 @@ namespace Mangos.World.Social
                     ref uint copper = ref client.Character.Copper;
                     copper = Conversions.ToUInteger(Operators.SubtractObject(copper, MySQLQuery.Rows[0]["mail_cod"]));
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_mail SET mail_cod = 0 WHERE mail_id = {MailID};");
-                    int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
+                    int MailTime = (int)(Globals.Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO characters_mail (mail_sender, mail_receiver, mail_subject, mail_body, mail_item_guid, mail_money, mail_COD, mail_time, mail_read, mail_type) VALUES \r\n                        ({0},{1},'{2}','{3}',{4},{5},{6},{7},{8},{9});", client.Character.GUID, MySQLQuery.Rows[0]["mail_sender"], "", "", 0, MySQLQuery.Rows[0]["mail_cod"], 0, MailTime, MailReadInfo.COD, 0));
                     IL_02b9:
                     if (Operators.ConditionalCompareObjectEqual(MySQLQuery.Rows[0]["item_guid"], 0, TextCompare: false))
@@ -279,7 +279,7 @@ namespace Mangos.World.Social
                         response3.Dispose();
                         return;
                     }
-                    ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(MySQLQuery.Rows[0].As<ulong>("item_guid"));
+                    ItemObject tmpItem = WS_Items.LoadItemByGUID(MySQLQuery.Rows[0].As<ulong>("item_guid"));
                     tmpItem.OwnerGUID = client.Character.GUID;
                     tmpItem.Save();
                     if (client.Character.ItemADD(ref tmpItem))
@@ -443,7 +443,7 @@ namespace Mangos.World.Social
                         return;
                     }
                     ulong ReceiverGUID = MySQLQuery.Rows[0].As<ulong>("char_guid");
-                    bool ReceiverSide = WorldServiceLocator._Functions.GetCharacterSide(MySQLQuery.Rows[0].As<byte>("char_race"));
+                    bool ReceiverSide = Globals.Functions.GetCharacterSide(MySQLQuery.Rows[0].As<byte>("char_race"));
                     if (client.Character.GUID == ReceiverGUID)
                     {
                         Packets.PacketClass response5 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
@@ -492,7 +492,7 @@ namespace Mangos.World.Social
                     ref uint copper = ref client.Character.Copper;
                     copper = (uint)(copper - (30L + Money));
                     client.Character.SetUpdateFlag(1176, client.Character.Copper);
-                    int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
+                    int MailTime = (int)(Globals.Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO characters_mail (mail_sender, mail_receiver, mail_type, mail_stationary, mail_subject, mail_body, mail_money, mail_COD, mail_time, mail_read, item_guid) VALUES\r\n                ({0},{1},{2},{3},'{4}','{5}',{6},{7},{8},{9},{10});", client.Character.GUID, ReceiverGUID, 0, 41, Subject.Replace("'", "`"), Body.Replace("'", "`"), Money, COD, MailTime, (byte)0, itemGuid == WorldServiceLocator._Global_Constants.GUID_ITEM));
                     if (decimal.Compare(new decimal(itemGuid), 0m) > 0)
                     {

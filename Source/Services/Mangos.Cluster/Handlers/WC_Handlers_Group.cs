@@ -477,7 +477,7 @@ namespace Mangos.Cluster.Handlers
             foreach (DataRow r in q.Rows)
             {
                 response.AddUInt32(Conversions.ToUInteger(r["map"]));                               // MapID
-                response.AddUInt32((uint)(Conversions.ToInteger(r["expire"]) - _clusterServiceLocator.Functions.GetTimestamp(DateAndTime.Now)));  // TimeLeft
+                response.AddUInt32((uint)(Conversions.ToInteger(r["expire"]) - Functions.GetTimestamp(DateAndTime.Now)));  // TimeLeft
                 response.AddUInt32(Conversions.ToUInteger(r["instance"]));                          // InstanceID
                 response.AddUInt32((uint)i);                                           // Counter
                 i += 1;
@@ -487,7 +487,7 @@ namespace Mangos.Cluster.Handlers
             response.Dispose();
         }
 
-        public void SendPartyResult(ClientClass objCharacter, string name, PartyCommand operation, PartyCommandResult result)
+        public static void SendPartyResult(ClientClass objCharacter, string name, PartyCommand operation, PartyCommandResult result)
         {
             PacketClass response = new(Opcodes.SMSG_PARTY_COMMAND_RESULT);
             response.AddInt32((byte)operation);
@@ -505,7 +505,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             packet.GetInt16();
-            string name = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
+            string name = Functions.CapitalizeName(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_INVITE [{2}]", client.IP, client.Port, name);
             ulong guid = 0UL;
             _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
@@ -529,7 +529,7 @@ namespace Mangos.Cluster.Handlers
             {
                 errCode = PartyCommandResult.INVITE_NOT_FOUND;
             }
-            else if (_clusterServiceLocator.Functions.GetCharacterSide((byte)_clusterServiceLocator.WorldCluster.CharacteRs[guid].Race) != _clusterServiceLocator.Functions.GetCharacterSide((byte)client.Character.Race))
+            else if (Functions.GetCharacterSide((byte)_clusterServiceLocator.WorldCluster.CharacteRs[guid].Race) != Functions.GetCharacterSide((byte)client.Character.Race))
             {
                 errCode = PartyCommandResult.INVITE_NOT_SAME_SIDE;
             }
@@ -947,7 +947,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_RAID_ICON_TARGET(PacketClass packet, ClientClass client)
+        public static void On_MSG_RAID_ICON_TARGET(PacketClass packet, ClientClass client)
         {
             if (packet.Data.Length < 7)
             {
@@ -1018,14 +1018,14 @@ namespace Mangos.Cluster.Handlers
             if (!_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(guid))
             {
                 // Character is offline
-                PacketClass response = _clusterServiceLocator.Functions.BuildPartyMemberStatsOffline(guid);
+                PacketClass response = Functions.BuildPartyMemberStatsOffline(guid);
                 client.Send(response);
                 response.Dispose();
             }
             else if (_clusterServiceLocator.WorldCluster.CharacteRs[guid].IsInWorld == false)
             {
                 // Character is offline (not in world)
-                PacketClass response = _clusterServiceLocator.Functions.BuildPartyMemberStatsOffline(guid);
+                PacketClass response = Functions.BuildPartyMemberStatsOffline(guid);
                 client.Send(response);
                 response.Dispose();
             }

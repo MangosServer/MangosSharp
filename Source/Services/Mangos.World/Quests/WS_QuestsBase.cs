@@ -203,7 +203,7 @@ namespace Mangos.World.Quests
                 ObjectivesDeliver = Quest.ObjectivesDeliver;
                 if (Quest.TimeLimit > 0)
                 {
-                    TimeEnd = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + Quest.TimeLimit);
+                    TimeEnd = (int)(Functions.GetTimestamp(DateAndTime.Now) + Quest.TimeLimit);
                 }
             }
         }

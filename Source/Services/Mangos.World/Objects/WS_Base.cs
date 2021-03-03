@@ -938,7 +938,7 @@ namespace Mangos.World.Objects
                     }
                     Damage += SpellDamageBenefit;
                     IsCrit = false;
-                    if (!IsDot && Caster is WS_PlayerData.CharacterObject object1 && WorldServiceLocator._Functions.RollChance(object1.GetCriticalWithSpells))
+                    if (!IsDot && Caster is WS_PlayerData.CharacterObject object1 && Functions.RollChance(object1.GetCriticalWithSpells))
                     {
                         Damage = (int)(1.5f * Damage);
                         IsCrit = true;
@@ -978,28 +978,28 @@ namespace Mangos.World.Objects
                         {
                             WS_Spells wS_Spells4 = WorldServiceLocator._WS_Spells;
                             BaseUnit Target = this;
-                            wS_Spells4.SendNonMeleeDamageLog(ref Caster, ref Target, SpellID, (int)DamageType, Damage, Resist, Absorb, IsCrit);
+                            WS_Spells.SendNonMeleeDamageLog(ref Caster, ref Target, SpellID, (int)DamageType, Damage, Resist, Absorb, IsCrit);
                             break;
                         }
                     case SpellType.SPELL_TYPE_DOT:
                         {
                             WS_Spells wS_Spells3 = WorldServiceLocator._WS_Spells;
                             BaseUnit Target = this;
-                            wS_Spells3.SendPeriodicAuraLog(ref Caster, ref Target, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
+                            WS_Spells.SendPeriodicAuraLog(ref Caster, ref Target, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
                             break;
                         }
                     case SpellType.SPELL_TYPE_HEAL:
                         {
                             WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
                             BaseUnit Target = this;
-                            wS_Spells2.SendHealSpellLog(ref Caster, ref Target, SpellID, Damage, IsCrit);
+                            WS_Spells.SendHealSpellLog(ref Caster, ref Target, SpellID, Damage, IsCrit);
                             break;
                         }
                     case SpellType.SPELL_TYPE_HEALDOT:
                         {
                             WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
                             BaseUnit Target = this;
-                            wS_Spells.SendPeriodicAuraLog(ref Caster, ref Target, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
+                            WS_Spells.SendPeriodicAuraLog(ref Caster, ref Target, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
                             break;
                         }
                 }
@@ -1270,7 +1270,7 @@ namespace Mangos.World.Objects
                         int Schools = (int)(tmpSpell.Value >> 23);
                         int AbsorbDamage = (int)(tmpSpell.Value & 0x7FFFFFL);
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Spell: {0} [{1}]", AbsorbDamage, Schools);
-                        if (WorldServiceLocator._Functions.HaveFlag((uint)Schools, (byte)School))
+                        if (Functions.HaveFlag((uint)Schools, (byte)School))
                         {
                             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Apmongo, yes?!");
                             if (Damage == AbsorbDamage)

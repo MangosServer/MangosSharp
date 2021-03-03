@@ -408,7 +408,7 @@ namespace Mangos.World.Handlers
                 client.Character.cDynamicFlags = 0;
                 client.Character.cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_DEAD;
                 client.Character = null;
-                WorldServiceLocator._Functions.SendCorpseReclaimDelay(ref client, ref client.Character);
+                Globals.Functions.SendCorpseReclaimDelay(ref client, ref client.Character);
                 client.Character.StopMirrorTimer(MirrorTimer.FATIGUE);
                 client.Character.StopMirrorTimer(MirrorTimer.DROWNING);
                 if (client.Character.underWaterTimer != null)
@@ -421,7 +421,7 @@ namespace Mangos.World.Handlers
                 myCorpse.AddToWorld();
                 client.Character.Invisibility = InvisibilityLevel.DEAD;
                 client.Character.CanSeeInvisibility = InvisibilityLevel.DEAD;
-                WorldServiceLocator._WS_CharMovement.UpdateCell(ref client.Character);
+                WS_CharMovement.UpdateCell(ref client.Character);
                 checked
                 {
                     for (int i = 0; i <= WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1; i++)
@@ -473,7 +473,7 @@ namespace Mangos.World.Handlers
             Character.cUnitFlags = 8;
             Character.cDynamicFlags = 0;
             Character.InvisibilityReset();
-            WorldServiceLocator._WS_CharMovement.UpdateCell(ref Character);
+            WS_CharMovement.UpdateCell(ref Character);
             Character.SetLandWalk();
             if (Character.Race == Races.RACE_NIGHT_ELF)
             {
@@ -510,7 +510,7 @@ namespace Mangos.World.Handlers
         public void On_CMSG_TOGGLE_PVP(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TOGGLE_PVP", client.IP, client.Port);
-            client.Character.isPvP = !client.Character.isPvP;
+            client.Character.IsPvP = !client.Character.IsPvP;
             client.Character.SetUpdateFlag(46, client.Character.cUnitFlags);
             client.Character.SendCharacterUpdate();
         }

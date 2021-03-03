@@ -688,7 +688,7 @@ namespace Mangos.World.Handlers
                 }
                 return;
             }
-            if (WorldServiceLocator._WS_Combat.GetDistance(client.Character, WorldServiceLocator._WorldServer.CHARACTERs[targetGUID]) > 30f)
+            if (WS_Combat.GetDistance(client.Character, WorldServiceLocator._WorldServer.CHARACTERs[targetGUID]) > 30f)
             {
                 Packets.PacketClass response3 = new(Opcodes.SMSG_TRADE_STATUS);
                 try

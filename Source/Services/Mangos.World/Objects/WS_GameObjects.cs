@@ -336,7 +336,7 @@ namespace Mangos.World.Objects
                     GameObjectInfo baseGameObject = new(ID_);
                 }
                 ID = ID_;
-                GUID = WorldServiceLocator._WS_GameObjects.GetNewGUID();
+                GUID = GetNewGUID();
                 Flags = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Flags;
                 Faction = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Faction;
                 Size = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Size;
@@ -397,7 +397,7 @@ namespace Mangos.World.Objects
                     GameObjectInfo baseGameObject = new(ID_);
                 }
                 ID = ID_;
-                GUID = WorldServiceLocator._WS_GameObjects.GetNewGUID();
+                GUID = GetNewGUID();
                 MapID = MapID_;
                 positionX = PosX;
                 positionY = PosY;
@@ -487,10 +487,10 @@ namespace Mangos.World.Objects
 
             public void AddToWorld()
             {
-                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                 if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
                 {
-                    WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+                    Handlers.WS_CharMovement.MAP_Load(CellX, CellY, MapID);
                 }
                 try
                 {
@@ -569,7 +569,7 @@ namespace Mangos.World.Objects
                 {
                     return;
                 }
-                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                 WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].GameObjectsHere.Remove(GUID);
                 ulong[] array = SeenBy.ToArray();
                 foreach (ulong plGUID in array)
@@ -846,7 +846,7 @@ namespace Mangos.World.Objects
 
             public void TurnTo(float x, float y)
             {
-                orientation = WorldServiceLocator._WS_Combat.GetOrientation(positionX, x, positionY, y);
+                orientation = Handlers.WS_Combat.GetOrientation(positionX, x, positionY, y);
                 Rotations[2] = (float)Math.Sin(orientation / 2f);
                 Rotations[3] = (float)Math.Cos(orientation / 2f);
                 if (SeenBy.Count > 0)
@@ -870,14 +870,14 @@ namespace Mangos.World.Objects
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private ulong GetNewGUID()
+        private static ulong GetNewGUID()
         {
             ref ulong gameObjectsGUIDCounter = ref WorldServiceLocator._WorldServer.GameObjectsGUIDCounter;
             gameObjectsGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(gameObjectsGUIDCounter), 1m));
             return WorldServiceLocator._WorldServer.GameObjectsGUIDCounter;
         }
 
-        public GameObjectObject GetClosestGameobject(ref WS_Base.BaseUnit unit, int GameObjectEntry = 0)
+        public static GameObjectObject GetClosestGameobject(ref WS_Base.BaseUnit unit, int GameObjectEntry = 0)
         {
             float minDistance = float.MaxValue;
             GameObjectObject targetGameobject = null;
@@ -888,7 +888,7 @@ namespace Mangos.World.Objects
                 {
                     if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID2) && (GameObjectEntry == 0 || WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2].ID == GameObjectEntry))
                     {
-                        float tmpDistance = WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2], unit);
+                        float tmpDistance = Handlers.WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2], unit);
                         if (tmpDistance < minDistance)
                         {
                             minDistance = tmpDistance;
@@ -900,7 +900,7 @@ namespace Mangos.World.Objects
             }
             byte cellX = default;
             byte cellY = default;
-            WorldServiceLocator._WS_Maps.GetMapTile(unit.positionX, unit.positionY, ref cellX, ref cellY);
+            WS_Maps.GetMapTile(unit.positionX, unit.positionY, ref cellX, ref cellY);
             int x = -1;
             checked
             {
@@ -917,7 +917,7 @@ namespace Mangos.World.Objects
                             {
                                 if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID) && (GameObjectEntry == 0 || WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].ID == GameObjectEntry))
                                 {
-                                    float tmpDistance = WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID], unit);
+                                    float tmpDistance = Handlers.WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID], unit);
                                     if (tmpDistance < minDistance)
                                     {
                                         minDistance = tmpDistance;
@@ -936,7 +936,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_GAMEOBJECT_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_GAMEOBJECT_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -985,7 +985,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_GAMEOBJ_USE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_GAMEOBJ_USE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -1080,11 +1080,11 @@ namespace Mangos.World.Objects
                     case GameObjectType.GAMEOBJECT_TYPE_MEETINGSTONE:
                         if (client.Character.Level < GO.GetSound(0))
                         {
-                            WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_LEVEL_REQUIREMENT, ref client, 23598);
+                            Spells.WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_LEVEL_REQUIREMENT, ref client, 23598);
                         }
                         else if (client.Character.Level > WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound(1))
                         {
-                            WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_LEVEL_REQUIREMENT, ref client, 23598);
+                            Spells.WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_LEVEL_REQUIREMENT, ref client, 23598);
                         }
                         else
                         {

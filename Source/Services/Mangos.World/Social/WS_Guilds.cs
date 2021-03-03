@@ -32,7 +32,7 @@ namespace Mangos.World.Social
 {
     public class WS_Guilds
     {
-        public void SendPetitionActivate(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+        public static void SendPetitionActivate(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
         {
             if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID))
             {
@@ -58,7 +58,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void On_CMSG_PETITION_SHOWLIST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PETITION_SHOWLIST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
             {
@@ -69,7 +69,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void On_CMSG_PETITION_BUY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PETITION_BUY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -157,7 +157,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void SendPetitionSignatures(ref WS_PlayerData.CharacterObject objCharacter, ulong iGUID)
+        public static void SendPetitionSignatures(ref WS_PlayerData.CharacterObject objCharacter, ulong iGUID)
         {
             DataTable MySQLQuery = new();
             checked
@@ -184,7 +184,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void On_CMSG_PETITION_SHOW_SIGNATURES(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PETITION_SHOW_SIGNATURES(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
             {
@@ -195,7 +195,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void On_CMSG_PETITION_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PETITION_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -251,7 +251,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void On_MSG_PETITION_RENAME(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_MSG_PETITION_RENAME(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -272,7 +272,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void On_CMSG_OFFER_PETITION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_OFFER_PETITION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 21)
             {
@@ -292,7 +292,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void On_CMSG_PETITION_SIGN(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_PETITION_SIGN(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -323,7 +323,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void On_MSG_PETITION_DECLINE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_MSG_PETITION_DECLINE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -345,7 +345,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void On_CMSG_TURN_IN_PETITION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_TURN_IN_PETITION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
             {
@@ -356,7 +356,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public void SendTabardActivate(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+        public static void SendTabardActivate(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
         {
             Packets.PacketClass packet = new(Opcodes.MSG_TABARDVENDOR_ACTIVATE);
             packet.AddUInt64(cGUID);
@@ -364,7 +364,7 @@ namespace Mangos.World.Social
             packet.Dispose();
         }
 
-        public void On_MSG_TABARDVENDOR_ACTIVATE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_MSG_TABARDVENDOR_ACTIVATE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
             {
@@ -375,7 +375,7 @@ namespace Mangos.World.Social
             }
         }
 
-        public int GetGuildBankTabPrice(byte TabID)
+        public static int GetGuildBankTabPrice(byte TabID)
         {
             return TabID switch
             {
@@ -389,7 +389,7 @@ namespace Mangos.World.Social
             };
         }
 
-        public void SendGuildResult(ref WS_Network.ClientClass client, GuildCommand Command, GuildError Result, string Text = "")
+        public static void SendGuildResult(ref WS_Network.ClientClass client, GuildCommand Command, GuildError Result, string Text = "")
         {
             Packets.PacketClass response = new(Opcodes.SMSG_GUILD_COMMAND_RESULT);
             response.AddInt32((int)Command);

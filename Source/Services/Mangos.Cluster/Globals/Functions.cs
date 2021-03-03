@@ -39,12 +39,12 @@ namespace Mangos.Cluster.Globals
 
         public Functions(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
-        public int ToInteger(bool value)
+        public static int ToInteger(bool value)
         {
             return value ? 1 : 0;
         }
 
-        public string ToHex(byte[] bBytes, int start = 0)
+        public static string ToHex(byte[] bBytes, int start = 0)
         {
             if (bBytes.Length == 0)
             {
@@ -67,7 +67,7 @@ namespace Mangos.Cluster.Globals
             return tmpStr;
         }
 
-        public char[] ByteToCharArray(byte[] bBytes)
+        public static char[] ByteToCharArray(byte[] bBytes)
         {
             if (bBytes.Length == 0)
             {
@@ -83,7 +83,7 @@ namespace Mangos.Cluster.Globals
             return bChar;
         }
 
-        public int[] ByteToIntArray(byte[] bBytes)
+        public static int[] ByteToIntArray(byte[] bBytes)
         {
             if (bBytes.Length == 0)
             {
@@ -99,7 +99,7 @@ namespace Mangos.Cluster.Globals
             return bInt;
         }
 
-        public byte[] IntToByteArray(int[] bInt)
+        public static byte[] IntToByteArray(int[] bInt)
         {
             if (bInt.Length == 0)
             {
@@ -116,7 +116,7 @@ namespace Mangos.Cluster.Globals
             return bBytes;
         }
 
-        public byte[] Concat(byte[] a, byte[] b)
+        public static byte[] Concat(byte[] a, byte[] b)
         {
             byte[] buffer1 = new byte[(a.Length + b.Length)];
             int num1;
@@ -136,19 +136,19 @@ namespace Mangos.Cluster.Globals
             return buffer1;
         }
 
-        public bool HaveFlag(uint value, byte flagPos)
+        public static bool HaveFlag(uint value, byte flagPos)
         {
             value >>= flagPos;
             value = (uint)(value % 2L);
             return value == 1L;
         }
 
-        public bool HaveFlags(int value, int flags)
+        public static bool HaveFlags(int value, int flags)
         {
             return (value & flags) == flags;
         }
 
-        public void SetFlag(ref uint value, byte flagPos, bool flagValue)
+        public static void SetFlag(ref uint value, byte flagPos, bool flagValue)
         {
             if (flagValue)
             {
@@ -160,7 +160,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        public DateTime GetNextDay(DayOfWeek iDay, int hour = 0)
+        public static DateTime GetNextDay(DayOfWeek iDay, int hour = 0)
         {
             int iDiff = (int)iDay - (int)DateAndTime.Today.DayOfWeek;
             if (iDiff <= 0)
@@ -173,14 +173,14 @@ namespace Mangos.Cluster.Globals
             return nextFriday;
         }
 
-        public DateTime GetNextDate(int days, int hours = 0)
+        public static DateTime GetNextDate(int days, int hours = 0)
         {
             DateTime nextDate = DateAndTime.Today.AddDays(days);
             nextDate = nextDate.AddHours(hours);
             return nextDate;
         }
 
-        public uint GetTimestamp(DateTime fromDateTime)
+        public static uint GetTimestamp(DateTime fromDateTime)
         {
             DateTime startDate = DateTime.Parse("1970-01-01");
             TimeSpan timeSpan;
@@ -188,7 +188,7 @@ namespace Mangos.Cluster.Globals
             return (uint)Math.Abs(timeSpan.TotalSeconds);
         }
 
-        public DateTime GetDateFromTimestamp(uint unixTimestamp)
+        public static DateTime GetDateFromTimestamp(uint unixTimestamp)
         {
             TimeSpan timeSpan;
             DateTime startDate = DateTime.Parse("1970-01-01");
@@ -201,7 +201,7 @@ namespace Mangos.Cluster.Globals
             return startDate.Add(timeSpan);
         }
 
-        public string GetTimeLeftString(uint seconds)
+        public static string GetTimeLeftString(uint seconds)
         {
             if (seconds < 60L)
             {
@@ -218,12 +218,12 @@ namespace Mangos.Cluster.Globals
                 : (seconds / 86400L) + "d " + (seconds / 3600L % 24L) + "h " + (seconds / 60L % 60L) + "m " + (seconds % 60L) + "s";
         }
 
-        public string EscapeString(string s)
+        public static string EscapeString(string s)
         {
             return s.Replace("\"", "").Replace("'", "");
         }
 
-        public string CapitalizeName(string name)
+        public static string CapitalizeName(string name)
         {
             return name.Length > 1 ? Strings.UCase(Strings.Left(name, 1)) + Strings.LCase(Strings.Right(name, name.Length - 1)) : Strings.UCase(name);
         }
@@ -242,12 +242,12 @@ namespace Mangos.Cluster.Globals
             return strName.Length is not < 2 and not > 16 && _regexGuild.IsMatch(strName);
         }
 
-        public string FixName(string strName)
+        public static string FixName(string strName)
         {
             return strName.Replace("\"", "'").Replace("<", "").Replace(">", "").Replace("*", "").Replace("/", "").Replace(@"\", "").Replace(":", "").Replace("|", "").Replace("?", "");
         }
 
-        public void RAND_bytes(ref byte[] bBytes, int length)
+        public static void RAND_bytes(ref byte[] bBytes, int length)
         {
             if (length == 0)
             {
@@ -266,7 +266,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        public float MathLerp(float value1, float value2, float amount)
+        public static float MathLerp(float value1, float value2, float amount)
         {
             return value1 + ((value2 - value1) * amount);
         }
@@ -298,7 +298,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        public string GetClassName(int classe)
+        public static string GetClassName(int classe)
         {
             string getClassNameRet;
             switch ((Classes)classe)
@@ -367,7 +367,7 @@ namespace Mangos.Cluster.Globals
             return getClassNameRet;
         }
 
-        public string GetRaceName(int race)
+        public static string GetRaceName(int race)
         {
             string getRaceNameRet;
             switch ((Races)race)
@@ -430,7 +430,7 @@ namespace Mangos.Cluster.Globals
             return getRaceNameRet;
         }
 
-        public int GetRaceModel(Races race, int gender)
+        public static int GetRaceModel(Races race, int gender)
         {
             switch (race)
             {
@@ -481,7 +481,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        public bool GetCharacterSide(byte race)
+        public static bool GetCharacterSide(byte race)
         {
             switch ((Races)race)
             {
@@ -500,7 +500,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        public bool IsContinentMap(int map)
+        public static bool IsContinentMap(int map)
         {
             switch (map)
             {
@@ -517,7 +517,7 @@ namespace Mangos.Cluster.Globals
             }
         }
 
-        public string SetColor(string message, byte red, byte green, byte blue)
+        public static string SetColor(string message, byte red, byte green, byte blue)
         {
             string setColorRet = "|cFF";
             setColorRet = red < 16 ? setColorRet + "0" + Conversion.Hex(red) : setColorRet + Conversion.Hex(red);
@@ -541,7 +541,7 @@ namespace Mangos.Cluster.Globals
             client.Send(packet);
         }
 
-        public void SendMessageNotification(ClientClass client, string message)
+        public static void SendMessageNotification(ClientClass client, string message)
         {
             PacketClass packet = new(Opcodes.SMSG_NOTIFICATION);
             try
@@ -661,7 +661,7 @@ namespace Mangos.Cluster.Globals
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC", client.IP, client.Port);
         }
 
-        public void SendTimeSyncReq(ClientClass client)
+        public static void SendTimeSyncReq(ClientClass client)
         {
             // Dim packet As New PacketClass(OPCODES.SMSG_TIME_SYNC_REQ)
             // packet.AddInt32(0)
@@ -849,7 +849,7 @@ namespace Mangos.Cluster.Globals
             GROUP_UPDATE_FULL_REQUEST_REPLY = 0x7FFC0BFFU
         }
 
-        public PacketClass BuildPartyMemberStatsOffline(ulong guid)
+        public static PacketClass BuildPartyMemberStatsOffline(ulong guid)
         {
             PacketClass packet = new(Opcodes.SMSG_PARTY_MEMBER_STATS_FULL);
             packet.AddPackGuid(guid);

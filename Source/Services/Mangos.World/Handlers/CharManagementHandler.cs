@@ -30,7 +30,7 @@ namespace Mangos.World.Handlers
 {
     public class CharManagementHandler
     {
-        public void On_CMSG_SET_ACTION_BUTTON(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SET_ACTION_BUTTON(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) < 10)
             {
@@ -66,7 +66,7 @@ namespace Mangos.World.Handlers
             client.Character.ActionButtons[button] = new WS_PlayerHelper.TActionButton(action, actionType, actionMisc);
         }
 
-        public void On_CMSG_LOGOUT_REQUEST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_LOGOUT_REQUEST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOGOUT_REQUEST", client.IP, client.Port);
             client.Character.Save();
@@ -130,7 +130,7 @@ namespace Mangos.World.Handlers
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGOUT_RESPONSE", client.IP, client.Port);
             client.Character.SetMoveRoot();
             client.Character.ZoneCheck();
-            if (client.Character.isResting)
+            if (client.Character.IsResting)
             {
                 client.Character.Logout();
             }
@@ -140,7 +140,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_LOGOUT_CANCEL(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_LOGOUT_CANCEL(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             try
             {
@@ -197,7 +197,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public void On_CMSG_STANDSTATECHANGE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_STANDSTATECHANGE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 6)
             {
@@ -224,7 +224,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public InventoryChangeFailure CanUseAmmo(ref WS_PlayerData.CharacterObject objCharacter, int AmmoID)
+        public static InventoryChangeFailure CanUseAmmo(ref WS_PlayerData.CharacterObject objCharacter, int AmmoID)
         {
             if (objCharacter.DEAD)
             {
@@ -268,7 +268,7 @@ namespace Mangos.World.Handlers
             return objCharacter.HavePassiveAura(46699) ? InventoryChangeFailure.EQUIP_ERR_BAG_FULL6 : InventoryChangeFailure.EQUIP_ERR_OK;
         }
 
-        public bool CheckAmmoCompatibility(ref WS_PlayerData.CharacterObject objCharacter, int AmmoID)
+        public static bool CheckAmmoCompatibility(ref WS_PlayerData.CharacterObject objCharacter, int AmmoID)
         {
             if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(AmmoID))
             {

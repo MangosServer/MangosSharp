@@ -289,11 +289,11 @@ namespace Mangos.World.Player
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmp);
             }
 
-            public void Load(ulong GUID)
+            public static void Load(ulong GUID)
             {
             }
 
-            public void SaveAsNew(ulong GUID)
+            public static void SaveAsNew(ulong GUID)
             {
             }
         }
@@ -429,7 +429,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public void SendBindPointUpdate(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
+        public static void SendBindPointUpdate(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Packets.PacketClass SMSG_BINDPOINTUPDATE = new(Opcodes.SMSG_BINDPOINTUPDATE);
             try
@@ -447,7 +447,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public void Send_SMSG_SET_REST_START(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
+        public static void Send_SMSG_SET_REST_START(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Packets.PacketClass SMSG_SET_REST_START = new(Opcodes.SMSG_SET_REST_START);
             try
@@ -461,7 +461,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public void SendTutorialFlags(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
+        public static void SendTutorialFlags(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Packets.PacketClass SMSG_TUTORIAL_FLAGS = new(Opcodes.SMSG_TUTORIAL_FLAGS);
             try
@@ -475,7 +475,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public void SendFactions(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
+        public static void SendFactions(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_INITIALIZE_FACTIONS);
             try
@@ -503,7 +503,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public void SendActionButtons(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
+        public static void SendActionButtons(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_ACTION_BUTTONS);
             try
@@ -535,7 +535,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public void SendInitWorldStates(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
+        public static void SendInitWorldStates(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Character.ZoneCheck();
             int NumberOfFields = Character.ZoneID switch
@@ -615,7 +615,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public void SendInitialSpells(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
+        public static void SendInitialSpells(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_INITIAL_SPELLS);
             checked
@@ -650,9 +650,9 @@ namespace Mangos.World.Player
                         {
                             packet.AddUInt16((ushort)Cooldown.Key);
                             int timeLeft = 0;
-                            if (Cooldown.Value.Key > WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))
+                            if (Cooldown.Value.Key > Functions.GetTimestamp(DateAndTime.Now))
                             {
-                                timeLeft = (int)(checked(Cooldown.Value.Key - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) * 1000L);
+                                timeLeft = (int)(checked(Cooldown.Value.Key - Functions.GetTimestamp(DateAndTime.Now)) * 1000L);
                             }
                             packet.AddUInt16((ushort)Cooldown.Value.Value);
                             packet.AddUInt16((ushort)WorldServiceLocator._WS_Spells.SPELLs[Cooldown.Key].Category);
@@ -679,7 +679,7 @@ namespace Mangos.World.Player
             }
         }
 
-        public void InitializeTalentSpells(WS_PlayerData.CharacterObject objCharacter)
+        public static void InitializeTalentSpells(WS_PlayerData.CharacterObject objCharacter)
         {
             WS_Spells.SpellTargets t = new();
             WS_Base.BaseUnit objCharacter2 = objCharacter;

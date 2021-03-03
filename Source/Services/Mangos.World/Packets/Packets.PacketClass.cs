@@ -366,7 +366,7 @@ namespace Mangos.World.Globals
                         Offset++;
                     }
                     Offset++;
-                    return WorldServiceLocator._Functions.EscapeString(Encoding.UTF8.GetString(Data, start, i));
+                    return Functions.EscapeString(Encoding.UTF8.GetString(Data, start, i));
                 }
             }
 
@@ -377,7 +377,7 @@ namespace Mangos.World.Globals
                 {
                     int start = Offset + 1;
                     Offset += thisLength + 1;
-                    return WorldServiceLocator._Functions.EscapeString(Encoding.UTF8.GetString(Data, start, thisLength));
+                    return Functions.EscapeString(Encoding.UTF8.GetString(Data, start, thisLength));
                 }
             }
 

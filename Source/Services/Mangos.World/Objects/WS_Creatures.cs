@@ -115,15 +115,15 @@ namespace Mangos.World.Objects
 
             public string Name => CreatureInfo.Name;
 
-            public float MaxDistance => 35f;
+            public static float MaxDistance => 35f;
 
-            public bool isAbleToWalkOnWater => CreatureInfo.CreatureFamily switch
+            public bool IsAbleToWalkOnWater => CreatureInfo.CreatureFamily switch
             {
                 3 or 10 or 11 or 12 or 20 or 21 or 27 => false,
                 _ => true,
             };
 
-            public bool isAbleToWalkOnGround
+            public bool IsAbleToWalkOnGround
             {
                 get
                 {
@@ -132,9 +132,9 @@ namespace Mangos.World.Objects
                 }
             }
 
-            public bool isCritter => CreatureInfo.CreatureType == 8;
+            public bool IsCritter => CreatureInfo.CreatureType == 8;
 
-            public bool isGuard => (CreatureInfo.cNpcFlags & 0x40) == 64;
+            public bool IsGuard => (CreatureInfo.cNpcFlags & 0x40) == 64;
 
             public override bool IsDead => aiScript != null
                         ? Life.Current == 0 || aiScript.State == AIState.AI_DEAD || aiScript.State == AIState.AI_RESPAWN
@@ -454,7 +454,7 @@ namespace Mangos.World.Objects
                             SMSG_MONSTER_MOVE.AddInt8(4);
                             SMSG_MONSTER_MOVE.AddSingle(o);
                         }
-                        float moveDist = WorldServiceLocator._WS_Combat.GetDistance(positionX, x, positionY, y, positionZ, z);
+                        float moveDist = Handlers.WS_Combat.GetDistance(positionX, x, positionY, y, positionZ, z);
                         if (Flying)
                         {
                             SMSG_MONSTER_MOVE.AddInt32(768);
@@ -470,7 +470,7 @@ namespace Mangos.World.Objects
                             SMSG_MONSTER_MOVE.AddInt32(0);
                             TimeToMove = (int)Math.Round((moveDist / (CreatureInfo.WalkSpeed * SpeedMod) * 1000f) + 0.5f);
                         }
-                        orientation = WorldServiceLocator._WS_Combat.GetOrientation(positionX, x, positionY, y);
+                        orientation = Handlers.WS_Combat.GetOrientation(positionX, x, positionY, y);
                         OldX = positionX;
                         OldY = positionY;
                         OldZ = positionZ;
@@ -510,18 +510,18 @@ namespace Mangos.World.Objects
             {
                 WS_Maps wS_Maps = WorldServiceLocator._WS_Maps;
                 WS_Base.BaseObject objCharacter = this;
-                if (wS_Maps.IsOutsideOfMap(ref objCharacter))
+                if (WS_Maps.IsOutsideOfMap(ref objCharacter))
                 {
                     return false;
                 }
                 if (z < WorldServiceLocator._WS_Maps.GetWaterLevel(x, y, checked((int)MapID)))
                 {
-                    if (!isAbleToWalkOnWater)
+                    if (!IsAbleToWalkOnWater)
                     {
                         return false;
                     }
                 }
-                else if (!isAbleToWalkOnGround)
+                else if (!IsAbleToWalkOnGround)
                 {
                     return false;
                 }
@@ -535,7 +535,7 @@ namespace Mangos.World.Objects
 
             public void TurnTo(float x, float y)
             {
-                orientation = WorldServiceLocator._WS_Combat.GetOrientation(positionX, x, positionY, y);
+                orientation = Handlers.WS_Combat.GetOrientation(positionX, x, positionY, y);
                 TurnTo(orientation);
             }
 
@@ -618,7 +618,7 @@ namespace Mangos.World.Objects
                 {
                     object1.RemoveFromCombat(this);
                     WS_PlayerData.CharacterObject Character;
-                    if (!isCritter && !isGuard && CreatureInfo.cNpcFlags == 0)
+                    if (!IsCritter && !IsGuard && CreatureInfo.cNpcFlags == 0)
                     {
                         Character = object1;
                         GiveXP(ref Character);
@@ -982,7 +982,7 @@ namespace Mangos.World.Objects
                 {
                     return -1;
                 }
-                if (WorldServiceLocator._WS_Combat.GetDistance(this, Target) > WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetRange)
+                if (Handlers.WS_Combat.GetDistance(this, Target) > WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetRange)
                 {
                     return -1;
                 }
@@ -1004,7 +1004,7 @@ namespace Mangos.World.Objects
                 {
                     return -1;
                 }
-                if (WorldServiceLocator._WS_Combat.GetDistance(this, x, y, z) > WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetRange)
+                if (Handlers.WS_Combat.GetDistance(this, x, y, z) > WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetRange)
                 {
                     return -1;
                 }
@@ -1128,10 +1128,10 @@ namespace Mangos.World.Objects
                             this
                         });
                     }
-                    else if (File.Exists("scripts\\creatures\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb"))
+                    else if (File.Exists("scripts\\creatures\\" + Globals.Functions.FixName(Name) + ".vb"))
                     {
-                        ScriptedObject tmpScript = new("scripts\\creatures\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb", "", InMemory: true);
-                        aiScript = (WS_Creatures_AI.TBaseAI)tmpScript.InvokeConstructor("CreatureAI_" + WorldServiceLocator._Functions.FixName(Name).Replace(" ", "_"), new object[1]
+                        ScriptedObject tmpScript = new("scripts\\creatures\\" + Globals.Functions.FixName(Name) + ".vb", "", InMemory: true);
+                        aiScript = (WS_Creatures_AI.TBaseAI)tmpScript.InvokeConstructor("CreatureAI_" + Globals.Functions.FixName(Name).Replace(" ", "_"), new object[1]
                         {
                             this
                         });
@@ -1141,12 +1141,12 @@ namespace Mangos.World.Objects
                     {
                         return;
                     }
-                    if (isCritter)
+                    if (IsCritter)
                     {
                         CreatureObject Creature = this;
                         aiScript = new WS_Creatures_AI.CritterAI(ref Creature);
                     }
-                    else if (isGuard)
+                    else if (IsGuard)
                     {
                         if (MoveType == 2)
                         {
@@ -1372,7 +1372,7 @@ namespace Mangos.World.Objects
                     CreatureInfo baseCreature = new(ID_);
                 }
                 ID = ID_;
-                GUID = WorldServiceLocator._WS_Creatures.GetNewGUID();
+                GUID = GetNewGUID();
                 Initialize();
                 try
                 {
@@ -1427,7 +1427,7 @@ namespace Mangos.World.Objects
                     CreatureInfo baseCreature = new(ID_);
                 }
                 ID = ID_;
-                GUID = WorldServiceLocator._WS_Creatures.GetNewGUID();
+                GUID = GetNewGUID();
                 positionX = PosX;
                 positionY = PosY;
                 positionZ = PosZ;
@@ -1576,10 +1576,10 @@ namespace Mangos.World.Objects
 
             public void AddToWorld()
             {
-                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                 if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
                 {
-                    WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+                    Handlers.WS_CharMovement.MAP_Load(CellX, CellY, MapID);
                 }
                 try
                 {
@@ -1647,7 +1647,7 @@ namespace Mangos.World.Objects
             {
                 try
                 {
-                    WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                    WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                     WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID);
                     ulong[] array = SeenBy.ToArray();
                     foreach (ulong plGUID in array)
@@ -1673,13 +1673,13 @@ namespace Mangos.World.Objects
             {
                 try
                 {
-                    if (CellX != WorldServiceLocator._WS_Maps.GetMapTileX(positionX) || CellY != WorldServiceLocator._WS_Maps.GetMapTileY(positionY))
+                    if (CellX != WS_Maps.GetMapTileX(positionX) || CellY != WS_Maps.GetMapTileY(positionY))
                     {
                         if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles != null && !Information.IsNothing(WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID)))
                         {
                             WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CreaturesHere.Remove(GUID);
                         }
-                        WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                        WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                         if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
                         {
                             aiScript.Reset();
@@ -1899,7 +1899,7 @@ namespace Mangos.World.Objects
             NPCTexts = new Dictionary<int, NPCText>();
         }
 
-        public void On_CMSG_CREATURE_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_CREATURE_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -1954,7 +1954,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_NPC_TEXT_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_NPC_TEXT_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -2024,7 +2024,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_GOSSIP_SELECT_OPTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_GOSSIP_SELECT_OPTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) < 17)
             {
@@ -2048,7 +2048,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public void On_CMSG_SPIRIT_HEALER_ACTIVATE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public static void On_CMSG_SPIRIT_HEALER_ACTIVATE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -2085,7 +2085,7 @@ namespace Mangos.World.Objects
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private ulong GetNewGUID()
+        private static ulong GetNewGUID()
         {
             ref ulong creatureGUIDCounter = ref WorldServiceLocator._WorldServer.CreatureGUIDCounter;
             creatureGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(creatureGUIDCounter), 1m));

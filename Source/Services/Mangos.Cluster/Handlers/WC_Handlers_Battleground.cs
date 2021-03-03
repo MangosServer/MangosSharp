@@ -182,7 +182,7 @@ namespace Mangos.Cluster.Handlers
             /// <returns></returns>
             public void Enqueue(WcHandlerCharacter.CharacterObject objCharacter)
             {
-                if (_clusterServiceLocator.Functions.GetCharacterSide((byte)objCharacter.Race))
+                if (Functions.GetCharacterSide((byte)objCharacter.Race))
                 {
                     _queueTeam1.Add(objCharacter);
                 }
@@ -399,7 +399,7 @@ namespace Mangos.Cluster.Handlers
         /// </summary>
         /// <param name="bgTypeId">The bg type id.</param>
         /// <returns></returns>
-        private int GetBattleGrounMapIdByTypeId(BattleGroundTypeId bgTypeId)
+        private static int GetBattleGrounMapIdByTypeId(BattleGroundTypeId bgTypeId)
         {
             switch (bgTypeId)
             {
@@ -430,7 +430,7 @@ namespace Mangos.Cluster.Handlers
         /// </summary>
         /// <param name="objCharacter">The objCharacter.</param>
         /// <returns></returns>
-        public void SendBattlegroundGroupJoined(WcHandlerCharacter.CharacterObject objCharacter)
+        public static void SendBattlegroundGroupJoined(WcHandlerCharacter.CharacterObject objCharacter)
         {
             // 0 - Your group has joined a battleground queue, but you are not eligible
             // 1 - Your group has joined the queue for AV
@@ -449,7 +449,7 @@ namespace Mangos.Cluster.Handlers
             }
         }
 
-        public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(PacketClass packet, ClientClass client)
+        public static void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(PacketClass packet, ClientClass client)
         {
             PacketClass p = new(Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS);
             try

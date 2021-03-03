@@ -68,7 +68,7 @@ namespace Mangos.WoWFakeClient
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.White;
             Worldserver.InitializePackets();
-            Worldserver.timeBeginPeriod(1);
+            Worldserver.TimeBeginPeriod(1);
             ConnectToRealm();
             Thread NewThread;
             NewThread = new Thread(CheckConnection)

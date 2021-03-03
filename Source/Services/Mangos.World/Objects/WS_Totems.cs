@@ -103,7 +103,7 @@ namespace Mangos.World.Objects
                                         {
                                             WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
                                             WS_PlayerData.CharacterObject objCharacter = (WS_PlayerData.CharacterObject)Caster;
-                                            Targets = wS_Spells.GetPartyMembersAtPoint(ref objCharacter, ActiveSpells[i].Aura_Info[j].GetRadius, positionX, positionY, positionZ);
+                                            Targets = WS_Spells.GetPartyMembersAtPoint(ref objCharacter, ActiveSpells[i].Aura_Info[j].GetRadius, positionX, positionY, positionZ);
                                             break;
                                         }
 
@@ -111,7 +111,7 @@ namespace Mangos.World.Objects
                                         {
                                             WS_Spells wS_Spells2 = WorldServiceLocator._WS_Spells;
                                             WS_Base.BaseUnit Target = this;
-                                            Targets = wS_Spells2.GetFriendAroundMe(ref Target, ActiveSpells[i].Aura_Info[j].GetRadius);
+                                            Targets = WS_Spells.GetFriendAroundMe(ref Target, ActiveSpells[i].Aura_Info[j].GetRadius);
                                             break;
                                         }
                                 }

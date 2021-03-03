@@ -35,7 +35,7 @@ namespace Mangos.World.Player
         {
             WS_PlayerData.CharacterObject Character = new();
             DataTable MySQLQuery = new();
-            Character.Name = WorldServiceLocator._Functions.CapitalizeName(ref Name);
+            Character.Name = Globals.Functions.CapitalizeName(ref Name);
             Character.Race = (Races)Race;
             Character.Classe = (Classes)Classe;
             Character.Gender = (Genders)Gender;
@@ -77,7 +77,7 @@ namespace Mangos.World.Player
                 {
                     MySQLQuery.Clear();
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT char_race FROM characters WHERE account_id = \"{Account_ID}\" LIMIT 1;", ref MySQLQuery);
-                    if (MySQLQuery.Rows.Count > 0 && Character.IsHorde != WorldServiceLocator._Functions.GetCharacterSide(MySQLQuery.Rows[0].As<byte>("char_race")))
+                    if (MySQLQuery.Rows.Count > 0 && Character.IsHorde != Globals.Functions.GetCharacterSide(MySQLQuery.Rows[0].As<byte>("char_race")))
                     {
                         return 51;
                     }
@@ -163,7 +163,7 @@ namespace Mangos.World.Player
             objCharacter.Energy.Current = 0;
             objCharacter.Energy.Base = 0;
             objCharacter.ManaType = WorldServiceLocator._WS_Player_Initializator.GetClassManaType(objCharacter.Classe);
-            objCharacter.Model = WorldServiceLocator._Functions.GetRaceModel(objCharacter.Race, (int)objCharacter.Gender);
+            objCharacter.Model = Globals.Functions.GetRaceModel(objCharacter.Race, (int)objCharacter.Gender);
             objCharacter.Faction = WorldServiceLocator._WS_DBCDatabase.CharRaces[(int)objCharacter.Race].FactionID;
             objCharacter.MapID = Conversions.ToUInteger(CreateInfo.Rows[0]["map"]);
             objCharacter.ZoneID = Conversions.ToInteger(CreateInfo.Rows[0]["zone"]);

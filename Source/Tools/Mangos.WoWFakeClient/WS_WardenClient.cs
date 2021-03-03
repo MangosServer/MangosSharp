@@ -406,7 +406,7 @@ namespace Mangos.WoWFakeClient
             private byte[] PrepairModule(ref BinaryReader br)
             {
                 int length = br.ReadInt32();
-                m_Mod = malloc(length);
+                m_Mod = Malloc(length);
                 byte[] bModule = new byte[length];
                 MemoryStream ms = new(bModule);
                 BinaryWriter bw = new(ms);
@@ -636,7 +636,7 @@ namespace Mangos.WoWFakeClient
                 Console.WriteLine("  GetRC4Data: 0x{0:X}", myFunctionList.fpGetRC4Data);
 
                 // http://forum.valhallalegends.com/index.php?topic=17758.0
-                myFuncList = new IntPtr(malloc(0x1C));
+                myFuncList = new IntPtr(Malloc(0x1C));
                 Marshal.StructureToPtr(myFunctionList, myFuncList, false);
                 pFuncList = myFuncList.ToInt32();
                 int localVarPtr() { object argobj = pFuncList; int ret = VarPtr(ref argobj); return ret; }
@@ -665,7 +665,7 @@ namespace Mangos.WoWFakeClient
 
             private void Unload_Module()
             {
-                free(m_Mod);
+                Free(m_Mod);
             }
 
             [StructLayout(LayoutKind.Explicit, Size = 0x1C)]
@@ -748,13 +748,13 @@ namespace Mangos.WoWFakeClient
             private int AllocateMem(int dwSize)
             {
                 Console.WriteLine("Warden.AllocateMem() Size={0}", dwSize);
-                return malloc(dwSize);
+                return Malloc(dwSize);
             }
 
             private void FreeMemory(int dwMemory)
             {
                 Console.WriteLine("Warden.FreeMemory() Memory={0}", dwMemory);
-                free(dwMemory);
+                Free(dwMemory);
             }
 
             private int SetRC4Data(int lpKeys, int dwSize)
@@ -831,12 +831,12 @@ namespace Mangos.WoWFakeClient
 
         private static int ByteArrPtr(ref byte[] arr)
         {
-            int pData = malloc(arr.Length);
+            int pData = Malloc(arr.Length);
             Marshal.Copy(arr, 0, new IntPtr(pData), arr.Length);
             return pData;
         }
 
-        private static int malloc(int length)
+        private static int Malloc(int length)
         {
             int tmpHandle = Marshal.AllocHGlobal(length + 4).ToInt32();
             int lockedHandle = GlobalLock(tmpHandle) + 4;
@@ -844,7 +844,7 @@ namespace Mangos.WoWFakeClient
             return lockedHandle;
         }
 
-        private static void free(int ptr)
+        private static void Free(int ptr)
         {
             int tmpHandle = Marshal.ReadInt32(new IntPtr(ptr - 4));
             GlobalUnlock(tmpHandle);

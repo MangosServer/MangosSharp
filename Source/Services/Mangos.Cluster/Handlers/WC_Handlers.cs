@@ -84,7 +84,7 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_BATTLEMASTER_JOIN] = _clusterServiceLocator.WcHandlersBattleground.On_CMSG_BATTLEMASTER_JOIN;
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_BATTLEFIELD_PORT] = _clusterServiceLocator.WcHandlersBattleground.On_CMSG_BATTLEFIELD_PORT;
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_LEAVE_BATTLEFIELD] = _clusterServiceLocator.WcHandlersBattleground.On_CMSG_LEAVE_BATTLEFIELD;
-            _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS] = _clusterServiceLocator.WcHandlersBattleground.On_MSG_BATTLEGROUND_PLAYER_POSITIONS;
+            _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS] = WcHandlersBattleground.On_MSG_BATTLEGROUND_PLAYER_POSITIONS;
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_FRIEND_LIST] = _clusterServiceLocator.WcHandlersSocial.On_CMSG_FRIEND_LIST;
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_ADD_FRIEND] = _clusterServiceLocator.WcHandlersSocial.On_CMSG_ADD_FRIEND;
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_ADD_IGNORE] = _clusterServiceLocator.WcHandlersSocial.On_CMSG_ADD_IGNORE;
@@ -106,7 +106,7 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.MSG_MINIMAP_PING] = _clusterServiceLocator.WcHandlersGroup.On_MSG_MINIMAP_PING;
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.MSG_RANDOM_ROLL] = _clusterServiceLocator.WcHandlersGroup.On_MSG_RANDOM_ROLL;
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.MSG_RAID_READY_CHECK] = _clusterServiceLocator.WcHandlersGroup.On_MSG_RAID_READY_CHECK;
-            _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.MSG_RAID_ICON_TARGET] = _clusterServiceLocator.WcHandlersGroup.On_MSG_RAID_ICON_TARGET;
+            _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.MSG_RAID_ICON_TARGET] = WcHandlersGroup.On_MSG_RAID_ICON_TARGET;
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_REQUEST_PARTY_MEMBER_STATS] = _clusterServiceLocator.WcHandlersGroup.On_CMSG_REQUEST_PARTY_MEMBER_STATS;
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_TURN_IN_PETITION] = _clusterServiceLocator.WcHandlersGuild.On_CMSG_TURN_IN_PETITION;
             _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_GUILD_QUERY] = _clusterServiceLocator.WcHandlersGuild.On_CMSG_GUILD_QUERY;

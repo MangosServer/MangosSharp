@@ -49,10 +49,10 @@ namespace Mangos.WoWFakeClient
         public static bool Decoding;
 
         [DllImport("winmm.dll")]
-        public static extern int timeGetTime();
+        public static extern int TimeGetTime();
 
         [DllImport("winmm.dll")]
-        public static extern int timeBeginPeriod(int uPeriod);
+        public static extern int TimeBeginPeriod(int uPeriod);
 
         public static bool WS_Connected()
         {
@@ -196,7 +196,7 @@ namespace Mangos.WoWFakeClient
                 }
 
                 CurrentPing = (uint)(CurrentPing + 1L);
-                PingSent = timeGetTime();
+                PingSent = TimeGetTime();
                 Packets.PacketClass Ping = new(OPCODES.CMSG_PING);
                 Ping.AddUInt32(CurrentPing);
                 Ping.AddInt32(CurrentLatency);

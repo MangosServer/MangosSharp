@@ -85,11 +85,11 @@ namespace Mangos.Cluster.Network
             Port = (uint)remoteEndPoint.Port;
 
             // DONE: Connection spam protection
-            if (_clusterServiceLocator.WcNetwork.LastConnections.ContainsKey(_clusterServiceLocator.WcNetwork.Ip2Int(IP)))
+            if (_clusterServiceLocator.WcNetwork.LastConnections.ContainsKey(WcNetwork.Ip2Int(IP)))
             {
-                if (DateTime.Now > _clusterServiceLocator.WcNetwork.LastConnections[_clusterServiceLocator.WcNetwork.Ip2Int(IP)])
+                if (DateTime.Now > _clusterServiceLocator.WcNetwork.LastConnections[WcNetwork.Ip2Int(IP)])
                 {
-                    _clusterServiceLocator.WcNetwork.LastConnections[_clusterServiceLocator.WcNetwork.Ip2Int(IP)] = DateTime.Now.AddSeconds(5d);
+                    _clusterServiceLocator.WcNetwork.LastConnections[WcNetwork.Ip2Int(IP)] = DateTime.Now.AddSeconds(5d);
                 }
                 else
                 {
@@ -100,7 +100,7 @@ namespace Mangos.Cluster.Network
             }
             else
             {
-                _clusterServiceLocator.WcNetwork.LastConnections.Add(_clusterServiceLocator.WcNetwork.Ip2Int(IP), DateTime.Now.AddSeconds(5d));
+                _clusterServiceLocator.WcNetwork.LastConnections.Add(WcNetwork.Ip2Int(IP), DateTime.Now.AddSeconds(5d));
             }
 
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "Incoming connection from [{0}:{1}]", IP, Port);
