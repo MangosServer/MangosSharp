@@ -164,7 +164,7 @@ namespace Mangos.World.Handlers
                             WorldServiceLocator._Functions.SetFlag(ref client.Character.ZonesExplored[areaFlagOffset], (byte)areaFlag, flagValue: true);
                             int GainedXP = WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level * 10;
                             GainedXP = WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].Level * 10;
-                            Packets.PacketClass SMSG_EXPLORATION_EXPERIENCE = new Packets.PacketClass(Opcodes.SMSG_EXPLORATION_EXPERIENCE);
+                            Packets.PacketClass SMSG_EXPLORATION_EXPERIENCE = new(Opcodes.SMSG_EXPLORATION_EXPERIENCE);
                             SMSG_EXPLORATION_EXPERIENCE.AddInt32(WorldServiceLocator._WS_Maps.AreaTable[exploreFlag].ID);
                             SMSG_EXPLORATION_EXPERIENCE.AddInt32(GainedXP);
                             client.Send(ref SMSG_EXPLORATION_EXPERIENCE);
@@ -201,7 +201,7 @@ namespace Mangos.World.Handlers
                 int ClientTimeDelay = (int)(MsTime - Time);
                 int MoveTime = (int)(Time - checked(MsTime - ClientTimeDelay) + 500 + MsTime);
                 packet.AddInt32(MoveTime, 10);
-                Packets.PacketClass response = new Packets.PacketClass(packet.OpCode);
+                Packets.PacketClass response = new(packet.OpCode);
                 response.AddPackGUID(client.Character.GUID);
                 byte[] tempArray = new byte[packet.Data.Length - 6 + 1];
                 Array.Copy(packet.Data, 6, tempArray, 0, packet.Data.Length - 6);
@@ -248,7 +248,7 @@ namespace Mangos.World.Handlers
                 int ClientTimeDelay = (int)(MsTime - Time);
                 int MoveTime = (int)(Time - checked(MsTime - ClientTimeDelay) + 500 + MsTime);
                 packet.AddInt32(MoveTime, 10);
-                Packets.PacketClass response = new Packets.PacketClass(packet.OpCode);
+                Packets.PacketClass response = new(packet.OpCode);
                 response.AddPackGUID(Controlled.GUID);
                 byte[] tempArray = new byte[packet.Data.Length - 6 + 1];
                 Array.Copy(packet.Data, 6, tempArray, 0, packet.Data.Length - 6);
@@ -350,7 +350,7 @@ namespace Mangos.World.Handlers
 
         public void SendAreaTriggerMessage(ref WS_Network.ClientClass client, string Text)
         {
-            Packets.PacketClass p = new Packets.PacketClass(Opcodes.SMSG_AREA_TRIGGER_MESSAGE);
+            Packets.PacketClass p = new(Opcodes.SMSG_AREA_TRIGGER_MESSAGE);
             p.AddInt32(Text.Length);
             p.AddString(Text);
             client.Send(ref p);
@@ -368,7 +368,7 @@ namespace Mangos.World.Handlers
                 packet.GetInt16();
                 int triggerID = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AREATRIGGER [triggerID={2}]", client.IP, client.Port, triggerID);
-                DataTable q = new DataTable();
+                DataTable q = new();
                 q.Clear();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT entry, quest FROM quest_relations WHERE actor=2 and role=0 and entry = {triggerID};", ref q);
                 if (q.Rows.Count > 0)
@@ -508,8 +508,8 @@ namespace Mangos.World.Handlers
                         }
                         if (client.Character.LogoutTimer != null)
                         {
-                            Packets.UpdateClass UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                            Packets.PacketClass SMSG_UPDATE_OBJECT = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                            Packets.UpdateClass UpdateData = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                            Packets.PacketClass SMSG_UPDATE_OBJECT = new(Opcodes.SMSG_UPDATE_OBJECT);
                             try
                             {
                                 SMSG_UPDATE_OBJECT.AddInt32(1);
@@ -525,7 +525,7 @@ namespace Mangos.World.Handlers
                             {
                                 SMSG_UPDATE_OBJECT.Dispose();
                             }
-                            Packets.PacketClass packetACK = new Packets.PacketClass(Opcodes.SMSG_STANDSTATE_CHANGE_ACK);
+                            Packets.PacketClass packetACK = new(Opcodes.SMSG_STANDSTATE_CHANGE_ACK);
                             try
                             {
                                 packetACK.AddInt8(1);
@@ -1037,10 +1037,10 @@ namespace Mangos.World.Handlers
                     cHARACTERs[key] = (WS_PlayerData.CharacterObject)objCharacter;
                     if (flag)
                     {
-                        Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                        Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                         packet.AddInt32(1);
                         packet.AddInt8(0);
-                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                        Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                         WorldServiceLocator._WorldServer.CHARACTERs[GUID].FillAllUpdateFlags(ref tmpUpdate);
                         Packets.UpdateClass updateClass = tmpUpdate;
                         WS_PlayerData.CharacterObject updateObject = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = GUID];
@@ -1061,10 +1061,10 @@ namespace Mangos.World.Handlers
                     Character = (WS_PlayerData.CharacterObject)objCharacter;
                     if (flag)
                     {
-                        Packets.PacketClass myPacket = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                        Packets.PacketClass myPacket = new(Opcodes.SMSG_UPDATE_OBJECT);
                         myPacket.AddInt32(1);
                         myPacket.AddInt8(0);
-                        Packets.UpdateClass myTmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                        Packets.UpdateClass myTmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                         Character.FillAllUpdateFlags(ref myTmpUpdate);
                         myTmpUpdate.AddToPacket(ref myPacket, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref Character);
                         myTmpUpdate.Dispose();
@@ -1079,7 +1079,7 @@ namespace Mangos.World.Handlers
 
         public void UpdateCreaturesAndGameObjectsInCell(ref WS_Maps.TMapTile MapTile, ref WS_PlayerData.CharacterObject Character)
         {
-            Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
+            Packets.UpdatePacketClass packet = new();
             WS_Maps.TMapTile tMapTile = MapTile;
             ulong[] list = tMapTile.CreaturesHere.ToArray();
             ulong[] array = list;
@@ -1095,7 +1095,7 @@ namespace Mangos.World.Handlers
                     wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)objCharacter;
                     if (flag)
                     {
-                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
+                        Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].FillAllUpdateFlags(ref tmpUpdate);
                         Packets.UpdateClass updateClass = tmpUpdate;
                         Packets.PacketClass packet2 = packet;
@@ -1127,7 +1127,7 @@ namespace Mangos.World.Handlers
                     wORLD_TRANSPORTs[key] = (WS_Transports.TransportObject)objCharacter;
                     if (flag)
                     {
-                        Packets.UpdateClass tmpUpdate3 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                        Packets.UpdateClass tmpUpdate3 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                         WorldServiceLocator._WorldServer.WORLD_TRANSPORTs[GUID2].FillAllUpdateFlags(ref tmpUpdate3, ref Character);
                         Packets.UpdateClass updateClass2 = tmpUpdate3;
                         Packets.PacketClass packet2 = packet;
@@ -1150,7 +1150,7 @@ namespace Mangos.World.Handlers
                     wORLD_GAMEOBJECTs[key] = (WS_GameObjects.GameObjectObject)objCharacter;
                     if (flag)
                     {
-                        Packets.UpdateClass tmpUpdate2 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                        Packets.UpdateClass tmpUpdate2 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2].FillAllUpdateFlags(ref tmpUpdate2, ref Character);
                         Packets.UpdateClass updateClass3 = tmpUpdate2;
                         Packets.PacketClass packet2 = packet;
@@ -1178,7 +1178,7 @@ namespace Mangos.World.Handlers
                     wORLD_DYNAMICOBJECTs[key] = (WS_DynamicObjects.DynamicObjectObject)objCharacter;
                     if (flag)
                     {
-                        Packets.UpdateClass tmpUpdate4 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_DYNAMICOBJECT);
+                        Packets.UpdateClass tmpUpdate4 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_DYNAMICOBJECT);
                         WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs[GUID3].FillAllUpdateFlags(ref tmpUpdate4);
                         Packets.UpdateClass updateClass4 = tmpUpdate4;
                         Packets.PacketClass packet2 = packet;
@@ -1221,10 +1221,10 @@ namespace Mangos.World.Handlers
                     wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)objCharacter;
                     if (flag)
                     {
-                        Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                        Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                         packet.AddInt32(1);
                         packet.AddInt8(0);
-                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
+                        Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].FillAllUpdateFlags(ref tmpUpdate);
                         Packets.UpdateClass updateClass = tmpUpdate;
                         WS_Creatures.CreatureObject updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
@@ -1266,10 +1266,10 @@ namespace Mangos.World.Handlers
                     }
                     if (num != 0)
                     {
-                        Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                        Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                         packet.AddInt32(1);
                         packet.AddInt8(0);
-                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                        Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].FillAllUpdateFlags(ref tmpUpdate, ref Character);
                         Packets.UpdateClass updateClass = tmpUpdate;
                         Dictionary<ulong, WS_GameObjects.GameObjectObject> wORLD_GAMEOBJECTs;
@@ -1304,10 +1304,10 @@ namespace Mangos.World.Handlers
                     wORLD_CORPSEOBJECTs[key] = (WS_Corpses.CorpseObject)objCharacter;
                     if (flag)
                     {
-                        Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                        Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                         packet.AddInt32(1);
                         packet.AddInt8(0);
-                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
+                        Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
                         WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID].FillAllUpdateFlags(ref tmpUpdate);
                         Packets.UpdateClass updateClass = tmpUpdate;
                         WS_Corpses.CorpseObject updateObject = (wORLD_CORPSEOBJECTs = WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs)[key = GUID];

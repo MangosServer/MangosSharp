@@ -36,7 +36,7 @@ namespace Mangos.Cluster.Handlers.Guild
             public ulong Leader;
             public string Motd;
             public string Info;
-            public List<ulong> Members = new List<ulong>();
+            public List<ulong> Members = new();
             public string[] Ranks = new string[10];
             public uint[] RankRights = new uint[10];
             public byte EmblemStyle;
@@ -51,7 +51,7 @@ namespace Mangos.Cluster.Handlers.Guild
             public Guild(uint guildId)
             {
                 Id = guildId;
-                DataTable mySqlQuery = new DataTable();
+                DataTable mySqlQuery = new();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT * FROM guilds WHERE guild_id = " + Id + ";", ref mySqlQuery);
                 if (mySqlQuery.Rows.Count == 0)
                 {

@@ -57,7 +57,7 @@ namespace Mangos.Cluster.Network
 
         public ClientInfo GetClientInfo()
         {
-            ClientInfo ci = new ClientInfo
+            ClientInfo ci = new()
             {
                 Access = Access,
                 Account = Account,
@@ -106,7 +106,7 @@ namespace Mangos.Cluster.Network
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "Incoming connection from [{0}:{1}]", IP, Port);
 
             // Send Auth Challenge
-            PacketClass p = new PacketClass(Opcodes.SMSG_AUTH_CHALLENGE);
+            PacketClass p = new(Opcodes.SMSG_AUTH_CHALLENGE);
             p.AddInt32((int)Index);
             Send(p);
             Index = (uint)Interlocked.Increment(ref _clusterServiceLocator.WorldCluster.ClietniDs);

@@ -166,7 +166,7 @@ namespace Mangos.World.Network
                 {
                     throw new ApplicationException("Client doesn't exist!");
                 }
-                ClientClass objCharacter = new ClientClass(client);
+                ClientClass objCharacter = new(client);
                 if (WorldServiceLocator._WorldServer.CLIENTs.ContainsKey(id))
                 {
                     WorldServiceLocator._WorldServer.CLIENTs.Remove(id);
@@ -203,7 +203,7 @@ namespace Mangos.World.Network
                 try
                 {
                     ClientClass client = WorldServiceLocator._WorldServer.CLIENTs[id];
-                    WS_PlayerData.CharacterObject Character = new WS_PlayerData.CharacterObject(ref client, guid);
+                    WS_PlayerData.CharacterObject Character = new(ref client, guid);
                     WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                     WorldServiceLocator._WorldServer.CHARACTERs[guid] = Character;
                     WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseWriterLock();
@@ -248,7 +248,7 @@ namespace Mangos.World.Network
                 {
                     if (WorldServiceLocator._WorldServer.CLIENTs.TryGetValue(id, out ClientClass _client))
                     {
-                        Packets.PacketClass p = new Packets.PacketClass(ref data);
+                        Packets.PacketClass p = new(ref data);
                         _client?.PushPacket(p);
                     }
                     else
@@ -341,7 +341,7 @@ namespace Mangos.World.Network
 
             public ServerInfo GetServerInfo()
             {
-                ServerInfo serverInfo = new ServerInfo
+                ServerInfo serverInfo = new()
                 {
                     cpuUsage = UsageCPU,
                     memoryUsage = checked((ulong)Math.Round(Process.GetCurrentProcess().WorkingSet64 / 1048576.0))
@@ -359,7 +359,7 @@ namespace Mangos.World.Network
             {
                 if (!WorldServiceLocator._WS_Maps.Maps.ContainsKey(MapID))
                 {
-                    WS_Maps.TMap Map = new WS_Maps.TMap(checked((int)MapID), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));
+                    WS_Maps.TMap Map = new(checked((int)MapID), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));
                 }
             }
 
@@ -415,7 +415,7 @@ namespace Mangos.World.Network
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[{0:000000}] Client group set [G{1:00000}]", ID, GroupID);
                 if (!WorldServiceLocator._WS_Group.Groups.ContainsKey(GroupID))
                 {
-                    WS_Group.Group Group = new WS_Group.Group(GroupID);
+                    WS_Group.Group Group = new(GroupID);
                     Cluster.GroupRequestUpdate(ID);
                 }
                 WorldServiceLocator._WorldServer.CLIENTs[ID].Character.Group = WorldServiceLocator._WS_Group.Groups[GroupID];
@@ -434,7 +434,7 @@ namespace Mangos.World.Network
                 {
                     return;
                 }
-                List<ulong> list = new List<ulong>();
+                List<ulong> list = new();
                 foreach (ulong GUID in Members)
                 {
                     if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID))

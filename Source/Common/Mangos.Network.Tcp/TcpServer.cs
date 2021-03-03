@@ -113,7 +113,7 @@ namespace Mangos.Network.Tcp
                         writeCount < buffer.Length && reader.TryRead(out buffer[writeCount]);
                         writeCount++) ;
 
-                    ArraySegment<byte> arraySegment = new ArraySegment<byte>(buffer, 0, writeCount);
+                    ArraySegment<byte> arraySegment = new(buffer, 0, writeCount);
                     await client.SendAsync(arraySegment, SocketFlags.None);
                 }
             }

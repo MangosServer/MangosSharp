@@ -79,7 +79,7 @@ namespace Mangos.World.Handlers
             {
                 index = 0;
                 data = new byte[20];
-                SHA1Managed sha1 = new SHA1Managed();
+                SHA1Managed sha1 = new();
                 source1 = sha1.ComputeHash(seed, 0, 20);
                 source2 = sha1.ComputeHash(seed, 20, 20);
                 Update();
@@ -88,7 +88,7 @@ namespace Mangos.World.Handlers
             public void Update()
             {
                 byte[] buffer1 = new byte[60];
-                SHA1Managed sha1 = new SHA1Managed();
+                SHA1Managed sha1 = new();
                 Buffer.BlockCopy(source1, 0, buffer1, 0, 20);
                 Buffer.BlockCopy(data, 0, buffer1, 20, 20);
                 Buffer.BlockCopy(source2, 0, buffer1, 40, 20);
@@ -295,7 +295,7 @@ namespace Mangos.World.Handlers
         public void MaievInit(ref WS_PlayerData.CharacterObject objCharacter)
         {
             byte[] i = WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientGetCryptKey(objCharacter.client.Index);
-            MaievData j = new MaievData(i);
+            MaievData j = new(i);
             byte[] seedOut = j.GetBytes(16);
             byte[] seedIn = j.GetBytes(16);
             objCharacter.WardenData.KeyOut = RC4.Init(seedOut);
@@ -315,7 +315,7 @@ namespace Mangos.World.Handlers
                 throw new ApplicationException("Maiev.mod not ready!");
             }
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [{2}]", objCharacter.client.IP, objCharacter.client.Port, WorldServiceLocator._WS_Warden.Maiev.ModuleName);
-            Packets.PacketClass r = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
+            Packets.PacketClass r = new(Opcodes.SMSG_WARDEN_DATA);
             r.AddInt8(0);
             r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.WardenModule);
             r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.ModuleKey);
@@ -329,13 +329,13 @@ namespace Mangos.World.Handlers
             {
                 throw new ApplicationException("Maiev.mod not ready!");
             }
-            FileStream file = new FileStream($"warden\\{WorldServiceLocator._WS_Warden.Maiev.ModuleName}.bin", FileMode.Open, FileAccess.Read);
+            FileStream file = new($"warden\\{WorldServiceLocator._WS_Warden.Maiev.ModuleName}.bin", FileMode.Open, FileAccess.Read);
             checked
             {
                 int size;
                 for (size = (int)file.Length; size > 500; size -= 500)
                 {
-                    Packets.PacketClass r = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
+                    Packets.PacketClass r = new(Opcodes.SMSG_WARDEN_DATA);
                     r.AddInt8(1);
                     r.AddInt16(500);
                     int i = 1;
@@ -350,7 +350,7 @@ namespace Mangos.World.Handlers
                 }
                 if (size > 0)
                 {
-                    Packets.PacketClass r2 = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
+                    Packets.PacketClass r2 = new(Opcodes.SMSG_WARDEN_DATA);
                     r2.AddInt8(1);
                     r2.AddUInt16((ushort)size);
                     int num = size;
@@ -366,7 +366,7 @@ namespace Mangos.World.Handlers
 
         public void MaievSendUnk(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            Packets.PacketClass unk = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
+            Packets.PacketClass unk = new(Opcodes.SMSG_WARDEN_DATA);
             try
             {
                 unk.AddInt8(3);
@@ -457,7 +457,7 @@ namespace Mangos.World.Handlers
 
         public void MaievSendSeed(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            Packets.PacketClass r = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
+            Packets.PacketClass r = new(Opcodes.SMSG_WARDEN_DATA);
             r.AddInt8(5);
             r.AddByteArray(objCharacter.WardenData.Seed);
             WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
@@ -482,7 +482,7 @@ namespace Mangos.World.Handlers
 
         public bool ControlChecksum(uint checkSum, byte[] data)
         {
-            SHA1Managed sha1 = new SHA1Managed();
+            SHA1Managed sha1 = new();
             byte[] hash = sha1.ComputeHash(data);
             uint[] ints = new uint[5];
             int i = 0;

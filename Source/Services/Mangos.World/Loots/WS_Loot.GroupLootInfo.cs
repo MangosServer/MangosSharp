@@ -69,7 +69,7 @@ namespace Mangos.World.Loots
                 if (maxRollType == 0)
                 {
                     LootObject.GroupLootInfo.Remove(LootSlot);
-                    Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.SMSG_LOOT_ALL_PASSED);
+                    Packets.PacketClass response2 = new(Opcodes.SMSG_LOOT_ALL_PASSED);
                     response2.AddUInt64(LootObject.GUID);
                     response2.AddInt32(LootSlot);
                     response2.AddInt32(Item.ItemID);
@@ -93,7 +93,7 @@ namespace Mangos.World.Loots
                                 maxRoll = rollValue;
                                 looterCharacter = looter.Key;
                             }
-                            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_LOOT_ROLL);
+                            Packets.PacketClass response = new(Opcodes.SMSG_LOOT_ROLL);
                             response.AddUInt64(LootObject.GUID);
                             response.AddInt32(LootSlot);
                             response.AddUInt64(looter.Key.GUID);
@@ -106,12 +106,12 @@ namespace Mangos.World.Loots
                             response.Dispose();
                         }
                     }
-                    ItemObject itemObject = new ItemObject(Item.ItemID, looterCharacter.GUID)
+                    ItemObject itemObject = new(Item.ItemID, looterCharacter.GUID)
                     {
                         StackCount = Item.ItemCount
                     };
                     ItemObject tmpItem = itemObject;
-                    Packets.PacketClass wonItem = new Packets.PacketClass(Opcodes.SMSG_LOOT_ROLL_WON);
+                    Packets.PacketClass wonItem = new(Opcodes.SMSG_LOOT_ROLL_WON);
                     wonItem.AddUInt64(LootObject.GUID);
                     wonItem.AddInt32(LootSlot);
                     wonItem.AddInt32(Item.ItemID);
@@ -150,7 +150,7 @@ namespace Mangos.World.Loots
                     if (!Looters.ContainsKey(objCharacter))
                     {
                         Looters[objCharacter] = 0;
-                        Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_LOOT_ROLL);
+                        Packets.PacketClass response = new(Opcodes.SMSG_LOOT_ROLL);
                         response.AddUInt64(LootObject.GUID);
                         response.AddInt32(LootSlot);
                         response.AddUInt64(objCharacter.GUID);

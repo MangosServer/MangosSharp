@@ -52,15 +52,15 @@ namespace Mangos.Cluster
         // Players' containers
         public long ClietniDs;
 
-        public Dictionary<uint, ClientClass> ClienTs = new Dictionary<uint, ClientClass>();
-        public ReaderWriterLock CharacteRsLock = new ReaderWriterLock();
-        public Dictionary<ulong, WcHandlerCharacter.CharacterObject> CharacteRs = new Dictionary<ulong, WcHandlerCharacter.CharacterObject>();
+        public Dictionary<uint, ClientClass> ClienTs = new();
+        public ReaderWriterLock CharacteRsLock = new();
+        public Dictionary<ulong, WcHandlerCharacter.CharacterObject> CharacteRs = new();
         // Public CHARACTER_NAMEs As New Hashtable
 
         // System Things...
-        public BaseWriter Log = new BaseWriter();
+        public BaseWriter Log = new();
 
-        public Random Rnd = new Random();
+        public Random Rnd = new();
 
         public delegate void HandlePacket(PacketClass packet, ClientClass client);
 
@@ -123,28 +123,28 @@ namespace Mangos.Cluster
             }
         }
 
-        private Dictionary<Opcodes, HandlePacket> _packetHandlers = new Dictionary<Opcodes, HandlePacket>();
+        private readonly Dictionary<Opcodes, HandlePacket> _packetHandlers = new();
 
         public Dictionary<Opcodes, HandlePacket> GetPacketHandlers()
         {
             return _packetHandlers;
         }
 
-        private SQL _accountDatabase = new SQL();
+        private readonly SQL _accountDatabase = new();
 
         public SQL GetAccountDatabase()
         {
             return _accountDatabase;
         }
 
-        private SQL _characterDatabase = new SQL();
+        private readonly SQL _characterDatabase = new();
 
         public SQL GetCharacterDatabase()
         {
             return _characterDatabase;
         }
 
-        private SQL _worldDatabase = new SQL();
+        private readonly SQL _worldDatabase = new();
 
         public SQL GetWorldDatabase()
         {
@@ -285,7 +285,7 @@ namespace Mangos.Cluster
             _clusterServiceLocator.WorldServerClass.Start();
 
             ClusterConfiguration configuration = configurationProvider.GetConfiguration();
-            ProxyServer<WorldServerClass> server = new ProxyServer<WorldServerClass>(
+            ProxyServer<WorldServerClass> server = new(
                 IPAddress.Parse(configuration.ClusterListenAddress),
                 configuration.ClusterListenPort,
                 _clusterServiceLocator.WcNetwork.WorldServer);

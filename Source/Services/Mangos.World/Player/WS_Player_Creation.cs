@@ -33,8 +33,8 @@ namespace Mangos.World.Player
     {
         public int CreateCharacter(string Account, string Name, byte Race, byte Classe, byte Gender, byte Skin, byte Face, byte HairStyle, byte HairColor, byte FacialHair, byte OutfitID)
         {
-            WS_PlayerData.CharacterObject Character = new WS_PlayerData.CharacterObject();
-            DataTable MySQLQuery = new DataTable();
+            WS_PlayerData.CharacterObject Character = new();
+            DataTable MySQLQuery = new();
             Character.Name = WorldServiceLocator._Functions.CapitalizeName(ref Name);
             Character.Race = (Races)Race;
             Character.Classe = (Classes)Classe;
@@ -121,11 +121,11 @@ namespace Mangos.World.Player
 
         public void CreateCharacter(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            DataTable CreateInfo = new DataTable();
-            DataTable CreateInfoBars = new DataTable();
-            DataTable CreateInfoSkills = new DataTable();
-            DataTable LevelStats = new DataTable();
-            DataTable ClassLevelStats = new DataTable();
+            DataTable CreateInfo = new();
+            DataTable CreateInfoBars = new();
+            DataTable CreateInfoSkills = new();
+            DataTable LevelStats = new();
+            DataTable ClassLevelStats = new();
             WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM playercreateinfo WHERE race = {(int)objCharacter.Race} AND class = {(int)objCharacter.Classe};", ref CreateInfo);
             if (CreateInfo.Rows.Count <= 0)
             {
@@ -257,7 +257,7 @@ namespace Mangos.World.Player
 
         public void CreateCharacterSpells(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            DataTable CreateInfoSpells = new DataTable();
+            DataTable CreateInfoSpells = new();
             WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM playercreateinfo_spell WHERE race = {(int)objCharacter.Race} AND class = {(int)objCharacter.Classe};", ref CreateInfoSpells);
             if (CreateInfoSpells.Rows.Count <= 0)
             {
@@ -284,14 +284,14 @@ namespace Mangos.World.Player
 
         public void CreateCharacterItems(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            DataTable CreateInfoItems = new DataTable();
+            DataTable CreateInfoItems = new();
             WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM playercreateinfo_item WHERE race = {(int)objCharacter.Race} AND class = {(int)objCharacter.Classe};", ref CreateInfoItems);
             if (CreateInfoItems.Rows.Count <= 0)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "No information found in playercreateinfo_item table for Race: {0}, Class: {1}", objCharacter.Race, objCharacter.Classe);
             }
-            Dictionary<int, int> Items = new Dictionary<int, int>();
-            List<int> Used = new List<int>();
+            Dictionary<int, int> Items = new();
+            List<int> Used = new();
             IEnumerator enumerator = default;
             try
             {
@@ -313,7 +313,7 @@ namespace Mangos.World.Player
             {
                 if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(Item2.Key))
                 {
-                    WS_Items.ItemInfo newItem = new WS_Items.ItemInfo(Item2.Key);
+                    WS_Items.ItemInfo newItem = new(Item2.Key);
                 }
                 if (WorldServiceLocator._WorldServer.ITEMDatabase[Item2.Key].ContainerSlots <= 0)
                 {

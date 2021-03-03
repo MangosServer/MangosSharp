@@ -108,7 +108,7 @@ namespace Mangos.World.Auction
 
         public void SendShowAuction(ref WS_PlayerData.CharacterObject objCharacter, ulong GUID)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO);
+            Packets.PacketClass packet = new(Opcodes.MSG_AUCTION_HELLO);
             new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).AddUInt64(GUID);
             new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).AddUInt64((ulong)GetAuctionSide(GUID));
             objCharacter.client.Send(ref packet);
@@ -139,7 +139,7 @@ namespace Mangos.World.Auction
 
         public void SendAuctionCommandResult(ref WS_Network.ClientClass client, int AuctionID, AuctionAction AuctionAction, AuctionError AuctionError, int BidError)
         {
-            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT);
+            Packets.PacketClass response = new(Opcodes.SMSG_AUCTION_COMMAND_RESULT);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32(AuctionID);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32((int)AuctionAction);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32((int)AuctionError);
@@ -150,7 +150,7 @@ namespace Mangos.World.Auction
 
         public void SendAuctionBidderNotification(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION);
+            Packets.PacketClass packet = new(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddUInt64(0uL);
@@ -164,7 +164,7 @@ namespace Mangos.World.Auction
 
         public void SendAuctionOwnerNotification(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION);
+            Packets.PacketClass packet = new(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
@@ -178,7 +178,7 @@ namespace Mangos.World.Auction
 
         public void SendAuctionRemovedNotification(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION);
+            Packets.PacketClass packet = new(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
@@ -188,8 +188,8 @@ namespace Mangos.World.Auction
 
         public void SendAuctionListOwnerItems(ref WS_Network.ClientClass client)
         {
-            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT);
-            DataTable MySQLQuery = new DataTable();
+            Packets.PacketClass response = new(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT);
+            DataTable MySQLQuery = new();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM auctionhouse WHERE auction_owner = {Conversions.ToString(client.Character.GUID)};", ref MySQLQuery);
             if (MySQLQuery.Rows.Count > 50)
             {
@@ -230,8 +230,8 @@ namespace Mangos.World.Auction
 
         public void SendAuctionListBidderItems(ref WS_Network.ClientClass client)
         {
-            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_LIST_RESULT);
-            DataTable MySQLQuery = new DataTable();
+            Packets.PacketClass response = new(Opcodes.SMSG_AUCTION_BIDDER_LIST_RESULT);
+            DataTable MySQLQuery = new();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM auctionhouse WHERE auction_bidder = {Conversions.ToString(client.Character.GUID)};", ref MySQLQuery);
             if (MySQLQuery.Rows.Count > 50)
             {
@@ -311,7 +311,7 @@ namespace Mangos.World.Auction
                 client.Character.ItemREMOVE(iGUID, Destroy: false, Update: true);
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update($@"INSERT INTO auctionhouse (auction_bid, auction_buyout, auction_timeleft, auction_bidder, auction_owner, auction_itemId, auction_itemGuid, auction_itemCount) VALUES 
             ({Bid},{Buyout},{Time},{0},{client.Character.GUID},{WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].ItemEntry},{iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM},{WorldServiceLocator._WorldServer.WORLD_ITEMs[iGUID].StackCount});");
-                DataTable MySQLQuery = new DataTable();
+                DataTable MySQLQuery = new();
                 WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT auction_id FROM auctionhouse WHERE auction_itemGuid = {Conversions.ToString(iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM)};", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count != 0)
                 {
@@ -329,13 +329,13 @@ namespace Mangos.World.Auction
                 int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                 int AuctionID = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_REMOVE_ITEM [GUID={2} AuctionID={3}]", client.IP, client.Port, GUID, AuctionID);
-                DataTable MySQLQuery = new DataTable();
+                DataTable MySQLQuery = new();
                 WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM auctionhouse WHERE auction_id = {Conversions.ToString(AuctionID)};", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count != 0)
                 {
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format(@"INSERT INTO characters_mail (mail_sender, mail_receiver, mail_type, mail_stationary, mail_subject, mail_body, mail_money, mail_COD, mail_time, mail_read, item_guid) VALUES
             ({0},{1},{2},{3},'{4}','{5}',{6},{7},{8},{9},{10});", AuctionID, MySQLQuery.Rows[0]["auction_owner"], 2, 62, Operators.ConcatenateObject(MySQLQuery.Rows[0]["auction_itemId"], ":0:4"), "", 0, 0, MailTime, 0, MySQLQuery.Rows[0]["auction_itemGuid"]));
-                    DataTable MailQuery = new DataTable();
+                    DataTable MailQuery = new();
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT mail_id FROM characters_mail WHERE mail_receiver = ", MySQLQuery.Rows[0]["auction_owner"]), ";")), ref MailQuery);
                     int MailID = Conversions.ToInteger(MailQuery.Rows[0]["mail_id"]);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update($"INSERT INTO mail_items (mail_id, item_guid) VALUES ({MailID}, {RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["auction_itemGuid"])});");
@@ -364,7 +364,7 @@ namespace Mangos.World.Auction
                 {
                     return;
                 }
-                DataTable MySQLQuery = new DataTable();
+                DataTable MySQLQuery = new();
                 WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM auctionhouse WHERE auction_id = {Conversions.ToString(AuctionID)};", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count != 0 && !Operators.ConditionalCompareObjectLess(Bid, MySQLQuery.Rows[0]["auction_bid"], TextCompare: false))
                 {
@@ -385,7 +385,7 @@ namespace Mangos.World.Auction
                         bodyText = Conversions.ToString(Operators.ConcatenateObject(BitConverter.ToString(buffer).Replace("-", "") + ":" + Conversions.ToString(Bid) + ":", MySQLQuery.Rows[0]["auction_buyout"]));
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format(@"INSERT INTO characters_mail (mail_sender, mail_receiver, mail_type, mail_stationary, mail_subject, mail_body, mail_money, mail_COD, mail_time, mail_read, item_guid) VALUES 
                 ({0},{1},{2},{3},'{4}','{5}',{6},{7},{8},{9},{10});", AuctionID, client.Character.GUID, 2, 62, Operators.ConcatenateObject(MySQLQuery.Rows[0]["auction_itemId"], ":0:1"), bodyText, 0, 0, MailTime, 0, MySQLQuery.Rows[0]["auction_itemGuid"]));
-                        DataTable MailQuery = new DataTable();
+                        DataTable MailQuery = new();
                         WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_id FROM characters_mail WHERE mail_receiver = {Conversions.ToString(client.Character.GUID)};", ref MailQuery);
                         int MailID = Conversions.ToInteger(MailQuery.Rows[0]["mail_id"]);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"INSERT INTO mail_items (mail_id, item_guid) VALUES ({MailID},{RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["auction_itemGuid"])});");
@@ -428,7 +428,7 @@ namespace Mangos.World.Auction
                 int itemQuality = packet.GetInt32();
                 int mustBeUsable = packet.GetInt8();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_LIST_ITEMS [{2} ({3}-{4})]", client.IP, client.Port, Name, LevelMIN, LevelMAX);
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_AUCTION_LIST_RESULT);
+                Packets.PacketClass response = new(Opcodes.SMSG_AUCTION_LIST_RESULT);
                 string QueryString = $"SELECT auctionhouse.* FROM {WorldServiceLocator._WorldServer.CharacterDatabase.SQLDBName}.auctionhouse, {WorldServiceLocator._WorldServer.WorldDatabase.SQLDBName}.item_template WHERE item_template.entry = auctionhouse.auction_itemId";
                 if (Operators.CompareString(Name, "", TextCompare: false) != 0)
                 {
@@ -458,7 +458,7 @@ namespace Mangos.World.Auction
                 {
                     QueryString = $"{QueryString} AND item_template.quality = {Conversions.ToString(itemQuality)}";
                 }
-                DataTable MySQLQuery = new DataTable();
+                DataTable MySQLQuery = new();
                 WorldServiceLocator._WorldServer.CharacterDatabase.Query(QueryString + ";", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count > 32)
                 {

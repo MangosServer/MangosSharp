@@ -79,8 +79,8 @@ namespace Mangos.Cluster.Handlers
             public byte Gender;
             public DateTime Time = DateAndTime.Now;
             public int Latency;
-            public List<ulong> IgnoreList = new List<ulong>();
-            public List<string> JoinedChannels = new List<string>();
+            public List<ulong> IgnoreList = new();
+            public List<string> JoinedChannels = new();
             public bool Afk;
             public bool Dnd;
             public string AfkMessage;
@@ -134,7 +134,7 @@ namespace Mangos.Cluster.Handlers
             public void ReLoad()
             {
                 // DONE: Get character info from DB
-                DataTable mySqlQuery = new DataTable();
+                DataTable mySqlQuery = new();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters WHERE char_guid = {0};", Guid), ref mySqlQuery);
                 if (mySqlQuery.Rows.Count > 0)
                 {
@@ -155,7 +155,7 @@ namespace Mangos.Cluster.Handlers
                     {
                         if (_clusterServiceLocator.WcGuild.GuilDs.ContainsKey(guildId) == false)
                         {
-                            WcGuild.Guild tmpGuild = new WcGuild.Guild(guildId);
+                            WcGuild.Guild tmpGuild = new(guildId);
                             Guild = tmpGuild;
                         }
                         else
@@ -243,7 +243,7 @@ namespace Mangos.Cluster.Handlers
 
             public void Transfer(float posX, float posY, float posZ, float ori, int thisMap)
             {
-                PacketClass p = new PacketClass(Opcodes.SMSG_TRANSFER_PENDING);
+                PacketClass p = new(Opcodes.SMSG_TRANSFER_PENDING);
                 p.AddInt32(thisMap);
                 Client.Send(p);
                 p.Dispose();
@@ -259,7 +259,7 @@ namespace Mangos.Cluster.Handlers
 
             public void Transfer(float posX, float posY, float posZ, float ori)
             {
-                PacketClass p = new PacketClass(Opcodes.SMSG_TRANSFER_PENDING);
+                PacketClass p = new(Opcodes.SMSG_TRANSFER_PENDING);
                 p.AddInt32((int)Map);
                 Client.Send(p);
                 p.Dispose();
@@ -284,7 +284,7 @@ namespace Mangos.Cluster.Handlers
                 _clusterServiceLocator.Functions.SendAccountMd5(Client, argcharacter);
 
                 // DONE: SMSG_TRIGGER_CINEMATIC
-                DataTable q = new DataTable();
+                DataTable q = new();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_moviePlayed FROM characters WHERE char_guid = {0} AND char_moviePlayed = 0;", Guid), ref q);
                 if (q.Rows.Count > 0)
                 {
@@ -328,7 +328,7 @@ namespace Mangos.Cluster.Handlers
                         {
                             tmpGroup.Value.Members[i] = this;
                             tmpGroup.Value.SendGroupList();
-                            PacketClass response = new PacketClass(0) { Data = GetWorld.GroupMemberStats(Guid, 0) };
+                            PacketClass response = new(0) { Data = GetWorld.GroupMemberStats(Guid, 0) };
                             CharacterObject argobjCharacter3 = this;
                             tmpGroup.Value.BroadcastToOther(response, argobjCharacter3);
                             response.Dispose();
@@ -415,7 +415,7 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
             if (guid == 0m)
             {
-                DataTable q = new DataTable();
+                DataTable q = new();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", _clusterServiceLocator.Functions.EscapeString(name)), ref q);
                 return q.Rows.Count > 0 ? q.Rows[0].As<ulong>("char_guid") : 0UL;
             }
@@ -430,7 +430,7 @@ namespace Mangos.Cluster.Handlers
                 return _clusterServiceLocator.WorldCluster.CharacteRs[Conversions.ToULong(guid)].Name;
             }
 
-            DataTable q = new DataTable();
+            DataTable q = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_guid = \"{0}\";", guid), ref q);
             return q.Rows.Count > 0 ? q.Rows[0].As<string>("char_name") : "";
         }

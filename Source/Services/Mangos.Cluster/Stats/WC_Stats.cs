@@ -78,7 +78,7 @@ namespace Mangos.Cluster.Stats
         private int _countPlayersAlliance;
         private int _countPlayersHorde;
         private int _countGMs;
-        private readonly Dictionary<WorldInfo, List<string>> _w = new Dictionary<WorldInfo, List<string>>();
+        private readonly Dictionary<WorldInfo, List<string>> _w = new();
 
         private string FormatUptime(TimeSpan time)
         {

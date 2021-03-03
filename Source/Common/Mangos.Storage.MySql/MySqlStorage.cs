@@ -72,7 +72,7 @@ namespace Mangos.Storage.MySql
         private string GetEmbeddedSqlResourcebody(Assembly assembly, string resource)
         {
             using Stream stream = assembly.GetManifestResourceStream(resource);
-            using StreamReader reader = new StreamReader(stream);
+            using StreamReader reader = new(stream);
             return reader.ReadToEnd();
         }
 

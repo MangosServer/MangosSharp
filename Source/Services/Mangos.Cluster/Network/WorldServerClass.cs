@@ -68,15 +68,15 @@ namespace Mangos.Cluster.Network
             _mTimerCpu = new Timer(_clusterServiceLocator.WcStats.CheckCpu, null, 1000, 1000);
         }
 
-        public Dictionary<uint, IWorld> Worlds = new Dictionary<uint, IWorld>();
-        public Dictionary<uint, WorldInfo> WorldsInfo = new Dictionary<uint, WorldInfo>();
+        public Dictionary<uint, IWorld> Worlds = new();
+        public Dictionary<uint, WorldInfo> WorldsInfo = new();
 
         public bool Connect(string uri, List<uint> maps)
         {
             try
             {
                 Disconnect(uri, maps);
-                WorldInfo worldServerInfo = new WorldInfo();
+                WorldInfo worldServerInfo = new();
                 _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "Connected Map Server: {0}", uri);
                 lock (((ICollection)Worlds).SyncRoot)
                 {
@@ -148,8 +148,8 @@ namespace Mangos.Cluster.Network
 
         public void Ping(object state)
         {
-            List<uint> downedServers = new List<uint>();
-            Dictionary<WorldInfo, int> sentPingTo = new Dictionary<WorldInfo, int>();
+            List<uint> downedServers = new();
+            Dictionary<WorldInfo, int> sentPingTo = new();
             int myTime;
             int serverTime;
             int latency;
@@ -233,7 +233,7 @@ namespace Mangos.Cluster.Network
         public void ClientTransfer(uint id, float posX, float posY, float posZ, float ori, uint map)
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "[{0:000000}] Client has transferred from map {1:000} to map {2:000}", id, _clusterServiceLocator.WorldCluster.ClienTs[id].Character.Map, map);
-            PacketClass p = new PacketClass(Opcodes.SMSG_NEW_WORLD);
+            PacketClass p = new(Opcodes.SMSG_NEW_WORLD);
             p.AddUInt32(map);
             p.AddSingle(posX);
             p.AddSingle(posY);
@@ -432,7 +432,7 @@ namespace Mangos.Cluster.Network
 
         public List<int> BattlefieldList(byte mapType)
         {
-            List<int> battlefieldMap = new List<int>();
+            List<int> battlefieldMap = new();
             _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
             foreach (KeyValuePair<int, Handlers.WcHandlersBattleground.Battlefield> bg in _clusterServiceLocator.WcHandlersBattleground.BattlefielDs)
             {

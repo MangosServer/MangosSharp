@@ -40,7 +40,7 @@ namespace Mangos.Cluster.DataStores
         }
 
         private readonly string _mapDbc = "Map.dbc";
-        public Dictionary<int, MapInfo> Maps = new Dictionary<int, MapInfo>();
+        public Dictionary<int, MapInfo> Maps = new();
 
         public async Task InitializeMapsAsync()
         {
@@ -49,7 +49,7 @@ namespace Mangos.Cluster.DataStores
                 DataStore data = await _dataStoreProvider.GetDataStoreAsync(_mapDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    MapInfo m = new MapInfo
+                    MapInfo m = new()
                     {
                         Id = data.ReadInt(i, 0),
                         Type = (MapTypes)data.ReadInt(i, 2),
@@ -88,7 +88,7 @@ namespace Mangos.Cluster.DataStores
         }
 
         private readonly string _worldSafeLocsDbc = "WorldSafeLocs.dbc";
-        public Dictionary<int, WorldSafeLoc> WorldSafeLocs = new Dictionary<int, WorldSafeLoc>();
+        public Dictionary<int, WorldSafeLoc> WorldSafeLocs = new();
 
         public async Task InitializeWorldSafeLocsAsync()
         {
@@ -97,7 +97,7 @@ namespace Mangos.Cluster.DataStores
                 DataStore data = await _dataStoreProvider.GetDataStoreAsync(_worldSafeLocsDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    WorldSafeLoc worldSafeLoc = new WorldSafeLoc
+                    WorldSafeLoc worldSafeLoc = new()
                     {
                         Id = data.ReadInt(i, 0),
                         Map = (uint)data.ReadInt(i, 1),
@@ -127,12 +127,12 @@ namespace Mangos.Cluster.DataStores
             public float Z;
         }
 
-        public Dictionary<byte, Battleground> Battlegrounds = new Dictionary<byte, Battleground>();
+        public Dictionary<byte, Battleground> Battlegrounds = new();
 
         public void InitializeBattlegrounds()
         {
             byte entry;
-            DataTable mySqlQuery = new DataTable();
+            DataTable mySqlQuery = new();
             _clusterServiceLocator.WorldCluster.GetWorldDatabase().Query("SELECT * FROM battleground_template", ref mySqlQuery);
             foreach (DataRow row in mySqlQuery.Rows)
             {
@@ -170,7 +170,7 @@ namespace Mangos.Cluster.DataStores
         }
 
         private readonly string _chatChannelsDbc = "ChatChannels.dbc";
-        public Dictionary<int, ChatChannelInfo> ChatChannelsInfo = new Dictionary<int, ChatChannelInfo>();
+        public Dictionary<int, ChatChannelInfo> ChatChannelsInfo = new();
 
         public async Task InitializeChatChannelsAsync()
         {
@@ -179,7 +179,7 @@ namespace Mangos.Cluster.DataStores
                 DataStore data = await _dataStoreProvider.GetDataStoreAsync(_chatChannelsDbc);
                 for (int i = 0, loopTo = data.Rows - 1; i <= loopTo; i++)
                 {
-                    ChatChannelInfo chatChannels = new ChatChannelInfo
+                    ChatChannelInfo chatChannels = new()
                     {
                         Index = data.ReadInt(i, 0),
                         Flags = data.ReadInt(i, 1),
@@ -267,7 +267,7 @@ namespace Mangos.Cluster.DataStores
             }
         }
 
-        public Dictionary<int, CharRace> CharRaces = new Dictionary<int, CharRace>();
+        public Dictionary<int, CharRace> CharRaces = new();
 
         public class CharRace
         {
@@ -287,7 +287,7 @@ namespace Mangos.Cluster.DataStores
             }
         }
 
-        public Dictionary<int, CharClass> CharClasses = new Dictionary<int, CharClass>();
+        public Dictionary<int, CharClass> CharClasses = new();
 
         public class CharClass
         {

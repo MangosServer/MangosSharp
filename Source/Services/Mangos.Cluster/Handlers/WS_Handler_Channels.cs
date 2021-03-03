@@ -32,7 +32,7 @@ namespace Mangos.Cluster.Handlers
 {
     public class WsHandlerChannels
     {
-        public Dictionary<string, ChatChannelClass> ChatChanneLs = new Dictionary<string, ChatChannelClass>();
+        public Dictionary<string, ChatChannelClass> ChatChanneLs = new();
         private long _chatChanneLsCounter = 1L;
 
         private long GetNexyChatChannelId()
@@ -55,11 +55,11 @@ namespace Mangos.Cluster.Handlers
             public string Password = "";
             public bool Announce = true;
             public bool Moderate = true;
-            public List<ulong> Joined = new List<ulong>();
-            public Dictionary<ulong, byte> JoinedMode = new Dictionary<ulong, byte>();
-            public List<ulong> Banned = new List<ulong>();
-            public List<ulong> Moderators = new List<ulong>();
-            public List<ulong> Muted = new List<ulong>();
+            public List<ulong> Joined = new();
+            public Dictionary<ulong, byte> JoinedMode = new();
+            public List<ulong> Banned = new();
+            public List<ulong> Moderators = new();
+            public List<ulong> Muted = new();
             public ulong Owner;
 
             private bool _disposedValue; // To detect redundant calls
@@ -92,7 +92,7 @@ namespace Mangos.Cluster.Handlers
                 ChannelName = name;
                 ChannelFlags = (byte)CHANNEL_FLAG.CHANNEL_FLAG_NONE;
                 clusterServiceLocator.WsHandlerChannels.ChatChanneLs.Add(ChannelName, this);
-                string sZone = name.Substring(name.IndexOf(" - ", StringComparison.Ordinal) + 3);
+                string sZone = name[(name.IndexOf(" - ", StringComparison.Ordinal) + 3)..];
                 foreach (KeyValuePair<int, DataStores.WsDbcDatabase.ChatChannelInfo> chatChannel in clusterServiceLocator.WsDbcDatabase.ChatChannelsInfo)
                 {
                     if ((chatChannel.Value.Name.Replace("%s", sZone).ToUpper() ?? "") == (name.ToUpper() ?? ""))
@@ -443,7 +443,7 @@ namespace Mangos.Cluster.Handlers
                 }
                 else
                 {
-                    PacketClass packet = new PacketClass(Opcodes.SMSG_CHANNEL_LIST);
+                    PacketClass packet = new(Opcodes.SMSG_CHANNEL_LIST);
                     packet.AddInt8(0);                   // ChannelType
                     packet.AddString(ChannelName);       // ChannelName
                     packet.AddInt8(ChannelFlags);        // ChannelFlags
@@ -825,7 +825,7 @@ namespace Mangos.Cluster.Handlers
 
             protected PacketClass BuildChannelNotify(CHANNEL_NOTIFY_FLAGS notify, ulong guid1, ulong guid2, string name)
             {
-                PacketClass response = new PacketClass(Opcodes.SMSG_CHANNEL_NOTIFY);
+                PacketClass response = new(Opcodes.SMSG_CHANNEL_NOTIFY);
                 response.AddInt8((byte)notify);
                 response.AddString(ChannelName);
                 switch (notify)

@@ -28,11 +28,11 @@ namespace Mangos.WardenExtractor
     {
         public static void FixNormalDll(ref byte[] Data)
         {
-            MemoryStream ms = new MemoryStream();
-            BinaryWriter bw = new BinaryWriter(ms);
-            MemoryStream ms2 = new MemoryStream(Data);
-            BinaryReader br = new BinaryReader(ms2);
-            List<Section> Sections = new List<Section>();
+            MemoryStream ms = new();
+            BinaryWriter bw = new(ms);
+            MemoryStream ms2 = new(Data);
+            BinaryReader br = new(ms2);
+            List<Section> Sections = new();
             int CurrentPosition = 0x400;
             int ImportAddress = br.ReadInt32();
             int ImportUnk = br.ReadInt32();
@@ -77,7 +77,7 @@ namespace Mangos.WardenExtractor
                 }
 
                 long tmpPos = br.BaseStream.Position;
-                Section newSection = new Section
+                Section newSection = new()
                 {
                     Name = name,
                     Address = virtualaddress,
@@ -112,7 +112,7 @@ namespace Mangos.WardenExtractor
             br = null;
 
             // TODO: Other headers!
-            Section ExportSection = new Section
+            Section ExportSection = new()
             {
                 Name = ".edata",
                 Address = ExportAddress,
@@ -125,7 +125,7 @@ namespace Mangos.WardenExtractor
             };
             CurrentPosition += ExportSection.RawSize;
             Sections.Add(ExportSection);
-            Section ImportSection = new Section
+            Section ImportSection = new()
             {
                 Name = ".idata",
                 Address = ImportAddress,
@@ -138,7 +138,7 @@ namespace Mangos.WardenExtractor
             };
             CurrentPosition += ImportSection.RawSize;
             Sections.Add(ImportSection);
-            Section RelocSection = new Section
+            Section RelocSection = new()
             {
                 Name = ".reloc",
                 Address = 0xC000,
@@ -401,7 +401,7 @@ namespace Mangos.WardenExtractor
 
         private static Instruction ParseInstuction(ref byte[] Data, ref int Position)
         {
-            Instruction newInstruction = new Instruction();
+            Instruction newInstruction = new();
             if (Data[Position] == 0)
             {
                 Position += 1;
@@ -956,7 +956,7 @@ namespace Mangos.WardenExtractor
 
             public byte[] GetBytes()
             {
-                MemoryStream newData = new MemoryStream();
+                MemoryStream newData = new();
                 for (int i = 0; i <= 3; i++)
                 {
                     if (IsPrefix(Prefix[i]) == false)

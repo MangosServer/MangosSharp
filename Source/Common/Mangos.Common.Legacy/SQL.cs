@@ -326,8 +326,8 @@ namespace Mangos.Common.Legacy
                     case DB_Type.MySQL:
                         {
                             Monitor.Enter(MySQLConn);
-                            MySqlCommand MySQLCommand = new MySqlCommand(sqlquery, MySQLConn);
-                            MySqlDataAdapter MySQLAdapter = new MySqlDataAdapter(MySQLCommand);
+                            MySqlCommand MySQLCommand = new(sqlquery, MySQLConn);
+                            MySqlDataAdapter MySQLAdapter = new(MySQLCommand);
                             if (Result is null)
                             {
                                 Result = new DataTable();
@@ -391,7 +391,7 @@ namespace Mangos.Common.Legacy
                         {
                             Monitor.Enter(MySQLConn);
                             MySqlTransaction MySQLTransaction = MySQLConn.BeginTransaction();
-                            MySqlCommand MySQLCommand = new MySqlCommand(sqlquery, MySQLConn, MySQLTransaction);
+                            MySqlCommand MySQLCommand = new(sqlquery, MySQLConn, MySQLTransaction);
                             MySQLCommand.ExecuteNonQuery();
                             MySQLTransaction.Commit();
                             Console.WriteLine("transaction completed");
@@ -420,7 +420,7 @@ namespace Mangos.Common.Legacy
         // TODO: Apply proper implementation as needed
         public int TableInsert(string tablename, string dbField1, string dbField1Value, string dbField2, int dbField2Value)
         {
-            MySqlCommand cmd = new MySqlCommand("", MySQLConn);
+            MySqlCommand cmd = new("", MySQLConn);
             cmd.Connection.Open();
             cmd.CommandText = "insert into `" + tablename + "`(`" + dbField1 + "`,`" + dbField2 + "`) " + "VALUES (@field1value, @field2value)";
             cmd.Parameters.AddWithValue("@field1value", dbField1Value);
@@ -441,14 +441,14 @@ namespace Mangos.Common.Legacy
         // TODO: Apply proper implementation as needed
         public DataSet TableSelect(string tablename, string returnfields, string dbField1, string dbField1Value)
         {
-            MySqlCommand cmd = new MySqlCommand("", MySQLConn);
+            MySqlCommand cmd = new("", MySQLConn);
             cmd.Connection.Open();
             cmd.CommandText = "select " + returnfields + " FROM `" + tablename + "` WHERE `" + dbField1 + "` = '@dbField1value';";
             cmd.Parameters.AddWithValue("@dbfield1value", dbField1Value);
             try
             {
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                DataSet myDataset = new DataSet();
+                MySqlDataAdapter adapter = new();
+                DataSet myDataset = new();
                 adapter.SelectCommand = cmd;
                 adapter.Fill(myDataset);
                 cmd.ExecuteScalar();
@@ -489,9 +489,9 @@ namespace Mangos.Common.Legacy
                     case DB_Type.MySQL:
                         {
                             Monitor.Enter(MySQLConn);
-                            MySqlCommand MySQLCommand = new MySqlCommand(sqlquery, MySQLConn);
-                            MySqlDataAdapter MySQLAdapter = new MySqlDataAdapter(MySQLCommand);
-                            DataTable result = new DataTable();
+                            MySqlCommand MySQLCommand = new(sqlquery, MySQLConn);
+                            MySqlDataAdapter MySQLAdapter = new(MySQLCommand);
+                            DataTable result = new();
                             MySQLAdapter.Fill(result);
                             break;
                         }

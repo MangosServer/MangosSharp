@@ -257,7 +257,7 @@ namespace Mangos.Common.Legacy.Globals
 
         public bool CheckRequiredDbVersion(SQL thisDatabase, ServerDb thisServerDb)
         {
-            DataTable mySqlQuery = new DataTable();
+            DataTable mySqlQuery = new();
             // thisDatabase.Query(String.Format("SELECT column_name FROM information_schema.columns WHERE table_name='" & thisTableName & "'  AND TABLE_SCHEMA='" & thisDatabase.SQLDBName & "'"), mySqlQuery)
             thisDatabase.Query("SELECT `version`,`structure`,`content` FROM db_version ORDER BY VERSION DESC, structure DESC, content DESC LIMIT 0,1", ref mySqlQuery);
             // Check database version against code version

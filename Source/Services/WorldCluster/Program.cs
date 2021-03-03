@@ -26,7 +26,7 @@ namespace WorldCluster
     {
         public static async Task Main(string[] args)
         {
-            ContainerBuilder builder = new ContainerBuilder();
+            ContainerBuilder builder = new();
 
             builder
                 .RegisterModule<LoggerModule>()

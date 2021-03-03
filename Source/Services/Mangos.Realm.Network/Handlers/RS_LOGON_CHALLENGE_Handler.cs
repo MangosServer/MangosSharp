@@ -132,7 +132,7 @@ namespace Mangos.Realm.Network.Handlers
 
             clientModel.AuthEngine.CalculateX(request.Account, hash);
 
-            AUTH_LOGON_CHALLENGE resposne = new AUTH_LOGON_CHALLENGE(
+            AUTH_LOGON_CHALLENGE resposne = new(
                 clientModel.AuthEngine.PublicB,
                 clientModel.AuthEngine.g,
                 clientModel.AuthEngine.N,

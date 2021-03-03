@@ -52,7 +52,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -80,7 +80,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -108,7 +108,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -136,7 +136,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -164,7 +164,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -192,7 +192,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -220,7 +220,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -248,7 +248,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -277,7 +277,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -306,7 +306,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -334,7 +334,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -362,7 +362,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -390,7 +390,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -418,7 +418,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -447,7 +447,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }
@@ -476,7 +476,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Sync your location to other party / raid members
             if (client.Character.IsInGroup)
             {
-                PacketClass statsPacket = new PacketClass(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
+                PacketClass statsPacket = new(Opcodes.UMSG_UPDATE_GROUP_MEMBERS) { Data = client.Character.GetWorld.GroupMemberStats(client.Character.Guid, (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_POSITION + (int)Functions.PartyMemberStatsFlag.GROUP_UPDATE_FLAG_ZONE) };
                 client.Character.Group.BroadcastToOutOfRange(statsPacket, client.Character);
                 statsPacket.Dispose();
             }

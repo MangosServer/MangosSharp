@@ -43,7 +43,7 @@ namespace Mangos.World.Quests
 
         public void LoadAllQuests()
         {
-            DataTable cQuests = new DataTable();
+            DataTable cQuests = new();
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Loading Quests...");
             WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT entry FROM quests;", ref cQuests);
             IEnumerator enumerator = default;
@@ -54,7 +54,7 @@ namespace Mangos.World.Quests
                 {
                     DataRow row = (DataRow)enumerator.Current;
                     int questID = row.As<int>("entry");
-                    WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
+                    WS_QuestInfo tmpQuest = new(questID);
                     _quests.Add(tmpQuest, Conversions.ToString(questID));
                 }
             }
@@ -171,9 +171,9 @@ namespace Mangos.World.Quests
 
         public QuestMenu GetQuestMenu(ref WS_PlayerData.CharacterObject objCharacter, ulong guid)
         {
-            QuestMenu questMenu = new QuestMenu();
+            QuestMenu questMenu = new();
             int creatureEntry = WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].ID;
-            List<int> alreadyHave = new List<int>();
+            List<int> alreadyHave = new();
             checked
             {
                 if (WorldServiceLocator._WorldServer.CreatureQuestFinishers.ContainsKey(creatureEntry))
@@ -217,7 +217,7 @@ namespace Mangos.World.Quests
                             {
                                 try
                                 {
-                                    WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
+                                    WS_QuestInfo tmpQuest = new(questID);
                                     if (tmpQuest.CanSeeQuest(ref objCharacter) && tmpQuest.SatisfyQuestLevel(ref objCharacter))
                                     {
                                         questMenu.AddMenu(tmpQuest.Title, (short)questID, tmpQuest.Level_Normal, 5);
@@ -251,9 +251,9 @@ namespace Mangos.World.Quests
 
         public QuestMenu GetQuestMenuGO(ref WS_PlayerData.CharacterObject objCharacter, ulong guid)
         {
-            QuestMenu questMenu = new QuestMenu();
+            QuestMenu questMenu = new();
             int gOEntry = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[guid].ID;
-            List<int> alreadyHave = new List<int>();
+            List<int> alreadyHave = new();
             checked
             {
                 if (WorldServiceLocator._WorldServer.GameobjectQuestFinishers.ContainsKey(gOEntry))
@@ -295,7 +295,7 @@ namespace Mangos.World.Quests
                             }
                             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
                             {
-                                WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
+                                WS_QuestInfo tmpQuest = new(questID);
                                 if (tmpQuest.CanSeeQuest(ref objCharacter) && tmpQuest.SatisfyQuestLevel(ref objCharacter))
                                 {
                                     questMenu.AddMenu(tmpQuest.Title, (short)questID, tmpQuest.Level_Normal, 5);
@@ -325,7 +325,7 @@ namespace Mangos.World.Quests
             {
                 questMenu = GetQuestMenu(ref objCharacter, guid);
             }
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_LIST);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUESTGIVER_QUEST_LIST);
             checked
             {
                 try
@@ -364,7 +364,7 @@ namespace Mangos.World.Quests
 
         public void SendQuestDetails(ref WS_Network.ClientClass client, ref WS_QuestInfo quest, ulong guid, bool acceptActive)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_DETAILS);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUESTGIVER_QUEST_DETAILS);
             checked
             {
                 try
@@ -406,7 +406,7 @@ namespace Mangos.World.Quests
                             {
                                 if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.RewardItems[i2]))
                                 {
-                                    WS_Items.ItemInfo tmpItem3 = new WS_Items.ItemInfo(quest.RewardItems[i2]);
+                                    WS_Items.ItemInfo tmpItem3 = new(quest.RewardItems[i2]);
                                     packet.AddInt32(tmpItem3.Id);
                                 }
                                 else
@@ -454,7 +454,7 @@ namespace Mangos.World.Quests
                             {
                                 if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.RewardStaticItems[m]))
                                 {
-                                    WS_Items.ItemInfo tmpItem2 = new WS_Items.ItemInfo(quest.RewardStaticItems[m]);
+                                    WS_Items.ItemInfo tmpItem2 = new(quest.RewardStaticItems[m]);
                                     packet.AddInt32(tmpItem2.Id);
                                 }
                                 else
@@ -497,7 +497,7 @@ namespace Mangos.World.Quests
                     {
                         if (quest.ObjectivesItem[k] != 0 && !WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.ObjectivesItem[k]))
                         {
-                            WS_Items.ItemInfo tmpItem = new WS_Items.ItemInfo(quest.ObjectivesItem[k]);
+                            WS_Items.ItemInfo tmpItem = new(quest.ObjectivesItem[k]);
                             packet.AddInt32(tmpItem.Id);
                         }
                         else
@@ -534,7 +534,7 @@ namespace Mangos.World.Quests
 
         public void SendQuest(ref WS_Network.ClientClass client, ref WS_QuestInfo quest) //TODO: Figure out the correct packet structure for this
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUEST_QUERY_RESPONSE);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUEST_QUERY_RESPONSE);
             checked
             {
                 try
@@ -659,7 +659,7 @@ namespace Mangos.World.Quests
 
         public void SendQuestMessageAddItem(ref WS_Network.ClientClass client, int itemID, int itemCount)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTUPDATE_ADD_ITEM);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUESTUPDATE_ADD_ITEM);
             try
             {
                 packet.AddInt32(itemID);
@@ -674,7 +674,7 @@ namespace Mangos.World.Quests
 
         public void SendQuestMessageAddKill(ref WS_Network.ClientClass client, int questID, ulong killGuid, int killID, int killCurrentCount, int killCount)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTUPDATE_ADD_KILL);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUESTUPDATE_ADD_KILL);
             try
             {
                 packet.AddInt32(questID);
@@ -696,7 +696,7 @@ namespace Mangos.World.Quests
 
         public void SendQuestMessageFailed(ref WS_Network.ClientClass client, int questID)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_FAILED);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUESTGIVER_QUEST_FAILED);
             try
             {
                 packet.AddInt32(questID);
@@ -710,7 +710,7 @@ namespace Mangos.World.Quests
 
         public void SendQuestMessageFailedTimer(ref WS_Network.ClientClass client, int questID)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTUPDATE_FAILEDTIMER);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUESTUPDATE_FAILEDTIMER);
             try
             {
                 packet.AddInt32(questID);
@@ -724,7 +724,7 @@ namespace Mangos.World.Quests
 
         public void SendQuestMessageComplete(ref WS_Network.ClientClass client, int questID)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTUPDATE_COMPLETE);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUESTUPDATE_COMPLETE);
             try
             {
                 packet.AddInt32(questID);
@@ -738,7 +738,7 @@ namespace Mangos.World.Quests
 
         public void SendQuestComplete(ref WS_Network.ClientClass client, ref WS_QuestInfo quest, int xP, int gold)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_COMPLETE);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUESTGIVER_QUEST_COMPLETE);
             checked
             {
                 try
@@ -782,7 +782,7 @@ namespace Mangos.World.Quests
 
         public void SendQuestReward(ref WS_Network.ClientClass client, ref WS_QuestInfo quest, ulong guid, ref WS_QuestsBase objBaseQuest)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_OFFER_REWARD);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUESTGIVER_OFFER_REWARD);
             try
             {
                 packet.AddUInt64(guid);
@@ -831,7 +831,7 @@ namespace Mangos.World.Quests
                             packet.AddInt32(quest.RewardItems_Count[k]);
                             if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.RewardItems[k]))
                             {
-                                WS_Items.ItemInfo tmpItem2 = new WS_Items.ItemInfo(quest.RewardItems[k]);
+                                WS_Items.ItemInfo tmpItem2 = new(quest.RewardItems[k]);
                                 packet.AddInt32(tmpItem2.Model);
                             }
                             else
@@ -863,7 +863,7 @@ namespace Mangos.World.Quests
                             packet.AddInt32(quest.RewardStaticItems_Count[i]);
                             if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.RewardStaticItems[i]))
                             {
-                                WS_Items.ItemInfo tmpItem = new WS_Items.ItemInfo(quest.RewardStaticItems[i]);
+                                WS_Items.ItemInfo tmpItem = new(quest.RewardStaticItems[i]);
                             }
                             packet.AddInt32(WorldServiceLocator._WorldServer.ITEMDatabase[quest.RewardStaticItems[i]].Model);
                         }
@@ -905,7 +905,7 @@ namespace Mangos.World.Quests
 
         public void SendQuestRequireItems(ref WS_Network.ClientClass client, ref WS_QuestInfo quest, ulong guid, ref WS_QuestsBase objBaseQuest)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_REQUEST_ITEMS);
+            Packets.PacketClass packet = new(Opcodes.SMSG_QUESTGIVER_REQUEST_ITEMS);
             checked
             {
                 try
@@ -951,7 +951,7 @@ namespace Mangos.World.Quests
                             {
                                 if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.ObjectivesItem[i]))
                                 {
-                                    WS_Items.ItemInfo tmpItem = new WS_Items.ItemInfo(quest.ObjectivesItem[i]);
+                                    WS_Items.ItemInfo tmpItem = new(quest.ObjectivesItem[i]);
                                     packet.AddInt32(tmpItem.Id);
                                 }
                                 else
@@ -993,7 +993,7 @@ namespace Mangos.World.Quests
 
         public void LoadQuests(ref WS_PlayerData.CharacterObject objCharacter)
         {
-            DataTable cQuests = new DataTable();
+            DataTable cQuests = new();
             int i = 0;
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT quest_id, quest_status FROM characters_quests q WHERE q.char_guid = {objCharacter.GUID};", ref cQuests);
             checked
@@ -1450,7 +1450,7 @@ namespace Mangos.World.Quests
         public QuestgiverStatusFlag GetQuestgiverStatus(ref WS_PlayerData.CharacterObject objCharacter, ulong cGuid)
         {
             QuestgiverStatusFlag status = QuestgiverStatusFlag.DIALOG_STATUS_NONE;
-            List<int> alreadyHave = new List<int>();
+            List<int> alreadyHave = new();
             if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(cGuid))
             {
                 if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGuid))
@@ -1556,7 +1556,7 @@ namespace Mangos.World.Quests
                         packet.GetInt16();
                         ulong guid = packet.GetUInt64();
                         QuestgiverStatusFlag status = GetQuestgiverStatus(ref client.Character, guid);
-                        Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_STATUS);
+                        Packets.PacketClass response = new(Opcodes.SMSG_QUESTGIVER_STATUS);
                         try
                         {
                             response.AddUInt64(guid);
@@ -1625,7 +1625,7 @@ namespace Mangos.World.Quests
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_QUERY_QUEST [GUID={2:X} QuestID={3}]", client.IP, client.Port, guid, questID);
             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
             {
-                WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
+                WS_QuestInfo tmpQuest = new(questID);
                 try
                 {
                     client.Character.TalkCurrentQuest = tmpQuest;
@@ -1668,7 +1668,7 @@ namespace Mangos.World.Quests
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_ACCEPT_QUEST [GUID={2:X} QuestID={3}]", client.IP, client.Port, guid, questID);
             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
             {
-                WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
+                WS_QuestInfo tmpQuest = new(questID);
                 if (client.Character.TalkCurrentQuest.ID != questID)
                 {
                     client.Character.TalkCurrentQuest = tmpQuest;
@@ -1686,7 +1686,7 @@ namespace Mangos.World.Quests
             {
                 if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(guid))
                 {
-                    Packets.PacketClass response3 = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
+                    Packets.PacketClass response3 = new(Opcodes.MSG_QUEST_PUSH_RESULT);
                     try
                     {
                         response3.AddUInt64(client.Character.GUID);
@@ -1702,7 +1702,7 @@ namespace Mangos.World.Quests
                 else
                 {
                     QuestgiverStatusFlag status = GetQuestgiverStatus(ref client.Character, guid);
-                    Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_STATUS);
+                    Packets.PacketClass response2 = new(Opcodes.SMSG_QUESTGIVER_STATUS);
                     try
                     {
                         response2.AddUInt64(guid);
@@ -1717,7 +1717,7 @@ namespace Mangos.World.Quests
             }
             else
             {
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_QUESTLOG_FULL);
+                Packets.PacketClass response = new(Opcodes.SMSG_QUESTLOG_FULL);
                 try
                 {
                     client.Send(ref response);
@@ -1751,7 +1751,7 @@ namespace Mangos.World.Quests
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUEST_QUERY [QuestID={2}]", client.IP, client.Port, questID);
             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
             {
-                WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
+                WS_QuestInfo tmpQuest = new(questID);
                 if (client.Character.TalkCurrentQuest == null)
                 {
                     SendQuest(ref client, ref tmpQuest);
@@ -1785,7 +1785,7 @@ namespace Mangos.World.Quests
         {
             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
             {
-                WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
+                WS_QuestInfo tmpQuest = new(questID);
                 int j = 0;
                 do
                 {
@@ -1882,7 +1882,7 @@ namespace Mangos.World.Quests
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_REQUEST_REWARD [GUID={2:X} Quest={3}]", client.IP, client.Port, guid, questID);
                 if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
                 {
-                    WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
+                    WS_QuestInfo tmpQuest = new(questID);
                     int j = 0;
                     do
                     {
@@ -1955,7 +1955,7 @@ namespace Mangos.World.Quests
                                 copper = (uint)(copper + client.Character.TalkCurrentQuest.RewardGold);
                                 goto IL_01d2;
                             }
-                            Packets.PacketClass errorPacket = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
+                            Packets.PacketClass errorPacket = new(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
                             errorPacket.AddInt32(23);
                             client.Send(ref errorPacket);
                             errorPacket.Dispose();
@@ -1972,7 +1972,7 @@ namespace Mangos.World.Quests
                                     ref uint copper2 = ref client.Character.Copper;
                                     copper2 = (uint)(copper2 - client.Character.TalkCurrentQuest.RewardGold);
                                 }
-                                Packets.PacketClass errorPacket3 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
+                                Packets.PacketClass errorPacket3 = new(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
                                 errorPacket3.AddInt32(21);
                                 client.Send(ref errorPacket3);
                                 errorPacket3.Dispose();
@@ -1988,7 +1988,7 @@ namespace Mangos.World.Quests
                         {
                             goto IL_034e;
                         }
-                        ItemObject tmpItem2 = new ItemObject(client.Character.TalkCurrentQuest.RewardItems[rewardIndex], client.Character.GUID)
+                        ItemObject tmpItem2 = new(client.Character.TalkCurrentQuest.RewardItems[rewardIndex], client.Character.GUID)
                         {
                             StackCount = client.Character.TalkCurrentQuest.RewardItems_Count[rewardIndex]
                         };
@@ -2011,7 +2011,7 @@ namespace Mangos.World.Quests
                         }
                         if (client.Character.TalkCurrentQuest.RewardSpell > 0)
                         {
-                            WS_Spells.SpellTargets spellTargets2 = new WS_Spells.SpellTargets();
+                            WS_Spells.SpellTargets spellTargets2 = new();
                             WS_Spells.SpellTargets spellTargets3 = spellTargets2;
                             ref WS_PlayerData.CharacterObject character = ref client.Character;
                             ref WS_PlayerData.CharacterObject reference = ref character;
@@ -2021,7 +2021,7 @@ namespace Mangos.World.Quests
                             Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                             ulong key;
                             WS_Base.BaseObject Caster = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = guid];
-                            WS_Spells.CastSpellParameters castSpellParameters = new WS_Spells.CastSpellParameters(ref spellTargets2, ref Caster, client.Character.TalkCurrentQuest.RewardSpell, Instant: true);
+                            WS_Spells.CastSpellParameters castSpellParameters = new(ref spellTargets2, ref Caster, client.Character.TalkCurrentQuest.RewardSpell, Instant: true);
                             wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)Caster;
                             WS_Spells.CastSpellParameters castParams2 = castSpellParameters;
                             ThreadPool.QueueUserWorkItem(castParams2.Cast);
@@ -2095,7 +2095,7 @@ namespace Mangos.World.Quests
                         {
                             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(client.Character.TalkCurrentQuest.NextQuest))
                             {
-                                WS_QuestInfo tmpQuest2 = new WS_QuestInfo(client.Character.TalkCurrentQuest.NextQuest);
+                                WS_QuestInfo tmpQuest2 = new(client.Character.TalkCurrentQuest.NextQuest);
                                 client.Character.TalkCurrentQuest = tmpQuest2;
                             }
                             else
@@ -2138,7 +2138,7 @@ namespace Mangos.World.Quests
                             copper5 = (uint)(copper5 + client.Character.TalkCurrentQuest.RewardGold);
                             goto IL_0a03;
                         }
-                        Packets.PacketClass errorPacket4 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
+                        Packets.PacketClass errorPacket4 = new(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
                         errorPacket4.AddInt32(23);
                         client.Send(ref errorPacket4);
                         errorPacket4.Dispose();
@@ -2155,7 +2155,7 @@ namespace Mangos.World.Quests
                                 ref uint copper6 = ref client.Character.Copper;
                                 copper6 = (uint)(copper6 - client.Character.TalkCurrentQuest.RewardGold);
                             }
-                            Packets.PacketClass errorPacket2 = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
+                            Packets.PacketClass errorPacket2 = new(Opcodes.SMSG_QUESTGIVER_QUEST_INVALID);
                             errorPacket2.AddInt32(21);
                             client.Send(ref errorPacket2);
                             errorPacket2.Dispose();
@@ -2171,7 +2171,7 @@ namespace Mangos.World.Quests
                     {
                         goto IL_0b7f;
                     }
-                    ItemObject tmpItem = new ItemObject(client.Character.TalkCurrentQuest.RewardItems[rewardIndex], client.Character.GUID)
+                    ItemObject tmpItem = new(client.Character.TalkCurrentQuest.RewardItems[rewardIndex], client.Character.GUID)
                     {
                         StackCount = client.Character.TalkCurrentQuest.RewardItems_Count[rewardIndex]
                     };
@@ -2194,7 +2194,7 @@ namespace Mangos.World.Quests
                     }
                     if (client.Character.TalkCurrentQuest.RewardSpell > 0)
                     {
-                        WS_Spells.SpellTargets spellTargets = new WS_Spells.SpellTargets();
+                        WS_Spells.SpellTargets spellTargets = new();
                         WS_Spells.SpellTargets spellTargets4 = spellTargets;
                         ref WS_PlayerData.CharacterObject character2 = ref client.Character;
                         ref WS_PlayerData.CharacterObject reference = ref character2;
@@ -2204,7 +2204,7 @@ namespace Mangos.World.Quests
                         Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                         ulong key;
                         WS_Base.BaseObject Caster = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = guid];
-                        WS_Spells.CastSpellParameters castSpellParameters = new WS_Spells.CastSpellParameters(ref spellTargets, ref Caster, client.Character.TalkCurrentQuest.RewardSpell, Instant: true);
+                        WS_Spells.CastSpellParameters castSpellParameters = new(ref spellTargets, ref Caster, client.Character.TalkCurrentQuest.RewardSpell, Instant: true);
                         wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)Caster;
                         WS_Spells.CastSpellParameters castParams = castSpellParameters;
                         ThreadPool.QueueUserWorkItem(castParams.Cast);
@@ -2278,7 +2278,7 @@ namespace Mangos.World.Quests
                     {
                         if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(client.Character.TalkCurrentQuest.NextQuest))
                         {
-                            WS_QuestInfo tmpQuest3 = new WS_QuestInfo(client.Character.TalkCurrentQuest.NextQuest);
+                            WS_QuestInfo tmpQuest3 = new(client.Character.TalkCurrentQuest.NextQuest);
                             client.Character.TalkCurrentQuest = tmpQuest3;
                         }
                         else
@@ -2314,7 +2314,7 @@ namespace Mangos.World.Quests
             }
             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
             {
-                WS_QuestInfo tmpQuest = new WS_QuestInfo(questID);
+                WS_QuestInfo tmpQuest = new(questID);
                 foreach (ulong guid in client.Character.Group.LocalMembers)
                 {
                     if (guid == client.Character.GUID)
@@ -2322,7 +2322,7 @@ namespace Mangos.World.Quests
                         continue;
                     }
                     WS_PlayerData.CharacterObject characterObject = WorldServiceLocator._WorldServer.CHARACTERs[guid];
-                    Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
+                    Packets.PacketClass response2 = new(Opcodes.MSG_QUEST_PUSH_RESULT);
                     response2.AddUInt64(guid);
                     response2.AddInt32(0);
                     response2.AddInt8(0);
@@ -2358,7 +2358,7 @@ namespace Mangos.World.Quests
                     }
                     if (message2 != 0)
                     {
-                        Packets.PacketClass errorPacket2 = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
+                        Packets.PacketClass errorPacket2 = new(Opcodes.MSG_QUEST_PUSH_RESULT);
                         errorPacket2.AddUInt64(characterObject.GUID);
                         errorPacket2.AddInt32((int)message2);
                         errorPacket2.AddInt8(0);
@@ -2375,7 +2375,7 @@ namespace Mangos.World.Quests
                     continue;
                 }
                 WS_PlayerData.CharacterObject characterObject2 = WorldServiceLocator._WorldServer.CHARACTERs[guid2];
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
+                Packets.PacketClass response = new(Opcodes.MSG_QUEST_PUSH_RESULT);
                 response.AddUInt64(guid2);
                 response.AddInt32(0);
                 response.AddInt8(0);
@@ -2411,7 +2411,7 @@ namespace Mangos.World.Quests
                 }
                 if (message != 0)
                 {
-                    Packets.PacketClass errorPacket = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
+                    Packets.PacketClass errorPacket = new(Opcodes.MSG_QUEST_PUSH_RESULT);
                     errorPacket.AddUInt64(characterObject2.GUID);
                     errorPacket.AddInt32((int)message);
                     errorPacket.AddInt8(0);
@@ -2429,7 +2429,7 @@ namespace Mangos.World.Quests
                 ulong guid = packet.GetUInt64();
                 QuestPartyPushError message = (QuestPartyPushError)packet.GetInt8();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_QUEST_PUSH_RESULT [{2:X} {3}]", client.IP, client.Port, guid, message);
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.MSG_QUEST_PUSH_RESULT);
+                Packets.PacketClass response = new(Opcodes.MSG_QUEST_PUSH_RESULT);
                 response.AddUInt64(guid);
                 response.AddInt8(2);
                 response.AddInt32(0);

@@ -82,20 +82,20 @@ namespace Mangos.Cluster.Handlers
             GetBattlefield((BattlefieldMapType)mapType, (byte)client.Character.Level).Enqueue(client.Character);
         }
 
-        public Dictionary<int, Battlefield> BattlefielDs = new Dictionary<int, Battlefield>();
-        public ReaderWriterLock BattlefielDsLock = new ReaderWriterLock();
+        public Dictionary<int, Battlefield> BattlefielDs = new();
+        public ReaderWriterLock BattlefielDsLock = new();
         private int _battlefielDsCounter;
 
         public class Battlefield : IDisposable
         {
             private readonly ClusterServiceLocator _clusterServiceLocator;
 
-            private readonly List<WcHandlerCharacter.CharacterObject> _queueTeam1 = new List<WcHandlerCharacter.CharacterObject>();
-            private readonly List<WcHandlerCharacter.CharacterObject> _queueTeam2 = new List<WcHandlerCharacter.CharacterObject>();
-            private readonly List<WcHandlerCharacter.CharacterObject> _invitedTeam1 = new List<WcHandlerCharacter.CharacterObject>();
-            private readonly List<WcHandlerCharacter.CharacterObject> _invitedTeam2 = new List<WcHandlerCharacter.CharacterObject>();
-            private readonly List<WcHandlerCharacter.CharacterObject> _membersTeam1 = new List<WcHandlerCharacter.CharacterObject>();
-            private readonly List<WcHandlerCharacter.CharacterObject> _membersTeam2 = new List<WcHandlerCharacter.CharacterObject>();
+            private readonly List<WcHandlerCharacter.CharacterObject> _queueTeam1 = new();
+            private readonly List<WcHandlerCharacter.CharacterObject> _queueTeam2 = new();
+            private readonly List<WcHandlerCharacter.CharacterObject> _invitedTeam1 = new();
+            private readonly List<WcHandlerCharacter.CharacterObject> _invitedTeam2 = new();
+            private readonly List<WcHandlerCharacter.CharacterObject> _membersTeam1 = new();
+            private readonly List<WcHandlerCharacter.CharacterObject> _membersTeam2 = new();
             public readonly int Id;
             private readonly uint _map;
             public readonly BattlefieldMapType MapType;
@@ -283,7 +283,7 @@ namespace Mangos.Cluster.Handlers
                     status = BattlegroundStatus.STATUS_IN_PROGRESS;
                 }
 
-                PacketClass p = new PacketClass(Opcodes.SMSG_BATTLEFIELD_STATUS);
+                PacketClass p = new(Opcodes.SMSG_BATTLEFIELD_STATUS);
                 try
                 {
                     p.AddUInt32(slot);               // Slot (0, 1 or 2)
@@ -437,7 +437,7 @@ namespace Mangos.Cluster.Handlers
             // 2 - Your group has joined the queue for WS
             // 3 - Your group has joined the queue for AB
 
-            PacketClass p = new PacketClass(Opcodes.SMSG_GROUP_JOINED_BATTLEGROUND);
+            PacketClass p = new(Opcodes.SMSG_GROUP_JOINED_BATTLEGROUND);
             try
             {
                 p.AddUInt32(0xFFFFFFFEU);
@@ -451,7 +451,7 @@ namespace Mangos.Cluster.Handlers
 
         public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(PacketClass packet, ClientClass client)
         {
-            PacketClass p = new PacketClass(Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS);
+            PacketClass p = new(Opcodes.MSG_BATTLEGROUND_PLAYER_POSITIONS);
             try
             {
                 p.AddUInt32(0U);

@@ -47,7 +47,7 @@ namespace Mangos.World.Warden
 
             public void Do_MEM_CHECK(string ScanModule, int Offset, byte Length)
             {
-                CheatCheck newCheck = new CheatCheck(CheckTypes.MEM_CHECK)
+                CheatCheck newCheck = new(CheckTypes.MEM_CHECK)
                 {
                     Str = ScanModule,
                     Addr = Offset,
@@ -62,7 +62,7 @@ namespace Mangos.World.Warden
 
             public void Do_PAGE_CHECK_A_B(int Seed, byte[] Hash, int Offset, byte Length)
             {
-                CheatCheck newCheck = new CheatCheck(CheckTypes.PAGE_CHECK_A_B)
+                CheatCheck newCheck = new(CheckTypes.PAGE_CHECK_A_B)
                 {
                     Seed = Seed,
                     Hash = Hash,
@@ -74,7 +74,7 @@ namespace Mangos.World.Warden
 
             public void Do_MPQ_CHECK(string File)
             {
-                CheatCheck newCheck = new CheatCheck(CheckTypes.MPQ_CHECK)
+                CheatCheck newCheck = new(CheckTypes.MPQ_CHECK)
                 {
                     Str = File
                 };
@@ -84,7 +84,7 @@ namespace Mangos.World.Warden
 
             public void Do_LUA_STR_CHECK(string str)
             {
-                CheatCheck newCheck = new CheatCheck(CheckTypes.LUA_STR_CHECK)
+                CheatCheck newCheck = new(CheckTypes.LUA_STR_CHECK)
                 {
                     Str = str
                 };
@@ -94,7 +94,7 @@ namespace Mangos.World.Warden
 
             public void Do_DRIVER_CHECK(int Seed, byte[] Hash, string Driver)
             {
-                CheatCheck newCheck = new CheatCheck(CheckTypes.DRIVER_CHECK)
+                CheatCheck newCheck = new(CheckTypes.DRIVER_CHECK)
                 {
                     Seed = Seed,
                     Hash = Hash,
@@ -106,13 +106,13 @@ namespace Mangos.World.Warden
 
             public void Do_TIMING_CHECK()
             {
-                CheatCheck newCheck = new CheatCheck(CheckTypes.TIMING_CHECK);
+                CheatCheck newCheck = new(CheckTypes.TIMING_CHECK);
                 Checks.Add(newCheck);
             }
 
             public void Do_PROC_CHECK(int Seed, byte[] Hash, string ScanModule, string ProcName, int Offset, byte Length)
             {
-                CheatCheck newCheck = new CheatCheck(CheckTypes.PROC_CHECK)
+                CheatCheck newCheck = new(CheckTypes.PROC_CHECK)
                 {
                     Seed = Seed,
                     Hash = Hash,
@@ -128,7 +128,7 @@ namespace Mangos.World.Warden
 
             public void Do_MODULE_CHECK(int Seed, byte[] Hash)
             {
-                CheatCheck newCheck = new CheatCheck(CheckTypes.MODULE_CHECK)
+                CheatCheck newCheck = new(CheckTypes.MODULE_CHECK)
                 {
                     Seed = Seed,
                     Hash = Hash
@@ -138,7 +138,7 @@ namespace Mangos.World.Warden
 
             public Packets.PacketClass GetPacket()
             {
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_WARDEN_DATA);
+                Packets.PacketClass packet = new(Opcodes.SMSG_WARDEN_DATA);
                 packet.AddInt8(2);
                 foreach (string tmpStr in UsedStrings)
                 {

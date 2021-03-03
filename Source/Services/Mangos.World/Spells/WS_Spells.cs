@@ -382,7 +382,7 @@ namespace Mangos.World.Spells
 
             public Dictionary<WS_Base.BaseObject, SpellMissInfo> GetTargets(ref WS_Base.BaseObject Caster, SpellTargets Targets, byte Index)
             {
-                List<WS_Base.BaseObject> TargetsInfected = new List<WS_Base.BaseObject>();
+                List<WS_Base.BaseObject> TargetsInfected = new();
                 WS_Base.BaseUnit Ref = null;
                 if (Caster is WS_Totems.TotemObject @object)
                 {
@@ -508,7 +508,7 @@ namespace Mangos.World.Spells
                                 case SpellImplicitTargets.TARGET_CHAIN_DAMAGE:
                                 case SpellImplicitTargets.TARGET_CHAIN_HEAL:
                                     {
-                                        List<WS_Base.BaseUnit> UsedTargets = new List<WS_Base.BaseUnit>();
+                                        List<WS_Base.BaseUnit> UsedTargets = new();
                                         WS_Base.BaseUnit TargetUnit = null;
                                         if (!TargetsInfected.Contains(Targets.unitTarget))
                                         {
@@ -700,7 +700,7 @@ namespace Mangos.World.Spells
 
             public Dictionary<WS_Base.BaseObject, SpellMissInfo> CalculateMisses(ref WS_Base.BaseObject Caster, ref List<WS_Base.BaseObject> Targets, ref SpellEffect SpellEffect)
             {
-                Dictionary<WS_Base.BaseObject, SpellMissInfo> newTargets = new Dictionary<WS_Base.BaseObject, SpellMissInfo>();
+                Dictionary<WS_Base.BaseObject, SpellMissInfo> newTargets = new();
                 foreach (WS_Base.BaseObject Target in Targets)
                 {
                     if (Target != Caster && Caster is WS_Base.BaseUnit unit && Target is WS_Base.BaseUnit unit1)
@@ -763,7 +763,7 @@ namespace Mangos.World.Spells
 
             public List<WS_Base.BaseObject> GetHits(ref Dictionary<WS_Base.BaseObject, SpellMissInfo> Targets)
             {
-                List<WS_Base.BaseObject> targetHits = new List<WS_Base.BaseObject>();
+                List<WS_Base.BaseObject> targetHits = new();
                 foreach (KeyValuePair<WS_Base.BaseObject, SpellMissInfo> Target in Targets)
                 {
                     if (Target.Value == SpellMissInfo.SPELL_MISS_NONE)
@@ -897,7 +897,7 @@ namespace Mangos.World.Spells
                     {
                         CastFlags = checked((short)(CastFlags | 0x20));
                     }
-                    Packets.PacketClass spellStart = new Packets.PacketClass(Opcodes.SMSG_SPELL_START);
+                    Packets.PacketClass spellStart = new(Opcodes.SMSG_SPELL_START);
                     if (castParams.Item != null)
                     {
                         spellStart.AddPackGUID(castParams.Item.GUID);
@@ -1139,8 +1139,8 @@ namespace Mangos.World.Spells
                                 case 0:
                                     {
                                         creatureObject.Mana.Current -= GetManaCost(creatureObject.Level, creatureObject.Mana.Base);
-                                        Packets.UpdatePacketClass updatePacket2 = new Packets.UpdatePacketClass();
-                                        Packets.UpdateClass powerUpdate2 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                                        Packets.UpdatePacketClass updatePacket2 = new();
+                                        Packets.UpdateClass powerUpdate2 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                                         powerUpdate2.SetUpdateFlag(23, creatureObject.Mana.Current);
                                         Packets.PacketClass packet = updatePacket2;
                                         WS_Creatures.CreatureObject creature = (WS_Creatures.CreatureObject)Caster;
@@ -1156,8 +1156,8 @@ namespace Mangos.World.Spells
                                 case -2:
                                     {
                                         creatureObject.Life.Current -= GetManaCost(creatureObject.Level, creatureObject.Life.Base);
-                                        Packets.UpdatePacketClass updatePacket = new Packets.UpdatePacketClass();
-                                        Packets.UpdateClass powerUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                                        Packets.UpdatePacketClass updatePacket = new();
+                                        Packets.UpdateClass powerUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                                         powerUpdate.SetUpdateFlag(22, creatureObject.Life.Current);
                                         Packets.PacketClass packet = updatePacket;
                                         WS_Creatures.CreatureObject creature = (WS_Creatures.CreatureObject)Caster;
@@ -1177,7 +1177,7 @@ namespace Mangos.World.Spells
                         {
                             WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_NO_ERROR, ref object4.client, ID);
                         }
-                        Dictionary<ulong, SpellMissInfo> tmpTargets = new Dictionary<ulong, SpellMissInfo>();
+                        Dictionary<ulong, SpellMissInfo> tmpTargets = new();
                         byte j = 0;
                         do
                         {
@@ -1678,7 +1678,7 @@ namespace Mangos.World.Spells
                 {
                     case WS_PlayerData.CharacterObject _:
                         {
-                            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_CHANNEL_START);
+                            Packets.PacketClass packet = new(Opcodes.MSG_CHANNEL_START);
                             packet.AddInt32(ID);
                             packet.AddInt32(Duration);
                             ((WS_PlayerData.CharacterObject)Caster).client.Send(ref packet);
@@ -1694,8 +1694,8 @@ namespace Mangos.World.Spells
 
                         break;
                 }
-                Packets.UpdatePacketClass updatePacket = new Packets.UpdatePacketClass();
-                Packets.UpdateClass updateBlock = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                Packets.UpdatePacketClass updatePacket = new();
+                Packets.UpdateClass updateBlock = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                 updateBlock.SetUpdateFlag(144, ID);
                 if (Targets.unitTarget != null)
                 {
@@ -1745,7 +1745,7 @@ namespace Mangos.World.Spells
                 {
                     if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(2512))
                     {
-                        WS_Items.ItemInfo tmpInfo = new WS_Items.ItemInfo(2512);
+                        WS_Items.ItemInfo tmpInfo = new(2512);
                         WorldServiceLocator._WorldServer.ITEMDatabase.Add(2512, tmpInfo);
                     }
                     ItemInfo = WorldServiceLocator._WorldServer.ITEMDatabase[2512];
@@ -1758,14 +1758,14 @@ namespace Mangos.World.Spells
             {
                 if (Caster is WS_PlayerData.CharacterObject @object)
                 {
-                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SPELL_FAILURE);
+                    Packets.PacketClass packet = new(Opcodes.SMSG_SPELL_FAILURE);
                     packet.AddUInt64(Caster.GUID);
                     packet.AddInt32(ID);
                     packet.AddInt8(result);
                     @object.client.Send(ref packet);
                     packet.Dispose();
                 }
-                Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_SPELL_FAILED_OTHER);
+                Packets.PacketClass packet2 = new(Opcodes.SMSG_SPELL_FAILED_OTHER);
                 packet2.AddUInt64(Caster.GUID);
                 packet2.AddInt32(ID);
                 Caster.SendToNearPlayers(ref packet2);
@@ -1842,7 +1842,7 @@ namespace Mangos.World.Spells
 
             public void SendSpellMiss(ref WS_Base.BaseObject Caster, ref WS_Base.BaseUnit Target, SpellMissInfo MissInfo)
             {
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SPELLLOGMISS);
+                Packets.PacketClass packet = new(Opcodes.SMSG_SPELLLOGMISS);
                 packet.AddInt32(ID);
                 packet.AddUInt64(Caster.GUID);
                 packet.AddInt8(0);
@@ -1855,7 +1855,7 @@ namespace Mangos.World.Spells
 
             public void SendSpellLog(ref WS_Base.BaseObject Caster, ref SpellTargets Targets)
             {
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SPELLLOGEXECUTE);
+                Packets.PacketClass packet = new(Opcodes.SMSG_SPELLLOGEXECUTE);
                 if (Caster is WS_PlayerData.CharacterObject)
                 {
                     packet.AddPackGUID(Caster.GUID);
@@ -2022,7 +2022,7 @@ namespace Mangos.World.Spells
                     {
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_spells SET cooldown={2}, cooldownitem={3} WHERE guid = {0} AND spellid = {1};", objCharacter.GUID, ID, objCharacter.Spells[ID].Cooldown, objCharacter.Spells[ID].CooldownItem));
                     }
-                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SPELL_COOLDOWN);
+                    Packets.PacketClass packet = new(Opcodes.SMSG_SPELL_COOLDOWN);
                     packet.AddUInt64(objCharacter.GUID);
                     if (CatRecovery > 0)
                     {
@@ -2581,7 +2581,7 @@ namespace Mangos.World.Spells
                         {
                             int delaytime = 200;
                             Delayed += delaytime;
-                            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SPELL_DELAYED);
+                            Packets.PacketClass packet = new(Opcodes.SMSG_SPELL_DELAYED);
                             packet.AddPackGUID(Caster.GUID);
                             packet.AddInt32(delaytime);
                             Caster.SendToNearPlayers(ref packet);
@@ -2686,7 +2686,7 @@ namespace Mangos.World.Spells
 
         public void SendCastResult(SpellFailedReason result, ref WS_Network.ClientClass client, int id)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_CAST_RESULT);
+            Packets.PacketClass packet = new(Opcodes.SMSG_CAST_RESULT);
             packet.AddInt32(id);
             if (result != SpellFailedReason.SPELL_NO_ERROR)
             {
@@ -2703,7 +2703,7 @@ namespace Mangos.World.Spells
 
         public void SendNonMeleeDamageLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int SchoolType, int Damage, int Resist, int Absorbed, bool CriticalHit)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SPELLNONMELEEDAMAGELOG);
+            Packets.PacketClass packet = new(Opcodes.SMSG_SPELLNONMELEEDAMAGELOG);
             packet.AddPackGUID(Target.GUID);
             packet.AddPackGUID(Caster.GUID);
             packet.AddInt32(SpellID);
@@ -2728,7 +2728,7 @@ namespace Mangos.World.Spells
 
         public void SendHealSpellLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int Damage, bool CriticalHit)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_HEALSPELL_ON_PLAYER_OBSOLETE);
+            Packets.PacketClass packet = new(Opcodes.SMSG_HEALSPELL_ON_PLAYER_OBSOLETE);
             packet.AddPackGUID(Target.GUID);
             packet.AddPackGUID(Caster.GUID);
             packet.AddInt32(SpellID);
@@ -2750,7 +2750,7 @@ namespace Mangos.World.Spells
 
         public void SendPeriodicAuraLog(ref WS_Base.BaseUnit Caster, ref WS_Base.BaseUnit Target, int SpellID, int School, int Damage, int AuraIndex)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PERIODICAURALOG);
+            Packets.PacketClass packet = new(Opcodes.SMSG_PERIODICAURALOG);
             packet.AddPackGUID(Target.GUID);
             packet.AddPackGUID(Caster.GUID);
             packet.AddInt32(SpellID);
@@ -2765,7 +2765,7 @@ namespace Mangos.World.Spells
 
         public void SendPlaySpellVisual(ref WS_Base.BaseUnit Caster, int SpellId)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PLAY_SPELL_VISUAL);
+            Packets.PacketClass packet = new(Opcodes.SMSG_PLAY_SPELL_VISUAL);
             packet.AddUInt64(Caster.GUID);
             packet.AddInt32(SpellId);
             Caster.SendToNearPlayers(ref packet);
@@ -2774,7 +2774,7 @@ namespace Mangos.World.Spells
 
         public void SendChannelUpdate(ref WS_PlayerData.CharacterObject Caster, int Time)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_CHANNEL_UPDATE);
+            Packets.PacketClass packet = new(Opcodes.MSG_CHANNEL_UPDATE);
             packet.AddInt32(Time);
             Caster.client.Send(ref packet);
             packet.Dispose();
@@ -3077,7 +3077,7 @@ namespace Mangos.World.Spells
             if ((SPELLs[SpellInfo.TriggerSpell].EquippedItemClass >= 0) & (Caster is WS_PlayerData.CharacterObject))
             {
             }
-            CastSpellParameters castParams = new CastSpellParameters(ref Target, ref Caster, SpellInfo.TriggerSpell);
+            CastSpellParameters castParams = new(ref Target, ref Caster, SpellInfo.TriggerSpell);
             ThreadPool.QueueUserWorkItem(castParams.Cast);
             return SpellFailedReason.SPELL_NO_ERROR;
         }
@@ -3166,8 +3166,8 @@ namespace Mangos.World.Spells
                     {
                         case WS_Creatures.CreatureObject _:
                             {
-                                Packets.UpdateClass myTmpUpdate = new Packets.UpdateClass(188);
-                                Packets.UpdatePacketClass myPacket = new Packets.UpdatePacketClass();
+                                Packets.UpdateClass myTmpUpdate = new(188);
+                                Packets.UpdatePacketClass myPacket = new();
                                 myTmpUpdate.SetUpdateFlag(23 + SpellInfo.MiscValue, TargetPower);
                                 Packets.PacketClass packet = myPacket;
                                 WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Unit;
@@ -3216,8 +3216,8 @@ namespace Mangos.World.Spells
                 {
                     case WS_Creatures.CreatureObject _:
                         {
-                            Packets.UpdateClass TmpUpdate = new Packets.UpdateClass(188);
-                            Packets.UpdatePacketClass Packet = new Packets.UpdatePacketClass();
+                            Packets.UpdateClass TmpUpdate = new(188);
+                            Packets.UpdatePacketClass Packet = new();
                             TmpUpdate.SetUpdateFlag(23 + SpellInfo.MiscValue, CasterPower);
                             Packets.PacketClass packet = Packet;
                             WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Caster;
@@ -3436,7 +3436,7 @@ namespace Mangos.World.Spells
                             {
                                 if (creatureObject.CreatureInfo.PocketLootID > 0)
                                 {
-                                    WS_Loot.LootObject Loot = new WS_Loot.LootObject(creatureObject.GUID, LootType.LOOTTYPE_PICKPOCKETING)
+                                    WS_Loot.LootObject Loot = new(creatureObject.GUID, LootType.LOOTTYPE_PICKPOCKETING)
                                     {
                                         LootOwner = Caster.GUID
                                     };
@@ -3484,7 +3484,7 @@ namespace Mangos.World.Spells
                                 creatureObject.cUnitFlags &= -67108865;
                                 if (creatureObject.CreatureInfo.SkinLootID > 0)
                                 {
-                                    WS_Loot.LootObject Loot = new WS_Loot.LootObject(creatureObject.GUID, LootType.LOOTTYPE_SKINNING)
+                                    WS_Loot.LootObject Loot = new(creatureObject.GUID, LootType.LOOTTYPE_SKINNING)
                                     {
                                         LootOwner = Caster.GUID
                                     };
@@ -3495,8 +3495,8 @@ namespace Mangos.World.Spells
                                 {
                                     WorldServiceLocator._WS_Loot.SendEmptyLoot(creatureObject.GUID, LootType.LOOTTYPE_SKINNING, ref ((WS_PlayerData.CharacterObject)Caster).client);
                                 }
-                                Packets.UpdateClass TmpUpdate = new Packets.UpdateClass(188);
-                                Packets.UpdatePacketClass Packet = new Packets.UpdatePacketClass();
+                                Packets.UpdateClass TmpUpdate = new(188);
+                                Packets.UpdatePacketClass Packet = new();
                                 TmpUpdate.SetUpdateFlag(46, creatureObject.cUnitFlags);
                                 Packets.PacketClass packet = Packet;
                                 WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Target.unitTarget;
@@ -3884,7 +3884,7 @@ namespace Mangos.World.Spells
                 ((WS_Base.BaseUnit)Caster).StandState = 1;
                 @object.SetUpdateFlag(138, ((WS_Base.BaseUnit)Caster).cBytes1);
                 @object.SendCharacterUpdate();
-                Packets.PacketClass packetACK = new Packets.PacketClass(Opcodes.SMSG_STANDSTATE_CHANGE_ACK);
+                Packets.PacketClass packetACK = new(Opcodes.SMSG_STANDSTATE_CHANGE_ACK);
                 packetACK.AddInt8(((WS_Base.BaseUnit)Caster).StandState);
                 @object.client.Send(ref packetACK);
                 packetACK.Dispose();
@@ -3936,7 +3936,7 @@ namespace Mangos.World.Spells
             }
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Amplitude: {0}", SpellInfo.Amplitude);
             WS_Base.BaseUnit Caster_ = (WS_Base.BaseUnit)Caster;
-            WS_DynamicObjects.DynamicObjectObject dynamicObjectObject = new WS_DynamicObjects.DynamicObjectObject(ref Caster_, SpellID, Target.dstX, Target.dstY, Target.dstZ, SPELLs[SpellID].GetDuration, SpellInfo.GetRadius);
+            WS_DynamicObjects.DynamicObjectObject dynamicObjectObject = new(ref Caster_, SpellID, Target.dstX, Target.dstY, Target.dstZ, SPELLs[SpellID].GetDuration, SpellInfo.GetRadius);
             Caster = Caster_;
             WS_DynamicObjects.DynamicObjectObject tmpDO = dynamicObjectObject;
             tmpDO.AddEffect(SpellInfo);
@@ -3961,7 +3961,7 @@ namespace Mangos.World.Spells
                 }
                 if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(SpellInfo.ItemType))
                 {
-                    WS_Items.ItemInfo tmpInfo = new WS_Items.ItemInfo(SpellInfo.ItemType);
+                    WS_Items.ItemInfo tmpInfo = new(SpellInfo.ItemType);
                     WorldServiceLocator._WorldServer.ITEMDatabase.Add(SpellInfo.ItemType, tmpInfo);
                 }
                 if (Amount > WorldServiceLocator._WorldServer.ITEMDatabase[SpellInfo.ItemType].Stackable)
@@ -3975,7 +3975,7 @@ namespace Mangos.World.Spells
                 {
                     if (Unit is WS_PlayerData.CharacterObject @object)
                     {
-                        ItemObject tmpItem = new ItemObject(SpellInfo.ItemType, Unit.GUID)
+                        ItemObject tmpItem = new(SpellInfo.ItemType, Unit.GUID)
                         {
                             StackCount = Amount
                         };
@@ -4005,7 +4005,7 @@ namespace Mangos.World.Spells
                             {
                                 if (Caster is WS_PlayerData.CharacterObject @object)
                                 {
-                                    Packets.PacketClass RessurectFailed = new Packets.PacketClass(Opcodes.SMSG_RESURRECT_FAILED);
+                                    Packets.PacketClass RessurectFailed = new(Opcodes.SMSG_RESURRECT_FAILED);
                                     @object.client.Send(ref RessurectFailed);
                                     RessurectFailed.Dispose();
                                 }
@@ -4018,7 +4018,7 @@ namespace Mangos.World.Spells
                             ((WS_PlayerData.CharacterObject)Unit).resurrectPositionZ = Caster.positionZ;
                             ((WS_PlayerData.CharacterObject)Unit).resurrectHealth = checked(((WS_PlayerData.CharacterObject)Unit).Life.Maximum * SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0)) / 100;
                             ((WS_PlayerData.CharacterObject)Unit).resurrectMana = checked(((WS_PlayerData.CharacterObject)Unit).Mana.Maximum * SpellInfo.MiscValue) / 100;
-                            Packets.PacketClass RessurectRequest2 = new Packets.PacketClass(Opcodes.SMSG_RESURRECT_REQUEST);
+                            Packets.PacketClass RessurectRequest2 = new(Opcodes.SMSG_RESURRECT_REQUEST);
                             RessurectRequest2.AddUInt64(Caster.GUID);
                             RessurectRequest2.AddUInt32(1u);
                             RessurectRequest2.AddUInt16(0);
@@ -4032,8 +4032,8 @@ namespace Mangos.World.Spells
                         {
                             Target.unitTarget.Life.Current = checked(((WS_Creatures.CreatureObject)Unit).Life.Maximum * SpellInfo.valueBase) / 100;
                             Target.unitTarget.cUnitFlags &= -16385;
-                            Packets.UpdatePacketClass packetForNear = new Packets.UpdatePacketClass();
-                            Packets.UpdateClass UpdateData = new Packets.UpdateClass(188);
+                            Packets.UpdatePacketClass packetForNear = new();
+                            Packets.UpdateClass UpdateData = new(188);
                             UpdateData.SetUpdateFlag(22, ((WS_Creatures.CreatureObject)Unit).Life.Current);
                             UpdateData.SetUpdateFlag(46, Target.unitTarget.cUnitFlags);
                             Packets.PacketClass packet = packetForNear;
@@ -4060,7 +4060,7 @@ namespace Mangos.World.Spells
                             characterObject.resurrectPositionZ = Caster.positionZ;
                             characterObject.resurrectHealth = checked(characterObject.Life.Maximum * SpellInfo.valueBase) / 100;
                             characterObject.resurrectMana = checked(characterObject.Mana.Maximum * SpellInfo.MiscValue) / 100;
-                            Packets.PacketClass RessurectRequest = new Packets.PacketClass(Opcodes.SMSG_RESURRECT_REQUEST);
+                            Packets.PacketClass RessurectRequest = new(Opcodes.SMSG_RESURRECT_REQUEST);
                             RessurectRequest.AddUInt64(Caster.GUID);
                             RessurectRequest.AddUInt32(1u);
                             RessurectRequest.AddUInt16(0);
@@ -4086,7 +4086,7 @@ namespace Mangos.World.Spells
                             {
                                 if (Caster is WS_PlayerData.CharacterObject @object)
                                 {
-                                    Packets.PacketClass RessurectFailed = new Packets.PacketClass(Opcodes.SMSG_RESURRECT_FAILED);
+                                    Packets.PacketClass RessurectFailed = new(Opcodes.SMSG_RESURRECT_FAILED);
                                     @object.client.Send(ref RessurectFailed);
                                     RessurectFailed.Dispose();
                                 }
@@ -4099,7 +4099,7 @@ namespace Mangos.World.Spells
                             ((WS_PlayerData.CharacterObject)Unit).resurrectPositionZ = Caster.positionZ;
                             ((WS_PlayerData.CharacterObject)Unit).resurrectHealth = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                             ((WS_PlayerData.CharacterObject)Unit).resurrectMana = SpellInfo.MiscValue;
-                            Packets.PacketClass RessurectRequest2 = new Packets.PacketClass(Opcodes.SMSG_RESURRECT_REQUEST);
+                            Packets.PacketClass RessurectRequest2 = new(Opcodes.SMSG_RESURRECT_REQUEST);
                             RessurectRequest2.AddUInt64(Caster.GUID);
                             RessurectRequest2.AddUInt32(1u);
                             RessurectRequest2.AddUInt16(0);
@@ -4112,8 +4112,8 @@ namespace Mangos.World.Spells
                     case WS_Creatures.CreatureObject _:
                         {
                             ((WS_Creatures.CreatureObject)Unit).Life.Current = checked(((WS_Creatures.CreatureObject)Unit).Life.Maximum * SpellInfo.valueBase) / 100;
-                            Packets.UpdatePacketClass packetForNear = new Packets.UpdatePacketClass();
-                            Packets.UpdateClass UpdateData = new Packets.UpdateClass(188);
+                            Packets.UpdatePacketClass packetForNear = new();
+                            Packets.UpdateClass UpdateData = new(188);
                             UpdateData.SetUpdateFlag(22, ((WS_Creatures.CreatureObject)Unit).Life.Current);
                             Packets.PacketClass packet = packetForNear;
                             WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Unit;
@@ -4138,7 +4138,7 @@ namespace Mangos.World.Spells
                             WorldServiceLocator._WorldServer.CHARACTERs[((WS_Corpses.CorpseObject)Unit).Owner].resurrectPositionZ = Caster.positionZ;
                             WorldServiceLocator._WorldServer.CHARACTERs[((WS_Corpses.CorpseObject)Unit).Owner].resurrectHealth = SpellInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0);
                             WorldServiceLocator._WorldServer.CHARACTERs[((WS_Corpses.CorpseObject)Unit).Owner].resurrectMana = SpellInfo.MiscValue;
-                            Packets.PacketClass RessurectRequest = new Packets.PacketClass(Opcodes.SMSG_RESURRECT_REQUEST);
+                            Packets.PacketClass RessurectRequest = new(Opcodes.SMSG_RESURRECT_REQUEST);
                             RessurectRequest.AddUInt64(Caster.GUID);
                             RessurectRequest.AddUInt32(1u);
                             RessurectRequest.AddUInt16(0);
@@ -4286,7 +4286,7 @@ namespace Mangos.World.Spells
                     SelectedY = Caster.positionY;
                     SelectedZ = Caster.positionZ;
                 }
-                WS_Creatures.CreatureObject creatureObject = new WS_Creatures.CreatureObject(SpellInfo.MiscValue, SelectedX, SelectedY, SelectedZ, Caster.orientation, checked((int)Caster.MapID), Duration)
+                WS_Creatures.CreatureObject creatureObject = new(SpellInfo.MiscValue, SelectedX, SelectedY, SelectedZ, Caster.orientation, checked((int)Caster.MapID), Duration)
                 {
                     Level = ((WS_Base.BaseUnit)Caster).Level,
                     CreatedBy = Caster.GUID,
@@ -4366,7 +4366,7 @@ namespace Mangos.World.Spells
                         }
                         if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(SpellInfo.MiscValue))
                         {
-                            CreatureInfo tmpInfo = new CreatureInfo(SpellInfo.MiscValue);
+                            CreatureInfo tmpInfo = new(SpellInfo.MiscValue);
                             WorldServiceLocator._WorldServer.CREATURESDatabase.Add(SpellInfo.MiscValue, tmpInfo);
                         }
                         NewTotem.InitSpell(WorldServiceLocator._WorldServer.CREATURESDatabase[SpellInfo.MiscValue].Spells[0]);
@@ -4400,7 +4400,7 @@ namespace Mangos.World.Spells
                 selectedY = (float)(Caster.positionY + (Math.Sin(Caster.orientation) * SPELLs[SpellID].GetRange));
             }
             WS_GameObjects.GameObjectInfo GameobjectInfo = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(SpellInfo.MiscValue) ? WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[SpellInfo.MiscValue] : new WS_GameObjects.GameObjectInfo(SpellInfo.MiscValue);
-            WS_GameObjects.GameObjectObject gameObjectObject = new WS_GameObjects.GameObjectObject(PosZ: (GameobjectInfo.Type != GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE) ? WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID) : WorldServiceLocator._WS_Maps.GetWaterLevel(selectedX, selectedY, checked((int)Caster.MapID)), ID_: SpellInfo.MiscValue, MapID_: Caster.MapID, PosX: selectedX, PosY: selectedY, Rotation: Caster.orientation, Owner_: Caster.GUID)
+            WS_GameObjects.GameObjectObject gameObjectObject = new(PosZ: (GameobjectInfo.Type != GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE) ? WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID) : WorldServiceLocator._WS_Maps.GetWaterLevel(selectedX, selectedY, checked((int)Caster.MapID)), ID_: SpellInfo.MiscValue, MapID_: Caster.MapID, PosX: selectedX, PosY: selectedY, Rotation: Caster.orientation, Owner_: Caster.GUID)
             {
                 CreatedBySpell = SpellID,
                 Level = ((WS_Base.BaseUnit)Caster).Level,
@@ -4413,7 +4413,7 @@ namespace Mangos.World.Spells
                 tmpGO.SetupFishingNode();
             }
             tmpGO.AddToWorld();
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
+            Packets.PacketClass packet = new(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
             packet.AddUInt64(tmpGO.GUID);
             tmpGO.SendToNearPlayers(ref packet);
             packet.Dispose();
@@ -4440,7 +4440,7 @@ namespace Mangos.World.Spells
             if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Target.itemTarget.OwnerGUID))
             {
                 WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].SendItemUpdate(Target.itemTarget);
-                Packets.PacketClass EnchantLog = new Packets.PacketClass(Opcodes.SMSG_ENCHANTMENTLOG);
+                Packets.PacketClass EnchantLog = new(Opcodes.SMSG_ENCHANTMENTLOG);
                 EnchantLog.AddUInt64(Target.itemTarget.OwnerGUID);
                 EnchantLog.AddUInt64(Caster.GUID);
                 EnchantLog.AddInt32(Target.itemTarget.ItemEntry);
@@ -4480,7 +4480,7 @@ namespace Mangos.World.Spells
             if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Target.itemTarget.OwnerGUID))
             {
                 WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].SendItemUpdate(Target.itemTarget);
-                Packets.PacketClass EnchantLog = new Packets.PacketClass(Opcodes.SMSG_ENCHANTMENTLOG);
+                Packets.PacketClass EnchantLog = new(Opcodes.SMSG_ENCHANTMENTLOG);
                 EnchantLog.AddUInt64(Target.itemTarget.OwnerGUID);
                 EnchantLog.AddUInt64(Caster.GUID);
                 EnchantLog.AddInt32(Target.itemTarget.ItemEntry);
@@ -4532,7 +4532,7 @@ namespace Mangos.World.Spells
             }
             float moveDist = WorldServiceLocator._WS_Combat.GetDistance(Caster, NearX, NearY, NearZ);
             double TimeToMove = checked((double)Math.Round(moveDist / SPELLs[SpellID].Speed * 1000f));
-            Packets.PacketClass SMSG_MONSTER_MOVE = new Packets.PacketClass(Opcodes.SMSG_MONSTER_MOVE);
+            Packets.PacketClass SMSG_MONSTER_MOVE = new(Opcodes.SMSG_MONSTER_MOVE);
             SMSG_MONSTER_MOVE.AddPackGUID(Caster.GUID);
             SMSG_MONSTER_MOVE.AddSingle(Caster.positionX);
             SMSG_MONSTER_MOVE.AddSingle(Caster.positionY);
@@ -4560,7 +4560,7 @@ namespace Mangos.World.Spells
             foreach (WS_Base.BaseUnit Unit in Infected)
             {
                 float Direction = WorldServiceLocator._WS_Combat.GetOrientation(Caster.positionX, Unit.positionX, Caster.positionY, Unit.positionY);
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_KNOCK_BACK);
+                Packets.PacketClass packet = new(Opcodes.SMSG_MOVE_KNOCK_BACK);
                 packet.AddPackGUID(Unit.GUID);
                 packet.AddInt32(0);
                 packet.AddSingle((float)Math.Cos(Direction));
@@ -4606,7 +4606,7 @@ namespace Mangos.World.Spells
                         {
                             return SpellFailedReason.SPELL_FAILED_UNKNOWN;
                         }
-                        CastSpellParameters castParams = new CastSpellParameters(ref Target, ref Caster, SpellID2);
+                        CastSpellParameters castParams = new(ref Target, ref Caster, SpellID2);
                         ThreadPool.QueueUserWorkItem(castParams.Cast);
                     }
                 }
@@ -4644,12 +4644,12 @@ namespace Mangos.World.Spells
                     float flagX = Caster.positionX + ((Target.unitTarget.positionX - Caster.positionX) / 2f);
                     float flagY = Caster.positionY + ((Target.unitTarget.positionY - Caster.positionY) / 2f);
                     float flagZ = WorldServiceLocator._WS_Maps.GetZCoord(flagX, flagY, Caster.positionZ + 3f, Caster.MapID);
-                    WS_GameObjects.GameObjectObject tmpGO = new WS_GameObjects.GameObjectObject(SpellInfo.MiscValue, Caster.MapID, flagX, flagY, flagZ, 0f, Caster.GUID);
+                    WS_GameObjects.GameObjectObject tmpGO = new(SpellInfo.MiscValue, Caster.MapID, flagX, flagY, flagZ, 0f, Caster.GUID);
                     tmpGO.AddToWorld();
                     ((WS_PlayerData.CharacterObject)Target.unitTarget).DuelArbiter = tmpGO.GUID;
                     @object.DuelPartner = (WS_PlayerData.CharacterObject)Target.unitTarget;
                     ((WS_PlayerData.CharacterObject)Target.unitTarget).DuelPartner = @object;
-                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_DUEL_REQUESTED);
+                    Packets.PacketClass packet = new(Opcodes.SMSG_DUEL_REQUESTED);
                     packet.AddUInt64(tmpGO.GUID);
                     packet.AddUInt64(Caster.GUID);
                     ((WS_PlayerData.CharacterObject)Target.unitTarget).client.SendMultiplyPackets(ref packet);
@@ -4679,7 +4679,7 @@ namespace Mangos.World.Spells
 
         public List<WS_Base.BaseUnit> GetEnemyAtPoint(ref WS_Base.BaseUnit objCharacter, float PosX, float PosY, float PosZ, float Distance)
         {
-            List<WS_Base.BaseUnit> result = new List<WS_Base.BaseUnit>();
+            List<WS_Base.BaseUnit> result = new();
             switch (objCharacter)
             {
                 case WS_PlayerData.CharacterObject _:
@@ -4723,7 +4723,7 @@ namespace Mangos.World.Spells
 
         public List<WS_Base.BaseUnit> GetEnemyAroundMe(ref WS_Base.BaseUnit objCharacter, float Distance, WS_Base.BaseUnit r = null)
         {
-            List<WS_Base.BaseUnit> result = new List<WS_Base.BaseUnit>();
+            List<WS_Base.BaseUnit> result = new();
             if (r == null)
             {
                 r = objCharacter;
@@ -4771,7 +4771,7 @@ namespace Mangos.World.Spells
 
         public List<WS_Base.BaseUnit> GetFriendAroundMe(ref WS_Base.BaseUnit objCharacter, float Distance)
         {
-            List<WS_Base.BaseUnit> result = new List<WS_Base.BaseUnit>();
+            List<WS_Base.BaseUnit> result = new();
             switch (objCharacter)
             {
                 case WS_PlayerData.CharacterObject _:
@@ -4815,7 +4815,7 @@ namespace Mangos.World.Spells
 
         public List<WS_Base.BaseUnit> GetFriendPlayersAroundMe(ref WS_Base.BaseUnit objCharacter, float Distance)
         {
-            List<WS_Base.BaseUnit> result = new List<WS_Base.BaseUnit>();
+            List<WS_Base.BaseUnit> result = new();
             switch (objCharacter)
             {
                 case WS_PlayerData.CharacterObject _:
@@ -4851,7 +4851,7 @@ namespace Mangos.World.Spells
 
         public List<WS_Base.BaseUnit> GetPartyMembersAroundMe(ref WS_PlayerData.CharacterObject objCharacter, float distance)
         {
-            List<WS_Base.BaseUnit> list = new List<WS_Base.BaseUnit>
+            List<WS_Base.BaseUnit> list = new()
             {
                 objCharacter
             };
@@ -4873,7 +4873,7 @@ namespace Mangos.World.Spells
 
         public List<WS_Base.BaseUnit> GetPartyMembersAtPoint(ref WS_PlayerData.CharacterObject objCharacter, float Distance, float PosX, float PosY, float PosZ)
         {
-            List<WS_Base.BaseUnit> result = new List<WS_Base.BaseUnit>();
+            List<WS_Base.BaseUnit> result = new();
             if (WorldServiceLocator._WS_Combat.GetDistance(objCharacter, PosX, PosY, PosZ) < Distance)
             {
                 result.Add(objCharacter);
@@ -4895,7 +4895,7 @@ namespace Mangos.World.Spells
 
         public List<WS_Base.BaseUnit> GetEnemyInFrontOfMe(ref WS_Base.BaseUnit objCharacter, float Distance)
         {
-            List<WS_Base.BaseUnit> result = new List<WS_Base.BaseUnit>();
+            List<WS_Base.BaseUnit> result = new();
             WS_Base.BaseUnit r = null;
             List<WS_Base.BaseUnit> tmp = GetEnemyAroundMe(ref objCharacter, Distance, r);
             foreach (WS_Base.BaseUnit unit in tmp)
@@ -4915,7 +4915,7 @@ namespace Mangos.World.Spells
 
         public List<WS_Base.BaseUnit> GetEnemyInBehindMe(ref WS_Base.BaseUnit objCharacter, float Distance)
         {
-            List<WS_Base.BaseUnit> result = new List<WS_Base.BaseUnit>();
+            List<WS_Base.BaseUnit> result = new();
             WS_Base.BaseUnit r = null;
             List<WS_Base.BaseUnit> tmp = GetEnemyAroundMe(ref objCharacter, Distance, r);
             foreach (WS_Base.BaseUnit unit in tmp)
@@ -5153,8 +5153,8 @@ namespace Mangos.World.Spells
                 @object.SendCharacterUpdate();
                 return;
             }
-            Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-            Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(6);
+            Packets.UpdatePacketClass packet = new();
+            Packets.UpdateClass tmpUpdate = new(6);
             tmpUpdate.SetUpdateFlag(4, Target.Size);
             Packets.PacketClass packet2 = packet;
             WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Target;
@@ -5463,9 +5463,9 @@ namespace Mangos.World.Spells
 
                 case AuraAction.AURA_UPDATE:
                     {
-                        SpellTargets Targets = new SpellTargets();
+                        SpellTargets Targets = new();
                         Targets.SetTarget_UNIT(ref Target);
-                        CastSpellParameters castParams = new CastSpellParameters(ref Targets, ref Caster, EffectInfo.TriggerSpell);
+                        CastSpellParameters castParams = new(ref Targets, ref Caster, EffectInfo.TriggerSpell);
                         ThreadPool.QueueUserWorkItem(castParams.Cast);
                         if (Caster is WS_Base.BaseUnit Caster2)
                         {
@@ -5700,7 +5700,7 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_ADD:
                     if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue))
                     {
-                        CreatureInfo creature = new CreatureInfo(EffectInfo.MiscValue);
+                        CreatureInfo creature = new(EffectInfo.MiscValue);
                         WorldServiceLocator._WorldServer.CREATURESDatabase.Add(EffectInfo.MiscValue, creature);
                     }
                     Target.Model = WorldServiceLocator._WorldServer.CREATURESDatabase[EffectInfo.MiscValue].GetFirstModel;
@@ -5722,8 +5722,8 @@ namespace Mangos.World.Spells
                 object1.SendCharacterUpdate();
                 return;
             }
-            Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-            Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
+            Packets.UpdatePacketClass packet = new();
+            Packets.UpdateClass tmpUpdate = new(188);
             tmpUpdate.SetUpdateFlag(131, Target.Model);
             Packets.PacketClass packet2 = packet;
             WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Target;
@@ -6073,8 +6073,8 @@ namespace Mangos.World.Spells
             }
             else
             {
-                Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-                Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
+                Packets.UpdatePacketClass packet = new();
+                Packets.UpdateClass tmpUpdate = new(188);
                 tmpUpdate.SetUpdateFlag(164, Target.cBytes2);
                 tmpUpdate.SetUpdateFlag(131, Target.Model);
                 Packets.PacketClass packet2 = packet;
@@ -6437,7 +6437,7 @@ namespace Mangos.World.Spells
                         Target.RemoveAurasByInterruptFlag(131072);
                         if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue))
                         {
-                            CreatureInfo creature = new CreatureInfo(EffectInfo.MiscValue);
+                            CreatureInfo creature = new(EffectInfo.MiscValue);
                             WorldServiceLocator._WorldServer.CREATURESDatabase.Add(EffectInfo.MiscValue, creature);
                         }
                         Target.Mount = WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue)
@@ -6460,8 +6460,8 @@ namespace Mangos.World.Spells
                 @object.SendCharacterUpdate();
                 return;
             }
-            Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-            Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
+            Packets.UpdatePacketClass packet = new();
+            Packets.UpdateClass tmpUpdate = new(188);
             tmpUpdate.SetUpdateFlag(133, Target.Mount);
             Packets.PacketClass packet2 = packet;
             WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Target;
@@ -6609,8 +6609,8 @@ namespace Mangos.World.Spells
                 object4.SendCharacterUpdate();
                 return;
             }
-            Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-            Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
+            Packets.UpdatePacketClass packet = new();
+            Packets.UpdateClass tmpUpdate = new(188);
             tmpUpdate.SetUpdateFlag(46, Target.cUnitFlags);
             Packets.PacketClass packet2 = packet;
             WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Target;
@@ -6665,8 +6665,8 @@ namespace Mangos.World.Spells
                 object3.SendCharacterUpdate();
                 return;
             }
-            Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-            Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
+            Packets.UpdatePacketClass packet = new();
+            Packets.UpdateClass tmpUpdate = new(188);
             tmpUpdate.SetUpdateFlag(46, Target.cUnitFlags);
             Packets.PacketClass packet2 = packet;
             WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Target;
@@ -6682,7 +6682,7 @@ namespace Mangos.World.Spells
 
         public void SPELL_AURA_MOD_FEAR(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
         {
-            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
+            Packets.PacketClass response = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
             response.AddPackGUID(Target.GUID);
             switch (Action)
             {
@@ -6710,8 +6710,8 @@ namespace Mangos.World.Spells
 
                 default:
                     {
-                        Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
+                        Packets.UpdatePacketClass packet = new();
+                        Packets.UpdateClass tmpUpdate = new(188);
                         tmpUpdate.SetUpdateFlag(46, Target.cUnitFlags);
                         Packets.PacketClass packet2 = packet;
                         WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Target;
@@ -6737,7 +6737,7 @@ namespace Mangos.World.Spells
 
                 case AuraAction.AURA_ADD:
                     {
-                        Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_FEATHER_FALL);
+                        Packets.PacketClass packet = new(Opcodes.SMSG_MOVE_FEATHER_FALL);
                         packet.AddPackGUID(Target.GUID);
                         Target.SendToNearPlayers(ref packet);
                         packet.Dispose();
@@ -6746,7 +6746,7 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     {
-                        Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_MOVE_NORMAL_FALL);
+                        Packets.PacketClass packet2 = new(Opcodes.SMSG_MOVE_NORMAL_FALL);
                         packet2.AddPackGUID(Target.GUID);
                         Target.SendToNearPlayers(ref packet2);
                         packet2.Dispose();
@@ -6764,7 +6764,7 @@ namespace Mangos.World.Spells
 
                 case AuraAction.AURA_ADD:
                     {
-                        Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_FEATHER_FALL);
+                        Packets.PacketClass packet = new(Opcodes.SMSG_MOVE_FEATHER_FALL);
                         packet.AddPackGUID(Target.GUID);
                         Target.SendToNearPlayers(ref packet);
                         packet.Dispose();
@@ -6773,7 +6773,7 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     {
-                        Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_MOVE_NORMAL_FALL);
+                        Packets.PacketClass packet2 = new(Opcodes.SMSG_MOVE_NORMAL_FALL);
                         packet2.AddPackGUID(Target.GUID);
                         Target.SendToNearPlayers(ref packet2);
                         packet2.Dispose();
@@ -6791,7 +6791,7 @@ namespace Mangos.World.Spells
 
                 case AuraAction.AURA_ADD:
                     {
-                        Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_WATER_WALK);
+                        Packets.PacketClass packet = new(Opcodes.SMSG_MOVE_WATER_WALK);
                         packet.AddPackGUID(Target.GUID);
                         Target.SendToNearPlayers(ref packet);
                         packet.Dispose();
@@ -6800,7 +6800,7 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     {
-                        Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_MOVE_LAND_WALK);
+                        Packets.PacketClass packet2 = new(Opcodes.SMSG_MOVE_LAND_WALK);
                         packet2.AddPackGUID(Target.GUID);
                         Target.SendToNearPlayers(ref packet2);
                         packet2.Dispose();
@@ -6818,7 +6818,7 @@ namespace Mangos.World.Spells
 
                 case AuraAction.AURA_ADD:
                     {
-                        Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MOVE_SET_HOVER);
+                        Packets.PacketClass packet = new(Opcodes.SMSG_MOVE_SET_HOVER);
                         packet.AddPackGUID(Target.GUID);
                         Target.SendToNearPlayers(ref packet);
                         packet.Dispose();
@@ -6827,7 +6827,7 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     {
-                        Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_MOVE_UNSET_HOVER);
+                        Packets.PacketClass packet2 = new(Opcodes.SMSG_MOVE_UNSET_HOVER);
                         packet2.AddPackGUID(Target.GUID);
                         Target.SendToNearPlayers(ref packet2);
                         packet2.Dispose();
@@ -6895,7 +6895,7 @@ namespace Mangos.World.Spells
                             {
                                 if ((mask & shiftdata) != 0)
                                 {
-                                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SET_FLAT_SPELL_MODIFIER);
+                                    Packets.PacketClass packet = new(Opcodes.SMSG_SET_FLAT_SPELL_MODIFIER);
                                     packet.AddInt8((byte)eff);
                                     packet.AddInt8((byte)op);
                                     packet.AddUInt16(send_val);
@@ -6961,7 +6961,7 @@ namespace Mangos.World.Spells
                             {
                                 if ((mask & shiftdata) != 0)
                                 {
-                                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SET_PCT_SPELL_MODIFIER);
+                                    Packets.PacketClass packet = new(Opcodes.SMSG_SET_PCT_SPELL_MODIFIER);
                                     packet.AddInt8((byte)eff);
                                     packet.AddInt8((byte)op);
                                     packet.AddUInt16(send_val);
@@ -7514,8 +7514,8 @@ namespace Mangos.World.Spells
                     @object.GroupUpdateFlag |= 4u;
                     return;
                 }
-                Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-                Packets.UpdateClass UpdateData = new Packets.UpdateClass(188);
+                Packets.UpdatePacketClass packet = new();
+                Packets.UpdateClass UpdateData = new(188);
                 UpdateData.SetUpdateFlag(28, Target.Life.Maximum);
                 Packets.PacketClass packet2 = packet;
                 WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Target;
@@ -7558,8 +7558,8 @@ namespace Mangos.World.Spells
                 @object.GroupUpdateFlag |= 4u;
                 return;
             }
-            Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-            Packets.UpdateClass UpdateData = new Packets.UpdateClass(188);
+            Packets.UpdatePacketClass packet = new();
+            Packets.UpdateClass UpdateData = new(188);
             UpdateData.SetUpdateFlag(28, Target.Life.Maximum);
             Packets.PacketClass packet2 = packet;
             WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Target;
@@ -7645,8 +7645,8 @@ namespace Mangos.World.Spells
                 @object.SetUpdateFlag(30, @object.Rage.Maximum);
                 return;
             }
-            Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-            Packets.UpdateClass UpdateData = new Packets.UpdateClass(188);
+            Packets.UpdatePacketClass packet = new();
+            Packets.UpdateClass UpdateData = new(188);
             UpdateData.SetUpdateFlag((int)checked(29 + Target.ManaType), Target.Mana.Maximum);
             Packets.PacketClass packet2 = packet;
             WS_Creatures.CreatureObject updateObject = (WS_Creatures.CreatureObject)Target;
@@ -8290,8 +8290,8 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_ADD:
                     if (Target is WS_Creatures.CreatureObject @object && @object.CreatureInfo.CreatureType == 1)
                     {
-                        Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
+                        Packets.UpdatePacketClass packet = new();
+                        Packets.UpdateClass tmpUpdate = new(188);
                         tmpUpdate.SetUpdateFlag(143, Target.cDynamicFlags | 0x10);
                         Packets.PacketClass packet3 = packet;
                         WS_Creatures.CreatureObject updateObject = @object;
@@ -8308,8 +8308,8 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_REMOVEBYDURATION:
                     if (Target is WS_Creatures.CreatureObject object1 && object1.CreatureInfo.CreatureType == 1)
                     {
-                        Packets.UpdatePacketClass packet2 = new Packets.UpdatePacketClass();
-                        Packets.UpdateClass tmpUpdate2 = new Packets.UpdateClass(188);
+                        Packets.UpdatePacketClass packet2 = new();
+                        Packets.UpdateClass tmpUpdate2 = new(188);
                         tmpUpdate2.SetUpdateFlag(143, Target.cDynamicFlags);
                         Packets.PacketClass packet3 = packet2;
                         WS_Creatures.CreatureObject updateObject = object1;
@@ -8401,8 +8401,8 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_ADD:
                     if (Target.Level <= EffectInfo.GetValue(((WS_Base.BaseUnit)Caster).Level, 0))
                     {
-                        Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
+                        Packets.UpdatePacketClass packet = new();
+                        Packets.UpdateClass tmpUpdate = new(188);
                         tmpUpdate.SetUpdateFlag(10, Caster.GUID);
                         tmpUpdate.SetUpdateFlag(35, ((WS_PlayerData.CharacterObject)Caster).Faction);
                         Packets.PacketClass packet8;
@@ -8471,7 +8471,7 @@ namespace Mangos.World.Spells
                             WS_PlayerData.CharacterObject updateObject = @object;
                             wS_Pets.SendPetInitialize(ref updateObject, ref Target);
                             Caster = updateObject;
-                            Packets.PacketClass packet6 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
+                            Packets.PacketClass packet6 = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
                             packet6.AddPackGUID(Target.GUID);
                             packet6.AddInt8(1);
                             @object.client.Send(ref packet6);
@@ -8490,7 +8490,7 @@ namespace Mangos.World.Spells
 
                             case WS_PlayerData.CharacterObject object1:
                                 {
-                                    Packets.PacketClass packet3 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
+                                    Packets.PacketClass packet3 = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
                                     packet3.AddPackGUID(Target.GUID);
                                     packet3.AddInt8(0);
                                     object1.client.Send(ref packet3);
@@ -8504,8 +8504,8 @@ namespace Mangos.World.Spells
                 case AuraAction.AURA_REMOVE:
                 case AuraAction.AURA_REMOVEBYDURATION:
                     {
-                        Packets.UpdatePacketClass packet2 = new Packets.UpdatePacketClass();
-                        Packets.UpdateClass tmpUpdate2 = new Packets.UpdateClass(188);
+                        Packets.UpdatePacketClass packet2 = new();
+                        Packets.UpdateClass tmpUpdate2 = new(188);
                         tmpUpdate2.SetUpdateFlag(10, 0);
                         Packets.PacketClass packet8;
                         switch (Target)
@@ -8569,11 +8569,11 @@ namespace Mangos.World.Spells
                         tmpUpdate2.Dispose();
                         if (Caster is WS_PlayerData.CharacterObject @object)
                         {
-                            Packets.PacketClass packet5 = new Packets.PacketClass(Opcodes.SMSG_PET_SPELLS);
+                            Packets.PacketClass packet5 = new(Opcodes.SMSG_PET_SPELLS);
                             packet5.AddUInt64(0uL);
                             @object.client.Send(ref packet5);
                             packet5.Dispose();
-                            Packets.PacketClass packet7 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
+                            Packets.PacketClass packet7 = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
                             packet7.AddPackGUID(Target.GUID);
                             packet7.AddInt8(0);
                             @object.client.Send(ref packet7);
@@ -8592,7 +8592,7 @@ namespace Mangos.World.Spells
 
                             case WS_PlayerData.CharacterObject object1:
                                 {
-                                    Packets.PacketClass packet4 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
+                                    Packets.PacketClass packet4 = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
                                     packet4.AddPackGUID(Target.GUID);
                                     packet4.AddInt8(1);
                                     object1.client.Send(ref packet4);
@@ -8709,7 +8709,7 @@ namespace Mangos.World.Spells
             {
                 if (objCharacter.DuelOutOfBounds == 11)
                 {
-                    Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_DUEL_OUTOFBOUNDS);
+                    Packets.PacketClass packet2 = new(Opcodes.SMSG_DUEL_OUTOFBOUNDS);
                     objCharacter.client.Send(ref packet2);
                     packet2.Dispose();
                     objCharacter.DuelOutOfBounds = 10;
@@ -8718,7 +8718,7 @@ namespace Mangos.World.Spells
             else if (objCharacter.DuelOutOfBounds != 11)
             {
                 objCharacter.DuelOutOfBounds = 11;
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_DUEL_INBOUNDS);
+                Packets.PacketClass packet = new(Opcodes.SMSG_DUEL_INBOUNDS);
                 objCharacter.client.Send(ref packet);
                 packet.Dispose();
             }
@@ -8730,7 +8730,7 @@ namespace Mangos.World.Spells
             {
                 return;
             }
-            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_DUEL_COMPLETE);
+            Packets.PacketClass response = new(Opcodes.SMSG_DUEL_COMPLETE);
             response.AddInt8(1);
             Winner.client.SendMultiplyPackets(ref response);
             Loser.client.SendMultiplyPackets(ref response);
@@ -8779,14 +8779,14 @@ namespace Mangos.World.Spells
                 }
                 Loser.SendCharacterUpdate();
                 Winner.SendCharacterUpdate();
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_DUEL_WINNER);
+                Packets.PacketClass packet = new(Opcodes.SMSG_DUEL_WINNER);
                 packet.AddInt8(0);
                 packet.AddString(Winner.Name);
                 packet.AddInt8(1);
                 packet.AddString(Loser.Name);
                 Winner.SendToNearPlayers(ref packet);
                 packet.Dispose();
-                Packets.PacketClass SMSG_EMOTE = new Packets.PacketClass(Opcodes.SMSG_EMOTE);
+                Packets.PacketClass SMSG_EMOTE = new(Opcodes.SMSG_EMOTE);
                 SMSG_EMOTE.AddInt32(20);
                 SMSG_EMOTE.AddUInt64(Loser.GUID);
                 Loser.SendToNearPlayers(ref SMSG_EMOTE);
@@ -8814,12 +8814,12 @@ namespace Mangos.World.Spells
                     c2.SetUpdateFlag(188, c2.DuelArbiter);
                     c2.SendCharacterUpdate();
                     c1.SendCharacterUpdate();
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_DUEL_COUNTDOWN);
+                    Packets.PacketClass response = new(Opcodes.SMSG_DUEL_COUNTDOWN);
                     response.AddInt32(3000);
                     c1.client.SendMultiplyPackets(ref response);
                     c2.client.SendMultiplyPackets(ref response);
                     response.Dispose();
-                    Thread StartDuel = new Thread(c2.StartDuel)
+                    Thread StartDuel = new(c2.StartDuel)
                     {
                         Name = "Duel timer"
                     };
@@ -8838,7 +8838,7 @@ namespace Mangos.World.Spells
                 WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[client.Character.DuelArbiter].Despawn();
                 client.Character.DuelArbiter = 0uL;
                 client.Character.DuelPartner.DuelArbiter = 0uL;
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_DUEL_COMPLETE);
+                Packets.PacketClass response = new(Opcodes.SMSG_DUEL_COMPLETE);
                 response.AddInt8(0);
                 client.Character.client.SendMultiplyPackets(ref response);
                 client.Character.DuelPartner.client.SendMultiplyPackets(ref response);
@@ -8955,7 +8955,7 @@ namespace Mangos.World.Spells
             {
                 SpellType = CurrentSpellTypes.CURRENT_MELEE_SPELL;
             }
-            SpellTargets Targets = new SpellTargets();
+            SpellTargets Targets = new();
             SpellFailedReason castResult = SpellFailedReason.SPELL_FAILED_ERROR;
             try
             {
@@ -8971,7 +8971,7 @@ namespace Mangos.World.Spells
                 {
                     ref WS_PlayerData.CharacterObject character = ref client.Character;
                     Caster = character;
-                    CastSpellParameters castSpellParameters = new CastSpellParameters(ref Targets, ref Caster, spellID);
+                    CastSpellParameters castSpellParameters = new(ref Targets, ref Caster, spellID);
                     character = (WS_PlayerData.CharacterObject)Caster;
                     CastSpellParameters tmpSpell = castSpellParameters;
                     client.Character.spellCasted[(int)SpellType] = tmpSpell;

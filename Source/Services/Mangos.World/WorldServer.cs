@@ -200,7 +200,7 @@ namespace Mangos.World
                                        where arg.IndexOf("config") != -1
                                        select arg)
                 {
-                    FileName = Strings.Trim(arg.Substring(checked(arg.IndexOf("=") + 1)));
+                    FileName = Strings.Trim(arg[(arg.IndexOf("=") + 1)..]);
                 }
 
                 if (!File.Exists(FileName))

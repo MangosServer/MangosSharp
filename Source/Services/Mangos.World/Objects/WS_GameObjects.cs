@@ -76,7 +76,7 @@ namespace Mangos.World.Objects
                 found_ = false;
                 ID = ID_;
                 WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.Add(ID, this);
-                DataTable MySQLQuery = new DataTable();
+                DataTable MySQLQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM gameobject_template WHERE entry = {ID_};", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count == 0)
                 {
@@ -333,7 +333,7 @@ namespace Mangos.World.Objects
                 RespawnTimer = null;
                 if (!WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID_))
                 {
-                    GameObjectInfo baseGameObject = new GameObjectInfo(ID_);
+                    GameObjectInfo baseGameObject = new(ID_);
                 }
                 ID = ID_;
                 GUID = WorldServiceLocator._WS_GameObjects.GetNewGUID();
@@ -364,7 +364,7 @@ namespace Mangos.World.Objects
                 RespawnTimer = null;
                 if (!WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID_))
                 {
-                    GameObjectInfo baseGameObject = new GameObjectInfo(ID_);
+                    GameObjectInfo baseGameObject = new(ID_);
                 }
                 ID = ID_;
                 GUID = GUID_;
@@ -394,7 +394,7 @@ namespace Mangos.World.Objects
                 RespawnTimer = null;
                 if (!WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID_))
                 {
-                    GameObjectInfo baseGameObject = new GameObjectInfo(ID_);
+                    GameObjectInfo baseGameObject = new(ID_);
                 }
                 ID = ID_;
                 GUID = WorldServiceLocator._WS_GameObjects.GetNewGUID();
@@ -436,7 +436,7 @@ namespace Mangos.World.Objects
                 RespawnTimer = null;
                 if (Info == null)
                 {
-                    DataTable MySQLQuery = new DataTable();
+                    DataTable MySQLQuery = new();
                     WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM gameobject LEFT OUTER JOIN game_event_gameobject ON gameobject.guid = game_event_gameobject.guid WHERE gameobject.guid = {cGUID};", ref MySQLQuery);
                     if (MySQLQuery.Rows.Count <= 0)
                     {
@@ -460,7 +460,7 @@ namespace Mangos.World.Objects
                 State = (GameObjectLootState)Conversions.ToByte(Info["state"]);
                 if (!WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID))
                 {
-                    GameObjectInfo baseGameObject = new GameObjectInfo(ID);
+                    GameObjectInfo baseGameObject = new(ID);
                 }
                 Flags = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Flags;
                 Faction = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Faction;
@@ -534,10 +534,10 @@ namespace Mangos.World.Objects
                                     }
                                     if (num != 0)
                                     {
-                                        Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                                        Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                                         packet.AddInt32(1);
                                         packet.AddInt8(0);
-                                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                                        Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                                         Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
                                         ulong key;
                                         WS_PlayerData.CharacterObject Character = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = plGUID];
@@ -586,10 +586,10 @@ namespace Mangos.World.Objects
 
             public void SetState(GameObjectLootState State)
             {
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(1);
                 packet.AddInt8(0);
-                Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                 tmpUpdate.SetUpdateFlag(14, 0, (byte)State);
                 GameObjectObject updateObject = this;
                 tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
@@ -607,10 +607,10 @@ namespace Mangos.World.Objects
                 {
                     ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(initialState: false), CloseDoor, null, AutoCloseTime, executeOnlyOnce: true);
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(1);
                 packet.AddInt8(0);
-                Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                 tmpUpdate.SetUpdateFlag(9, Flags);
                 tmpUpdate.SetUpdateFlag(14, 0, (byte)State);
                 GameObjectObject updateObject = this;
@@ -624,10 +624,10 @@ namespace Mangos.World.Objects
             {
                 Flags &= 254;
                 state = GameObjectLootState.DOOR_CLOSED;
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(1);
                 packet.AddInt8(0);
-                Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                 tmpUpdate.SetUpdateFlag(9, Flags);
                 tmpUpdate.SetUpdateFlag(14, 0, Conversions.ToByte(state));
                 GameObjectObject updateObject = this;
@@ -696,10 +696,10 @@ namespace Mangos.World.Objects
                     int AreaFlag = WorldServiceLocator._WS_Maps.GetAreaFlag(positionX, positionY, checked((int)MapID));
                     int AreaID = WorldServiceLocator._WS_Maps.AreaTable[AreaFlag].ID;
                     WorldServiceLocator._WS_Loot.LootTemplates_Fishing.GetLoot(AreaID)?.Process(ref Loot, 0);
-                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                    Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                     packet.AddInt32(1);
                     packet.AddInt8(0);
-                    Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                    Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                     tmpUpdate.SetUpdateFlag(9, Flags);
                     tmpUpdate.SetUpdateFlag(14, 0, Conversions.ToByte(state));
                     GameObjectObject updateObject = this;
@@ -707,7 +707,7 @@ namespace Mangos.World.Objects
                     tmpUpdate.Dispose();
                     SendToNearPlayers(ref packet);
                     packet.Dispose();
-                    Packets.PacketClass packetAnim = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_CUSTOM_ANIM);
+                    Packets.PacketClass packetAnim = new(Opcodes.SMSG_GAMEOBJECT_CUSTOM_ANIM);
                     packetAnim.AddUInt64(GUID);
                     packetAnim.AddInt32(0);
                     SendToNearPlayers(ref packetAnim);
@@ -729,7 +729,7 @@ namespace Mangos.World.Objects
                     }
                     if (decimal.Compare(new decimal(Owner), 0m) > 0 && WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(Owner) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Owner))
                     {
-                        Packets.PacketClass fishEscaped = new Packets.PacketClass(Opcodes.SMSG_FISH_ESCAPED);
+                        Packets.PacketClass fishEscaped = new(Opcodes.SMSG_FISH_ESCAPED);
                         WorldServiceLocator._WorldServer.CHARACTERs[Owner].client.Send(ref fishEscaped);
                         fishEscaped.Dispose();
                         WorldServiceLocator._WorldServer.CHARACTERs[Owner].FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL, OK: true);
@@ -764,7 +764,7 @@ namespace Mangos.World.Objects
 
             public void SpawnAnimation()
             {
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
+                Packets.PacketClass packet = new(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
                 packet.AddUInt64(GUID);
                 SendToNearPlayers(ref packet);
                 packet.Dispose();
@@ -789,7 +789,7 @@ namespace Mangos.World.Objects
                 if (Delay == 0)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Gameobject {0:X} despawning.", GUID);
-                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
+                    Packets.PacketClass packet = new(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
                     packet.AddUInt64(GUID);
                     SendToNearPlayers(ref packet);
                     packet.Dispose();
@@ -827,12 +827,12 @@ namespace Mangos.World.Objects
                 {
                     ToDespawn = false;
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Gameobject {0:X} despawning.", GUID);
-                    Packets.PacketClass despawnPacket = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
+                    Packets.PacketClass despawnPacket = new(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
                     despawnPacket.AddUInt64(GUID);
                     SendToNearPlayers(ref despawnPacket);
                     despawnPacket.Dispose();
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_DESTROY_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_DESTROY_OBJECT);
                 packet.AddUInt64(GUID);
                 SendToNearPlayers(ref packet);
                 packet.Dispose();
@@ -851,10 +851,10 @@ namespace Mangos.World.Objects
                 Rotations[3] = (float)Math.Cos(orientation / 2f);
                 if (SeenBy.Count > 0)
                 {
-                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                    Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                     packet.AddInt32(2);
                     packet.AddInt8(0);
-                    Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                    Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                     tmpUpdate.SetUpdateFlag(18, orientation);
                     tmpUpdate.SetUpdateFlag(10, Rotations[0]);
                     tmpUpdate.SetUpdateFlag(11, Rotations[1]);
@@ -944,7 +944,7 @@ namespace Mangos.World.Objects
                 {
                     return;
                 }
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_QUERY_RESPONSE);
+                Packets.PacketClass response = new(Opcodes.SMSG_GAMEOBJECT_QUERY_RESPONSE);
                 packet.GetInt16();
                 int GameObjectID = packet.GetInt32();
                 ulong GameObjectGUID = packet.GetUInt64();
@@ -1021,7 +1021,7 @@ namespace Mangos.World.Objects
 
                     case GameObjectType.GAMEOBJECT_TYPE_CHAIR:
                         {
-                            Packets.PacketClass StandState = new Packets.PacketClass(Opcodes.CMSG_STANDSTATECHANGE);
+                            Packets.PacketClass StandState = new(Opcodes.CMSG_STANDSTATECHANGE);
                             try
                             {
                                 StandState.AddInt8((byte)(4L + WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound(1)));
@@ -1032,7 +1032,7 @@ namespace Mangos.World.Objects
                             {
                                 StandState.Dispose();
                             }
-                            Packets.PacketClass packetACK = new Packets.PacketClass(Opcodes.SMSG_STANDSTATE_CHANGE_ACK);
+                            Packets.PacketClass packetACK = new(Opcodes.SMSG_STANDSTATE_CHANGE_ACK);
                             try
                             {
                                 packetACK.AddInt8((byte)(4L + GO.GetSound(1)));
@@ -1046,7 +1046,7 @@ namespace Mangos.World.Objects
                         }
                     case GameObjectType.GAMEOBJECT_TYPE_CAMERA:
                         {
-                            Packets.PacketClass cinematicPacket = new Packets.PacketClass(Opcodes.SMSG_TRIGGER_CINEMATIC);
+                            Packets.PacketClass cinematicPacket = new(Opcodes.SMSG_TRIGGER_CINEMATIC);
                             cinematicPacket.AddUInt32(GO.GetSound(1));
                             client.Send(ref cinematicPacket);
                             cinematicPacket.Dispose();
@@ -1102,7 +1102,7 @@ namespace Mangos.World.Objects
                             if (GO.State == GameObjectLootState.DOOR_CLOSED)
                             {
                                 GO.State = GameObjectLootState.DOOR_OPEN;
-                                Packets.PacketClass fishNotHookedPacket = new Packets.PacketClass(Opcodes.SMSG_FISH_NOT_HOOKED);
+                                Packets.PacketClass fishNotHookedPacket = new(Opcodes.SMSG_FISH_NOT_HOOKED);
                                 client.Send(ref fishNotHookedPacket);
                                 fishNotHookedPacket.Dispose();
                             }
@@ -1111,7 +1111,7 @@ namespace Mangos.World.Objects
                         {
                             int AreaFlag = WorldServiceLocator._WS_Maps.GetAreaFlag(GO.positionX, GO.positionY, (int)GO.MapID);
                             int AreaID = WorldServiceLocator._WS_Maps.AreaTable[AreaFlag].ID;
-                            DataTable MySQLQuery = new DataTable();
+                            DataTable MySQLQuery = new();
                             WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM skill_fishing_base_level WHERE entry = {AreaID};", ref MySQLQuery);
                             if (MySQLQuery.Rows.Count == 0)
                             {
@@ -1140,7 +1140,7 @@ namespace Mangos.World.Objects
                             else
                             {
                                 GO.State = GameObjectLootState.DOOR_CLOSED;
-                                Packets.PacketClass fishEscaped = new Packets.PacketClass(Opcodes.SMSG_FISH_ESCAPED);
+                                Packets.PacketClass fishEscaped = new(Opcodes.SMSG_FISH_ESCAPED);
                                 client.Send(ref fishEscaped);
                                 fishEscaped.Dispose();
                             }

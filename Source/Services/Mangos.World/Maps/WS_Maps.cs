@@ -83,7 +83,7 @@ namespace Mangos.World.Maps
             foreach (string map2 in WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps)
             {
                 uint id = Conversions.ToUInteger(map2);
-                TMap map = new TMap(checked((int)id), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));
+                TMap map = new(checked((int)id), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));
             }
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: {0} Maps initialized.", Maps.Count);
         }
@@ -398,7 +398,7 @@ namespace Mangos.World.Maps
                 {
                     InstanceGuidAdd = Convert.ToUInt64(decimal.Add(new decimal(1000000L), decimal.Multiply(new decimal(TileInstance - 1L), new decimal(100000L))));
                 }
-                DataTable MysqlQuery = new DataTable();
+                DataTable MysqlQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM creature LEFT OUTER JOIN game_event_creature ON creature.guid = game_event_creature.guid WHERE map={TileMap} AND position_X BETWEEN '{MinX}' AND '{MaxX}' AND position_Y BETWEEN '{MinY}' AND '{MaxY}';", ref MysqlQuery);
                 IEnumerator enumerator = default;
                 try
@@ -413,7 +413,7 @@ namespace Mangos.World.Maps
                         }
                         try
                         {
-                            WS_Creatures.CreatureObject tmpCr = new WS_Creatures.CreatureObject(Convert.ToUInt64(decimal.Add(new decimal(row.As<long>("guid")), new decimal(InstanceGuidAdd))), row);
+                            WS_Creatures.CreatureObject tmpCr = new(Convert.ToUInt64(decimal.Add(new decimal(row.As<long>("guid")), new decimal(InstanceGuidAdd))), row);
                             if (tmpCr.GameEvent == 0)
                             {
                                 tmpCr.instance = TileInstance;
@@ -448,7 +448,7 @@ namespace Mangos.World.Maps
                         }
                         try
                         {
-                            WS_GameObjects.GameObjectObject tmpGo = new WS_GameObjects.GameObjectObject(row.As<ulong>("guid") + InstanceGuidAdd, row);
+                            WS_GameObjects.GameObjectObject tmpGo = new(row.As<ulong>("guid") + InstanceGuidAdd, row);
                             if (tmpGo.GameEvent == 0)
                             {
                                 tmpGo.instance = TileInstance;
@@ -481,7 +481,7 @@ namespace Mangos.World.Maps
                         {
                             try
                             {
-                                WS_Corpses.CorpseObject tmpCorpse = new WS_Corpses.CorpseObject(Conversions.ToULong(InfoRow["guid"]), InfoRow)
+                                WS_Corpses.CorpseObject tmpCorpse = new(Conversions.ToULong(InfoRow["guid"]), InfoRow)
                                 {
                                     instance = TileInstance
                                 };
@@ -603,7 +603,7 @@ namespace Mangos.World.Maps
         public void SendTransferAborted(ref WS_Network.ClientClass client, int Map, TransferAbortReason Reason)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRANSFER_ABORTED [{2}:{3}]", client.IP, client.Port, Map, Reason);
-            Packets.PacketClass p = new Packets.PacketClass(Opcodes.SMSG_TRANSFER_ABORTED);
+            Packets.PacketClass p = new(Opcodes.SMSG_TRANSFER_ABORTED);
             try
             {
                 p.AddInt32(Map);

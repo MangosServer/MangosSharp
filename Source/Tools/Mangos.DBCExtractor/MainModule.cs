@@ -26,12 +26,12 @@ namespace Mangos.DBCExtractor
 {
     internal static class MainModule
     {
-        public static List<MpqArchive> MPQArchives = new List<MpqArchive>();
-        public static List<int> MapIDs = new List<int>();
-        public static List<string> MapNames = new List<string>();
-        public static Dictionary<int, int> MapAreas = new Dictionary<int, int>();
+        public static List<MpqArchive> MPQArchives = new();
+        public static List<int> MapIDs = new();
+        public static List<string> MapNames = new();
+        public static Dictionary<int, int> MapAreas = new();
         public static int MaxAreaID = -1;
-        public static Dictionary<int, int> MapLiqTypes = new Dictionary<int, int>();
+        public static Dictionary<int, int> MapLiqTypes = new();
 
         public static void Main()
         {
@@ -46,7 +46,7 @@ namespace Mangos.DBCExtractor
                 goto ExitNow;
             }
 
-            List<string> MPQFilesToOpen = new List<string> { "terrain.MPQ", "dbc.MPQ", "misc.MPQ", "patch.MPQ", "patch-2.MPQ" };
+            List<string> MPQFilesToOpen = new() { "terrain.MPQ", "dbc.MPQ", "misc.MPQ", "patch.MPQ", "patch-2.MPQ" };
             foreach (string mpq in MPQFilesToOpen)
             {
                 if (File.Exists(@"Data\" + mpq) == false)
@@ -60,7 +60,7 @@ namespace Mangos.DBCExtractor
             foreach (string mpq in MPQFilesToOpen)
             {
                 FileStream stream = File.Open(Path.GetFullPath(@"Data\" + mpq), FileMode.Open);
-                MpqArchive newArchive = new MpqArchive(stream, true);
+                MpqArchive newArchive = new(stream, true);
                 MPQArchives.Add(newArchive);
                 Console.WriteLine("Loaded archive [{0}].", mpq);
             }

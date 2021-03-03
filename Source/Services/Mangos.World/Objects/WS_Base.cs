@@ -137,7 +137,7 @@ namespace Mangos.World.Objects
 
             public void SendPlaySound(int SoundID, bool OnlyToSelf = false)
             {
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PLAY_OBJECT_SOUND);
+                Packets.PacketClass packet = new(Opcodes.SMSG_PLAY_OBJECT_SOUND);
                 try
                 {
                     packet.AddInt32(SoundID);
@@ -394,7 +394,7 @@ namespace Mangos.World.Objects
                         @object.SetUpdateFlag(113 + AuraLevel_Slot, ActiveSpells_Count[AuraLevel_Slot]);
                         @object.SetUpdateFlag(101 + AuraLevel_Slot, ActiveSpells_Level[AuraLevel_Slot]);
                         @object.SendCharacterUpdate();
-                        Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(Opcodes.SMSG_UPDATE_AURA_DURATION);
+                        Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new(Opcodes.SMSG_UPDATE_AURA_DURATION);
                         try
                         {
                             SMSG_UPDATE_AURA_DURATION.AddInt8((byte)Slot);
@@ -407,8 +407,8 @@ namespace Mangos.World.Objects
                         }
                         return;
                     }
-                    Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                    Packets.UpdatePacketClass tmpPacket = new Packets.UpdatePacketClass();
+                    Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                    Packets.UpdatePacketClass tmpPacket = new();
                     try
                     {
                         tmpUpdate.SetUpdateFlag(47 + Slot, SpellID);
@@ -816,7 +816,7 @@ namespace Mangos.World.Objects
                     {
                         @object.SetUpdateFlag(113 + AuraFlag_Slot, ActiveSpells_Count[AuraFlag_Slot]);
                         @object.SendCharacterUpdate();
-                        Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new Packets.PacketClass(Opcodes.SMSG_UPDATE_AURA_DURATION);
+                        Packets.PacketClass SMSG_UPDATE_AURA_DURATION = new(Opcodes.SMSG_UPDATE_AURA_DURATION);
                         try
                         {
                             SMSG_UPDATE_AURA_DURATION.AddInt8((byte)Slot);
@@ -829,8 +829,8 @@ namespace Mangos.World.Objects
                         }
                         return;
                     }
-                    Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                    Packets.UpdatePacketClass tmpPacket = new Packets.UpdatePacketClass();
+                    Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                    Packets.UpdatePacketClass tmpPacket = new();
                     try
                     {
                         tmpUpdate.SetUpdateFlag(113 + AuraFlag_Slot, ActiveSpells_Count[AuraFlag_Slot]);
@@ -852,7 +852,7 @@ namespace Mangos.World.Objects
 
             public void DoEmote(int EmoteID)
             {
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_EMOTE);
+                Packets.PacketClass packet = new(Opcodes.SMSG_EMOTE);
                 try
                 {
                     packet.AddInt32(EmoteID);
@@ -1260,7 +1260,7 @@ namespace Mangos.World.Objects
 
             public int GetAbsorb(DamageTypes School, int Damage)
             {
-                Dictionary<int, uint> ListChange = new Dictionary<int, uint>();
+                Dictionary<int, uint> ListChange = new();
                 int StartDmg = Damage;
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Damage: {0} [{1}]", Damage, School);
                 checked

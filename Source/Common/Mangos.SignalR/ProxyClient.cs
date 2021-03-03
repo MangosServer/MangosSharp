@@ -38,7 +38,7 @@ namespace Mangos.SignalR
 
         public static T Create<T>(string url)
         {
-            HubConnectionBuilder hubConnectionBuilder = new HubConnectionBuilder();
+            HubConnectionBuilder hubConnectionBuilder = new();
             hubConnectionBuilder.WithUrl(url);
             HubConnection hubConnection = hubConnectionBuilder.Build();
             hubConnection.StartAsync().Wait();

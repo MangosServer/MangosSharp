@@ -33,7 +33,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_QUERY_TIME(PacketClass packet, ClientClass client)
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUERY_TIME", client.IP, client.Port);
-            PacketClass response = new PacketClass(Opcodes.SMSG_QUERY_TIME_RESPONSE);
+            PacketClass response = new(Opcodes.SMSG_QUERY_TIME_RESPONSE);
             response.AddInt32(_clusterServiceLocator.NativeMethods.timeGetTime("")); // GetTimestamp(Now))
             client.Send(response);
             response.Dispose();
@@ -53,7 +53,7 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_PLAYED_TIME(PacketClass packet, ClientClass client)
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY", client.IP, client.Port);
-            PacketClass response = new PacketClass(Opcodes.SMSG_PLAYED_TIME);
+            PacketClass response = new(Opcodes.SMSG_PLAYED_TIME);
             response.AddInt32(1);
             response.AddInt32(1);
             client.Send(response);
@@ -72,7 +72,7 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY [GUID={2:X}]", client.IP, client.Port, guid);
             if (_clusterServiceLocator.CommonGlobalFunctions.GuidIsPlayer(guid) && _clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(guid))
             {
-                PacketClass smsgNameQueryResponse = new PacketClass(Opcodes.SMSG_NAME_QUERY_RESPONSE);
+                PacketClass smsgNameQueryResponse = new(Opcodes.SMSG_NAME_QUERY_RESPONSE);
                 smsgNameQueryResponse.AddUInt64(guid);
                 smsgNameQueryResponse.AddString(_clusterServiceLocator.WorldCluster.CharacteRs[guid].Name);
                 smsgNameQueryResponse.AddInt32((byte)_clusterServiceLocator.WorldCluster.CharacteRs[guid].Race);

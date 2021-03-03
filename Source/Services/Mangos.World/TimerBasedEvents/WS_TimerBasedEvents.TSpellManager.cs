@@ -110,7 +110,7 @@ namespace Mangos.World.Server
                     {
                         WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                     }
-                    List<WS_DynamicObjects.DynamicObjectObject> DynamicObjectsToDelete = new List<WS_DynamicObjects.DynamicObjectObject>();
+                    List<WS_DynamicObjects.DynamicObjectObject> DynamicObjectsToDelete = new();
                     try
                     {
                         WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
@@ -207,7 +207,7 @@ namespace Mangos.World.Server
                             {
                                 if (objCharacter.ActiveSpells[i].SpellCaster == objCharacter)
                                 {
-                                    List<WS_Base.BaseUnit> Targets = new List<WS_Base.BaseUnit>();
+                                    List<WS_Base.BaseUnit> Targets = new();
                                     switch (objCharacter)
                                     {
                                         case WS_PlayerData.CharacterObject _:

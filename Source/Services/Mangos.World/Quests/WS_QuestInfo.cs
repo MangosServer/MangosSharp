@@ -205,7 +205,7 @@ namespace Mangos.World.Quests
             CompleteScript = 0;
             ID = QuestID;
             PreQuests = new List<int>();
-            DataTable MySQLQuery = new DataTable();
+            DataTable MySQLQuery = new();
             WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM quests WHERE entry = {QuestID};", ref MySQLQuery);
             if (MySQLQuery.Rows.Count == 0)
             {
@@ -387,7 +387,7 @@ namespace Mangos.World.Quests
             {
                 if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(NextQuestInChain))
                 {
-                    WS_QuestInfo tmpQuest2 = new WS_QuestInfo(NextQuestInChain);
+                    WS_QuestInfo tmpQuest2 = new(NextQuestInChain);
                     if (!tmpQuest2.PreQuests.Contains(ID))
                     {
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Added prequest [{0}] to quest [{1}]", ID, NextQuestInChain);
@@ -408,7 +408,7 @@ namespace Mangos.World.Quests
             int signedQuestID = (NextQuest < 0) ? checked(-ID) : ID;
             if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(unsignedNextQuest))
             {
-                WS_QuestInfo tmpQuest = new WS_QuestInfo(unsignedNextQuest);
+                WS_QuestInfo tmpQuest = new(unsignedNextQuest);
                 if (!tmpQuest.PreQuests.Contains(signedQuestID))
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Added prequest [{0}] to quest [{1}]", signedQuestID, unsignedNextQuest);
@@ -438,7 +438,7 @@ namespace Mangos.World.Quests
             }
             if (ZoneOrSort < 0)
             {
-                WS_Quests tmpQuest = new WS_Quests();
+                WS_Quests tmpQuest = new();
                 byte reqSort = tmpQuest.ClassByQuestSort(checked(-ZoneOrSort));
                 if (reqSort > 0 && reqSort != (uint)objCharacter.Classe)
                 {

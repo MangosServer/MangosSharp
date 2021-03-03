@@ -125,10 +125,10 @@ namespace Mangos.World.Objects
                     ProjectData.ClearProjectError();
                     return;
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(1);
                 packet.AddInt8(0);
-                Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_DYNAMICOBJECT);
+                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_DYNAMICOBJECT);
                 FillAllUpdateFlags(ref tmpUpdate);
                 Packets.UpdateClass updateClass = tmpUpdate;
                 DynamicObjectObject updateObject = this;
@@ -260,7 +260,7 @@ namespace Mangos.World.Objects
             public void Spawn()
             {
                 AddToWorld();
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
+                Packets.PacketClass packet = new(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
                 packet.AddUInt64(GUID);
                 SendToNearPlayers(ref packet);
                 packet.Dispose();
@@ -272,7 +272,7 @@ namespace Mangos.World.Objects
                 {
                     Caster.dynamicObjects.Remove(this);
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
+                Packets.PacketClass packet = new(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
                 packet.AddUInt64(GUID);
                 SendToNearPlayers(ref packet);
                 packet.Dispose();

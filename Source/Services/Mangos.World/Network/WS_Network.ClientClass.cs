@@ -32,10 +32,10 @@ namespace Mangos.World.Network
         public class ClientClass : ClientInfo, IDisposable
         {
             public WS_PlayerData.CharacterObject Character;
-            public ConcurrentQueue<Packets.PacketClass> Packets = new ConcurrentQueue<Packets.PacketClass>();
+            public ConcurrentQueue<Packets.PacketClass> Packets = new();
             public bool DEBUG_CONNECTION;
             private Thread ProcessQueueThread;
-            private readonly ManualResetEvent ProcessQueueSempahore = new ManualResetEvent(false);
+            private readonly ManualResetEvent ProcessQueueSempahore = new(false);
             private volatile bool IsActive = true;
 
             public ClientClass(ClientInfo ci, bool isDebug = false)
@@ -74,7 +74,7 @@ namespace Mangos.World.Network
                 }
             }
 
-            private readonly object _sempahoreLock = new object();
+            private readonly object _sempahoreLock = new();
 
             private void QueueProcessor()
             {
@@ -143,7 +143,7 @@ namespace Mangos.World.Network
                 }
             }
 
-            private readonly object lockObj = new object();
+            private readonly object lockObj = new();
 
             public void Send(ref byte[] data)
             {

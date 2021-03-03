@@ -81,8 +81,8 @@ namespace Mangos.World.Maps
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Map file [{0}] not found", fileName);
                         return;
                     }
-                    FileStream f = new FileStream("maps\\" + fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 82704, FileOptions.SequentialScan);
-                    BinaryReader b = new BinaryReader(f);
+                    FileStream f = new("maps\\" + fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 82704, FileOptions.SequentialScan);
+                    BinaryReader b = new(f);
                     string fileVersion = Encoding.ASCII.GetString(b.ReadBytes(8), 0, 8);
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading map file [{0}] version [{1}]", fileName, fileVersion);
                     int rESOLUTION_FLAGS = WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS;

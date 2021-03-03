@@ -33,7 +33,7 @@ namespace Mangos.Extractor
         public static int SearchInFile(Stream f, string s, int o = 0)
         {
             f.Seek(0L, SeekOrigin.Begin);
-            BinaryReader r = new BinaryReader(f);
+            BinaryReader r = new(f);
             byte[] b1 = r.ReadBytes((int)f.Length);
             byte[] b2 = Encoding.ASCII.GetBytes(s);
             for (int i = o, loopTo = b1.Length - 1; i <= loopTo; i++)
@@ -58,7 +58,7 @@ namespace Mangos.Extractor
         public static int SearchInFile(Stream f, int v)
         {
             f.Seek(0L, SeekOrigin.Begin);
-            BinaryReader r = new BinaryReader(f);
+            BinaryReader r = new(f);
             byte[] b1 = r.ReadBytes((int)f.Length);
             byte[] b2 = BitConverter.GetBytes(v);
             // Array.Reverse(b2)
@@ -138,12 +138,12 @@ namespace Mangos.Extractor
         public static string ToField(string sField)
         {
             // Make the first letter in upper case and the rest in lower case
-            string tmp = sField.Substring(0, 1).ToUpper() + sField.Substring(1).ToLower();
+            string tmp = sField.Substring(0, 1).ToUpper() + sField[1..].ToLower();
             // Replace lowercase object with Object (used in f.ex Gameobject -> GameObject)
             if (tmp.IndexOf("object", StringComparison.OrdinalIgnoreCase) > 0)
             {
                 tmp = tmp.Length > tmp.IndexOf("object", StringComparison.OrdinalIgnoreCase) + 6
-                    ? tmp.Substring(0, tmp.IndexOf("object")) + "Object" + tmp.Substring(tmp.IndexOf("object") + 6)
+                    ? tmp.Substring(0, tmp.IndexOf("object")) + "Object" + tmp[(tmp.IndexOf("object") + 6)..]
                     : tmp.Substring(0, tmp.IndexOf("object")) + "Object";
             }
 
@@ -279,11 +279,11 @@ namespace Mangos.Extractor
             int TBC = 0;
             int alpha = 0;
             FileVersionInfo versInfo = FileVersionInfo.GetVersionInfo("Wow.exe");
-            FileStream f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
-            BinaryReader r1 = new BinaryReader(f);
-            StreamReader r2 = new StreamReader(f);
-            FileStream o = new FileStream(versInfo.FileMajorPart + "." + versInfo.FileMinorPart + "." + versInfo.FileBuildPart + "." + versInfo.FilePrivatePart + "_Global.UpdateFields.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
-            StreamWriter w = new StreamWriter(o);
+            FileStream f = new("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
+            BinaryReader r1 = new(f);
+            StreamReader r2 = new(f);
+            FileStream o = new(versInfo.FileMajorPart + "." + versInfo.FileMinorPart + "." + versInfo.FileBuildPart + "." + versInfo.FilePrivatePart + "_Global.UpdateFields.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            StreamWriter w = new(o);
             int FIELD_NAME_OFFSET = SearchInFile(f, "CORPSE_FIELD_PAD");
             int OBJECT_FIELD_GUID = SearchInFile(f, "OBJECT_FIELD_GUID") + 0x400000;
             int FIELD_TYPE_OFFSET = SearchInFile(f, OBJECT_FIELD_GUID);
@@ -311,7 +311,7 @@ namespace Mangos.Extractor
             }
             else
             {
-                List<string> Names = new List<string>();
+                List<string> Names = new();
                 string Last = "";
                 int Offset = FIELD_NAME_OFFSET;
                 f.Seek(Offset, SeekOrigin.Begin);
@@ -321,7 +321,7 @@ namespace Mangos.Extractor
                     Names.Add(Last);
                 }
 
-                List<TypeEntry> Info = new List<TypeEntry>();
+                List<TypeEntry> Info = new();
                 int Temp;
                 byte[] Buffer = new byte[4];
                 Offset = 0;
@@ -338,7 +338,7 @@ namespace Mangos.Extractor
                         continue;
                     }
 
-                    TypeEntry tmp = new TypeEntry
+                    TypeEntry tmp = new()
                     {
                         Name = Temp
                     };
@@ -368,7 +368,7 @@ namespace Mangos.Extractor
                 string sField;
                 int BasedOn = 0;
                 string BasedOnName = "";
-                Dictionary<string, int> EndNum = new Dictionary<string, int>();
+                Dictionary<string, int> EndNum = new();
                 for (int j = 0, loopTo1 = Info.Count - 1; j <= loopTo1; j++)
                 {
                     sName = ReadString(f, Info[j].Name - 0x400000);
@@ -483,11 +483,11 @@ namespace Mangos.Extractor
 
         public static void ExtractOpcodes()
         {
-            FileStream f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
-            BinaryReader r1 = new BinaryReader(f);
-            StreamReader r2 = new StreamReader(f);
-            FileStream o = new FileStream("Global.Opcodes.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
-            StreamWriter w = new StreamWriter(o);
+            FileStream f = new("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
+            BinaryReader r1 = new(f);
+            StreamReader r2 = new(f);
+            FileStream o = new("Global.Opcodes.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            StreamWriter w = new(o);
             MessageBox.Show(ReadString(f, SearchInFile(f, "CMSG_REQUEST_PARTY_MEMBER_STATS")));
             int START = SearchInFile(f, "NUM_MSG_TYPES");
             if (START == -1)
@@ -496,7 +496,7 @@ namespace Mangos.Extractor
             }
             else
             {
-                Stack<string> Names = new Stack<string>();
+                Stack<string> Names = new();
                 string Last = "";
                 f.Seek(START, SeekOrigin.Begin);
                 while (Last != "MSG_NULL_ACTION")
@@ -528,11 +528,11 @@ namespace Mangos.Extractor
 
         public static void ExtractSpellFailedReason()
         {
-            FileStream f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
-            BinaryReader r1 = new BinaryReader(f);
-            StreamReader r2 = new StreamReader(f);
-            FileStream o = new FileStream("Global.SpellFailedReasons.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
-            StreamWriter w = new StreamWriter(o);
+            FileStream f = new("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
+            BinaryReader r1 = new(f);
+            StreamReader r2 = new(f);
+            FileStream o = new("Global.SpellFailedReasons.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            StreamWriter w = new(o);
             int REASON_NAME_OFFSET = SearchInFile(f, "SPELL_FAILED_UNKNOWN");
             if (REASON_NAME_OFFSET == -1)
             {
@@ -540,7 +540,7 @@ namespace Mangos.Extractor
             }
             else
             {
-                Stack<string> Names = new Stack<string>();
+                Stack<string> Names = new();
                 string Last = "";
                 int Offset = REASON_NAME_OFFSET;
                 f.Seek(Offset, SeekOrigin.Begin);
@@ -577,11 +577,11 @@ namespace Mangos.Extractor
 
         public static void ExtractChatTypes()
         {
-            FileStream f = new FileStream("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
-            BinaryReader r1 = new BinaryReader(f);
-            StreamReader r2 = new StreamReader(f);
-            FileStream o = new FileStream("Global.ChatTypes.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
-            StreamWriter w = new StreamWriter(o);
+            FileStream f = new("wow.exe", FileMode.Open, FileAccess.Read, FileShare.Read, 10000000);
+            BinaryReader r1 = new(f);
+            StreamReader r2 = new(f);
+            FileStream o = new("Global.ChatTypes.cs", FileMode.Create, FileAccess.Write, FileShare.None, 1024);
+            StreamWriter w = new(o);
             int START = SearchInFile(f, "CHAT_MSG_RAID_WARNING");
             if (START == -1)
             {
@@ -589,7 +589,7 @@ namespace Mangos.Extractor
             }
             else
             {
-                Stack<string> Names = new Stack<string>();
+                Stack<string> Names = new();
                 string Last = "";
                 int Offset = START;
                 f.Seek(Offset, SeekOrigin.Begin);
