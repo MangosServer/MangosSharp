@@ -201,9 +201,9 @@ namespace Mangos.World.Maps
                 byte MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
                 byte MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
                 byte MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
-                return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
+                return (byte)(Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
                     ? 0
-                    : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaTerrain[MapTile_LocalX, MapTile_LocalY];
+                    : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaTerrain[MapTile_LocalX, MapTile_LocalY]);
             }
         }
 

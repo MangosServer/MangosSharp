@@ -4465,7 +4465,7 @@ namespace Mangos.World.Player
                                 break;
 
                             case 15:
-                                AttackTimeBase[0] = Classe == Classes.CLASS_ROGUE ? 1900 : 2000;
+                                AttackTimeBase[0] = (short)(Classe == Classes.CLASS_ROGUE ? 1900 : 2000);
                                 break;
 
                             case 16:
