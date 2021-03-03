@@ -220,7 +220,7 @@ namespace Mangos.Cluster.Handlers
                 }
 
                 // DONE: If new channel, set owner
-                if (Functions.HaveFlags(ChannelFlags, (byte)CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Owner == 0m)
+                if (_clusterServiceLocator.Functions.HaveFlags(ChannelFlags, (byte)CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Owner == 0m)
                 {
                     SetOwner(character);
                 }
@@ -281,7 +281,7 @@ namespace Mangos.Cluster.Handlers
                 }
 
                 // DONE: Set new owner
-                if (Functions.HaveFlags(ChannelFlags, (byte)CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Owner == character.Guid && Joined.Count > 0)
+                if (_clusterServiceLocator.Functions.HaveFlags(ChannelFlags, (byte)CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Owner == character.Guid && Joined.Count > 0)
                 {
                     IEnumerator tmp = Joined.GetEnumerator();
                     tmp.MoveNext();
@@ -292,7 +292,7 @@ namespace Mangos.Cluster.Handlers
                 }
 
                 // DONE: If free and not global - clear channel
-                if (Functions.HaveFlags(ChannelFlags, (byte)CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Joined.Count == 0)
+                if (_clusterServiceLocator.Functions.HaveFlags(ChannelFlags, (byte)CHANNEL_FLAG.CHANNEL_FLAG_CUSTOM) && Joined.Count == 0)
                 {
                     _clusterServiceLocator.WsHandlerChannels.ChatChanneLs.Remove(ChannelName);
                     Dispose();
@@ -476,7 +476,7 @@ namespace Mangos.Cluster.Handlers
                         character.Client.Send(packet);
                         packet.Dispose();
                     }
-                    else if (Functions.GetCharacterSide((byte)_clusterServiceLocator.WorldCluster.CharacteRs[guid].Race) != Functions.GetCharacterSide((byte)character.Race))
+                    else if (_clusterServiceLocator.Functions.GetCharacterSide((byte)_clusterServiceLocator.WorldCluster.CharacteRs[guid].Race) != _clusterServiceLocator.Functions.GetCharacterSide((byte)character.Race))
                     {
                         PacketClass packet = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_INVITED_WRONG_FACTION, character.Guid, default, default);
                         character.Client.Send(packet);
@@ -813,12 +813,12 @@ namespace Mangos.Cluster.Handlers
                 }
             }
 
-            public static void Save()
+            public void Save()
             {
                 // TODO: Saving into database
             }
 
-            public static void Load()
+            public void Load()
             {
                 // TODO: Loading from database
             }

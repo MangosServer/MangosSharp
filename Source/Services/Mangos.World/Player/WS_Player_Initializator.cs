@@ -337,7 +337,7 @@ namespace Mangos.World.Player
                         byte j = 0;
                         do
                         {
-                            if (Globals.Functions.HaveFlag((uint)tmpFactionInfo.Value.flags[j], (byte)((int)objCharacter.Race - 1)))
+                            if (WorldServiceLocator._Functions.HaveFlag((uint)tmpFactionInfo.Value.flags[j], (byte)((int)objCharacter.Race - 1)))
                             {
                                 objCharacter.Reputation[i].Flags = tmpFactionInfo.Value.rep_flags[j];
                                 objCharacter.Reputation[i].Value = tmpFactionInfo.Value.rep_stats[j];

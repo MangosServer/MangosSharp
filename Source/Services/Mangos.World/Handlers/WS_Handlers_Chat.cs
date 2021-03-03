@@ -28,7 +28,7 @@ namespace Mangos.World.Handlers
 {
     public class WS_Handlers_Chat
     {
-        public static byte GetChatFlag(WS_PlayerData.CharacterObject objCharacter)
+        public byte GetChatFlag(WS_PlayerData.CharacterObject objCharacter)
         {
             if (objCharacter.GM)
             {
@@ -41,7 +41,7 @@ namespace Mangos.World.Handlers
             return (byte)(objCharacter.DND ? 2 : 0);
         }
 
-        public static void On_CMSG_MESSAGECHAT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_MESSAGECHAT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MESSAGECHAT", client.IP, client.Port);
             if (checked(packet.Data.Length - 1) < 14 && client.Character != null)
@@ -67,7 +67,7 @@ namespace Mangos.World.Handlers
                         if (MessageString.StartsWith(WorldServiceLocator._ConfigurationProvider.GetConfiguration().CommandCharacter) && client.Character.Access > AccessLevel.Player)
                         {
                             MessageString = MessageString.Remove(0, 1);
-                            Packets.PacketClass toCommand = Functions.BuildChatMessage(2147483647uL, MessageString, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
+                            Packets.PacketClass toCommand = WorldServiceLocator._Functions.BuildChatMessage(2147483647uL, MessageString, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
                             try
                             {
                                 client.Send(ref toCommand);

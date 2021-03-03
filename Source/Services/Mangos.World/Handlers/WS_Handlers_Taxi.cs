@@ -453,7 +453,7 @@ namespace Mangos.World.Handlers
                         foreach (KeyValuePair<int, WS_DBCDatabase.TTaxiPathNode> taxiPathNode in WorldServiceLocator._WS_DBCDatabase.TaxiPathNodes[path])
                         {
                             waypointNodes.Add(taxiPathNode.Value.Seq, taxiPathNode.Value);
-                            totalDistance += WS_Combat.GetDistance(lastX, taxiPathNode.Value.x, lastY, taxiPathNode.Value.y, lastZ, taxiPathNode.Value.z);
+                            totalDistance += WorldServiceLocator._WS_Combat.GetDistance(lastX, taxiPathNode.Value.x, lastY, taxiPathNode.Value.y, lastZ, taxiPathNode.Value.z);
                             lastX = taxiPathNode.Value.x;
                             lastY = taxiPathNode.Value.y;
                             lastZ = taxiPathNode.Value.z;
@@ -516,14 +516,14 @@ namespace Mangos.World.Handlers
                             {
                                 WP_SMSG_MONSTER_MOVE.Dispose();
                             }
-                            float moveDistance = WS_Combat.GetDistance(lastX, waypointNodes[i].x, lastY, waypointNodes[i].y, lastZ, waypointNodes[i].z);
+                            float moveDistance = WorldServiceLocator._WS_Combat.GetDistance(lastX, waypointNodes[i].x, lastY, waypointNodes[i].y, lastZ, waypointNodes[i].z);
                             Thread.Sleep((int)(moveDistance / WorldServiceLocator._Global_Constants.UNIT_NORMAL_TAXI_SPEED * 1000f));
                             totalDistance -= moveDistance;
                             character.positionX = lastX;
                             character.positionY = lastY;
                             character.positionZ = lastZ;
-                            WS_CharMovement.MoveCell(ref character);
-                            WS_CharMovement.UpdateCell(ref character);
+                            WorldServiceLocator._WS_CharMovement.MoveCell(ref character);
+                            WorldServiceLocator._WS_CharMovement.UpdateCell(ref character);
                         }
                     }
                 }

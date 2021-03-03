@@ -36,7 +36,7 @@ namespace Mangos.World.Handlers
         public void InstanceMapUpdate()
         {
             DataTable q = new();
-            uint TimeStamp = Globals.Functions.GetTimestamp(DateAndTime.Now);
+            uint TimeStamp = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE expire < {TimeStamp};", ref q);
             IEnumerator enumerator = default;
             try
@@ -183,8 +183,8 @@ namespace Mangos.World.Handlers
                         while (x3 <= 63);
                         return;
                     }
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, Globals.Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[Map].ResetTime));
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances_group SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, Globals.Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[Map].ResetTime));
+                    WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[Map].ResetTime));
+                    WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances_group SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[Map].ResetTime));
                     short x2 = 0;
                     do
                     {
@@ -227,7 +227,7 @@ namespace Mangos.World.Handlers
             if (WorldServiceLocator._WS_Maps.Maps[objCharacter.MapID].Type == MapTypes.MAP_COMMON)
             {
                 objCharacter.instance = 0u;
-                objCharacter.SystemMessage(Globals.Functions.SetColor("You are not in instance.", 200, 0, byte.MaxValue));
+                objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor("You are not in instance.", 200, 0, byte.MaxValue));
                 return;
             }
             InstanceMapUpdate();
@@ -236,8 +236,8 @@ namespace Mangos.World.Handlers
             if (q.Rows.Count > 0)
             {
                 objCharacter.instance = Conversions.ToUInteger(q.Rows[0]["instance"]);
-                objCharacter.SystemMessage(Globals.Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 0, 200, byte.MaxValue));
-                SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, Conversions.ToInteger(Operators.SubtractObject(q.Rows[0]["expire"], Globals.Functions.GetTimestamp(DateAndTime.Now))));
+                objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 0, 200, byte.MaxValue));
+                SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, Conversions.ToInteger(Operators.SubtractObject(q.Rows[0]["expire"], WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))));
                 return;
             }
             if (objCharacter.IsInGroup)
@@ -246,23 +246,23 @@ namespace Mangos.World.Handlers
                 if (q.Rows.Count > 0)
                 {
                     objCharacter.instance = Conversions.ToUInteger(q.Rows[0]["instance"]);
-                    objCharacter.SystemMessage(Globals.Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 245, 245, byte.MaxValue));
-                    SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, Conversions.ToInteger(Operators.SubtractObject(q.Rows[0]["expire"], Globals.Functions.GetTimestamp(DateAndTime.Now))));
+                    objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 245, 245, byte.MaxValue));
+                    SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, Conversions.ToInteger(Operators.SubtractObject(q.Rows[0]["expire"], WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))));
                     return;
                 }
             }
             checked
             {
                 int instanceNewID = (int)InstanceMapCreate(objCharacter.MapID);
-                int instanceNewResetTime = (int)(Globals.Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[objCharacter.MapID].ResetTime);
+                int instanceNewResetTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[objCharacter.MapID].ResetTime);
                 objCharacter.instance = (uint)instanceNewID;
                 if (objCharacter.IsInGroup)
                 {
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update($"INSERT INTO characters_instances_group (group_id, map, instance, expire) VALUES ({objCharacter.Group.ID}, {objCharacter.MapID}, {instanceNewID}, {instanceNewResetTime});");
                 }
                 InstanceMapSpawn(objCharacter.MapID, (uint)instanceNewID);
-                objCharacter.SystemMessage(Globals.Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 245, 245, byte.MaxValue));
-                SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, (int)(Globals.Functions.GetTimestamp(DateAndTime.Now) - instanceNewResetTime));
+                objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 245, 245, byte.MaxValue));
+                SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) - instanceNewResetTime));
             }
         }
 

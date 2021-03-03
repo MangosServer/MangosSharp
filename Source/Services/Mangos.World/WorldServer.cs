@@ -40,6 +40,7 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
+//using Microsoft.VisualBasic.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Mangos.World
@@ -425,7 +426,7 @@ namespace Mangos.World
             WorldServiceLocator._WS_Handlers.IntializePacketHandlers();
             ALLQUESTS.LoadAllQuests();
             await AllGraveYards.InitializeGraveyardsAsync();
-            WS_Transports.LoadTransports();
+            WorldServiceLocator._WS_Transports.LoadTransports();
             ClsWorldServer = new WS_Network.WorldServerClass(WorldServiceLocator._DataStoreProvider);
             WorldServerConfiguration configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
             server = new ProxyServer<WS_Network.WorldServerClass>(Dns.GetHostAddresses(configuration.LocalConnectHost)[0], configuration.LocalConnectPort, ClsWorldServer);

@@ -161,14 +161,15 @@ namespace Mangos.World.Handlers
                     {
                         return;
                     }
-                    SendAttackStop(Character.GUID, Victim.GUID, ref Character.client);
+                    WorldServiceLocator._WS_Combat.SendAttackStop(Character.GUID, Victim.GUID, ref Character.client);
                     Victim = Victim_;
                     combatReach = 2f + Victim.BoundingRadius + Character.CombatReach;
                     minRanged = Victim.BoundingRadius + 8f;
                 }
+                WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 ref WS_PlayerData.CharacterObject character = ref Character;
                 bool flag = false;
-                int AttackSpeed = GetAttackTime(ref character, ref flag);
+                int AttackSpeed = wS_Combat.GetAttackTime(ref character, ref flag);
                 checked
                 {
                     if (WorldServiceLocator._NativeMethods.timeGetTime("") - LastAttack >= AttackSpeed)
@@ -235,7 +236,7 @@ namespace Mangos.World.Handlers
                             WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                             ref WS_PlayerData.CharacterObject character = ref Character;
                             flag = false;
-                            nextAttackTimer.Change(GetAttackTime(ref character, ref flag), -1);
+                            nextAttackTimer.Change(wS_Combat.GetAttackTime(ref character, ref flag), -1);
                             return;
                         }
                         if (Victim.IsDead)
@@ -272,7 +273,7 @@ namespace Mangos.World.Handlers
                         float tmpPosX = Victim.positionX;
                         float tmpPosY = Victim.positionY;
                         float tmpPosZ = Victim.positionZ;
-                        float tmpDist = GetDistance(Character, tmpPosX, tmpPosY, tmpPosZ);
+                        float tmpDist = WorldServiceLocator._WS_Combat.GetDistance(Character, tmpPosX, tmpPosY, tmpPosZ);
                         if (tmpDist > 8f + Victim.CombatReach)
                         {
                             if (Character.CanShootRanged)
@@ -298,7 +299,7 @@ namespace Mangos.World.Handlers
                         WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
                         ref WS_PlayerData.CharacterObject character2 = ref Character;
                         WS_Base.BaseObject Object = character2;
-                        flag = IsInFrontOf(ref Object, tmpPosX, tmpPosY);
+                        flag = wS_Combat2.IsInFrontOf(ref Object, tmpPosX, tmpPosY);
                         character2 = (WS_PlayerData.CharacterObject)Object;
                         if (!flag)
                         {
@@ -320,7 +321,7 @@ namespace Mangos.World.Handlers
                             combatNextAttack.Set();
                             combatNextAttackSpell = false;
                         }
-                        int NextAttack = GetAttackTime(ref Character, ref combatDualWield);
+                        int NextAttack = WorldServiceLocator._WS_Combat.GetAttackTime(ref Character, ref combatDualWield);
                         if (HaveMainHand && HaveOffHand)
                         {
                             if (combatDualWield)
@@ -392,9 +393,10 @@ namespace Mangos.World.Handlers
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "AttackPause: Casting Spell");
                     Timer nextAttackTimer = NextAttackTimer;
+                    WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                     ref WS_PlayerData.CharacterObject character = ref Character;
                     flag = false;
-                    nextAttackTimer.Change(GetAttackTime(ref character, ref flag), -1);
+                    nextAttackTimer.Change(wS_Combat.GetAttackTime(ref character, ref flag), -1);
                     return;
                 }
                 if (Victim.Life.Current == 0)
@@ -424,7 +426,7 @@ namespace Mangos.World.Handlers
                     AttackStop();
                     return;
                 }
-                float tmpDist = GetDistance(Character, tmpPosX, tmpPosY, tmpPosZ);
+                float tmpDist = WorldServiceLocator._WS_Combat.GetDistance(Character, tmpPosX, tmpPosY, tmpPosZ);
                 if (tmpDist < combatReach)
                 {
                     Ranged = false;
@@ -439,9 +441,10 @@ namespace Mangos.World.Handlers
                     SMSG_ATTACKSWING_NOTINRANGE.Dispose();
                     return;
                 }
+                WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
                 ref WS_PlayerData.CharacterObject character2 = ref Character;
                 WS_Base.BaseObject Object = character2;
-                flag = IsInFrontOf(ref Object, tmpPosX, tmpPosY);
+                flag = wS_Combat2.IsInFrontOf(ref Object, tmpPosX, tmpPosY);
                 character2 = (WS_PlayerData.CharacterObject)Object;
                 if (!flag)
                 {
@@ -454,9 +457,10 @@ namespace Mangos.World.Handlers
                 {
                     DoRangedDamage();
                     Timer nextAttackTimer2 = NextAttackTimer;
+                    WS_Combat wS_Combat3 = WorldServiceLocator._WS_Combat;
                     ref WS_PlayerData.CharacterObject character3 = ref Character;
                     flag = false;
-                    nextAttackTimer2.Change(GetAttackTime(ref character3, ref flag), -1);
+                    nextAttackTimer2.Change(wS_Combat3.GetAttackTime(ref character3, ref flag), -1);
                 }
             }
 
@@ -466,7 +470,7 @@ namespace Mangos.World.Handlers
                 ref WS_PlayerData.CharacterObject character = ref Character;
                 ref WS_PlayerData.CharacterObject reference = ref character;
                 WS_Base.BaseUnit Attacker = character;
-                DamageInfo damageInfo2 = CalculateDamage(ref Attacker, ref Victim, combatDualWield, Ranged: false);
+                DamageInfo damageInfo2 = wS_Combat.CalculateDamage(ref Attacker, ref Victim, combatDualWield, Ranged: false);
                 reference = (WS_PlayerData.CharacterObject)Attacker;
                 DamageInfo damageInfo = damageInfo2;
                 WS_Combat wS_Combat2 = WorldServiceLocator._WS_Combat;
@@ -476,7 +480,7 @@ namespace Mangos.World.Handlers
                 ref WS_Base.BaseUnit victim = ref Victim;
                 ref WS_Base.BaseUnit reference2 = ref victim;
                 WS_Base.BaseObject baseObject = victim;
-                SendAttackerStateUpdate(ref Attacker2, ref baseObject, damageInfo, Character.client);
+                wS_Combat2.SendAttackerStateUpdate(ref Attacker2, ref baseObject, damageInfo, Character.client);
                 reference2 = (WS_Base.BaseUnit)baseObject;
                 reference = (WS_PlayerData.CharacterObject)Attacker2;
                 WS_Spells.SpellTargets Target = new();
@@ -497,7 +501,7 @@ namespace Mangos.World.Handlers
                             byte j = 0;
                             do
                             {
-                                if (Victim.ActiveSpells[i].Aura_Info[j] != null && Victim.ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == 42 && Functions.RollChance(Victim.ActiveSpells[i].GetSpellInfo.procChance))
+                                if (Victim.ActiveSpells[i].Aura_Info[j] != null && Victim.ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == 42 && WorldServiceLocator._Functions.RollChance(Victim.ActiveSpells[i].GetSpellInfo.procChance))
                                 {
                                     ref WS_Base.BaseUnit victim2 = ref Victim;
                                     reference2 = ref victim2;
@@ -515,7 +519,7 @@ namespace Mangos.World.Handlers
                     }
                     if (Character.Classe == Classes.CLASS_WARRIOR || (Character.Classe == Classes.CLASS_DRUID && (Character.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || Character.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR)))
                     {
-                        Character.Rage.Increment((int)(((7.5 * damageInfo.Damage / Character.GetRageConversion) + (WS_PlayerData.CharacterObject.GetHitFactor((damageInfo.HitInfo & 4) == 0, (damageInfo.HitInfo & 0x200) != 0) * GetAttackTime(ref Character, ref combatDualWield))) / 2.0));
+                        Character.Rage.Increment((int)(((7.5 * damageInfo.Damage / Character.GetRageConversion) + (Character.GetHitFactor((damageInfo.HitInfo & 4) == 0, (damageInfo.HitInfo & 0x200) != 0) * WorldServiceLocator._WS_Combat.GetAttackTime(ref Character, ref combatDualWield))) / 2.0));
                         Character.SetUpdateFlag(24, Character.Rage.Current);
                         Character.SendCharacterUpdate();
                     }
@@ -548,9 +552,10 @@ namespace Mangos.World.Handlers
 
             public void DoMeleeDamageBySpell(ref WS_PlayerData.CharacterObject Character, ref WS_Base.BaseObject Victim2, int BonusDamage, int SpellID)
             {
+                WS_Combat wS_Combat = WorldServiceLocator._WS_Combat;
                 WS_Base.BaseUnit Attacker = Character;
                 WS_Base.BaseUnit baseUnit = (WS_Base.BaseUnit)Victim2;
-                DamageInfo damageInfo2 = CalculateDamage(ref Attacker, ref baseUnit, DualWield: false, Ranged: false, WorldServiceLocator._WS_Spells.SPELLs[SpellID]);
+                DamageInfo damageInfo2 = wS_Combat.CalculateDamage(ref Attacker, ref baseUnit, DualWield: false, Ranged: false, WorldServiceLocator._WS_Spells.SPELLs[SpellID]);
                 Victim2 = baseUnit;
                 Character = (WS_PlayerData.CharacterObject)Attacker;
                 DamageInfo damageInfo = damageInfo2;
@@ -569,7 +574,7 @@ namespace Mangos.World.Handlers
                     WS_Spells wS_Spells = WorldServiceLocator._WS_Spells;
                     baseUnit = Character;
                     Attacker = (WS_Base.BaseUnit)Victim2;
-                    WS_Spells.SendNonMeleeDamageLog(ref baseUnit, ref Attacker, SpellID, (int)damageInfo.DamageType, damageInfo.Damage, 0, damageInfo.Absorbed, IsCrit);
+                    wS_Spells.SendNonMeleeDamageLog(ref baseUnit, ref Attacker, SpellID, (int)damageInfo.DamageType, damageInfo.Damage, 0, damageInfo.Absorbed, IsCrit);
                     Victim2 = Attacker;
                     Character = (WS_PlayerData.CharacterObject)baseUnit;
                     if (Victim2 is WS_Creatures.CreatureObject obj)
@@ -606,7 +611,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static void DoEmote(int AnimationID, ref WS_Base.BaseObject Unit)
+        public void DoEmote(int AnimationID, ref WS_Base.BaseObject Unit)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_EMOTE);
             packet.AddInt32(AnimationID);
@@ -615,7 +620,7 @@ namespace Mangos.World.Handlers
             packet.Dispose();
         }
 
-        public static float GetWeaponDmg(ref WS_PlayerData.CharacterObject objCharacter, WeaponAttackType AttackType, bool MaxDmg)
+        public float GetWeaponDmg(ref WS_PlayerData.CharacterObject objCharacter, WeaponAttackType AttackType, bool MaxDmg)
         {
             byte WepSlot;
             switch (AttackType)
@@ -653,7 +658,7 @@ namespace Mangos.World.Handlers
             return Dmg;
         }
 
-        public static float GetAPMultiplier(ref WS_Base.BaseUnit objCharacter, WeaponAttackType AttackType, bool Normalized)
+        public float GetAPMultiplier(ref WS_Base.BaseUnit objCharacter, WeaponAttackType AttackType, bool Normalized)
         {
             if (!Normalized || !(objCharacter is WS_PlayerData.CharacterObject))
             {
@@ -717,7 +722,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static void CalculateMinMaxDamage(ref WS_PlayerData.CharacterObject objCharacter, WeaponAttackType AttackType)
+        public void CalculateMinMaxDamage(ref WS_PlayerData.CharacterObject objCharacter, WeaponAttackType AttackType)
         {
             WS_Base.BaseUnit objCharacter2 = objCharacter;
             float aPMultiplier = GetAPMultiplier(ref objCharacter2, AttackType, Normalized: true);
@@ -788,7 +793,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static DamageInfo CalculateDamage(ref WS_Base.BaseUnit Attacker, ref WS_Base.BaseUnit Victim, bool DualWield, bool Ranged, WS_Spells.SpellInfo Ability = null, WS_Spells.SpellEffect Effect = null)
+        public DamageInfo CalculateDamage(ref WS_Base.BaseUnit Attacker, ref WS_Base.BaseUnit Victim, bool DualWield, bool Ranged, WS_Spells.SpellInfo Ability = null, WS_Spells.SpellEffect Effect = null)
         {
             DamageInfo result = default;
             result.victimState = AttackVictimState.VICTIMSTATE_NORMAL;
@@ -1016,7 +1021,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static float GetBasePercentDodge(ref WS_Base.BaseUnit objCharacter, int skillDiference)
+        public float GetBasePercentDodge(ref WS_Base.BaseUnit objCharacter, int skillDiference)
         {
             if (objCharacter is WS_PlayerData.CharacterObject @object)
             {
@@ -1042,7 +1047,7 @@ namespace Mangos.World.Handlers
             return 0f;
         }
 
-        public static float GetBasePercentParry(ref WS_Base.BaseUnit objCharacter, int skillDiference)
+        public float GetBasePercentParry(ref WS_Base.BaseUnit objCharacter, int skillDiference)
         {
             return objCharacter switch
             {
@@ -1051,7 +1056,7 @@ namespace Mangos.World.Handlers
             };
         }
 
-        public static float GetBasePercentBlock(ref WS_Base.BaseUnit objCharacter, int skillDiference)
+        public float GetBasePercentBlock(ref WS_Base.BaseUnit objCharacter, int skillDiference)
         {
             return objCharacter switch
             {
@@ -1060,7 +1065,7 @@ namespace Mangos.World.Handlers
             };
         }
 
-        public static float GetBasePercentMiss(ref WS_Base.BaseUnit objCharacter, int skillDiference)
+        public float GetBasePercentMiss(ref WS_Base.BaseUnit objCharacter, int skillDiference)
         {
             if (objCharacter is WS_PlayerData.CharacterObject characterObject)
             {
@@ -1076,7 +1081,7 @@ namespace Mangos.World.Handlers
             return 5f - (skillDiference * 0.04f);
         }
 
-        public static float GetBasePercentCrit(ref WS_Base.BaseUnit objCharacter, int skillDiference)
+        public float GetBasePercentCrit(ref WS_Base.BaseUnit objCharacter, int skillDiference)
         {
             switch (objCharacter)
             {
@@ -1129,27 +1134,27 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static float GetDistance(WS_Base.BaseObject Object1, WS_Base.BaseObject Object2)
+        public float GetDistance(WS_Base.BaseObject Object1, WS_Base.BaseObject Object2)
         {
             return GetDistance(Object1.positionX, Object2.positionX, Object1.positionY, Object2.positionY, Object1.positionZ, Object2.positionZ);
         }
 
-        public static float GetDistance(WS_Base.BaseObject Object1, float x2, float y2, float z2)
+        public float GetDistance(WS_Base.BaseObject Object1, float x2, float y2, float z2)
         {
             return GetDistance(Object1.positionX, x2, Object1.positionY, y2, Object1.positionZ, z2);
         }
 
-        public static float GetDistance(float x1, float x2, float y1, float y2, float z1, float z2)
+        public float GetDistance(float x1, float x2, float y1, float y2, float z1, float z2)
         {
             return (float)Math.Sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2)));
         }
 
-        public static float GetDistance(float x1, float x2, float y1, float y2)
+        public float GetDistance(float x1, float x2, float y1, float y2)
         {
             return (float)Math.Sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
         }
 
-        public static float GetOrientation(float x1, float x2, float y1, float y2)
+        public float GetOrientation(float x1, float x2, float y1, float y2)
         {
             float angle = (float)Math.Atan2(y2 - y1, x2 - x1);
             if (angle < 0f)
@@ -1159,12 +1164,12 @@ namespace Mangos.World.Handlers
             return angle;
         }
 
-        public static bool IsInFrontOf(ref WS_Base.BaseObject Object1, ref WS_Base.BaseObject Object2)
+        public bool IsInFrontOf(ref WS_Base.BaseObject Object1, ref WS_Base.BaseObject Object2)
         {
             return IsInFrontOf(ref Object1, Object2.positionX, Object2.positionY);
         }
 
-        public static bool IsInFrontOf(ref WS_Base.BaseObject Object1, float x2, float y2)
+        public bool IsInFrontOf(ref WS_Base.BaseObject Object1, float x2, float y2)
         {
             float angle2 = GetOrientation(Object1.positionX, x2, Object1.positionY, y2);
             float lowAngle = Object1.orientation - ((float)Math.PI / 3f);
@@ -1174,12 +1179,12 @@ namespace Mangos.World.Handlers
                 : angle2 >= lowAngle && angle2 <= hiAngle;
         }
 
-        public static bool IsInBackOf(ref WS_Base.BaseObject Object1, ref WS_Base.BaseObject Object2)
+        public bool IsInBackOf(ref WS_Base.BaseObject Object1, ref WS_Base.BaseObject Object2)
         {
             return IsInBackOf(ref Object1, Object2.positionX, Object2.positionY);
         }
 
-        public static bool IsInBackOf(ref WS_Base.BaseObject Object1, float x2, float y2)
+        public bool IsInBackOf(ref WS_Base.BaseObject Object1, float x2, float y2)
         {
             float angle2 = GetOrientation(x2, Object1.positionX, y2, Object1.positionY);
             float lowAngle = Object1.orientation - ((float)Math.PI / 3f);
@@ -1189,7 +1194,7 @@ namespace Mangos.World.Handlers
                 : angle2 >= lowAngle && angle2 <= hiAngle;
         }
 
-        public static int GetSkillWeapon(ref WS_Base.BaseUnit objCharacter, bool DualWield)
+        public int GetSkillWeapon(ref WS_Base.BaseUnit objCharacter, bool DualWield)
         {
             checked
             {
@@ -1231,7 +1236,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static int GetSkillDefence(ref WS_Base.BaseUnit objCharacter)
+        public int GetSkillDefence(ref WS_Base.BaseUnit objCharacter)
         {
             if (objCharacter is WS_PlayerData.CharacterObject @object)
             {
@@ -1244,7 +1249,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static int GetAttackTime(ref WS_PlayerData.CharacterObject objCharacter, ref bool combatDualWield)
+        public int GetAttackTime(ref WS_PlayerData.CharacterObject objCharacter, ref bool combatDualWield)
         {
             switch (objCharacter.attackSheathState)
             {
@@ -1275,7 +1280,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static void GetDamage(ref WS_Base.BaseUnit objCharacter, bool DualWield, ref DamageInfo result)
+        public void GetDamage(ref WS_Base.BaseUnit objCharacter, bool DualWield, ref DamageInfo result)
         {
             checked
             {
@@ -1320,7 +1325,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static void SetPlayerInCombat(ref WS_PlayerData.CharacterObject objCharacter)
+        public void SetPlayerInCombat(ref WS_PlayerData.CharacterObject objCharacter)
         {
             objCharacter.cUnitFlags |= 0x80000;
             objCharacter.SetUpdateFlag(46, objCharacter.cUnitFlags);
@@ -1328,14 +1333,14 @@ namespace Mangos.World.Handlers
             objCharacter.RemoveAurasByInterruptFlag(32);
         }
 
-        public static void SetPlayerOutOfCombat(ref WS_PlayerData.CharacterObject objCharacter)
+        public void SetPlayerOutOfCombat(ref WS_PlayerData.CharacterObject objCharacter)
         {
             objCharacter.cUnitFlags &= -524289;
             objCharacter.SetUpdateFlag(46, objCharacter.cUnitFlags);
             objCharacter.SendCharacterUpdate(toNear: false);
         }
 
-        public static void On_CMSG_SET_SELECTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_SET_SELECTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
             {
@@ -1349,7 +1354,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static void On_CMSG_ATTACKSWING(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_ATTACKSWING(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13 && client.Character != null)
             {
@@ -1381,7 +1386,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static void On_CMSG_ATTACKSTOP(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_ATTACKSTOP(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             try
             {
@@ -1399,7 +1404,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static void On_CMSG_SET_AMMO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_SET_AMMO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) < 9)
             {
@@ -1410,7 +1415,7 @@ namespace Mangos.World.Handlers
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_AMMO [{2}]", client.IP, client.Port, AmmoID);
             if (client.Character.IsDead)
             {
-                WS_Items.SendInventoryChangeFailure(ref client.Character, InventoryChangeFailure.EQUIP_ERR_YOU_ARE_DEAD, 0uL, 0uL);
+                WorldServiceLocator._WS_Items.SendInventoryChangeFailure(ref client.Character, InventoryChangeFailure.EQUIP_ERR_YOU_ARE_DEAD, 0uL, 0uL);
             }
             else if (AmmoID != 0)
             {
@@ -1419,14 +1424,14 @@ namespace Mangos.World.Handlers
                 {
                     WS_Items.ItemInfo tmpItem = new(AmmoID);
                 }
-                InventoryChangeFailure CanUse = CharManagementHandler.CanUseAmmo(ref client.Character, AmmoID);
+                InventoryChangeFailure CanUse = WorldServiceLocator._CharManagementHandler.CanUseAmmo(ref client.Character, AmmoID);
                 if (CanUse != 0)
                 {
-                    WS_Items.SendInventoryChangeFailure(ref client.Character, CanUse, 0uL, 0uL);
+                    WorldServiceLocator._WS_Items.SendInventoryChangeFailure(ref client.Character, CanUse, 0uL, 0uL);
                     return;
                 }
                 float currentDPS = 0f;
-                if ((WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(AmmoID) && WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].ObjectClass == ITEM_CLASS.ITEM_CLASS_PROJECTILE) || CharManagementHandler.CheckAmmoCompatibility(ref client.Character, AmmoID))
+                if ((WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(AmmoID) && WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].ObjectClass == ITEM_CLASS.ITEM_CLASS_PROJECTILE) || WorldServiceLocator._CharManagementHandler.CheckAmmoCompatibility(ref client.Character, AmmoID))
                 {
                     currentDPS = WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].Damage[0].Minimum;
                 }
@@ -1449,7 +1454,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static void On_CMSG_SETSHEATHED(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_SETSHEATHED(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 9)
             {
@@ -1460,7 +1465,7 @@ namespace Mangos.World.Handlers
             }
         }
 
-        public static void SetSheath(ref WS_PlayerData.CharacterObject objCharacter, SHEATHE_SLOT State)
+        public void SetSheath(ref WS_PlayerData.CharacterObject objCharacter, SHEATHE_SLOT State)
         {
             objCharacter.attackSheathState = State;
             objCharacter.combatCanDualWield = false;
@@ -1572,14 +1577,14 @@ namespace Mangos.World.Handlers
             objCharacter.SendCharacterUpdate();
         }
 
-        public static void SetVirtualItemInfo(WS_PlayerData.CharacterObject objChar, byte Slot, ref ItemObject Item)
+        public void SetVirtualItemInfo(WS_PlayerData.CharacterObject objChar, byte Slot, ref ItemObject Item)
         {
             if (Slot <= 2 && Item != null)
             {
             }
         }
 
-        public static void SendAttackStop(ulong attackerGUID, ulong victimGUID, ref WS_Network.ClientClass client)
+        public void SendAttackStop(ulong attackerGUID, ulong victimGUID, ref WS_Network.ClientClass client)
         {
             Packets.PacketClass SMSG_ATTACKSTOP = new(Opcodes.SMSG_ATTACKSTOP);
             SMSG_ATTACKSTOP.AddPackGUID(attackerGUID);
@@ -1590,7 +1595,7 @@ namespace Mangos.World.Handlers
             SMSG_ATTACKSTOP.Dispose();
         }
 
-        public static void SendAttackStart(ulong attackerGUID, ulong victimGUID, WS_Network.ClientClass client)
+        public void SendAttackStart(ulong attackerGUID, ulong victimGUID, WS_Network.ClientClass client)
         {
             Packets.PacketClass SMSG_ATTACKSTART = new(Opcodes.SMSG_ATTACKSTART);
             SMSG_ATTACKSTART.AddUInt64(attackerGUID);
@@ -1599,7 +1604,7 @@ namespace Mangos.World.Handlers
             SMSG_ATTACKSTART.Dispose();
         }
 
-        public static void SendAttackerStateUpdate(ref WS_Base.BaseObject Attacker, ref WS_Base.BaseObject Victim, DamageInfo damageInfo, WS_Network.ClientClass client = null)
+        public void SendAttackerStateUpdate(ref WS_Base.BaseObject Attacker, ref WS_Base.BaseObject Victim, DamageInfo damageInfo, WS_Network.ClientClass client = null)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_ATTACKERSTATEUPDATE);
             packet.AddInt32(damageInfo.HitInfo);

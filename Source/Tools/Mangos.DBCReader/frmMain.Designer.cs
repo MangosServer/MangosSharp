@@ -41,16 +41,16 @@ namespace Mangos.DBCReader
             components = new Container();
             txtFile = new TextBox();
             _cmdBrowse = new Button();
-            _cmdBrowse.Click += new EventHandler(CmdBrowse_Click);
+            _cmdBrowse.Click += new EventHandler(cmdBrowse_Click);
             _DBCData = new ListView();
             _DBCData.ColumnClick += new ColumnClickEventHandler(DBCData_ColumnClick);
             ProgressBar = new ProgressBar();
             BindingSource1 = new BindingSource(components);
             cmbColumn = new ComboBox();
             _txtQuery = new TextBox();
-            _txtQuery.KeyDown += new KeyEventHandler(TxtQuery_KeyDown);
+            _txtQuery.KeyDown += new KeyEventHandler(txtQuery_KeyDown);
             _cmdSearch = new Button();
-            _cmdSearch.Click += new EventHandler(CmdSearch_Click);
+            _cmdSearch.Click += new EventHandler(cmdSearch_Click);
             ((ISupportInitialize)BindingSource1).BeginInit();
             SuspendLayout();
             // 
@@ -168,13 +168,13 @@ namespace Mangos.DBCReader
             {
                 if (_cmdBrowse != null)
                 {
-                    _cmdBrowse.Click -= CmdBrowse_Click;
+                    _cmdBrowse.Click -= cmdBrowse_Click;
                 }
 
                 _cmdBrowse = value;
                 if (_cmdBrowse != null)
                 {
-                    _cmdBrowse.Click += CmdBrowse_Click;
+                    _cmdBrowse.Click += cmdBrowse_Click;
                 }
             }
         }
@@ -223,13 +223,13 @@ namespace Mangos.DBCReader
             {
                 if (_txtQuery != null)
                 {
-                    _txtQuery.KeyDown -= TxtQuery_KeyDown;
+                    _txtQuery.KeyDown -= txtQuery_KeyDown;
                 }
 
                 _txtQuery = value;
                 if (_txtQuery != null)
                 {
-                    _txtQuery.KeyDown += TxtQuery_KeyDown;
+                    _txtQuery.KeyDown += txtQuery_KeyDown;
                 }
             }
         }
@@ -249,13 +249,13 @@ namespace Mangos.DBCReader
             {
                 if (_cmdSearch != null)
                 {
-                    _cmdSearch.Click -= CmdSearch_Click;
+                    _cmdSearch.Click -= cmdSearch_Click;
                 }
 
                 _cmdSearch = value;
                 if (_cmdSearch != null)
                 {
-                    _cmdSearch.Click += CmdSearch_Click;
+                    _cmdSearch.Click += cmdSearch_Click;
                 }
             }
         }

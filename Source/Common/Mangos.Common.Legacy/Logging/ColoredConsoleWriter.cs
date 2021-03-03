@@ -90,9 +90,6 @@ namespace Mangos.Common.Legacy.Logging
                         Console.ForegroundColor = ConsoleColor.DarkMagenta;
                         break;
                     }
-
-                default:
-                    break;
             }
 
             if (arg is null)
@@ -170,9 +167,6 @@ namespace Mangos.Common.Legacy.Logging
                         Console.ForegroundColor = ConsoleColor.DarkMagenta;
                         break;
                     }
-
-                default:
-                    break;
             }
 
             if (arg is null)

@@ -151,8 +151,8 @@ namespace Mangos.Cluster.Handlers
             packet.GetInt16();
             uint levelMinimum = packet.GetUInt32();       // 0
             uint levelMaximum = packet.GetUInt32();       // 100
-            string namePlayer = Globals.Functions.EscapeString(packet.GetString());
-            string nameGuild = Globals.Functions.EscapeString(packet.GetString());
+            string namePlayer = _clusterServiceLocator.Functions.EscapeString(packet.GetString());
+            string nameGuild = _clusterServiceLocator.Functions.EscapeString(packet.GetString());
             uint maskRace = packet.GetUInt32();
             uint maskClass = packet.GetUInt32();
             uint zonesCount = packet.GetUInt32();         // Limited to 10
@@ -176,7 +176,7 @@ namespace Mangos.Cluster.Handlers
             List<string> strings = new();
             for (int i = 1, loopTo1 = (int)stringsCount; i <= loopTo1; i++)
             {
-                strings.Add(_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(Globals.Functions.EscapeString(packet.GetString())));
+                strings.Add(_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(_clusterServiceLocator.Functions.EscapeString(packet.GetString())));
             }
 
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_WHO [P:'{2}' G:'{3}' L:{4}-{5} C:{6:X} R:{7:X}]", client.IP, client.Port, namePlayer, nameGuild, levelMinimum, levelMaximum, maskClass, maskRace);
@@ -191,7 +191,7 @@ namespace Mangos.Cluster.Handlers
                     continue;
                 }
 
-                if (Globals.Functions.GetCharacterSide((byte)objCharacter.Value.Race) != Globals.Functions.GetCharacterSide((byte)client.Character.Race) && client.Character.Access < AccessLevel.GameMaster)
+                if (_clusterServiceLocator.Functions.GetCharacterSide((byte)objCharacter.Value.Race) != _clusterServiceLocator.Functions.GetCharacterSide((byte)client.Character.Race) && client.Character.Access < AccessLevel.GameMaster)
                 {
                     continue;
                 }
@@ -231,12 +231,12 @@ namespace Mangos.Cluster.Handlers
                             continue;
                         }
 
-                        if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(Globals.Functions.GetRaceName((int)objCharacter.Value.Race)) == stringValue)
+                        if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(_clusterServiceLocator.Functions.GetRaceName((int)objCharacter.Value.Race)) == stringValue)
                         {
                             continue;
                         }
 
-                        if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(Globals.Functions.GetClassName((int)objCharacter.Value.Classe)) == stringValue)
+                        if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(_clusterServiceLocator.Functions.GetClassName((int)objCharacter.Value.Classe)) == stringValue)
                         {
                             continue;
                         }
@@ -310,7 +310,7 @@ namespace Mangos.Cluster.Handlers
             if (q.Rows.Count > 0)
             {
                 guid = (ulong)q.Rows[0].As<long>("char_guid");
-                bool friendSide = Globals.Functions.GetCharacterSide(q.Rows[0].As<byte>("char_race"));
+                bool friendSide = _clusterServiceLocator.Functions.GetCharacterSide(q.Rows[0].As<byte>("char_race"));
                 q.Clear();
                 _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT flags FROM character_social WHERE flags = {0}", Conversions.ToByte(SocialFlag.SOCIAL_FLAG_FRIEND)), ref q);
                 int numberOfFriends = q.Rows.Count;
@@ -331,7 +331,7 @@ namespace Mangos.Cluster.Handlers
                     response.AddInt8((byte)FriendResult.FRIEND_LIST_FULL);
                     response.AddUInt64(guid);
                 }
-                else if (Globals.Functions.GetCharacterSide((byte)client.Character.Race) != friendSide)
+                else if (_clusterServiceLocator.Functions.GetCharacterSide((byte)client.Character.Race) != friendSide)
                 {
                     response.AddInt8((byte)FriendResult.FRIEND_ENEMY);
                     response.AddUInt64(guid);

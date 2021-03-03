@@ -75,7 +75,7 @@ namespace Mangos.World.Objects
                             Functions functions = WorldServiceLocator._Functions;
                             WS_PlayerData.CharacterObject characterObject;
                             int Classe = (int)(characterObject = objCharacter).Classe;
-                            string className = Functions.GetClassName(ref Classe);
+                            string className = functions.GetClassName(ref Classe);
                             characterObject.Classe = (Classes)checked((byte)Classe);
                             gossipMenu.AddMenu("I am interested in " + className + " training.", 3);
                             objCharacter.TalkMenuTypes.Add(Gossip_Option.GOSSIP_OPTION_TRAINER);
@@ -362,15 +362,15 @@ namespace Mangos.World.Objects
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_ARENACHARTER, TextCompare: false))
                 {
-                    Social.WS_Guilds.SendPetitionActivate(ref objCharacter, cGUID);
+                    WorldServiceLocator._WS_Guilds.SendPetitionActivate(ref objCharacter, cGUID);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_TABARDVENDOR, TextCompare: false))
                 {
-                    Social.WS_Guilds.SendTabardActivate(ref objCharacter, cGUID);
+                    WorldServiceLocator._WS_Guilds.SendTabardActivate(ref objCharacter, cGUID);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_AUCTIONEER, TextCompare: false))
                 {
-                    Auction.WS_Auction.SendShowAuction(ref objCharacter, cGUID);
+                    WorldServiceLocator._WS_Auction.SendShowAuction(ref objCharacter, cGUID);
                 }
                 else if (Operators.ConditionalCompareObjectEqual(left, Gossip_Option.GOSSIP_OPTION_TALENTWIPE, TextCompare: false))
                 {
@@ -698,7 +698,7 @@ namespace Mangos.World.Objects
                     if (WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].StackCount > count)
                     {
                         WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].StackCount -= count;
-                        ItemObject tmpItem = WS_Items.LoadItemByGUID(itemGuid);
+                        ItemObject tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(itemGuid);
                         ref ulong itemGuidCounter = ref WorldServiceLocator._WorldServer.itemGuidCounter;
                         itemGuidCounter = Convert.ToUInt64(decimal.Add(new decimal(itemGuidCounter), 1m));
                         tmpItem.GUID = WorldServiceLocator._WorldServer.itemGuidCounter;
@@ -1067,7 +1067,7 @@ namespace Mangos.World.Objects
                 }
                 else
                 {
-                    WS_Items.SendInventoryChangeFailure(ref client.Character, InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL, 0uL, 0uL);
+                    WorldServiceLocator._WS_Items.SendInventoryChangeFailure(ref client.Character, InventoryChangeFailure.EQUIP_ERR_INVENTORY_FULL, 0uL, 0uL);
                     client.Character.ItemSETSLOT(ref tmpItem, 0, (byte)slot);
                 }
             }

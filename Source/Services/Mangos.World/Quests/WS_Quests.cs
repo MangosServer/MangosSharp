@@ -628,7 +628,7 @@ namespace Mangos.World.Quests
                         packet.AddUInt32((uint)quest.ObjectivesItem_Count[j]);
                         if (quest.ObjectivesItem[j] != 0)
                         {
-                            WS_Items.SendItemInfo(ref client, quest.ObjectivesItem[j]);
+                            WorldServiceLocator._WS_Items.SendItemInfo(ref client, quest.ObjectivesItem[j]);
                         }
                         j++;
                     }

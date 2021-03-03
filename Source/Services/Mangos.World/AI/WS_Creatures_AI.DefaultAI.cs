@@ -430,7 +430,7 @@ namespace Mangos.World.AI
                         {
                             return;
                         }
-                        float distance = WS_Combat.GetDistance(aiCreature, aiTarget);
+                        float distance = WorldServiceLocator._WS_Combat.GetDistance(aiCreature, aiTarget);
                         if (distance > 2f + aiCreature.CombatReach + aiTarget.BoundingRadius)
                         {
                             State = AIState.AI_MOVE_FOR_ATTACK;
@@ -447,7 +447,7 @@ namespace Mangos.World.AI
                             ref WS_Base.BaseUnit aiTarget = ref this.aiTarget;
                             ref WS_Base.BaseUnit reference3 = ref aiTarget;
                             WS_Base.BaseObject Object2 = aiTarget;
-                            bool flag = WS_Combat.IsInFrontOf(ref Object, ref Object2);
+                            bool flag = WorldServiceLocator._WS_Combat.IsInFrontOf(ref Object, ref Object2);
                             reference3 = (WS_Base.BaseUnit)Object2;
                             reference2 = (WS_Creatures.CreatureObject)Object;
                             if (!flag)
@@ -462,7 +462,7 @@ namespace Mangos.World.AI
                             reference2 = ref reference4;
                             WS_Base.BaseUnit Attacker = reference4;
                             reference2 = (WS_Creatures.CreatureObject)Attacker;
-                            WS_Combat.DamageInfo damageInfo = WS_Combat.CalculateDamage(ref Attacker, ref this.aiTarget, DualWield: false, Ranged: false);
+                            WS_Combat.DamageInfo damageInfo = WorldServiceLocator._WS_Combat.CalculateDamage(ref Attacker, ref this.aiTarget, DualWield: false, Ranged: false);
                             ref WS_Creatures.CreatureObject reference5 = ref aiCreature;
                             reference2 = ref reference5;
                             Object2 = reference5;
@@ -470,7 +470,7 @@ namespace Mangos.World.AI
                             reference3 = ref aiTarget3;
                             Object = aiTarget3;
                             WS_Network.ClientClass client = null;
-                            WS_Combat.SendAttackerStateUpdate(Attacker: ref Object2, Victim: ref Object, damageInfo, client);
+                            WorldServiceLocator._WS_Combat.SendAttackerStateUpdate(Attacker: ref Object2, Victim: ref Object, damageInfo, client);
                             reference3 = (WS_Base.BaseUnit)Object;
                             reference2 = (WS_Creatures.CreatureObject)Object2;
                             ref WS_Creatures.CreatureObject reference6 = ref aiCreature;
@@ -496,7 +496,7 @@ namespace Mangos.World.AI
                 {
                     case null:
                         {
-                            float distanceToSpawn = WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
+                            float distanceToSpawn = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
                             if (!IsWaypoint && aiCreature?.SpawnID > 0 && distanceToSpawn > aiCreature?.MaxDistance)
                             {
                                 GoBackToSpawn();
@@ -508,7 +508,7 @@ namespace Mangos.World.AI
 
                     default:
                         {
-                            float distanceToLastHit = WS_Combat.GetDistance(aiCreature.positionX, LastHitX, aiCreature.positionY, LastHitY, aiCreature.positionZ, LastHitZ);
+                            float distanceToLastHit = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, LastHitX, aiCreature.positionY, LastHitY, aiCreature.positionZ, LastHitZ);
                             if (distanceToLastHit > aiCreature?.MaxDistance)
                             {
                                 OnLeaveCombat();
@@ -548,7 +548,7 @@ namespace Mangos.World.AI
                         {
                             ref WS_Creatures.CreatureObject reference = ref aiCreature;
                             WS_Base.BaseObject obj = reference;
-                            bool flag = Maps.WS_Maps.IsInLineOfSight(ref obj, selectedX2, selectedY2, selectedZ2 + 1f);
+                            bool flag = WorldServiceLocator._WS_Maps.IsInLineOfSight(ref obj, selectedX2, selectedY2, selectedZ2 + 1f);
                             reference = (WS_Creatures.CreatureObject)obj;
                             if (flag)
                             {
@@ -578,7 +578,7 @@ namespace Mangos.World.AI
                     object1?.SetToRealPosition();
                 }
                 float distance = 1000f * aiCreature.CreatureInfo.RunSpeed;
-                float distanceToTarget = WS_Combat.GetDistance(aiCreature, aiTarget);
+                float distanceToTarget = WorldServiceLocator._WS_Combat.GetDistance(aiCreature, aiTarget);
                 if (distanceToTarget < distance)
                 {
                     State = AIState.AI_ATTACKING;
@@ -599,7 +599,7 @@ namespace Mangos.World.AI
                     }
                     if (aiCreature.CanMoveTo(NearX, NearY, NearZ))
                     {
-                        aiCreature.orientation = WS_Combat.GetOrientation(aiCreature.positionX, NearX, aiCreature.positionY, NearY);
+                        aiCreature.orientation = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, NearX, aiCreature.positionY, NearY);
                         aiTimer = aiCreature.MoveTo(NearX, NearY, NearZ, 0f, Running: true);
                         return;
                     }
@@ -613,7 +613,7 @@ namespace Mangos.World.AI
                     return;
                 }
                 State = AIState.AI_MOVE_FOR_ATTACK;
-                float angle = WS_Combat.GetOrientation(aiCreature.positionX, aiTarget.positionX, aiCreature.positionY, aiTarget.positionY);
+                float angle = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, aiTarget.positionX, aiCreature.positionY, aiTarget.positionY);
                 aiCreature.orientation = angle;
                 float selectedX = (float)(aiCreature?.positionX + (Math.Cos(angle) * distance));
                 float selectedY = (float)(aiCreature?.positionY + (Math.Sin(angle) * distance));
@@ -636,9 +636,9 @@ namespace Mangos.World.AI
             {
                 float distance = (!ResetRun) ? ((float)(3.0 * aiCreature?.CreatureInfo?.WalkSpeed)) : ((float)(3.0 * aiCreature?.CreatureInfo?.RunSpeed));
                 aiCreature?.SetToRealPosition(Forced: true);
-                float angle = WS_Combat.GetOrientation(aiCreature.positionX, ResetX, aiCreature.positionY, ResetY);
+                float angle = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, ResetX, aiCreature.positionY, ResetY);
                 aiCreature.orientation = angle;
-                float tmpDist = WS_Combat.GetDistance(aiCreature, ResetX, ResetY, ResetZ);
+                float tmpDist = WorldServiceLocator._WS_Combat.GetDistance(aiCreature, ResetX, ResetY, ResetZ);
                 if (tmpDist < distance)
                 {
                     aiTimer = aiCreature.MoveTo(ResetX, ResetY, ResetZ, ResetO, ResetRun);

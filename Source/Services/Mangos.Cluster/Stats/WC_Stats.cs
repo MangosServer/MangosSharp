@@ -80,7 +80,10 @@ namespace Mangos.Cluster.Stats
         private int _countGMs;
         private readonly Dictionary<WorldInfo, List<string>> _w = new();
 
-        private static string FormatUptime(TimeSpan time) => string.Format("{0}d {1}h {2}m {3}s {4}ms", time.Days, time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+        private string FormatUptime(TimeSpan time)
+        {
+            return string.Format("{0}d {1}h {2}m {3}s {4}ms", time.Days, time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+        }
 
         public void CheckCpu(object state)
         {

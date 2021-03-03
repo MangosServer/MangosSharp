@@ -159,7 +159,7 @@ namespace Mangos.World.Network
                 }
             }
 
-            public static void ClientConnect(uint id, ClientInfo client)
+            public void ClientConnect(uint id, ClientInfo client)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[{0:000000}] Client connected", id);
                 if (client == null)
@@ -180,7 +180,7 @@ namespace Mangos.World.Network
                 ClientConnect(id, client);
             }
 
-            public static void ClientDisconnect(uint id)
+            public void ClientDisconnect(uint id)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[{0:000000}] Client disconnected", id);
                 if (WorldServiceLocator._WorldServer.CLIENTs[id].Character != null)
@@ -197,7 +197,7 @@ namespace Mangos.World.Network
                 ClientDisconnect(id);
             }
 
-            public static void ClientLogin(uint id, ulong guid)
+            public void ClientLogin(uint id, ulong guid)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[{0:000000}] Client login [0x{1:X}]", id, guid);
                 try
@@ -207,8 +207,8 @@ namespace Mangos.World.Network
                     WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                     WorldServiceLocator._WorldServer.CHARACTERs[guid] = Character;
                     WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseWriterLock();
-                    Globals.Functions.SendCorpseReclaimDelay(ref client, ref Character);
-                    WS_PlayerHelper.InitializeTalentSpells(Character);
+                    WorldServiceLocator._Functions.SendCorpseReclaimDelay(ref client, ref Character);
+                    WorldServiceLocator._WS_PlayerHelper.InitializeTalentSpells(Character);
                     Character.Login();
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.USER, "[{0}:{1}] Player login complete [0x{2:X}]", client.IP, client.Port, guid);
                 }
@@ -225,7 +225,7 @@ namespace Mangos.World.Network
                 ClientLogin(id, guid);
             }
 
-            public static void ClientLogout(uint id)
+            public void ClientLogout(uint id)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[{0:000000}] Client logout", id);
                 WorldServiceLocator._WorldServer.CLIENTs[id].Character.Logout();
@@ -269,7 +269,7 @@ namespace Mangos.World.Network
                 ClientPacket(id, data);
             }
 
-            public static int ClientCreateCharacter(string account, string name, byte race, byte classe, byte gender, byte skin, byte face, byte hairStyle, byte hairColor, byte facialHair, byte outfitId)
+            public int ClientCreateCharacter(string account, string name, byte race, byte classe, byte gender, byte skin, byte face, byte hairStyle, byte hairColor, byte facialHair, byte outfitId)
             {
                 if (string.IsNullOrEmpty(account))
                 {
@@ -300,7 +300,7 @@ namespace Mangos.World.Network
                 return ClientCreateCharacter(account, name, race, classe, gender, skin, face, hairStyle, hairColor, facialHair, outfitId);
             }
 
-            public static int Ping(int timestamp, int latency)
+            public int Ping(int timestamp, int latency)
             {
                 checked
                 {
@@ -369,7 +369,7 @@ namespace Mangos.World.Network
                 await InstanceCreateAsync(MapID).ConfigureAwait(false);
             }
 
-            public static void InstanceDestroy(uint MapID)
+            public void InstanceDestroy(uint MapID)
             {
                 WorldServiceLocator._WS_Maps.Maps[MapID].Dispose();
             }
@@ -380,7 +380,7 @@ namespace Mangos.World.Network
                 InstanceDestroy(MapID);
             }
 
-            public static bool InstanceCanCreate(int Type)
+            public bool InstanceCanCreate(int Type)
             {
                 WorldServerConfiguration configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
                 return Type switch
@@ -428,7 +428,7 @@ namespace Mangos.World.Network
                 ClientSetGroup(ID, GroupID);
             }
 
-            public static void GroupUpdate(long GroupID, byte GroupType, ulong GroupLeader, ulong[] Members)
+            public void GroupUpdate(long GroupID, byte GroupType, ulong GroupLeader, ulong[] Members)
             {
                 if (!WorldServiceLocator._WS_Group.Groups.ContainsKey(GroupID))
                 {
@@ -459,7 +459,7 @@ namespace Mangos.World.Network
                 GroupUpdate(GroupID, GroupType, GroupLeader, Members);
             }
 
-            public static void GroupUpdateLoot(long GroupID, byte Difficulty, byte Method, byte Threshold, ulong Master)
+            public void GroupUpdateLoot(long GroupID, byte Difficulty, byte Method, byte Threshold, ulong Master)
             {
                 if (WorldServiceLocator._WS_Group.Groups.ContainsKey(GroupID))
                 {
@@ -477,7 +477,7 @@ namespace Mangos.World.Network
                 GroupUpdateLoot(GroupID, Difficulty, Method, Threshold, Master);
             }
 
-            public static byte[] GroupMemberStats(ulong GUID, int Flag)
+            public byte[] GroupMemberStats(ulong GUID, int Flag)
             {
                 if (Flag == 0)
                 {
@@ -500,7 +500,7 @@ namespace Mangos.World.Network
                 return GroupMemberStats(GUID, Flag);
             }
 
-            public static void GuildUpdate(ulong GUID, uint GuildID, byte GuildRank)
+            public void GuildUpdate(ulong GUID, uint GuildID, byte GuildRank)
             {
                 WorldServiceLocator._WorldServer.CHARACTERs[GUID].GuildID = GuildID;
                 WorldServiceLocator._WorldServer.CHARACTERs[GUID].GuildRank = GuildRank;
@@ -515,7 +515,7 @@ namespace Mangos.World.Network
                 GuildUpdate(GUID, GuildID, GuildRank);
             }
 
-            public static void BattlefieldCreate(int BattlefieldID, byte BattlefieldMapType, uint Map)
+            public void BattlefieldCreate(int BattlefieldID, byte BattlefieldMapType, uint Map)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[B{0:0000}] Battlefield created", BattlefieldID);
             }
@@ -526,7 +526,7 @@ namespace Mangos.World.Network
                 BattlefieldCreate(BattlefieldID, BattlefieldMapType, Map);
             }
 
-            public static void BattlefieldDelete(int BattlefieldID)
+            public void BattlefieldDelete(int BattlefieldID)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[B{0:0000}] Battlefield deleted", BattlefieldID);
             }
@@ -537,7 +537,7 @@ namespace Mangos.World.Network
                 BattlefieldDelete(BattlefieldID);
             }
 
-            public static void BattlefieldJoin(int BattlefieldID, ulong GUID)
+            public void BattlefieldJoin(int BattlefieldID, ulong GUID)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[B{0:0000}] Character [0x{1:X}] joined battlefield", BattlefieldID, GUID);
             }
@@ -548,7 +548,7 @@ namespace Mangos.World.Network
                 BattlefieldJoin(BattlefieldID, GUID);
             }
 
-            public static void BattlefieldLeave(int BattlefieldID, ulong GUID)
+            public void BattlefieldLeave(int BattlefieldID, ulong GUID)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[B{0:0000}] Character [0x{1:X}] left battlefield", BattlefieldID, GUID);
             }

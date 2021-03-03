@@ -331,7 +331,7 @@ namespace Mangos.Cluster.Network
             if (!_clusterServiceLocator.WcNetwork.WorldServer.Worlds.ContainsKey(mapId))
             {
                 // We don't create new continents
-                if (Globals.Functions.IsContinentMap((int)mapId))
+                if (_clusterServiceLocator.Functions.IsContinentMap((int)mapId))
                 {
                     _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, "[{0:000000}] Requested Instance Map [{1}] is a continent", client.Index, mapId);
                     client.Send(new PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));

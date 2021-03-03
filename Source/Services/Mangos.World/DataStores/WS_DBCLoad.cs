@@ -336,7 +336,7 @@ namespace Mangos.World.DataStores
             }
         }
 
-        public static void InitializeSpellChains()
+        public void InitializeSpellChains()
         {
             try
             {
@@ -1014,7 +1014,7 @@ namespace Mangos.World.DataStores
             }
         }
 
-        public static void LoadCreatureGossip()
+        public void LoadCreatureGossip()
         {
             try
             {
@@ -1078,7 +1078,7 @@ namespace Mangos.World.DataStores
             }
         }
 
-        public static void LoadCreatureMovements()
+        public void LoadCreatureMovements()
         {
             try
             {
@@ -1114,7 +1114,7 @@ namespace Mangos.World.DataStores
             }
         }
 
-        public static void LoadCreatureEquipTable()
+        public void LoadCreatureEquipTable()
         {
             try
             {
@@ -1156,7 +1156,7 @@ namespace Mangos.World.DataStores
             }
         }
 
-        public static void LoadCreatureModelInfo()
+        public void LoadCreatureModelInfo()
         {
             try
             {
@@ -1191,7 +1191,7 @@ namespace Mangos.World.DataStores
             }
         }
 
-        public static void LoadQuestStartersAndFinishers()
+        public void LoadQuestStartersAndFinishers()
         {
             DataTable questStarters = new();
             WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=0 and role =0;", ref questStarters);
@@ -1310,7 +1310,7 @@ namespace Mangos.World.DataStores
             }
         }
 
-        public static void LoadLootStores()
+        public void LoadLootStores()
         {
             WorldServiceLocator._WS_Loot.LootTemplates_Creature = new WS_Loot.LootStore("creature_loot_template");
             WorldServiceLocator._WS_Loot.LootTemplates_Disenchant = new WS_Loot.LootStore("disenchant_loot_template");
@@ -1323,7 +1323,7 @@ namespace Mangos.World.DataStores
             WorldServiceLocator._WS_Loot.LootTemplates_Skinning = new WS_Loot.LootStore("skinning_loot_template");
         }
 
-        public static void LoadWeather()
+        public void LoadWeather()
         {
             try
             {

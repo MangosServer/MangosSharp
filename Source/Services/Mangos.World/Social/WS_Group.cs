@@ -142,7 +142,7 @@ namespace Mangos.World.Social
             if ((flag & (true ? 1u : 0u)) != 0)
             {
                 byte memberFlags = 1;
-                if (objCharacter.IsPvP)
+                if (objCharacter.isPvP)
                 {
                     memberFlags = (byte)(memberFlags | 2);
                 }

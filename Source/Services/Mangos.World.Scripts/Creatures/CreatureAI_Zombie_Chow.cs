@@ -66,7 +66,7 @@ namespace Mangos.World.Scripts.Creatures
 
         public void HealGluth(ref WS_Creatures.CreatureObject NPC_Gluth, ref WS_Creatures.CreatureObject Zombie_Chow)
         {
-            Coords Waypoint1 = new()
+            coords Waypoint1 = new()
             {
                 X = 3304.919922d,
                 Y = 3139.149902d,
@@ -81,7 +81,7 @@ namespace Mangos.World.Scripts.Creatures
             }
         }
 
-        private struct Coords
+        private struct coords
         {
             public double X;
             public double Y;

@@ -132,7 +132,7 @@ namespace Mangos.World.Objects
             private readonly byte TransportAt;
 
             public TransportObject(int ID_, string Name, int Period_)
-                : base(ID_, GetNewGUID())
+                : base(ID_, WorldServiceLocator._WS_Transports.GetNewGUID())
             {
                 TransportName = "";
                 Passengers = new List<WS_Base.BaseUnit>();
@@ -224,7 +224,7 @@ namespace Mangos.World.Objects
                         {
                             PathPoints[j].DistFromPrev = PathPoints[j].ActionFlag == 1 || PathPoints[j].MapID != PathPoints[j - 1].MapID
                                 ? 0f
-                                : WS_Combat.GetDistance(PathPoints[j].X, PathPoints[j - 1].X, PathPoints[j].Y, PathPoints[j - 1].Y, PathPoints[j].Z, PathPoints[j - 1].Z);
+                                : WorldServiceLocator._WS_Combat.GetDistance(PathPoints[j].X, PathPoints[j - 1].X, PathPoints[j].Y, PathPoints[j - 1].Y, PathPoints[j].Z, PathPoints[j - 1].Z);
                             if (PathPoints[j].ActionFlag == 2)
                             {
                                 if (FirstStop == -1)
@@ -539,7 +539,7 @@ namespace Mangos.World.Objects
             {
                 byte TileX = default;
                 byte TileY = default;
-                WS_Maps.GetMapTile(positionX, positionY, ref TileX, ref TileY);
+                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref TileX, ref TileY);
                 if (!Teleported && CellX == TileX && CellY == TileY)
                 {
                     return;
@@ -769,14 +769,14 @@ namespace Mangos.World.Objects
             }
         }
 
-        private static ulong GetNewGUID()
+        private ulong GetNewGUID()
         {
             ref ulong transportGUIDCounter = ref WorldServiceLocator._WorldServer.TransportGUIDCounter;
             transportGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(transportGUIDCounter), 1m));
             return WorldServiceLocator._WorldServer.TransportGUIDCounter;
         }
 
-        public static void LoadTransports()
+        public void LoadTransports()
         {
             try
             {

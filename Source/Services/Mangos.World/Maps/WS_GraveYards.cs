@@ -184,7 +184,7 @@ namespace Mangos.World.Maps
                                     {
                                         continue;
                                     }
-                                    float dist3 = Handlers.WS_Combat.GetDistance(Character.positionX, Graveyards[GraveyardID2].X, Character.positionY, Graveyards[GraveyardID2].Y, Character.positionZ, Graveyards[GraveyardID2].Z);
+                                    float dist3 = WorldServiceLocator._WS_Combat.GetDistance(Character.positionX, Graveyards[GraveyardID2].X, Character.positionY, Graveyards[GraveyardID2].Y, Character.positionZ, Graveyards[GraveyardID2].Z);
                                     if (foundNear)
                                     {
                                         if (dist3 < distNear)
@@ -253,7 +253,7 @@ namespace Mangos.World.Maps
                             {
                                 continue;
                             }
-                            float dist2 = Handlers.WS_Combat.GetDistance(Character.positionX, Graveyards[GraveyardID].X, Character.positionY, Graveyards[GraveyardID].Y, Character.positionZ, Graveyards[GraveyardID].Z);
+                            float dist2 = WorldServiceLocator._WS_Combat.GetDistance(Character.positionX, Graveyards[GraveyardID].X, Character.positionY, Graveyards[GraveyardID].Y, Character.positionZ, Graveyards[GraveyardID].Z);
                             if (foundNear)
                             {
                                 if (dist2 < distNear)

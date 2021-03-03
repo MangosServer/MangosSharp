@@ -146,7 +146,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            public static Gossips GetGossip(int Entry)
+            public Gossips GetGossip(int Entry)
             {
                 switch (Entry)
                 {
@@ -198,7 +198,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_Stormwind(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_Stormwind(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 objCharacter.TalkMenuTypes.Clear();
                 GossipMenu npcMenu = new();
@@ -227,7 +227,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 933, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_Stormwind(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_Stormwind(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -563,7 +563,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_Orgrimmar(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_Orgrimmar(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -592,7 +592,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 2593, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_Orgrimmar(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_Orgrimmar(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -919,7 +919,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_Thunderbluff(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_Thunderbluff(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -946,7 +946,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 3543, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_Thunderbluff(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_Thunderbluff(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -1239,7 +1239,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_Darnassus(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_Darnassus(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -1266,7 +1266,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 3543, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_Darnassus(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_Darnassus(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -1532,7 +1532,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_Ironforge(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_Ironforge(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -1560,7 +1560,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 933, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_Ironforge(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_Ironforge(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -1879,7 +1879,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_Undercity(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_Undercity(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -1907,7 +1907,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 3543, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_Undercity(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_Undercity(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -2208,7 +2208,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_Mulgore(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_Mulgore(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -2230,7 +2230,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 3543, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_Mulgore(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_Mulgore(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -2427,7 +2427,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_Durotar(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_Durotar(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -2449,7 +2449,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 4037, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_Durotar(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_Durotar(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -2683,7 +2683,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_ElwynnForest(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_ElwynnForest(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -2706,7 +2706,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 933, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_ElwynnForest(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_ElwynnForest(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -2956,7 +2956,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_DunMorogh(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_DunMorogh(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -2979,7 +2979,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 4287, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_DunMorogh(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_DunMorogh(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -3219,7 +3219,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_Tirisfall(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_Tirisfall(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -3241,7 +3241,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 4097, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_Tirisfall(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_Tirisfall(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked
@@ -3458,7 +3458,7 @@ namespace Mangos.World.Gossip
                 }
             }
 
-            private static void OnGossipHello_Teldrassil(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
+            private void OnGossipHello_Teldrassil(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
@@ -3481,7 +3481,7 @@ namespace Mangos.World.Gossip
                 obj.SendGossip(cGUID, 4316, npcMenu, qMenu);
             }
 
-            private static void OnGossipSelect_Teldrassil(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
+            private void OnGossipSelect_Teldrassil(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID, int Selected)
             {
                 object left = objCharacter.TalkMenuTypes[Selected];
                 checked

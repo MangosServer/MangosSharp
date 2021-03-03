@@ -40,7 +40,7 @@ namespace Mangos.Cluster.Network
 
         public Dictionary<uint, DateTime> LastConnections = new();
 
-        public static uint Ip2Int(string ip)
+        public uint Ip2Int(string ip)
         {
             if (ip.Split(".").Length != 4)
             {

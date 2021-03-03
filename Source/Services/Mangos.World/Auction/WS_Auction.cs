@@ -42,7 +42,7 @@ namespace Mangos.World.Auction
 
         public int AuctionTax;
 
-        public static AuctionHouses GetAuctionSide(ulong GUID)
+        public AuctionHouses GetAuctionSide(ulong GUID)
         {
             if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().GlobalAuction)
             {
@@ -57,7 +57,7 @@ namespace Mangos.World.Auction
             };
         }
 
-        public static int GetAuctionDeposit(ulong GUID, int Price, int ItemCount, int Time)
+        public int GetAuctionDeposit(ulong GUID, int Price, int ItemCount, int Time)
         {
             if (ItemCount == 0)
             {
@@ -71,7 +71,7 @@ namespace Mangos.World.Auction
             });
         }
 
-        public static void AuctionCreateMail(MailAuctionAction MailAction, AuctionHouses AuctionLocation, ulong ReceiverGUID, int ItemID, ref Packets.PacketClass packet)
+        public void AuctionCreateMail(MailAuctionAction MailAction, AuctionHouses AuctionLocation, ulong ReceiverGUID, int ItemID, ref Packets.PacketClass packet)
         {
             string queryString = "INSERT INTO characters_mail (";
             string valuesString = ") VALUES (";
@@ -106,7 +106,7 @@ namespace Mangos.World.Auction
             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"{queryString}{valuesString}");
         }
 
-        public static void SendShowAuction(ref WS_PlayerData.CharacterObject objCharacter, ulong GUID)
+        public void SendShowAuction(ref WS_PlayerData.CharacterObject objCharacter, ulong GUID)
         {
             Packets.PacketClass packet = new(Opcodes.MSG_AUCTION_HELLO);
             new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).AddUInt64(GUID);
@@ -115,7 +115,7 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.MSG_AUCTION_HELLO).Dispose();
         }
 
-        public static void AuctionListAddItem(ref Packets.PacketClass packet, ref DataRow row)
+        public void AuctionListAddItem(ref Packets.PacketClass packet, ref DataRow row)
         {
             packet.AddUInt32(row.As<uint>("auction_id"));
             uint itemId = row.As<uint>("auction_itemId");
@@ -137,7 +137,7 @@ namespace Mangos.World.Auction
             }
         }
 
-        public static void SendAuctionCommandResult(ref WS_Network.ClientClass client, int AuctionID, AuctionAction AuctionAction, AuctionError AuctionError, int BidError)
+        public void SendAuctionCommandResult(ref WS_Network.ClientClass client, int AuctionID, AuctionAction AuctionAction, AuctionError AuctionError, int BidError)
         {
             Packets.PacketClass response = new(Opcodes.SMSG_AUCTION_COMMAND_RESULT);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).AddInt32(AuctionID);
@@ -148,7 +148,7 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_COMMAND_RESULT).Dispose();
         }
 
-        public static void SendAuctionBidderNotification(ref WS_PlayerData.CharacterObject objCharacter)
+        public void SendAuctionBidderNotification(ref WS_PlayerData.CharacterObject objCharacter)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).AddInt32(0);
@@ -162,7 +162,7 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_BIDDER_NOTIFICATION).Dispose();
         }
 
-        public static void SendAuctionOwnerNotification(ref WS_PlayerData.CharacterObject objCharacter)
+        public void SendAuctionOwnerNotification(ref WS_PlayerData.CharacterObject objCharacter)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).AddInt32(0);
@@ -176,7 +176,7 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_OWNER_NOTIFICATION).Dispose();
         }
 
-        public static void SendAuctionRemovedNotification(ref WS_PlayerData.CharacterObject objCharacter)
+        public void SendAuctionRemovedNotification(ref WS_PlayerData.CharacterObject objCharacter)
         {
             Packets.PacketClass packet = new(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION);
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).AddInt32(0);
@@ -186,7 +186,7 @@ namespace Mangos.World.Auction
             new Packets.PacketClass(Opcodes.SMSG_AUCTION_REMOVED_NOTIFICATION).Dispose();
         }
 
-        public static void SendAuctionListOwnerItems(ref WS_Network.ClientClass client)
+        public void SendAuctionListOwnerItems(ref WS_Network.ClientClass client)
         {
             Packets.PacketClass response = new(Opcodes.SMSG_AUCTION_OWNER_LIST_RESULT);
             DataTable MySQLQuery = new();
@@ -228,7 +228,7 @@ namespace Mangos.World.Auction
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_AUCTION_OWNER_LIST_RESULT", client.IP, client.Port);
         }
 
-        public static void SendAuctionListBidderItems(ref WS_Network.ClientClass client)
+        public void SendAuctionListBidderItems(ref WS_Network.ClientClass client)
         {
             Packets.PacketClass response = new(Opcodes.SMSG_AUCTION_BIDDER_LIST_RESULT);
             DataTable MySQLQuery = new();
@@ -270,7 +270,7 @@ namespace Mangos.World.Auction
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_AUCTION_BIDDER_LIST_RESULT", client.IP, client.Port);
         }
 
-        public static void On_MSG_AUCTION_HELLO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_MSG_AUCTION_HELLO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
             {
@@ -280,7 +280,7 @@ namespace Mangos.World.Auction
             }
         }
 
-        public static void On_CMSG_AUCTION_SELL_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_AUCTION_SELL_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -320,13 +320,13 @@ namespace Mangos.World.Auction
             }
         }
 
-        public static void On_CMSG_AUCTION_REMOVE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_AUCTION_REMOVE_ITEM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong GUID = packet.GetUInt64();
             checked
             {
-                int MailTime = (int)(Globals.Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
+                int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                 int AuctionID = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_REMOVE_ITEM [GUID={2} AuctionID={3}]", client.IP, client.Port, GUID, AuctionID);
                 DataTable MySQLQuery = new();
@@ -350,13 +350,13 @@ namespace Mangos.World.Auction
             }
         }
 
-        public static void On_CMSG_AUCTION_PLACE_BID(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_AUCTION_PLACE_BID(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             packet.GetInt16();
             ulong cGUID = packet.GetUInt64();
             checked
             {
-                int MailTime = (int)(Globals.Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
+                int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                 int AuctionID = packet.GetInt32();
                 int Bid = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUCTION_PLACE_BID [AuctionID={2} Bid={3}]", client.IP, client.Port, AuctionID, Bid);
@@ -404,7 +404,7 @@ namespace Mangos.World.Auction
             }
         }
 
-        public static void On_CMSG_AUCTION_LIST_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_AUCTION_LIST_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             checked
             {
@@ -497,7 +497,7 @@ namespace Mangos.World.Auction
             }
         }
 
-        public static void On_CMSG_AUCTION_LIST_OWNER_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_AUCTION_LIST_OWNER_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 13)
             {
@@ -508,7 +508,7 @@ namespace Mangos.World.Auction
             }
         }
 
-        public static void On_CMSG_AUCTION_LIST_BIDDER_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+        public void On_CMSG_AUCTION_LIST_BIDDER_ITEMS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             if (checked(packet.Data.Length - 1) >= 21)
             {

@@ -28,7 +28,7 @@ namespace Mangos.WoWFakeClient
         public static void On_SMSG_PONG(ref Packets.PacketClass Packet)
         {
             uint SequenceID = Packet.GetUInt32();
-            int Latency = Worldserver.TimeGetTime() - Worldserver.PingSent;
+            int Latency = Worldserver.timeGetTime() - Worldserver.PingSent;
             if (SequenceID == Worldserver.CurrentPing && Latency >= 0)
             {
                 Worldserver.CurrentLatency = Latency;

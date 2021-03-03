@@ -253,7 +253,7 @@ namespace Mangos.World.Network
                 }
             }
 
-            private static void SetError(Exception ex, string message, LogType logType)
+            private void SetError(Exception ex, string message, LogType logType)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(logType, message, ex);
             }

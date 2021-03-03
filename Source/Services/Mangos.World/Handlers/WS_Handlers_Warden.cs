@@ -304,7 +304,7 @@ namespace Mangos.World.Handlers
             objCharacter.WardenData.Scan = new WS_Warden.WardenScan(ref objCharacter);
             objCharacter.WardenData.xorByte = 0;
             objCharacter.WardenData.K = i;
-            Functions.RAND_bytes(ref objCharacter.WardenData.Seed, 16);
+            WorldServiceLocator._Functions.RAND_bytes(ref objCharacter.WardenData.Seed, 16);
             MaievSendModule(ref objCharacter);
         }
 

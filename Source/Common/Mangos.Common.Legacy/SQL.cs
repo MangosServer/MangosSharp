@@ -182,9 +182,6 @@ namespace Mangos.Common.Legacy
                             SQLMessage?.Invoke(EMessages.ID_Message, "MySQL Connection Opened Successfully [" + SQLUser + "@" + SQLHost + "]");
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
             catch (MySqlException e)
@@ -220,9 +217,6 @@ namespace Mangos.Common.Legacy
 
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
             catch (MySqlException e)
@@ -249,9 +243,6 @@ namespace Mangos.Common.Legacy
                             MySQLConn.Dispose();
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
 
@@ -325,9 +316,6 @@ namespace Mangos.Common.Legacy
 
                         break;
                     }
-
-                default:
-                    break;
             }
 
             int ExitCode = (int)ReturnState.Success;
@@ -352,9 +340,6 @@ namespace Mangos.Common.Legacy
                             MySQLAdapter.Fill(Result);
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
             catch (MySqlException e)
@@ -372,9 +357,6 @@ namespace Mangos.Common.Legacy
                             Monitor.Exit(MySQLConn);
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
 
@@ -399,9 +381,6 @@ namespace Mangos.Common.Legacy
 
                         break;
                     }
-
-                default:
-                    break;
             }
 
             try
@@ -418,9 +397,6 @@ namespace Mangos.Common.Legacy
                             Console.WriteLine("transaction completed");
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
             catch (MySqlException e)
@@ -437,9 +413,6 @@ namespace Mangos.Common.Legacy
                             Monitor.Exit(MySQLConn);
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
         }
@@ -507,9 +480,6 @@ namespace Mangos.Common.Legacy
 
                         break;
                     }
-
-                default:
-                    break;
             }
 
             try
@@ -525,9 +495,6 @@ namespace Mangos.Common.Legacy
                             MySQLAdapter.Fill(result);
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
             catch (MySqlException e)
@@ -544,9 +511,6 @@ namespace Mangos.Common.Legacy
                             Monitor.Exit(MySQLConn);
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
         }

@@ -88,7 +88,7 @@ namespace Mangos.World.Maps
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: {0} Maps initialized.", Maps.Count);
         }
 
-        public static float ValidateMapCoord(float coord)
+        public float ValidateMapCoord(float coord)
         {
             if (coord > 32f * WorldServiceLocator._Global_Constants.SIZE)
             {
@@ -101,7 +101,7 @@ namespace Mangos.World.Maps
             return coord;
         }
 
-        public static void GetMapTile(float x, float y, ref byte MapTileX, ref byte MapTileY)
+        public void GetMapTile(float x, float y, ref byte MapTileX, ref byte MapTileY)
         {
             checked
             {
@@ -110,12 +110,12 @@ namespace Mangos.World.Maps
             }
         }
 
-        public static byte GetMapTileX(float x)
+        public byte GetMapTileX(float x)
         {
             return checked((byte)(32f - (ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE)));
         }
 
-        public static byte GetMapTileY(float y)
+        public byte GetMapTileY(float y)
         {
             return checked((byte)(32f - (ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE)));
         }
@@ -155,9 +155,9 @@ namespace Mangos.World.Maps
                     }
                     try
                     {
-                        float topHeight = Globals.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), MapTile_LocalY), xNormalized);
-                        float bottomHeight = Globals.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(MapTile_LocalY + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), (byte)(MapTile_LocalY + 1)), xNormalized);
-                        return Globals.Functions.MathLerp(topHeight, bottomHeight, yNormalized);
+                        float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), MapTile_LocalY), xNormalized);
+                        float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(MapTile_LocalY + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), (byte)(MapTile_LocalY + 1)), xNormalized);
+                        return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
                     }
                     catch (Exception ex)
                     {
@@ -223,7 +223,7 @@ namespace Mangos.World.Maps
             }
         }
 
-        public static bool IsOutsideOfMap(ref WS_Base.BaseObject objCharacter)
+        public bool IsOutsideOfMap(ref WS_Base.BaseObject objCharacter)
         {
             return false;
         }
@@ -263,9 +263,9 @@ namespace Mangos.World.Maps
                     }
                     try
                     {
-                        float topHeight = Globals.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
-                        float bottomHeight = Globals.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
-                        return Globals.Functions.MathLerp(topHeight, bottomHeight, yNormalized);
+                        float topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
+                        float bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
+                        return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
                     }
                     catch (Exception ex)
                     {
@@ -311,12 +311,12 @@ namespace Mangos.World.Maps
             }
         }
 
-        public static bool IsInLineOfSight(ref WS_Base.BaseObject obj, ref WS_Base.BaseObject obj2)
+        public bool IsInLineOfSight(ref WS_Base.BaseObject obj, ref WS_Base.BaseObject obj2)
         {
             return IsInLineOfSight(obj.MapID, obj.positionX, obj.positionY, obj.positionZ + 2f, obj2.positionX, obj2.positionY, obj2.positionZ + 2f);
         }
 
-        public static bool IsInLineOfSight(ref WS_Base.BaseObject obj, float x2, float y2, float z2)
+        public bool IsInLineOfSight(ref WS_Base.BaseObject obj, float x2, float y2, float z2)
         {
             x2 = ValidateMapCoord(x2);
             y2 = ValidateMapCoord(y2);
@@ -324,7 +324,7 @@ namespace Mangos.World.Maps
             return IsInLineOfSight(obj.MapID, obj.positionX, obj.positionY, obj.positionZ + 2f, x2, y2, z2);
         }
 
-        public static bool IsInLineOfSight(uint MapID, float x1, float y1, float z1, float x2, float y2, float z2)
+        public bool IsInLineOfSight(uint MapID, float x1, float y1, float z1, float x2, float y2, float z2)
         {
             x1 = ValidateMapCoord(x1);
             y1 = ValidateMapCoord(y1);
@@ -335,7 +335,7 @@ namespace Mangos.World.Maps
             return true;
         }
 
-        public static float GetVMapHeight(uint MapID, float x, float y, float z)
+        public float GetVMapHeight(uint MapID, float x, float y, float z)
         {
             x = ValidateMapCoord(x);
             y = ValidateMapCoord(y);
@@ -343,7 +343,7 @@ namespace Mangos.World.Maps
             return WorldServiceLocator._Global_Constants.VMAP_INVALID_HEIGHT_VALUE;
         }
 
-        public static bool GetObjectHitPos(ref WS_Base.BaseObject obj, ref WS_Base.BaseObject obj2, ref float rx, ref float ry, ref float rz, float pModifyDist)
+        public bool GetObjectHitPos(ref WS_Base.BaseObject obj, ref WS_Base.BaseObject obj2, ref float rx, ref float ry, ref float rz, float pModifyDist)
         {
             rx = ValidateMapCoord(rx);
             ry = ValidateMapCoord(ry);
@@ -351,7 +351,7 @@ namespace Mangos.World.Maps
             return GetObjectHitPos(obj.MapID, obj.positionX, obj.positionY, obj.positionZ + 2f, obj2.positionX, obj2.positionY, obj2.positionZ + 2f, ref rx, ref ry, ref rz, pModifyDist);
         }
 
-        public static bool GetObjectHitPos(ref WS_Base.BaseObject obj, float x2, float y2, float z2, ref float rx, ref float ry, ref float rz, float pModifyDist)
+        public bool GetObjectHitPos(ref WS_Base.BaseObject obj, float x2, float y2, float z2, ref float rx, ref float ry, ref float rz, float pModifyDist)
         {
             rx = ValidateMapCoord(rx);
             ry = ValidateMapCoord(ry);
@@ -362,7 +362,7 @@ namespace Mangos.World.Maps
             return GetObjectHitPos(obj.MapID, obj.positionX, obj.positionY, obj.positionZ + 2f, x2, y2, z2, ref rx, ref ry, ref rz, pModifyDist);
         }
 
-        public static bool GetObjectHitPos(uint MapID, float x1, float y1, float z1, float x2, float y2, float z2, ref float rx, ref float ry, ref float rz, float pModifyDist)
+        public bool GetObjectHitPos(uint MapID, float x1, float y1, float z1, float x2, float y2, float z2, ref float rx, ref float ry, ref float rz, float pModifyDist)
         {
             x1 = ValidateMapCoord(x1);
             y1 = ValidateMapCoord(y1);
@@ -541,7 +541,7 @@ namespace Mangos.World.Maps
             }
         }
 
-        public static void UnloadSpawns(byte TileX, byte TileY, uint TileMap)
+        public void UnloadSpawns(byte TileX, byte TileY, uint TileMap)
         {
             checked
             {
@@ -600,7 +600,7 @@ namespace Mangos.World.Maps
             }
         }
 
-        public static void SendTransferAborted(ref WS_Network.ClientClass client, int Map, TransferAbortReason Reason)
+        public void SendTransferAborted(ref WS_Network.ClientClass client, int Map, TransferAbortReason Reason)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRANSFER_ABORTED [{2}:{3}]", client.IP, client.Port, Map, Reason);
             Packets.PacketClass p = new(Opcodes.SMSG_TRANSFER_ABORTED);

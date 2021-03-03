@@ -263,7 +263,7 @@ namespace Mangos.Realm
         // M1 = sha2.ComputeHash(temp)
         // End Sub
 
-        private static byte[] Combine(byte[] Bytes1, byte[] Bytes2)
+        private byte[] Combine(byte[] Bytes1, byte[] Bytes2)
         {
             if (Bytes1.Length != Bytes2.Length)
             {
@@ -288,7 +288,7 @@ namespace Mangos.Realm
             return CombineBuffer;
         }
 
-        public static byte[] Concat(byte[] Buffer1, byte[] Buffer2)
+        public byte[] Concat(byte[] Buffer1, byte[] Buffer2)
         {
             byte[] ConcatBuffer = new byte[(Buffer1.Length + Buffer2.Length)];
             Array.Copy(Buffer1, ConcatBuffer, Buffer1.Length);
@@ -296,7 +296,7 @@ namespace Mangos.Realm
             return ConcatBuffer;
         }
 
-        private static ArrayList Split(byte[] ByteBuffer)
+        private ArrayList Split(byte[] ByteBuffer)
         {
             byte[] SplitBuffer1 = new byte[(int)((ByteBuffer.Length / 2d) - 1d + 1)];
             byte[] SplitBuffer2 = new byte[(int)((ByteBuffer.Length / 2d) - 1d + 1)];

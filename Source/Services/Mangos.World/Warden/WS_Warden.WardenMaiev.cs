@@ -353,7 +353,7 @@ namespace Mangos.World.Warden
                 }
             }
 
-            public static bool CheckSignature(byte[] Signature, byte[] Data, int DataLen)
+            public bool CheckSignature(byte[] Signature, byte[] Data, int DataLen)
             {
                 BigInteger power = new(new byte[4]
                 {

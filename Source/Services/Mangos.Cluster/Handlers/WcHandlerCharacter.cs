@@ -185,13 +185,13 @@ namespace Mangos.Cluster.Handlers
                     Client = null;
 
                     // DONE: Update character status in database
-                    _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_online = 0, char_logouttime = '{1}' WHERE char_guid = '{0}';", Guid, Globals.Functions.GetTimestamp(DateAndTime.Now)));
+                    _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_online = 0, char_logouttime = '{1}' WHERE char_guid = '{0}';", Guid, _clusterServiceLocator.Functions.GetTimestamp(DateAndTime.Now)));
 
                     // NOTE: Don't leave group on normal disconnect, only on logout
                     if (IsInGroup)
                     {
                         // DONE: Tell the group the member is offline
-                        PacketClass response = Globals.Functions.BuildPartyMemberStatsOffline(Guid);
+                        PacketClass response = _clusterServiceLocator.Functions.BuildPartyMemberStatsOffline(Guid);
                         Group.Broadcast(response);
                         response.Dispose();
 
@@ -299,11 +299,11 @@ namespace Mangos.Cluster.Handlers
 
                 // DONE: Server Message Of The Day
                 _clusterServiceLocator.Functions.SendMessageMotd(Client, "Welcome to World of Warcraft.");
-                _clusterServiceLocator.Functions.SendMessageMotd(Client, string.Format("This server is using {0} v.{1}", Globals.Functions.SetColor("[MangosSharp, written in C# .NET 5.0]", 4, 147, 11), Assembly.GetExecutingAssembly().GetName().Version));
+                _clusterServiceLocator.Functions.SendMessageMotd(Client, string.Format("This server is using {0} v.{1}", _clusterServiceLocator.Functions.SetColor("[MangosSharp, written in C# .NET 5.0]", 4, 147, 11), Assembly.GetExecutingAssembly().GetName().Version));
 
                 // DONE: Guild Message Of The Day
                 CharacterObject argobjCharacter = this;
-                WcGuild.SendGuildMotd(argobjCharacter);
+                _clusterServiceLocator.WcGuild.SendGuildMotd(argobjCharacter);
 
                 // DONE: Social lists
                 CharacterObject argcharacter3 = this;
@@ -416,7 +416,7 @@ namespace Mangos.Cluster.Handlers
             if (guid == 0m)
             {
                 DataTable q = new();
-                _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", Globals.Functions.EscapeString(name)), ref q);
+                _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_guid FROM characters WHERE char_name = \"{0}\";", _clusterServiceLocator.Functions.EscapeString(name)), ref q);
                 return q.Rows.Count > 0 ? q.Rows[0].As<ulong>("char_guid") : 0UL;
             }
 

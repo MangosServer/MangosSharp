@@ -233,7 +233,7 @@ namespace Mangos.World.AI
                             ref WS_Creatures.CreatureObject reference = ref aiCreature;
                             WS_Base.BaseObject obj = reference;
                             reference = (WS_Creatures.CreatureObject)obj;
-                            bool flag = Maps.WS_Maps.IsInLineOfSight(ref obj, selectedX, selectedY, selectedZ + 2f);
+                            bool flag = WorldServiceLocator._WS_Maps.IsInLineOfSight(ref obj, selectedX, selectedY, selectedZ + 2f);
                             if (flag)
                             {
                                 break;

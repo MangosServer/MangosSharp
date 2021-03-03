@@ -109,10 +109,10 @@ namespace Mangos.World.Objects
 
             public void AddToWorld()
             {
-                WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                 if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
                 {
-                    Handlers.WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+                    WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
                 }
                 try
                 {
@@ -180,7 +180,7 @@ namespace Mangos.World.Objects
 
             public void RemoveFromWorld()
             {
-                WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+                WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
                 WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].DynamicObjectsHere.Remove(GUID);
                 ulong[] array = SeenBy.ToArray();
                 foreach (ulong plGUID in array)
@@ -237,7 +237,7 @@ namespace Mangos.World.Objects
                         }
                         continue;
                     }
-                    List<WS_Base.BaseUnit> Targets = WS_Spells.GetEnemyAtPoint(ref Caster, positionX, positionY, positionZ, Effect.GetRadius);
+                    List<WS_Base.BaseUnit> Targets = WorldServiceLocator._WS_Spells.GetEnemyAtPoint(ref Caster, positionX, positionY, positionZ, Effect.GetRadius);
                     foreach (WS_Base.BaseUnit item in Targets)
                     {
                         WS_Base.BaseUnit Target = item;

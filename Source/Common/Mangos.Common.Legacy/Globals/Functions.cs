@@ -98,7 +98,7 @@ namespace Mangos.Common.Legacy.Globals
             return (uint)(guid & mangosGlobalConstants.GUID_MASK_LOW);
         }
 
-        public static int GetShapeshiftModel(ShapeshiftForm form, Races race, int model)
+        public int GetShapeshiftModel(ShapeshiftForm form, Races race, int model)
         {
             switch (form)
             {
@@ -208,22 +208,6 @@ namespace Mangos.Common.Legacy.Globals
                         return 12824;
                     }
 
-                case ShapeshiftForm.FORM_NORMAL:
-                    break;
-                case ShapeshiftForm.FORM_AMBIENT:
-                    break;
-                case ShapeshiftForm.FORM_CREATURECAT:
-                    break;
-                case ShapeshiftForm.FORM_BATTLESTANCE:
-                    break;
-                case ShapeshiftForm.FORM_DEFENSIVESTANCE:
-                    break;
-                case ShapeshiftForm.FORM_BERSERKERSTANCE:
-                    break;
-                case ShapeshiftForm.FORM_SHADOW:
-                    break;
-                case ShapeshiftForm.FORM_STEALTH:
-                    break;
                 default:
                     {
                         return model;
@@ -236,7 +220,7 @@ namespace Mangos.Common.Legacy.Globals
             return default;
         }
 
-        public static ManaTypes GetShapeshiftManaType(ShapeshiftForm form, ManaTypes manaType)
+        public ManaTypes GetShapeshiftManaType(ShapeshiftForm form, ManaTypes manaType)
         {
             switch (form)
             {
@@ -312,9 +296,6 @@ namespace Mangos.Common.Legacy.Globals
                         logger.Warning("Default switch fallback has occured with an error, data output: ThisServerDb {0}, CoreDbVersion {1}, CoreDbContent {2}, CoreDbVersion {3}", thisServerDb, coreDbVersion, coreDbContent, coreDbVersion);
                         break;
                     }
-
-                default:
-                    break;
             }
 
             if (mySqlQuery.Rows.Count > 0)

@@ -54,7 +54,7 @@ namespace Mangos.Loggers.Console
             }
         }
 
-        private static void Write(ConsoleColor color, string format, object[] args)
+        private void Write(ConsoleColor color, string format, object[] args)
         {
             lock (_lockObject)
             {
@@ -63,6 +63,9 @@ namespace Mangos.Loggers.Console
             }
         }
 
-        private static string Format(string format, object[] args) => string.Format("[{0}] {1}", DateTime.Now, string.Format(format, args));
+        private string Format(string format, object[] args)
+        {
+            return string.Format("[{0}] {1}", DateTime.Now, string.Format(format, args));
+        }
     }
 }

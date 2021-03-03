@@ -55,7 +55,7 @@ namespace Mangos.Storage.MySql
             }
         }
 
-        private static Dictionary<string, string> GetEmbeddedQueries(object executor)
+        private Dictionary<string, string> GetEmbeddedQueries(object executor)
         {
             Type type = executor.GetType();
             Assembly assembly = type.Assembly;
@@ -69,7 +69,7 @@ namespace Mangos.Storage.MySql
             return resources;
         }
 
-        private static string GetEmbeddedSqlResourcebody(Assembly assembly, string resource)
+        private string GetEmbeddedSqlResourcebody(Assembly assembly, string resource)
         {
             using Stream stream = assembly.GetManifestResourceStream(resource);
             using StreamReader reader = new(stream);
@@ -81,7 +81,7 @@ namespace Mangos.Storage.MySql
             return queries.ContainsKey(query) ? queries[query] : throw new Exception($"Unknown sql query '{query}'");
         }
 
-        private static string GetEmbeddedSqlResourceName(string queriesCatalog, string resource)
+        private string GetEmbeddedSqlResourceName(string queriesCatalog, string resource)
         {
             return Regex.Split(resource, $"{queriesCatalog}.(.*).sql")[1];
         }

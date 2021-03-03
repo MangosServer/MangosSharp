@@ -215,7 +215,7 @@ namespace Mangos.World.Server
                                 value.DuelOutOfBounds -= 2;
                                 if (value.DuelOutOfBounds == 0)
                                 {
-                                    Spells.WS_Spells.DuelComplete(ref value.DuelPartner, ref value.client.Character);
+                                    WorldServiceLocator._WS_Spells.DuelComplete(ref value.DuelPartner, ref value.client.Character);
                                 }
                             }
                             value.CheckCombat();

@@ -129,7 +129,7 @@ namespace Mangos.World.Maps
             {
                 if (!_disposedValue)
                 {
-                    UnloadSpawns(CellX, CellY, CellMap);
+                    WorldServiceLocator._WS_Maps.UnloadSpawns(CellX, CellY, CellMap);
                 }
                 _disposedValue = true;
             }

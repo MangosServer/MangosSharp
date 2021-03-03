@@ -42,14 +42,14 @@ namespace Mangos.Cluster.Handlers
             packet.GetInt16();
             SuggestionType suggestion = (SuggestionType)packet.GetInt32();
             int cLength = packet.GetInt32();
-            string cString = Functions.EscapeString(packet.GetString());
+            string cString = _clusterServiceLocator.Functions.EscapeString(packet.GetString());
             if (packet.Data.Length - 1 < 14 + cString.Length + 5)
             {
                 return;
             }
 
             int tLength = packet.GetInt32();
-            string tString = Functions.EscapeString(packet.GetString());
+            string tString = _clusterServiceLocator.Functions.EscapeString(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BUG [2]", client.IP, client.Port, suggestion);
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "Bug report [{0}:{1} Lengths:{2}, {3}] " + cString + Constants.vbCrLf + tString, cLength.ToString(), tLength.ToString());
         }
@@ -103,7 +103,7 @@ namespace Mangos.Cluster.Handlers
             float ticketX = packet.GetFloat();
             float ticketY = packet.GetFloat();
             float ticketZ = packet.GetFloat();
-            string ticketText = Functions.EscapeString(packet.GetString());
+            string ticketText = _clusterServiceLocator.Functions.EscapeString(packet.GetString());
             DataTable mySqlResult = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters_tickets WHERE char_guid = {0};", client.Character.Guid), ref mySqlResult);
             PacketClass smsgGmticketCreate = new(Opcodes.SMSG_GMTICKET_CREATE);
@@ -162,7 +162,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             packet.GetInt16();
-            string ticketText = Functions.EscapeString(packet.GetString());
+            string ticketText = _clusterServiceLocator.Functions.EscapeString(packet.GetString());
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GMTICKET_UPDATETEXT [{2}]", client.IP, client.Port, ticketText);
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters_tickets SET char_guid={0}, ticket_text=\"{1}\";", client.Character.Guid, ticketText));
         }

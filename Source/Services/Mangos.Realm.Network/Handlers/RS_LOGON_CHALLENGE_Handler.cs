@@ -151,7 +151,7 @@ namespace Mangos.Realm.Network.Handlers
                 : AccountState.LOGIN_UNKNOWN_ACCOUNT;
         }
 
-        private static byte[] GetPasswordHashFromString(string sha_pass_hash)
+        private byte[] GetPasswordHashFromString(string sha_pass_hash)
         {
             byte[] hash = new byte[20];
             for (int i = 0; i < 40; i += 2)

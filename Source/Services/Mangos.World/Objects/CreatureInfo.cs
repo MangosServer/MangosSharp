@@ -274,9 +274,9 @@ namespace Mangos.World.Objects
             Resistances[6] = MySQLQuery.Rows[0].As<int>("ResistanceArcane");
             EquipmentID = MySQLQuery.Rows[0].As<int>("EquipmentTemplateId");
             MechanicImmune = MySQLQuery.Rows[0].As<uint>("SchoolImmuneMask");
-            if (File.Exists("scripts\\gossip\\" + Globals.Functions.FixName(Name) + ".vb"))
+            if (File.Exists("scripts\\gossip\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb"))
             {
-                ScriptedObject tmpScript = new("scripts\\gossip\\" + Globals.Functions.FixName(Name) + ".vb", "", InMemory: true);
+                ScriptedObject tmpScript = new("scripts\\gossip\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb", "", InMemory: true);
                 TalkScript = (TBaseTalk)tmpScript.InvokeConstructor("TalkScript");
                 tmpScript.Dispose();
             }
