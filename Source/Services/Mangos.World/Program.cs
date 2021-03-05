@@ -58,7 +58,7 @@ namespace Mangos.World
 
         public static IContainer CreateContainer()
         {
-            ContainerBuilder builder = new ContainerBuilder();
+            ContainerBuilder builder = new();
             RegisterLoggers(builder);
             RegisterConfiguration(builder);
             RegisterServices(builder);

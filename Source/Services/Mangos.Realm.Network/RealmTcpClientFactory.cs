@@ -37,7 +37,7 @@ namespace Mangos.Realm.Network
 
         public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
         {
-            Client clientModel = new Client((IPEndPoint)clientSocket.RemoteEndPoint);
+            Client clientModel = new((IPEndPoint)clientSocket.RemoteEndPoint);
 
             return new RealmTcpClient(logger, router, clientModel);
         }

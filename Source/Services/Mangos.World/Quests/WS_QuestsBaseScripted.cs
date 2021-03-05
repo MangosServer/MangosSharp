@@ -47,7 +47,7 @@ namespace Mangos.World.Quests
         {
         }
 
-        public virtual void OnQuestCastSpell(ref WS_PlayerData.CharacterObject objCharacter, ref WS_GameObjects.GameObjectObject GameObject, int SpellID)
+        public virtual void OnQuestCastSpell(ref WS_PlayerData.CharacterObject objCharacter, ref WS_GameObjects.GameObject GameObject, int SpellID)
         {
         }
 

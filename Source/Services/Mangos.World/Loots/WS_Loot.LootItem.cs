@@ -42,7 +42,7 @@ namespace Mangos.World.Loots
                         try
                         {
                             WorldServiceLocator._WorldServer.ITEMDatabase.Remove(ItemID);
-                            WS_Items.ItemInfo tmpItem = new WS_Items.ItemInfo(ItemID);
+                            WS_Items.ItemInfo tmpItem = new(ItemID);
                             WorldServiceLocator._WorldServer.ITEMDatabase.Add(ItemID, tmpItem);
                         }
                         catch (Exception ex)

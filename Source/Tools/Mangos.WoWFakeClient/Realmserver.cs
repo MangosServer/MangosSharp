@@ -31,8 +31,8 @@ namespace Mangos.WoWFakeClient
 {
     internal static class Realmserver
     {
-        private static readonly Random Random = new Random();
-        private static readonly Socket Connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+        private static readonly Random Random = new();
+        private static readonly Socket Connection = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
         private static IPAddress ConnIP;
         private static int ConnPort;
         public static string Account = "Administrator";
@@ -182,7 +182,7 @@ namespace Mangos.WoWFakeClient
 
         public static void OnConnect()
         {
-            Packets.PacketClass LogonChallenge = new Packets.PacketClass(CMD_AUTH_LOGON_CHALLENGE);
+            Packets.PacketClass LogonChallenge = new(CMD_AUTH_LOGON_CHALLENGE);
             LogonChallenge.AddInt8(0x8);
             LogonChallenge.AddUInt16(0); // Packet length
             LogonChallenge.AddString("WoW");
@@ -205,7 +205,7 @@ namespace Mangos.WoWFakeClient
 
         public static void OnData(byte[] Buffer)
         {
-            Packets.PacketClass Packet = new Packets.PacketClass(ref Buffer, true);
+            Packets.PacketClass Packet = new(ref Buffer, true);
             switch (Packet.OpCode)
             {
                 case CMD_AUTH_LOGON_CHALLENGE:
@@ -226,7 +226,7 @@ namespace Mangos.WoWFakeClient
                                     CrcSalt = Packet.GetByteArray(16);
                                     CalculateProof();
                                     Thread.Sleep(100);
-                                    Packets.PacketClass LogonProof = new Packets.PacketClass(CMD_AUTH_LOGON_PROOF);
+                                    Packets.PacketClass LogonProof = new(CMD_AUTH_LOGON_PROOF);
                                     LogonProof.AddByteArray(PublicA);
                                     LogonProof.AddByteArray(M1);
                                     LogonProof.AddByteArray(CrcHash);
@@ -270,7 +270,7 @@ namespace Mangos.WoWFakeClient
                             case 0: // No error
                                 {
                                     Console.WriteLine("[{0}][Realm] Proof Success.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
-                                    Packets.PacketClass RealmList = new Packets.PacketClass(CMD_AUTH_REALMLIST);
+                                    Packets.PacketClass RealmList = new(CMD_AUTH_REALMLIST);
                                     RealmList.AddInt32(0);
                                     SendR(RealmList);
                                     RealmList.Dispose();
@@ -378,33 +378,33 @@ namespace Mangos.WoWFakeClient
             Array.Reverse(A);
             string tempStr = Account.ToUpper() + ":" + Password.ToUpper();
             byte[] temp = Encoding.ASCII.GetBytes(tempStr.ToCharArray());
-            SHA1Managed algorithm1 = new SHA1Managed();
+            SHA1Managed algorithm1 = new();
             temp = algorithm1.ComputeHash(temp);
             byte[] X = algorithm1.ComputeHash(Concat(Salt, temp));
             Array.Reverse(X);
             Array.Reverse(N);
             byte[] K = new byte[] { 3 };
             byte[] S = new byte[32];
-            BigInteger BNg = new BigInteger(G, isUnsigned: true, isBigEndian: true);
-            BigInteger BNa = new BigInteger(A, isUnsigned: true, isBigEndian: true);
-            BigInteger BNn = new BigInteger(N, isUnsigned: true, isBigEndian: true);
-            BigInteger BNx = new BigInteger(X, isUnsigned: true, isBigEndian: true);
-            BigInteger BNk = new BigInteger(K, isUnsigned: true, isBigEndian: true);
+            BigInteger BNg = new(G, isUnsigned: true, isBigEndian: true);
+            BigInteger BNa = new(A, isUnsigned: true, isBigEndian: true);
+            BigInteger BNn = new(N, isUnsigned: true, isBigEndian: true);
+            BigInteger BNx = new(X, isUnsigned: true, isBigEndian: true);
+            BigInteger BNk = new(K, isUnsigned: true, isBigEndian: true);
             BigInteger BNpublicA = BigInteger.ModPow(BNg, BNa, BNn);
             PublicA = BNpublicA.ToByteArray(isUnsigned: true, isBigEndian: true);
             Array.Reverse(PublicA);
             byte[] U = algorithm1.ComputeHash(Concat(PublicA, ServerB));
             Array.Reverse(ServerB);
             Array.Reverse(U);
-            BigInteger BNu = new BigInteger(U, isUnsigned: true, isBigEndian: true);
-            BigInteger BNb = new BigInteger(ServerB, isUnsigned: true, isBigEndian: true);
+            BigInteger BNu = new(U, isUnsigned: true, isBigEndian: true);
+            BigInteger BNb = new(ServerB, isUnsigned: true, isBigEndian: true);
 
             // S= (B - kg^x) ^ (a + ux)   (mod N)
-            BigInteger temp1 = new BigInteger();
-            BigInteger temp2 = new BigInteger();
-            BigInteger temp3 = new BigInteger();
-            BigInteger temp4 = new BigInteger();
-            BigInteger temp5 = new BigInteger();
+            BigInteger temp1 = new();
+            BigInteger temp2 = new();
+            BigInteger temp3 = new();
+            BigInteger temp4 = new();
+            BigInteger temp5 = new();
 
             // Temp1 = g ^ x mod n
             temp1 = BigInteger.ModPow(BNg, BNx, BNn);
@@ -425,7 +425,7 @@ namespace Mangos.WoWFakeClient
             BigInteger BNs = BigInteger.ModPow(temp3, temp5, BNn);
             S = BNs.ToByteArray(isUnsigned: true, isBigEndian: true);
             Array.Reverse(S);
-            ArrayList list1 = new ArrayList();
+            ArrayList list1 = new();
             list1 = SplitArray(S);
             list1[0] = algorithm1.ComputeHash((byte[])list1[0]);
             list1[1] = algorithm1.ComputeHash((byte[])list1[1]);
@@ -481,7 +481,7 @@ namespace Mangos.WoWFakeClient
                 num2 += 1;
             }
 
-            ArrayList list1 = new ArrayList
+            ArrayList list1 = new()
             {
                 buffer2,
                 buffer3

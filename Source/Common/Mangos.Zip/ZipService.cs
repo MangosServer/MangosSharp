@@ -25,8 +25,8 @@ namespace Mangos.Zip
     {
         public byte[] Compress(byte[] data, int offset, int length)
         {
-            using MemoryStream outputStream = new MemoryStream();
-            using DeflaterOutputStream compressordStream = new DeflaterOutputStream(outputStream);
+            using MemoryStream outputStream = new();
+            using DeflaterOutputStream compressordStream = new(outputStream);
             compressordStream.Write(data, offset, length);
             compressordStream.Flush();
             return outputStream.ToArray();
@@ -34,9 +34,9 @@ namespace Mangos.Zip
 
         public byte[] DeCompress(byte[] data)
         {
-            using MemoryStream outputStream = new MemoryStream();
-            using MemoryStream compressedStream = new MemoryStream(data);
-            using InflaterInputStream inputStream = new InflaterInputStream(compressedStream);
+            using MemoryStream outputStream = new();
+            using MemoryStream compressedStream = new(data);
+            using InflaterInputStream inputStream = new(compressedStream);
             inputStream.CopyTo(outputStream);
             outputStream.Position = 0;
             return outputStream.ToArray();

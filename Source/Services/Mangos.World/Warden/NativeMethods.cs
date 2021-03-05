@@ -24,7 +24,7 @@ namespace Mangos.World.Warden
     public sealed class NativeMethods
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Ansi, EntryPoint = "LoadLibraryA", ExactSpelling = true, SetLastError = true)]
-        private static extern int LoadLibrary([MarshalAs(UnmanagedType.LPStr)] ref string lpLibFileName); //Is this the correct type?
+        private static extern int LoadLibrary([MarshalAs(UnmanagedType.LPWStr)] ref string lpLibFileName); //Is this the correct type?
 
         public static int LoadLibrary(string lpLibFileName, string dummy)
         {

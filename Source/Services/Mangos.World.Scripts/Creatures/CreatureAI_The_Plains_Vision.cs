@@ -29,7 +29,7 @@ namespace Mangos.World.Scripts.Creatures
         protected WS_Creatures.CreatureObject aiCreature;
         private int CurrentWaypoint;
         private int NextWaypoint;
-        private readonly List<WS_DBCDatabase.CreatureMovePoint> Waypoints = new List<WS_DBCDatabase.CreatureMovePoint>();
+        private readonly List<WS_DBCDatabase.CreatureMovePoint> Waypoints = new();
 
         public CreatureAI_The_Plains_Vision(ref WS_Creatures.CreatureObject Creature)
         {

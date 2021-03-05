@@ -79,7 +79,7 @@ namespace Mangos.World.Handlers
                     {
                         foreach (ChatCommandAttribute info in infos)
                         {
-                            ChatCommand chatCommand = new ChatCommand
+                            ChatCommand chatCommand = new()
                             {
                                 CommandHelp = info.GetcmdHelp,
                                 CommandAccess = info.GetcmdAccess,
@@ -208,7 +208,7 @@ namespace Mangos.World.Handlers
                 }
                 else
                 {
-                    WS_Spells.SpellTargets Targets = new WS_Spells.SpellTargets();
+                    WS_Spells.SpellTargets Targets = new();
                     WS_Base.BaseUnit objCharacter2 = objCharacter;
                     Targets.SetTarget_UNIT(ref objCharacter2);
                     objCharacter = (WS_PlayerData.CharacterObject)objCharacter2;
@@ -216,7 +216,7 @@ namespace Mangos.World.Handlers
                     Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
                     WS_Base.BaseObject Caster = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
                     cHARACTERs[targetGUID] = (WS_PlayerData.CharacterObject)Caster;
-                    WS_Spells.CastSpellParameters castParams = new WS_Spells.CastSpellParameters(ref Targets, ref Caster, SpellID);
+                    WS_Spells.CastSpellParameters castParams = new(ref Targets, ref Caster, SpellID);
                     ThreadPool.QueueUserWorkItem(callBack: castParams.Cast);
                 }
             }
@@ -234,13 +234,13 @@ namespace Mangos.World.Handlers
             {
                 if (objCharacter.MindControl is WS_PlayerData.CharacterObject @object)
                 {
-                    Packets.PacketClass packet1 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
+                    Packets.PacketClass packet1 = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
                     packet1.AddPackGUID(objCharacter.MindControl.GUID);
                     packet1.AddInt8(1);
                     @object.client.Send(ref packet1);
                     packet1.Dispose();
                 }
-                Packets.PacketClass packet4 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
+                Packets.PacketClass packet4 = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
                 packet4.AddPackGUID(objCharacter.MindControl.GUID);
                 packet4.AddInt8(0);
                 objCharacter.client.Send(ref packet4);
@@ -255,7 +255,7 @@ namespace Mangos.World.Handlers
             }
             if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
-                Packets.PacketClass packet2 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
+                Packets.PacketClass packet2 = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
                 packet2.AddPackGUID(objCharacter.TargetGUID);
                 packet2.AddInt8(0);
                 WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].client.Send(ref packet2);
@@ -271,7 +271,7 @@ namespace Mangos.World.Handlers
                 }
                 objCharacter.MindControl = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
             }
-            Packets.PacketClass packet3 = new Packets.PacketClass(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
+            Packets.PacketClass packet3 = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
             packet3.AddPackGUID(objCharacter.TargetGUID);
             packet3.AddInt8(1);
             objCharacter.client.Send(ref packet3);
@@ -297,7 +297,7 @@ namespace Mangos.World.Handlers
             int SpellID = Conversions.ToInteger(tmp[0]);
             if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
             {
-                WS_Spells.SpellTargets Targets2 = new WS_Spells.SpellTargets();
+                WS_Spells.SpellTargets Targets2 = new();
                 ulong targetGUID;
                 Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                 WS_Base.BaseUnit objCharacter2 = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[targetGUID = objCharacter.TargetGUID];
@@ -310,7 +310,7 @@ namespace Mangos.World.Handlers
             }
             else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
-                WS_Spells.SpellTargets Targets = new WS_Spells.SpellTargets();
+                WS_Spells.SpellTargets Targets = new();
                 Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
                 ulong targetGUID;
                 WS_Base.BaseUnit objCharacter2 = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
@@ -424,7 +424,7 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_NOTIFICATION);
+            Packets.PacketClass packet = new(Opcodes.SMSG_NOTIFICATION);
             packet.AddString(Text);
             packet.UpdateLength();
             WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
@@ -480,7 +480,7 @@ namespace Mangos.World.Handlers
             }
             int Type = Conversions.ToInteger(tmp[0]);
             string Text = tmp[1];
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_SERVER_MESSAGE);
+            Packets.PacketClass packet = new(Opcodes.SMSG_SERVER_MESSAGE);
             packet.AddInt32(Type);
             packet.AddString(Text);
             packet.UpdateLength();
@@ -718,7 +718,7 @@ namespace Mangos.World.Handlers
                 case WS_PlayerData.CharacterObject _:
                     {
                         //uint timeNow = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
-                        List<int> cooldownSpells = new List<int>();
+                        List<int> cooldownSpells = new();
                         foreach (KeyValuePair<int, WS_Spells.CharacterSpell> Spell in ((WS_PlayerData.CharacterObject)targetUnit).Spells)
                         {
                             if (Spell.Value.Cooldown != 0)
@@ -731,7 +731,7 @@ namespace Mangos.World.Handlers
                         }
                         foreach (int SpellID in cooldownSpells)
                         {
-                            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_CLEAR_COOLDOWN);
+                            Packets.PacketClass packet = new(Opcodes.SMSG_CLEAR_COOLDOWN);
                             packet.AddInt32(SpellID);
                             packet.AddUInt64(targetUnit.GUID);
                             ((WS_PlayerData.CharacterObject)targetUnit).client.Send(ref packet);
@@ -766,7 +766,7 @@ namespace Mangos.World.Handlers
                 int id = Conversions.ToInteger(tmp[0]);
                 if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
                 {
-                    ItemObject newItem2 = new ItemObject(id, objCharacter.TargetGUID)
+                    ItemObject newItem2 = new(id, objCharacter.TargetGUID)
                     {
                         StackCount = Count
                     };
@@ -781,7 +781,7 @@ namespace Mangos.World.Handlers
                 }
                 else
                 {
-                    ItemObject newItem = new ItemObject(id, objCharacter.GUID)
+                    ItemObject newItem = new(id, objCharacter.GUID)
                     {
                         StackCount = Count
                     };
@@ -813,7 +813,7 @@ namespace Mangos.World.Handlers
                 {
                     foreach (int item in WorldServiceLocator._WS_DBCDatabase.ItemSet[id].ItemID)
                     {
-                        ItemObject newItem = new ItemObject(item, objCharacter.TargetGUID)
+                        ItemObject newItem = new(item, objCharacter.TargetGUID)
                         {
                             StackCount = 1
                         };
@@ -831,7 +831,7 @@ namespace Mangos.World.Handlers
                 {
                     foreach (int item2 in WorldServiceLocator._WS_DBCDatabase.ItemSet[id].ItemID)
                     {
-                        ItemObject newItem2 = new ItemObject(item2, objCharacter.GUID)
+                        ItemObject newItem2 = new(item2, objCharacter.GUID)
                         {
                             StackCount = 1
                         };
@@ -1283,7 +1283,7 @@ namespace Mangos.World.Handlers
                         objCharacter.CommandResponse("Unknown race. Use DW, GN, HU, NE, OR, TA, TR, UN for race.");
                         return true;
                 }
-                DataTable Info = new DataTable();
+                DataTable Info = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM playercreateinfo WHERE race = {(int)Race};", ref Info);
                 WS_PlayerData.CharacterObject Character = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID];
                 Character.Teleport(Conversions.ToSingle(Info.Rows[0]["position_x"]), Conversions.ToSingle(Info.Rows[0]["position_y"]), Conversions.ToSingle(Info.Rows[0]["position_z"]), Conversions.ToSingle(Info.Rows[0]["orientation"]), Conversions.ToInteger(Info.Rows[0]["map"]));
@@ -1421,7 +1421,7 @@ namespace Mangos.World.Handlers
             }
             if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(location), "LIST", TextCompare: false) == 0)
             {
-                DataTable listSqlQuery = new DataTable();
+                DataTable listSqlQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM game_tele order by name", ref listSqlQuery);
                 IEnumerator enumerator = default;
                 string cmdList = "Listing of available locations:" + Environment.NewLine;
@@ -1446,7 +1446,7 @@ namespace Mangos.World.Handlers
             }
             location = location.Replace("'", "").Replace(" ", "");
             location = location.Replace(";", "");
-            DataTable mySqlQuery = new DataTable();
+            DataTable mySqlQuery = new();
             if (location.Contains("*"))
             {
                 location = location.Replace("*", "");
@@ -1582,11 +1582,11 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            DataTable account = new DataTable();
+            DataTable account = new();
             WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, last_ip FROM account WHERE username = \"" + Name + "\";", ref account);
             ulong accountID = Conversions.ToULong(account.Rows[0]["id"]);
             int IP = Conversions.ToInteger(account.Rows[0]["last_ip"]);
-            DataTable result = new DataTable();
+            DataTable result = new();
             WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT active FROM account_banned WHERE id = " + Conversions.ToString(accountID) + ";", ref result);
             if (result.Rows.Count > 0)
             {
@@ -1616,11 +1616,11 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            DataTable account = new DataTable();
+            DataTable account = new();
             WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, last_ip FROM account WHERE username = \"" + Name + "\";", ref account);
             ulong accountID = Conversions.ToULong(account.Rows[0]["id"]);
             int IP = Conversions.ToInteger(account.Rows[0]["last_ip"]);
-            DataTable result = new DataTable();
+            DataTable result = new();
             WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT active FROM account_banned WHERE id = '" + Conversions.ToString(accountID) + "';", ref result);
             if (result.Rows.Count > 0)
             {
@@ -1764,7 +1764,7 @@ namespace Mangos.World.Handlers
                     return true;
                 }
                 WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].TurnTo(objCharacter.positionX, objCharacter.positionY);
-                DataTable _ = new DataTable();
+                DataTable _ = new();
                 ulong _2 = checked(objCharacter.TargetGUID - WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT);
                 objCharacter.CommandResponse("Object rotation will be visible when the object is reloaded!");
             }
@@ -1774,7 +1774,7 @@ namespace Mangos.World.Handlers
         [ChatCommand("npcadd", "npcadd #id - Spawn creature at your position.", AccessLevel.Developer)]
         public bool cmdAddCreature(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            WS_Creatures.CreatureObject tmpCr = new WS_Creatures.CreatureObject(Conversions.ToInteger(Message), objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation, checked((int)objCharacter.MapID));
+            WS_Creatures.CreatureObject tmpCr = new(Conversions.ToInteger(Message), objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation, checked((int)objCharacter.MapID));
             tmpCr.AddToWorld();
             objCharacter.CommandResponse("Creature [" + WorldServiceLocator._Functions.SetColor(tmpCr.Name, 4, 147, 11) + "] spawned.");
             return true;
@@ -1860,9 +1860,9 @@ namespace Mangos.World.Handlers
         {
             WS_GameObjects wS_GameObjects = WorldServiceLocator._WS_GameObjects;
             WS_Base.BaseUnit unit = objCharacter;
-            WS_GameObjects.GameObjectObject closestGameobject = wS_GameObjects.GetClosestGameobject(ref unit);
+            WS_GameObjects.GameObject closestGameobject = wS_GameObjects.GetClosestGameobject(ref unit);
             objCharacter = (WS_PlayerData.CharacterObject)unit;
-            WS_GameObjects.GameObjectObject targetGO = closestGameobject;
+            WS_GameObjects.GameObject targetGO = closestGameobject;
             if (targetGO == null)
             {
                 objCharacter.CommandResponse("Could not find any near objects.");
@@ -1899,7 +1899,7 @@ namespace Mangos.World.Handlers
         [ChatCommand("gobjectadd", "gobjectadd #id - Spawn game object at your position.", AccessLevel.Developer)]
         public bool cmdAddGameObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            WS_GameObjects.GameObjectObject tmpGO = new WS_GameObjects.GameObjectObject(Conversions.ToInteger(Message), objCharacter.MapID, objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation);
+            WS_GameObjects.GameObject tmpGO = new(Conversions.ToInteger(Message), objCharacter.MapID, objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation);
             tmpGO.Rotations[2] = (float)Math.Sin(tmpGO.orientation / 2f);
             tmpGO.Rotations[3] = (float)Math.Cos(tmpGO.orientation / 2f);
             tmpGO.AddToWorld();
@@ -1914,7 +1914,7 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            DataTable result = new DataTable();
+            DataTable result = new();
             string[] acct = Strings.Split(Strings.Trim(Message));
             if (acct.Length != 3)
             {
@@ -1946,7 +1946,7 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            DataTable result = new DataTable();
+            DataTable result = new();
             string[] acct = Strings.Split(Strings.Trim(Message));
             if (acct.Length != 2)
             {
@@ -1985,7 +1985,7 @@ namespace Mangos.World.Handlers
             {
                 return false;
             }
-            DataTable result = new DataTable();
+            DataTable result = new();
             string[] acct = Strings.Split(Strings.Trim(Message));
             if (acct.Length != 2)
             {
@@ -2030,7 +2030,7 @@ namespace Mangos.World.Handlers
 
         public ulong GetGUID(string Name)
         {
-            DataTable MySQLQuery = new DataTable();
+            DataTable MySQLQuery = new();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT char_guid FROM characters WHERE char_name = \"{Name}\";", ref MySQLQuery);
             return MySQLQuery.Rows.Count > 0 ? MySQLQuery.Rows[0].As<ulong>("char_guid") : 0uL;
         }
@@ -2048,10 +2048,10 @@ namespace Mangos.World.Handlers
             bool noErrors = true;
             try
             {
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(1);
                 packet.AddInt8(0);
-                Packets.UpdateClass UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                Packets.UpdateClass UpdateData = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                 UpdateData.SetUpdateFlag(Index, Value);
                 if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
                 {

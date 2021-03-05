@@ -103,7 +103,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public class TransportObject : WS_GameObjects.GameObjectObject
+        public class TransportObject : WS_GameObjects.GameObject
         {
             public string TransportName;
 
@@ -180,7 +180,7 @@ namespace Mangos.World.Objects
                     }
                     int MapsUsed = 0;
                     int MapChange = 0;
-                    List<TransportMove> PathPoints = new List<TransportMove>();
+                    List<TransportMove> PathPoints = new();
                     int t = 0;
                     if (WorldServiceLocator._WS_DBCDatabase.TaxiPathNodes.ContainsKey(PathID))
                     {
@@ -434,10 +434,10 @@ namespace Mangos.World.Objects
 
             public void CreateEveryoneOnTransport(ref WS_PlayerData.CharacterObject Character)
             {
-                Packets.PacketClass mePacket = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                Packets.PacketClass mePacket = new(Opcodes.SMSG_UPDATE_OBJECT);
                 mePacket.AddInt32(1);
                 mePacket.AddInt8(0);
-                Packets.UpdateClass meTmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                Packets.UpdateClass meTmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                 Character.FillAllUpdateFlags(ref meTmpUpdate);
                 meTmpUpdate.AddToPacket(ref mePacket, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref Character);
                 meTmpUpdate.Dispose();
@@ -461,12 +461,12 @@ namespace Mangos.World.Objects
                                 tmpUnit = (WS_Base.BaseUnit)objCharacter;
                                 if (flag)
                                 {
-                                    Packets.PacketClass myPacket2 = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                                    Packets.PacketClass myPacket2 = new(Opcodes.SMSG_UPDATE_OBJECT);
                                     try
                                     {
                                         myPacket2.AddInt32(1);
                                         myPacket2.AddInt8(0);
-                                        Packets.UpdateClass myTmpUpdate2 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                                        Packets.UpdateClass myTmpUpdate2 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                                         ((WS_PlayerData.CharacterObject)tmpUnit).FillAllUpdateFlags(ref myTmpUpdate2);
                                         Packets.UpdateClass updateClass = myTmpUpdate2;
                                         WS_PlayerData.CharacterObject updateObject = (WS_PlayerData.CharacterObject)tmpUnit;
@@ -507,12 +507,12 @@ namespace Mangos.World.Objects
                                 tmpUnit = (WS_Base.BaseUnit)objCharacter;
                                 if (flag)
                                 {
-                                    Packets.PacketClass myPacket = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                                    Packets.PacketClass myPacket = new(Opcodes.SMSG_UPDATE_OBJECT);
                                     try
                                     {
                                         myPacket.AddInt32(1);
                                         myPacket.AddInt8(0);
-                                        Packets.UpdateClass myTmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
+                                        Packets.UpdateClass myTmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
                                         ((WS_Creatures.CreatureObject)tmpUnit).FillAllUpdateFlags(ref myTmpUpdate);
                                         Packets.UpdateClass updateClass2 = myTmpUpdate;
                                         WS_Creatures.CreatureObject updateObject2 = (WS_Creatures.CreatureObject)tmpUnit;
@@ -605,7 +605,7 @@ namespace Mangos.World.Objects
                                     {
                                         continue;
                                     }
-                                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                                    Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
 
                                     using (packet)
                                     {
@@ -613,7 +613,7 @@ namespace Mangos.World.Objects
                                         {
                                             packet.AddInt32(1);
                                             packet.AddInt8(0);
-                                            Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                                            Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                                             try
                                             {
                                                 Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
@@ -622,7 +622,7 @@ namespace Mangos.World.Objects
                                                 FillAllUpdateFlags(ref tmpUpdate, ref Character);
                                                 cHARACTERs[key] = Character;
                                                 Packets.UpdateClass updateClass = tmpUpdate;
-                                                WS_GameObjects.GameObjectObject updateObject = this;
+                                                WS_GameObjects.GameObject updateObject = this;
                                                 updateClass.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject);
                                             }
                                             finally
@@ -780,7 +780,7 @@ namespace Mangos.World.Objects
         {
             try
             {
-                DataTable TransportQuery = new DataTable();
+                DataTable TransportQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM transports", ref TransportQuery);
                 IEnumerator enumerator = default;
                 try
@@ -792,7 +792,7 @@ namespace Mangos.World.Objects
                         int TransportEntry = row.As<int>("entry");
                         string TransportName = row.As<string>("name");
                         int TransportPeriod = row.As<int>("period");
-                        TransportObject newTransport = new TransportObject(TransportEntry, TransportName, TransportPeriod);
+                        TransportObject newTransport = new(TransportEntry, TransportName, TransportPeriod);
                     }
                 }
                 finally

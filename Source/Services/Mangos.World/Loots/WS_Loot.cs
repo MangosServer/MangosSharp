@@ -77,7 +77,7 @@ namespace Mangos.World.Loots
                     LootTable[client.Character.lootGUID].GetLoot(ref client, slot);
                     return;
                 }
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
+                Packets.PacketClass response = new(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
                 response.AddInt8(49);
                 response.AddUInt64(0uL);
                 response.AddUInt64(0uL);
@@ -104,7 +104,7 @@ namespace Mangos.World.Loots
                 {
                     List<WS_Base.BaseUnit> members = WorldServiceLocator._WS_Spells.GetPartyMembersAroundMe(ref client.Character, 100f);
                     LootTable[client.Character.lootGUID].Money = 0;
-                    Packets.PacketClass sharePcket = new Packets.PacketClass(Opcodes.SMSG_LOOT_MONEY_NOTIFY);
+                    Packets.PacketClass sharePcket = new(Opcodes.SMSG_LOOT_MONEY_NOTIFY);
                     int copper2 = (LootTable[client.Character.lootGUID].Money / members.Count) + 1;
                     sharePcket.AddInt32(copper2);
                     foreach (WS_PlayerData.CharacterObject character in members)
@@ -126,7 +126,7 @@ namespace Mangos.World.Loots
                     ref uint copper5 = ref client.Character.Copper;
                     copper5 = (uint)(copper5 + copper);
                     LootTable[client.Character.lootGUID].Money = 0;
-                    Packets.PacketClass lootPacket = new Packets.PacketClass(Opcodes.SMSG_LOOT_MONEY_NOTIFY);
+                    Packets.PacketClass lootPacket = new(Opcodes.SMSG_LOOT_MONEY_NOTIFY);
                     lootPacket.AddInt32(copper);
                     client.Send(ref lootPacket);
                     lootPacket.Dispose();
@@ -134,7 +134,7 @@ namespace Mangos.World.Loots
                 client.Character.SetUpdateFlag(1176, client.Character.Copper);
                 client.Character.SendCharacterUpdate(toNear: false);
                 client.Character.SaveCharacter();
-                Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.SMSG_LOOT_CLEAR_MONEY);
+                Packets.PacketClass response2 = new(Opcodes.SMSG_LOOT_CLEAR_MONEY);
                 client.SendMultiplyPackets(ref response2);
                 response2.Dispose();
             }
@@ -195,10 +195,10 @@ namespace Mangos.World.Loots
                                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags = WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags | 0x4000000;
                                     }
                                     WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 0;
-                                    Packets.PacketClass response3 = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                                    Packets.PacketClass response3 = new(Opcodes.SMSG_UPDATE_OBJECT);
                                     response3.AddInt32(1);
                                     response3.AddInt8(0);
-                                    Packets.UpdateClass UpdateData4 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                                    Packets.UpdateClass UpdateData4 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                                     UpdateData4.SetUpdateFlag(143, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
                                     UpdateData4.SetUpdateFlag(46, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
                                     ulong key;
@@ -247,10 +247,10 @@ namespace Mangos.World.Loots
                                     break;
                                 }
                                 WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 1;
-                                Packets.PacketClass response4 = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                                Packets.PacketClass response4 = new(Opcodes.SMSG_UPDATE_OBJECT);
                                 response4.AddInt32(1);
                                 response4.AddInt8(0);
-                                Packets.UpdateClass UpdateData3 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                                Packets.UpdateClass UpdateData3 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                                 UpdateData3.SetUpdateFlag(143, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
                                 Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                                 ulong key;
@@ -278,14 +278,14 @@ namespace Mangos.World.Loots
                     else
                     {
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].State = GameObjectLootState.DOOR_CLOSED;
-                        Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                        Packets.PacketClass response2 = new(Opcodes.SMSG_UPDATE_OBJECT);
                         response2.AddInt32(1);
                         response2.AddInt8(0);
-                        Packets.UpdateClass UpdateData2 = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                        Packets.UpdateClass UpdateData2 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                         UpdateData2.SetUpdateFlag(14, 0, (byte)WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].State);
                         ulong key;
-                        Dictionary<ulong, WS_GameObjects.GameObjectObject> wORLD_GAMEOBJECTs;
-                        WS_GameObjects.GameObjectObject updateObject2 = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
+                        Dictionary<ulong, WS_GameObjects.GameObject> wORLD_GAMEOBJECTs;
+                        WS_GameObjects.GameObject updateObject2 = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
                         UpdateData2.AddToPacket(ref response2, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject2);
                         wORLD_GAMEOBJECTs[key] = updateObject2;
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].SendToNearPlayers(ref response2);
@@ -305,7 +305,7 @@ namespace Mangos.World.Loots
             }
             else
             {
-                Packets.PacketClass responseRelease = new Packets.PacketClass(Opcodes.SMSG_LOOT_RELEASE_RESPONSE);
+                Packets.PacketClass responseRelease = new(Opcodes.SMSG_LOOT_RELEASE_RESPONSE);
                 responseRelease.AddUInt64(GUID);
                 responseRelease.AddInt8(1);
                 client.Send(ref responseRelease);
@@ -317,10 +317,10 @@ namespace Mangos.World.Loots
                         WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags = WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags | 0x4000000;
                     }
                     WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 0;
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                    Packets.PacketClass response = new(Opcodes.SMSG_UPDATE_OBJECT);
                     response.AddInt32(1);
                     response.AddInt8(0);
-                    Packets.UpdateClass UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                    Packets.UpdateClass UpdateData = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                     UpdateData.SetUpdateFlag(143, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
                     UpdateData.SetUpdateFlag(46, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
                     ulong key;
@@ -338,7 +338,7 @@ namespace Mangos.World.Loots
 
         public void SendEmptyLoot(ulong GUID, LootType LootType, ref WS_Network.ClientClass client)
         {
-            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_LOOT_RESPONSE);
+            Packets.PacketClass response = new(Opcodes.SMSG_LOOT_RESPONSE);
             response.AddUInt64(GUID);
             response.AddInt8((byte)LootType);
             response.AddInt32(0);
@@ -350,7 +350,7 @@ namespace Mangos.World.Loots
 
         public void StartRoll(ulong LootGUID, byte Slot, ref WS_PlayerData.CharacterObject Character)
         {
-            List<WS_PlayerData.CharacterObject> rollCharacters = new List<WS_PlayerData.CharacterObject>
+            List<WS_PlayerData.CharacterObject> rollCharacters = new()
             {
                 Character
             };
@@ -361,7 +361,7 @@ namespace Mangos.World.Loots
                     rollCharacters.Add(WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
                 }
             }
-            Packets.PacketClass startRoll = new Packets.PacketClass(Opcodes.SMSG_LOOT_START_ROLL);
+            Packets.PacketClass startRoll = new(Opcodes.SMSG_LOOT_START_ROLL);
             startRoll.AddUInt64(LootGUID);
             startRoll.AddInt32(Slot);
             startRoll.AddInt32(LootTable[LootGUID].GroupLootInfo[Slot].Item.ItemID);
@@ -388,7 +388,7 @@ namespace Mangos.World.Loots
                     byte Slot = (byte)packet.GetInt32();
                     byte rollType = packet.GetInt8();
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT_ROLL [loot={2} roll={3}]", client.IP, client.Port, GUID, rollType);
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_LOOT_ROLL);
+                    Packets.PacketClass response = new(Opcodes.SMSG_LOOT_ROLL);
                     response.AddUInt64(GUID);
                     response.AddInt32(Slot);
                     response.AddUInt64(client.Character.GUID);

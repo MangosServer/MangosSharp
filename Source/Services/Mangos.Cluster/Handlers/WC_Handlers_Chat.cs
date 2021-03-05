@@ -138,7 +138,7 @@ namespace Mangos.Cluster.Handlers
                         }
                         else
                         {
-                            PacketClass smsgChatPlayerNotFound = new PacketClass(Opcodes.SMSG_CHAT_PLAYER_NOT_FOUND);
+                            PacketClass smsgChatPlayerNotFound = new(Opcodes.SMSG_CHAT_PLAYER_NOT_FOUND);
                             smsgChatPlayerNotFound.AddString(toUser);
                             client.Send(smsgChatPlayerNotFound);
                             smsgChatPlayerNotFound.Dispose();
@@ -268,7 +268,7 @@ namespace Mangos.Cluster.Handlers
             if (!_clusterServiceLocator.WsHandlerChannels.ChatChanneLs.ContainsKey(channelName))
             {
                 // The New does a an add to the .Containskey collection above
-                WsHandlerChannels.ChatChannelClass newChannel = new WsHandlerChannels.ChatChannelClass(channelName, _clusterServiceLocator);
+                WsHandlerChannels.ChatChannelClass newChannel = new(channelName, _clusterServiceLocator);
             }
 
             _clusterServiceLocator.WsHandlerChannels.ChatChanneLs[channelName].Join(client.Character, password);

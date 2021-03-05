@@ -22,7 +22,7 @@ namespace Mangos.Loggers.Console
 {
     public class ConsoleLogger : ILogger
     {
-        private static readonly object _lockObject = new object();
+        private static readonly object _lockObject = new();
 
         public void Debug(string format, params object[] args)
         {

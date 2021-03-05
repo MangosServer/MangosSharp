@@ -45,12 +45,12 @@ namespace Mangos.WoWFakeClient
             temp = Realmserver.Concat(temp, BitConverter.GetBytes(Worldserver.ClientSeed));
             temp = Realmserver.Concat(temp, BitConverter.GetBytes(Worldserver.ServerSeed));
             temp = Realmserver.Concat(temp, Realmserver.SS_Hash);
-            SHA1Managed algorithm1 = new SHA1Managed();
+            SHA1Managed algorithm1 = new();
             byte[] ShaDigest = algorithm1.ComputeHash(temp);
             Worldserver.Decoding = true;
             VBMath.Randomize();
             Worldserver.ClientSeed = (uint)(uint.MaxValue * VBMath.Rnd());
-            Packets.PacketClass Response = new Packets.PacketClass(OPCODES.CMSG_AUTH_SESSION);
+            Packets.PacketClass Response = new(OPCODES.CMSG_AUTH_SESSION);
             Response.AddInt32(Realmserver.Revision);
             Response.AddInt32(0); // SessionID?
             Response.AddString(Realmserver.Account.ToUpper());
@@ -71,7 +71,7 @@ namespace Mangos.WoWFakeClient
                 case 0xC:
                     {
                         Console.WriteLine("[{0}][World] Auth succeeded.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
-                        Packets.PacketClass Response = new Packets.PacketClass(OPCODES.CMSG_CHAR_ENUM);
+                        Packets.PacketClass Response = new(OPCODES.CMSG_CHAR_ENUM);
                         Worldserver.Send(Response);
                         Response.Dispose();
                         break;
@@ -125,7 +125,7 @@ namespace Mangos.WoWFakeClient
                     uint PetFamilyID = Packet.GetUInt32();
                     Console.WriteLine("[{0}][World] Logging in with character [{1}].", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"), Name);
                     Worldserver.CharacterGUID = GUID;
-                    Packets.PacketClass Response = new Packets.PacketClass(OPCODES.CMSG_PLAYER_LOGIN);
+                    Packets.PacketClass Response = new(OPCODES.CMSG_PLAYER_LOGIN);
                     Response.AddUInt64(GUID);
                     Worldserver.Send(Response);
                     Response.Dispose();

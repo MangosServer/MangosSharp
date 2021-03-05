@@ -271,7 +271,7 @@ namespace Mangos.WoWFakeClient
             public void AddPackGUID(ulong buffer)
             {
                 byte[] GUID = BitConverter.GetBytes(buffer);
-                BitArray flags = new BitArray(8);
+                BitArray flags = new(8);
                 int offsetStart = Data.Length;
                 int offsetNewSize = offsetStart;
                 byte i;

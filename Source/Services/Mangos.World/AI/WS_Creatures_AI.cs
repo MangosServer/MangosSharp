@@ -41,7 +41,7 @@ namespace Mangos.World.AI
 
             public void ResetThreatTable()
             {
-                List<WS_Base.BaseUnit> tmpUnits = new List<WS_Base.BaseUnit>();
+                List<WS_Base.BaseUnit> tmpUnits = new();
                 foreach (KeyValuePair<WS_Base.BaseUnit, int> item in aiHateTable)
                 {
                     tmpUnits?.Add(item.Key);

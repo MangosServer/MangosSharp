@@ -34,7 +34,7 @@ namespace Mangos.World.Handlers
     {
         private void SendActivateTaxiReply(ref WS_Network.ClientClass client, ActivateTaxiReplies reply)
         {
-            Packets.PacketClass taxiFailed = new Packets.PacketClass(Opcodes.SMSG_ACTIVATETAXIREPLY);
+            Packets.PacketClass taxiFailed = new(Opcodes.SMSG_ACTIVATETAXIREPLY);
             try
             {
                 taxiFailed.AddInt32((int)reply);
@@ -53,7 +53,7 @@ namespace Mangos.World.Handlers
                 return;
             }
             int currentTaxi = WorldServiceLocator._WS_DBCDatabase.GetNearestTaxi(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].positionX, WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].positionY, checked((int)WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].MapID));
-            Packets.PacketClass SMSG_TAXINODE_STATUS = new Packets.PacketClass(Opcodes.SMSG_TAXINODE_STATUS);
+            Packets.PacketClass SMSG_TAXINODE_STATUS = new(Opcodes.SMSG_TAXINODE_STATUS);
             try
             {
                 SMSG_TAXINODE_STATUS.AddUInt64(cGuid);
@@ -83,7 +83,7 @@ namespace Mangos.World.Handlers
             if (!objCharacter.TaxiZones[currentTaxi])
             {
                 objCharacter.TaxiZones.Set(currentTaxi, value: true);
-                Packets.PacketClass SMSG_NEW_TAXI_PATH = new Packets.PacketClass(Opcodes.SMSG_NEW_TAXI_PATH);
+                Packets.PacketClass SMSG_NEW_TAXI_PATH = new(Opcodes.SMSG_NEW_TAXI_PATH);
                 try
                 {
                     objCharacter.client.Send(ref SMSG_NEW_TAXI_PATH);
@@ -92,7 +92,7 @@ namespace Mangos.World.Handlers
                 {
                     SMSG_NEW_TAXI_PATH.Dispose();
                 }
-                Packets.PacketClass SMSG_TAXINODE_STATUS = new Packets.PacketClass(Opcodes.SMSG_TAXINODE_STATUS);
+                Packets.PacketClass SMSG_TAXINODE_STATUS = new(Opcodes.SMSG_TAXINODE_STATUS);
                 try
                 {
                     SMSG_TAXINODE_STATUS.AddUInt64(cGuid);
@@ -106,7 +106,7 @@ namespace Mangos.World.Handlers
             }
             else
             {
-                Packets.PacketClass SMSG_SHOWTAXINODES = new Packets.PacketClass(Opcodes.SMSG_SHOWTAXINODES);
+                Packets.PacketClass SMSG_SHOWTAXINODES = new(Opcodes.SMSG_SHOWTAXINODES);
                 try
                 {
                     SMSG_SHOWTAXINODES.AddInt32(1);
@@ -409,7 +409,7 @@ namespace Mangos.World.Handlers
             {
                 try
                 {
-                    List<int> waypointPaths = new List<int>();
+                    List<int> waypointPaths = new();
                     while (character.TaxiNodes.Count > 0)
                     {
                         int dstNode = character.TaxiNodes.Dequeue();
@@ -444,7 +444,7 @@ namespace Mangos.World.Handlers
                             character.SendCharacterUpdate(toNear: false);
                             Console.WriteLine("Paying {0}", price);
                         }
-                        Dictionary<int, WS_DBCDatabase.TTaxiPathNode> waypointNodes = new Dictionary<int, WS_DBCDatabase.TTaxiPathNode>();
+                        Dictionary<int, WS_DBCDatabase.TTaxiPathNode> waypointNodes = new();
                         waypointNodes.Clear();
                         float lastX = character.positionX;
                         float lastY = character.positionY;
@@ -461,7 +461,7 @@ namespace Mangos.World.Handlers
                         lastX = character.positionX;
                         lastY = character.positionY;
                         lastZ = character.positionZ;
-                        Packets.PacketClass SMSG_MONSTER_MOVE = new Packets.PacketClass(Opcodes.SMSG_MONSTER_MOVE);
+                        Packets.PacketClass SMSG_MONSTER_MOVE = new(Opcodes.SMSG_MONSTER_MOVE);
                         try
                         {
                             SMSG_MONSTER_MOVE.AddPackGUID(character.GUID);
@@ -490,7 +490,7 @@ namespace Mangos.World.Handlers
                             lastX = waypointNodes[i].x;
                             lastY = waypointNodes[i].y;
                             lastZ = waypointNodes[i].z;
-                            Packets.PacketClass WP_SMSG_MONSTER_MOVE = new Packets.PacketClass(Opcodes.SMSG_MONSTER_MOVE);
+                            Packets.PacketClass WP_SMSG_MONSTER_MOVE = new(Opcodes.SMSG_MONSTER_MOVE);
                             try
                             {
                                 WP_SMSG_MONSTER_MOVE.AddPackGUID(character.GUID);

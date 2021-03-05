@@ -81,7 +81,7 @@ namespace Mangos.World.Objects
                 if (Owner is WS_PlayerData.CharacterObject @object)
                 {
                     @object.GroupUpdateFlag |= 0x7FC00u;
-                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PET_SPELLS);
+                    Packets.PacketClass packet = new(Opcodes.SMSG_PET_SPELLS);
                     packet.AddUInt64(0uL);
                     @object.client.Send(ref packet);
                     packet.Dispose();
@@ -205,7 +205,7 @@ namespace Mangos.World.Objects
         {
             if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(PetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[PetGUID] is PetObject @object)
             {
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_PET_NAME_QUERY_RESPONSE);
+                Packets.PacketClass response = new(Opcodes.SMSG_PET_NAME_QUERY_RESPONSE);
                 response.AddInt32(PetNumber);
                 response.AddString(@object.PetName);
                 response.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
@@ -220,7 +220,7 @@ namespace Mangos.World.Objects
             {
                 return;
             }
-            DataTable PetQuery = new DataTable();
+            DataTable PetQuery = new();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM character_pet WHERE owner = '{objCharacter.GUID}';", ref PetQuery);
             if (PetQuery.Rows.Count != 0)
             {
@@ -257,7 +257,7 @@ namespace Mangos.World.Objects
                 Command = @object.Command;
                 State = @object.State;
             }
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PET_SPELLS);
+            Packets.PacketClass packet = new(Opcodes.SMSG_PET_SPELLS);
             packet.AddUInt64(Pet.GUID);
             packet.AddInt32(0);
             packet.AddInt32(16842752);

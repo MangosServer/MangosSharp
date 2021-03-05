@@ -266,7 +266,7 @@ namespace Mangos.World.DataStores
                                     Dictionary<int, WS_Spells.SpellInfo> Spells;
                                     WS_Spells.SpellInfo Spell = (Spells = WorldServiceLocator._WS_Spells.SPELLs)[key = id];
                                     Spells[key] = Spell;
-                                    WS_Spells.SpellEffect spellEffect2 = new WS_Spells.SpellEffect(ref Spell)
+                                    WS_Spells.SpellEffect spellEffect2 = new(ref Spell)
                                     {
                                         ID = (SpellEffects_Names)spellDBC.ReadInt(i, 61 + k),
                                         valueDie = spellDBC.ReadInt(i, 64 + k),
@@ -340,7 +340,7 @@ namespace Mangos.World.DataStores
         {
             try
             {
-                DataTable spellChainQuery = new DataTable();
+                DataTable spellChainQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT spell_id, prev_spell FROM spell_chain", ref spellChainQuery);
                 IEnumerator enumerator = default;
                 try
@@ -494,7 +494,7 @@ namespace Mangos.World.DataStores
                     int num = tmpDBC.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
-                        WS_DBCDatabase.TSkillLineAbility tmpSkillLineAbility = new WS_DBCDatabase.TSkillLineAbility
+                        WS_DBCDatabase.TSkillLineAbility tmpSkillLineAbility = new()
                         {
                             ID = tmpDBC.ReadInt(i, 0),
                             SkillID = tmpDBC.ReadInt(i, 1),
@@ -816,7 +816,7 @@ namespace Mangos.World.DataStores
                     int num = dbc.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
-                        WS_DBCDatabase.TalentInfo tmpInfo = new WS_DBCDatabase.TalentInfo
+                        WS_DBCDatabase.TalentInfo tmpInfo = new()
                         {
                             TalentID = dbc.ReadInt(i, 0),
                             TalentTab = dbc.ReadInt(i, 1),
@@ -969,7 +969,7 @@ namespace Mangos.World.DataStores
                     int num = dbc.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
-                        WS_DBCDatabase.TItemDisplayInfo tmpItemDisplayInfo = new WS_DBCDatabase.TItemDisplayInfo
+                        WS_DBCDatabase.TItemDisplayInfo tmpItemDisplayInfo = new()
                         {
                             ID = dbc.ReadInt(i, 0),
                             RandomPropertyChance = dbc.ReadInt(i, 11),
@@ -996,7 +996,7 @@ namespace Mangos.World.DataStores
                     int num = dbc.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
-                        WS_DBCDatabase.TItemRandomPropertiesInfo tmpInfo = new WS_DBCDatabase.TItemRandomPropertiesInfo
+                        WS_DBCDatabase.TItemRandomPropertiesInfo tmpInfo = new()
                         {
                             ID = dbc.ReadInt(i, 0)
                         };
@@ -1018,7 +1018,7 @@ namespace Mangos.World.DataStores
         {
             try
             {
-                DataTable gossipQuery = new DataTable();
+                DataTable gossipQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM npc_gossip;", ref gossipQuery);
                 IEnumerator enumerator = default;
                 try
@@ -1059,7 +1059,7 @@ namespace Mangos.World.DataStores
                     int num = dbc.Rows - 1;
                     for (int i = 0; i <= num; i++)
                     {
-                        WS_DBCDatabase.CreatureFamilyInfo tmpInfo = new WS_DBCDatabase.CreatureFamilyInfo
+                        WS_DBCDatabase.CreatureFamilyInfo tmpInfo = new()
                         {
                             ID = dbc.ReadInt(i, 0),
                             Unknown1 = dbc.ReadInt(i, 5),
@@ -1082,7 +1082,7 @@ namespace Mangos.World.DataStores
         {
             try
             {
-                DataTable movementsQuery = new DataTable();
+                DataTable movementsQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM waypoint_data ORDER BY id, point;", ref movementsQuery);
                 IEnumerator enumerator = default;
                 try
@@ -1118,7 +1118,7 @@ namespace Mangos.World.DataStores
         {
             try
             {
-                DataTable equipQuery = new DataTable();
+                DataTable equipQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM creature_equip_template_raw;", ref equipQuery);
                 IEnumerator enumerator = default;
                 try
@@ -1160,7 +1160,7 @@ namespace Mangos.World.DataStores
         {
             try
             {
-                DataTable modelQuery = new DataTable();
+                DataTable modelQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM creature_model_info;", ref modelQuery);
                 IEnumerator enumerator = default;
                 try
@@ -1193,7 +1193,7 @@ namespace Mangos.World.DataStores
 
         public void LoadQuestStartersAndFinishers()
         {
-            DataTable questStarters = new DataTable();
+            DataTable questStarters = new();
             WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=0 and role =0;", ref questStarters);
             IEnumerator enumerator = default;
             try
@@ -1249,7 +1249,7 @@ namespace Mangos.World.DataStores
                 questStartersAmount += questStarters.Rows.Count;
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Database: {0} queststarters initated for {1} creatures and {2} gameobjects.", questStartersAmount, WorldServiceLocator._WorldServer.CreatureQuestStarters.Count, WorldServiceLocator._WorldServer.GameobjectQuestStarters.Count);
                 questStarters.Clear();
-                DataTable questFinishers = new DataTable();
+                DataTable questFinishers = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM quest_relations where actor=0 and role=1;", ref questFinishers);
                 IEnumerator enumerator3 = default;
                 try
@@ -1327,7 +1327,7 @@ namespace Mangos.World.DataStores
         {
             try
             {
-                DataTable weatherQuery = new DataTable();
+                DataTable weatherQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM game_weather;", ref weatherQuery);
                 IEnumerator enumerator = default;
                 try
@@ -1339,7 +1339,7 @@ namespace Mangos.World.DataStores
                         int zone = row.As<int>("zone");
                         if (!WorldServiceLocator._WS_Weather.WeatherZones.ContainsKey(zone))
                         {
-                            WS_Weather.WeatherZone zoneChanges = new WS_Weather.WeatherZone(zone);
+                            WS_Weather.WeatherZone zoneChanges = new(zone);
                             zoneChanges.Seasons[0] = new WS_Weather.WeatherSeasonChances(row.As<int>("spring_rain_chance"), row.As<int>("spring_snow_chance"), row.As<int>("spring_storm_chance"));
                             zoneChanges.Seasons[1] = new WS_Weather.WeatherSeasonChances(row.As<int>("summer_rain_chance"), row.As<int>("summer_snow_chance"), row.As<int>("summer_storm_chance"));
                             zoneChanges.Seasons[2] = new WS_Weather.WeatherSeasonChances(row.As<int>("fall_rain_chance"), row.As<int>("fall_snow_chance"), row.As<int>("fall_storm_chance"));

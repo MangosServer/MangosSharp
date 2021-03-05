@@ -653,7 +653,7 @@ namespace Mangos.World.DataStores
 
         public void InitializeBattlemasters()
         {
-            DataTable MySQLQuery = new DataTable();
+            DataTable MySQLQuery = new();
             WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM battlemaster_entry", ref MySQLQuery);
             IEnumerator enumerator = default;
             try
@@ -677,7 +677,7 @@ namespace Mangos.World.DataStores
 
         public void InitializeBattlegrounds()
         {
-            DataTable mySqlQuery = new DataTable();
+            DataTable mySqlQuery = new();
             WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM battleground_template", ref mySqlQuery);
             IEnumerator enumerator = default;
             try
@@ -710,7 +710,7 @@ namespace Mangos.World.DataStores
 
         public void InitializeTeleportCoords()
         {
-            DataTable MySQLQuery = new DataTable();
+            DataTable MySQLQuery = new();
             WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM spells_teleport_coords", ref MySQLQuery);
             IEnumerator enumerator = default;
             try
@@ -751,7 +751,7 @@ namespace Mangos.World.DataStores
                 WorldServiceLocator._WS_TimerBasedEvents.CharacterSaver = new WS_TimerBasedEvents.TCharacterSaver();
                 WorldServiceLocator._WS_TimerBasedEvents.WeatherChanger = new WS_TimerBasedEvents.TWeatherChanger();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: Loading Maps and Spawns....");
-                DataTable MySQLQuery = new DataTable();
+                DataTable MySQLQuery = new();
                 try
                 {
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT MAX(item_guid) FROM characters_inventory;", ref MySQLQuery);

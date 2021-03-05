@@ -129,7 +129,7 @@ namespace Mangos.World.Maps
         {
             checked
             {
-                DataTable GraveQuery = new DataTable();
+                DataTable GraveQuery = new();
                 bool foundNear = false;
                 float distNear = 0f;
                 TGraveyard entryNear = default;

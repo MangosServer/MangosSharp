@@ -167,7 +167,7 @@ namespace Mangos.Cluster.Globals
         public void AddPackGuid(ulong buffer)
         {
             byte[] guid = BitConverter.GetBytes(buffer);
-            BitArray flags = new BitArray(8);
+            BitArray flags = new(8);
             int offsetStart = Data.Length;
             int offsetNewSize = offsetStart;
             for (byte i = 0; i <= 7; i++)

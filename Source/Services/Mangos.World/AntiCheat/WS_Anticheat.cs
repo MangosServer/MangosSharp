@@ -28,7 +28,7 @@ namespace Mangos.World.AntiCheat
     [StandardModule]
     public sealed class WS_Anticheat
     {
-        private static readonly List<SpeedHackViolation> SpeedHacks = new List<SpeedHackViolation>();
+        private static readonly List<SpeedHackViolation> SpeedHacks = new();
 
         public static void MovementEvent(ref WS_Network.ClientClass client, float RunSpeed, float posX, float positionX, float posY, float positionY, float posZ, float positionZ, int sTime, int cTime)
         {

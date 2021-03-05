@@ -235,11 +235,11 @@ namespace Mangos.World.Quests
         {
             if (ObjectivesDeliver > 0)
             {
-                ItemObject tmpItem = new ItemObject(ObjectivesDeliver, objCharacter.GUID);
+                ItemObject tmpItem = new(ObjectivesDeliver, objCharacter.GUID);
                 if (!objCharacter.ItemADD(ref tmpItem))
                 {
                     tmpItem.Delete();
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_QUESTGIVER_QUEST_FAILED);
+                    Packets.PacketClass response = new(Opcodes.SMSG_QUESTGIVER_QUEST_FAILED);
                     response.AddInt32(ID);
                     response.AddInt32(4);
                     objCharacter.client.Send(ref response);

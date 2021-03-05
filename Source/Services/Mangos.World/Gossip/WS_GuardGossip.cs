@@ -201,7 +201,7 @@ namespace Mangos.World.Gossip
             private void OnGossipHello_Stormwind(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
                 objCharacter.TalkMenuTypes.Clear();
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_AUCTIONHOUSE);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_STORMWIND_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_DEEPRUNTRAM);
@@ -314,7 +314,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 11, TextCompare: false))
                     {
-                        GossipMenu npcMenu3 = new GossipMenu();
+                        GossipMenu npcMenu3 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALTERACVALLEY);
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ARATHIBASIN);
@@ -328,7 +328,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 12, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_MAGE);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ROGUE);
@@ -351,7 +351,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 13, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BLACKSMITHING);
@@ -565,7 +565,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_Orgrimmar(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_WINDRIDER);
@@ -679,7 +679,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 11, TextCompare: false))
                     {
-                        GossipMenu npcMenu3 = new GossipMenu();
+                        GossipMenu npcMenu3 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALTERACVALLEY);
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ARATHIBASIN);
@@ -693,7 +693,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 12, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_HUNTER);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_MAGE);
@@ -715,7 +715,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 13, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BLACKSMITHING);
@@ -921,7 +921,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_Thunderbluff(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_WINDRIDER);
@@ -1017,7 +1017,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 9, TextCompare: false))
                     {
-                        GossipMenu npcMenu3 = new GossipMenu();
+                        GossipMenu npcMenu3 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALTERACVALLEY);
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ARATHIBASIN);
@@ -1031,7 +1031,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 10, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_DRUID);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_HUNTER);
@@ -1052,7 +1052,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 11, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BLACKSMITHING);
@@ -1241,7 +1241,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_Darnassus(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_AUCTIONHOUSE);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BANK);
@@ -1337,7 +1337,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 9, TextCompare: false))
                     {
-                        GossipMenu npcMenu3 = new GossipMenu();
+                        GossipMenu npcMenu3 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALTERACVALLEY);
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ARATHIBASIN);
@@ -1351,7 +1351,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 10, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_DRUID);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_HUNTER);
@@ -1371,7 +1371,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 11, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_COOKING);
@@ -1534,7 +1534,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_Ironforge(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_AUCTIONHOUSE);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_IRONFORGE_BANK);
@@ -1639,7 +1639,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 10, TextCompare: false))
                     {
-                        GossipMenu npcMenu3 = new GossipMenu();
+                        GossipMenu npcMenu3 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALTERACVALLEY);
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ARATHIBASIN);
@@ -1653,7 +1653,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 11, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_HUNTER);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_MAGE);
@@ -1675,7 +1675,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 12, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BLACKSMITHING);
@@ -1881,7 +1881,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_Undercity(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BATHANDLER);
@@ -1986,7 +1986,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 10, TextCompare: false))
                     {
-                        GossipMenu npcMenu3 = new GossipMenu();
+                        GossipMenu npcMenu3 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALTERACVALLEY);
                         npcMenu3.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ARATHIBASIN);
@@ -2000,7 +2000,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 11, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_MAGE);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_PRIEST);
@@ -2020,7 +2020,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 12, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BLACKSMITHING);
@@ -2210,7 +2210,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_Mulgore(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_WINDRIDER);
@@ -2267,7 +2267,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 5, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_DRUID);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_HUNTER);
@@ -2286,7 +2286,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 6, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BLACKSMITHING);
@@ -2429,7 +2429,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_Durotar(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_WINDRIDER);
@@ -2486,7 +2486,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 5, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_HUNTER);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_MAGE);
@@ -2508,7 +2508,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 6, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BLACKSMITHING);
@@ -2685,7 +2685,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_ElwynnForest(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_GRYPHON);
@@ -2750,7 +2750,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 6, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_DRUID);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_HUNTER);
@@ -2773,7 +2773,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 7, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BLACKSMITHING);
@@ -2958,7 +2958,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_DunMorogh(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_HIPPOGRYPH);
@@ -3023,7 +3023,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 6, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_HUNTER);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_MAGE);
@@ -3045,7 +3045,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 7, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BLACKSMITHING);
@@ -3221,7 +3221,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_Tirisfall(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BATHANDLER);
@@ -3278,7 +3278,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 5, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_MAGE);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_PRIEST);
@@ -3298,7 +3298,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 6, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BLACKSMITHING);
@@ -3460,7 +3460,7 @@ namespace Mangos.World.Gossip
 
             private void OnGossipHello_Teldrassil(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
             {
-                GossipMenu npcMenu = new GossipMenu();
+                GossipMenu npcMenu = new();
                 objCharacter.TalkMenuTypes.Clear();
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_BANK);
                 npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_FERRY);
@@ -3525,7 +3525,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 6, TextCompare: false))
                     {
-                        GossipMenu npcMenu2 = new GossipMenu();
+                        GossipMenu npcMenu2 = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_DRUID);
                         npcMenu2.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_HUNTER);
@@ -3545,7 +3545,7 @@ namespace Mangos.World.Gossip
                     }
                     else if (Operators.ConditionalCompareObjectEqual(left, 7, TextCompare: false))
                     {
-                        GossipMenu npcMenu = new GossipMenu();
+                        GossipMenu npcMenu = new();
                         objCharacter.TalkMenuTypes.Clear();
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_ALCHEMY);
                         npcMenu.AddMenu(WorldServiceLocator._Global_Constants.GOSSIP_TEXT_COOKING);

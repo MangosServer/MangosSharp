@@ -48,7 +48,7 @@ namespace Mangos.World.Social
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_RETURN_TO_SENDER [MailID={2}]", client.IP, client.Port, MailID);
                     int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_mail SET mail_time = {1}, mail_read = 0, mail_receiver = (mail_receiver + mail_sender), mail_sender = (mail_receiver - mail_sender), mail_receiver = (mail_receiver - mail_sender) WHERE mail_id = {0};", MailID, MailTime));
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                    Packets.PacketClass response = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(MailID);
                     response.AddInt32(3);
                     response.AddInt32(0);
@@ -67,7 +67,7 @@ namespace Mangos.World.Social
                 int MailID = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_DELETE [MailID={2}]", client.IP, client.Port, MailID);
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM characters_mail WHERE mail_id = {MailID};");
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                Packets.PacketClass response = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                 response.AddInt32(MailID);
                 response.AddInt32(4);
                 response.AddInt32(0);
@@ -95,18 +95,18 @@ namespace Mangos.World.Social
         public void On_MSG_QUERY_NEXT_MAIL_TIME(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_QUERY_NEXT_MAIL_TIME", client.IP, client.Port);
-            DataTable MySQLQuery = new DataTable();
+            DataTable MySQLQuery = new();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT COUNT(*) FROM characters_mail WHERE mail_read = 0 AND mail_receiver = {client.Character.GUID} AND mail_time > {WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)};", ref MySQLQuery);
             if (Operators.ConditionalCompareObjectGreater(MySQLQuery.Rows[0][0], 0, TextCompare: false))
             {
-                Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.MSG_QUERY_NEXT_MAIL_TIME);
+                Packets.PacketClass response2 = new(Opcodes.MSG_QUERY_NEXT_MAIL_TIME);
                 response2.AddInt32(0);
                 client.Send(ref response2);
                 response2.Dispose();
             }
             else
             {
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.MSG_QUERY_NEXT_MAIL_TIME);
+                Packets.PacketClass response = new(Opcodes.MSG_QUERY_NEXT_MAIL_TIME);
                 response.AddInt8(0);
                 response.AddInt8(192);
                 response.AddInt8(168);
@@ -129,7 +129,7 @@ namespace Mangos.World.Social
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GET_MAIL_LIST [GUID={2:X}]", client.IP, client.Port, GameObjectGUID);
                 try
                 {
-                    DataTable MySQLQuery = new DataTable();
+                    DataTable MySQLQuery = new();
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_id FROM characters_mail WHERE mail_time < {WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)};", ref MySQLQuery);
                     if (MySQLQuery.Rows.Count > 0)
                     {
@@ -142,7 +142,7 @@ namespace Mangos.World.Social
                         }
                     }
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_mail WHERE mail_receiver = {client.Character.GUID};", ref MySQLQuery);
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_MAIL_LIST_RESULT);
+                    Packets.PacketClass response = new(Opcodes.SMSG_MAIL_LIST_RESULT);
                     response.AddInt8((byte)MySQLQuery.Rows.Count);
                     if (MySQLQuery.Rows.Count > 0)
                     {
@@ -237,11 +237,11 @@ namespace Mangos.World.Social
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_TAKE_ITEM [MailID={2}]", client.IP, client.Port, MailID);
                 try
                 {
-                    DataTable MySQLQuery = new DataTable();
+                    DataTable MySQLQuery = new();
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_cod, mail_sender, item_guid FROM characters_mail WHERE mail_id = {MailID} AND mail_receiver = {client.Character.GUID};", ref MySQLQuery);
                     if (MySQLQuery.Rows.Count == 0)
                     {
-                        Packets.PacketClass response4 = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                        Packets.PacketClass response4 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                         response4.AddInt32(MailID);
                         response4.AddInt32(2);
                         response4.AddInt32(6);
@@ -255,7 +255,7 @@ namespace Mangos.World.Social
                     }
                     if (Operators.ConditionalCompareObjectLess(client.Character.Copper, MySQLQuery.Rows[0]["mail_cod"], TextCompare: false))
                     {
-                        Packets.PacketClass noMoney = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                        Packets.PacketClass noMoney = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                         noMoney.AddInt32(MailID);
                         noMoney.AddInt32(0);
                         noMoney.AddInt32(3);
@@ -271,7 +271,7 @@ namespace Mangos.World.Social
                     IL_02b9:
                     if (Operators.ConditionalCompareObjectEqual(MySQLQuery.Rows[0]["item_guid"], 0, TextCompare: false))
                     {
-                        Packets.PacketClass response3 = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                        Packets.PacketClass response3 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                         response3.AddInt32(MailID);
                         response3.AddInt32(2);
                         response3.AddInt32(6);
@@ -286,7 +286,7 @@ namespace Mangos.World.Social
                     {
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_mail SET item_guid = 0 WHERE mail_id = {MailID};");
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM mail_items WHERE mail_id = {MailID};");
-                        Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                        Packets.PacketClass response2 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                         response2.AddInt32(MailID);
                         response2.AddInt32(2);
                         response2.AddInt32(0);
@@ -296,7 +296,7 @@ namespace Mangos.World.Social
                     else
                     {
                         tmpItem.Dispose();
-                        Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                        Packets.PacketClass response = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                         response.AddInt32(MailID);
                         response.AddInt32(2);
                         response.AddInt32(1);
@@ -325,7 +325,7 @@ namespace Mangos.World.Social
                     ulong GameObjectGUID = packet.GetUInt64();
                     int MailID = packet.GetInt32();
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_TAKE_MONEY [MailID={2}]", client.IP, client.Port, MailID);
-                    DataTable MySQLQuery = new DataTable();
+                    DataTable MySQLQuery = new();
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT mail_money FROM characters_mail WHERE mail_id = {0}; UPDATE characters_mail SET mail_money = 0 WHERE mail_id = {0};", MailID), ref MySQLQuery);
                     if (client.Character.Copper + Conversions.ToLong(MySQLQuery.Rows[0]["mail_money"]) > uint.MaxValue)
                     {
@@ -337,7 +337,7 @@ namespace Mangos.World.Social
                         copper = Conversions.ToUInteger(Operators.AddObject(copper, MySQLQuery.Rows[0]["mail_money"]));
                     }
                     client.Character.SetUpdateFlag(1176, client.Character.Copper);
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                    Packets.PacketClass response = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                     response.AddInt32(MailID);
                     response.AddInt32(1);
                     response.AddInt32(0);
@@ -355,11 +355,11 @@ namespace Mangos.World.Social
                 packet.GetInt16();
                 int MailID = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ITEM_TEXT_QUERY [MailID={2}]", client.IP, client.Port, MailID);
-                DataTable MySQLQuery = new DataTable();
+                DataTable MySQLQuery = new();
                 WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_body FROM characters_mail WHERE mail_id = {MailID};", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count != 0)
                 {
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_ITEM_TEXT_QUERY_RESPONSE);
+                    Packets.PacketClass response = new(Opcodes.SMSG_ITEM_TEXT_QUERY_RESPONSE);
                     response.AddInt32(MailID);
                     response.AddString(MySQLQuery.Rows[0].As<string>("mail_body"));
                     client.Send(ref response);
@@ -376,13 +376,13 @@ namespace Mangos.World.Social
                 ulong GameObjectGUID = packet.GetUInt64();
                 int MailID = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_CREATE_TEXT_ITEM [MailID={2}]", client.IP, client.Port, MailID);
-                ItemObject tmpItem = new ItemObject(889, client.Character.GUID)
+                ItemObject tmpItem = new(889, client.Character.GUID)
                 {
                     ItemText = MailID
                 };
                 if (!client.Character.ItemADD(ref tmpItem))
                 {
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_ITEM_TEXT_QUERY_RESPONSE);
+                    Packets.PacketClass response = new(Opcodes.SMSG_ITEM_TEXT_QUERY_RESPONSE);
                     response.AddInt32(MailID);
                     response.AddInt32(0);
                     response.AddInt32(1);
@@ -430,11 +430,11 @@ namespace Mangos.World.Social
                 try
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SEND_MAIL [Receiver={2} Subject={3}]", client.IP, client.Port, Receiver, Subject);
-                    DataTable MySQLQuery = new DataTable();
+                    DataTable MySQLQuery = new();
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT char_guid, char_race FROM characters WHERE char_name Like '" + Receiver + "';", ref MySQLQuery);
                     if (MySQLQuery.Rows.Count == 0)
                     {
-                        Packets.PacketClass response6 = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                        Packets.PacketClass response6 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                         response6.AddInt32(0);
                         response6.AddInt32(0);
                         response6.AddInt32(4);
@@ -446,7 +446,7 @@ namespace Mangos.World.Social
                     bool ReceiverSide = WorldServiceLocator._Functions.GetCharacterSide(MySQLQuery.Rows[0].As<byte>("char_race"));
                     if (client.Character.GUID == ReceiverGUID)
                     {
-                        Packets.PacketClass response5 = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                        Packets.PacketClass response5 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                         response5.AddInt32(0);
                         response5.AddInt32(0);
                         response5.AddInt32(2);
@@ -456,7 +456,7 @@ namespace Mangos.World.Social
                     }
                     if (client.Character.Copper < Money + 30L)
                     {
-                        Packets.PacketClass response4 = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                        Packets.PacketClass response4 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                         response4.AddInt32(0);
                         response4.AddInt32(0);
                         response4.AddInt32(3);
@@ -467,7 +467,7 @@ namespace Mangos.World.Social
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_id FROM characters_mail WHERE mail_receiver = {ReceiverGUID}", ref MySQLQuery);
                     if (MySQLQuery.Rows.Count >= 100)
                     {
-                        Packets.PacketClass response3 = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                        Packets.PacketClass response3 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                         response3.AddInt32(0);
                         response3.AddInt32(0);
                         response3.AddInt32(6);
@@ -477,7 +477,7 @@ namespace Mangos.World.Social
                     }
                     if (client.Access >= AccessLevel.GameMaster && client.Character.IsHorde != ReceiverSide)
                     {
-                        Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                        Packets.PacketClass response2 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                         response2.AddInt32(0);
                         response2.AddInt32(0);
                         response2.AddInt32(5);
@@ -498,7 +498,7 @@ namespace Mangos.World.Social
                     {
                         client.Character.ItemREMOVE(itemGuid, Destroy: false, Update: true);
                     }
-                    Packets.PacketClass sendOK = new Packets.PacketClass(Opcodes.SMSG_SEND_MAIL_RESULT);
+                    Packets.PacketClass sendOK = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                     sendOK.AddInt32(0);
                     sendOK.AddInt32(0);
                     sendOK.AddInt32(0);
@@ -507,7 +507,7 @@ namespace Mangos.World.Social
                     WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                     if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(ReceiverGUID))
                     {
-                        Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_RECEIVED_MAIL);
+                        Packets.PacketClass response = new(Opcodes.SMSG_RECEIVED_MAIL);
                         response.AddInt32(0);
                         WorldServiceLocator._WorldServer.CHARACTERs[ReceiverGUID].client.Send(ref response);
                         response.Dispose();

@@ -94,12 +94,12 @@ namespace Mangos.World.Objects
                         j++;
                     }
                     while (j <= 18);
-                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                    Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                     try
                     {
                         packet.AddInt32(1);
                         packet.AddInt8(0);
-                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
+                        Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
                         try
                         {
                             tmpUpdate.SetUpdateFlag(6, 0);
@@ -155,7 +155,7 @@ namespace Mangos.World.Objects
 
             public void Destroy()
             {
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_DESTROY_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_DESTROY_OBJECT);
                 try
                 {
                     packet.AddUInt64(GUID);
@@ -245,7 +245,7 @@ namespace Mangos.World.Objects
                 Items = new int[19];
                 if (Info == null)
                 {
-                    DataTable MySQLQuery = new DataTable();
+                    DataTable MySQLQuery = new();
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM corpse WHERE guid = {cGUID};", ref MySQLQuery);
                     if (MySQLQuery.Rows.Count <= 0)
                     {
@@ -275,12 +275,12 @@ namespace Mangos.World.Objects
                     WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
                 }
                 WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Add(GUID);
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                 checked
                 {
                     try
                     {
-                        Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
+                        Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
                         try
                         {
                             packet.AddInt32(1);

@@ -30,7 +30,7 @@ namespace Mangos.World.Objects
 {
     public class WS_DynamicObjects
     {
-        public class DynamicObjectObject : WS_Base.BaseObject, IDisposable
+        public class DynamicObject : WS_Base.BaseObject, IDisposable
         {
             public int SpellID;
 
@@ -69,7 +69,7 @@ namespace Mangos.World.Objects
                 Dispose();
             }
 
-            public DynamicObjectObject(ref WS_Base.BaseUnit Caster_, int SpellID_, float PosX, float PosY, float PosZ, int Duration_, float Radius_)
+            public DynamicObject(ref WS_Base.BaseUnit Caster_, int SpellID_, float PosX, float PosY, float PosZ, int Duration_, float Radius_)
             {
                 SpellID = 0;
                 Effects = new List<WS_Spells.SpellEffect>();
@@ -125,13 +125,13 @@ namespace Mangos.World.Objects
                     ProjectData.ClearProjectError();
                     return;
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(1);
                 packet.AddInt8(0);
-                Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_DYNAMICOBJECT);
+                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_DYNAMICOBJECT);
                 FillAllUpdateFlags(ref tmpUpdate);
                 Packets.UpdateClass updateClass = tmpUpdate;
-                DynamicObjectObject updateObject = this;
+                DynamicObject updateObject = this;
                 updateClass.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF, ref updateObject);
                 tmpUpdate.Dispose();
                 short i = -1;
@@ -260,7 +260,7 @@ namespace Mangos.World.Objects
             public void Spawn()
             {
                 AddToWorld();
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
+                Packets.PacketClass packet = new(Opcodes.SMSG_GAMEOBJECT_SPAWN_ANIM);
                 packet.AddUInt64(GUID);
                 SendToNearPlayers(ref packet);
                 packet.Dispose();
@@ -272,7 +272,7 @@ namespace Mangos.World.Objects
                 {
                     Caster.dynamicObjects.Remove(this);
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
+                Packets.PacketClass packet = new(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
                 packet.AddUInt64(GUID);
                 SendToNearPlayers(ref packet);
                 packet.Dispose();

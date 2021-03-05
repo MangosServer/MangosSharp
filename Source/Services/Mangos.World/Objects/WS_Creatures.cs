@@ -229,8 +229,8 @@ namespace Mangos.World.Objects
 
             public void SendTargetUpdate(ulong TargetGUID)
             {
-                Packets.UpdatePacketClass packet = new Packets.UpdatePacketClass();
-                Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(188);
+                Packets.UpdatePacketClass packet = new();
+                Packets.UpdateClass tmpUpdate = new(188);
                 tmpUpdate.SetUpdateFlag(16, TargetGUID);
                 Packets.PacketClass packet2 = packet;
                 CreatureObject updateObject = this;
@@ -373,7 +373,7 @@ namespace Mangos.World.Objects
                 orientation = o;
                 if (SeenBy.Count > 0)
                 {
-                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_MOVE_HEARTBEAT);
+                    Packets.PacketClass packet = new(Opcodes.MSG_MOVE_HEARTBEAT);
                     packet.AddPackGUID(GUID);
                     packet.AddInt32(0);
                     packet.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
@@ -435,7 +435,7 @@ namespace Mangos.World.Objects
                     ProjectData.ClearProjectError();
                 }
                 int TimeToMove = 1;
-                Packets.PacketClass SMSG_MONSTER_MOVE = new Packets.PacketClass(Opcodes.SMSG_MONSTER_MOVE);
+                Packets.PacketClass SMSG_MONSTER_MOVE = new(Opcodes.SMSG_MONSTER_MOVE);
                 checked
                 {
                     try
@@ -544,7 +544,7 @@ namespace Mangos.World.Objects
                 orientation = orientation_;
                 if (SeenBy.Count > 0 && (aiScript == null || !aiScript.IsMoving))
                 {
-                    Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_MOVE_HEARTBEAT);
+                    Packets.PacketClass packet = new(Opcodes.MSG_MOVE_HEARTBEAT);
                     try
                     {
                         packet.AddPackGUID(GUID);
@@ -589,8 +589,8 @@ namespace Mangos.World.Objects
                     WS_Base.BaseUnit Victim = this;
                     tBaseAI.OnKill(ref Victim);
                 }
-                Packets.UpdatePacketClass packetForNear = new Packets.UpdatePacketClass();
-                Packets.UpdateClass UpdateData = new Packets.UpdateClass(188);
+                Packets.UpdatePacketClass packetForNear = new();
+                Packets.UpdateClass UpdateData = new(188);
                 checked
                 {
                     int num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
@@ -664,8 +664,8 @@ namespace Mangos.World.Objects
                 }
                 if (SeenBy.Count > 0)
                 {
-                    Packets.UpdatePacketClass packetForNear = new Packets.UpdatePacketClass();
-                    Packets.UpdateClass UpdateData = new Packets.UpdateClass(188);
+                    Packets.UpdatePacketClass packetForNear = new();
+                    Packets.UpdateClass UpdateData = new(188);
                     UpdateData.SetUpdateFlag(22, Life.Current);
                     UpdateData.SetUpdateFlag((int)checked(23 + base.ManaType), Mana.Current);
                     Packets.PacketClass packet = packetForNear;
@@ -687,8 +687,8 @@ namespace Mangos.World.Objects
                         Life.Current += Damage;
                         if (SeenBy.Count > 0)
                         {
-                            Packets.UpdatePacketClass packetForNear = new Packets.UpdatePacketClass();
-                            Packets.UpdateClass UpdateData = new Packets.UpdateClass(188);
+                            Packets.UpdatePacketClass packetForNear = new();
+                            Packets.UpdateClass UpdateData = new(188);
                             UpdateData.SetUpdateFlag(22, Life.Current);
                             Packets.PacketClass packet = packetForNear;
                             CreatureObject updateObject = this;
@@ -712,8 +712,8 @@ namespace Mangos.World.Objects
                     }
                     if (SeenBy.Count > 0)
                     {
-                        Packets.UpdatePacketClass packetForNear = new Packets.UpdatePacketClass();
-                        Packets.UpdateClass UpdateData = new Packets.UpdateClass(188);
+                        Packets.UpdatePacketClass packetForNear = new();
+                        Packets.UpdateClass UpdateData = new(188);
                         UpdateData.SetUpdateFlag((int)checked(23 + base.ManaType), Mana.Current);
                         Packets.PacketClass packet = packetForNear;
                         CreatureObject updateObject = this;
@@ -740,10 +740,10 @@ namespace Mangos.World.Objects
                     }
                     cUnitFlags |= 67108864;
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(1);
                 packet.AddInt8(0);
-                Packets.UpdateClass UpdateData = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                Packets.UpdateClass UpdateData = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                 UpdateData.SetUpdateFlag(143, cDynamicFlags);
                 UpdateData.SetUpdateFlag(46, cUnitFlags);
                 CreatureObject updateObject = this;
@@ -811,7 +811,7 @@ namespace Mangos.World.Objects
                 {
                     return false;
                 }
-                WS_Loot.LootObject Loot = new WS_Loot.LootObject(GUID, LootType);
+                WS_Loot.LootObject Loot = new(GUID, LootType);
                 WorldServiceLocator._WS_Loot.LootTemplates_Creature.GetLoot(CreatureInfo.LootID)?.Process(ref Loot, 0);
                 checked
                 {
@@ -943,7 +943,7 @@ namespace Mangos.World.Objects
             {
                 if (WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(SpellID))
                 {
-                    WS_Spells.SpellTargets t = new WS_Spells.SpellTargets();
+                    WS_Spells.SpellTargets t = new();
                     WS_Base.BaseUnit objCharacter = this;
                     t.SetTarget_SELF(ref objCharacter);
                     WS_Spells.SpellInfo spellInfo = WorldServiceLocator._WS_Spells.SPELLs[SpellID];
@@ -958,12 +958,12 @@ namespace Mangos.World.Objects
                 {
                     return -1;
                 }
-                WS_Spells.SpellTargets Targets = new WS_Spells.SpellTargets();
+                WS_Spells.SpellTargets Targets = new();
                 WS_Spells.SpellTargets spellTargets = Targets;
                 WS_Base.BaseUnit objCharacter = this;
                 spellTargets.SetTarget_SELF(ref objCharacter);
                 WS_Base.BaseObject Caster = this;
-                WS_Spells.CastSpellParameters tmpSpell = new WS_Spells.CastSpellParameters(ref Targets, ref Caster, SpellID);
+                WS_Spells.CastSpellParameters tmpSpell = new(ref Targets, ref Caster, SpellID);
                 if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration > 0)
                 {
                     SpellCasted = tmpSpell;
@@ -986,10 +986,10 @@ namespace Mangos.World.Objects
                 {
                     return -1;
                 }
-                WS_Spells.SpellTargets Targets = new WS_Spells.SpellTargets();
+                WS_Spells.SpellTargets Targets = new();
                 Targets.SetTarget_UNIT(ref Target);
                 WS_Base.BaseObject Caster = this;
-                WS_Spells.CastSpellParameters tmpSpell = new WS_Spells.CastSpellParameters(ref Targets, ref Caster, SpellID);
+                WS_Spells.CastSpellParameters tmpSpell = new(ref Targets, ref Caster, SpellID);
                 if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration > 0)
                 {
                     SpellCasted = tmpSpell;
@@ -1008,10 +1008,10 @@ namespace Mangos.World.Objects
                 {
                     return -1;
                 }
-                WS_Spells.SpellTargets Targets = new WS_Spells.SpellTargets();
+                WS_Spells.SpellTargets Targets = new();
                 Targets.SetTarget_DESTINATIONLOCATION(x, y, z);
                 WS_Base.BaseObject Caster = this;
-                WS_Spells.CastSpellParameters tmpSpell = new WS_Spells.CastSpellParameters(ref Targets, ref Caster, SpellID);
+                WS_Spells.CastSpellParameters tmpSpell = new(ref Targets, ref Caster, SpellID);
                 if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration > 0)
                 {
                     SpellCasted = tmpSpell;
@@ -1022,7 +1022,7 @@ namespace Mangos.World.Objects
 
             public void SpawnCreature(int Entry, float PosX, float PosY, float PosZ)
             {
-                CreatureObject tmpCreature = new CreatureObject(Entry, PosX, PosY, PosZ, 0f, checked((int)MapID))
+                CreatureObject tmpCreature = new(Entry, PosX, PosY, PosZ, 0f, checked((int)MapID))
                 {
                     instance = instance,
                     DestroyAtNoCombat = true
@@ -1041,7 +1041,7 @@ namespace Mangos.World.Objects
 
             public void SendChatMessage(string Message, ChatMsg msgType, LANGUAGES msgLanguage, ulong SecondGUID = 0uL)
             {
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_MESSAGECHAT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_MESSAGECHAT);
                 byte flag = 0;
                 packet.AddInt8(checked((byte)msgType));
                 packet.AddInt32((int)msgLanguage);
@@ -1130,7 +1130,7 @@ namespace Mangos.World.Objects
                     }
                     else if (File.Exists("scripts\\creatures\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb"))
                     {
-                        ScriptedObject tmpScript = new ScriptedObject("scripts\\creatures\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb", "", InMemory: true);
+                        ScriptedObject tmpScript = new("scripts\\creatures\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb", "", InMemory: true);
                         aiScript = (WS_Creatures_AI.TBaseAI)tmpScript.InvokeConstructor("CreatureAI_" + WorldServiceLocator._Functions.FixName(Name).Replace(" ", "_"), new object[1]
                         {
                             this
@@ -1211,7 +1211,7 @@ namespace Mangos.World.Objects
                 PositionUpdated = true;
                 if (infoRow == null)
                 {
-                    DataTable MySQLQuery = new DataTable();
+                    DataTable MySQLQuery = new();
                     WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM creature LEFT OUTER JOIN game_event_creature ON creature.guid = game_event_creature.guid WHERE creature.guid = {GUID_};", ref MySQLQuery);
                     if (MySQLQuery.Rows.Count <= 0)
                     {
@@ -1221,7 +1221,7 @@ namespace Mangos.World.Objects
                     infoRow = MySQLQuery.Rows[0];
                 }
                 DataRow row = null;
-                DataTable AddonInfoQuery = new DataTable();
+                DataTable AddonInfoQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM spawns_creatures_addon WHERE spawn_id = {GUID_};", ref AddonInfoQuery);
                 if (AddonInfoQuery.Rows.Count > 0)
                 {
@@ -1260,7 +1260,7 @@ namespace Mangos.World.Objects
                 }
                 if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(ID))
                 {
-                    CreatureInfo baseCreature = new CreatureInfo(ID);
+                    CreatureInfo baseCreature = new(ID);
                 }
                 GUID = checked(GUID_ + WorldServiceLocator._Global_Constants.GUID_UNIT);
                 Initialize();
@@ -1314,7 +1314,7 @@ namespace Mangos.World.Objects
                 PositionUpdated = true;
                 if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(ID_))
                 {
-                    CreatureInfo baseCreature = new CreatureInfo(ID_);
+                    CreatureInfo baseCreature = new(ID_);
                 }
                 ID = ID_;
                 GUID = GUID_;
@@ -1369,7 +1369,7 @@ namespace Mangos.World.Objects
                 PositionUpdated = true;
                 if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(ID_))
                 {
-                    CreatureInfo baseCreature = new CreatureInfo(ID_);
+                    CreatureInfo baseCreature = new(ID_);
                 }
                 ID = ID_;
                 GUID = WorldServiceLocator._WS_Creatures.GetNewGUID();
@@ -1424,7 +1424,7 @@ namespace Mangos.World.Objects
                 PositionUpdated = true;
                 if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(ID_))
                 {
-                    CreatureInfo baseCreature = new CreatureInfo(ID_);
+                    CreatureInfo baseCreature = new(ID_);
                 }
                 ID = ID_;
                 GUID = WorldServiceLocator._WS_Creatures.GetNewGUID();
@@ -1507,7 +1507,7 @@ namespace Mangos.World.Objects
                 {
                     WorldServiceLocator._WorldServer.CHARACTERs[SummonedBy].NonCombatPet = null;
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_DESTROY_OBJECT);
+                Packets.PacketClass packet = new(Opcodes.SMSG_DESTROY_OBJECT);
                 packet.AddUInt64(GUID);
                 SendToNearPlayers(ref packet);
                 packet.Dispose();
@@ -1552,8 +1552,8 @@ namespace Mangos.World.Objects
                 }
                 if (SeenBy.Count > 0)
                 {
-                    Packets.UpdatePacketClass packetForNear = new Packets.UpdatePacketClass();
-                    Packets.UpdateClass UpdateData = new Packets.UpdateClass(188);
+                    Packets.UpdatePacketClass packetForNear = new();
+                    Packets.UpdateClass UpdateData = new(188);
                     UpdateData.SetUpdateFlag(22, Life.Current);
                     UpdateData.SetUpdateFlag((int)checked(23 + base.ManaType), Mana.Current);
                     UpdateData.SetUpdateFlag(46, cUnitFlags);
@@ -1612,12 +1612,12 @@ namespace Mangos.World.Objects
                                     WS_Base.BaseObject objCharacter = this;
                                     if (characterObject.CanSee(ref objCharacter))
                                     {
-                                        Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_UPDATE_OBJECT);
+                                        Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                                         try
                                         {
                                             packet.AddInt32(1);
                                             packet.AddInt8(0);
-                                            Packets.UpdateClass tmpUpdate = new Packets.UpdateClass(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
+                                            Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_UNIT);
                                             FillAllUpdateFlags(ref tmpUpdate);
                                             Packets.UpdateClass updateClass = tmpUpdate;
                                             CreatureObject updateObject = this;
@@ -1773,7 +1773,7 @@ namespace Mangos.World.Objects
                 EmoteDelay2 = new int[8];
                 EmoteDelay3 = new int[8];
                 TextID = _TextID;
-                DataTable MySQLQuery = new DataTable();
+                DataTable MySQLQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM npc_text WHERE ID = {TextID};", ref MySQLQuery);
                 checked
                 {
@@ -1907,7 +1907,7 @@ namespace Mangos.World.Objects
                 {
                     return;
                 }
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_CREATURE_QUERY_RESPONSE);
+                Packets.PacketClass response = new(Opcodes.SMSG_CREATURE_QUERY_RESPONSE);
                 packet.GetInt16();
                 int CreatureID = packet.GetInt32();
                 ulong CreatureGUID = packet.GetUInt64();
@@ -1994,14 +1994,14 @@ namespace Mangos.World.Objects
                 {
                     if (WorldServiceLocator._WorldServer.CREATURESDatabase[WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].ID].TalkScript == null)
                     {
-                        Packets.PacketClass test = new Packets.PacketClass(Opcodes.SMSG_NPC_WONT_TALK);
+                        Packets.PacketClass test = new(Opcodes.SMSG_NPC_WONT_TALK);
                         test.AddUInt64(GUID);
                         test.AddInt8(1);
                         client.Send(ref test);
                         test.Dispose();
                         if (!NPCTexts.ContainsKey(34))
                         {
-                            NPCText tmpText = new NPCText(34, "Hi $N, I'm not yet scripted to talk with you.");
+                            NPCText tmpText = new(34, "Hi $N, I'm not yet scripted to talk with you.");
                         }
                         client.Character.SendTalking(34);
                         WS_PlayerData.CharacterObject character = client.Character;

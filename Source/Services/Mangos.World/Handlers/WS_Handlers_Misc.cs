@@ -46,7 +46,7 @@ namespace Mangos.World.Handlers
                 packet.GetInt16();
                 ulong GUID = packet.GetUInt64();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY [GUID={2:X}]", client.IP, client.Port, GUID);
-                Packets.PacketClass SMSG_NAME_QUERY_RESPONSE = new Packets.PacketClass(Opcodes.SMSG_NAME_QUERY_RESPONSE);
+                Packets.PacketClass SMSG_NAME_QUERY_RESPONSE = new(Opcodes.SMSG_NAME_QUERY_RESPONSE);
                 switch (GUID)
                 {
                     case int.MaxValue:
@@ -84,7 +84,7 @@ namespace Mangos.World.Handlers
                                 }
                                 return;
                             }
-                            DataTable MySQLQuery = new DataTable();
+                            DataTable MySQLQuery = new();
                             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT char_name, char_race, char_class, char_gender FROM characters WHERE char_guid = \"{GUID}\";", ref MySQLQuery);
                             switch (MySQLQuery.Rows.Count)
                             {
@@ -230,7 +230,7 @@ namespace Mangos.World.Handlers
         public void On_CMSG_MOUNTSPECIAL_ANIM(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MOUNTSPECIAL_ANIM", client.IP, client.Port);
-            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_MOUNTSPECIAL_ANIM);
+            Packets.PacketClass response = new(Opcodes.SMSG_MOUNTSPECIAL_ANIM);
             try
             {
                 response.AddPackGUID(client.Character.GUID);
@@ -249,7 +249,7 @@ namespace Mangos.World.Handlers
                 packet.GetInt16();
                 int emoteID = packet.GetInt32();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_EMOTE [{2}]", client.IP, client.Port, emoteID);
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_EMOTE);
+                Packets.PacketClass response = new(Opcodes.SMSG_EMOTE);
                 try
                 {
                     response.AddInt32(emoteID);
@@ -317,7 +317,7 @@ namespace Mangos.World.Handlers
                         secondName = WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Name;
                     }
                 }
-                Packets.PacketClass SMSG_TEXT_EMOTE = new Packets.PacketClass(Opcodes.SMSG_TEXT_EMOTE);
+                Packets.PacketClass SMSG_TEXT_EMOTE = new(Opcodes.SMSG_TEXT_EMOTE);
                 try
                 {
                     SMSG_TEXT_EMOTE.AddUInt64(client.Character.GUID);
@@ -338,7 +338,7 @@ namespace Mangos.World.Handlers
         {
             if (decimal.Compare(new decimal(client.Character.corpseGUID), 0m) != 0)
             {
-                Packets.PacketClass MSG_CORPSE_QUERY = new Packets.PacketClass(Opcodes.MSG_CORPSE_QUERY);
+                Packets.PacketClass MSG_CORPSE_QUERY = new(Opcodes.MSG_CORPSE_QUERY);
                 try
                 {
                     MSG_CORPSE_QUERY.AddInt8(1);
@@ -353,7 +353,7 @@ namespace Mangos.World.Handlers
                 {
                     MSG_CORPSE_QUERY.Dispose();
                 }
-                Packets.PacketClass MSG_MINIMAP_PING = new Packets.PacketClass(Opcodes.MSG_MINIMAP_PING);
+                Packets.PacketClass MSG_MINIMAP_PING = new(Opcodes.MSG_MINIMAP_PING);
                 try
                 {
                     MSG_MINIMAP_PING.AddUInt64(client.Character.corpseGUID);
@@ -394,7 +394,7 @@ namespace Mangos.World.Handlers
         {
             try
             {
-                if (client.Character != null)
+                if (client.Character is null)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1} Account:{2} CharName:{3} CharGUID:{4}] Client is Null!", client.IP, client.Port, client.Account, client.Character.UnitName, client.Character.GUID);
                     return;
@@ -407,7 +407,6 @@ namespace Mangos.World.Handlers
                 client.Character.cUnitFlags = 8;
                 client.Character.cDynamicFlags = 0;
                 client.Character.cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_DEAD;
-                client.Character = null;
                 WorldServiceLocator._Functions.SendCorpseReclaimDelay(ref client, ref client.Character);
                 client.Character.StopMirrorTimer(MirrorTimer.FATIGUE);
                 client.Character.StopMirrorTimer(MirrorTimer.DROWNING);
@@ -416,7 +415,7 @@ namespace Mangos.World.Handlers
                     client.Character.underWaterTimer.Dispose();
                     client.Character.underWaterTimer = null;
                 }
-                WS_Corpses.CorpseObject myCorpse = new WS_Corpses.CorpseObject(ref client.Character);
+                WS_Corpses.CorpseObject myCorpse = new(ref client.Character);
                 myCorpse.Save();
                 myCorpse.AddToWorld();
                 client.Character.Invisibility = InvisibilityLevel.DEAD;
@@ -526,7 +525,7 @@ namespace Mangos.World.Handlers
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_INSPECT_HONOR_STATS [{2:X}]", client.IP, client.Port, GUID);
             if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID))
             {
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.MSG_INSPECT_HONOR_STATS);
+                Packets.PacketClass response = new(Opcodes.MSG_INSPECT_HONOR_STATS);
                 try
                 {
                     response.AddUInt64(GUID);
@@ -586,7 +585,7 @@ namespace Mangos.World.Handlers
             if (enabled <= 1)
             {
                 client.Character.Reputation[faction].Flags = enabled == 1 ? client.Character.Reputation[faction].Flags | 2 : client.Character.Reputation[faction].Flags & -3;
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_SET_FACTION_STANDING);
+                Packets.PacketClass response = new(Opcodes.SMSG_SET_FACTION_STANDING);
                 try
                 {
                     response.AddInt32(client.Character.Reputation[faction].Flags);

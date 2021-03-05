@@ -355,14 +355,14 @@ namespace Mangos.World.Warden
 
             public bool CheckSignature(byte[] Signature, byte[] Data, int DataLen)
             {
-                BigInteger power = new BigInteger(new byte[4]
+                BigInteger power = new(new byte[4]
                 {
                     1,
                     0,
                     1,
                     0
                 }, isUnsigned: true, isBigEndian: true);
-                BigInteger pmod = new BigInteger(new byte[256]
+                BigInteger pmod = new(new byte[256]
                 {
                     107,
                     206,
@@ -621,7 +621,7 @@ namespace Mangos.World.Warden
                     175,
                     199
                 }, isUnsigned: true, isBigEndian: true);
-                BigInteger sig = new BigInteger(Signature, isUnsigned: true, isBigEndian: true);
+                BigInteger sig = new(Signature, isUnsigned: true, isBigEndian: true);
                 byte[] result = BigInteger.ModPow(sig, power, pmod).ToByteArray(isUnsigned: true, isBigEndian: true);
                 byte[] properResult = new byte[256];
                 checked
@@ -642,7 +642,7 @@ namespace Mangos.World.Warden
                     byte[] newData = new byte[DataLen + bKey.Length - 1 + 1];
                     Array.Copy(Data, 0, newData, 0, DataLen);
                     Array.Copy(bKey, 0, newData, DataLen, bKey.Length);
-                    SHA1Managed sha1 = new SHA1Managed();
+                    SHA1Managed sha1 = new();
                     byte[] digest = sha1.ComputeHash(newData);
                     Array.Copy(digest, 0, properResult, 0, digest.Length);
                     Console.WriteLine("Result:       " + BitConverter.ToString(result));

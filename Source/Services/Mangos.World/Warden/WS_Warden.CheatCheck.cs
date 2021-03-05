@@ -53,8 +53,8 @@ namespace Mangos.World.Warden
 
             public byte[] ToData(byte XorCheck, ref byte index)
             {
-                MemoryStream ms = new MemoryStream();
-                BinaryWriter bw = new BinaryWriter(ms);
+                MemoryStream ms = new();
+                BinaryWriter bw = new(ms);
                 bw.Write(XorCheck);
                 checked
                 {

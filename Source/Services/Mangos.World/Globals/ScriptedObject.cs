@@ -64,9 +64,9 @@ namespace Mangos.World.Globals
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.SUCCESS, "Compiling: \\Scripts\\*.*");
             try
             {
-                CSharpCodeProvider CSCP = new CSharpCodeProvider();
-                VBCodeProvider VBCP = new VBCodeProvider();
-                CompilerParameters cParameters = new CompilerParameters();
+                CSharpCodeProvider CSCP = new();
+                VBCodeProvider VBCP = new();
+                CompilerParameters cParameters = new();
                 IEnumerator enumerator = default;
                 try
                 {
@@ -133,9 +133,9 @@ namespace Mangos.World.Globals
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.SUCCESS, "Compiling: {0}", AssemblySourceFile);
             try
             {
-                CSharpCodeProvider CSCP = new CSharpCodeProvider();
-                VBCodeProvider VBCP = new VBCodeProvider();
-                CompilerParameters cParameters = new CompilerParameters();
+                CSharpCodeProvider CSCP = new();
+                VBCodeProvider VBCP = new();
+                CompilerParameters cParameters = new();
                 if (!InMemory)
                 {
                     cParameters.OutputAssembly = AssemblyFile;

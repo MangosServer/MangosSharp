@@ -37,13 +37,13 @@ namespace Mangos.DBCReader
             _cmdSearch.Name = "cmdSearch";
         }
 
-        private readonly List<int> IsFloat = new List<int>();
-        private readonly List<int> IsString = new List<int>();
+        private readonly List<int> IsFloat = new();
+        private readonly List<int> IsString = new();
         private byte[] StringData = Array.Empty<byte>();
 
         private void cmdBrowse_Click(object sender, EventArgs e)
         {
-            OpenFileDialog fdlg = new OpenFileDialog
+            OpenFileDialog fdlg = new()
             {
                 Title = "Which DBC You Want to View",
                 Filter = "DBC File (*.dbc)|*.dbc",
@@ -57,8 +57,8 @@ namespace Mangos.DBCReader
                 IsString.Clear();
                 DBCData.Clear();
                 cmbColumn.Items.Clear();
-                FileStream fs = new FileStream(fdlg.FileName, FileMode.Open, FileAccess.Read);
-                BinaryReader s = new BinaryReader(fs);
+                FileStream fs = new(fdlg.FileName, FileMode.Open, FileAccess.Read);
+                BinaryReader s = new(fs);
                 s.BaseStream.Seek(0L, SeekOrigin.Begin);
                 byte[] Buffer = s.ReadBytes((int)FileSystem.FileLen(fdlg.FileName));
                 HandleDBCData(Buffer);
@@ -94,7 +94,7 @@ namespace Mangos.DBCReader
             int loopTo = Columns - 1;
             for (i = 0; i <= loopTo; i++)
             {
-                ColumnHeader tmpColumn = new ColumnHeader
+                ColumnHeader tmpColumn = new()
                 {
                     Text = i.ToString(),
                     Width = 90
@@ -109,7 +109,7 @@ namespace Mangos.DBCReader
             // Code below doesn't work at the moment, flags are in some cases counted as floats
             float tmpSng;
             string tmpString = "";
-            List<int> notFloat = new List<int>();
+            List<int> notFloat = new();
             for (i = 0; i <= 99; i++)
             {
                 if (i > Rows - 1)
@@ -127,8 +127,8 @@ namespace Mangos.DBCReader
                         if (tmpSng < 50000f) // Only allow floats to be between 0 and 50000 (negative and positive)
                         {
                             tmpString = tmpSng.ToString().Replace(",", ".");
-                            tmpString = tmpString.Substring(tmpString.IndexOf(".") + 1);
-                            if (tmpSng.ToString().Replace(",", ".").IndexOf(".") == -1 || tmpString.Length >= 1 && tmpString.Length <= 6) // Only allow a minimum of 1 decimal and a maximum of 5 decimals
+                            tmpString = tmpString[(tmpString.IndexOf(".") + 1)..];
+                            if (!tmpSng.ToString().Replace(",", ".").Contains(".", StringComparison.CurrentCulture) || tmpString.Length >= 1 && tmpString.Length <= 6) // Only allow a minimum of 1 decimal and a maximum of 5 decimals
                             {
                                 if (IsFloat.Contains(j) == false)
                                 {
@@ -147,7 +147,7 @@ namespace Mangos.DBCReader
 
             // Check if any column is a string
             int tmpInt;
-            List<int> notString = new List<int>();
+            List<int> notString = new();
             if (StringPartLength > 0)
             {
                 for (i = 0; i <= 99; i++)
@@ -448,7 +448,7 @@ namespace Mangos.DBCReader
             for (int i = start, loopTo = DBCData.Items.Count - 1; i <= loopTo; i++)
             {
                 string sItem = DBCData.Items[i].SubItems[column].Text;
-                if (is_string && sItem.IndexOf(sQuery, StringComparison.OrdinalIgnoreCase) >= 0)
+                if (is_string && sItem.Contains(sQuery, StringComparison.OrdinalIgnoreCase))
                 {
                     DBCData.SelectedItems.Clear();
                     DBCData.Items[i].Selected = true;

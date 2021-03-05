@@ -474,7 +474,7 @@ namespace Mangos.World.Objects
             {
                 Id = itemId;
                 WorldServiceLocator._WorldServer.ITEMDatabase.Add(Id, this);
-                DataTable mySqlQuery = new DataTable();
+                DataTable mySqlQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM item_template WHERE entry = {itemId};", ref mySqlQuery);
                 if (mySqlQuery.Rows.Count == 0)
                 {
@@ -771,7 +771,7 @@ namespace Mangos.World.Objects
 
         public void SendItemInfo(ref WS_Network.ClientClass client, int itemID)
         {
-            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_ITEM_QUERY_SINGLE_RESPONSE);
+            Packets.PacketClass response = new(Opcodes.SMSG_ITEM_QUERY_SINGLE_RESPONSE);
             ItemInfo item = WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(itemID) ? WorldServiceLocator._WorldServer.ITEMDatabase[itemID] : new ItemInfo(itemID);
             response.AddInt32(item.Id);
             response.AddInt32((int)item.ObjectClass);
@@ -907,7 +907,7 @@ namespace Mangos.World.Objects
                 packet.GetInt16();
                 int itemID = packet.GetInt32();
                 ItemInfo item = WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(itemID) ? WorldServiceLocator._WorldServer.ITEMDatabase[itemID] : new ItemInfo(itemID);
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_ITEM_NAME_QUERY_RESPONSE);
+                Packets.PacketClass response = new(Opcodes.SMSG_ITEM_NAME_QUERY_RESPONSE);
                 response.AddInt32(itemID);
                 response.AddString(item.Name);
                 response.AddInt32((int)item.InventoryType);
@@ -1007,7 +1007,7 @@ namespace Mangos.World.Objects
                 }
                 if (errCode != 0)
                 {
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
+                    Packets.PacketClass response = new(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
                     response.AddInt8(errCode);
                     response.AddUInt64(client.Character.ItemGetGUID(srcBag, srcSlot));
                     response.AddUInt64(0uL);
@@ -1141,7 +1141,7 @@ namespace Mangos.World.Objects
             }
             if (decimal.Compare(new decimal(guid), 0m) != 0)
             {
-                Packets.PacketClass response = new Packets.PacketClass((Opcodes)opcode);
+                Packets.PacketClass response = new((Opcodes)opcode);
                 response.AddUInt64(guid);
                 client.Send(ref response);
                 response.Dispose();
@@ -1156,9 +1156,9 @@ namespace Mangos.World.Objects
                 int pageID = packet.GetInt32();
                 ulong itemGuid = packet.GetUInt64();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PAGE_TEXT_QUERY [pageID={2}, itemGuid={3:X}]", client.IP, client.Port, pageID, itemGuid);
-                DataTable mySqlQuery = new DataTable();
+                DataTable mySqlQuery = new();
                 WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM page_text WHERE entry = \"{pageID}\";", ref mySqlQuery);
-                Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_PAGE_TEXT_QUERY_RESPONSE);
+                Packets.PacketClass response = new(Opcodes.SMSG_PAGE_TEXT_QUERY_RESPONSE);
                 response.AddInt32(pageID);
                 if (mySqlQuery.Rows.Count != 0)
                 {
@@ -1330,7 +1330,7 @@ namespace Mangos.World.Objects
                 {
                     WorldServiceLocator._WorldServer.WORLD_ITEMs[itemGuid].SoulbindItem(client);
                 }
-                WS_Spells.SpellTargets targets = new WS_Spells.SpellTargets();
+                WS_Spells.SpellTargets targets = new();
                 WS_Spells.SpellTargets spellTargets = targets;
                 ref WS_PlayerData.CharacterObject character = ref client.Character;
                 ref WS_PlayerData.CharacterObject reference = ref character;
@@ -1354,7 +1354,7 @@ namespace Mangos.World.Objects
                         Dictionary<ulong, ItemObject> wORLD_ITEMs;
                         ulong key;
                         ItemObject Item = (wORLD_ITEMs = WorldServiceLocator._WorldServer.WORLD_ITEMs)[key = itemGuid];
-                        WS_Spells.CastSpellParameters castSpellParameters = new WS_Spells.CastSpellParameters(ref targets, ref Caster, spellID, ref Item, InstantCast);
+                        WS_Spells.CastSpellParameters castSpellParameters = new(ref targets, ref Caster, spellID, ref Item, InstantCast);
                         wORLD_ITEMs[key] = Item;
                         reference = (WS_PlayerData.CharacterObject)Caster;
                         WS_Spells.CastSpellParameters tmpSpell = castSpellParameters;
@@ -1427,7 +1427,7 @@ namespace Mangos.World.Objects
 
         public void SendInventoryChangeFailure(ref WS_PlayerData.CharacterObject objCharacter, InventoryChangeFailure errorCode, ulong guid1, ulong guid2)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
+            Packets.PacketClass packet = new(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
             packet.AddInt8((byte)errorCode);
             if (errorCode == InventoryChangeFailure.EQUIP_ERR_YOU_MUST_REACH_LEVEL_N)
             {

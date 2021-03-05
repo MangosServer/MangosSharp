@@ -183,7 +183,7 @@ namespace Mangos.World.Weather
 
             public void SendUpdate()
             {
-                Packets.PacketClass SMSG_WEATHER = new Packets.PacketClass(Opcodes.SMSG_WEATHER);
+                Packets.PacketClass SMSG_WEATHER = new(Opcodes.SMSG_WEATHER);
                 SMSG_WEATHER.AddInt32((int)CurrentWeather);
                 SMSG_WEATHER.AddSingle(Intensity);
                 SMSG_WEATHER.AddInt32(GetSound());

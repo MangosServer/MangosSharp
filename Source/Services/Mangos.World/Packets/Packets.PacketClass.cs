@@ -228,7 +228,7 @@ namespace Mangos.World.Globals
             public void AddPackGUID(ulong buffer)
             {
                 byte[] guid = BitConverter.GetBytes(buffer);
-                BitArray flags = new BitArray(8);
+                BitArray flags = new(8);
                 int offsetStart = Data.Length;
                 int offsetNewSize = offsetStart;
                 byte j = 0;

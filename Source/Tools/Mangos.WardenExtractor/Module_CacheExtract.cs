@@ -36,8 +36,8 @@ namespace Mangos.WardenExtractor
                 return;
             }
 
-            FileStream fs = new FileStream(sWDB, FileMode.Open, FileAccess.Read, FileShare.Read);
-            BinaryReader br = new BinaryReader(fs);
+            FileStream fs = new(sWDB, FileMode.Open, FileAccess.Read, FileShare.Read);
+            BinaryReader br = new(fs);
             string Header = Conversions.ToString(br.ReadChars(4));
             uint Version = br.ReadUInt32();
             string Lang = Program.Reverse(Conversions.ToString(br.ReadChars(4)));
@@ -57,7 +57,7 @@ namespace Mangos.WardenExtractor
                 int ModLen = br.ReadInt32();
                 byte[] ModData = new byte[ModLen];
                 br.Read(ModData, 0, ModLen);
-                FileStream fs2 = new FileStream(@"Modules\" + ModName + ".mod", FileMode.Create, FileAccess.Write, FileShare.None);
+                FileStream fs2 = new(@"Modules\" + ModName + ".mod", FileMode.Create, FileAccess.Write, FileShare.None);
                 fs2.Write(ModData, 0, ModLen);
                 fs2.Close();
                 fs2.Dispose();
@@ -79,10 +79,10 @@ namespace Mangos.WardenExtractor
                 return;
             }
 
-            FileStream fs = new FileStream(sWDB, FileMode.Open, FileAccess.Read, FileShare.Read);
-            BinaryReader br = new BinaryReader(fs);
-            MemoryStream ms = new MemoryStream();
-            BinaryWriter bw = new BinaryWriter(ms);
+            FileStream fs = new(sWDB, FileMode.Open, FileAccess.Read, FileShare.Read);
+            BinaryReader br = new(fs);
+            MemoryStream ms = new();
+            BinaryWriter bw = new(ms);
             string Header = Conversions.ToString(br.ReadChars(4));
             uint Version = br.ReadUInt32();
             string Lang = Program.Reverse(Conversions.ToString(br.ReadChars(4)));
@@ -124,7 +124,7 @@ namespace Mangos.WardenExtractor
 
             fs.Close();
             fs.Dispose();
-            FileStream fs2 = new FileStream(sWDB.Replace(Path.GetExtension(sWDB), "") + ".new.wdb", FileMode.Create, FileAccess.Write, FileShare.Read);
+            FileStream fs2 = new(sWDB.Replace(Path.GetExtension(sWDB), "") + ".new.wdb", FileMode.Create, FileAccess.Write, FileShare.Read);
             byte[] newFile = ms.ToArray();
             fs2.Write(newFile, 0, newFile.Length);
             fs2.Close();

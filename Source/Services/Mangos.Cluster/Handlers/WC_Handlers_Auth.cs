@@ -56,7 +56,7 @@ namespace Mangos.Cluster.Handlers
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTH_SESSION [{2}]", client.IP, client.Port, client.Account);
             Thread.Sleep(500);
-            PacketClass response = new PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
+            PacketClass response = new(Opcodes.SMSG_AUTH_RESPONSE);
             response.AddInt8((byte)LoginResponse.LOGIN_OK);
             response.AddInt32(0);
             response.AddInt8(2); // BillingPlanFlags
@@ -105,7 +105,7 @@ namespace Mangos.Cluster.Handlers
             client.Account = tmp;
 
             // DONE: Set client.SS_Hash
-            DataTable result = new DataTable();
+            DataTable result = new();
             string query;
             query = "SELECT sessionkey, gmlevel FROM account WHERE username = '" + client.Account + "';";
             _clusterServiceLocator.WorldCluster.GetAccountDatabase().Query(query, ref result);
@@ -117,7 +117,7 @@ namespace Mangos.Cluster.Handlers
             else
             {
                 _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.USER, "[{0}:{1}] AUTH_UNKNOWN_ACCOUNT: Account not in DB!", client.IP, client.Port);
-                PacketClass responseUnkAcc = new PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
+                PacketClass responseUnkAcc = new(Opcodes.SMSG_AUTH_RESPONSE);
                 responseUnkAcc.AddInt8((byte)AuthResult.WOW_FAIL_UNKNOWN_ACCOUNT);
                 client.Send(responseUnkAcc);
                 return;
@@ -134,7 +134,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Disconnect clients trying to enter with an invalid build
             if (clientVersion is < REQUIRED_BUILD_LOW or > REQUIRED_BUILD_HIGH)
             {
-                PacketClass invalidVersion = new PacketClass(Opcodes.SMSG_AUTH_RESPONSE);
+                PacketClass invalidVersion = new(Opcodes.SMSG_AUTH_RESPONSE);
                 invalidVersion.AddInt8((byte)AuthResult.WOW_FAIL_VERSION_INVALID);
                 client.Send(invalidVersion);
                 return;
@@ -175,8 +175,8 @@ namespace Mangos.Cluster.Handlers
             packet.Offset = 0;
             // DumpPacket(packet.Data)
 
-            List<string> addOnsNames = new List<string>();
-            List<uint> addOnsHashes = new List<uint>();
+            List<string> addOnsNames = new();
+            List<uint> addOnsHashes = new();
             // Dim AddOnsConsoleWrite As String = String.Format("[{0}:{1}] Client addons loaded:", client.IP, client.Port)
             while (packet.Offset < clientAddOnsSize)
             {
@@ -192,7 +192,7 @@ namespace Mangos.Cluster.Handlers
             // Not needed already - in 1.11 addons list is removed.
 
             // DONE: Send packet
-            PacketClass addOnsEnable = new PacketClass(Opcodes.SMSG_ADDON_INFO);
+            PacketClass addOnsEnable = new(Opcodes.SMSG_ADDON_INFO);
             for (int i = 0, loopTo1 = addOnsNames.Count - 1; i <= loopTo1; i++)
             {
                 if (File.Exists(string.Format(@"interface\{0}.pub", addOnsNames[i])) && addOnsHashes[i] != 0x1C776D01U)
@@ -200,7 +200,7 @@ namespace Mangos.Cluster.Handlers
                     // We have hash data
                     addOnsEnable.AddInt8(2);                    // AddOn Type [1-enabled, 0-banned, 2-blizzard]
                     addOnsEnable.AddInt8(1);                    // Unk
-                    FileStream fs = new FileStream(string.Format(@"interface\{0}.pub", addOnsNames[i]), FileMode.Open, FileAccess.Read, FileShare.Read, 258, FileOptions.SequentialScan);
+                    FileStream fs = new(string.Format(@"interface\{0}.pub", addOnsNames[i]), FileMode.Open, FileAccess.Read, FileShare.Read, 258, FileOptions.SequentialScan);
                     byte[] fb = new byte[257];
                     fs.Read(fb, 0, 257);
 
@@ -231,7 +231,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             packet.GetInt16();
-            PacketClass response = new PacketClass(Opcodes.SMSG_PONG);
+            PacketClass response = new(Opcodes.SMSG_PONG);
             response.AddInt32(packet.GetInt32());
             client.Send(response);
             if (client.Character is object)
@@ -328,7 +328,7 @@ namespace Mangos.Cluster.Handlers
             // If AccData.Rows.Count > 0 Then FoundData = True
             // End If
 
-            PacketClass response = new PacketClass(Opcodes.SMSG_UPDATE_ACCOUNT_DATA);
+            PacketClass response = new(Opcodes.SMSG_UPDATE_ACCOUNT_DATA);
             response.AddUInt32(dataId);
 
             // If FoundData = False Then
@@ -358,8 +358,8 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_ENUM", client.IP, client.Port);
 
             // DONE: Query _WorldCluster.CHARACTERs DB
-            PacketClass response = new PacketClass(Opcodes.SMSG_CHAR_ENUM);
-            DataTable mySqlQuery = new DataTable();
+            PacketClass response = new(Opcodes.SMSG_CHAR_ENUM);
+            DataTable mySqlQuery = new();
             int accountId;
             try
             {
@@ -373,14 +373,14 @@ namespace Mangos.Cluster.Handlers
                 for (int i = 0, loopTo = mySqlQuery.Rows.Count - 1; i <= loopTo; i++)
                 {
                     bool dead = false;
-                    DataTable deadMySqlQuery = new DataTable();
+                    DataTable deadMySqlQuery = new();
                     _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT COUNT(*) FROM corpse WHERE player = {0};", mySqlQuery.Rows[i]["char_guid"]), ref deadMySqlQuery);
                     if (deadMySqlQuery.Rows[0].As<int>(0) > 0)
                     {
                         dead = true;
                     }
 
-                    DataTable petQuery = new DataTable();
+                    DataTable petQuery = new();
                     _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT modelid, level, entry FROM character_pet WHERE owner = '{0}';", mySqlQuery.Rows[i]["char_guid"]), ref petQuery);
                     response.AddInt64(mySqlQuery.Rows[i].As<long>("char_guid"));
                     response.AddString(mySqlQuery.Rows[i].As<string>("char_name"));
@@ -430,7 +430,7 @@ namespace Mangos.Cluster.Handlers
                     {
                         petModel = petQuery.Rows[0].As<int>("modelid");
                         petLevel = petQuery.Rows[0].As<int>("level");
-                        DataTable petFamilyQuery = new DataTable();
+                        DataTable petFamilyQuery = new();
                         _clusterServiceLocator.WorldCluster.GetWorldDatabase().Query(string.Format("SELECT family FROM creature_template WHERE entry = '{0}'", petQuery.Rows[0]["entry"]), ref petFamilyQuery);
                         petFamily = petFamilyQuery.Rows[0].As<int>("family");
                     }
@@ -441,7 +441,7 @@ namespace Mangos.Cluster.Handlers
 
                     // DONE: Get items
                     long guid = mySqlQuery.Rows[i].As<long>("char_guid");
-                    DataTable itemsMySqlQuery = new DataTable();
+                    DataTable itemsMySqlQuery = new();
                     string characterDb = _clusterServiceLocator.WorldCluster.GetCharacterDatabase().SQLDBName;
                     string worldDb = _clusterServiceLocator.WorldCluster.GetWorldDatabase().SQLDBName;
                     _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT item_slot, displayid, inventorytype FROM " + characterDb + ".characters_inventory, " + worldDb + ".item_template WHERE item_bag = {0} AND item_slot <> 255 AND entry = item_id  ORDER BY item_slot;", guid), ref itemsMySqlQuery);
@@ -494,12 +494,12 @@ namespace Mangos.Cluster.Handlers
         public void On_CMSG_CHAR_DELETE(PacketClass packet, ClientClass client)
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAR_DELETE", client.IP, client.Port);
-            PacketClass response = new PacketClass(Opcodes.SMSG_CHAR_DELETE);
+            PacketClass response = new(Opcodes.SMSG_CHAR_DELETE);
             packet.GetInt16();
             ulong guid = packet.GetUInt64();
             try
             {
-                DataTable q = new DataTable();
+                DataTable q = new();
 
                 // Done: Fixed packet manipulation protection
                 _clusterServiceLocator.WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id FROM account WHERE username = \"{0}\";", client.Account), ref q);
@@ -577,7 +577,7 @@ namespace Mangos.Cluster.Handlers
             byte errCode = (byte)ATLoginFlags.AT_LOGIN_RENAME;
 
             // DONE: Check for existing name
-            DataTable q = new DataTable();
+            DataTable q = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT char_name FROM characters WHERE char_name LIKE \"{0}\";", name), ref q);
             if (q.Rows.Count > 0)
             {
@@ -591,7 +591,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Send response
-            PacketClass response = new PacketClass(Opcodes.SMSG_CHAR_RENAME);
+            PacketClass response = new(Opcodes.SMSG_CHAR_RENAME);
             response.AddInt8(errCode);
             client.Send(response);
             response.Dispose();
@@ -633,7 +633,7 @@ namespace Mangos.Cluster.Handlers
                 _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Character creation failed!{2}{3}", client.IP, client.Port, Constants.vbCrLf, ex.ToString());
             }
 
-            PacketClass response = new PacketClass(Opcodes.SMSG_CHAR_CREATE);
+            PacketClass response = new(Opcodes.SMSG_CHAR_CREATE);
             response.AddInt8((byte)result);
             client.Send(response);
         }
@@ -669,7 +669,7 @@ namespace Mangos.Cluster.Handlers
                 _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "[{0:000000}] Unable to login: WORLD SERVER DOWN", client.Index);
                 client.Character.Dispose();
                 client.Character = null;
-                PacketClass r = new PacketClass(Opcodes.SMSG_CHARACTER_LOGIN_FAILED);
+                PacketClass r = new(Opcodes.SMSG_CHARACTER_LOGIN_FAILED);
                 try
                 {
                     r.AddInt8((byte)CharResponse.CHAR_LOGIN_NO_WORLD);
@@ -680,7 +680,7 @@ namespace Mangos.Cluster.Handlers
                     _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "[{0:000000}] Unable to login: {1}", client.Index, ex.ToString());
                     client.Character.Dispose();
                     client.Character = null;
-                    PacketClass a = new PacketClass(Opcodes.SMSG_CHARACTER_LOGIN_FAILED);
+                    PacketClass a = new(Opcodes.SMSG_CHARACTER_LOGIN_FAILED);
                     try
                     {
                         a.AddInt8((byte)CharResponse.CHAR_LOGIN_FAILED);

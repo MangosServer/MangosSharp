@@ -57,7 +57,7 @@ namespace Mangos.Cluster.Network
                         int length = buffer[1] + (buffer[0] * 256) + 2;
                         await reader.ReadToArrayAsync(buffer, 6, length - 6);
 
-                        PacketClass packet = new PacketClass(buffer);
+                        PacketClass packet = new(buffer);
                         clientClass.OnPacket(packet);
                     }
                 }

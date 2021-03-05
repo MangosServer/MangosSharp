@@ -136,7 +136,7 @@ namespace Mangos.World.Social
                     flag |= 8u;
                 }
             }
-            Packets.PacketClass packet = new Packets.PacketClass(opCode);
+            Packets.PacketClass packet = new(opCode);
             packet.AddPackGUID(objCharacter.GUID);
             packet.AddUInt32(flag);
             if ((flag & (true ? 1u : 0u)) != 0)

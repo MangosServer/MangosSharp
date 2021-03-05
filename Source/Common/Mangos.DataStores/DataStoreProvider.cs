@@ -26,7 +26,7 @@ namespace Mangos.DataStores
     {
         private readonly string dbcDirectory = "dbc";
 
-        private Dictionary<string, DataStore> dataStores;
+        private readonly Dictionary<string, DataStore> dataStores;
 
         public DataStoreProvider() => dataStores = new Dictionary<string, DataStore>();
 
@@ -38,7 +38,7 @@ namespace Mangos.DataStores
             }
 
             string path = Path.Combine(dbcDirectory, dbcFileName);
-            DataStore dataStore = new DataStore();
+            DataStore dataStore = new();
             await dataStore.LoadFromFileAsync(path);
             dataStores[dbcFileName] = dataStore;
             return dataStore;

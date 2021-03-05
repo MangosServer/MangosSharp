@@ -29,15 +29,15 @@ namespace Mangos.WoWFakeClient
 {
     public static class Worldserver
     {
-        private static readonly Socket Connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+        private static readonly Socket Connection = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
         private static IPAddress ConnIP;
         private static int ConnPort;
-        public static Queue Queue = new Queue();
+        public static Queue Queue = new();
         private static Timer PingTimer;
         public static int PingSent;
         public static uint CurrentPing;
         public static int CurrentLatency;
-        public static Dictionary<OPCODES, HandlePacket> PacketHandlers = new Dictionary<OPCODES, HandlePacket>();
+        public static Dictionary<OPCODES, HandlePacket> PacketHandlers = new();
 
         public delegate void HandlePacket(ref Packets.PacketClass Packet);
 
@@ -129,7 +129,7 @@ namespace Mangos.WoWFakeClient
                             // Move packet to Data
                             byte[] data = new byte[PacketLen];
                             Array.Copy(Buffer, data, PacketLen);
-                            Packets.PacketClass Packet = new Packets.PacketClass(ref data);
+                            Packets.PacketClass Packet = new(ref data);
                             lock (Queue.SyncRoot)
                             {
                                 Queue.Enqueue(Packet);
@@ -197,7 +197,7 @@ namespace Mangos.WoWFakeClient
 
                 CurrentPing = (uint)(CurrentPing + 1L);
                 PingSent = timeGetTime();
-                Packets.PacketClass Ping = new Packets.PacketClass(OPCODES.CMSG_PING);
+                Packets.PacketClass Ping = new(OPCODES.CMSG_PING);
                 Ping.AddUInt32(CurrentPing);
                 Ping.AddInt32(CurrentLatency);
                 Send(Ping);

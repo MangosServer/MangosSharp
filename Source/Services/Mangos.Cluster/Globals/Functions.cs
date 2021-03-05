@@ -228,14 +228,14 @@ namespace Mangos.Cluster.Globals
             return name.Length > 1 ? Strings.UCase(Strings.Left(name, 1)) + Strings.LCase(Strings.Right(name, name.Length - 1)) : Strings.UCase(name);
         }
 
-        private readonly Regex _regexAz = new Regex("^[a-zA-Z]+$");
+        private readonly Regex _regexAz = new("^[a-zA-Z]+$");
 
         public bool ValidateName(string strName)
         {
             return strName.Length is not < 2 and not > 16 && _regexAz.IsMatch(strName);
         }
 
-        private readonly Regex _regexGuild = new Regex("^[a-z A-Z]+$");
+        private readonly Regex _regexGuild = new("^[a-z A-Z]+$");
 
         public bool ValidateGuildName(string strName)
         {
@@ -273,8 +273,8 @@ namespace Mangos.Cluster.Globals
 
         public void Ban_Account(string name, string reason)
         {
-            DataTable account = new DataTable();
-            DataTable bannedAccount = new DataTable();
+            DataTable account = new();
+            DataTable bannedAccount = new();
             _clusterServiceLocator.WorldCluster.GetAccountDatabase().Query(string.Format("SELECT id, username FROM account WHERE username = {0};", name), ref account);
             if (account.Rows.Count > 0)
             {
@@ -543,7 +543,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendMessageNotification(ClientClass client, string message)
         {
-            PacketClass packet = new PacketClass(Opcodes.SMSG_NOTIFICATION);
+            PacketClass packet = new(Opcodes.SMSG_NOTIFICATION);
             try
             {
                 packet.AddString(message);
@@ -601,7 +601,7 @@ namespace Mangos.Cluster.Globals
             // End If
             // End If
 
-            PacketClass smsgAccountDataTimes = new PacketClass(Opcodes.SMSG_ACCOUNT_DATA_MD5);
+            PacketClass smsgAccountDataTimes = new(Opcodes.SMSG_ACCOUNT_DATA_MD5);
             try
             {
                 // Dim md5hash As MD5 = MD5.Create()
@@ -638,7 +638,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendTriggerCinematic(ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
-            PacketClass packet = new PacketClass(Opcodes.SMSG_TRIGGER_CINEMATIC);
+            PacketClass packet = new(Opcodes.SMSG_TRIGGER_CINEMATIC);
             try
             {
                 if (_clusterServiceLocator.WsDbcDatabase.CharRaces.ContainsKey((int)character.Race))
@@ -670,7 +670,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendGameTime(ClientClass client, WcHandlerCharacter.CharacterObject character)
         {
-            PacketClass smsgLoginSettimespeed = new PacketClass(Opcodes.SMSG_LOGIN_SETTIMESPEED);
+            PacketClass smsgLoginSettimespeed = new(Opcodes.SMSG_LOGIN_SETTIMESPEED);
             try
             {
                 DateTime time = DateTime.Now;
@@ -696,7 +696,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendProficiency(ClientClass client, byte proficiencyType, int proficiencyFlags)
         {
-            PacketClass packet = new PacketClass(Opcodes.SMSG_SET_PROFICIENCY);
+            PacketClass packet = new(Opcodes.SMSG_SET_PROFICIENCY);
             try
             {
                 packet.AddInt8(proficiencyType);
@@ -713,7 +713,7 @@ namespace Mangos.Cluster.Globals
 
         public void SendCorpseReclaimDelay(ClientClass client, WcHandlerCharacter.CharacterObject character, int seconds = 30)
         {
-            PacketClass packet = new PacketClass(Opcodes.SMSG_CORPSE_RECLAIM_DELAY);
+            PacketClass packet = new(Opcodes.SMSG_CORPSE_RECLAIM_DELAY);
             try
             {
                 packet.AddInt32(seconds * 1000);
@@ -729,7 +729,7 @@ namespace Mangos.Cluster.Globals
 
         public PacketClass BuildChatMessage(ulong senderGuid, string message, ChatMsg msgType, LANGUAGES msgLanguage, byte flag = 0, string msgChannel = "Global")
         {
-            PacketClass packet = new PacketClass(Opcodes.SMSG_MESSAGECHAT);
+            PacketClass packet = new(Opcodes.SMSG_MESSAGECHAT);
             try
             {
                 packet.AddInt8((byte)msgType);
@@ -851,7 +851,7 @@ namespace Mangos.Cluster.Globals
 
         public PacketClass BuildPartyMemberStatsOffline(ulong guid)
         {
-            PacketClass packet = new PacketClass(Opcodes.SMSG_PARTY_MEMBER_STATS_FULL);
+            PacketClass packet = new(Opcodes.SMSG_PARTY_MEMBER_STATS_FULL);
             packet.AddPackGuid(guid);
             packet.AddUInt32((uint)PartyMemberStatsFlag.GROUP_UPDATE_FLAG_STATUS);
             packet.AddInt8((byte)PartyMemberStatsStatus.STATUS_OFFLINE);

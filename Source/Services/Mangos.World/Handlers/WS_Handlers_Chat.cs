@@ -38,7 +38,7 @@ namespace Mangos.World.Handlers
             {
                 return 1;
             }
-            return objCharacter.DND ? 2 : 0;
+            return (byte)(objCharacter.DND ? 2 : 0);
         }
 
         public void On_CMSG_MESSAGECHAT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)

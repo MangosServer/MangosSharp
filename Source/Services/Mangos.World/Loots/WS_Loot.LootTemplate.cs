@@ -88,7 +88,7 @@ namespace Mangos.World.Loots
                             LootStoreItem Item = (items2 = Items)[index = i];
                             items2[index] = Item;
                             List<LootItem> items = Loot.Items;
-                            LootItem item = new LootItem(ref Item);
+                            LootItem item = new(ref Item);
                             items.Add(item);
                         }
                     }

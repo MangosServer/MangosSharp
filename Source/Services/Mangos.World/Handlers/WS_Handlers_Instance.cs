@@ -35,7 +35,7 @@ namespace Mangos.World.Handlers
     {
         public void InstanceMapUpdate()
         {
-            DataTable q = new DataTable();
+            DataTable q = new();
             uint TimeStamp = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE expire < {TimeStamp};", ref q);
             IEnumerator enumerator = default;
@@ -62,7 +62,7 @@ namespace Mangos.World.Handlers
 
         public uint InstanceMapCreate(uint Map)
         {
-            DataTable q = new DataTable();
+            DataTable q = new();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT MAX(instance) FROM characters_instances WHERE map = {Map};", ref q);
             return q.Rows[0][0] != DBNull.Value ? (uint)(q.Rows[0].As<int>(0) + 1) : 0u;
         }
@@ -231,7 +231,7 @@ namespace Mangos.World.Handlers
                 return;
             }
             InstanceMapUpdate();
-            DataTable q = new DataTable();
+            DataTable q = new();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE char_guid = {objCharacter.GUID} AND map = {objCharacter.MapID};", ref q);
             if (q.Rows.Count > 0)
             {
@@ -298,7 +298,7 @@ namespace Mangos.World.Handlers
 
         public void SendInstanceSaved(WS_PlayerData.CharacterObject Character)
         {
-            DataTable q = new DataTable();
+            DataTable q = new();
             WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE char_guid = {Character.GUID};", ref q);
             SendUpdateInstanceOwnership(ref Character.client, 0u - ((q.Rows.Count > 0) ? 1u : 0u));
             IEnumerator enumerator = default;

@@ -96,7 +96,7 @@ namespace Mangos.World.Objects
                         {
                             if (ActiveSpells[i] != null && ActiveSpells[i].Aura_Info[j] != null && ActiveSpells[i].Aura_Info[j].ID == SpellEffects_Names.SPELL_EFFECT_APPLY_AREA_AURA)
                             {
-                                List<WS_Base.BaseUnit> Targets = new List<WS_Base.BaseUnit>();
+                                List<WS_Base.BaseUnit> Targets = new();
                                 switch (Caster)
                                 {
                                     case WS_PlayerData.CharacterObject _:

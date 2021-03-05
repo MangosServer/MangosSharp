@@ -38,7 +38,7 @@ namespace Mangos.Cluster.Network
             return _clusterServiceLocator.NativeMethods.timeGetTime("") - _lastPing;
         }
 
-        public Dictionary<uint, DateTime> LastConnections = new Dictionary<uint, DateTime>();
+        public Dictionary<uint, DateTime> LastConnections = new();
 
         public uint Ip2Int(string ip)
         {

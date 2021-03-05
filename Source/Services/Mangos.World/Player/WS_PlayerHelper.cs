@@ -431,7 +431,7 @@ namespace Mangos.World.Player
 
         public void SendBindPointUpdate(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
-            Packets.PacketClass SMSG_BINDPOINTUPDATE = new Packets.PacketClass(Opcodes.SMSG_BINDPOINTUPDATE);
+            Packets.PacketClass SMSG_BINDPOINTUPDATE = new(Opcodes.SMSG_BINDPOINTUPDATE);
             try
             {
                 SMSG_BINDPOINTUPDATE.AddSingle(Character.bindpoint_positionX);
@@ -449,7 +449,7 @@ namespace Mangos.World.Player
 
         public void Send_SMSG_SET_REST_START(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
-            Packets.PacketClass SMSG_SET_REST_START = new Packets.PacketClass(Opcodes.SMSG_SET_REST_START);
+            Packets.PacketClass SMSG_SET_REST_START = new(Opcodes.SMSG_SET_REST_START);
             try
             {
                 SMSG_SET_REST_START.AddInt32(WorldServiceLocator._WS_Network.MsTime());
@@ -463,7 +463,7 @@ namespace Mangos.World.Player
 
         public void SendTutorialFlags(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
-            Packets.PacketClass SMSG_TUTORIAL_FLAGS = new Packets.PacketClass(Opcodes.SMSG_TUTORIAL_FLAGS);
+            Packets.PacketClass SMSG_TUTORIAL_FLAGS = new(Opcodes.SMSG_TUTORIAL_FLAGS);
             try
             {
                 SMSG_TUTORIAL_FLAGS.AddByteArray(Character.TutorialFlags);
@@ -477,7 +477,7 @@ namespace Mangos.World.Player
 
         public void SendFactions(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_INITIALIZE_FACTIONS);
+            Packets.PacketClass packet = new(Opcodes.SMSG_INITIALIZE_FACTIONS);
             try
             {
                 packet.AddInt32(64);
@@ -505,7 +505,7 @@ namespace Mangos.World.Player
 
         public void SendActionButtons(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_ACTION_BUTTONS);
+            Packets.PacketClass packet = new(Opcodes.SMSG_ACTION_BUTTONS);
             try
             {
                 byte i = 0;
@@ -551,7 +551,7 @@ namespace Mangos.World.Player
                 3703 => 9,
                 _ => 10,
             };
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_INIT_WORLD_STATES);
+            Packets.PacketClass packet = new(Opcodes.SMSG_INIT_WORLD_STATES);
             try
             {
                 packet.AddUInt32(Character.MapID);
@@ -617,7 +617,7 @@ namespace Mangos.World.Player
 
         public void SendInitialSpells(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_INITIAL_SPELLS);
+            Packets.PacketClass packet = new(Opcodes.SMSG_INITIAL_SPELLS);
             checked
             {
                 try
@@ -626,7 +626,7 @@ namespace Mangos.World.Player
                     int countPos = packet.Data.Length;
                     packet.AddInt16(0);
                     int spellCount = 0;
-                    Dictionary<int, KeyValuePair<uint, int>> spellCooldowns = new Dictionary<int, KeyValuePair<uint, int>>();
+                    Dictionary<int, KeyValuePair<uint, int>> spellCooldowns = new();
                     foreach (KeyValuePair<int, WS_Spells.CharacterSpell> Spell in Character.Spells)
                     {
                         if (Spell.Value.Active == 1)
@@ -681,7 +681,7 @@ namespace Mangos.World.Player
 
         public void InitializeTalentSpells(WS_PlayerData.CharacterObject objCharacter)
         {
-            WS_Spells.SpellTargets t = new WS_Spells.SpellTargets();
+            WS_Spells.SpellTargets t = new();
             WS_Base.BaseUnit objCharacter2 = objCharacter;
             t.SetTarget_SELF(ref objCharacter2);
             objCharacter = (WS_PlayerData.CharacterObject)objCharacter2;

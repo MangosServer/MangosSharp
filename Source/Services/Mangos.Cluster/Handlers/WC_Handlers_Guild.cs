@@ -73,7 +73,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Create guild data
-            DataTable mySqlQuery = new DataTable();
+            DataTable mySqlQuery = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES (\"{0}\", {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = \"{0}\";", guildName, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref mySqlQuery);
             _clusterServiceLocator.WcGuild.AddCharacterToGuild(client.Character, mySqlQuery.Rows[0].As<int>("guild_id"), 0);
         }
@@ -88,7 +88,7 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_INFO);
+            PacketClass response = new(Opcodes.SMSG_GUILD_INFO);
             response.AddString(client.Character.Guild.Name);
             response.AddInt32(client.Character.Guild.CDay);
             response.AddInt32(client.Character.Guild.CMonth);
@@ -240,7 +240,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Find new leader's GUID
-            DataTable mySqlQuery = new DataTable();
+            DataTable mySqlQuery = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid, char_guildId, char_guildrank FROM characters WHERE char_name = '" + playerName + "';", ref mySqlQuery);
             if (mySqlQuery.Rows.Count == 0)
             {
@@ -269,7 +269,7 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", client.Character.GuildRank, client.Character.Guid));
 
             // DONE: Send notify message
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.LEADER_CHANGED);
             response.AddInt8(2);
             response.AddString(client.Character.Name);
@@ -319,7 +319,7 @@ namespace Mangos.Cluster.Handlers
             client.Character.Guild.BackgroundColor = (byte)tBackgroundColor;
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_tEmblemStyle = {1}, guild_tEmblemColor = {2}, guild_tBorderStyle = {3}, guild_tBorderColor = {4}, guild_tBackgroundColor = {5} WHERE guild_id = {0};", client.Character.Guild.Id, tEmblemStyle, tEmblemColor, tBorderStyle, tBorderColor, tBackgroundColor));
             _clusterServiceLocator.WcGuild.SendGuildQuery(client, client.Character.Guild.Id);
-            PacketClass packetEvent = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass packetEvent = new(Opcodes.SMSG_GUILD_EVENT);
             packetEvent.AddInt8((byte)GuildEvent.TABARDCHANGE);
             packetEvent.AddInt32((int)client.Character.Guild.Id);
             ulong argnotTo = 0UL;
@@ -350,7 +350,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Clear all members
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.DISBANDED);
             response.AddInt8(0);
             int guildId = (int)client.Character.Guild.Id;
@@ -408,7 +408,7 @@ namespace Mangos.Cluster.Handlers
 
             client.Character.Guild.Motd = motd;
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_MOTD = '{1}' WHERE guild_id = '{0}';", client.Character.Guild.Id, motd));
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.MOTD);
             response.AddInt8(1);
             response.AddString(motd);
@@ -514,7 +514,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Find player2's guid
-            DataTable q = new DataTable();
+            DataTable q = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName + "';", ref q);
 
             // DONE: Removed checks
@@ -538,7 +538,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Send guild event
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.REMOVED);
             response.AddInt8(2);
             response.AddString(playerName);
@@ -572,7 +572,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Find promoted player's guid
-            DataTable q = new DataTable();
+            DataTable q = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
 
             // DONE: Promoted checks
@@ -613,7 +613,7 @@ namespace Mangos.Cluster.Handlers
             objCharacter.SendGuildUpdate();
 
             // DONE: Send event to guild
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.PROMOTION);
             response.AddInt8(3);
             response.AddString(objCharacter.Name);
@@ -647,7 +647,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Find demoted player's guid
-            DataTable q = new DataTable();
+            DataTable q = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
 
             // DONE: Demoted checks
@@ -695,7 +695,7 @@ namespace Mangos.Cluster.Handlers
             objCharacter.SendGuildUpdate();
 
             // DONE: Send event to guild
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.DEMOTION);
             response.AddInt8(3);
             response.AddString(objCharacter.Name);
@@ -732,7 +732,7 @@ namespace Mangos.Cluster.Handlers
             }
 
             // DONE: Find invited player's guid
-            DataTable q = new DataTable();
+            DataTable q = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_guid FROM characters WHERE char_name = '" + playerName.Replace("'", "_") + "';", ref q);
 
             // DONE: Invited checks
@@ -767,7 +767,7 @@ namespace Mangos.Cluster.Handlers
                 return;
             }
 
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_INVITE);
+            PacketClass response = new(Opcodes.SMSG_GUILD_INVITE);
             response.AddString(client.Character.Name);
             response.AddString(client.Character.Guild.Name);
             objCharacter.Client.Send(response);
@@ -785,7 +785,7 @@ namespace Mangos.Cluster.Handlers
 
             _clusterServiceLocator.WcGuild.AddCharacterToGuild(client.Character, (int)client.Character.GuildInvited);
             client.Character.GuildInvited = 0U;
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.JOINED);
             response.AddInt8(1);
             response.AddString(client.Character.Name);
@@ -801,7 +801,7 @@ namespace Mangos.Cluster.Handlers
             client.Character.GuildInvited = 0U;
             if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey((ulong)Conversions.ToLong(client.Character.GuildInvitedBy)))
             {
-                PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_DECLINE);
+                PacketClass response = new(Opcodes.SMSG_GUILD_DECLINE);
                 response.AddString(client.Character.Name);
                 _clusterServiceLocator.WorldCluster.CharacteRs[(ulong)Conversions.ToLong(client.Character.GuildInvitedBy)].Client.Send(response);
                 response.Dispose();
@@ -829,7 +829,7 @@ namespace Mangos.Cluster.Handlers
 
             _clusterServiceLocator.WcGuild.RemoveCharacterFromGuild(client.Character);
             _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_QUIT_S, GuildError.GUILD_PLAYER_NO_MORE_IN_GUILD, client.Character.Name);
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass response = new(Opcodes.SMSG_GUILD_EVENT);
             response.AddInt8((byte)GuildEvent.LEFT);
             response.AddInt8(1);
             response.AddString(client.Character.Name);
@@ -850,7 +850,7 @@ namespace Mangos.Cluster.Handlers
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TURN_IN_PETITION [GUID={2:X}]", client.IP, client.Port, itemGuid);
 
             // DONE: Get info
-            DataTable q = new DataTable();
+            DataTable q = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT * FROM petitions WHERE petition_itemGuid = " + (itemGuid - _clusterServiceLocator.GlobalConstants.GUID_ITEM) + " LIMIT 1;", ref q);
             if (q.Rows.Count == 0)
             {
@@ -863,7 +863,7 @@ namespace Mangos.Cluster.Handlers
             // DONE: Check if already in guild
             if (type == 9 && client.Character.IsInGuild)
             {
-                PacketClass response = new PacketClass(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
+                PacketClass response = new(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
                 response.AddInt32((int)PetitionTurnInError.PETITIONTURNIN_ALREADY_IN_GUILD);
                 client.Send(response);
                 response.Dispose();
@@ -874,14 +874,14 @@ namespace Mangos.Cluster.Handlers
             byte requiredSigns = 9;
             if (q.Rows[0].As<int>("petition_signedMembers") < requiredSigns)
             {
-                PacketClass response = new PacketClass(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
+                PacketClass response = new(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
                 response.AddInt32((int)PetitionTurnInError.PETITIONTURNIN_NEED_MORE_SIGNATURES);
                 client.Send(response);
                 response.Dispose();
                 return;
             }
 
-            DataTable q2 = new DataTable();
+            DataTable q2 = new();
 
             // DONE: Create guild and add members
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("INSERT INTO guilds (guild_name, guild_leader, guild_cYear, guild_cMonth, guild_cDay) VALUES ('{0}', {1}, {2}, {3}, {4}); SELECT guild_id FROM guilds WHERE guild_name = '{0}';", name, client.Character.Guid, DateAndTime.Now.Year - 2006, DateAndTime.Now.Month, DateAndTime.Now.Day), ref q2);
@@ -905,7 +905,7 @@ namespace Mangos.Cluster.Handlers
 
             // DONE: Delete guild charter item, on the world server
             client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
-            PacketClass success = new PacketClass(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
+            PacketClass success = new(Opcodes.SMSG_TURN_IN_PETITION_RESULTS);
             success.AddInt32(0); // Okay
             client.Send(success);
             success.Dispose();

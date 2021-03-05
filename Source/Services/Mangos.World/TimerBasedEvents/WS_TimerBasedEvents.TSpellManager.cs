@@ -110,11 +110,11 @@ namespace Mangos.World.Server
                     {
                         WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                     }
-                    List<WS_DynamicObjects.DynamicObjectObject> DynamicObjectsToDelete = new List<WS_DynamicObjects.DynamicObjectObject>();
+                    List<WS_DynamicObjects.DynamicObject> DynamicObjectsToDelete = new();
                     try
                     {
                         WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                        foreach (KeyValuePair<ulong, WS_DynamicObjects.DynamicObjectObject> Dynamic in WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs)
+                        foreach (KeyValuePair<ulong, WS_DynamicObjects.DynamicObject> Dynamic in WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs)
                         {
                             if (Dynamic.Value != null && Dynamic.Value.Update())
                             {
@@ -133,7 +133,7 @@ namespace Mangos.World.Server
                     {
                         WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs_Lock.ReleaseReaderLock();
                     }
-                    foreach (WS_DynamicObjects.DynamicObjectObject item in DynamicObjectsToDelete)
+                    foreach (WS_DynamicObjects.DynamicObject item in DynamicObjectsToDelete)
                     {
                         item?.Delete();
                     }
@@ -207,7 +207,7 @@ namespace Mangos.World.Server
                             {
                                 if (objCharacter.ActiveSpells[i].SpellCaster == objCharacter)
                                 {
-                                    List<WS_Base.BaseUnit> Targets = new List<WS_Base.BaseUnit>();
+                                    List<WS_Base.BaseUnit> Targets = new();
                                     switch (objCharacter)
                                     {
                                         case WS_PlayerData.CharacterObject _:

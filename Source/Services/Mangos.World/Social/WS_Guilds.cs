@@ -41,7 +41,7 @@ namespace Mangos.World.Social
                 {
                     Count = 1;
                 }
-                Packets.PacketClass packet = new Packets.PacketClass(Opcodes.SMSG_PETITION_SHOWLIST);
+                Packets.PacketClass packet = new(Opcodes.SMSG_PETITION_SHOWLIST);
                 packet.AddUInt64(cGUID);
                 packet.AddInt8(1);
                 if (Count == 1)
@@ -106,7 +106,7 @@ namespace Mangos.World.Social
                 }
                 int CharterID = WorldServiceLocator._Global_Constants.PETITION_GUILD;
                 int CharterPrice = WorldServiceLocator._Global_Constants.PETITION_GUILD_PRICE;
-                DataTable q = new DataTable();
+                DataTable q = new();
                 WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT guild_id FROM guilds WHERE guild_name = '{Name}'", ref q);
                 if (q.Rows.Count > 0)
                 {
@@ -119,7 +119,7 @@ namespace Mangos.World.Social
                 }
                 if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(CharterID))
                 {
-                    Packets.PacketClass response2 = new Packets.PacketClass(Opcodes.SMSG_BUY_FAILED);
+                    Packets.PacketClass response2 = new(Opcodes.SMSG_BUY_FAILED);
                     response2.AddUInt64(GUID);
                     response2.AddInt32(CharterID);
                     response2.AddInt8(0);
@@ -129,7 +129,7 @@ namespace Mangos.World.Social
                 }
                 if (client.Character.Copper < CharterPrice)
                 {
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_BUY_FAILED);
+                    Packets.PacketClass response = new(Opcodes.SMSG_BUY_FAILED);
                     response.AddUInt64(GUID);
                     response.AddInt32(CharterID);
                     response.AddInt8(2);
@@ -141,7 +141,7 @@ namespace Mangos.World.Social
                 copper = (uint)(copper - CharterPrice);
                 client.Character.SetUpdateFlag(1176, client.Character.Copper);
                 client.Character.SendCharacterUpdate(toNear: false);
-                ItemObject tmpItem = new ItemObject(CharterID, client.Character.GUID)
+                ItemObject tmpItem = new(CharterID, client.Character.GUID)
                 {
                     StackCount = 1
                 };
@@ -159,13 +159,13 @@ namespace Mangos.World.Social
 
         public void SendPetitionSignatures(ref WS_PlayerData.CharacterObject objCharacter, ulong iGUID)
         {
-            DataTable MySQLQuery = new DataTable();
+            DataTable MySQLQuery = new();
             checked
             {
                 WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count != 0)
                 {
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_PETITION_SHOW_SIGNATURES);
+                    Packets.PacketClass response = new(Opcodes.SMSG_PETITION_SHOW_SIGNATURES);
                     response.AddUInt64(iGUID);
                     response.AddUInt64(MySQLQuery.Rows[0].As<ulong>("petition_owner"));
                     response.AddInt32(MySQLQuery.Rows[0].As<int>("petition_id"));
@@ -207,11 +207,11 @@ namespace Mangos.World.Social
                 int PetitionGUID = packet.GetInt32();
                 ulong itemGuid = packet.GetUInt64();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_QUERY [pGUID={3} iGUID={2:X}]", client.IP, client.Port, itemGuid, PetitionGUID);
-                DataTable MySQLQuery = new DataTable();
+                DataTable MySQLQuery = new();
                 WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count != 0)
                 {
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_PETITION_QUERY_RESPONSE);
+                    Packets.PacketClass response = new(Opcodes.SMSG_PETITION_QUERY_RESPONSE);
                     response.AddInt32(MySQLQuery.Rows[0].As<int>("petition_id"));
                     response.AddUInt64(MySQLQuery.Rows[0].As<ulong>("petition_owner"));
                     response.AddString(MySQLQuery.Rows[0].As<string>("petition_name"));
@@ -262,7 +262,7 @@ namespace Mangos.World.Social
                     string NewName = packet.GetString();
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_PETITION_RENAME [NewName={3} GUID={2:X}]", client.IP, client.Port, itemGuid, NewName);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update("UPDATE petitions SET petition_name = '" + NewName + "' WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";");
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.MSG_PETITION_RENAME);
+                    Packets.PacketClass response = new(Opcodes.MSG_PETITION_RENAME);
                     response.AddUInt64(itemGuid);
                     response.AddString(NewName);
                     response.AddInt32((int)(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM));
@@ -304,12 +304,12 @@ namespace Mangos.World.Social
                 ulong itemGuid = packet.GetUInt64();
                 int Unk = packet.GetInt8();
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_SIGN [GUID={2:X} Unk={3}]", client.IP, client.Port, itemGuid, Unk);
-                DataTable MySQLQuery = new DataTable();
+                DataTable MySQLQuery = new();
                 WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT petition_signedMembers, petition_owner FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count != 0)
                 {
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE petitions SET petition_signedMembers = petition_signedMembers + 1, petition_signedMember", Operators.AddObject(MySQLQuery.Rows[0]["petition_signedMembers"], 1)), " = "), client.Character.GUID), " WHERE petition_itemGuid = "), itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM), ";")));
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_PETITION_SIGN_RESULTS);
+                    Packets.PacketClass response = new(Opcodes.SMSG_PETITION_SIGN_RESULTS);
                     response.AddUInt64(itemGuid);
                     response.AddUInt64(client.Character.GUID);
                     response.AddInt32(0);
@@ -332,9 +332,9 @@ namespace Mangos.World.Social
                     packet.GetInt16();
                     ulong itemGuid = packet.GetUInt64();
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_PETITION_DECLINE [GUID={2:X}]", client.IP, client.Port, itemGuid);
-                    DataTable q = new DataTable();
+                    DataTable q = new();
                     WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT petition_owner FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM) + " LIMIT 1;", ref q);
-                    Packets.PacketClass response = new Packets.PacketClass(Opcodes.MSG_PETITION_DECLINE);
+                    Packets.PacketClass response = new(Opcodes.MSG_PETITION_DECLINE);
                     response.AddUInt64(client.Character.GUID);
                     if (q.Rows.Count > 0 && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("petition_owner")))
                     {
@@ -358,7 +358,7 @@ namespace Mangos.World.Social
 
         public void SendTabardActivate(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
         {
-            Packets.PacketClass packet = new Packets.PacketClass(Opcodes.MSG_TABARDVENDOR_ACTIVATE);
+            Packets.PacketClass packet = new(Opcodes.MSG_TABARDVENDOR_ACTIVATE);
             packet.AddUInt64(cGUID);
             objCharacter.client.Send(ref packet);
             packet.Dispose();
@@ -391,7 +391,7 @@ namespace Mangos.World.Social
 
         public void SendGuildResult(ref WS_Network.ClientClass client, GuildCommand Command, GuildError Result, string Text = "")
         {
-            Packets.PacketClass response = new Packets.PacketClass(Opcodes.SMSG_GUILD_COMMAND_RESULT);
+            Packets.PacketClass response = new(Opcodes.SMSG_GUILD_COMMAND_RESULT);
             response.AddInt32((int)Command);
             response.AddString(Text);
             response.AddInt32((int)Result);

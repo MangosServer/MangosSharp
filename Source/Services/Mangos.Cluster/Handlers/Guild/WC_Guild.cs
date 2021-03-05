@@ -36,7 +36,7 @@ namespace Mangos.Cluster.Handlers.Guild
 
         public WcGuild(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
 
-        public Dictionary<uint, Guild> GuilDs = new Dictionary<uint, Guild>();
+        public Dictionary<uint, Guild> GuilDs = new();
 
         // Basic Guild Framework
         public void AddCharacterToGuild(WcHandlerCharacter.CharacterObject objCharacter, int guildId, int guildRank = 4)
@@ -44,7 +44,7 @@ namespace Mangos.Cluster.Handlers.Guild
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE characters SET char_guildId = {0}, char_guildRank = {2}, char_guildOffNote = '', char_guildPNote = '' WHERE char_guid = {1};", guildId, objCharacter.Guid, guildRank));
             if (GuilDs.ContainsKey((uint)guildId) == false)
             {
-                Guild tmpGuild = new Guild((uint)guildId);
+                Guild tmpGuild = new((uint)guildId);
                 GuilDs.Add((uint)guildId, tmpGuild);
             }
 
@@ -154,11 +154,11 @@ namespace Mangos.Cluster.Handlers.Guild
             // DONE: Load the guild if it doesn't exist in the memory
             if (GuilDs.ContainsKey(guildId) == false)
             {
-                Guild tmpGuild = new Guild(guildId);
+                Guild tmpGuild = new(guildId);
                 GuilDs.Add(guildId, tmpGuild);
             }
 
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_QUERY_RESPONSE);
+            PacketClass response = new(Opcodes.SMSG_GUILD_QUERY_RESPONSE);
             response.AddUInt32(guildId);
             response.AddString(GuilDs[guildId].Name);
             for (int i = 0; i <= 9; i++)
@@ -194,9 +194,9 @@ namespace Mangos.Cluster.Handlers.Guild
             }
 
             // DONE: Count the members
-            DataTable members = new DataTable();
+            DataTable members = new();
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query("SELECT char_online, char_guid, char_name, char_class, char_level, char_zone_id, char_logouttime, char_guildRank, char_guildPNote, char_guildOffNote FROM characters WHERE char_guildId = " + objCharacter.Guild.Id + ";", ref members);
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_ROSTER);
+            PacketClass response = new(Opcodes.SMSG_GUILD_ROSTER);
             response.AddInt32(members.Rows.Count);
             response.AddString(objCharacter.Guild.Motd);
             response.AddString(objCharacter.Guild.Info);
@@ -262,7 +262,7 @@ namespace Mangos.Cluster.Handlers.Guild
 
         public void SendGuildResult(ClientClass client, GuildCommand command, GuildError result, string text = "")
         {
-            PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_COMMAND_RESULT);
+            PacketClass response = new(Opcodes.SMSG_GUILD_COMMAND_RESULT);
             response.AddInt32((int)command);
             response.AddString(text);
             response.AddInt32((int)result);
@@ -277,7 +277,7 @@ namespace Mangos.Cluster.Handlers.Guild
                 return;
             }
 
-            PacketClass statuspacket = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+            PacketClass statuspacket = new(Opcodes.SMSG_GUILD_EVENT);
             statuspacket.AddInt8((byte)status);
             statuspacket.AddInt8(1);
             statuspacket.AddString(objCharacter.Name);
@@ -312,7 +312,7 @@ namespace Mangos.Cluster.Handlers.Guild
             {
                 if (!string.IsNullOrEmpty(objCharacter.Guild.Motd))
                 {
-                    PacketClass response = new PacketClass(Opcodes.SMSG_GUILD_EVENT);
+                    PacketClass response = new(Opcodes.SMSG_GUILD_EVENT);
                     response.AddInt8((byte)GuildEvent.MOTD);
                     response.AddInt8(1);
                     response.AddString(objCharacter.Guild.Motd);
