@@ -394,7 +394,7 @@ namespace Mangos.World.Handlers
         {
             try
             {
-                if (client.Character != null)
+                if (client.Character is null)
                 {
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1} Account:{2} CharName:{3} CharGUID:{4}] Client is Null!", client.IP, client.Port, client.Account, client.Character.UnitName, client.Character.GUID);
                     return;
@@ -407,7 +407,6 @@ namespace Mangos.World.Handlers
                 client.Character.cUnitFlags = 8;
                 client.Character.cDynamicFlags = 0;
                 client.Character.cPlayerFlags |= PlayerFlags.PLAYER_FLAGS_DEAD;
-                client.Character = null;
                 WorldServiceLocator._Functions.SendCorpseReclaimDelay(ref client, ref client.Character);
                 client.Character.StopMirrorTimer(MirrorTimer.FATIGUE);
                 client.Character.StopMirrorTimer(MirrorTimer.DROWNING);

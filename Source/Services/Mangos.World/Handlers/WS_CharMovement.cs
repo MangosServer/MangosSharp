@@ -869,11 +869,11 @@ namespace Mangos.World.Handlers
                 else
                 {
                     WS_PlayerData.CharacterObject obj4 = Character;
-                    Dictionary<ulong, WS_GameObjects.GameObjectObject> wORLD_GAMEOBJECTs;
+                    Dictionary<ulong, WS_GameObjects.GameObject> wORLD_GAMEOBJECTs;
                     ulong key;
                     WS_Base.BaseObject objCharacter = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID3];
                     bool flag = obj4.CanSee(ref objCharacter);
-                    wORLD_GAMEOBJECTs[key] = (WS_GameObjects.GameObjectObject)objCharacter;
+                    wORLD_GAMEOBJECTs[key] = (WS_GameObjects.GameObject)objCharacter;
                     if (!flag)
                     {
                         Character.guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
@@ -889,11 +889,11 @@ namespace Mangos.World.Handlers
             foreach (ulong GUID4 in array4)
             {
                 WS_PlayerData.CharacterObject obj5 = Character;
-                Dictionary<ulong, WS_DynamicObjects.DynamicObjectObject> wORLD_DYNAMICOBJECTs;
+                Dictionary<ulong, WS_DynamicObjects.DynamicObject> wORLD_DYNAMICOBJECTs;
                 ulong key;
                 WS_Base.BaseObject objCharacter = (wORLD_DYNAMICOBJECTs = WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs)[key = GUID4];
                 bool flag = obj5.CanSee(ref objCharacter);
-                wORLD_DYNAMICOBJECTs[key] = (WS_DynamicObjects.DynamicObjectObject)objCharacter;
+                wORLD_DYNAMICOBJECTs[key] = (WS_DynamicObjects.DynamicObject)objCharacter;
                 if (!flag)
                 {
                     Character.guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
@@ -1131,7 +1131,7 @@ namespace Mangos.World.Handlers
                         WorldServiceLocator._WorldServer.WORLD_TRANSPORTs[GUID2].FillAllUpdateFlags(ref tmpUpdate3, ref Character);
                         Packets.UpdateClass updateClass2 = tmpUpdate3;
                         Packets.PacketClass packet2 = packet;
-                        WS_GameObjects.GameObjectObject updateObject2 = (wORLD_TRANSPORTs = WorldServiceLocator._WorldServer.WORLD_TRANSPORTs)[key = GUID2];
+                        WS_GameObjects.GameObject updateObject2 = (wORLD_TRANSPORTs = WorldServiceLocator._WorldServer.WORLD_TRANSPORTs)[key = GUID2];
                         updateClass2.AddToPacket(ref packet2, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject2);
                         wORLD_TRANSPORTs[key] = (WS_Transports.TransportObject)updateObject2;
                         packet = (Packets.UpdatePacketClass)packet2;
@@ -1143,18 +1143,18 @@ namespace Mangos.World.Handlers
                 else
                 {
                     WS_PlayerData.CharacterObject obj3 = Character;
-                    Dictionary<ulong, WS_GameObjects.GameObjectObject> wORLD_GAMEOBJECTs;
+                    Dictionary<ulong, WS_GameObjects.GameObject> wORLD_GAMEOBJECTs;
                     ulong key;
                     WS_Base.BaseObject objCharacter = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID2];
                     bool flag = obj3.CanSee(ref objCharacter);
-                    wORLD_GAMEOBJECTs[key] = (WS_GameObjects.GameObjectObject)objCharacter;
+                    wORLD_GAMEOBJECTs[key] = (WS_GameObjects.GameObject)objCharacter;
                     if (flag)
                     {
                         Packets.UpdateClass tmpUpdate2 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2].FillAllUpdateFlags(ref tmpUpdate2, ref Character);
                         Packets.UpdateClass updateClass3 = tmpUpdate2;
                         Packets.PacketClass packet2 = packet;
-                        WS_GameObjects.GameObjectObject updateObject2 = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID2];
+                        WS_GameObjects.GameObject updateObject2 = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID2];
                         updateClass3.AddToPacket(ref packet2, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject2);
                         wORLD_GAMEOBJECTs[key] = updateObject2;
                         packet = (Packets.UpdatePacketClass)packet2;
@@ -1171,18 +1171,18 @@ namespace Mangos.World.Handlers
                 if (!Character.dynamicObjectsNear.Contains(GUID3))
                 {
                     WS_PlayerData.CharacterObject obj4 = Character;
-                    Dictionary<ulong, WS_DynamicObjects.DynamicObjectObject> wORLD_DYNAMICOBJECTs;
+                    Dictionary<ulong, WS_DynamicObjects.DynamicObject> wORLD_DYNAMICOBJECTs;
                     ulong key;
                     WS_Base.BaseObject objCharacter = (wORLD_DYNAMICOBJECTs = WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs)[key = GUID3];
                     bool flag = obj4.CanSee(ref objCharacter);
-                    wORLD_DYNAMICOBJECTs[key] = (WS_DynamicObjects.DynamicObjectObject)objCharacter;
+                    wORLD_DYNAMICOBJECTs[key] = (WS_DynamicObjects.DynamicObject)objCharacter;
                     if (flag)
                     {
                         Packets.UpdateClass tmpUpdate4 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_DYNAMICOBJECT);
                         WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs[GUID3].FillAllUpdateFlags(ref tmpUpdate4);
                         Packets.UpdateClass updateClass4 = tmpUpdate4;
                         Packets.PacketClass packet2 = packet;
-                        WS_DynamicObjects.DynamicObjectObject updateObject3 = (wORLD_DYNAMICOBJECTs = WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs)[key = GUID3];
+                        WS_DynamicObjects.DynamicObject updateObject3 = (wORLD_DYNAMICOBJECTs = WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs)[key = GUID3];
                         updateClass4.AddToPacket(ref packet2, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF, ref updateObject3);
                         wORLD_DYNAMICOBJECTs[key] = updateObject3;
                         packet = (Packets.UpdatePacketClass)packet2;
@@ -1253,11 +1253,11 @@ namespace Mangos.World.Handlers
                     if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(GUID) && WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID))
                     {
                         WS_PlayerData.CharacterObject obj = Character;
-                        Dictionary<ulong, WS_GameObjects.GameObjectObject> wORLD_GAMEOBJECTs;
+                        Dictionary<ulong, WS_GameObjects.GameObject> wORLD_GAMEOBJECTs;
                         ulong key;
                         WS_Base.BaseObject objCharacter = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
                         bool flag = obj.CanSee(ref objCharacter);
-                        wORLD_GAMEOBJECTs[key] = (WS_GameObjects.GameObjectObject)objCharacter;
+                        wORLD_GAMEOBJECTs[key] = (WS_GameObjects.GameObject)objCharacter;
                         num = flag ? 1 : 0;
                     }
                     else
@@ -1272,9 +1272,9 @@ namespace Mangos.World.Handlers
                         Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].FillAllUpdateFlags(ref tmpUpdate, ref Character);
                         Packets.UpdateClass updateClass = tmpUpdate;
-                        Dictionary<ulong, WS_GameObjects.GameObjectObject> wORLD_GAMEOBJECTs;
+                        Dictionary<ulong, WS_GameObjects.GameObject> wORLD_GAMEOBJECTs;
                         ulong key;
-                        WS_GameObjects.GameObjectObject updateObject = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
+                        WS_GameObjects.GameObject updateObject = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
                         updateClass.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject);
                         wORLD_GAMEOBJECTs[key] = updateObject;
                         tmpUpdate.Dispose();

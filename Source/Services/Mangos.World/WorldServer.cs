@@ -97,13 +97,13 @@ namespace Mangos.World
 
         public ArrayList WORLD_CREATUREsKeys;
 
-        public Dictionary<ulong, WS_GameObjects.GameObjectObject> WORLD_GAMEOBJECTs;
+        public Dictionary<ulong, WS_GameObjects.GameObject> WORLD_GAMEOBJECTs;
 
         public Dictionary<ulong, WS_Corpses.CorpseObject> WORLD_CORPSEOBJECTs;
 
         public System.Threading.ReaderWriterLock WORLD_DYNAMICOBJECTs_Lock;
 
-        public Dictionary<ulong, WS_DynamicObjects.DynamicObjectObject> WORLD_DYNAMICOBJECTs;
+        public Dictionary<ulong, WS_DynamicObjects.DynamicObject> WORLD_DYNAMICOBJECTs;
 
         public System.Threading.ReaderWriterLock WORLD_TRANSPORTs_Lock;
 
@@ -163,10 +163,10 @@ namespace Mangos.World
             WORLD_CREATUREs_Lock = new System.Threading.ReaderWriterLock();
             WORLD_CREATUREs = new Dictionary<ulong, WS_Creatures.CreatureObject>();
             WORLD_CREATUREsKeys = new ArrayList();
-            WORLD_GAMEOBJECTs = new Dictionary<ulong, WS_GameObjects.GameObjectObject>();
+            WORLD_GAMEOBJECTs = new Dictionary<ulong, WS_GameObjects.GameObject>();
             WORLD_CORPSEOBJECTs = new Dictionary<ulong, WS_Corpses.CorpseObject>();
             WORLD_DYNAMICOBJECTs_Lock = new System.Threading.ReaderWriterLock();
-            WORLD_DYNAMICOBJECTs = new Dictionary<ulong, WS_DynamicObjects.DynamicObjectObject>();
+            WORLD_DYNAMICOBJECTs = new Dictionary<ulong, WS_DynamicObjects.DynamicObject>();
             WORLD_TRANSPORTs_Lock = new System.Threading.ReaderWriterLock();
             WORLD_TRANSPORTs = new Dictionary<ulong, WS_Transports.TransportObject>();
             WORLD_ITEMs = new Dictionary<ulong, ItemObject>();

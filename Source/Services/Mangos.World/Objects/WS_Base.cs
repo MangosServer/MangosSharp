@@ -178,7 +178,7 @@ namespace Mangos.World.Objects
         {
             public const float CombatReach_Base = 2f;
 
-            public WS_GameObjects.GameObjectObject OnTransport;
+            public WS_GameObjects.GameObject OnTransport;
 
             public float transportX;
 
@@ -246,9 +246,9 @@ namespace Mangos.World.Objects
 
             public int AttackPowerModsRanged;
 
-            public List<WS_DynamicObjects.DynamicObjectObject> dynamicObjects;
+            public List<WS_DynamicObjects.DynamicObject> dynamicObjects;
 
-            public List<WS_GameObjects.GameObjectObject> gameObjects;
+            public List<WS_GameObjects.GameObject> gameObjects;
 
             public BaseActiveSpell[] ActiveSpells;
 
@@ -1356,8 +1356,8 @@ namespace Mangos.World.Objects
                 Spell_ThreatModifier = 1f;
                 AttackPowerMods = 0;
                 AttackPowerModsRanged = 0;
-                dynamicObjects = new List<WS_DynamicObjects.DynamicObjectObject>();
-                gameObjects = new List<WS_GameObjects.GameObjectObject>();
+                dynamicObjects = new List<WS_DynamicObjects.DynamicObject>();
+                gameObjects = new List<WS_GameObjects.GameObject>();
                 checked
                 {
                     ActiveSpells = new BaseActiveSpell[WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1 + 1];

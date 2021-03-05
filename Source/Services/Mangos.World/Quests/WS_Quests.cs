@@ -1122,7 +1122,7 @@ namespace Mangos.World.Quests
             while (i <= 24);
         }
 
-        public void OnQuestCastSpell(ref WS_PlayerData.CharacterObject objCharacter, ref WS_GameObjects.GameObjectObject gameObject, int spellID)
+        public void OnQuestCastSpell(ref WS_PlayerData.CharacterObject objCharacter, ref WS_GameObjects.GameObject gameObject, int spellID)
         {
             int i = 0;
             do
@@ -1262,7 +1262,7 @@ namespace Mangos.World.Quests
             return false;
         }
 
-        public byte IsGameObjectUsedForQuest(ref WS_GameObjects.GameObjectObject gameobject, ref WS_PlayerData.CharacterObject objCharacter)
+        public byte IsGameObjectUsedForQuest(ref WS_GameObjects.GameObject gameobject, ref WS_PlayerData.CharacterObject objCharacter)
         {
             if (!gameobject.IsUsedForQuests)
             {
@@ -1300,7 +1300,7 @@ namespace Mangos.World.Quests
         {
         }
 
-        public void OnQuestAddQuestLoot(ref WS_PlayerData.CharacterObject objCharacter, ref WS_GameObjects.GameObjectObject gameObject, ref WS_Loot.LootObject loot)
+        public void OnQuestAddQuestLoot(ref WS_PlayerData.CharacterObject objCharacter, ref WS_GameObjects.GameObject gameObject, ref WS_Loot.LootObject loot)
         {
         }
 

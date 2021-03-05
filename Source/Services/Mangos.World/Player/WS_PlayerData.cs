@@ -685,6 +685,12 @@ namespace Mangos.World.Player
                 _ => true,
             };
 
+            public bool IsAlliance => Race switch
+            {
+                Races.RACE_ORC or Races.RACE_UNDEAD or Races.RACE_TAUREN or Races.RACE_TROLL => false,
+                _ => true,
+            };
+
             public int Team => Race switch
             {
                 Races.RACE_HUMAN or Races.RACE_DWARF or Races.RACE_NIGHT_ELF or Races.RACE_GNOME => 469,
@@ -979,7 +985,7 @@ namespace Mangos.World.Player
 
                         break;
 
-                    case WS_GameObjects.GameObjectObject _ when ((WS_GameObjects.GameObjectObject)objCharacter).Despawned:
+                    case WS_GameObjects.GameObject _ when ((WS_GameObjects.GameObject)objCharacter).Despawned:
                         return false;
                 }
                 float distance = WorldServiceLocator._WS_Combat.GetDistance(this, objCharacter);
@@ -1158,7 +1164,7 @@ namespace Mangos.World.Player
                         if (OnTransport != null)
                         {
                             Packets.UpdateClass tmpUpdate2 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
-                            WS_GameObjects.GameObjectObject onTransport = OnTransport;
+                            WS_GameObjects.GameObject onTransport = OnTransport;
                             CharacterObject Character = this;
                             onTransport.FillAllUpdateFlags(ref tmpUpdate2, ref Character);
                             tmpUpdate2.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref OnTransport);
@@ -1932,9 +1938,9 @@ namespace Mangos.World.Player
                         WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_INTERRUPTED, ref client, SpellID);
                     }
                     client.Character.RemoveAuraBySpell(SpellID);
-                    WS_DynamicObjects.DynamicObjectObject[] DynamicObjects = client.Character.dynamicObjects.ToArray();
-                    WS_DynamicObjects.DynamicObjectObject[] array = DynamicObjects;
-                    foreach (WS_DynamicObjects.DynamicObjectObject tmpDO in array)
+                    WS_DynamicObjects.DynamicObject[] DynamicObjects = client.Character.dynamicObjects.ToArray();
+                    WS_DynamicObjects.DynamicObject[] array = DynamicObjects;
+                    foreach (WS_DynamicObjects.DynamicObject tmpDO in array)
                     {
                         if (tmpDO.SpellID == SpellID)
                         {
@@ -1943,9 +1949,9 @@ namespace Mangos.World.Player
                             break;
                         }
                     }
-                    WS_GameObjects.GameObjectObject[] GameObjects = client.Character.gameObjects.ToArray();
-                    WS_GameObjects.GameObjectObject[] array2 = GameObjects;
-                    foreach (WS_GameObjects.GameObjectObject tmpGO in array2)
+                    WS_GameObjects.GameObject[] GameObjects = client.Character.gameObjects.ToArray();
+                    WS_GameObjects.GameObject[] array2 = GameObjects;
+                    foreach (WS_GameObjects.GameObject tmpGO in array2)
                     {
                         if (tmpGO.CreatedBySpell == SpellID)
                         {
@@ -5228,7 +5234,7 @@ namespace Mangos.World.Player
                 {
                     return TReaction.HOSTILE;
                 }
-                return (GetReputation(WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[FactionID].FactionID)) switch
+                return GetReputation(WorldServiceLocator._WS_DBCDatabase.FactionTemplatesInfo[FactionID].FactionID) switch
                 {
                     ReputationRank.Hated or ReputationRank.Hostile => TReaction.HOSTILE,
                     ReputationRank.Friendly or ReputationRank.Honored => TReaction.FRIENDLY,
@@ -5774,7 +5780,7 @@ namespace Mangos.World.Player
                                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Spawning new transport!");
                                 ulong cGUID = TransportGUID - WorldServiceLocator._Global_Constants.GUID_TRANSPORT;
                                 DataRow row = null;
-                                WS_GameObjects.GameObjectObject newGameobject = new(cGUID, row);
+                                WS_GameObjects.GameObject newGameobject = new(cGUID, row);
                                 newGameobject.AddToWorld();
                                 OnTransport = newGameobject;
                                 transportX = positionX;

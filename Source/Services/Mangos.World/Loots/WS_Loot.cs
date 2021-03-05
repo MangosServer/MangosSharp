@@ -284,8 +284,8 @@ namespace Mangos.World.Loots
                         Packets.UpdateClass UpdateData2 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
                         UpdateData2.SetUpdateFlag(14, 0, (byte)WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].State);
                         ulong key;
-                        Dictionary<ulong, WS_GameObjects.GameObjectObject> wORLD_GAMEOBJECTs;
-                        WS_GameObjects.GameObjectObject updateObject2 = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
+                        Dictionary<ulong, WS_GameObjects.GameObject> wORLD_GAMEOBJECTs;
+                        WS_GameObjects.GameObject updateObject2 = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
                         UpdateData2.AddToPacket(ref response2, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject2);
                         wORLD_GAMEOBJECTs[key] = updateObject2;
                         WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].SendToNearPlayers(ref response2);

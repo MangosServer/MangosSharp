@@ -1860,9 +1860,9 @@ namespace Mangos.World.Handlers
         {
             WS_GameObjects wS_GameObjects = WorldServiceLocator._WS_GameObjects;
             WS_Base.BaseUnit unit = objCharacter;
-            WS_GameObjects.GameObjectObject closestGameobject = wS_GameObjects.GetClosestGameobject(ref unit);
+            WS_GameObjects.GameObject closestGameobject = wS_GameObjects.GetClosestGameobject(ref unit);
             objCharacter = (WS_PlayerData.CharacterObject)unit;
-            WS_GameObjects.GameObjectObject targetGO = closestGameobject;
+            WS_GameObjects.GameObject targetGO = closestGameobject;
             if (targetGO == null)
             {
                 objCharacter.CommandResponse("Could not find any near objects.");
@@ -1899,7 +1899,7 @@ namespace Mangos.World.Handlers
         [ChatCommand("gobjectadd", "gobjectadd #id - Spawn game object at your position.", AccessLevel.Developer)]
         public bool cmdAddGameObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         {
-            WS_GameObjects.GameObjectObject tmpGO = new(Conversions.ToInteger(Message), objCharacter.MapID, objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation);
+            WS_GameObjects.GameObject tmpGO = new(Conversions.ToInteger(Message), objCharacter.MapID, objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation);
             tmpGO.Rotations[2] = (float)Math.Sin(tmpGO.orientation / 2f);
             tmpGO.Rotations[3] = (float)Math.Cos(tmpGO.orientation / 2f);
             tmpGO.AddToWorld();

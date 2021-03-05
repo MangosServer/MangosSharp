@@ -30,7 +30,7 @@ namespace Mangos.World.Objects
 {
     public class WS_DynamicObjects
     {
-        public class DynamicObjectObject : WS_Base.BaseObject, IDisposable
+        public class DynamicObject : WS_Base.BaseObject, IDisposable
         {
             public int SpellID;
 
@@ -69,7 +69,7 @@ namespace Mangos.World.Objects
                 Dispose();
             }
 
-            public DynamicObjectObject(ref WS_Base.BaseUnit Caster_, int SpellID_, float PosX, float PosY, float PosZ, int Duration_, float Radius_)
+            public DynamicObject(ref WS_Base.BaseUnit Caster_, int SpellID_, float PosX, float PosY, float PosZ, int Duration_, float Radius_)
             {
                 SpellID = 0;
                 Effects = new List<WS_Spells.SpellEffect>();
@@ -131,7 +131,7 @@ namespace Mangos.World.Objects
                 Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_DYNAMICOBJECT);
                 FillAllUpdateFlags(ref tmpUpdate);
                 Packets.UpdateClass updateClass = tmpUpdate;
-                DynamicObjectObject updateObject = this;
+                DynamicObject updateObject = this;
                 updateClass.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF, ref updateObject);
                 tmpUpdate.Dispose();
                 short i = -1;

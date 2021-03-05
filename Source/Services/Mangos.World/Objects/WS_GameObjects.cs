@@ -125,7 +125,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public class GameObjectObject : WS_Base.BaseObject, IDisposable
+        public class GameObject : WS_Base.BaseObject, IDisposable
         {
             public int ID;
 
@@ -242,7 +242,7 @@ namespace Mangos.World.Objects
                 if (Type == GameObjectType.GAMEOBJECT_TYPE_CHEST)
                 {
                     WS_Quests aLLQUESTS = WorldServiceLocator._WorldServer.ALLQUESTS;
-                    GameObjectObject gameobject = this;
+                    GameObject gameobject = this;
                     byte UsedForQuest = aLLQUESTS.IsGameObjectUsedForQuest(ref gameobject, ref Character);
                     if (UsedForQuest > 0)
                     {
@@ -312,7 +312,7 @@ namespace Mangos.World.Objects
                 Dispose();
             }
 
-            public GameObjectObject(int ID_)
+            public GameObject(int ID_)
             {
                 ID = 0;
                 Flags = 0;
@@ -343,7 +343,7 @@ namespace Mangos.World.Objects
                 WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.Add(GUID, this);
             }
 
-            public GameObjectObject(int ID_, ulong GUID_)
+            public GameObject(int ID_, ulong GUID_)
             {
                 ID = 0;
                 Flags = 0;
@@ -373,7 +373,7 @@ namespace Mangos.World.Objects
                 Size = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Size;
             }
 
-            public GameObjectObject(int ID_, uint MapID_, float PosX, float PosY, float PosZ, float Rotation, ulong Owner_ = 0uL)
+            public GameObject(int ID_, uint MapID_, float PosX, float PosY, float PosZ, float Rotation, ulong Owner_ = 0uL)
             {
                 ID = 0;
                 Flags = 0;
@@ -415,7 +415,7 @@ namespace Mangos.World.Objects
                 WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.Add(GUID, this);
             }
 
-            public GameObjectObject(ulong cGUID, DataRow Info = null)
+            public GameObject(ulong cGUID, DataRow Info = null)
             {
                 ID = 0;
                 Flags = 0;
@@ -544,7 +544,7 @@ namespace Mangos.World.Objects
                                         FillAllUpdateFlags(ref tmpUpdate, ref Character);
                                         cHARACTERs[key] = Character;
                                         Packets.UpdateClass updateClass = tmpUpdate;
-                                        GameObjectObject updateObject = this;
+                                        GameObject updateObject = this;
                                         updateClass.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject);
                                         tmpUpdate.Dispose();
                                         WorldServiceLocator._WorldServer.CHARACTERs[plGUID].client.SendMultiplyPackets(ref packet);
@@ -591,7 +591,7 @@ namespace Mangos.World.Objects
                 packet.AddInt8(0);
                 Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                 tmpUpdate.SetUpdateFlag(14, 0, (byte)State);
-                GameObjectObject updateObject = this;
+                GameObject updateObject = this;
                 tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                 tmpUpdate.Dispose();
                 SendToNearPlayers(ref packet);
@@ -613,7 +613,7 @@ namespace Mangos.World.Objects
                 Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                 tmpUpdate.SetUpdateFlag(9, Flags);
                 tmpUpdate.SetUpdateFlag(14, 0, (byte)State);
-                GameObjectObject updateObject = this;
+                GameObject updateObject = this;
                 tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                 tmpUpdate.Dispose();
                 SendToNearPlayers(ref packet);
@@ -630,7 +630,7 @@ namespace Mangos.World.Objects
                 Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                 tmpUpdate.SetUpdateFlag(9, Flags);
                 tmpUpdate.SetUpdateFlag(14, 0, Conversions.ToByte(state));
-                GameObjectObject updateObject = this;
+                GameObject updateObject = this;
                 tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                 tmpUpdate.Dispose();
                 SendToNearPlayers(ref packet);
@@ -702,7 +702,7 @@ namespace Mangos.World.Objects
                     Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
                     tmpUpdate.SetUpdateFlag(9, Flags);
                     tmpUpdate.SetUpdateFlag(14, 0, Conversions.ToByte(state));
-                    GameObjectObject updateObject = this;
+                    GameObject updateObject = this;
                     tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                     tmpUpdate.Dispose();
                     SendToNearPlayers(ref packet);
@@ -860,7 +860,7 @@ namespace Mangos.World.Objects
                     tmpUpdate.SetUpdateFlag(11, Rotations[1]);
                     tmpUpdate.SetUpdateFlag(12, Rotations[2]);
                     tmpUpdate.SetUpdateFlag(13, Rotations[3]);
-                    GameObjectObject updateObject = this;
+                    GameObject updateObject = this;
                     tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                     tmpUpdate.Dispose();
                     SendToNearPlayers(ref packet);
@@ -877,10 +877,10 @@ namespace Mangos.World.Objects
             return WorldServiceLocator._WorldServer.GameObjectsGUIDCounter;
         }
 
-        public GameObjectObject GetClosestGameobject(ref WS_Base.BaseUnit unit, int GameObjectEntry = 0)
+        public GameObject GetClosestGameobject(ref WS_Base.BaseUnit unit, int GameObjectEntry = 0)
         {
             float minDistance = float.MaxValue;
-            GameObjectObject targetGameobject = null;
+            GameObject targetGameobject = null;
             if (unit is WS_PlayerData.CharacterObject @object)
             {
                 ulong[] array = @object.gameObjectsNear.ToArray();
@@ -1000,7 +1000,7 @@ namespace Mangos.World.Objects
                 {
                     return;
                 }
-                GameObjectObject GO = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID];
+                GameObject GO = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID];
                 client.Character.RemoveAurasByInterruptFlag(2048);
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "GameObjectType: {0}", WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].Type);
                 GameObjectType type = GO.Type;

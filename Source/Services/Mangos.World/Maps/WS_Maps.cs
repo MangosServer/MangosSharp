@@ -448,7 +448,7 @@ namespace Mangos.World.Maps
                         }
                         try
                         {
-                            WS_GameObjects.GameObjectObject tmpGo = new(row.As<ulong>("guid") + InstanceGuidAdd, row);
+                            WS_GameObjects.GameObject tmpGo = new(row.As<ulong>("guid") + InstanceGuidAdd, row);
                             if (tmpGo.GameEvent == 0)
                             {
                                 tmpGo.instance = TileInstance;
@@ -583,7 +583,7 @@ namespace Mangos.World.Maps
                 {
                     WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
                 }
-                foreach (KeyValuePair<ulong, WS_GameObjects.GameObjectObject> Gameobject in WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)
+                foreach (KeyValuePair<ulong, WS_GameObjects.GameObject> Gameobject in WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)
                 {
                     if (Gameobject.Value.MapID == TileMap && Gameobject.Value.positionX >= MinX && Gameobject.Value.positionX <= MaxX && Gameobject.Value.positionY >= MinY && Gameobject.Value.positionY <= MaxY)
                     {

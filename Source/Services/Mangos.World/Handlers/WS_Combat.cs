@@ -1471,7 +1471,7 @@ namespace Mangos.World.Handlers
             objCharacter.combatCanDualWield = false;
             objCharacter.cBytes2 = (objCharacter.cBytes2 & -256) | (int)State;
             objCharacter.SetUpdateFlag(164, objCharacter.cBytes2);
-            if (objCharacter != null)
+            if (objCharacter is null)
             {
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1} Account:{2} CharName:{3} CharGUID:{4}] Client is Null!", objCharacter.client.IP, objCharacter.client.Port, objCharacter.client.Account, objCharacter.client.Character.UnitName, objCharacter.client.Character.GUID);
                 return;

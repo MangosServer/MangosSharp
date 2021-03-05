@@ -302,7 +302,7 @@ namespace Mangos.World.Globals
                 }
             }
 
-            public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_GameObjects.GameObjectObject updateObject)
+            public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_GameObjects.GameObject updateObject)
             {
                 checked
                 {
@@ -389,7 +389,7 @@ namespace Mangos.World.Globals
                 }
             }
 
-            public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_DynamicObjects.DynamicObjectObject updateObject)
+            public void AddToPacket(ref PacketClass packet, ObjectUpdateType updateType, ref WS_DynamicObjects.DynamicObject updateObject)
             {
                 checked
                 {

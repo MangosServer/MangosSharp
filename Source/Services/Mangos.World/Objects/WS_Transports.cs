@@ -103,7 +103,7 @@ namespace Mangos.World.Objects
             }
         }
 
-        public class TransportObject : WS_GameObjects.GameObjectObject
+        public class TransportObject : WS_GameObjects.GameObject
         {
             public string TransportName;
 
@@ -622,7 +622,7 @@ namespace Mangos.World.Objects
                                                 FillAllUpdateFlags(ref tmpUpdate, ref Character);
                                                 cHARACTERs[key] = Character;
                                                 Packets.UpdateClass updateClass = tmpUpdate;
-                                                WS_GameObjects.GameObjectObject updateObject = this;
+                                                WS_GameObjects.GameObject updateObject = this;
                                                 updateClass.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject);
                                             }
                                             finally
