@@ -293,7 +293,7 @@ public class ClientClass : ClientInfo
 
     public void OnSendComplete(IAsyncResult ar)
     {
-        if (_socket is object)
+        if (_socket is not null)
         {
             var bytesSent = _socket.EndSend(ar);
             Interlocked.Add(ref _clusterServiceLocator.WcStats.DataTransferOut, bytesSent);
@@ -313,7 +313,7 @@ public class ClientClass : ClientInfo
             // On Error Resume Next
             // May have to trap and use exception handler rather than the on error resume next rubbish
 
-            if (_socket is object)
+            if (_socket is not null)
             {
                 _socket.Close();
             }
@@ -323,7 +323,7 @@ public class ClientClass : ClientInfo
                 _clusterServiceLocator.WorldCluster.ClienTs.Remove(Index);
             }
 
-            if (Character is object)
+            if (Character is not null)
             {
                 if (Character.IsInWorld)
                 {

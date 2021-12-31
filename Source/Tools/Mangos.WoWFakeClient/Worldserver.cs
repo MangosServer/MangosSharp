@@ -56,7 +56,7 @@ public static class Worldserver
 
     public static bool WS_Connected()
     {
-        return Connection is object && Connection.Connected;
+        return Connection is not null && Connection.Connected;
     }
 
     public static void InitializePackets()

@@ -140,7 +140,7 @@ public class WcHandlersSocial
         foreach (DataRow row in q.Rows)
         {
             var guid = row.As<ulong>("guid");
-            if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(guid) && _clusterServiceLocator.WorldCluster.CharacteRs[guid].Client is object)
+            if (_clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(guid) && _clusterServiceLocator.WorldCluster.CharacteRs[guid].Client is not null)
             {
                 _clusterServiceLocator.WorldCluster.CharacteRs[guid].Client.SendMultiplyPackets(friendpacket);
             }
@@ -244,7 +244,7 @@ public class WcHandlersSocial
                         continue;
                     }
 
-                    if (objCharacter.Value.Guild is object && _clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(objCharacter.Value.Guild.Name).IndexOf(stringValue, StringComparison.Ordinal) != -1)
+                    if (objCharacter.Value.Guild is not null && _clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(objCharacter.Value.Guild.Name).IndexOf(stringValue, StringComparison.Ordinal) != -1)
                     {
                         continue;
                     }
@@ -274,7 +274,7 @@ public class WcHandlersSocial
         foreach (var guid in results)
         {
             response.AddString(_clusterServiceLocator.WorldCluster.CharacteRs[guid].Name);           // Name
-            if (_clusterServiceLocator.WorldCluster.CharacteRs[guid].Guild is object)
+            if (_clusterServiceLocator.WorldCluster.CharacteRs[guid].Guild is not null)
             {
                 response.AddString(_clusterServiceLocator.WorldCluster.CharacteRs[guid].Guild.Name); // Guild Name
             }

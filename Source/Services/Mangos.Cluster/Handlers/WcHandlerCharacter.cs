@@ -95,19 +95,19 @@ public class WcHandlerCharacter
         public bool GroupAssistant;
         public bool GroupInvitedFlag;
 
-        public bool IsInGroup => Group is object && GroupInvitedFlag == false;
+        public bool IsInGroup => Group is not null && GroupInvitedFlag == false;
 
         public bool IsGroupLeader => Group is not null && ReferenceEquals(Group.Members[Group.Leader], this);
 
-        public bool IsInRaid => Group is object && Group.Type == GroupType.RAID;
+        public bool IsInRaid => Group is not null && Group.Type == GroupType.RAID;
 
-        public bool IsInGuild => Guild is object;
+        public bool IsInGuild => Guild is not null;
 
-        public bool IsGuildLeader => Guild is object && Guild.Leader == Guid;
+        public bool IsGuildLeader => Guild is not null && Guild.Leader == Guid;
 
         public bool IsGuildRightSet(GuildRankRights rights)
         {
-            return Guild is object && (Guild.RankRights[GuildRank] & (uint)rights) == (uint)rights;
+            return Guild is not null && (Guild.RankRights[GuildRank] & (uint)rights) == (uint)rights;
         }
 
         public bool Side
@@ -327,7 +327,7 @@ public class WcHandlerCharacter
             {
                 for (byte i = 0, loopTo = (byte)(tmpGroup.Value.Members.Length - 1); i <= loopTo; i++)
                 {
-                    if (tmpGroup.Value.Members[i] is object && tmpGroup.Value.Members[i].Guid == Guid)
+                    if (tmpGroup.Value.Members[i] is not null && tmpGroup.Value.Members[i].Guid == Guid)
                     {
                         tmpGroup.Value.Members[i] = this;
                         tmpGroup.Value.SendGroupList();
@@ -368,7 +368,7 @@ public class WcHandlerCharacter
         public void SendGuildUpdate()
         {
             var guildId = 0U;
-            if (Guild is object)
+            if (Guild is not null)
             {
                 guildId = Guild.Id;
             }

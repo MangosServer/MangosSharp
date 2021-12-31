@@ -576,7 +576,7 @@ public class Functions
         _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
         foreach (var character in _clusterServiceLocator.WorldCluster.CharacteRs)
         {
-            if (character.Value.Client is object)
+            if (character.Value.Client is not null)
             {
                 SendMessageSystem(character.Value.Client, "System Message: " + SetColor(message, 255, 0, 0));
             }

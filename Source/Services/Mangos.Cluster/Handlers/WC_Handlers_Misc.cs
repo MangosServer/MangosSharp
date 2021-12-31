@@ -108,7 +108,7 @@ public class WcHandlersMisc
 
     public void On_CMSG_CANCEL_TRADE(PacketClass packet, ClientClass client)
     {
-        if (client.Character is object && client.Character.IsInWorld)
+        if (client.Character is not null && client.Character.IsInWorld)
         {
             try
             {

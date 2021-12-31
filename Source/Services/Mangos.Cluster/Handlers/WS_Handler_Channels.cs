@@ -250,7 +250,7 @@ public class WsHandlerChannels
             // DONE: Check if not on this channel
             if (!Joined.Contains(character.Guid))
             {
-                if (character.Client is object)
+                if (character.Client is not null)
                 {
                     var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_NOT_ON, character.Guid, default, default);
                     character.Client.Send(p);
@@ -261,7 +261,7 @@ public class WsHandlerChannels
             }
 
             // DONE: You Left channel
-            if (character.Client is object)
+            if (character.Client is not null)
             {
                 var p = BuildChannelNotify(CHANNEL_NOTIFY_FLAGS.CHANNEL_YOU_LEFT, character.Guid, default, default);
                 character.Client.Send(p);

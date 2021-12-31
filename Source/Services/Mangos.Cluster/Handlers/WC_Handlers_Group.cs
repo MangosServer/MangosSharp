@@ -101,10 +101,10 @@ public class WcHandlersGroup
 
                 for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
                 {
-                    if (Members[i] is object)
+                    if (Members[i] is not null)
                     {
                         Members[i].Group = null;
-                        if (Members[i].Client is object)
+                        if (Members[i].Client is not null)
                         {
                             Members[i].Client.SendMultiplyPackets(packet);
                             Members[i].GetWorld.ClientSetGroup(Members[i].Client.Index, -1);
@@ -175,7 +175,7 @@ public class WcHandlersGroup
                         _lootMaster = Leader;
                     }
 
-                    if (objCharacter.Client is object)
+                    if (objCharacter.Client is not null)
                     {
                         PacketClass packet = new(Opcodes.SMSG_GROUP_UNINVITE);
                         objCharacter.Client.Send(packet);
@@ -209,9 +209,9 @@ public class WcHandlersGroup
             var newLootMaster = false;
             for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
             {
-                if (Members[i] is object && Members[i].Client is object)
+                if (Members[i] is not null && Members[i].Client is not null)
                 {
-                    if (leaver is object && ReferenceEquals(leaver, Members[i]))
+                    if (leaver is not null && ReferenceEquals(leaver, Members[i]))
                     {
                         if (i == _lootMaster)
                         {
@@ -316,7 +316,7 @@ public class WcHandlersGroup
             _lootMaster = 255;
             for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
             {
-                if (Members[i] is object && Members[i].Guid == guid)
+                if (Members[i] is not null && Members[i].Guid == guid)
                 {
                     _lootMaster = i;
                     break;
@@ -341,7 +341,7 @@ public class WcHandlersGroup
             byte count = 0;
             for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
             {
-                if (Members[i] is object)
+                if (Members[i] is not null)
                 {
                     count = (byte)(count + 1);
                 }
@@ -355,7 +355,7 @@ public class WcHandlersGroup
             List<ulong> list = new();
             for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
             {
-                if (Members[i] is object)
+                if (Members[i] is not null)
                 {
                     list.Add(Members[i].Guid);
                 }
@@ -368,7 +368,7 @@ public class WcHandlersGroup
         {
             for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
             {
-                if (Members[i] is object && Members[i].Client is object)
+                if (Members[i] is not null && Members[i].Client is not null)
                 {
                     Members[i].Client.SendMultiplyPackets(packet);
                 }
@@ -379,7 +379,7 @@ public class WcHandlersGroup
         {
             for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
             {
-                if (Members[i] is object && !ReferenceEquals(Members[i], objCharacter) && Members[i].Client is object)
+                if (Members[i] is not null && !ReferenceEquals(Members[i], objCharacter) && Members[i].Client is not null)
                 {
                     Members[i].Client.SendMultiplyPackets(packet);
                 }
@@ -390,7 +390,7 @@ public class WcHandlersGroup
         {
             for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
             {
-                if (Members[i] is object && !ReferenceEquals(Members[i], objCharacter) && Members[i].Client is object)
+                if (Members[i] is not null && !ReferenceEquals(Members[i], objCharacter) && Members[i].Client is not null)
                 {
                     if (objCharacter.Map != Members[i].Map || Math.Sqrt(Math.Pow(objCharacter.PositionX - Members[i].PositionX, 2d) + Math.Pow(objCharacter.PositionY - Members[i].PositionY, 2d)) > _clusterServiceLocator.GlobalConstants.DEFAULT_DISTANCE_VISIBLE)
                     {
@@ -405,7 +405,7 @@ public class WcHandlersGroup
             var groupCount = GetMembersCount();
             for (byte i = 0, loopTo = (byte)(Members.Length - 1); i <= loopTo; i++)
             {
-                if (Members[i] is object)
+                if (Members[i] is not null)
                 {
                     PacketClass packet = new(Opcodes.SMSG_GROUP_LIST);
                     packet.AddInt8((byte)Type);                                    // GroupType 0:Party 1:Raid
@@ -415,7 +415,7 @@ public class WcHandlersGroup
                     packet.AddInt32(groupCount - 1);
                     for (byte j = 0, loopTo1 = (byte)(Members.Length - 1); j <= loopTo1; j++)
                     {
-                        if (Members[j] is object && !ReferenceEquals(Members[j], Members[i]))
+                        if (Members[j] is not null && !ReferenceEquals(Members[j], Members[i]))
                         {
                             packet.AddString(Members[j].Name);
                             packet.AddUInt64(Members[j].Guid);
@@ -447,7 +447,7 @@ public class WcHandlersGroup
 
                     packet.AddInt8((byte)LootThreshold);
                     packet.AddInt16(0);
-                    if (Members[i].Client is object)
+                    if (Members[i].Client is not null)
                     {
                         Members[i].Client.Send(packet);
                     }
@@ -469,7 +469,7 @@ public class WcHandlersGroup
     {
         _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_REQUEST_RAID_INFO", client.IP, client.Port);
         DataTable q = new();
-        if (client.Character is object)
+        if (client.Character is not null)
         {
             _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(string.Format("SELECT * FROM characters_instances WHERE char_guid = {0};", client.Character.Guid), ref q);
         }
@@ -782,7 +782,7 @@ public class WcHandlersGroup
 
             for (int i = 0, loopTo1 = client.Character.Group.Members.Length - 1; i <= loopTo1; i++)
             {
-                if (client.Character.Group.Members[i] is object && (client.Character.Group.Members[i].Name ?? "") == (name ?? ""))
+                if (client.Character.Group.Members[i] is not null && (client.Character.Group.Members[i].Name ?? "") == (name ?? ""))
                 {
                     client.Character.Group.Members[j] = client.Character.Group.Members[i];
                     client.Character.Group.Members[i] = null;
@@ -820,7 +820,7 @@ public class WcHandlersGroup
             var loopTo = client.Character.Group.Members.Length - 1;
             for (j = 0; j <= loopTo; j++)
             {
-                if (client.Character.Group.Members[j] is object && (client.Character.Group.Members[j].Name ?? "") == (name2 ?? ""))
+                if (client.Character.Group.Members[j] is not null && (client.Character.Group.Members[j].Name ?? "") == (name2 ?? ""))
                 {
                     break;
                 }
@@ -828,7 +828,7 @@ public class WcHandlersGroup
 
             for (int i = 0, loopTo1 = client.Character.Group.Members.Length - 1; i <= loopTo1; i++)
             {
-                if (client.Character.Group.Members[i] is object && (client.Character.Group.Members[i].Name ?? "") == (name1 ?? ""))
+                if (client.Character.Group.Members[i] is not null && (client.Character.Group.Members[i].Name ?? "") == (name1 ?? ""))
                 {
                     var tmpPlayer = client.Character.Group.Members[j];
                     client.Character.Group.Members[j] = client.Character.Group.Members[i];

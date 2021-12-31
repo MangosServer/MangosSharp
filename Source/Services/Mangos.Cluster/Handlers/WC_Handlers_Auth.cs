@@ -87,11 +87,11 @@ public class WcHandlersAuth
         // DONE: Kick if existing
         foreach (var tmpClientEntry in _clusterServiceLocator.WorldCluster.ClienTs)
         {
-            if (tmpClientEntry.Value is object)
+            if (tmpClientEntry.Value is not null)
             {
                 if (tmpClientEntry.Value.Account == tmp)
                 {
-                    if (tmpClientEntry.Value.Character is object)
+                    if (tmpClientEntry.Value.Character is not null)
                     {
                         tmpClientEntry.Value.Character.Dispose();
                         tmpClientEntry.Value.Character = null;
@@ -234,7 +234,7 @@ public class WcHandlersAuth
         PacketClass response = new(Opcodes.SMSG_PONG);
         response.AddInt32(packet.GetInt32());
         client.Send(response);
-        if (client.Character is object)
+        if (client.Character is not null)
         {
             client.Character.Latency = packet.GetInt32();
         }

@@ -120,14 +120,14 @@ internal static class MainModule
         var numDBCs = 0;
         foreach (var mpqArchive in MPQArchives)
         {
-            numDBCs += mpqArchive.Where(x => x.Filename is object).Where(x => x.Filename.EndsWith(".dbc")).Count();
+            numDBCs += mpqArchive.Where(x => x.Filename is not null).Where(x => x.Filename.EndsWith(".dbc")).Count();
         }
 
         var i = 0;
         var numDiv30 = numDBCs / 30;
         foreach (var mpqArchive in MPQArchives)
         {
-            foreach (var mpqFile in mpqArchive.Where(x => x.Filename is object).Where(x => x.Filename.EndsWith(".dbc")))
+            foreach (var mpqFile in mpqArchive.Where(x => x.Filename is not null).Where(x => x.Filename.EndsWith(".dbc")))
             {
                 using (var mpqStream = mpqArchive.OpenFile(mpqFile))
                 {

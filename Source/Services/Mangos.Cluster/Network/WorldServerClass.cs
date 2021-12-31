@@ -112,7 +112,7 @@ public class WorldServerClass : Hub, ICluster
             {
                 foreach (var objCharacter in _clusterServiceLocator.WorldCluster.ClienTs)
                 {
-                    if (objCharacter.Value.Character is object && objCharacter.Value.Character.IsInWorld && objCharacter.Value.Character.Map == map)
+                    if (objCharacter.Value.Character is not null && objCharacter.Value.Character.IsInWorld && objCharacter.Value.Character.Map == map)
                     {
                         objCharacter.Value.Send(new PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE));
                         new PacketClass(Opcodes.SMSG_LOGOUT_COMPLETE).Dispose();
@@ -278,7 +278,7 @@ public class WorldServerClass : Hub, ICluster
         _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
         foreach (var objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
         {
-            if (objCharacter.Value.IsInWorld && objCharacter.Value.Client is object)
+            if (objCharacter.Value.IsInWorld && objCharacter.Value.Client is not null)
             {
                 b = (byte[])data.Clone();
                 objCharacter.Value.Client.Send(data);
@@ -294,7 +294,7 @@ public class WorldServerClass : Hub, ICluster
             var withBlock = _clusterServiceLocator.WcHandlersGroup.GrouPs[groupId];
             for (byte i = 0, loopTo = (byte)(withBlock.Members.Length - 1); i <= loopTo; i++)
             {
-                if (withBlock.Members[i] is object)
+                if (withBlock.Members[i] is not null)
                 {
                     withBlock.Members[i].Client.Send((byte[])data.Clone());
                 }
@@ -308,7 +308,7 @@ public class WorldServerClass : Hub, ICluster
             var withBlock = _clusterServiceLocator.WcHandlersGroup.GrouPs[groupId];
             for (byte i = 0, loopTo = (byte)(withBlock.Members.Length - 1); i <= loopTo; i++)
             {
-                if (withBlock.Members[i] is object && withBlock.Members[i].Client is object)
+                if (withBlock.Members[i] is not null && withBlock.Members[i].Client is not null)
                 {
                     withBlock.Members[i].Client.Send((byte[])data.Clone());
                 }
@@ -453,7 +453,7 @@ public class WorldServerClass : Hub, ICluster
 
     public void GroupRequestUpdate(uint id)
     {
-        if (_clusterServiceLocator.WorldCluster.ClienTs.ContainsKey(id) && _clusterServiceLocator.WorldCluster.ClienTs[id].Character is object && _clusterServiceLocator.WorldCluster.ClienTs[id].Character.IsInWorld && _clusterServiceLocator.WorldCluster.ClienTs[id].Character.IsInGroup)
+        if (_clusterServiceLocator.WorldCluster.ClienTs.ContainsKey(id) && _clusterServiceLocator.WorldCluster.ClienTs[id].Character is not null && _clusterServiceLocator.WorldCluster.ClienTs[id].Character.IsInWorld && _clusterServiceLocator.WorldCluster.ClienTs[id].Character.IsInGroup)
         {
             _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.NETWORK, "[G{0:00000}] Group update request", _clusterServiceLocator.WorldCluster.ClienTs[id].Character.Group.Id);
             try

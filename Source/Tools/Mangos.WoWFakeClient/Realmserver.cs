@@ -91,7 +91,7 @@ internal static class Realmserver
 
     public static bool RS_Connected()
     {
-        return Connection is object && Connection.Connected;
+        return Connection is not null && Connection.Connected;
     }
 
     public static void CheckConnection()
