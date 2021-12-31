@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Pet
+namespace Mangos.Common.Enums.Pet;
+
+public enum ActionFeedback : byte
 {
-    public enum ActionFeedback : byte
-    {
-        FEEDBACK_NONE = 0,
-        FEEDBACK_PET_DEAD = 1,
-        FEEDBACK_NO_TARGET = 2,
-        FEEDBACK_CANT_ATT = 3
-    }
+    FEEDBACK_NONE = 0,
+    FEEDBACK_PET_DEAD = 1,
+    FEEDBACK_NO_TARGET = 2,
+    FEEDBACK_CANT_ATT = 3
 }

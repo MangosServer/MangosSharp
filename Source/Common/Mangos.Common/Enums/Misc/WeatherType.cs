@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Misc
+namespace Mangos.Common.Enums.Misc;
+
+public enum WeatherType
 {
-    public enum WeatherType
-    {
-        WEATHER_FINE = 0,
-        WEATHER_RAIN = 1,
-        WEATHER_SNOW = 2,
-        WEATHER_SANDSTORM = 3
-    }
+    WEATHER_FINE = 0,
+    WEATHER_RAIN = 1,
+    WEATHER_SNOW = 2,
+    WEATHER_SANDSTORM = 3
 }

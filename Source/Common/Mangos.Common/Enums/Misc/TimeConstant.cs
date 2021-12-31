@@ -16,16 +16,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Misc
+namespace Mangos.Common.Enums.Misc;
+
+public enum TimeConstant
 {
-    public enum TimeConstant
-    {
-        MINUTE = 60,
-        HOUR = MINUTE * 60,
-        DAY = HOUR * 24,
-        WEEK = DAY * 7,
-        MONTH = DAY * 30,
-        YEAR = MONTH * 12,
-        IN_MILLISECONDS = 1000
-    }
+    MINUTE = 60,
+    HOUR = MINUTE * 60,
+    DAY = HOUR * 24,
+    WEEK = DAY * 7,
+    MONTH = DAY * 30,
+    YEAR = MONTH * 12,
+    IN_MILLISECONDS = 1000
 }

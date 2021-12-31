@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum AreaTeam
 {
-    public enum AreaTeam
-    {
-        AREATEAM_NONE = 0,
-        AREATEAM_ALLY = 2,
-        AREATEAM_HORDE = 4
-    }
+    AREATEAM_NONE = 0,
+    AREATEAM_ALLY = 2,
+    AREATEAM_HORDE = 4
 }

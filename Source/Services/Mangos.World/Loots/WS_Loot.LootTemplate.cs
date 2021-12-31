@@ -18,84 +18,83 @@
 
 using System.Collections.Generic;
 
-namespace Mangos.World.Loots
+namespace Mangos.World.Loots;
+
+public partial class WS_Loot
 {
-    public partial class WS_Loot
+    public class LootTemplate
     {
-        public class LootTemplate
+        public List<LootStoreItem> Items;
+
+        public Dictionary<byte, LootGroup> Groups;
+
+        public LootTemplate()
         {
-            public List<LootStoreItem> Items;
+            Items = new List<LootStoreItem>();
+            Groups = new Dictionary<byte, LootGroup>();
+        }
 
-            public Dictionary<byte, LootGroup> Groups;
-
-            public LootTemplate()
+        public void AddItem(ref LootStoreItem Item)
+        {
+            switch (Item.Group)
             {
-                Items = new List<LootStoreItem>();
-                Groups = new Dictionary<byte, LootGroup>();
-            }
-
-            public void AddItem(ref LootStoreItem Item)
-            {
-                switch (Item.Group)
-                {
-                    case > 0 when Item.MinCountOrRef > 0:
-                        if (!Groups.ContainsKey(Item.Group))
-                        {
-                            Groups.Add(Item.Group, new LootGroup());
-                        }
-                        Groups[Item.Group].AddItem(ref Item);
-                        break;
-                    default:
-                        Items.Add(Item);
-                        break;
-                }
-            }
-
-            public void Process(ref LootObject Loot, byte GroupID)
-            {
-                if (GroupID > 0)
-                {
-                    if (Groups.ContainsKey(GroupID))
+                case > 0 when Item.MinCountOrRef > 0:
+                    if (!Groups.ContainsKey(Item.Group))
                     {
-                        Groups[GroupID].Process(ref Loot);
+                        Groups.Add(Item.Group, new LootGroup());
                     }
-                    return;
-                }
-                checked
+                    Groups[Item.Group].AddItem(ref Item);
+                    break;
+                default:
+                    Items.Add(Item);
+                    break;
+            }
+        }
+
+        public void Process(ref LootObject Loot, byte GroupID)
+        {
+            if (GroupID > 0)
+            {
+                if (Groups.ContainsKey(GroupID))
                 {
-                    for (int i = 0; i <= Items.Count - 1; i++)
+                    Groups[GroupID].Process(ref Loot);
+                }
+                return;
+            }
+            checked
+            {
+                for (var i = 0; i <= Items.Count - 1; i++)
+                {
+                    if (!Items[i].Roll())
                     {
-                        if (!Items[i].Roll())
+                        continue;
+                    }
+                    if (Items[i].MinCountOrRef < 0)
+                    {
+                        var Referenced = WorldServiceLocator._WS_Loot.LootTemplates_Reference.GetLoot(-Items[i].MinCountOrRef);
+                        if (Referenced != null)
                         {
-                            continue;
-                        }
-                        if (Items[i].MinCountOrRef < 0)
-                        {
-                            LootTemplate Referenced = WorldServiceLocator._WS_Loot.LootTemplates_Reference.GetLoot(-Items[i].MinCountOrRef);
-                            if (Referenced != null)
+                            int maxCount = Items[i].MaxCount;
+                            for (var j = 1; j <= maxCount; j++)
                             {
-                                int maxCount = Items[i].MaxCount;
-                                for (int j = 1; j <= maxCount; j++)
-                                {
-                                    Referenced.Process(ref Loot, Items[i].Group);
-                                }
+                                Referenced.Process(ref Loot, Items[i].Group);
                             }
                         }
-                        else
-                        {
-                            int index;
-                            List<LootStoreItem> items2;
-                            LootStoreItem Item = (items2 = Items)[index = i];
-                            items2[index] = Item;
-                            List<LootItem> items = Loot.Items;
-                            LootItem item = new(ref Item);
-                            items.Add(item);
-                        }
                     }
-                    foreach (KeyValuePair<byte, LootGroup> group in Groups)
+                    else
                     {
-                        group.Value.Process(ref Loot);
+                        int index;
+                        List<LootStoreItem> items2;
+                        var Item = (items2 = Items)[index = i];
+                        items2[index] = Item;
+                        var items = Loot.Items;
+                        LootItem item = new(ref Item);
+                        items.Add(item);
                     }
+                }
+                foreach (var group in Groups)
+                {
+                    group.Value.Process(ref Loot);
                 }
             }
         }

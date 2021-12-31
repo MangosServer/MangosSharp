@@ -16,17 +16,16 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Player
+namespace Mangos.Common.Enums.Player;
+
+public enum ReputationRank : byte
 {
-    public enum ReputationRank : byte
-    {
-        Hated = 0,
-        Hostile = 1,
-        Unfriendly = 2,
-        Neutral = 3,
-        Friendly = 4,
-        Honored = 5,
-        Revered = 6,
-        Exalted = 7
-    }
+    Hated = 0,
+    Hostile = 1,
+    Unfriendly = 2,
+    Neutral = 3,
+    Friendly = 4,
+    Honored = 5,
+    Revered = 6,
+    Exalted = 7
 }

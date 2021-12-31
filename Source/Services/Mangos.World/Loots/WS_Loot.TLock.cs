@@ -16,38 +16,37 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.World.Loots
+namespace Mangos.World.Loots;
+
+public partial class WS_Loot
 {
-    public partial class WS_Loot
+    public class TLock
     {
-        public class TLock
+        public byte[] KeyType;
+
+        public int[] Keys;
+
+        public short RequiredMiningSkill;
+
+        public short RequiredLockingSkill;
+
+        public TLock(byte[] KeyType_, int[] Keys_, short ReqMining, short ReqLock)
         {
-            public byte[] KeyType;
-
-            public int[] Keys;
-
-            public short RequiredMiningSkill;
-
-            public short RequiredLockingSkill;
-
-            public TLock(byte[] KeyType_, int[] Keys_, short ReqMining, short ReqLock)
+            KeyType = new byte[5];
+            Keys = new int[5];
+            byte i = 0;
+            do
             {
-                KeyType = new byte[5];
-                Keys = new int[5];
-                byte i = 0;
-                do
+                KeyType[i] = KeyType_[i];
+                Keys[i] = Keys_[i];
+                checked
                 {
-                    KeyType[i] = KeyType_[i];
-                    Keys[i] = Keys_[i];
-                    checked
-                    {
-                        i = (byte)unchecked((uint)(i + 1));
-                    }
+                    i = (byte)unchecked((uint)(i + 1));
                 }
-                while (i <= 4u);
-                RequiredMiningSkill = ReqMining;
-                RequiredLockingSkill = ReqLock;
             }
+            while (i <= 4u);
+            RequiredMiningSkill = ReqMining;
+            RequiredLockingSkill = ReqLock;
         }
     }
 }

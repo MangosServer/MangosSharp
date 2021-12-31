@@ -16,20 +16,19 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Spell
+namespace Mangos.Common.Enums.Spell;
+
+public enum SpellFamilyNames
 {
-    public enum SpellFamilyNames
-    {
-        SPELLFAMILY_GENERIC = 0,
-        SPELLFAMILY_MAGE = 3,
-        SPELLFAMILY_WARRIOR = 4,
-        SPELLFAMILY_WARLOCK = 5,
-        SPELLFAMILY_PRIEST = 6,
-        SPELLFAMILY_DRUID = 7,
-        SPELLFAMILY_ROGUE = 8,
-        SPELLFAMILY_HUNTER = 9,
-        SPELLFAMILY_PALADIN = 10,
-        SPELLFAMILY_SHAMAN = 11,
-        SPELLFAMILY_POTION = 13
-    }
+    SPELLFAMILY_GENERIC = 0,
+    SPELLFAMILY_MAGE = 3,
+    SPELLFAMILY_WARRIOR = 4,
+    SPELLFAMILY_WARLOCK = 5,
+    SPELLFAMILY_PRIEST = 6,
+    SPELLFAMILY_DRUID = 7,
+    SPELLFAMILY_ROGUE = 8,
+    SPELLFAMILY_HUNTER = 9,
+    SPELLFAMILY_PALADIN = 10,
+    SPELLFAMILY_SHAMAN = 11,
+    SPELLFAMILY_POTION = 13
 }

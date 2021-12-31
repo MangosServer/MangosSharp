@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum TransportStates : byte
 {
-    public enum TransportStates : byte
-    {
-        TRANSPORT_MOVE_TO_DOCK = 0,
-        TRANSPORT_DOCKED,
-        TRANSPORT_MOVE_NEXT_MAP
-    }
+    TRANSPORT_MOVE_TO_DOCK = 0,
+    TRANSPORT_DOCKED,
+    TRANSPORT_MOVE_NEXT_MAP
 }

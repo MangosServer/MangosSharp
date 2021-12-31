@@ -16,15 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum ManaTypes
 {
-    public enum ManaTypes
-    {
-        TYPE_MANA = 0,
-        TYPE_RAGE = 1,
-        TYPE_FOCUS = 2,
-        TYPE_ENERGY = 3,
-        TYPE_HAPPINESS = 4,
-        TYPE_HEALTH = -2
-    }
+    TYPE_MANA = 0,
+    TYPE_RAGE = 1,
+    TYPE_FOCUS = 2,
+    TYPE_ENERGY = 3,
+    TYPE_HAPPINESS = 4,
+    TYPE_HEALTH = -2
 }

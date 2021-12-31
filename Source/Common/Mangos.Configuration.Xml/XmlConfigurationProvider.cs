@@ -20,28 +20,27 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Mangos.Configuration.Xml
+namespace Mangos.Configuration.Xml;
+
+public class XmlConfigurationProvider<T> : IConfigurationProvider<T>
+    where T : class
 {
-    public class XmlConfigurationProvider<T> : IConfigurationProvider<T>
-        where T : class
+    private T configuration;
+
+    public void LoadFromFile(string filePath)
     {
-        private T configuration;
-
-        public void LoadFromFile(string filePath)
+        if (configuration != null)
         {
-            if (configuration != null)
-            {
-                throw new Exception("Configuration has already been loaded");
-            }
-
-            using StreamReader streamReader = new(filePath);
-            XmlSerializer xmlSerializer = new(typeof(T));
-            configuration = (T)xmlSerializer.Deserialize(streamReader);
+            throw new Exception("Configuration has already been loaded");
         }
 
-        public T GetConfiguration()
-        {
-            return configuration == null ? throw new Exception("Configuration isn't loaded") : configuration;
-        }
+        using StreamReader streamReader = new(filePath);
+        XmlSerializer xmlSerializer = new(typeof(T));
+        configuration = (T)xmlSerializer.Deserialize(streamReader);
+    }
+
+    public T GetConfiguration()
+    {
+        return configuration ?? throw new Exception("Configuration isn't loaded");
     }
 }

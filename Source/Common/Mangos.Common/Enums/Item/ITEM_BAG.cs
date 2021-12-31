@@ -16,17 +16,16 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Item
+namespace Mangos.Common.Enums.Item;
+
+public enum ITEM_BAG
 {
-    public enum ITEM_BAG
-    {
-        NONE = 0,
-        ARROW = 1,
-        BULLET = 2,
-        SOUL_SHARD = 3,
-        HERB = 6,
-        ENCHANTING = 7,
-        ENGINEERING = 8,
-        KEYRING = 9
-    }
+    NONE = 0,
+    ARROW = 1,
+    BULLET = 2,
+    SOUL_SHARD = 3,
+    HERB = 6,
+    ENCHANTING = 7,
+    ENGINEERING = 8,
+    KEYRING = 9
 }

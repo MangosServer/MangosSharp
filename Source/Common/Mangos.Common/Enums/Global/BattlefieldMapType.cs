@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum BattlefieldMapType : byte
 {
-    public enum BattlefieldMapType : byte
-    {
-        BATTLEGROUND_AlteracValley = 1,
-        BATTLEGROUND_WarsongGulch = 2,
-        BATTLEGROUND_ArathiBasin = 3
-    }
+    BATTLEGROUND_AlteracValley = 1,
+    BATTLEGROUND_WarsongGulch = 2,
+    BATTLEGROUND_ArathiBasin = 3
 }

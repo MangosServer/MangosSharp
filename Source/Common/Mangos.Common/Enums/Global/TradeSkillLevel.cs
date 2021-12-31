@@ -16,15 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum TradeSkillLevel
 {
-    public enum TradeSkillLevel
-    {
-        TRADESKILL_LEVEL_NONE = 0,
-        TRADESKILL_LEVEL_APPRENTICE = 1,
-        TRADESKILL_LEVEL_JOURNEYMAN = 2,
-        TRADESKILL_LEVEL_EXPERT = 3,
-        TRADESKILL_LEVEL_ARTISAN = 4,
-        TRADESKILL_LEVEL_MASTER = 5
-    }
+    TRADESKILL_LEVEL_NONE = 0,
+    TRADESKILL_LEVEL_APPRENTICE = 1,
+    TRADESKILL_LEVEL_JOURNEYMAN = 2,
+    TRADESKILL_LEVEL_EXPERT = 3,
+    TRADESKILL_LEVEL_ARTISAN = 4,
+    TRADESKILL_LEVEL_MASTER = 5
 }

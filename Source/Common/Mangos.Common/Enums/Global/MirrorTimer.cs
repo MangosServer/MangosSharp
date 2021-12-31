@@ -16,15 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum MirrorTimer : byte
 {
-    public enum MirrorTimer : byte
-    {
-        FIRE = 5,
-        SLIME = 4,
-        LAVA = 3,
-        FALLING = 2,
-        DROWNING = 1,
-        FATIGUE = 0
-    }
+    FIRE = 5,
+    SLIME = 4,
+    LAVA = 3,
+    FALLING = 2,
+    DROWNING = 1,
+    FATIGUE = 0
 }

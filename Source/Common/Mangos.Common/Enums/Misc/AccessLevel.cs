@@ -16,14 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Misc
+namespace Mangos.Common.Enums.Misc;
+
+public enum AccessLevel : byte
 {
-    public enum AccessLevel : byte
-    {
-        Trial = 0,
-        Player = 1,
-        GameMaster = 2,
-        Developer = 3,
-        Admin = 4
-    }
+    Trial = 0,
+    Player = 1,
+    GameMaster = 2,
+    Developer = 3,
+    Admin = 4
 }

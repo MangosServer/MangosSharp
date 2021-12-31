@@ -18,18 +18,17 @@
 
 using System;
 
-namespace Mangos.Loggers
+namespace Mangos.Loggers;
+
+public interface ILogger
 {
-    public interface ILogger
-    {
-        void Debug(string format, params object[] args);
+    void Debug(string format, params object[] args);
 
-        void Message(string format, params object[] args);
+    void Message(string format, params object[] args);
 
-        void Warning(string format, params object[] args);
+    void Warning(string format, params object[] args);
 
-        void Error(string format, params object[] args);
+    void Error(string format, params object[] args);
 
-        void Error(string format, Exception exception, params object[] args);
-    }
+    void Error(string format, Exception exception, params object[] args);
 }

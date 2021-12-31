@@ -19,22 +19,21 @@
 using Mangos.World.Objects;
 using System;
 
-namespace Mangos.World.AI
-{
-    public partial class WS_Creatures_AI
-    {
-        public class StandStillAI : DefaultAI
-        {
-            public StandStillAI(ref WS_Creatures.CreatureObject Creature)
-                : base(ref Creature)
-            {
-                if (Creature is null)
-                {
-                    throw new ArgumentNullException(nameof(Creature));
-                }
+namespace Mangos.World.AI;
 
-                AllowedMove = false;
+public partial class WS_Creatures_AI
+{
+    public class StandStillAI : DefaultAI
+    {
+        public StandStillAI(ref WS_Creatures.CreatureObject Creature)
+            : base(ref Creature)
+        {
+            if (Creature is null)
+            {
+                throw new ArgumentNullException(nameof(Creature));
             }
+
+            AllowedMove = false;
         }
     }
 }

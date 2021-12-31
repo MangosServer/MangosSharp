@@ -19,31 +19,30 @@
 using System;
 using System.Data;
 
-namespace Mangos.Common.Legacy
+namespace Mangos.Common.Legacy;
+
+public static class SqlExtenions
 {
-    public static class SqlExtenions
+    public static T As<T>(this DataRow row, int column)
     {
-        public static T As<T>(this DataRow row, int column)
+        return row == null || row[column] == null ? throw new Exception("Null data row.") : (T)Convert.ChangeType(row[column], typeof(T));
+    }
+
+    public static T As<T>(this DataRow row, string field)
+    {
+        return row == null || row[field] == null ? throw new Exception("Null data row.") : (T)Convert.ChangeType(row[field], typeof(T));
+    }
+
+    /// <typeparam name="T1">Cast1</typeparam>
+    /// <typeparam name="T2">Cast2</typeparam>
+    public static T2 As<T1, T2>(this DataRow row, string field)
+    {
+        if (row == null || row[field] == null)
         {
-            return row == null || row[column] == null ? throw new Exception("Null data row.") : (T)Convert.ChangeType(row[column], typeof(T));
+            throw new Exception("Null data row.");
         }
 
-        public static T As<T>(this DataRow row, string field)
-        {
-            return row == null || row[field] == null ? throw new Exception("Null data row.") : (T)Convert.ChangeType(row[field], typeof(T));
-        }
-
-        /// <typeparam name="T1">Cast1</typeparam>
-        /// <typeparam name="T2">Cast2</typeparam>
-        public static T2 As<T1, T2>(this DataRow row, string field)
-        {
-            if (row == null || row[field] == null)
-            {
-                throw new Exception("Null data row.");
-            }
-
-            T1 t1 = (T1)Convert.ChangeType(row[field], typeof(T1));
-            return (T2)Convert.ChangeType(t1, typeof(T2));
-        }
+        T1 t1 = (T1)Convert.ChangeType(row[field], typeof(T1));
+        return (T2)Convert.ChangeType(t1, typeof(T2));
     }
 }

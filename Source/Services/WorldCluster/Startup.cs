@@ -25,70 +25,69 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace WorldCluster
+namespace WorldCluster;
+
+public class Startup
 {
-    public class Startup
+    private readonly ILogger logger;
+    private readonly XmlConfigurationProvider<ClusterConfiguration> configurationProvider;
+    private readonly TcpServer tcpServer;
+
+    private readonly Mangos.Cluster.WorldCluster worldCluster;
+
+    public Startup(
+        ILogger logger,
+        XmlConfigurationProvider<ClusterConfiguration> configurationProvider,
+        Mangos.Cluster.WorldCluster worldCluster,
+        TcpServer tcpServer)
     {
-        private readonly ILogger logger;
-        private readonly XmlConfigurationProvider<ClusterConfiguration> configurationProvider;
-        private readonly TcpServer tcpServer;
+        this.worldCluster = worldCluster;
+        this.configurationProvider = configurationProvider;
+        this.logger = logger;
+        this.tcpServer = tcpServer;
+    }
 
-        private readonly Mangos.Cluster.WorldCluster worldCluster;
+    public async Task StartAsync()
+    {
+        LoadConfiguration();
+        WriteServiceInformation();
 
-        public Startup(
-            ILogger logger,
-            XmlConfigurationProvider<ClusterConfiguration> configurationProvider,
-            Mangos.Cluster.WorldCluster worldCluster,
-            TcpServer tcpServer)
-        {
-            this.worldCluster = worldCluster;
-            this.configurationProvider = configurationProvider;
-            this.logger = logger;
-            this.tcpServer = tcpServer;
-        }
+        await worldCluster.StartAsync();
 
-        public async Task StartAsync()
-        {
-            LoadConfiguration();
-            WriteServiceInformation();
+        StartTcpServer();
 
-            await worldCluster.StartAsync();
+        worldCluster.WaitConsoleCommand();
+    }
 
-            StartTcpServer();
+    private void LoadConfiguration()
+    {
+        configurationProvider.LoadFromFile("configs/WorldCluster.ini");
+        logger.Debug("Cluster configuration has been loaded");
+    }
 
-            worldCluster.WaitConsoleCommand();
-        }
+    private void StartTcpServer()
+    {
+        var configuration = configurationProvider.GetConfiguration();
+        IPEndPoint endpoint = IPEndPoint.Parse(configuration.WorldClusterEndpoint);
+        tcpServer.Start(endpoint, 10);
+        logger.Debug("Tcp server has been started");
+    }
 
-        private void LoadConfiguration()
-        {
-            configurationProvider.LoadFromFile("configs/WorldCluster.ini");
-            logger.Debug("Cluster configuration has been loaded");
-        }
+    private void WriteServiceInformation()
+    {
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        var assemblyTitle = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
+        var product = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+        var copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
 
-        private void StartTcpServer()
-        {
-            ClusterConfiguration configuration = configurationProvider.GetConfiguration();
-            IPEndPoint endpoint = IPEndPoint.Parse(configuration.WorldClusterEndpoint);
-            tcpServer.Start(endpoint, 10);
-            logger.Debug("Tcp server has been started");
-        }
-
-        private void WriteServiceInformation()
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string assemblyTitle = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
-            string product = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
-            string copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
-
-            Console.Title = $"{assemblyTitle} v{Assembly.GetExecutingAssembly().GetName().Version}";
-            logger.Debug(product);
-            logger.Debug(copyright);
-            logger.Message(@" __  __      _  _  ___  ___  ___               ");
-            logger.Message(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
-            logger.Message(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
-            logger.Message(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
-            logger.Message("                                                ");
-            logger.Message("Website / Forum / Support: https://getmangos.eu/");
-        }
+        Console.Title = $"{assemblyTitle} v{Assembly.GetExecutingAssembly().GetName().Version}";
+        logger.Debug(product);
+        logger.Debug(copyright);
+        logger.Message(@" __  __      _  _  ___  ___  ___               ");
+        logger.Message(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
+        logger.Message(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
+        logger.Message(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
+        logger.Message("                                                ");
+        logger.Message("Website / Forum / Support: https://getmangos.eu/");
     }
 }

@@ -16,14 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum ChangeSpeedType : byte
 {
-    public enum ChangeSpeedType : byte
-    {
-        RUN = 1,
-        RUNBACK = 2,
-        SWIM = 3,
-        SWIMBACK = 4,
-        TURNRATE = 5
-    }
+    RUN = 1,
+    RUNBACK = 2,
+    SWIM = 3,
+    SWIMBACK = 4,
+    TURNRATE = 5
 }

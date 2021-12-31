@@ -16,18 +16,17 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Realm.Network.Requests
+namespace Mangos.Realm.Network.Requests;
+
+public class RS_LOGON_PROOF
 {
-    public class RS_LOGON_PROOF
+    public byte[] A { get; }
+
+    public byte[] M1 { get; }
+
+    public RS_LOGON_PROOF(byte[] a, byte[] m1)
     {
-        public byte[] A { get; }
-
-        public byte[] M1 { get; }
-
-        public RS_LOGON_PROOF(byte[] a, byte[] m1)
-        {
-            A = a;
-            M1 = m1;
-        }
+        A = a;
+        M1 = m1;
     }
 }

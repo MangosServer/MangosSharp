@@ -16,15 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Player
+namespace Mangos.Common.Enums.Player;
+
+public enum KeyRingSlots : byte  // 32 Slots?
 {
-    public enum KeyRingSlots : byte  // 32 Slots?
-    {
-        KEYRING_SLOT_START = 81,
-        KEYRING_SLOT_1 = 81,
-        KEYRING_SLOT_2 = 82,
-        KEYRING_SLOT_31 = 112,
-        KEYRING_SLOT_32 = 113,
-        KEYRING_SLOT_END = 113
-    }
+    KEYRING_SLOT_START = 81,
+    KEYRING_SLOT_1 = 81,
+    KEYRING_SLOT_2 = 82,
+    KEYRING_SLOT_31 = 112,
+    KEYRING_SLOT_32 = 113,
+    KEYRING_SLOT_END = 113
 }

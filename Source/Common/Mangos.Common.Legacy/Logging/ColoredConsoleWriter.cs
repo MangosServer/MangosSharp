@@ -23,162 +23,161 @@ using System.Runtime.CompilerServices;
 // Using this logging type, all logs are displayed in console.
 // Writting commands is done trought console.
 
-namespace Mangos.Common.Legacy.Logging
+namespace Mangos.Common.Legacy.Logging;
+
+public class ColoredConsoleWriter : BaseWriter
 {
-    public class ColoredConsoleWriter : BaseWriter
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public override void Write(LogType type, string formatStr, params object[] arg)
     {
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public override void Write(LogType type, string formatStr, params object[] arg)
+        if (LogLevel > type)
         {
-            if (LogLevel > type)
-            {
-                return;
-            }
-
-            switch (type)
-            {
-                case LogType.NETWORK:
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        break;
-                    }
-
-                case LogType.DEBUG:
-                    {
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        break;
-                    }
-
-                case LogType.INFORMATION:
-                    {
-                        Console.ForegroundColor = ConsoleColor.White;
-                        break;
-                    }
-
-                case LogType.USER:
-                    {
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        break;
-                    }
-
-                case LogType.SUCCESS:
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        break;
-                    }
-
-                case LogType.WARNING:
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        break;
-                    }
-
-                case LogType.FAILED:
-                    {
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        break;
-                    }
-
-                case LogType.CRITICAL:
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red; // Red
-                        break;
-                    }
-
-                case LogType.DATABASE:
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                        break;
-                    }
-            }
-
-            if (arg is null)
-            {
-                Console.Write(formatStr);
-            }
-            else
-            {
-                Console.Write(formatStr, arg);
-            }
-
-            Console.ForegroundColor = ConsoleColor.Gray;
+            return;
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public override void WriteLine(LogType type, string formatStr, params object[] arg)
+        switch (type)
         {
-            if (LogLevel > type)
-            {
-                return;
-            }
+            case LogType.NETWORK:
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    break;
+                }
 
-            switch (type)
-            {
-                case LogType.NETWORK:
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        break;
-                    }
+            case LogType.DEBUG:
+                {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    break;
+                }
 
-                case LogType.DEBUG:
-                    {
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        break;
-                    }
+            case LogType.INFORMATION:
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+                }
 
-                case LogType.INFORMATION:
-                    {
-                        Console.ForegroundColor = ConsoleColor.White;
-                        break;
-                    }
+            case LogType.USER:
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    break;
+                }
 
-                case LogType.USER:
-                    {
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        break;
-                    }
+            case LogType.SUCCESS:
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    break;
+                }
 
-                case LogType.SUCCESS:
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        break;
-                    }
+            case LogType.WARNING:
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+                }
 
-                case LogType.WARNING:
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        break;
-                    }
+            case LogType.FAILED:
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    break;
+                }
 
-                case LogType.FAILED:
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        break;
-                    }
+            case LogType.CRITICAL:
+                {
+                    Console.ForegroundColor = ConsoleColor.Red; // Red
+                    break;
+                }
 
-                case LogType.CRITICAL:
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        break;
-                    }
-
-                case LogType.DATABASE:
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                        break;
-                    }
-            }
-
-            if (arg is null)
-            {
-                Console.WriteLine($"[{DateTime.Now:hh:mm:ss}] {formatStr}");
-            }
-            else
-            {
-                Console.WriteLine($"[{DateTime.Now:hh:mm:ss}] {string.Format(formatStr, arg)}");
-            }
-
-            Console.ForegroundColor = ConsoleColor.Gray;
+            case LogType.DATABASE:
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    break;
+                }
         }
+
+        if (arg is null)
+        {
+            Console.Write(formatStr);
+        }
+        else
+        {
+            Console.Write(formatStr, arg);
+        }
+
+        Console.ForegroundColor = ConsoleColor.Gray;
+    }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    public override void WriteLine(LogType type, string formatStr, params object[] arg)
+    {
+        if (LogLevel > type)
+        {
+            return;
+        }
+
+        switch (type)
+        {
+            case LogType.NETWORK:
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    break;
+                }
+
+            case LogType.DEBUG:
+                {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    break;
+                }
+
+            case LogType.INFORMATION:
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+                }
+
+            case LogType.USER:
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    break;
+                }
+
+            case LogType.SUCCESS:
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    break;
+                }
+
+            case LogType.WARNING:
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+                }
+
+            case LogType.FAILED:
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    break;
+                }
+
+            case LogType.CRITICAL:
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    break;
+                }
+
+            case LogType.DATABASE:
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    break;
+                }
+        }
+
+        if (arg is null)
+        {
+            Console.WriteLine($"[{DateTime.Now:hh:mm:ss}] {formatStr}");
+        }
+        else
+        {
+            Console.WriteLine($"[{DateTime.Now:hh:mm:ss}] {string.Format(formatStr, arg)}");
+        }
+
+        Console.ForegroundColor = ConsoleColor.Gray;
     }
 }

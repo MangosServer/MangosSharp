@@ -23,80 +23,79 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Mangos.World.Server
+namespace Mangos.World.Server;
+
+public partial class WS_TimerBasedEvents
 {
-    public partial class WS_TimerBasedEvents
+    public class TCharacterSaver : IDisposable
     {
-        public class TCharacterSaver : IDisposable
+        public Timer CharacterSaverTimer;
+
+        private bool CharacterSaverWorking;
+
+        public int UPDATE_TIMER;
+
+        private bool _disposedValue;
+
+        public TCharacterSaver()
         {
-            public Timer CharacterSaverTimer;
+            CharacterSaverTimer = null;
+            CharacterSaverWorking = false;
+            UPDATE_TIMER = WorldServiceLocator._ConfigurationProvider.GetConfiguration().SaveTimer;
+            CharacterSaverTimer = new Timer(Update, null, 10000, UPDATE_TIMER);
+        }
 
-            private bool CharacterSaverWorking;
-
-            public int UPDATE_TIMER;
-
-            private bool _disposedValue;
-
-            public TCharacterSaver()
+        private void Update(object state)
+        {
+            if (CharacterSaverWorking)
             {
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Character Saver skipping update");
+                return;
+            }
+            CharacterSaverWorking = true;
+            try
+            {
+                WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+                foreach (var cHARACTER in WorldServiceLocator._WorldServer.CHARACTERs)
+                {
+                    cHARACTER.Value.SaveCharacter();
+                }
+            }
+            catch (Exception ex2)
+            {
+                ProjectData.SetProjectError(ex2);
+                var ex = ex2;
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, ex.ToString(), null);
+                ProjectData.ClearProjectError();
+            }
+            finally
+            {
+                WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+            }
+            WorldServiceLocator._WS_Handlers_Instance.InstanceMapUpdate();
+            CharacterSaverWorking = false;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                CharacterSaverTimer.Dispose();
                 CharacterSaverTimer = null;
-                CharacterSaverWorking = false;
-                UPDATE_TIMER = WorldServiceLocator._ConfigurationProvider.GetConfiguration().SaveTimer;
-                CharacterSaverTimer = new Timer(Update, null, 10000, UPDATE_TIMER);
             }
+            _disposedValue = true;
+        }
 
-            private void Update(object state)
-            {
-                if (CharacterSaverWorking)
-                {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Character Saver skipping update");
-                    return;
-                }
-                CharacterSaverWorking = true;
-                try
-                {
-                    WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                    foreach (KeyValuePair<ulong, WS_PlayerData.CharacterObject> cHARACTER in WorldServiceLocator._WorldServer.CHARACTERs)
-                    {
-                        cHARACTER.Value.SaveCharacter();
-                    }
-                }
-                catch (Exception ex2)
-                {
-                    ProjectData.SetProjectError(ex2);
-                    Exception ex = ex2;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, ex.ToString(), null);
-                    ProjectData.ClearProjectError();
-                }
-                finally
-                {
-                    WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
-                }
-                WorldServiceLocator._WS_Handlers_Instance.InstanceMapUpdate();
-                CharacterSaverWorking = false;
-            }
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
 
-            protected virtual void Dispose(bool disposing)
-            {
-                if (!_disposedValue)
-                {
-                    CharacterSaverTimer.Dispose();
-                    CharacterSaverTimer = null;
-                }
-                _disposedValue = true;
-            }
-
-            public void Dispose()
-            {
-                Dispose(disposing: true);
-                GC.SuppressFinalize(this);
-            }
-
-            void IDisposable.Dispose()
-            {
-                //ILSpy generated this explicit interface implementation from .override directive in Dispose
-                Dispose();
-            }
+        void IDisposable.Dispose()
+        {
+            //ILSpy generated this explicit interface implementation from .override directive in Dispose
+            Dispose();
         }
     }
 }

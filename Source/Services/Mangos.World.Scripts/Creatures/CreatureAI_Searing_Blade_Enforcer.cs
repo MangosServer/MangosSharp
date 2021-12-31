@@ -19,46 +19,45 @@
 using Mangos.World.AI;
 using Mangos.World.Objects;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Searing_Blade_Enforcer : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Searing_Blade_Enforcer : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int SLAM_COOLDOWN = 8000;
+    private const int SLAM_SPELL = 8242;
+    public int NextWaypoint;
+    public int NextSLAM;
+    public int CurrentWaypoint;
+
+    public CreatureAI_Searing_Blade_Enforcer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int SLAM_COOLDOWN = 8000;
-        private const int SLAM_SPELL = 8242;
-        public int NextWaypoint;
-        public int NextSLAM;
-        public int CurrentWaypoint;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Searing_Blade_Enforcer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnThink()
+    {
+        NextSLAM -= AI_UPDATE;
+        if (NextSLAM <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextSLAM = SLAM_COOLDOWN;
+            aiCreature.CastSpell(SLAM_SPELL, aiTarget); // Curse of Agony
         }
+    }
 
-        public override void OnThink()
+    public void CastSLAM()
+    {
+        for (var i = 0; i <= 3; i++)
         {
-            NextSLAM -= AI_UPDATE;
-            if (NextSLAM <= 0)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                NextSLAM = SLAM_COOLDOWN;
-                aiCreature.CastSpell(SLAM_SPELL, aiTarget); // Curse of Agony
+                return;
             }
-        }
 
-        public void CastSLAM()
-        {
-            for (int i = 0; i <= 3; i++)
-            {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(SLAM_SPELL, aiTarget);
-            }
+            aiCreature.CastSpell(SLAM_SPELL, aiTarget);
         }
     }
 }

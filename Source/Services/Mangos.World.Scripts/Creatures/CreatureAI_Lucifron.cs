@@ -22,242 +22,241 @@ using Mangos.World.AI;
 using Mangos.World.Objects;
 using System;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Lucifron : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Lucifron : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int Impending_Doom_Cooldown = 20000;
+    private const int Lucifrons_Curse_Cooldown = 20000;
+    private const int Shadow_Shock_Cooldown = 6000;
+    private const int Impending_Doom = 19702;
+    private const int Lucifrons_Curse = 19703;
+    private const int Shadow_Shock = 19460;
+    public int Phase;
+    public int NextImpendingDoom;
+    public int NextLucifronsCurse;
+    public int NextShadowShock;
+    public int NextWaypoint;
+    public int CurrentWaypoint;
+
+    public CreatureAI_Lucifron(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int Impending_Doom_Cooldown = 20000;
-        private const int Lucifrons_Curse_Cooldown = 20000;
-        private const int Shadow_Shock_Cooldown = 6000;
-        private const int Impending_Doom = 19702;
-        private const int Lucifrons_Curse = 19703;
-        private const int Shadow_Shock = 19460;
-        public int Phase;
-        public int NextImpendingDoom;
-        public int NextLucifronsCurse;
-        public int NextShadowShock;
-        public int NextWaypoint;
-        public int CurrentWaypoint;
+        Phase = 0;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Lucifron(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnEnterCombat()
+    {
+        if (Phase > 1)
         {
-            Phase = 0;
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            return;
         }
 
-        public override void OnEnterCombat()
+        base.OnEnterCombat();
+        aiCreature.Flying = false;
+        AllowedAttack = true;
+        Phase = 1;
+        // ReinitSpells()
+    }
+
+    public override void OnLeaveCombat(bool Reset = true)
+    {
+        base.OnLeaveCombat(Reset);
+        AllowedAttack = true;
+        Phase = 0;
+    }
+
+    public override void OnKill(ref WS_Base.BaseUnit Victim)
+    {
+        // Does he cast a dummy spell on target death?
+    }
+
+    public override void OnDeath()
+    {
+        // Does he do anything on his own death?
+    }
+
+    public override void OnThink()
+    {
+        if (Phase < 1)
         {
-            if (Phase > 1)
+            return;
+        }
+
+        if (Phase == 1)
+        {
+            NextImpendingDoom -= AI_UPDATE;
+            NextLucifronsCurse -= AI_UPDATE;
+            NextShadowShock -= AI_UPDATE;
+            if (NextImpendingDoom <= 0)
+            {
+                NextImpendingDoom = Impending_Doom_Cooldown;
+                aiCreature.CastSpell(Impending_Doom, aiTarget); // Impending DOOOOOM!
+            }
+
+            if (NextLucifronsCurse <= 0)
+            {
+                NextLucifronsCurse = Lucifrons_Curse_Cooldown;
+                aiCreature.CastSpell(Lucifrons_Curse, aiTarget); // Lucifrons Curse.
+            }
+
+            if (NextShadowShock <= 0)
+            {
+                NextShadowShock = Shadow_Shock_Cooldown;
+                aiCreature.CastSpell(Shadow_Shock, aiTarget); // Summon Player
+            }
+        }
+
+        if (NextWaypoint > 0)
+        {
+            NextWaypoint -= AI_UPDATE;
+            if (NextWaypoint <= 0)
+            {
+                On_Waypoint();
+            }
+        }
+    }
+
+    public void Cast_Lucirons_Curse()
+    {
+        for (var i = 0; i <= 2; i++)
+        {
+            WS_Base.BaseUnit theTarget = aiCreature;
+            if (theTarget is null)
             {
                 return;
             }
 
-            base.OnEnterCombat();
-            aiCreature.Flying = false;
-            AllowedAttack = true;
-            Phase = 1;
-            // ReinitSpells()
+            try
+            {
+                aiCreature.CastSpell(Lucifrons_Curse, aiTarget);
+            }
+            catch (Exception)
+            {
+                aiCreature.SendChatMessage("Failed to cast Lucifron's Curse. This is bad. Please report to developers.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+            }
         }
+    }
 
-        public override void OnLeaveCombat(bool Reset = true)
+    public void Cast_Impending_Doom()
+    {
+        for (var i = 1; i <= 2; i++)
         {
-            base.OnLeaveCombat(Reset);
-            AllowedAttack = true;
-            Phase = 0;
-        }
-
-        public override void OnKill(ref WS_Base.BaseUnit Victim)
-        {
-            // Does he cast a dummy spell on target death?
-        }
-
-        public override void OnDeath()
-        {
-            // Does he do anything on his own death?
-        }
-
-        public override void OnThink()
-        {
-            if (Phase < 1)
+            WS_Base.BaseUnit theTarget = aiCreature;
+            if (theTarget is null)
             {
                 return;
             }
 
-            if (Phase == 1)
+            try
             {
-                NextImpendingDoom -= AI_UPDATE;
-                NextLucifronsCurse -= AI_UPDATE;
-                NextShadowShock -= AI_UPDATE;
-                if (NextImpendingDoom <= 0)
-                {
-                    NextImpendingDoom = Impending_Doom_Cooldown;
-                    aiCreature.CastSpell(Impending_Doom, aiTarget); // Impending DOOOOOM!
-                }
-
-                if (NextLucifronsCurse <= 0)
-                {
-                    NextLucifronsCurse = Lucifrons_Curse_Cooldown;
-                    aiCreature.CastSpell(Lucifrons_Curse, aiTarget); // Lucifrons Curse.
-                }
-
-                if (NextShadowShock <= 0)
-                {
-                    NextShadowShock = Shadow_Shock_Cooldown;
-                    aiCreature.CastSpell(Shadow_Shock, aiTarget); // Summon Player
-                }
+                aiCreature.CastSpell(Impending_Doom, aiTarget);
             }
-
-            if (NextWaypoint > 0)
+            catch (Exception)
             {
-                NextWaypoint -= AI_UPDATE;
-                if (NextWaypoint <= 0)
-                {
-                    On_Waypoint();
-                }
+                aiCreature.SendChatMessage("Failed to cast IMPENDING DOOOOOM! Please report this to a developer.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
             }
         }
+    }
 
-        public void Cast_Lucirons_Curse()
+    public void Cast_Shadow_Shock()
+    {
+        for (var i = 2; i <= 2; i++)
         {
-            for (int i = 0; i <= 2; i++)
+            var theTarget = aiCreature.GetRandomTarget();
+            if (theTarget is null)
             {
-                WS_Base.BaseUnit theTarget = aiCreature;
-                if (theTarget is null)
-                {
-                    return;
-                }
+                return;
+            }
 
-                try
-                {
-                    aiCreature.CastSpell(Lucifrons_Curse, aiTarget);
-                }
-                catch (Exception)
-                {
-                    aiCreature.SendChatMessage("Failed to cast Lucifron's Curse. This is bad. Please report to developers.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
-                }
+            try
+            {
+                aiCreature.CastSpell(Shadow_Shock, theTarget.positionX, theTarget.positionY, theTarget.positionZ);
+            }
+            catch (Exception)
+            {
+                aiCreature.SendChatMessage("Failed to cast Shadow Shock. Please report this to a developer.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
             }
         }
+    }
 
-        public void Cast_Impending_Doom()
+    public void On_Waypoint()
+    {
+        switch (CurrentWaypoint)
         {
-            for (int i = 1; i <= 2; i++)
-            {
-                WS_Base.BaseUnit theTarget = aiCreature;
-                if (theTarget is null)
+            case 0:
                 {
-                    return;
+                    NextWaypoint = aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f, true); // No Waypoint Coords! Will need to back track from MaNGOS!
+                    break;
                 }
 
-                try
+            case 1:
                 {
-                    aiCreature.CastSpell(Impending_Doom, aiTarget);
+                    NextWaypoint = 10000;
+                    // NextSummon = NextWaypoint
+                    aiCreature.MoveTo(0.0f, -0.0f, -0.0f);
+                    break;
                 }
-                catch (Exception)
+
+            case 2:
                 {
-                    aiCreature.SendChatMessage("Failed to cast IMPENDING DOOOOOM! Please report this to a developer.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
+                    NextWaypoint = 23000;
+                    break;
                 }
-            }
+
+            case 3:
+                {
+                    NextWaypoint = 10000;
+                    aiCreature.MoveTo(0.0f, -0.0f, -0.0f);
+                    break;
+                }
+
+            case 4:
+            case 6:
+            case 8:
+            case 10:
+            case 12:
+                {
+                    NextWaypoint = 23000;
+                    break;
+                }
+
+            case 5:
+                {
+                    NextWaypoint = 10000;
+                    aiCreature.MoveTo(-0.0f, -0.0f, -0.0f);
+                    break;
+                }
+
+            case 7:
+                {
+                    NextWaypoint = 10000;
+                    aiCreature.MoveTo(-0.0f, -0.0f, -0.0f);
+                    break;
+                }
+
+            case 9:
+                {
+                    NextWaypoint = 10000;
+                    aiCreature.MoveTo(0.0f, -0.0f, -0.0f);
+                    break;
+                }
+
+            case 11:
+                {
+                    NextWaypoint = 10000;
+                    aiCreature.MoveTo(-0.0f, -0.0f, -0.0f);
+                    break;
+                }
         }
 
-        public void Cast_Shadow_Shock()
+        CurrentWaypoint += 1;
+        if (CurrentWaypoint > 12)
         {
-            for (int i = 2; i <= 2; i++)
-            {
-                WS_Base.BaseUnit theTarget = aiCreature.GetRandomTarget();
-                if (theTarget is null)
-                {
-                    return;
-                }
-
-                try
-                {
-                    aiCreature.CastSpell(Shadow_Shock, theTarget.positionX, theTarget.positionY, theTarget.positionZ);
-                }
-                catch (Exception)
-                {
-                    aiCreature.SendChatMessage("Failed to cast Shadow Shock. Please report this to a developer.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
-                }
-            }
-        }
-
-        public void On_Waypoint()
-        {
-            switch (CurrentWaypoint)
-            {
-                case 0:
-                    {
-                        NextWaypoint = aiCreature.MoveTo(-0.0f, -0.0f, -0.0f, 0.0f, true); // No Waypoint Coords! Will need to back track from MaNGOS!
-                        break;
-                    }
-
-                case 1:
-                    {
-                        NextWaypoint = 10000;
-                        // NextSummon = NextWaypoint
-                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f);
-                        break;
-                    }
-
-                case 2:
-                    {
-                        NextWaypoint = 23000;
-                        break;
-                    }
-
-                case 3:
-                    {
-                        NextWaypoint = 10000;
-                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f);
-                        break;
-                    }
-
-                case 4:
-                case 6:
-                case 8:
-                case 10:
-                case 12:
-                    {
-                        NextWaypoint = 23000;
-                        break;
-                    }
-
-                case 5:
-                    {
-                        NextWaypoint = 10000;
-                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f);
-                        break;
-                    }
-
-                case 7:
-                    {
-                        NextWaypoint = 10000;
-                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f);
-                        break;
-                    }
-
-                case 9:
-                    {
-                        NextWaypoint = 10000;
-                        aiCreature.MoveTo(0.0f, -0.0f, -0.0f);
-                        break;
-                    }
-
-                case 11:
-                    {
-                        NextWaypoint = 10000;
-                        aiCreature.MoveTo(-0.0f, -0.0f, -0.0f);
-                        break;
-                    }
-            }
-
-            CurrentWaypoint += 1;
-            if (CurrentWaypoint > 12)
-            {
-                CurrentWaypoint = 3;
-            }
+            CurrentWaypoint = 3;
         }
     }
 }

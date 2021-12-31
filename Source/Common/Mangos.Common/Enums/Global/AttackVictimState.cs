@@ -16,18 +16,17 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum AttackVictimState
 {
-    public enum AttackVictimState
-    {
-        VICTIMSTATE_UNKNOWN1 = 0,
-        VICTIMSTATE_NORMAL = 1,
-        VICTIMSTATE_DODGE = 2,
-        VICTIMSTATE_PARRY = 3,
-        VICTIMSTATE_UNKNOWN2 = 4,
-        VICTIMSTATE_BLOCKS = 5,
-        VICTIMSTATE_EVADES = 6,
-        VICTIMSTATE_IS_IMMUNE = 7,
-        VICTIMSTATE_DEFLECTS = 8
-    }
+    VICTIMSTATE_UNKNOWN1 = 0,
+    VICTIMSTATE_NORMAL = 1,
+    VICTIMSTATE_DODGE = 2,
+    VICTIMSTATE_PARRY = 3,
+    VICTIMSTATE_UNKNOWN2 = 4,
+    VICTIMSTATE_BLOCKS = 5,
+    VICTIMSTATE_EVADES = 6,
+    VICTIMSTATE_IS_IMMUNE = 7,
+    VICTIMSTATE_DEFLECTS = 8
 }

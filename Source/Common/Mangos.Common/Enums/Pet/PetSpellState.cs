@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Pet
+namespace Mangos.Common.Enums.Pet;
+
+public enum PetSpellState : byte
 {
-    public enum PetSpellState : byte
-    {
-        SPELL_UNCHANGED = 0,
-        SPELL_CHANGED = 1,
-        SPELL_NEW = 2,
-        SPELL_REMOVED = 3
-    }
+    SPELL_UNCHANGED = 0,
+    SPELL_CHANGED = 1,
+    SPELL_NEW = 2,
+    SPELL_REMOVED = 3
 }

@@ -20,24 +20,23 @@ using Autofac;
 using System.Threading.Tasks;
 using WorldCluster.Modules;
 
-namespace WorldCluster
+namespace WorldCluster;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
-        {
-            ContainerBuilder builder = new();
+        ContainerBuilder builder = new();
 
-            builder
-                .RegisterModule<LoggerModule>()
-                .RegisterModule<ConfigurationModule>()
-                .RegisterModule<TcpServerModule>()
-                .RegisterModule<DataStoreModule>()
-                .RegisterModule<ClusterModule>();
+        builder
+            .RegisterModule<LoggerModule>()
+            .RegisterModule<ConfigurationModule>()
+            .RegisterModule<TcpServerModule>()
+            .RegisterModule<DataStoreModule>()
+            .RegisterModule<ClusterModule>();
 
-            IContainer container = builder.Build();
-            Startup startup = container.Resolve<Startup>();
-            await startup.StartAsync();
-        }
+        var container = builder.Build();
+        var startup = container.Resolve<Startup>();
+        await startup.StartAsync();
     }
 }

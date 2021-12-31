@@ -20,46 +20,48 @@ using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 
-namespace Mangos.Cluster.Network
+namespace Mangos.Cluster.Network;
+
+public class WcNetwork
 {
-    public class WcNetwork
+    private readonly ClusterServiceLocator _clusterServiceLocator;
+
+    public WcNetwork(ClusterServiceLocator clusterServiceLocator)
     {
-        private readonly ClusterServiceLocator _clusterServiceLocator;
+        _clusterServiceLocator = clusterServiceLocator;
+    }
 
-        public WcNetwork(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
+    public WorldServerClass WorldServer => _clusterServiceLocator.WorldServerClass;
 
-        public WorldServerClass WorldServer => _clusterServiceLocator.WorldServerClass;
+    private readonly int _lastPing;
 
-        private readonly int _lastPing;
+    public int MsTime()
+    {
+        // DONE: Calculate the clusters timeGetTime("")
+        return _clusterServiceLocator.NativeMethods.timeGetTime("") - _lastPing;
+    }
 
-        public int MsTime()
+    public Dictionary<uint, DateTime> LastConnections = new();
+
+    public uint Ip2Int(string ip)
+    {
+        if (ip.Split(".").Length != 4)
         {
-            // DONE: Calculate the clusters timeGetTime("")
-            return _clusterServiceLocator.NativeMethods.timeGetTime("") - _lastPing;
+            return 0U;
         }
 
-        public Dictionary<uint, DateTime> LastConnections = new();
-
-        public uint Ip2Int(string ip)
+        try
         {
-            if (ip.Split(".").Length != 4)
-            {
-                return 0U;
-            }
-
-            try
-            {
-                byte[] ipBytes = new byte[4];
-                ipBytes[0] = Conversions.ToByte(ip.Split(".")[3]);
-                ipBytes[1] = Conversions.ToByte(ip.Split(".")[2]);
-                ipBytes[2] = Conversions.ToByte(ip.Split(".")[1]);
-                ipBytes[3] = Conversions.ToByte(ip.Split(".")[0]);
-                return BitConverter.ToUInt32(ipBytes, 0);
-            }
-            catch
-            {
-                return 0U;
-            }
+            var ipBytes = new byte[4];
+            ipBytes[0] = Conversions.ToByte(ip.Split(".")[3]);
+            ipBytes[1] = Conversions.ToByte(ip.Split(".")[2]);
+            ipBytes[2] = Conversions.ToByte(ip.Split(".")[1]);
+            ipBytes[3] = Conversions.ToByte(ip.Split(".")[0]);
+            return BitConverter.ToUInt32(ipBytes, 0);
+        }
+        catch
+        {
+            return 0U;
         }
     }
 }

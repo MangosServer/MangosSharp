@@ -21,37 +21,36 @@ using System.Collections.Generic;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace Mangos.Network.Tcp.Extensions
+namespace Mangos.Network.Tcp.Extensions;
+
+public static class ChannelWriterExtensions
 {
-    public static class ChannelWriterExtensions
+    public static async ValueTask WriteEnumerableAsync(this ChannelWriter<byte> writer, IEnumerable<byte> data)
     {
-        public static async ValueTask WriteEnumerableAsync(this ChannelWriter<byte> writer, IEnumerable<byte> data)
+        foreach (var item in data)
         {
-            foreach (byte item in data)
-            {
-                await writer.WriteAsync(item);
-            }
+            await writer.WriteAsync(item);
         }
+    }
 
-        public static async ValueTask WriteFloatAsync(this ChannelWriter<byte> writer, float data)
+    public static async ValueTask WriteFloatAsync(this ChannelWriter<byte> writer, float data)
+    {
+        await writer.WriteEnumerableAsync(BitConverter.GetBytes(data));
+    }
+
+    public static async ValueTask WriteZeroNCountAsync(this ChannelWriter<byte> writer, int count)
+    {
+        for (var i = 0; i < count; i++)
         {
-            await writer.WriteEnumerableAsync(BitConverter.GetBytes(data));
+            await writer.WriteAsync(0);
         }
+    }
 
-        public static async ValueTask WriteZeroNCountAsync(this ChannelWriter<byte> writer, int count)
+    public static async ValueTask WriteArrayAsync(this ChannelWriter<byte> writer, byte[] data, int count)
+    {
+        for (var i = 0; i < count; i++)
         {
-            for (int i = 0; i < count; i++)
-            {
-                await writer.WriteAsync(0);
-            }
-        }
-
-        public static async ValueTask WriteArrayAsync(this ChannelWriter<byte> writer, byte[] data, int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                await writer.WriteAsync(data[i]);
-            }
+            await writer.WriteAsync(data[i]);
         }
     }
 }

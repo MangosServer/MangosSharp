@@ -16,19 +16,18 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum TrackableCreatures
 {
-    public enum TrackableCreatures
-    {
-        All = 128,
-        Beast = 1,
-        Critter = 8,
-        Demon = 3,
-        Dragonkin = 2,
-        Elemental = 4,
-        Giant = 5,
-        Humanoid = 7,
-        Mechanical = 9,
-        Undead = 6
-    }
+    All = 128,
+    Beast = 1,
+    Critter = 8,
+    Demon = 3,
+    Dragonkin = 2,
+    Elemental = 4,
+    Giant = 5,
+    Humanoid = 7,
+    Mechanical = 9,
+    Undead = 6
 }

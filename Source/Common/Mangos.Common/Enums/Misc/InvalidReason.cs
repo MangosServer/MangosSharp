@@ -16,16 +16,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Misc
+namespace Mangos.Common.Enums.Misc;
+
+public enum InvalidReason
 {
-    public enum InvalidReason
-    {
-        DontHaveReq = 0,
-        DontHaveReqItems = 19,
-        DontHaveReqMoney = 21,
-        NotAvailableRace = 6,
-        NotEnoughLevel = 1,
-        ReadyHaveThatQuest = 13,
-        ReadyHaveTimedQuest = 12
-    }
+    DontHaveReq = 0,
+    DontHaveReqItems = 19,
+    DontHaveReqMoney = 21,
+    NotAvailableRace = 6,
+    NotEnoughLevel = 1,
+    ReadyHaveThatQuest = 13,
+    ReadyHaveTimedQuest = 12
 }

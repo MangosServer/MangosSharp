@@ -19,13 +19,12 @@
 using Autofac;
 using Mangos.DataStores;
 
-namespace WorldCluster.Modules
+namespace WorldCluster.Modules;
+
+public class DataStoreModule : Module
 {
-    public class DataStoreModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<DataStoreProvider>().AsSelf().SingleInstance();
-        }
+        builder.RegisterType<DataStoreProvider>().AsSelf().SingleInstance();
     }
 }

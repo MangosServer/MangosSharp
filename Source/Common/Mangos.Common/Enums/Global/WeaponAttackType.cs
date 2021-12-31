@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum WeaponAttackType : byte
 {
-    public enum WeaponAttackType : byte
-    {
-        BASE_ATTACK = 0,
-        OFF_ATTACK = 1,
-        RANGED_ATTACK = 2
-    }
+    BASE_ATTACK = 0,
+    OFF_ATTACK = 1,
+    RANGED_ATTACK = 2
 }

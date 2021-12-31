@@ -21,69 +21,68 @@ using Mangos.World.Objects;
 using Microsoft.VisualBasic.CompilerServices;
 using System;
 
-namespace Mangos.World.Loots
+namespace Mangos.World.Loots;
+
+public partial class WS_Loot
 {
-    public partial class WS_Loot
+    public class LootItem : IDisposable
     {
-        public class LootItem : IDisposable
+        public int ItemID;
+
+        public byte ItemCount;
+
+        private bool _disposedValue;
+
+        public int ItemModel
         {
-            public int ItemID;
-
-            public byte ItemCount;
-
-            private bool _disposedValue;
-
-            public int ItemModel
+            get
             {
-                get
+                if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(ItemID))
                 {
-                    if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(ItemID))
+                    try
                     {
-                        try
-                        {
-                            WorldServiceLocator._WorldServer.ITEMDatabase.Remove(ItemID);
-                            WS_Items.ItemInfo tmpItem = new(ItemID);
-                            WorldServiceLocator._WorldServer.ITEMDatabase.Add(ItemID, tmpItem);
-                        }
-                        catch (Exception ex)
-                        {
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error on ItemModel [Item ID {0} : Exception {1}]", ItemID, ex);
-                        }
+                        WorldServiceLocator._WorldServer.ITEMDatabase.Remove(ItemID);
+                        WS_Items.ItemInfo tmpItem = new(ItemID);
+                        WorldServiceLocator._WorldServer.ITEMDatabase.Add(ItemID, tmpItem);
                     }
-                    return WorldServiceLocator._WorldServer.ITEMDatabase[ItemID].Model;
+                    catch (Exception ex)
+                    {
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error on ItemModel [Item ID {0} : Exception {1}]", ItemID, ex);
+                    }
                 }
+                return WorldServiceLocator._WorldServer.ITEMDatabase[ItemID].Model;
             }
+        }
 
-            public LootItem(ref LootStoreItem Item)
+        public LootItem(ref LootStoreItem Item)
+        {
+            ItemID = 0;
+            ItemCount = 0;
+            ItemID = Item.ItemID;
+            checked
             {
-                ItemID = 0;
-                ItemCount = 0;
-                ItemID = Item.ItemID;
-                checked
-                {
-                    ItemCount = (byte)WorldServiceLocator._WorldServer.Rnd.Next(Item.MinCountOrRef, Item.MaxCount + 1);
-                }
+                ItemCount = (byte)WorldServiceLocator._WorldServer.Rnd.Next(Item.MinCountOrRef, Item.MaxCount + 1);
             }
+        }
 
-            protected virtual void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
             {
-                if (!_disposedValue)
-                {
-                }
-                _disposedValue = true;
             }
+            _disposedValue = true;
+        }
 
-            public void Dispose()
-            {
-                Dispose(disposing: true);
-                GC.SuppressFinalize(this);
-            }
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
 
-            void IDisposable.Dispose()
-            {
-                //ILSpy generated this explicit interface implementation from .override directive in Dispose
-                Dispose();
-            }
+        void IDisposable.Dispose()
+        {
+            //ILSpy generated this explicit interface implementation from .override directive in Dispose
+            Dispose();
         }
     }
 }

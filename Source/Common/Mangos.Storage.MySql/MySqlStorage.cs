@@ -27,99 +27,98 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Mangos.Storage.MySql
+namespace Mangos.Storage.MySql;
+
+public class MySqlStorage : IAsyncDisposable
 {
-    public class MySqlStorage : IAsyncDisposable
+    private MySqlConnection connection;
+    private Dictionary<string, string> queries;
+
+    public async Task ConnectAsync(object queriesTarget, string conenctionString)
     {
-        private MySqlConnection connection;
-        private Dictionary<string, string> queries;
-
-        public async Task ConnectAsync(object queriesTarget, string conenctionString)
+        if (connection != null)
         {
-            if (connection != null)
-            {
-                throw new Exception("MySql connection has already been opened");
-            }
-
-            connection = new MySqlConnection(conenctionString);
-            Task conenctionTask = connection.OpenAsync();
-            queries = GetEmbeddedQueries(queriesTarget);
-            await conenctionTask;
+            throw new Exception("MySql connection has already been opened");
         }
 
-        public async ValueTask DisposeAsync()
-        {
-            if (connection != null)
-            {
-                await connection.DisposeAsync();
-            }
-        }
+        connection = new MySqlConnection(conenctionString);
+        var conenctionTask = connection.OpenAsync();
+        queries = GetEmbeddedQueries(queriesTarget);
+        await conenctionTask;
+    }
 
-        private Dictionary<string, string> GetEmbeddedQueries(object executor)
+    public async ValueTask DisposeAsync()
+    {
+        if (connection != null)
         {
-            Type type = executor.GetType();
-            Assembly assembly = type.Assembly;
-            string queriesCatalog = $"{type.Namespace}.Queries";
-
-            Dictionary<string, string> resources = assembly.GetManifestResourceNames()
-                .Where(x => x.StartsWith(queriesCatalog))
-                .ToDictionary(
-                    x => GetEmbeddedSqlResourceName(queriesCatalog, x),
-                    x => GetEmbeddedSqlResourcebody(assembly, x));
-            return resources;
+            await connection.DisposeAsync();
         }
+    }
 
-        private string GetEmbeddedSqlResourcebody(Assembly assembly, string resource)
-        {
-            using Stream stream = assembly.GetManifestResourceStream(resource);
-            using StreamReader reader = new(stream);
-            return reader.ReadToEnd();
-        }
+    private Dictionary<string, string> GetEmbeddedQueries(object executor)
+    {
+        var type = executor.GetType();
+        var assembly = type.Assembly;
+        var queriesCatalog = $"{type.Namespace}.Queries";
 
-        private string GetQuery(string query)
-        {
-            return queries.ContainsKey(query) ? queries[query] : throw new Exception($"Unknown sql query '{query}'");
-        }
+        Dictionary<string, string> resources = assembly.GetManifestResourceNames()
+            .Where(x => x.StartsWith(queriesCatalog))
+            .ToDictionary(
+                x => GetEmbeddedSqlResourceName(queriesCatalog, x),
+                x => GetEmbeddedSqlResourcebody(assembly, x));
+        return resources;
+    }
 
-        private string GetEmbeddedSqlResourceName(string queriesCatalog, string resource)
-        {
-            return Regex.Split(resource, $"{queriesCatalog}.(.*).sql")[1];
-        }
+    private string GetEmbeddedSqlResourcebody(Assembly assembly, string resource)
+    {
+        using var stream = assembly.GetManifestResourceStream(resource);
+        using StreamReader reader = new(stream);
+        return reader.ReadToEnd();
+    }
 
-        public async Task<T> QuerySingleAsync<T>(
-            object parameters,
-            [CallerMemberName] string callerMemberName = null)
-        {
-            return await connection.QuerySingleAsync<T>(GetQuery(callerMemberName), parameters);
-        }
+    private string GetQuery(string query)
+    {
+        return queries.ContainsKey(query) ? queries[query] : throw new Exception($"Unknown sql query '{query}'");
+    }
 
-        public async Task<T> QuerySingleOrDefaultAsync<T>(
-            object parameters,
-            [CallerMemberName] string callerMemberName = null)
-        {
-            return await connection.QuerySingleOrDefaultAsync<T>(GetQuery(callerMemberName), parameters);
-        }
+    private string GetEmbeddedSqlResourceName(string queriesCatalog, string resource)
+    {
+        return Regex.Split(resource, $"{queriesCatalog}.(.*).sql")[1];
+    }
 
-        public async Task<T> QueryFirstOrDefaultAsync<T>(
-            object parameters,
-            [CallerMemberName] string callerMemberName = null)
-        {
-            return await connection.QueryFirstOrDefaultAsync<T>(GetQuery(callerMemberName), parameters);
-        }
+    public async Task<T> QuerySingleAsync<T>(
+        object parameters,
+        [CallerMemberName] string callerMemberName = null)
+    {
+        return await connection.QuerySingleAsync<T>(GetQuery(callerMemberName), parameters);
+    }
 
-        public async Task<List<T>> QueryListAsync<T>(
-            object parameters,
-            [CallerMemberName] string callerMemberName = null)
-        {
-            IEnumerable<T> result = await connection.QueryAsync<T>(GetQuery(callerMemberName), parameters);
-            return result.ToList();
-        }
+    public async Task<T> QuerySingleOrDefaultAsync<T>(
+        object parameters,
+        [CallerMemberName] string callerMemberName = null)
+    {
+        return await connection.QuerySingleOrDefaultAsync<T>(GetQuery(callerMemberName), parameters);
+    }
 
-        public async Task QueryAsync(
-           object parameters,
-           [CallerMemberName] string callerMemberName = null)
-        {
-            await connection.QueryAsync(GetQuery(callerMemberName), parameters);
-        }
+    public async Task<T> QueryFirstOrDefaultAsync<T>(
+        object parameters,
+        [CallerMemberName] string callerMemberName = null)
+    {
+        return await connection.QueryFirstOrDefaultAsync<T>(GetQuery(callerMemberName), parameters);
+    }
+
+    public async Task<List<T>> QueryListAsync<T>(
+        object parameters,
+        [CallerMemberName] string callerMemberName = null)
+    {
+        var result = await connection.QueryAsync<T>(GetQuery(callerMemberName), parameters);
+        return result.ToList();
+    }
+
+    public async Task QueryAsync(
+       object parameters,
+       [CallerMemberName] string callerMemberName = null)
+    {
+        await connection.QueryAsync(GetQuery(callerMemberName), parameters);
     }
 }

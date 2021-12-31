@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum CorpseType
 {
-    public enum CorpseType
-    {
-        CORPSE_BONES = 0,
-        CORPSE_RESURRECTABLE_PVE = 1,
-        CORPSE_RESURRECTABLE_PVP = 2
-    }
+    CORPSE_BONES = 0,
+    CORPSE_RESURRECTABLE_PVE = 1,
+    CORPSE_RESURRECTABLE_PVP = 2
 }

@@ -22,26 +22,25 @@ using RealmServer.Modules;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RealmServer
+namespace RealmServer;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
-        {
-            ContainerBuilder builder = new();
-            builder
-                .RegisterModule<LoggerModule>()
-                .RegisterModule<ConfigurationModule>()
-                .RegisterModule<StorageModule>()
-                .RegisterModule<TcpServerModule>()
-                .RegisterModule<CommonModule>()
-                .RegisterModule<RealmModule>();
+        ContainerBuilder builder = new();
+        builder
+            .RegisterModule<LoggerModule>()
+            .RegisterModule<ConfigurationModule>()
+            .RegisterModule<StorageModule>()
+            .RegisterModule<TcpServerModule>()
+            .RegisterModule<CommonModule>()
+            .RegisterModule<RealmModule>();
 
-            IContainer container = builder.Build();
-            Startup startup = container.Resolve<Startup>();
-            await startup.StartAsync();
+        var container = builder.Build();
+        var startup = container.Resolve<Startup>();
+        await startup.StartAsync();
 
-            Thread.CurrentThread.Join();
-        }
+        Thread.CurrentThread.Join();
     }
 }

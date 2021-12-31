@@ -22,95 +22,94 @@ using Mangos.World.AI;
 using Mangos.World.Objects;
 using System;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Lord_Serpentis : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Lord_Serpentis : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int SLUMBER_CD = 10000;
+    private const int Lightning_Bolt_CD = 6000;
+    private const int Slumber_Spell = 8040;
+    private const int Healing_Spell = 23381;
+    private const int Spell_Serpent_Form = 8041; // Not sure how this will work.
+    private const int Spell_Lightning_Bolt = 9532;
+    public int NextWaypoint;
+    public int NextLightningBolt;
+    public int NextSlumber;
+
+    // Public NextSerpentForm As Integer = 0 'This should never be re-casted.
+    public int CurrentWaypoint;
+
+    public CreatureAI_Lord_Serpentis(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int SLUMBER_CD = 10000;
-        private const int Lightning_Bolt_CD = 6000;
-        private const int Slumber_Spell = 8040;
-        private const int Healing_Spell = 23381;
-        private const int Spell_Serpent_Form = 8041; // Not sure how this will work.
-        private const int Spell_Lightning_Bolt = 9532;
-        public int NextWaypoint;
-        public int NextLightningBolt;
-        public int NextSlumber;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        // Public NextSerpentForm As Integer = 0 'This should never be re-casted.
-        public int CurrentWaypoint;
+    public override void OnEnterCombat()
+    {
+        base.OnEnterCombat();
+        aiCreature.SendChatMessage("I am the serpent king, I can do anything!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL); // If you can do anything, then go serpent form.
+    }
 
-        public CreatureAI_Lord_Serpentis(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnThink()
+    {
+        NextLightningBolt -= AI_UPDATE;
+        NextSlumber -= AI_UPDATE;
+        if (NextLightningBolt <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextLightningBolt = Lightning_Bolt_CD;
+            aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget); // Lightning bolt on current target.
         }
 
-        public override void OnEnterCombat()
+        if (NextSlumber <= 0)
         {
-            base.OnEnterCombat();
-            aiCreature.SendChatMessage("I am the serpent king, I can do anything!", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL); // If you can do anything, then go serpent form.
+            NextSlumber = SLUMBER_CD;
+            aiCreature.CastSpell(Slumber_Spell, aiTarget); // Not sure if its supposed to take a random target, stays like this for now.
         }
+    }
 
-        public override void OnThink()
+    public void CastLightning()
+    {
+        for (var i = 0; i <= 3; i++)
         {
-            NextLightningBolt -= AI_UPDATE;
-            NextSlumber -= AI_UPDATE;
-            if (NextLightningBolt <= 0)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                NextLightningBolt = Lightning_Bolt_CD;
-                aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget); // Lightning bolt on current target.
+                return;
             }
 
-            if (NextSlumber <= 0)
-            {
-                NextSlumber = SLUMBER_CD;
-                aiCreature.CastSpell(Slumber_Spell, aiTarget); // Not sure if its supposed to take a random target, stays like this for now.
-            }
+            aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
         }
+    }
 
-        public void CastLightning()
+    public void CastSlumber()
+    {
+        for (var i = 1; i <= 3; i++)
         {
-            for (int i = 0; i <= 3; i++)
+            WS_Base.BaseUnit target = aiCreature;
+            if (target is null)
             {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
+                return;
             }
         }
 
-        public void CastSlumber()
+        aiCreature.CastSpell(Slumber_Spell, aiTarget);
+    }
+
+    public override void OnHealthChange(int Percent)
+    {
+        base.OnHealthChange(Percent);
+        if (Percent <= 10)
         {
-            for (int i = 1; i <= 3; i++)
+            try
             {
-                WS_Base.BaseUnit target = aiCreature;
-                if (target is null)
-                {
-                    return;
-                }
+                aiCreature.CastSpellOnSelf(Healing_Spell);
             }
-
-            aiCreature.CastSpell(Slumber_Spell, aiTarget);
-        }
-
-        public override void OnHealthChange(int Percent)
-        {
-            base.OnHealthChange(Percent);
-            if (Percent <= 10)
+            catch (Exception)
             {
-                try
-                {
-                    aiCreature.CastSpellOnSelf(Healing_Spell);
-                }
-                catch (Exception)
-                {
-                    aiCreature.SendChatMessage("I was unable to cast healing touch on myself. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
-                }
+                aiCreature.SendChatMessage("I was unable to cast healing touch on myself. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
             }
         }
     }

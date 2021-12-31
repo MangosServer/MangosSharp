@@ -19,27 +19,26 @@
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using System.IO;
 
-namespace Mangos.Zip
-{
-    public class ZipService
-    {
-        public byte[] Compress(byte[] data, int offset, int length)
-        {
-            using MemoryStream outputStream = new();
-            using DeflaterOutputStream compressordStream = new(outputStream);
-            compressordStream.Write(data, offset, length);
-            compressordStream.Flush();
-            return outputStream.ToArray();
-        }
+namespace Mangos.Zip;
 
-        public byte[] DeCompress(byte[] data)
-        {
-            using MemoryStream outputStream = new();
-            using MemoryStream compressedStream = new(data);
-            using InflaterInputStream inputStream = new(compressedStream);
-            inputStream.CopyTo(outputStream);
-            outputStream.Position = 0;
-            return outputStream.ToArray();
-        }
+public class ZipService
+{
+    public byte[] Compress(byte[] data, int offset, int length)
+    {
+        using MemoryStream outputStream = new();
+        using DeflaterOutputStream compressordStream = new(outputStream);
+        compressordStream.Write(data, offset, length);
+        compressordStream.Flush();
+        return outputStream.ToArray();
+    }
+
+    public byte[] DeCompress(byte[] data)
+    {
+        using MemoryStream outputStream = new();
+        using MemoryStream compressedStream = new(data);
+        using InflaterInputStream inputStream = new(compressedStream);
+        inputStream.CopyTo(outputStream);
+        outputStream.Position = 0;
+        return outputStream.ToArray();
     }
 }

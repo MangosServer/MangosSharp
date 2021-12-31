@@ -16,16 +16,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Player
+namespace Mangos.Common.Enums.Player;
+
+public enum Attributes
 {
-    public enum Attributes
-    {
-        Agility = 3,
-        Health = 1,
-        Iq = 5,
-        Mana = 0,
-        Spirit = 6,
-        Stamina = 7,
-        Strenght = 4
-    }
+    Agility = 3,
+    Health = 1,
+    Iq = 5,
+    Mana = 0,
+    Spirit = 6,
+    Stamina = 7,
+    Strenght = 4
 }

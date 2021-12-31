@@ -18,56 +18,55 @@
 
 using Mangos.Common.Enums.Global;
 
-namespace Mangos.World.Loots
+namespace Mangos.World.Loots;
+
+public partial class WS_Loot
 {
-    public partial class WS_Loot
+    public class LootStoreItem
     {
-        public class LootStoreItem
+        public int ItemID;
+
+        public float Chance;
+
+        public byte Group;
+
+        public int MinCountOrRef;
+
+        public byte MaxCount;
+
+        public ConditionType LootCondition;
+
+        public int ConditionValue1;
+
+        public int ConditionValue2;
+
+        public bool NeedQuest;
+
+        public LootStoreItem(int Item, float Chance, byte Group, int MinCountOrRef, byte MaxCount, ConditionType LootCondition, int ConditionValue1, int ConditionValue2, bool NeedQuest)
         {
-            public int ItemID;
+            ItemID = 0;
+            this.Chance = 0f;
+            this.Group = 0;
+            this.MinCountOrRef = 0;
+            this.MaxCount = 0;
+            this.LootCondition = ConditionType.CONDITION_NONE;
+            this.ConditionValue1 = 0;
+            this.ConditionValue2 = 0;
+            this.NeedQuest = false;
+            ItemID = Item;
+            this.Chance = Chance;
+            this.Group = Group;
+            this.MinCountOrRef = MinCountOrRef;
+            this.MaxCount = MaxCount;
+            this.LootCondition = LootCondition;
+            this.ConditionValue1 = ConditionValue1;
+            this.ConditionValue2 = ConditionValue2;
+            this.NeedQuest = NeedQuest;
+        }
 
-            public float Chance;
-
-            public byte Group;
-
-            public int MinCountOrRef;
-
-            public byte MaxCount;
-
-            public ConditionType LootCondition;
-
-            public int ConditionValue1;
-
-            public int ConditionValue2;
-
-            public bool NeedQuest;
-
-            public LootStoreItem(int Item, float Chance, byte Group, int MinCountOrRef, byte MaxCount, ConditionType LootCondition, int ConditionValue1, int ConditionValue2, bool NeedQuest)
-            {
-                ItemID = 0;
-                this.Chance = 0f;
-                this.Group = 0;
-                this.MinCountOrRef = 0;
-                this.MaxCount = 0;
-                this.LootCondition = ConditionType.CONDITION_NONE;
-                this.ConditionValue1 = 0;
-                this.ConditionValue2 = 0;
-                this.NeedQuest = false;
-                ItemID = Item;
-                this.Chance = Chance;
-                this.Group = Group;
-                this.MinCountOrRef = MinCountOrRef;
-                this.MaxCount = MaxCount;
-                this.LootCondition = LootCondition;
-                this.ConditionValue1 = ConditionValue1;
-                this.ConditionValue2 = ConditionValue2;
-                this.NeedQuest = NeedQuest;
-            }
-
-            public bool Roll()
-            {
-                return Chance >= 100f || WorldServiceLocator._Functions.RollChance(Chance);
-            }
+        public bool Roll()
+        {
+            return Chance >= 100f || WorldServiceLocator._Functions.RollChance(Chance);
         }
     }
 }

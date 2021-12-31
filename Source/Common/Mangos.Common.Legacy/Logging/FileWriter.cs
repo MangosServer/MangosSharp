@@ -24,70 +24,69 @@ using System.IO;
 // Using this logging type, all logs are saved in files numbered by date.
 // Writting commands is done trought console.
 
-namespace Mangos.Common.Legacy.Logging
-{
-    public class FileWriter : BaseWriter
-    {
-        protected StreamWriter Output;
-        protected DateTime LastDate = DateTime.Parse("2007-01-01");
-        protected string Filename = "";
+namespace Mangos.Common.Legacy.Logging;
 
-        protected void CreateNewFile()
+public class FileWriter : BaseWriter
+{
+    protected StreamWriter Output;
+    protected DateTime LastDate = DateTime.Parse("2007-01-01");
+    protected string Filename = "";
+
+    protected void CreateNewFile()
+    {
+        LastDate = DateAndTime.Now.Date;
+        Output = new StreamWriter(string.Format("{0}-{1}.log", Filename, Strings.Format(LastDate, "yyyy-MM-dd")), true) { AutoFlush = true };
+        WriteLine(LogType.INFORMATION, "Log started successfully.");
+    }
+
+    public FileWriter(string createfilename)
+    {
+        Filename = createfilename;
+        CreateNewFile();
+    }
+
+    private bool _disposedValue; // To detect redundant calls
+
+    // IDisposable
+    protected override void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
         {
-            LastDate = DateAndTime.Now.Date;
-            Output = new StreamWriter(string.Format("{0}-{1}.log", Filename, Strings.Format(LastDate, "yyyy-MM-dd")), true) { AutoFlush = true };
-            WriteLine(LogType.INFORMATION, "Log started successfully.");
+            // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
+            // TODO: set large fields to null.
+            Output.Close();
         }
 
-        public FileWriter(string createfilename)
+        _disposedValue = true;
+    }
+
+    public override void Write(LogType type, string formatStr, params object[] arg)
+    {
+        if (LogLevel > type)
         {
-            Filename = createfilename;
+            return;
+        }
+
+        if (LastDate != DateAndTime.Now.Date)
+        {
             CreateNewFile();
         }
 
-        private bool _disposedValue; // To detect redundant calls
+        Output.Write(formatStr, arg);
+    }
 
-        // IDisposable
-        protected override void Dispose(bool disposing)
+    public override void WriteLine(LogType type, string formatStr, params object[] arg)
+    {
+        if (LogLevel > type)
         {
-            if (!_disposedValue)
-            {
-                // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-                // TODO: set large fields to null.
-                Output.Close();
-            }
-
-            _disposedValue = true;
+            return;
         }
 
-        public override void Write(LogType type, string formatStr, params object[] arg)
+        if (LastDate != DateAndTime.Now.Date)
         {
-            if (LogLevel > type)
-            {
-                return;
-            }
-
-            if (LastDate != DateAndTime.Now.Date)
-            {
-                CreateNewFile();
-            }
-
-            Output.Write(formatStr, arg);
+            CreateNewFile();
         }
 
-        public override void WriteLine(LogType type, string formatStr, params object[] arg)
-        {
-            if (LogLevel > type)
-            {
-                return;
-            }
-
-            if (LastDate != DateAndTime.Now.Date)
-            {
-                CreateNewFile();
-            }
-
-            Output.WriteLine(L[(int)type] + ":[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
-        }
+        Output.WriteLine(L[(int)type] + ":[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
     }
 }

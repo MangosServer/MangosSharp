@@ -23,149 +23,148 @@ using Mangos.World.Player;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Mangos.World.Loots
+namespace Mangos.World.Loots;
+
+public partial class WS_Loot
 {
-    public partial class WS_Loot
+    public class GroupLootInfo
     {
-        public class GroupLootInfo
+        public LootObject LootObject;
+
+        public byte LootSlot;
+
+        public LootItem Item;
+
+        public List<WS_PlayerData.CharacterObject> Rolls;
+
+        public Dictionary<WS_PlayerData.CharacterObject, int> Looters;
+
+        public Timer RollTimeoutTimer;
+
+        public GroupLootInfo()
         {
-            public LootObject LootObject;
+            Rolls = new List<WS_PlayerData.CharacterObject>();
+            Looters = new Dictionary<WS_PlayerData.CharacterObject, int>(5);
+            RollTimeoutTimer = null;
+        }
 
-            public byte LootSlot;
-
-            public LootItem Item;
-
-            public List<WS_PlayerData.CharacterObject> Rolls;
-
-            public Dictionary<WS_PlayerData.CharacterObject, int> Looters;
-
-            public Timer RollTimeoutTimer;
-
-            public GroupLootInfo()
+        public void Check()
+        {
+            if (Looters.Count != Rolls.Count)
             {
-                Rolls = new List<WS_PlayerData.CharacterObject>();
-                Looters = new Dictionary<WS_PlayerData.CharacterObject, int>(5);
-                RollTimeoutTimer = null;
+                return;
             }
-
-            public void Check()
+            byte maxRollType = 0;
+            foreach (var looter2 in Looters)
             {
-                if (Looters.Count != Rolls.Count)
+                if (looter2.Value == 1)
                 {
-                    return;
+                    maxRollType = 1;
                 }
-                byte maxRollType = 0;
-                foreach (KeyValuePair<WS_PlayerData.CharacterObject, int> looter2 in Looters)
+                if (looter2.Value == 2 && maxRollType != 1)
                 {
-                    if (looter2.Value == 1)
-                    {
-                        maxRollType = 1;
-                    }
-                    if (looter2.Value == 2 && maxRollType != 1)
-                    {
-                        maxRollType = 2;
-                    }
+                    maxRollType = 2;
                 }
-                if (maxRollType == 0)
+            }
+            if (maxRollType == 0)
+            {
+                LootObject.GroupLootInfo.Remove(LootSlot);
+                Packets.PacketClass response2 = new(Opcodes.SMSG_LOOT_ALL_PASSED);
+                response2.AddUInt64(LootObject.GUID);
+                response2.AddInt32(LootSlot);
+                response2.AddInt32(Item.ItemID);
+                response2.AddInt32(0);
+                response2.AddInt32(0);
+                Broadcast(ref response2);
+                response2.Dispose();
+                return;
+            }
+            WS_PlayerData.CharacterObject looterCharacter = null;
+            checked
+            {
+                var maxRoll = -1;
+                foreach (var looter in Looters)
                 {
-                    LootObject.GroupLootInfo.Remove(LootSlot);
-                    Packets.PacketClass response2 = new(Opcodes.SMSG_LOOT_ALL_PASSED);
-                    response2.AddUInt64(LootObject.GUID);
-                    response2.AddInt32(LootSlot);
-                    response2.AddInt32(Item.ItemID);
-                    response2.AddInt32(0);
-                    response2.AddInt32(0);
-                    Broadcast(ref response2);
-                    response2.Dispose();
-                    return;
-                }
-                WS_PlayerData.CharacterObject looterCharacter = null;
-                checked
-                {
-                    int maxRoll = -1;
-                    foreach (KeyValuePair<WS_PlayerData.CharacterObject, int> looter in Looters)
+                    if (looter.Value == maxRollType)
                     {
-                        if (looter.Value == maxRollType)
+                        var rollValue = (byte)WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
+                        if (rollValue > maxRoll)
                         {
-                            byte rollValue = (byte)WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
-                            if (rollValue > maxRoll)
-                            {
-                                maxRoll = rollValue;
-                                looterCharacter = looter.Key;
-                            }
-                            Packets.PacketClass response = new(Opcodes.SMSG_LOOT_ROLL);
-                            response.AddUInt64(LootObject.GUID);
-                            response.AddInt32(LootSlot);
-                            response.AddUInt64(looter.Key.GUID);
-                            response.AddInt32(Item.ItemID);
-                            response.AddInt32(0);
-                            response.AddInt32(0);
-                            response.AddInt8(rollValue);
-                            response.AddInt8((byte)looter.Value);
-                            Broadcast(ref response);
-                            response.Dispose();
+                            maxRoll = rollValue;
+                            looterCharacter = looter.Key;
                         }
-                    }
-                    ItemObject itemObject = new(Item.ItemID, looterCharacter.GUID)
-                    {
-                        StackCount = Item.ItemCount
-                    };
-                    ItemObject tmpItem = itemObject;
-                    Packets.PacketClass wonItem = new(Opcodes.SMSG_LOOT_ROLL_WON);
-                    wonItem.AddUInt64(LootObject.GUID);
-                    wonItem.AddInt32(LootSlot);
-                    wonItem.AddInt32(Item.ItemID);
-                    wonItem.AddInt32(0);
-                    wonItem.AddInt32(0);
-                    wonItem.AddUInt64(looterCharacter.GUID);
-                    wonItem.AddInt8((byte)maxRoll);
-                    wonItem.AddInt8(maxRollType);
-                    Broadcast(ref wonItem);
-                    if (looterCharacter.ItemADD(ref tmpItem))
-                    {
-                        looterCharacter.LogLootItem(tmpItem, Item.ItemCount, Recieved: false, Created: false);
-                        LootObject.GroupLootInfo.Remove(LootSlot);
-                        LootObject.Items[LootSlot] = null;
-                    }
-                    else
-                    {
-                        tmpItem.Delete();
-                        LootObject.GroupLootInfo.Remove(LootSlot);
-                    }
-                }
-            }
-
-            public void Broadcast(ref Packets.PacketClass packet)
-            {
-                foreach (WS_PlayerData.CharacterObject objCharacter in Rolls)
-                {
-                    objCharacter.client.SendMultiplyPackets(ref packet);
-                }
-            }
-
-            public void EndRoll(object state)
-            {
-                foreach (WS_PlayerData.CharacterObject objCharacter in Rolls)
-                {
-                    if (!Looters.ContainsKey(objCharacter))
-                    {
-                        Looters[objCharacter] = 0;
                         Packets.PacketClass response = new(Opcodes.SMSG_LOOT_ROLL);
                         response.AddUInt64(LootObject.GUID);
                         response.AddInt32(LootSlot);
-                        response.AddUInt64(objCharacter.GUID);
+                        response.AddUInt64(looter.Key.GUID);
                         response.AddInt32(Item.ItemID);
                         response.AddInt32(0);
                         response.AddInt32(0);
-                        response.AddInt8(249);
-                        response.AddInt8(0);
+                        response.AddInt8(rollValue);
+                        response.AddInt8((byte)looter.Value);
                         Broadcast(ref response);
+                        response.Dispose();
                     }
                 }
-                RollTimeoutTimer.Dispose();
-                RollTimeoutTimer = null;
-                Check();
+                ItemObject itemObject = new(Item.ItemID, looterCharacter.GUID)
+                {
+                    StackCount = Item.ItemCount
+                };
+                var tmpItem = itemObject;
+                Packets.PacketClass wonItem = new(Opcodes.SMSG_LOOT_ROLL_WON);
+                wonItem.AddUInt64(LootObject.GUID);
+                wonItem.AddInt32(LootSlot);
+                wonItem.AddInt32(Item.ItemID);
+                wonItem.AddInt32(0);
+                wonItem.AddInt32(0);
+                wonItem.AddUInt64(looterCharacter.GUID);
+                wonItem.AddInt8((byte)maxRoll);
+                wonItem.AddInt8(maxRollType);
+                Broadcast(ref wonItem);
+                if (looterCharacter.ItemADD(ref tmpItem))
+                {
+                    looterCharacter.LogLootItem(tmpItem, Item.ItemCount, Recieved: false, Created: false);
+                    LootObject.GroupLootInfo.Remove(LootSlot);
+                    LootObject.Items[LootSlot] = null;
+                }
+                else
+                {
+                    tmpItem.Delete();
+                    LootObject.GroupLootInfo.Remove(LootSlot);
+                }
             }
+        }
+
+        public void Broadcast(ref Packets.PacketClass packet)
+        {
+            foreach (var objCharacter in Rolls)
+            {
+                objCharacter.client.SendMultiplyPackets(ref packet);
+            }
+        }
+
+        public void EndRoll(object state)
+        {
+            foreach (var objCharacter in Rolls)
+            {
+                if (!Looters.ContainsKey(objCharacter))
+                {
+                    Looters[objCharacter] = 0;
+                    Packets.PacketClass response = new(Opcodes.SMSG_LOOT_ROLL);
+                    response.AddUInt64(LootObject.GUID);
+                    response.AddInt32(LootSlot);
+                    response.AddUInt64(objCharacter.GUID);
+                    response.AddInt32(Item.ItemID);
+                    response.AddInt32(0);
+                    response.AddInt32(0);
+                    response.AddInt8(249);
+                    response.AddInt8(0);
+                    Broadcast(ref response);
+                }
+            }
+            RollTimeoutTimer.Dispose();
+            RollTimeoutTimer = null;
+            Check();
         }
     }
 }

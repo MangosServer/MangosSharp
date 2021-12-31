@@ -21,34 +21,33 @@ using Microsoft.VisualBasic;
 using System;
 using System.Threading;
 
-namespace Mangos.Common.Legacy.Logging
+namespace Mangos.Common.Legacy.Logging;
+
+public class ConsoleWriter : BaseWriter
 {
-    public class ConsoleWriter : BaseWriter
+    public override void Write(LogType type, string formatStr, params object[] arg)
     {
-        public override void Write(LogType type, string formatStr, params object[] arg)
+        if (LogLevel > type)
         {
-            if (LogLevel > type)
-            {
-                return;
-            }
-
-            Console.Write(formatStr, arg);
+            return;
         }
 
-        public override void WriteLine(LogType type, string formatStr, params object[] arg)
-        {
-            if (LogLevel > type)
-            {
-                return;
-            }
+        Console.Write(formatStr, arg);
+    }
 
-            Console.WriteLine(L[(int)type] + ":" + "[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
+    public override void WriteLine(LogType type, string formatStr, params object[] arg)
+    {
+        if (LogLevel > type)
+        {
+            return;
         }
 
-        public override string ReadLine()
-        {
-            Thread.Sleep(TimeSpan.FromMinutes(1d));
-            return "info";
-        }
+        Console.WriteLine(L[(int)type] + ":" + "[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
+    }
+
+    public override string ReadLine()
+    {
+        Thread.Sleep(TimeSpan.FromMinutes(1d));
+        return "info";
     }
 }

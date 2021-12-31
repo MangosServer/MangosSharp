@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+internal static class ScriptHarness
 {
-    internal static class ScriptHarness
+    public static void Main()
     {
-        public static void Main()
-        {
-        }
     }
 }

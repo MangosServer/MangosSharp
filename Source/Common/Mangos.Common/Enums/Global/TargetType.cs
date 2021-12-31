@@ -16,17 +16,16 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum TargetType
 {
-    public enum TargetType
-    {
-        AllCharacters = -2,
-        AllMobiles = -3,
-        Enemy = -1,
-        Friend = 1,
-        GameObj = 4,
-        Neutral = 0,
-        Party = 2,
-        Pet = 3
-    }
+    AllCharacters = -2,
+    AllMobiles = -3,
+    Enemy = -1,
+    Friend = 1,
+    GameObj = 4,
+    Neutral = 0,
+    Party = 2,
+    Pet = 3
 }

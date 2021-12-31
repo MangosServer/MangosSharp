@@ -19,33 +19,32 @@
 using Mangos.Common.Globals;
 using System;
 
-namespace Mangos.World.Globals
+namespace Mangos.World.Globals;
+
+public partial class Packets
 {
-    public partial class Packets
+    public class UpdatePacketClass : PacketClass
     {
-        public class UpdatePacketClass : PacketClass
+        public int UpdatesCount
         {
-            public int UpdatesCount
+            get => BitConverter.ToInt32(Data, 4);
+            set
             {
-                get => BitConverter.ToInt32(Data, 4);
-                set
+                checked
                 {
-                    checked
-                    {
-                        Data[4] = (byte)(value & 0xFF);
-                        Data[5] = (byte)((value >> 8) & 0xFF);
-                        Data[6] = (byte)((value >> 16) & 0xFF);
-                        Data[7] = (byte)((value >> 24) & 0xFF);
-                    }
+                    Data[4] = (byte)(value & 0xFF);
+                    Data[5] = (byte)((value >> 8) & 0xFF);
+                    Data[6] = (byte)((value >> 16) & 0xFF);
+                    Data[7] = (byte)((value >> 24) & 0xFF);
                 }
             }
+        }
 
-            public UpdatePacketClass()
-                : base(Opcodes.SMSG_UPDATE_OBJECT)
-            {
-                AddInt32(0);
-                AddInt8(0);
-            }
+        public UpdatePacketClass()
+            : base(Opcodes.SMSG_UPDATE_OBJECT)
+        {
+            AddInt32(0);
+            AddInt8(0);
         }
     }
 }

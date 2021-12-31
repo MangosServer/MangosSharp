@@ -16,10 +16,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Spell
+namespace Mangos.Common.Enums.Spell;
+
+public enum SpellProcFlags : byte
 {
-    public enum SpellProcFlags : byte
-    {
-        PROC_ON_DAMAGE_RECEIVED = 3
-    }
+    PROC_ON_DAMAGE_RECEIVED = 3
 }

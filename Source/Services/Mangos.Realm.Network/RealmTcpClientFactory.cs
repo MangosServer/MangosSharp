@@ -22,24 +22,23 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace Mangos.Realm.Network
+namespace Mangos.Realm.Network;
+
+public class RealmTcpClientFactory : ITcpClientFactory
 {
-    public class RealmTcpClientFactory : ITcpClientFactory
+    private readonly ILogger logger;
+    private readonly Router router;
+
+    public RealmTcpClientFactory(ILogger logger, Router router)
     {
-        private readonly ILogger logger;
-        private readonly Router router;
+        this.router = router;
+        this.logger = logger;
+    }
 
-        public RealmTcpClientFactory(ILogger logger, Router router)
-        {
-            this.router = router;
-            this.logger = logger;
-        }
+    public Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
+    {
+        Client clientModel = new((IPEndPoint)clientSocket.RemoteEndPoint);
 
-        public Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
-        {
-            Client clientModel = new((IPEndPoint)clientSocket.RemoteEndPoint);
-
-            return Task.FromResult<ITcpClient>(new RealmTcpClient(logger, router, clientModel));
-        }
+        return Task.FromResult<ITcpClient>(new RealmTcpClient(logger, router, clientModel));
     }
 }

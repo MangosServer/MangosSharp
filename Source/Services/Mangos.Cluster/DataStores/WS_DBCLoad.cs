@@ -21,37 +21,39 @@ using Microsoft.VisualBasic;
 using System;
 using System.Threading.Tasks;
 
-namespace Mangos.Cluster.DataStores
+namespace Mangos.Cluster.DataStores;
+
+public class WsDbcLoad
 {
-    public class WsDbcLoad
+    private readonly ClusterServiceLocator _clusterServiceLocator;
+
+    public WsDbcLoad(ClusterServiceLocator clusterServiceLocator)
     {
-        private readonly ClusterServiceLocator _clusterServiceLocator;
+        _clusterServiceLocator = clusterServiceLocator;
+    }
 
-        public WsDbcLoad(ClusterServiceLocator clusterServiceLocator) => _clusterServiceLocator = clusterServiceLocator;
-
-        public async Task InitializeInternalDatabaseAsync()
+    public async Task InitializeInternalDatabaseAsync()
+    {
+        await InitializeLoadDataStoresAsync().ConfigureAwait(false);
+        try
         {
-            await InitializeLoadDataStoresAsync().ConfigureAwait(false);
-            try
-            {
-                // Set all characters offline
-                _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_online = 0;");
-            }
-            catch (Exception e)
-            {
-                _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "Internal database initialization failed! [{0}]{1}{2}", e.Message, Constants.vbCrLf, e.ToString());
-            }
+            // Set all characters offline
+            _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update("UPDATE characters SET char_online = 0;");
         }
-
-        private async Task InitializeLoadDataStoresAsync()
+        catch (Exception e)
         {
-            _clusterServiceLocator.WsDbcDatabase.InitializeBattlegrounds();
-            await Task.WhenAll(
-                _clusterServiceLocator.WsDbcDatabase.InitializeMapsAsync(),
-                _clusterServiceLocator.WsDbcDatabase.InitializeChatChannelsAsync(),
-                _clusterServiceLocator.WsDbcDatabase.InitializeWorldSafeLocsAsync(),
-                _clusterServiceLocator.WsDbcDatabase.InitializeCharRacesAsync(),
-                _clusterServiceLocator.WsDbcDatabase.InitializeCharClassesAsync());
+            _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.FAILED, "Internal database initialization failed! [{0}]{1}{2}", e.Message, Constants.vbCrLf, e.ToString());
         }
+    }
+
+    private async Task InitializeLoadDataStoresAsync()
+    {
+        _clusterServiceLocator.WsDbcDatabase.InitializeBattlegrounds();
+        await Task.WhenAll(
+            _clusterServiceLocator.WsDbcDatabase.InitializeMapsAsync(),
+            _clusterServiceLocator.WsDbcDatabase.InitializeChatChannelsAsync(),
+            _clusterServiceLocator.WsDbcDatabase.InitializeWorldSafeLocsAsync(),
+            _clusterServiceLocator.WsDbcDatabase.InitializeCharRacesAsync(),
+            _clusterServiceLocator.WsDbcDatabase.InitializeCharClassesAsync());
     }
 }

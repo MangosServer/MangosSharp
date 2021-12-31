@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Authentication
+namespace Mangos.Common.Enums.Authentication;
+
+public enum LogoutResponseCode : byte
 {
-    public enum LogoutResponseCode : byte
-    {
-        LOGOUT_RESPONSE_ACCEPTED = 0x0,
-        LOGOUT_RESPONSE_DENIED = 0xC
-    }
+    LOGOUT_RESPONSE_ACCEPTED = 0x0,
+    LOGOUT_RESPONSE_DENIED = 0xC
 }

@@ -18,15 +18,14 @@
 
 using System.Windows.Forms;
 
-namespace Mangos.Extractor
+namespace Mangos.Extractor;
+
+internal static class Program
 {
-    internal static class Program
+    public static void Main()
     {
-        public static void Main()
-        {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmMain());
-        }
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        Application.Run(new frmMain());
     }
 }

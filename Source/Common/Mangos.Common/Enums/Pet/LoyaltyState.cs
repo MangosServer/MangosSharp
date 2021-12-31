@@ -16,15 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Pet
+namespace Mangos.Common.Enums.Pet;
+
+public enum LoyaltyState : byte
 {
-    public enum LoyaltyState : byte
-    {
-        REBELLIOUS = 1,
-        UNRULY = 2,
-        SUBMISSIVE = 3,
-        DEPENDABLE = 4,
-        FAITHFUL = 5,
-        BEST_FRIEND = 6
-    }
+    REBELLIOUS = 1,
+    UNRULY = 2,
+    SUBMISSIVE = 3,
+    DEPENDABLE = 4,
+    FAITHFUL = 5,
+    BEST_FRIEND = 6
 }

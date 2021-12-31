@@ -20,104 +20,103 @@ using Mangos.Common.Enums.Warden;
 using Microsoft.VisualBasic.CompilerServices;
 using System.IO;
 
-namespace Mangos.World.Warden
+namespace Mangos.World.Warden;
+
+public partial class WS_Warden
 {
-    public partial class WS_Warden
+    public class CheatCheck
     {
-        public class CheatCheck
+        public CheckTypes Type;
+
+        public string Str;
+
+        public string Str2;
+
+        public int Addr;
+
+        public byte[] Hash;
+
+        public int Seed;
+
+        public byte Length;
+
+        public CheatCheck(CheckTypes Type_)
         {
-            public CheckTypes Type;
+            Str = "";
+            Str2 = "";
+            Addr = 0;
+            Hash = System.Array.Empty<byte>();
+            Seed = 0;
+            Length = 0;
+            Type = Type_;
+        }
 
-            public string Str;
-
-            public string Str2;
-
-            public int Addr;
-
-            public byte[] Hash;
-
-            public int Seed;
-
-            public byte Length;
-
-            public CheatCheck(CheckTypes Type_)
+        public byte[] ToData(byte XorCheck, ref byte index)
+        {
+            MemoryStream ms = new();
+            BinaryWriter bw = new(ms);
+            bw.Write(XorCheck);
+            checked
             {
-                Str = "";
-                Str2 = "";
-                Addr = 0;
-                Hash = System.Array.Empty<byte>();
-                Seed = 0;
-                Length = 0;
-                Type = Type_;
-            }
-
-            public byte[] ToData(byte XorCheck, ref byte index)
-            {
-                MemoryStream ms = new();
-                BinaryWriter bw = new(ms);
-                bw.Write(XorCheck);
-                checked
+                switch (Type)
                 {
-                    switch (Type)
-                    {
-                        case CheckTypes.MEM_CHECK:
-                            if (Operators.CompareString(Str, "", TextCompare: false) == 0)
-                            {
-                                bw.Write((byte)0);
-                            }
-                            else
-                            {
-                                bw.Write(index);
-                                index++;
-                            }
-                            bw.Write(Addr);
-                            bw.Write(Length);
-                            break;
-
-                        case CheckTypes.PAGE_CHECK_A_B:
-                            bw.Write(Seed);
-                            bw.Write(Hash, 0, Hash.Length);
-                            bw.Write(Addr);
-                            bw.Write(Length);
-                            break;
-
-                        case CheckTypes.MPQ_CHECK:
+                    case CheckTypes.MEM_CHECK:
+                        if (Operators.CompareString(Str, "", TextCompare: false) == 0)
+                        {
+                            bw.Write((byte)0);
+                        }
+                        else
+                        {
                             bw.Write(index);
                             index++;
-                            break;
+                        }
+                        bw.Write(Addr);
+                        bw.Write(Length);
+                        break;
 
-                        case CheckTypes.LUA_STR_CHECK:
-                            bw.Write(index);
-                            index++;
-                            break;
+                    case CheckTypes.PAGE_CHECK_A_B:
+                        bw.Write(Seed);
+                        bw.Write(Hash, 0, Hash.Length);
+                        bw.Write(Addr);
+                        bw.Write(Length);
+                        break;
 
-                        case CheckTypes.DRIVER_CHECK:
-                            bw.Write(Seed);
-                            bw.Write(Hash, 0, Hash.Length);
-                            bw.Write(index);
-                            index++;
-                            break;
+                    case CheckTypes.MPQ_CHECK:
+                        bw.Write(index);
+                        index++;
+                        break;
 
-                        case CheckTypes.PROC_CHECK:
-                            bw.Write(Seed);
-                            bw.Write(Hash, 0, Hash.Length);
-                            bw.Write(index);
-                            index++;
-                            bw.Write(index);
-                            index++;
-                            bw.Write(Addr);
-                            bw.Write(Length);
-                            break;
+                    case CheckTypes.LUA_STR_CHECK:
+                        bw.Write(index);
+                        index++;
+                        break;
 
-                        case CheckTypes.MODULE_CHECK:
-                            bw.Write(Seed);
-                            bw.Write(Hash, 0, Hash.Length);
-                            break;
-                    }
-                    byte[] tmpData = ms.ToArray();
-                    ms.Close();
-                    return tmpData;
+                    case CheckTypes.DRIVER_CHECK:
+                        bw.Write(Seed);
+                        bw.Write(Hash, 0, Hash.Length);
+                        bw.Write(index);
+                        index++;
+                        break;
+
+                    case CheckTypes.PROC_CHECK:
+                        bw.Write(Seed);
+                        bw.Write(Hash, 0, Hash.Length);
+                        bw.Write(index);
+                        index++;
+                        bw.Write(index);
+                        index++;
+                        bw.Write(Addr);
+                        bw.Write(Length);
+                        break;
+
+                    case CheckTypes.MODULE_CHECK:
+                        bw.Write(Seed);
+                        bw.Write(Hash, 0, Hash.Length);
+                        break;
                 }
+                var tmpData = ms.ToArray();
+                ms.Close();
+                return tmpData;
             }
         }
     }

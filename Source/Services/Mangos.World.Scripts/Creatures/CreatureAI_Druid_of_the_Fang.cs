@@ -22,73 +22,72 @@ using Mangos.World.AI;
 using Mangos.World.Objects;
 using System;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Druid_of_the_Fang : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Druid_of_the_Fang : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int SLUMBER_CD = 10000; // - Unable to implement this as for the time being due to threat issues in the core.
+    private const int Healing_Touch_CD = 20000;
+    private const int Serpent_Form_CD = 40000;
+    private const int Lightning_Bolt_CD = 6000;
+    private const int Slumber_Spell = 8040;
+    private const int Healing_Spell = 23381;
+    private const int Spell_Serpent_Form = 8041; // Not sure how this will work.
+    private const int Spell_Lightning_Bolt = 9532;
+    public int NextWaypoint;
+    public int NextLightningBolt;
+    public int NextSerpentForm;
+    public int NextHealingTouch;
+    public int NextSlumber;
+    public int CurrentWaypoint;
+
+    public CreatureAI_Druid_of_the_Fang(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int SLUMBER_CD = 10000; // - Unable to implement this as for the time being due to threat issues in the core.
-        private const int Healing_Touch_CD = 20000;
-        private const int Serpent_Form_CD = 40000;
-        private const int Lightning_Bolt_CD = 6000;
-        private const int Slumber_Spell = 8040;
-        private const int Healing_Spell = 23381;
-        private const int Spell_Serpent_Form = 8041; // Not sure how this will work.
-        private const int Spell_Lightning_Bolt = 9532;
-        public int NextWaypoint;
-        public int NextLightningBolt;
-        public int NextSerpentForm;
-        public int NextHealingTouch;
-        public int NextSlumber;
-        public int CurrentWaypoint;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Druid_of_the_Fang(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnThink()
+    {
+        NextLightningBolt -= AI_UPDATE;
+        NextSerpentForm -= AI_UPDATE;
+        NextHealingTouch -= AI_UPDATE;
+        NextSlumber -= AI_UPDATE;
+        if (NextLightningBolt <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextLightningBolt = Lightning_Bolt_CD;
+            aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget); // Lightning bolt on current target.
         }
+    }
 
-        public override void OnThink()
+    public void CastLightning()
+    {
+        for (var i = 0; i <= 3; i++)
         {
-            NextLightningBolt -= AI_UPDATE;
-            NextSerpentForm -= AI_UPDATE;
-            NextHealingTouch -= AI_UPDATE;
-            NextSlumber -= AI_UPDATE;
-            if (NextLightningBolt <= 0)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                NextLightningBolt = Lightning_Bolt_CD;
-                aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget); // Lightning bolt on current target.
+                return;
             }
+
+            aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
         }
+    }
 
-        public void CastLightning()
+    public override void OnHealthChange(int Percent)
+    {
+        base.OnHealthChange(Percent);
+        if (Percent <= 30)
         {
-            for (int i = 0; i <= 3; i++)
+            try
             {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
+                aiCreature.CastSpellOnSelf(Spell_Serpent_Form);
             }
-        }
-
-        public override void OnHealthChange(int Percent)
-        {
-            base.OnHealthChange(Percent);
-            if (Percent <= 30)
+            catch (Exception)
             {
-                try
-                {
-                    aiCreature.CastSpellOnSelf(Spell_Serpent_Form);
-                }
-                catch (Exception)
-                {
-                    aiCreature.SendChatMessage("I have failed to cast Serpent Form. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
-                }
+                aiCreature.SendChatMessage("I have failed to cast Serpent Form. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_MONSTER_YELL, LANGUAGES.LANG_UNIVERSAL);
             }
         }
     }

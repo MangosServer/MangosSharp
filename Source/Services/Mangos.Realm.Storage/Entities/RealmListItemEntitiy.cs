@@ -16,13 +16,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Realm.Storage.Entities
+namespace Mangos.Realm.Storage.Entities;
+
+public class RealmListItemEntitiy
 {
-    public class RealmListItemEntitiy
-    {
-        public string address, name, port;
-        public byte timezone, icon, realmflags;
-        public float population;
-        public int numchars;
-    }
+    public string address, name, port;
+    public byte timezone, icon, realmflags;
+    public float population;
+    public int numchars;
 }

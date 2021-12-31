@@ -18,18 +18,17 @@
 
 using System.Net;
 
-namespace Mangos.Realm
-{
-    public class Client
-    {
-        public string AccountName { get; set; }
-        public AuthEngine AuthEngine { get; }
-        public IPEndPoint RemoteEnpoint { get; }
+namespace Mangos.Realm;
 
-        public Client(IPEndPoint remoteEnpoint)
-        {
-            RemoteEnpoint = remoteEnpoint;
-            AuthEngine = new AuthEngine();
-        }
+public class Client
+{
+    public string AccountName { get; set; }
+    public AuthEngine AuthEngine { get; }
+    public IPEndPoint RemoteEnpoint { get; }
+
+    public Client(IPEndPoint remoteEnpoint)
+    {
+        RemoteEnpoint = remoteEnpoint;
+        AuthEngine = new AuthEngine();
     }
 }

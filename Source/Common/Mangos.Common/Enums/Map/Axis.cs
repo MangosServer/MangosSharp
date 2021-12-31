@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Map
+namespace Mangos.Common.Enums.Map;
+
+public enum Axis
 {
-    public enum Axis
-    {
-        X_AXIS = 0,
-        Y_AXIS = 1,
-        Z_AXIS = 2,
-        DETECT_AXIS = -1
-    }
+    X_AXIS = 0,
+    Y_AXIS = 1,
+    Z_AXIS = 2,
+    DETECT_AXIS = -1
 }

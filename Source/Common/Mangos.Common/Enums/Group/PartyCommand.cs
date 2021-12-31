@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Group
+namespace Mangos.Common.Enums.Group;
+
+public enum PartyCommand : byte
 {
-    public enum PartyCommand : byte
-    {
-        PARTY_OP_INVITE = 0,
-        PARTY_OP_LEAVE = 2
-    }
+    PARTY_OP_INVITE = 0,
+    PARTY_OP_LEAVE = 2
 }

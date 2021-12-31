@@ -19,13 +19,12 @@
 using Microsoft.VisualBasic;
 using System;
 
-namespace Mangos.WoWFakeClient
+namespace Mangos.WoWFakeClient;
+
+public static class WS_Movement
 {
-    public static class WS_Movement
+    public static void On_SMSG_SET_REST_START(ref Packets.PacketClass Packet)
     {
-        public static void On_SMSG_SET_REST_START(ref Packets.PacketClass Packet)
-        {
-            Console.WriteLine("[{0}][World] You're now inside the world.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
-        }
+        Console.WriteLine("[{0}][World] You're now inside the world.", Strings.Format(DateAndTime.TimeOfDay, "HH:mm:ss"));
     }
 }

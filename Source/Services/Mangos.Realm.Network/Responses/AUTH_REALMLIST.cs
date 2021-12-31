@@ -16,42 +16,41 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Realm.Network.Responses
+namespace Mangos.Realm.Network.Responses;
+
+public class AUTH_REALMLIST
 {
-    public class AUTH_REALMLIST
+    public class Realm
     {
-        public class Realm
+        public string Address { get; }
+        public string Name { get; }
+        public string Port { get; }
+        public byte Timezone { get; }
+        public byte Icon { get; }
+        public byte Realmflags { get; }
+        public float Population { get; }
+        public int CharacterCount { get; }
+
+        public Realm(string address, string name, string port, byte timezone, byte icon, byte realmflags, float population, int characterCount)
         {
-            public string Address { get; }
-            public string Name { get; }
-            public string Port { get; }
-            public byte Timezone { get; }
-            public byte Icon { get; }
-            public byte Realmflags { get; }
-            public float Population { get; }
-            public int CharacterCount { get; }
-
-            public Realm(string address, string name, string port, byte timezone, byte icon, byte realmflags, float population, int characterCount)
-            {
-                Address = address;
-                Name = name;
-                Port = port;
-                Timezone = timezone;
-                Icon = icon;
-                Realmflags = realmflags;
-                Population = population;
-                CharacterCount = characterCount;
-            }
+            Address = address;
+            Name = name;
+            Port = port;
+            Timezone = timezone;
+            Icon = icon;
+            Realmflags = realmflags;
+            Population = population;
+            CharacterCount = characterCount;
         }
+    }
 
-        public byte[] Unk { get; }
+    public byte[] Unk { get; }
 
-        public Realm[] Realms { get; }
+    public Realm[] Realms { get; }
 
-        public AUTH_REALMLIST(byte[] unk, Realm[] realms)
-        {
-            Unk = unk;
-            Realms = realms;
-        }
+    public AUTH_REALMLIST(byte[] unk, Realm[] realms)
+    {
+        Unk = unk;
+        Realms = realms;
     }
 }

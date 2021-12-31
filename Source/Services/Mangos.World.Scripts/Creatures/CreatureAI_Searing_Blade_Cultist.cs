@@ -19,46 +19,45 @@
 using Mangos.World.AI;
 using Mangos.World.Objects;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Searing_Blade_Cultist : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Searing_Blade_Cultist : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int COA_COOLDOWN = 15000;
+    private const int COA_SPELL = 18266;
+    public int NextWaypoint;
+    public int NextCOA;
+    public int CurrentWaypoint;
+
+    public CreatureAI_Searing_Blade_Cultist(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int COA_COOLDOWN = 15000;
-        private const int COA_SPELL = 18266;
-        public int NextWaypoint;
-        public int NextCOA;
-        public int CurrentWaypoint;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Searing_Blade_Cultist(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnThink()
+    {
+        NextCOA -= AI_UPDATE;
+        if (NextCOA <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextCOA = COA_COOLDOWN;
+            aiCreature.CastSpell(COA_SPELL, aiTarget); // Curse of Agony
         }
+    }
 
-        public override void OnThink()
+    public void CastCOA()
+    {
+        for (var i = 0; i <= 3; i++)
         {
-            NextCOA -= AI_UPDATE;
-            if (NextCOA <= 0)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                NextCOA = COA_COOLDOWN;
-                aiCreature.CastSpell(COA_SPELL, aiTarget); // Curse of Agony
+                return;
             }
-        }
 
-        public void CastCOA()
-        {
-            for (int i = 0; i <= 3; i++)
-            {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(COA_SPELL, aiTarget);
-            }
+            aiCreature.CastSpell(COA_SPELL, aiTarget);
         }
     }
 }

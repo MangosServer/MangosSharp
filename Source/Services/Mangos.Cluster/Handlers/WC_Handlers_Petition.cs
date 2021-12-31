@@ -16,10 +16,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Cluster.Handlers
+namespace Mangos.Cluster.Handlers;
+
+public class WcHandlersPetition
 {
-    public class WcHandlersPetition
-    {
-        // TODO: Need to code the petition handlers for guild creation
-    }
+    // TODO: Need to code the petition handlers for guild creation
 }

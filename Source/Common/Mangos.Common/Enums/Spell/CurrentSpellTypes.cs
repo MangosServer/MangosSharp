@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Spell
+namespace Mangos.Common.Enums.Spell;
+
+public enum CurrentSpellTypes
 {
-    public enum CurrentSpellTypes
-    {
-        CURRENT_MELEE_SPELL = 0,
-        CURRENT_GENERIC_SPELL = 1,
-        CURRENT_AUTOREPEAT_SPELL = 2,
-        CURRENT_CHANNELED_SPELL = 3
-    }
+    CURRENT_MELEE_SPELL = 0,
+    CURRENT_GENERIC_SPELL = 1,
+    CURRENT_AUTOREPEAT_SPELL = 2,
+    CURRENT_CHANNELED_SPELL = 3
 }

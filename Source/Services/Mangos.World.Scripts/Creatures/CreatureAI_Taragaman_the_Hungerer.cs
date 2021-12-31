@@ -19,70 +19,69 @@
 using Mangos.World.AI;
 using Mangos.World.Objects;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Taragaman_the_Hungerer : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Taragaman_the_Hungerer : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int NOVA_COOLDOWN = 4000;
+    private const int UPPER_COOLDOWN = 12000;
+    private const int NOVA_SPELL = 11970;
+    private const int UPPER_SPELL = 18072;
+    public int NextWaypoint;
+    public int NextNOVA;
+    public int NextUPPER;
+    public int CurrentWaypoint;
+
+    public CreatureAI_Taragaman_the_Hungerer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int NOVA_COOLDOWN = 4000;
-        private const int UPPER_COOLDOWN = 12000;
-        private const int NOVA_SPELL = 11970;
-        private const int UPPER_SPELL = 18072;
-        public int NextWaypoint;
-        public int NextNOVA;
-        public int NextUPPER;
-        public int CurrentWaypoint;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Taragaman_the_Hungerer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnThink()
+    {
+        NextNOVA -= AI_UPDATE;
+        NextUPPER -= AI_UPDATE;
+        if (NextNOVA <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextNOVA = NOVA_COOLDOWN;
+            aiCreature.CastSpell(NOVA_SPELL, aiTarget); // Fire Nova
         }
 
-        public override void OnThink()
+        if (NextUPPER <= 1)
         {
-            NextNOVA -= AI_UPDATE;
-            NextUPPER -= AI_UPDATE;
-            if (NextNOVA <= 0)
-            {
-                NextNOVA = NOVA_COOLDOWN;
-                aiCreature.CastSpell(NOVA_SPELL, aiTarget); // Fire Nova
-            }
-
-            if (NextUPPER <= 1)
-            {
-                NextUPPER = UPPER_COOLDOWN;
-                aiCreature.CastSpell(UPPER_SPELL, aiTarget); // Uppercut
-            }
+            NextUPPER = UPPER_COOLDOWN;
+            aiCreature.CastSpell(UPPER_SPELL, aiTarget); // Uppercut
         }
+    }
 
-        public void CastNOVA()
+    public void CastNOVA()
+    {
+        for (var i = 0; i <= 1; i++)
         {
-            for (int i = 0; i <= 1; i++)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(NOVA_SPELL, aiTarget);
+                return;
             }
+
+            aiCreature.CastSpell(NOVA_SPELL, aiTarget);
         }
+    }
 
-        public void CastUPPER()
+    public void CastUPPER()
+    {
+        for (var i = 1; i <= 1; i++)
         {
-            for (int i = 1; i <= 1; i++)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(UPPER_SPELL, aiTarget);
+                return;
             }
+
+            aiCreature.CastSpell(UPPER_SPELL, aiTarget);
         }
     }
 }

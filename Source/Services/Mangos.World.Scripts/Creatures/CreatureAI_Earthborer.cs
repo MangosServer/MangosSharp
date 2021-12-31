@@ -19,46 +19,45 @@
 using Mangos.World.AI;
 using Mangos.World.Objects;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Earthborer : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Earthborer : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int ACID_COOLDOWN = 10000;
+    private const int ACID_SPELL = 18070;
+    public int NextWaypoint;
+    public int NextAcid;
+    public int CurrentWaypoint;
+
+    public CreatureAI_Earthborer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int ACID_COOLDOWN = 10000;
-        private const int ACID_SPELL = 18070;
-        public int NextWaypoint;
-        public int NextAcid;
-        public int CurrentWaypoint;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Earthborer(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnThink()
+    {
+        NextAcid -= AI_UPDATE;
+        if (NextAcid <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextAcid = ACID_COOLDOWN;
+            aiCreature.CastSpell(ACID_SPELL, aiTarget); // Earthborer Acid
         }
+    }
 
-        public override void OnThink()
+    public void CastAcid()
+    {
+        for (var i = 0; i <= 3; i++)
         {
-            NextAcid -= AI_UPDATE;
-            if (NextAcid <= 0)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                NextAcid = ACID_COOLDOWN;
-                aiCreature.CastSpell(ACID_SPELL, aiTarget); // Earthborer Acid
+                return;
             }
-        }
 
-        public void CastAcid()
-        {
-            for (int i = 0; i <= 3; i++)
-            {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(ACID_SPELL, aiTarget);
-            }
+            aiCreature.CastSpell(ACID_SPELL, aiTarget);
         }
     }
 }

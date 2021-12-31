@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.AuctionHouse
+namespace Mangos.Common.Enums.AuctionHouse;
+
+public enum AuctionAction
 {
-    public enum AuctionAction
-    {
-        AUCTION_SELL_ITEM = 0,
-        AUCTION_CANCEL = 1,
-        AUCTION_PLACE_BID = 2
-    }
+    AUCTION_SELL_ITEM = 0,
+    AUCTION_CANCEL = 1,
+    AUCTION_PLACE_BID = 2
 }

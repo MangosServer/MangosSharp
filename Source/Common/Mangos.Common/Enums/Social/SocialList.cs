@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Social
+namespace Mangos.Common.Enums.Social;
+
+public enum SocialList : byte
 {
-    public enum SocialList : byte
-    {
-        MAX_FRIENDS_ON_LIST = 50,
-        MAX_IGNORES_ON_LIST = 25
-    }
+    MAX_FRIENDS_ON_LIST = 50,
+    MAX_IGNORES_ON_LIST = 25
 }

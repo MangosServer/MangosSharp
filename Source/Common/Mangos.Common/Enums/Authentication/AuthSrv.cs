@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Authentication
+namespace Mangos.Common.Enums.Authentication;
+
+public enum AuthSrv : byte
 {
-    public enum AuthSrv : byte
-    {
-        CMD_GRUNT_CONN_PONG = 0x11,
-        CMD_GRUNT_PROVESESSION = 0x21
-    }
+    CMD_GRUNT_CONN_PONG = 0x11,
+    CMD_GRUNT_PROVESESSION = 0x21
 }

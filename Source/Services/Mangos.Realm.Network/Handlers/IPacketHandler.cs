@@ -19,10 +19,9 @@
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace Mangos.Realm.Network.Handlers
+namespace Mangos.Realm.Network.Handlers;
+
+public interface IPacketHandler
 {
-    public interface IPacketHandler
-    {
-        Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, Client clientModel);
-    }
+    Task HandleAsync(ChannelReader<byte> reader, ChannelWriter<byte> writer, Client clientModel);
 }

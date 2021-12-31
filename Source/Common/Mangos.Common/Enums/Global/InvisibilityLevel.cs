@@ -16,14 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum InvisibilityLevel : byte
 {
-    public enum InvisibilityLevel : byte
-    {
-        VISIBLE = 0,
-        STEALTH = 1,
-        INIVISIBILITY = 2,
-        DEAD = 3,
-        GM = 4
-    }
+    VISIBLE = 0,
+    STEALTH = 1,
+    INIVISIBILITY = 2,
+    DEAD = 3,
+    GM = 4
 }

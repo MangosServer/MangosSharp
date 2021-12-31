@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum AuraAction : byte
 {
-    public enum AuraAction : byte
-    {
-        AURA_ADD,
-        AURA_UPDATE,
-        AURA_REMOVE,
-        AURA_REMOVEBYDURATION
-    }
+    AURA_ADD,
+    AURA_UPDATE,
+    AURA_REMOVE,
+    AURA_REMOVEBYDURATION
 }

@@ -16,14 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum TrackableResources
 {
-    public enum TrackableResources
-    {
-        ElvenGems = 7,
-        GahzRidian = 15,
-        Herbs = 2,
-        Minerals = 3,
-        Treasure = 6
-    }
+    ElvenGems = 7,
+    GahzRidian = 15,
+    Herbs = 2,
+    Minerals = 3,
+    Treasure = 6
 }

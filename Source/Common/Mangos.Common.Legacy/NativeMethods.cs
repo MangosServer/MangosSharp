@@ -18,13 +18,12 @@
 
 using System;
 
-namespace Mangos.Common.Legacy
+namespace Mangos.Common.Legacy;
+
+public class NativeMethods
 {
-    public class NativeMethods
+    public int timeGetTime(string dummy)
     {
-        public int timeGetTime(string dummy)
-        {
-            return Environment.TickCount;
-        }
+        return Environment.TickCount;
     }
 }

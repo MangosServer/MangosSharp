@@ -16,14 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Pet
+namespace Mangos.Common.Enums.Pet;
+
+public enum PetSaveType
 {
-    public enum PetSaveType
-    {
-        PET_SAVE_DELETED = -1,
-        PET_SAVE_CURRENT = 0,
-        PET_SAVE_IN_STABLE_1 = 1,
-        PET_SAVE_IN_STABLE_2 = 2,
-        PET_SAVE_NO_SLOT = 3
-    }
+    PET_SAVE_DELETED = -1,
+    PET_SAVE_CURRENT = 0,
+    PET_SAVE_IN_STABLE_1 = 1,
+    PET_SAVE_IN_STABLE_2 = 2,
+    PET_SAVE_NO_SLOT = 3
 }

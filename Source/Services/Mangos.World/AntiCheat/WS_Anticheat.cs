@@ -23,62 +23,61 @@ using Microsoft.VisualBasic.CompilerServices;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Mangos.World.AntiCheat
+namespace Mangos.World.AntiCheat;
+
+[StandardModule]
+public sealed class WS_Anticheat
 {
-    [StandardModule]
-    public sealed class WS_Anticheat
+    private static readonly List<SpeedHackViolation> SpeedHacks = new();
+
+    public static void MovementEvent(ref WS_Network.ClientClass client, float RunSpeed, float posX, float positionX, float posY, float positionY, float posZ, float positionZ, int sTime, int cTime)
     {
-        private static readonly List<SpeedHackViolation> SpeedHacks = new();
-
-        public static void MovementEvent(ref WS_Network.ClientClass client, float RunSpeed, float posX, float positionX, float posY, float positionY, float posZ, float positionZ, int sTime, int cTime)
+        var character = client.Character;
+        SpeedHackViolation sData;
+        if (!SpeedHacks.Exists(obj => obj.Character.Equals(character.Name, System.StringComparison.Ordinal)))
         {
-            WS_PlayerData.CharacterObject character = client.Character;
-            SpeedHackViolation sData;
-            if (!SpeedHacks.Exists(obj => obj.Character.Equals(character.Name, System.StringComparison.Ordinal)))
+            sData = new SpeedHackViolation(client.Character.Name, cTime, sTime);
+            SpeedHacks.Add(sData);
+        }
+        else
+        {
+            sData = SpeedHacks.Find(match: obj => obj.Character.Equals(character.Name, System.StringComparison.Ordinal));
+        }
+        sData.TriggerViolation(posX, positionX, posY, positionY, posZ, positionZ, sTime, cTime, RunSpeed);
+        checked
+        {
+            if (sData.LastViolation != 0)
             {
-                sData = new SpeedHackViolation(client.Character.Name, cTime, sTime);
-                SpeedHacks.Add(sData);
-            }
-            else
-            {
-                sData = SpeedHacks.Find(match: obj => obj.Character.Equals(character.Name, System.StringComparison.Ordinal));
-            }
-            sData.TriggerViolation(posX, positionX, posY, positionY, posZ, positionZ, sTime, cTime, RunSpeed);
-            checked
-            {
-                if (sData.LastViolation != 0)
+                sData.Violations += (int)sData.LastViolation;
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "[AntiCheat] Player {0} triggered a speedhack violation. ({1}) {2}", client.Character.Name, sData.Violations, sData.LastMessage);
+                if (sData.Violations >= 10)
                 {
-                    sData.Violations += (int)sData.LastViolation;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "[AntiCheat] Player {0} triggered a speedhack violation. ({1}) {2}", client.Character.Name, sData.Violations, sData.LastMessage);
-                    if (sData.Violations >= 10)
-                    {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.USER, "[AntiCheat] Player {0} exceeded violation value. Taking action.", client.Character.Name);
-                        client.Character.Logout();
-                        SpeedHacks.Remove(sData);
-                    }
-                    return;
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.USER, "[AntiCheat] Player {0} exceeded violation value. Taking action.", client.Character.Name);
+                    client.Character.Logout();
+                    SpeedHacks.Remove(sData);
                 }
-                if (sData.Violations > 0)
+                return;
+            }
+            if (sData.Violations > 0)
+            {
+                switch (sData.LastViolation)
                 {
-                    switch (sData.LastViolation)
-                    {
-                        case ViolationType.AC_VIOLATION_NONE:
-                        case ViolationType.AC_VIOLATION_SPEEDHACK_TIME:
-                        case ViolationType.AC_VIOLATION_MOVEMENT_Z:
-                            sData.Violations--;
-                            break;
+                    case ViolationType.AC_VIOLATION_NONE:
+                    case ViolationType.AC_VIOLATION_SPEEDHACK_TIME:
+                    case ViolationType.AC_VIOLATION_MOVEMENT_Z:
+                        sData.Violations--;
+                        break;
 
-                        case ViolationType.AC_VIOLATION_SPEEDHACK_MEM:
-                            sData.Violations -= 0;
-                            break;
-                        default:
-                            break;
-                    }
+                    case ViolationType.AC_VIOLATION_SPEEDHACK_MEM:
+                        sData.Violations -= 0;
+                        break;
+                    default:
+                        break;
                 }
-                if (sData.Violations < 0)
-                {
-                    sData.Violations = 0;
-                }
+            }
+            if (sData.Violations < 0)
+            {
+                sData.Violations = 0;
             }
         }
     }

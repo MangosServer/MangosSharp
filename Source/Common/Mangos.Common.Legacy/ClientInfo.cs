@@ -18,15 +18,14 @@
 
 using Mangos.Common.Enums.Misc;
 
-namespace Mangos.Common.Legacy
+namespace Mangos.Common.Legacy;
+
+public class ClientInfo
 {
-    public class ClientInfo
-    {
-        public uint Index { get; set; }
-        public string IP { get; set; }
-        public uint Port { get; set; }
-        public string Account { get; set; }
-        public AccessLevel Access { get; set; } = AccessLevel.Player;
-        public ExpansionLevel Expansion { get; set; } = ExpansionLevel.NORMAL;
-    }
+    public uint Index { get; set; }
+    public string IP { get; set; }
+    public uint Port { get; set; }
+    public string Account { get; set; }
+    public AccessLevel Access { get; set; } = AccessLevel.Player;
+    public ExpansionLevel Expansion { get; set; } = ExpansionLevel.NORMAL;
 }

@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum TotemType : byte
 {
-    public enum TotemType : byte
-    {
-        TOTEM_PASSIVE = 0,
-        TOTEM_ACTIVE = 1,
-        TOTEM_STATUE = 2
-    }
+    TOTEM_PASSIVE = 0,
+    TOTEM_ACTIVE = 1,
+    TOTEM_STATUE = 2
 }

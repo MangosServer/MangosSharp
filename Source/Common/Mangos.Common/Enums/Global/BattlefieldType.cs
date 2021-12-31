@@ -16,10 +16,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum BattlefieldType
 {
-    public enum BattlefieldType
-    {
-        TYPE_BATTLEGROUND = 3
-    }
+    TYPE_BATTLEGROUND = 3
 }

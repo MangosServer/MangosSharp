@@ -18,20 +18,19 @@
 
 using System;
 
-namespace Mangos.Common.Enums.Channel
+namespace Mangos.Common.Enums.Channel;
+
+[Flags]
+public enum ChatChannelsFlags
 {
-    [Flags]
-    public enum ChatChannelsFlags
-    {
-        FLAG_NONE = 0x0,
-        FLAG_INITIAL = 0x1,              // General, Trade, LocalDefense, LFG
-        FLAG_ZONE_DEP = 0x2,             // General, Trade, LocalDefense, GuildRecruitment
-        FLAG_GLOBAL = 0x4,               // WorldDefense
-        FLAG_TRADE = 0x8,                // Trade
-        FLAG_CITY_ONLY = 0x10,           // Trade, GuildRecruitment
-        FLAG_CITY_ONLY2 = 0x20,          // Trade, GuildRecruitment
-        FLAG_DEFENSE = 0x10000,          // LocalDefense, WorldDefense
-        FLAG_GUILD_REQ = 0x20000,        // GuildRecruitment
-        FLAG_LFG = 0x40000              // LookingForGroup
-    }
+    FLAG_NONE = 0x0,
+    FLAG_INITIAL = 0x1,              // General, Trade, LocalDefense, LFG
+    FLAG_ZONE_DEP = 0x2,             // General, Trade, LocalDefense, GuildRecruitment
+    FLAG_GLOBAL = 0x4,               // WorldDefense
+    FLAG_TRADE = 0x8,                // Trade
+    FLAG_CITY_ONLY = 0x10,           // Trade, GuildRecruitment
+    FLAG_CITY_ONLY2 = 0x20,          // Trade, GuildRecruitment
+    FLAG_DEFENSE = 0x10000,          // LocalDefense, WorldDefense
+    FLAG_GUILD_REQ = 0x20000,        // GuildRecruitment
+    FLAG_LFG = 0x40000              // LookingForGroup
 }

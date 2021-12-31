@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum LockKeyType : byte
 {
-    public enum LockKeyType : byte
-    {
-        LOCK_KEY_NONE = 0,
-        LOCK_KEY_ITEM = 1,
-        LOCK_KEY_SKILL = 2
-    }
+    LOCK_KEY_NONE = 0,
+    LOCK_KEY_ITEM = 1,
+    LOCK_KEY_SKILL = 2
 }

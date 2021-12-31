@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Player
+namespace Mangos.Common.Enums.Player;
+
+public enum XPSTATE : byte
 {
-    public enum XPSTATE : byte
-    {
-        Normal = 2,
-        Rested = 1
-    }
+    Normal = 2,
+    Rested = 1
 }

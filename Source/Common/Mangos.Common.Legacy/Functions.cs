@@ -16,32 +16,31 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Legacy
+namespace Mangos.Common.Legacy;
+
+public class Functions
 {
-    public class Functions
+    public string UppercaseFirstLetter(string val)
     {
-        public string UppercaseFirstLetter(string val)
+        if (string.IsNullOrEmpty(val))
         {
-            if (string.IsNullOrEmpty(val))
-            {
-                return val;
-            }
-
-            char[] array = val.ToCharArray();
-            array[0] = char.ToUpper(array[0]);
-            return new string(array);
+            return val;
         }
 
-        public string LowercaseFirstLetter(string val)
-        {
-            if (string.IsNullOrEmpty(val))
-            {
-                return val;
-            }
+        var array = val.ToCharArray();
+        array[0] = char.ToUpper(array[0]);
+        return new string(array);
+    }
 
-            char[] array = val.ToCharArray();
-            array[0] = char.ToLower(array[0]);
-            return new string(array);
+    public string LowercaseFirstLetter(string val)
+    {
+        if (string.IsNullOrEmpty(val))
+        {
+            return val;
         }
+
+        var array = val.ToCharArray();
+        array[0] = char.ToLower(array[0]);
+        return new string(array);
     }
 }

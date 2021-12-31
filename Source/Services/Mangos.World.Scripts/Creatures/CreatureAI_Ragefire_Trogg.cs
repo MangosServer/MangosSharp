@@ -19,46 +19,45 @@
 using Mangos.World.AI;
 using Mangos.World.Objects;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Ragefire_Trogg : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Ragefire_Trogg : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int STRIKE_COOLDOWN = 4000;
+    private const int STRIKE_SPELL = 11976;
+    public int NextWaypoint;
+    public int NextStrike;
+    public int CurrentWaypoint;
+
+    public CreatureAI_Ragefire_Trogg(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int STRIKE_COOLDOWN = 4000;
-        private const int STRIKE_SPELL = 11976;
-        public int NextWaypoint;
-        public int NextStrike;
-        public int CurrentWaypoint;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Ragefire_Trogg(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnThink()
+    {
+        NextStrike -= AI_UPDATE;
+        if (NextStrike <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextStrike = STRIKE_COOLDOWN;
+            aiCreature.CastSpell(STRIKE_SPELL, aiTarget); // Strike
         }
+    }
 
-        public override void OnThink()
+    public void CastStrike()
+    {
+        for (var i = 0; i <= 3; i++)
         {
-            NextStrike -= AI_UPDATE;
-            if (NextStrike <= 0)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                NextStrike = STRIKE_COOLDOWN;
-                aiCreature.CastSpell(STRIKE_SPELL, aiTarget); // Strike
+                return;
             }
-        }
 
-        public void CastStrike()
-        {
-            for (int i = 0; i <= 3; i++)
-            {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(STRIKE_SPELL, aiTarget);
-            }
+            aiCreature.CastSpell(STRIKE_SPELL, aiTarget);
         }
     }
 }

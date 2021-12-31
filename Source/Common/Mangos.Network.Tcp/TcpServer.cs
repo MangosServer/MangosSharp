@@ -24,103 +24,105 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Channels;
 
-namespace Mangos.Network.Tcp
+namespace Mangos.Network.Tcp;
+
+public class TcpServer
 {
-    public class TcpServer
+    private readonly ILogger logger;
+    private readonly ITcpClientFactory tcpClientFactory;
+    private readonly CancellationTokenSource cancellationTokenSource;
+
+    private Socket socket;
+
+    public TcpServer(ILogger logger, ITcpClientFactory tcpClientFactory)
     {
-        private readonly ILogger logger;
-        private readonly ITcpClientFactory tcpClientFactory;
-        private readonly CancellationTokenSource cancellationTokenSource;
+        this.logger = logger;
+        this.tcpClientFactory = tcpClientFactory;
 
-        private Socket socket;
+        cancellationTokenSource = new CancellationTokenSource();
+    }
 
-        public TcpServer(ILogger logger, ITcpClientFactory tcpClientFactory)
+    public void Start(IPEndPoint endPoint, int backlog)
+    {
+        socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        socket.Bind(endPoint);
+        socket.Listen(backlog);
+        StartAcceptLoop();
+    }
+
+    private async void StartAcceptLoop()
+    {
+        while (!cancellationTokenSource.IsCancellationRequested)
         {
-            this.logger = logger;
-            this.tcpClientFactory = tcpClientFactory;
-
-            cancellationTokenSource = new CancellationTokenSource();
+            OnAcceptAsync(await socket.AcceptAsync());
         }
+    }
 
-        public void Start(IPEndPoint endPoint, int backlog)
+    private async void OnAcceptAsync(Socket clientSocket)
+    {
+        try
         {
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Bind(endPoint);
-            socket.Listen(backlog);
-            StartAcceptLoop();
+            var tcpClient = await tcpClientFactory.CreateTcpClientAsync(clientSocket);
+            Channel<byte> recieveChannel = Channel.CreateUnbounded<byte>();
+            Channel<byte> sendChannel = Channel.CreateUnbounded<byte>();
+
+            RecieveAsync(clientSocket, recieveChannel.Writer);
+            SendAsync(clientSocket, sendChannel.Reader);
+            tcpClient.HandleAsync(recieveChannel.Reader, sendChannel.Writer, cancellationTokenSource.Token);
+
+            logger.Debug("New Tcp conenction established");
         }
-
-        private async void StartAcceptLoop()
+        catch (Exception ex)
         {
+            logger.Error("Error during accepting conenction handler", ex);
+        }
+    }
+
+    private async void RecieveAsync(Socket client, ChannelWriter<byte> writer)
+    {
+        try
+        {
+            var buffer = new byte[client.ReceiveBufferSize];
             while (!cancellationTokenSource.IsCancellationRequested)
             {
-                OnAcceptAsync(await socket.AcceptAsync());
-            }
-        }
-
-        private async void OnAcceptAsync(Socket clientSocket)
-        {
-            try
-            {
-                ITcpClient tcpClient = await tcpClientFactory.CreateTcpClientAsync(clientSocket);
-                Channel<byte> recieveChannel = Channel.CreateUnbounded<byte>();
-                Channel<byte> sendChannel = Channel.CreateUnbounded<byte>();
-
-                RecieveAsync(clientSocket, recieveChannel.Writer);
-                SendAsync(clientSocket, sendChannel.Reader);
-                tcpClient.HandleAsync(recieveChannel.Reader, sendChannel.Writer, cancellationTokenSource.Token);
-
-                logger.Debug("New Tcp conenction established");
-            }
-            catch (Exception ex)
-            {
-                logger.Error("Error during accepting conenction handler", ex);
-            }
-        }
-
-        private async void RecieveAsync(Socket client, ChannelWriter<byte> writer)
-        {
-            try
-            {
-                byte[] buffer = new byte[client.ReceiveBufferSize];
-                while (!cancellationTokenSource.IsCancellationRequested)
+                var bytesRead = await client.ReceiveAsync(buffer, SocketFlags.None);
+                if (bytesRead == 0)
                 {
-                    int bytesRead = await client.ReceiveAsync(buffer, SocketFlags.None);
-                    if (bytesRead == 0)
-                    {
-                        client.Dispose();
-                        return;
-                    }
-                    await writer.WriteArrayAsync(buffer, bytesRead);
+                    client.Dispose();
+                    return;
                 }
-            }
-            catch (Exception ex)
-            {
-                logger.Error("Error during recieving data from socket", ex);
+                await writer.WriteArrayAsync(buffer, bytesRead);
             }
         }
-
-        private async void SendAsync(Socket client, ChannelReader<byte> reader)
+        catch (Exception ex)
         {
-            try
-            {
-                byte[] buffer = new byte[client.SendBufferSize];
-                while (!cancellationTokenSource.IsCancellationRequested)
-                {
-                    await reader.WaitToReadAsync();
-                    int writeCount;
-                    for (writeCount = 0;
-                        writeCount < buffer.Length && reader.TryRead(out buffer[writeCount]);
-                        writeCount++) ;
+            logger.Error("Error during recieving data from socket", ex);
+        }
+    }
 
-                    ArraySegment<byte> arraySegment = new(buffer, 0, writeCount);
-                    await client.SendAsync(arraySegment, SocketFlags.None);
-                }
-            }
-            catch (Exception ex)
+    private async void SendAsync(Socket client, ChannelReader<byte> reader)
+    {
+        try
+        {
+            var buffer = new byte[client.SendBufferSize];
+            while (!cancellationTokenSource.IsCancellationRequested)
             {
-                logger.Error("Error during sending data to socket", ex);
+                await reader.WaitToReadAsync();
+                int writeCount;
+                for (writeCount = 0;
+                    writeCount < buffer.Length && reader.TryRead(out buffer[writeCount]);
+                    writeCount++)
+                {
+                    ;
+                }
+
+                ArraySegment<byte> arraySegment = new(buffer, 0, writeCount);
+                await client.SendAsync(arraySegment, SocketFlags.None);
             }
+        }
+        catch (Exception ex)
+        {
+            logger.Error("Error during sending data to socket", ex);
         }
     }
 }

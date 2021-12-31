@@ -19,50 +19,49 @@
 using Mangos.World.Objects;
 using System;
 
-namespace Mangos.World.AI
-{
-    public partial class WS_Creatures_AI
-    {
-        public class GuardAI : DefaultAI
-        {
-            public GuardAI(ref WS_Creatures.CreatureObject Creature)
-                : base(ref Creature)
-            {
-                if (Creature is null)
-                {
-                    throw new ArgumentNullException(nameof(Creature));
-                }
+namespace Mangos.World.AI;
 
-                AllowedMove = false;
+public partial class WS_Creatures_AI
+{
+    public class GuardAI : DefaultAI
+    {
+        public GuardAI(ref WS_Creatures.CreatureObject Creature)
+            : base(ref Creature)
+        {
+            if (Creature is null)
+            {
+                throw new ArgumentNullException(nameof(Creature));
             }
 
-            public void OnEmote(int emote)
+            AllowedMove = false;
+        }
+
+        public void OnEmote(int emote)
+        {
+            switch (emote)
             {
-                switch (emote)
-                {
-                    case 58:
-                        aiCreature?.DoEmote(2);
-                        break;
+                case 58:
+                    aiCreature?.DoEmote(2);
+                    break;
 
-                    case 101:
-                        aiCreature?.DoEmote(3);
-                        break;
+                case 101:
+                    aiCreature?.DoEmote(3);
+                    break;
 
-                    case 78:
-                        aiCreature?.DoEmote(66);
-                        break;
+                case 78:
+                    aiCreature?.DoEmote(66);
+                    break;
 
-                    case 84:
-                        aiCreature?.DoEmote(23);
-                        break;
+                case 84:
+                    aiCreature?.DoEmote(23);
+                    break;
 
-                    case 22:
-                    case 77:
-                        aiCreature?.DoEmote(25);
-                        break;
-                    default:
-                        break;
-                }
+                case 22:
+                case 77:
+                    aiCreature?.DoEmote(25);
+                    break;
+                default:
+                    break;
             }
         }
     }

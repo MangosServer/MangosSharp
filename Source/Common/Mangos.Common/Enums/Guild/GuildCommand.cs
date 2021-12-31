@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Guild
+namespace Mangos.Common.Enums.Guild;
+
+public enum GuildCommand : byte
 {
-    public enum GuildCommand : byte
-    {
-        GUILD_CREATE_S = 0x0,
-        GUILD_INVITE_S = 0x1,
-        GUILD_QUIT_S = 0x2,
-        GUILD_FOUNDER_S = 0xC
-    }
+    GUILD_CREATE_S = 0x0,
+    GUILD_INVITE_S = 0x1,
+    GUILD_QUIT_S = 0x2,
+    GUILD_FOUNDER_S = 0xC
 }

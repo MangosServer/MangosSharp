@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Guild
+namespace Mangos.Common.Enums.Guild;
+
+public enum PetitionTurnInError
 {
-    public enum PetitionTurnInError
-    {
-        PETITIONTURNIN_OK = 0,                   // :Closes the window
-        PETITIONTURNIN_ALREADY_IN_GUILD = 2,     // You are already in a guild
-        PETITIONTURNIN_NEED_MORE_SIGNATURES = 4 // You need more signatures
-    }
+    PETITIONTURNIN_OK = 0,                   // :Closes the window
+    PETITIONTURNIN_ALREADY_IN_GUILD = 2,     // You are already in a guild
+    PETITIONTURNIN_NEED_MORE_SIGNATURES = 4 // You need more signatures
 }

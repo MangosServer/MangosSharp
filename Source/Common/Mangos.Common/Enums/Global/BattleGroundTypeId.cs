@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum BattleGroundTypeId : byte
 {
-    public enum BattleGroundTypeId : byte
-    {
-        BATTLEGROUND_TYPE_NONE = 0,
-        BATTLEGROUND_AV = 1,
-        BATTLEGROUND_WS = 2,
-        BATTLEGROUND_AB = 3
-    }
+    BATTLEGROUND_TYPE_NONE = 0,
+    BATTLEGROUND_AV = 1,
+    BATTLEGROUND_WS = 2,
+    BATTLEGROUND_AB = 3
 }

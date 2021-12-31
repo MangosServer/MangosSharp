@@ -16,18 +16,17 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.World.Server
+namespace Mangos.World.Server;
+
+public partial class WS_TimerBasedEvents
 {
-    public partial class WS_TimerBasedEvents
-    {
-        public TRegenerator Regenerator;
+    public TRegenerator Regenerator;
 
-        public TAIManager AIManager;
+    public TAIManager AIManager;
 
-        public TSpellManager SpellManager;
+    public TSpellManager SpellManager;
 
-        public TCharacterSaver CharacterSaver;
+    public TCharacterSaver CharacterSaver;
 
-        public TWeatherChanger WeatherChanger;
-    }
+    public TWeatherChanger WeatherChanger;
 }

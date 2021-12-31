@@ -19,70 +19,69 @@
 using Mangos.World.AI;
 using Mangos.World.Objects;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Ragefire_Shaman : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Ragefire_Shaman : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int HEAL_COOLDOWN = 8000;
+    private const int BOLT_COOLDOWN = 3000;
+    private const int HEAL_SPELL = 11986;
+    private const int BOLT_SPELL = 9532;
+    public int NextWaypoint;
+    public int NextHeal;
+    public int NextBolt;
+    public int CurrentWaypoint;
+
+    public CreatureAI_Ragefire_Shaman(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int HEAL_COOLDOWN = 8000;
-        private const int BOLT_COOLDOWN = 3000;
-        private const int HEAL_SPELL = 11986;
-        private const int BOLT_SPELL = 9532;
-        public int NextWaypoint;
-        public int NextHeal;
-        public int NextBolt;
-        public int CurrentWaypoint;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Ragefire_Shaman(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnThink()
+    {
+        NextHeal -= AI_UPDATE;
+        NextBolt -= AI_UPDATE;
+        if (NextHeal <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextHeal = HEAL_COOLDOWN;
+            aiCreature.CastSpell(HEAL_SPELL, aiTarget); // HEALING WAVE
         }
 
-        public override void OnThink()
+        if (NextBolt <= 1)
         {
-            NextHeal -= AI_UPDATE;
-            NextBolt -= AI_UPDATE;
-            if (NextHeal <= 0)
-            {
-                NextHeal = HEAL_COOLDOWN;
-                aiCreature.CastSpell(HEAL_SPELL, aiTarget); // HEALING WAVE
-            }
-
-            if (NextBolt <= 1)
-            {
-                NextBolt = BOLT_COOLDOWN;
-                aiCreature.CastSpell(BOLT_SPELL, aiTarget); // LIGHTNING BOLT
-            }
+            NextBolt = BOLT_COOLDOWN;
+            aiCreature.CastSpell(BOLT_SPELL, aiTarget); // LIGHTNING BOLT
         }
+    }
 
-        public void CastHeal()
+    public void CastHeal()
+    {
+        for (var i = 0; i <= 1; i++)
         {
-            for (int i = 0; i <= 1; i++)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(HEAL_SPELL, aiTarget);
+                return;
             }
+
+            aiCreature.CastSpell(HEAL_SPELL, aiTarget);
         }
+    }
 
-        public void CastBolt()
+    public void CastBolt()
+    {
+        for (var i = 1; i <= 1; i++)
         {
-            for (int i = 1; i <= 1; i++)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(BOLT_SPELL, aiTarget);
+                return;
             }
+
+            aiCreature.CastSpell(BOLT_SPELL, aiTarget);
         }
     }
 }

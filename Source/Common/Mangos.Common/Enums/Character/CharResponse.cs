@@ -16,23 +16,22 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Character
+namespace Mangos.Common.Enums.Character;
+
+public enum CharResponse : byte
 {
-    public enum CharResponse : byte
-    {
-        CHAR_LIST_FAILED = 0x2C,
-        CHAR_CREATE_SUCCESS = 0x2E,
-        CHAR_CREATE_ERROR = 0x2F,
-        CHAR_CREATE_FAILED = 0x30,
-        CHAR_CREATE_NAME_IN_USE = 0x31,
-        CHAR_CREATE_DISABLED = 0x32,
-        CHAR_CREATE_PVP_TEAMS_VIOLATION = 0x33,
-        CHAR_CREATE_SERVER_LIMIT = 0x34,
-        CHAR_CREATE_ACCOUNT_LIMIT = 0x35,
-        CHAR_DELETE_SUCCESS = 0x39,
-        CHAR_DELETE_FAILED = 0x3A,
-        CHAR_LOGIN_NO_WORLD = 0x3D,
-        CHAR_LOGIN_FAILED = 0x40,
-        CHAR_NAME_INVALID_CHARACTER = 0x46
-    }
+    CHAR_LIST_FAILED = 0x2C,
+    CHAR_CREATE_SUCCESS = 0x2E,
+    CHAR_CREATE_ERROR = 0x2F,
+    CHAR_CREATE_FAILED = 0x30,
+    CHAR_CREATE_NAME_IN_USE = 0x31,
+    CHAR_CREATE_DISABLED = 0x32,
+    CHAR_CREATE_PVP_TEAMS_VIOLATION = 0x33,
+    CHAR_CREATE_SERVER_LIMIT = 0x34,
+    CHAR_CREATE_ACCOUNT_LIMIT = 0x35,
+    CHAR_DELETE_SUCCESS = 0x39,
+    CHAR_DELETE_FAILED = 0x3A,
+    CHAR_LOGIN_NO_WORLD = 0x3D,
+    CHAR_LOGIN_FAILED = 0x40,
+    CHAR_NAME_INVALID_CHARACTER = 0x46
 }

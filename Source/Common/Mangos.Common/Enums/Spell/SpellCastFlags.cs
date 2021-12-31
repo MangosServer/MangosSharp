@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Spell
+namespace Mangos.Common.Enums.Spell;
+
+public enum SpellCastFlags
 {
-    public enum SpellCastFlags
-    {
-        CAST_FLAG_RANGED = 0x20,
-        CAST_FLAG_ITEM_CASTER = 0x100,
-        CAST_FLAG_EXTRA_MSG = 0x400
-    }
+    CAST_FLAG_RANGED = 0x20,
+    CAST_FLAG_ITEM_CASTER = 0x100,
+    CAST_FLAG_EXTRA_MSG = 0x400
 }

@@ -19,10 +19,9 @@
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace Mangos.Realm.Network.Readers
+namespace Mangos.Realm.Network.Readers;
+
+public interface IPacketReader<T>
 {
-    public interface IPacketReader<T>
-    {
-        ValueTask<T> ReadAsync(ChannelReader<byte> reader);
-    }
+    ValueTask<T> ReadAsync(ChannelReader<byte> reader);
 }

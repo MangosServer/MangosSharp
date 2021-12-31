@@ -16,10 +16,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Realm.Storage.Entities
+namespace Mangos.Realm.Storage.Entities;
+
+public class AccountInfoEntity
 {
-    public class AccountInfoEntity
-    {
-        public string id, sha_pass_hash, gmlevel, expansion;
-    }
+    public string id, sha_pass_hash, gmlevel, expansion;
 }

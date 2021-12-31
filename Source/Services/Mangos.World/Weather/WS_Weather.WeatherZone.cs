@@ -26,208 +26,207 @@ using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 
-namespace Mangos.World.Weather
+namespace Mangos.World.Weather;
+
+public partial class WS_Weather
 {
-    public partial class WS_Weather
+    public class WeatherZone
     {
-        public class WeatherZone
+        public int ZoneID;
+
+        public WeatherSeasonChances[] Seasons;
+
+        public WeatherType CurrentWeather;
+
+        public float Intensity;
+
+        public WeatherZone(int ZoneID)
         {
-            public int ZoneID;
+            Seasons = new WeatherSeasonChances[4];
+            CurrentWeather = WeatherType.WEATHER_FINE;
+            Intensity = 0f;
+            this.ZoneID = ZoneID;
+        }
 
-            public WeatherSeasonChances[] Seasons;
-
-            public WeatherType CurrentWeather;
-
-            public float Intensity;
-
-            public WeatherZone(int ZoneID)
+        public void Update()
+        {
+            if (ChangeWeather())
             {
-                Seasons = new WeatherSeasonChances[4];
-                CurrentWeather = WeatherType.WEATHER_FINE;
-                Intensity = 0f;
-                this.ZoneID = ZoneID;
+                SendUpdate();
             }
+        }
 
-            public void Update()
+        public bool ChangeWeather()
+        {
+            var u = WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
+            if (u >= 30)
             {
-                if (ChangeWeather())
+                var oldWeather = CurrentWeather;
+                var oldIntensity = Intensity;
+                var TimeSince1Jan = checked((int)DateAndTime.Now.Subtract(new DateTime(DateAndTime.Now.Year, 1, 1)).TotalDays);
+                var Season = checked(TimeSince1Jan - 78 + 365) / 91 % 4;
+                if (u < 60 && Intensity < 0.333333343f)
                 {
-                    SendUpdate();
+                    CurrentWeather = WeatherType.WEATHER_FINE;
+                    Intensity = 0f;
                 }
-            }
-
-            public bool ChangeWeather()
-            {
-                int u = WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
-                if (u >= 30)
+                if (u < 60 && CurrentWeather != 0)
                 {
-                    WeatherType oldWeather = CurrentWeather;
-                    float oldIntensity = Intensity;
-                    int TimeSince1Jan = checked((int)DateAndTime.Now.Subtract(new DateTime(DateAndTime.Now.Year, 1, 1)).TotalDays);
-                    int Season = checked(TimeSince1Jan - 78 + 365) / 91 % 4;
-                    if (u < 60 && Intensity < 0.333333343f)
+                    Intensity -= 0.333333343f;
+                    return true;
+                }
+                if (u < 90 && CurrentWeather != 0)
+                {
+                    Intensity += 0.333333343f;
+                    return true;
+                }
+                if (CurrentWeather != 0)
+                {
+                    if (Intensity < 0.333333343f)
                     {
-                        CurrentWeather = WeatherType.WEATHER_FINE;
-                        Intensity = 0f;
-                    }
-                    if (u < 60 && CurrentWeather != 0)
-                    {
-                        Intensity -= 0.333333343f;
+                        Intensity = 0.9999f;
                         return true;
                     }
-                    if (u < 90 && CurrentWeather != 0)
+                    if (Intensity > 2f / 3f)
                     {
-                        Intensity += 0.333333343f;
-                        return true;
-                    }
-                    if (CurrentWeather != 0)
-                    {
-                        if (Intensity < 0.333333343f)
+                        var v = WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
+                        if (v < 50)
                         {
-                            Intensity = 0.9999f;
+                            Intensity -= 2f / 3f;
                             return true;
                         }
-                        if (Intensity > 2f / 3f)
-                        {
-                            int v = WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
-                            if (v < 50)
-                            {
-                                Intensity -= 2f / 3f;
-                                return true;
-                            }
-                        }
-                        CurrentWeather = WeatherType.WEATHER_FINE;
+                    }
+                    CurrentWeather = WeatherType.WEATHER_FINE;
+                    Intensity = 0f;
+                }
+                var chance1 = Seasons[Season].RainChance;
+                checked
+                {
+                    var chance2 = chance1 + Seasons[Season].SnowChance;
+                    var chance3 = chance2 + Seasons[Season].StormChance;
+                    var r = WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
+                    if (r < chance1)
+                    {
+                        CurrentWeather = WeatherType.WEATHER_RAIN;
+                    }
+                    else if (r < chance2)
+                    {
+                        CurrentWeather = WeatherType.WEATHER_SNOW;
+                    }
+                    else
+                    {
+                        CurrentWeather = r < chance3 ? WeatherType.WEATHER_SANDSTORM : WeatherType.WEATHER_FINE;
+                    }
+                    if (CurrentWeather == WeatherType.WEATHER_FINE)
+                    {
                         Intensity = 0f;
                     }
-                    int chance1 = Seasons[Season].RainChance;
-                    checked
+                    else if (u < 90)
                     {
-                        int chance2 = chance1 + Seasons[Season].SnowChance;
-                        int chance3 = chance2 + Seasons[Season].StormChance;
-                        int r = WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
-                        if (r < chance1)
-                        {
-                            CurrentWeather = WeatherType.WEATHER_RAIN;
-                        }
-                        else if (r < chance2)
-                        {
-                            CurrentWeather = WeatherType.WEATHER_SNOW;
-                        }
-                        else
-                        {
-                            CurrentWeather = r < chance3 ? WeatherType.WEATHER_SANDSTORM : WeatherType.WEATHER_FINE;
-                        }
-                        if (CurrentWeather == WeatherType.WEATHER_FINE)
-                        {
-                            Intensity = 0f;
-                        }
-                        else if (u < 90)
-                        {
-                            Intensity = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.33329999446868896);
-                        }
-                        else
-                        {
-                            r = WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
-                            Intensity = r < 50
-                                ? (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.33329999446868896) + 0.3334f
-                                : (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.33329999446868896) + 0.6667f;
-                        }
-                        return CurrentWeather != oldWeather || Intensity != oldIntensity;
+                        Intensity = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.33329999446868896);
                     }
-                }
-                bool ChangeWeather = default;
-                return ChangeWeather;
-            }
-
-            public int GetSound()
-            {
-                switch (CurrentWeather)
-                {
-                    case WeatherType.WEATHER_RAIN:
-                        if (Intensity < 0.333333343f)
-                        {
-                            return 8533;
-                        }
-                        if (Intensity < 2f / 3f)
-                        {
-                            return 8534;
-                        }
-                        return 8535;
-
-                    case WeatherType.WEATHER_SNOW:
-                        if (Intensity < 0.333333343f)
-                        {
-                            return 8536;
-                        }
-                        if (Intensity < 2f / 3f)
-                        {
-                            return 8537;
-                        }
-                        return 8538;
-
-                    case WeatherType.WEATHER_SANDSTORM:
-                        if (Intensity < 0.333333343f)
-                        {
-                            return 8556;
-                        }
-                        if (Intensity < 2f / 3f)
-                        {
-                            return 8557;
-                        }
-                        return 8558;
-
-                    default:
-                        return 0;
+                    else
+                    {
+                        r = WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
+                        Intensity = r < 50
+                            ? (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.33329999446868896) + 0.3334f
+                            : (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 0.33329999446868896) + 0.6667f;
+                    }
+                    return CurrentWeather != oldWeather || Intensity != oldIntensity;
                 }
             }
+            bool ChangeWeather = default;
+            return ChangeWeather;
+        }
 
-            public void SendUpdate()
+        public int GetSound()
+        {
+            switch (CurrentWeather)
             {
-                Packets.PacketClass SMSG_WEATHER = new(Opcodes.SMSG_WEATHER);
-                SMSG_WEATHER.AddInt32((int)CurrentWeather);
-                SMSG_WEATHER.AddSingle(Intensity);
-                SMSG_WEATHER.AddInt32(GetSound());
+                case WeatherType.WEATHER_RAIN:
+                    if (Intensity < 0.333333343f)
+                    {
+                        return 8533;
+                    }
+                    if (Intensity < 2f / 3f)
+                    {
+                        return 8534;
+                    }
+                    return 8535;
+
+                case WeatherType.WEATHER_SNOW:
+                    if (Intensity < 0.333333343f)
+                    {
+                        return 8536;
+                    }
+                    if (Intensity < 2f / 3f)
+                    {
+                        return 8537;
+                    }
+                    return 8538;
+
+                case WeatherType.WEATHER_SANDSTORM:
+                    if (Intensity < 0.333333343f)
+                    {
+                        return 8556;
+                    }
+                    if (Intensity < 2f / 3f)
+                    {
+                        return 8557;
+                    }
+                    return 8558;
+
+                default:
+                    return 0;
+            }
+        }
+
+        public void SendUpdate()
+        {
+            Packets.PacketClass SMSG_WEATHER = new(Opcodes.SMSG_WEATHER);
+            SMSG_WEATHER.AddInt32((int)CurrentWeather);
+            SMSG_WEATHER.AddSingle(Intensity);
+            SMSG_WEATHER.AddInt32(GetSound());
+            try
+            {
+                WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
                 try
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                    try
+                    foreach (var Character in WorldServiceLocator._WorldServer.CHARACTERs)
                     {
-                        foreach (KeyValuePair<ulong, WS_PlayerData.CharacterObject> Character in WorldServiceLocator._WorldServer.CHARACTERs)
+                        if (Character.Value.client != null && Character.Value.ZoneID == ZoneID)
                         {
-                            if (Character.Value.client != null && Character.Value.ZoneID == ZoneID)
-                            {
-                                Character.Value.client.SendMultiplyPackets(ref SMSG_WEATHER);
-                            }
+                            Character.Value.client.SendMultiplyPackets(ref SMSG_WEATHER);
                         }
                     }
-                    catch (Exception ex4)
-                    {
-                        ProjectData.SetProjectError(ex4);
-                        Exception ex3 = ex4;
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error updating Weather.{0}{1}", Environment.NewLine, ex3.ToString());
-                        ProjectData.ClearProjectError();
-                    }
-                    finally
-                    {
-                        WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
-                    }
                 }
-                catch (ApplicationException ex5)
+                catch (Exception ex4)
                 {
-                    ProjectData.SetProjectError(ex5);
-                    ApplicationException ex2 = ex5;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Weather Manager timed out");
+                    ProjectData.SetProjectError(ex4);
+                    var ex3 = ex4;
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error updating Weather.{0}{1}", Environment.NewLine, ex3.ToString());
                     ProjectData.ClearProjectError();
                 }
-                catch (Exception ex6)
+                finally
                 {
-                    ProjectData.SetProjectError(ex6);
-                    Exception ex = ex6;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error updating Weather.{0}{1}", Environment.NewLine, ex.ToString());
-                    ProjectData.ClearProjectError();
+                    WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                 }
-                SMSG_WEATHER.Dispose();
             }
+            catch (ApplicationException ex5)
+            {
+                ProjectData.SetProjectError(ex5);
+                var ex2 = ex5;
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Weather Manager timed out");
+                ProjectData.ClearProjectError();
+            }
+            catch (Exception ex6)
+            {
+                ProjectData.SetProjectError(ex6);
+                var ex = ex6;
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error updating Weather.{0}{1}", Environment.NewLine, ex.ToString());
+                ProjectData.ClearProjectError();
+            }
+            SMSG_WEATHER.Dispose();
         }
     }
 }

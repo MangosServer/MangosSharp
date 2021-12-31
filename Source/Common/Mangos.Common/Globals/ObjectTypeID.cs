@@ -16,19 +16,18 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Globals
+namespace Mangos.Common.Globals;
+
+public enum ObjectTypeId
 {
-    public enum ObjectTypeId
-    {
-        TYPEID_OBJECT = 0,
-        TYPEID_ITEM = 1,
-        TYPEID_CONTAINER = 2,
-        TYPEID_UNIT = 3,
-        TYPEID_PLAYER = 4,
-        TYPEID_GAMEOBJECT = 5,
-        TYPEID_DYNAMICOBJECT = 6,
-        TYPEID_CORPSE = 7,
-        TYPEID_AIGROUP = 8,
-        TYPEID_AREATRIGGER = 9
-    }
+    TYPEID_OBJECT = 0,
+    TYPEID_ITEM = 1,
+    TYPEID_CONTAINER = 2,
+    TYPEID_UNIT = 3,
+    TYPEID_PLAYER = 4,
+    TYPEID_GAMEOBJECT = 5,
+    TYPEID_DYNAMICOBJECT = 6,
+    TYPEID_CORPSE = 7,
+    TYPEID_AIGROUP = 8,
+    TYPEID_AREATRIGGER = 9
 }

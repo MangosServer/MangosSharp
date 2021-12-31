@@ -16,18 +16,17 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum LogType
 {
-    public enum LogType
-    {
-        NETWORK,                 // Network code debugging
-        DEBUG,                   // Packets processing
-        INFORMATION,             // User information
-        USER,                    // User actions
-        SUCCESS,                 // Normal operation
-        WARNING,                 // Warning
-        FAILED,                  // Processing Error
-        CRITICAL,                // Application Error
-        DATABASE                // Database Error
-    }
+    NETWORK,                 // Network code debugging
+    DEBUG,                   // Packets processing
+    INFORMATION,             // User information
+    USER,                    // User actions
+    SUCCESS,                 // Normal operation
+    WARNING,                 // Warning
+    FAILED,                  // Processing Error
+    CRITICAL,                // Application Error
+    DATABASE                // Database Error
 }

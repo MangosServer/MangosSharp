@@ -25,48 +25,47 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 
-namespace Mangos.SignalR
+namespace Mangos.SignalR;
+
+public class ProxyServer<T> : IDisposable where T : Hub
 {
-    public class ProxyServer<T> : IDisposable where T : Hub
+    private readonly IHost webhost;
+
+    public ProxyServer(IPAddress address, int port, T hub)
     {
-        private readonly IHost webhost;
+        var hostbuilder = Host.CreateDefaultBuilder();
+        hostbuilder.ConfigureWebHost(x => ConfigureWebHost(x, address, port, hub));
+        webhost = hostbuilder.Build();
+        webhost.Start();
+    }
 
-        public ProxyServer(IPAddress address, int port, T hub)
-        {
-            IHostBuilder hostbuilder = Host.CreateDefaultBuilder();
-            hostbuilder.ConfigureWebHost(x => ConfigureWebHost(x, address, port, hub));
-            webhost = hostbuilder.Build();
-            webhost.Start();
-        }
+    private void ConfigureWebHost(IWebHostBuilder webHostBuilder, IPAddress address, int port, T hub)
+    {
+        webHostBuilder.UseKestrel(x => x.Listen(address, port));
+        webHostBuilder.ConfigureLogging(x => x.ClearProviders());
+        webHostBuilder.ConfigureServices(x => ConfigureServices(x, hub));
+        webHostBuilder.Configure(ConfigureApplication);
+    }
 
-        private void ConfigureWebHost(IWebHostBuilder webHostBuilder, IPAddress address, int port, T hub)
-        {
-            webHostBuilder.UseKestrel(x => x.Listen(address, port));
-            webHostBuilder.ConfigureLogging(x => x.ClearProviders());
-            webHostBuilder.ConfigureServices(x => ConfigureServices(x, hub));
-            webHostBuilder.Configure(ConfigureApplication);
-        }
+    private void ConfigureServices(IServiceCollection serviceCollection, T hub)
+    {
+        serviceCollection.AddSignalR(ConfigureSignalR);
+        serviceCollection.AddSingleton(hub);
+    }
 
-        private void ConfigureServices(IServiceCollection serviceCollection, T hub)
-        {
-            serviceCollection.AddSignalR(ConfigureSignalR);
-            serviceCollection.AddSingleton(hub);
-        }
+    private void ConfigureApplication(IApplicationBuilder applicationBuilder)
+    {
+        applicationBuilder.UseRouting();
+        applicationBuilder.UseEndpoints(x => x.MapHub<T>(string.Empty));
+    }
 
-        private void ConfigureApplication(IApplicationBuilder applicationBuilder)
-        {
-            applicationBuilder.UseRouting();
-            applicationBuilder.UseEndpoints(x => x.MapHub<T>(string.Empty));
-        }
+    private void ConfigureSignalR(HubOptions hubOptions)
+    {
+        hubOptions.EnableDetailedErrors = true;
+    }
 
-        private void ConfigureSignalR(HubOptions hubOptions)
-        {
-            hubOptions.EnableDetailedErrors = true;
-        }
-
-        public void Dispose()
-        {
-            webhost.Dispose();
-        }
+    public void Dispose()
+    {
+        webhost.Dispose();
     }
 }

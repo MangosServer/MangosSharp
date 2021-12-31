@@ -16,17 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Quest
-{
-    public enum QuestInfo : byte
-    {
-        QUEST_OBJECTIVES_COUNT = 4,
-        QUEST_REWARD_CHOICES_COUNT = 5,
-        QUEST_REWARDS_COUNT = 4,
-        QUEST_DEPLINK_COUNT = 10,
-        QUEST_SLOTS = 24,
-        QUEST_SHARING_DISTANCE = 10
-    }
+namespace Mangos.Common.Enums.Quest;
 
-    // Quest System Enums
+public enum QuestInfo : byte
+{
+    QUEST_OBJECTIVES_COUNT = 4,
+    QUEST_REWARD_CHOICES_COUNT = 5,
+    QUEST_REWARDS_COUNT = 4,
+    QUEST_DEPLINK_COUNT = 10,
+    QUEST_SLOTS = 24,
+    QUEST_SHARING_DISTANCE = 10
 }

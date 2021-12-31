@@ -16,23 +16,22 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.World.Network
+namespace Mangos.World.Network;
+
+public partial class WS_Network
 {
-    public partial class WS_Network
+    private int LastPing;
+
+    public int WC_MsTime;
+
+    public WS_Network()
     {
-        private int LastPing;
+        LastPing = 0;
+        WC_MsTime = 0;
+    }
 
-        public int WC_MsTime;
-
-        public WS_Network()
-        {
-            LastPing = 0;
-            WC_MsTime = 0;
-        }
-
-        public int MsTime()
-        {
-            return checked(WC_MsTime + (WorldServiceLocator._NativeMethods.timeGetTime("") - LastPing));
-        }
+    public int MsTime()
+    {
+        return checked(WC_MsTime + (WorldServiceLocator._NativeMethods.timeGetTime("") - LastPing));
     }
 }

@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Group
+namespace Mangos.Common.Enums.Group;
+
+public enum GroupDungeonDifficulty : byte
 {
-    public enum GroupDungeonDifficulty : byte
-    {
-        DIFFICULTY_NORMAL = 0,
-        DIFFICULTY_HEROIC = 1
-    }
+    DIFFICULTY_NORMAL = 0,
+    DIFFICULTY_HEROIC = 1
 }

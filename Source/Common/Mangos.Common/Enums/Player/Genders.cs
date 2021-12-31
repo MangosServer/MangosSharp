@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Player
+namespace Mangos.Common.Enums.Player;
+
+public enum Genders : byte
 {
-    public enum Genders : byte
-    {
-        GENDER_MALE = 0,
-        GENDER_FEMALE = 1
-    }
+    GENDER_MALE = 0,
+    GENDER_FEMALE = 1
 }

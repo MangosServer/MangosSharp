@@ -19,32 +19,31 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Reflection;
 
-namespace Mangos.SignalR
+namespace Mangos.SignalR;
+
+public class ProxyClient : DispatchProxy
 {
-    public class ProxyClient : DispatchProxy
+    private HubConnection hubConnection;
+
+    protected override object Invoke(MethodInfo targetMethod, object[] args)
     {
-        private HubConnection hubConnection;
-
-        protected override object Invoke(MethodInfo targetMethod, object[] args)
+        if (targetMethod.ReturnType.Name == "Void")
         {
-            if (targetMethod.ReturnType.Name == "Void")
-            {
-                hubConnection.InvokeCoreAsync(targetMethod.Name, args).Wait();
-                return null;
-            }
-
-            return hubConnection.InvokeCoreAsync(targetMethod.Name, targetMethod.ReturnType, args).Result;
+            hubConnection.InvokeCoreAsync(targetMethod.Name, args).Wait();
+            return null;
         }
 
-        public static T Create<T>(string url)
-        {
-            HubConnectionBuilder hubConnectionBuilder = new();
-            hubConnectionBuilder.WithUrl(url);
-            HubConnection hubConnection = hubConnectionBuilder.Build();
-            hubConnection.StartAsync().Wait();
-            T proxy = Create<T, ProxyClient>();
-            (proxy as ProxyClient).hubConnection = hubConnection;
-            return proxy;
-        }
+        return hubConnection.InvokeCoreAsync(targetMethod.Name, targetMethod.ReturnType, args).Result;
+    }
+
+    public static T Create<T>(string url)
+    {
+        HubConnectionBuilder hubConnectionBuilder = new();
+        hubConnectionBuilder.WithUrl(url);
+        var hubConnection = hubConnectionBuilder.Build();
+        hubConnection.StartAsync().Wait();
+        var proxy = Create<T, ProxyClient>();
+        (proxy as ProxyClient).hubConnection = hubConnection;
+        return proxy;
     }
 }

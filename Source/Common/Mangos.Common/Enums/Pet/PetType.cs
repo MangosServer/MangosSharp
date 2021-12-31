@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Pet
+namespace Mangos.Common.Enums.Pet;
+
+public enum PetType : byte
 {
-    public enum PetType : byte
-    {
-        SUMMON_PET = 0,
-        HUNTER_PET = 1,
-        GUARDIAN_PET = 2,
-        MINI_PET = 3
-    }
+    SUMMON_PET = 0,
+    HUNTER_PET = 1,
+    GUARDIAN_PET = 2,
+    MINI_PET = 3
 }

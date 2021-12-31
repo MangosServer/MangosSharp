@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Group
+namespace Mangos.Common.Enums.Group;
+
+public enum PromoteToMain : byte
 {
-    public enum PromoteToMain : byte
-    {
-        MainTank = 0,
-        MainAssist = 1
-    }
+    MainTank = 0,
+    MainAssist = 1
 }

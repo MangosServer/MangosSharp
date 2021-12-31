@@ -16,15 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Social
+namespace Mangos.Common.Enums.Social;
+
+public enum MailResult
 {
-    public enum MailResult
-    {
-        MAIL_SENT = 0,
-        MAIL_MONEY_REMOVED = 1,
-        MAIL_ITEM_REMOVED = 2,
-        MAIL_RETURNED = 3,
-        MAIL_DELETED = 4,
-        MAIL_MADE_PERMANENT = 5
-    }
+    MAIL_SENT = 0,
+    MAIL_MONEY_REMOVED = 1,
+    MAIL_ITEM_REMOVED = 2,
+    MAIL_RETURNED = 3,
+    MAIL_DELETED = 4,
+    MAIL_MADE_PERMANENT = 5
 }

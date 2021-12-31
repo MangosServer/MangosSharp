@@ -16,21 +16,20 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Unit
+namespace Mangos.Common.Enums.Unit;
+
+public enum UNIT_TYPE
 {
-    public enum UNIT_TYPE
-    {
-        NONE = 0,
-        BEAST = 1,
-        DRAGONKIN = 2,
-        DEMON = 3,
-        ELEMENTAL = 4,
-        GIANT = 5,
-        UNDEAD = 6,
-        HUMANOID = 7,
-        CRITTER = 8,
-        MECHANICAL = 9,
-        NOT_SPECIFIED = 10,
-        TOTEM = 11
-    }
+    NONE = 0,
+    BEAST = 1,
+    DRAGONKIN = 2,
+    DEMON = 3,
+    ELEMENTAL = 4,
+    GIANT = 5,
+    UNDEAD = 6,
+    HUMANOID = 7,
+    CRITTER = 8,
+    MECHANICAL = 9,
+    NOT_SPECIFIED = 10,
+    TOTEM = 11
 }

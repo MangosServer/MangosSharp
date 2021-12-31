@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Pet
+namespace Mangos.Common.Enums.Pet;
+
+public enum HappinessState : byte
 {
-    public enum HappinessState : byte
-    {
-        UNHAPPY = 1,
-        CONTENT = 2,
-        HAPPY = 3
-    }
+    UNHAPPY = 1,
+    CONTENT = 2,
+    HAPPY = 3
 }

@@ -16,17 +16,16 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Warden
+namespace Mangos.Common.Enums.Warden;
+
+public enum CheckTypes : byte
 {
-    public enum CheckTypes : byte
-    {
-        MEM_CHECK = 0,
-        PAGE_CHECK_A_B = 1,
-        MPQ_CHECK = 2,
-        LUA_STR_CHECK = 3,
-        DRIVER_CHECK = 4,
-        TIMING_CHECK = 5,
-        PROC_CHECK = 6,
-        MODULE_CHECK = 7
-    }
+    MEM_CHECK = 0,
+    PAGE_CHECK_A_B = 1,
+    MPQ_CHECK = 2,
+    LUA_STR_CHECK = 3,
+    DRIVER_CHECK = 4,
+    TIMING_CHECK = 5,
+    PROC_CHECK = 6,
+    MODULE_CHECK = 7
 }

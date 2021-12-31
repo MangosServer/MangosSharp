@@ -22,71 +22,70 @@ using Mangos.World.AI;
 using Mangos.World.Objects;
 using System;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Targorr_the_Dread : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Targorr_the_Dread : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int ThrashCD = 7000;
+    private const int FrenzyCD = 90000; // This should never be reused.
+    private const int Spell_Frenzy = 8599;
+    private const int Spell_Thrash = 3391;
+    public int NextThrash;
+    public int NextWaypoint;
+    public int NextAcid;
+    public int CurrentWaypoint;
+
+    public CreatureAI_Targorr_the_Dread(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int ThrashCD = 7000;
-        private const int FrenzyCD = 90000; // This should never be reused.
-        private const int Spell_Frenzy = 8599;
-        private const int Spell_Thrash = 3391;
-        public int NextThrash;
-        public int NextWaypoint;
-        public int NextAcid;
-        public int CurrentWaypoint;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Targorr_the_Dread(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnThink()
+    {
+        NextThrash -= AI_UPDATE;
+        if (NextThrash <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextThrash = ThrashCD;
+            aiCreature.CastSpellOnSelf(Spell_Thrash); // Should be cast on self. Correct me if wrong.
         }
+    }
 
-        public override void OnThink()
+    public void CastThrash()
+    {
+        for (var i = 0; i <= 0; i++)
         {
-            NextThrash -= AI_UPDATE;
-            if (NextThrash <= 0)
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                NextThrash = ThrashCD;
-                aiCreature.CastSpellOnSelf(Spell_Thrash); // Should be cast on self. Correct me if wrong.
+                return;
+            }
+
+            try
+            {
+                aiCreature.CastSpellOnSelf(Spell_Thrash);
+            }
+            catch (Exception)
+            {
+                aiCreature.SendChatMessage("AI was unable to cast Thrash on himself. Please report this to a developer.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
             }
         }
+    }
 
-        public void CastThrash()
+    public override void OnHealthChange(int Percent)
+    {
+        base.OnHealthChange(Percent);
+        if (Percent <= 40)
         {
-            for (int i = 0; i <= 0; i++)
+            try
             {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                try
-                {
-                    aiCreature.CastSpellOnSelf(Spell_Thrash);
-                }
-                catch (Exception)
-                {
-                    aiCreature.SendChatMessage("AI was unable to cast Thrash on himself. Please report this to a developer.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
-                }
+                aiCreature.CastSpellOnSelf(Spell_Frenzy);
             }
-        }
-
-        public override void OnHealthChange(int Percent)
-        {
-            base.OnHealthChange(Percent);
-            if (Percent <= 40)
+            catch (Exception)
             {
-                try
-                {
-                    aiCreature.CastSpellOnSelf(Spell_Frenzy);
-                }
-                catch (Exception)
-                {
-                    aiCreature.SendChatMessage("AI was unable to cast Frenzy on himself. Please report this to a developer.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
-                }
+                aiCreature.SendChatMessage("AI was unable to cast Frenzy on himself. Please report this to a developer.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
             }
         }
     }

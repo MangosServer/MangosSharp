@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.AuctionHouse
+namespace Mangos.Common.Enums.AuctionHouse;
+
+public enum AuctionError
 {
-    public enum AuctionError
-    {
-        AUCTION_OK = 0,
-        AUCTION_INTERNAL_ERROR = 2,
-        AUCTION_NOT_ENOUGHT_MONEY = 3,
-        CANNOT_BID_YOUR_AUCTION_ERROR = 10
-    }
+    AUCTION_OK = 0,
+    AUCTION_INTERNAL_ERROR = 2,
+    AUCTION_NOT_ENOUGHT_MONEY = 3,
+    CANNOT_BID_YOUR_AUCTION_ERROR = 10
 }

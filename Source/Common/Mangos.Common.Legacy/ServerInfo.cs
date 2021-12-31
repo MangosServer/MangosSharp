@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Legacy
+namespace Mangos.Common.Legacy;
+
+public class ServerInfo
 {
-    public class ServerInfo
-    {
-        public float cpuUsage { get; set; }
-        public ulong memoryUsage { get; set; }
-    }
+    public float cpuUsage { get; set; }
+    public ulong memoryUsage { get; set; }
 }

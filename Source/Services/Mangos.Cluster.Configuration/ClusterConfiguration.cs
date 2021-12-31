@@ -19,37 +19,36 @@
 using Mangos.Common.Enums.Global;
 using System.Xml.Serialization;
 
-namespace Mangos.Cluster.Configuration
+namespace Mangos.Cluster.Configuration;
+
+[XmlRoot(ElementName = "WorldCluster")]
+public class ClusterConfiguration
 {
-    [XmlRoot(ElementName = "WorldCluster")]
-    public class ClusterConfiguration
-    {
-        public string WorldClusterEndpoint { get; set; } = "127.0.0.1:8085";
-        public int ServerPlayerLimit { get; set; } = 10;
+    public string WorldClusterEndpoint { get; set; } = "127.0.0.1:8085";
+    public int ServerPlayerLimit { get; set; } = 10;
 
-        // Database Settings
-        public string AccountDatabase { get; set; } = "root;mangosVB;localhost;3306;mangosVB;MySQL";
+    // Database Settings
+    public string AccountDatabase { get; set; } = "root;mangosVB;localhost;3306;mangosVB;MySQL";
 
-        public string CharacterDatabase { get; set; } = "root;mangosVB;localhost;3306;mangosVB;MySQL";
-        public string WorldDatabase { get; set; } = "root;mangosVB;localhost;3306;mangosVB;MySQL";
+    public string CharacterDatabase { get; set; } = "root;mangosVB;localhost;3306;mangosVB;MySQL";
+    public string WorldDatabase { get; set; } = "root;mangosVB;localhost;3306;mangosVB;MySQL";
 
-        // Cluster Settings
-        public string ClusterListenAddress { get; set; } = "127.0.0.1";
+    // Cluster Settings
+    public string ClusterListenAddress { get; set; } = "127.0.0.1";
 
-        public int ClusterListenPort { get; set; } = 50001;
+    public int ClusterListenPort { get; set; } = 50001;
 
-        // Stats Settings
-        public bool StatsEnabled { get; set; } = true;
+    // Stats Settings
+    public bool StatsEnabled { get; set; } = true;
 
-        public int StatsTimer { get; set; } = 120000;
-        public string StatsLocation { get; set; } = "stats.xml";
+    public int StatsTimer { get; set; } = 120000;
+    public string StatsLocation { get; set; } = "stats.xml";
 
-        // Logging Settings
-        public string LogType { get; set; } = "FILE";
+    // Logging Settings
+    public string LogType { get; set; } = "FILE";
 
-        public LogType LogLevel { get; set; } = Common.Enums.Global.LogType.NETWORK;
-        public string LogConfig { get; set; } = string.Empty;
-        public bool PacketLogging { get; set; }
-        public bool GmLogging { get; set; }
-    }
+    public LogType LogLevel { get; set; } = Common.Enums.Global.LogType.NETWORK;
+    public string LogConfig { get; set; } = string.Empty;
+    public bool PacketLogging { get; set; }
+    public bool GmLogging { get; set; }
 }

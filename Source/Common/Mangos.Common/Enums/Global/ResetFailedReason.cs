@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum ResetFailedReason : uint
 {
-    public enum ResetFailedReason : uint
-    {
-        INSTANCE_RESET_FAILED_ZONING = 0U,
-        INSTANCE_RESET_FAILED_OFFLINE = 1U,
-        INSTANCE_RESET_FAILED = 2U,
-        INSTANCE_RESET_SUCCESS = 3U
-    }
+    INSTANCE_RESET_FAILED_ZONING = 0U,
+    INSTANCE_RESET_FAILED_OFFLINE = 1U,
+    INSTANCE_RESET_FAILED = 2U,
+    INSTANCE_RESET_SUCCESS = 3U
 }

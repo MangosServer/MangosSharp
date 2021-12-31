@@ -16,14 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Spell
+namespace Mangos.Common.Enums.Spell;
+
+public enum SpellCastState : byte
 {
-    public enum SpellCastState : byte
-    {
-        SPELL_STATE_NULL = 0,
-        SPELL_STATE_PREPARING = 1,
-        SPELL_STATE_CASTING = 2,
-        SPELL_STATE_FINISHED = 3,
-        SPELL_STATE_IDLE = 4
-    }
+    SPELL_STATE_NULL = 0,
+    SPELL_STATE_PREPARING = 1,
+    SPELL_STATE_CASTING = 2,
+    SPELL_STATE_FINISHED = 3,
+    SPELL_STATE_IDLE = 4
 }

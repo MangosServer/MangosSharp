@@ -18,12 +18,11 @@
 
 using System;
 
-namespace Mangos.Common.Enums.Group
+namespace Mangos.Common.Enums.Group;
+
+[Flags]
+public enum GroupType : byte
 {
-    [Flags]
-    public enum GroupType : byte
-    {
-        PARTY = 0,
-        RAID = 1
-    }
+    PARTY = 0,
+    RAID = 1
 }

@@ -21,14 +21,13 @@ using Mangos.Realm.Network.Requests;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace Mangos.Realm.Network.Readers
+namespace Mangos.Realm.Network.Readers;
+
+public class RS_REALMLIST_Reader : IPacketReader<RS_REALMLIST>
 {
-    public class RS_REALMLIST_Reader : IPacketReader<RS_REALMLIST>
+    public async ValueTask<RS_REALMLIST> ReadAsync(ChannelReader<byte> reader)
     {
-        public async ValueTask<RS_REALMLIST> ReadAsync(ChannelReader<byte> reader)
-        {
-            byte[] unk = await reader.ReadArrayAsync(4);
-            return new RS_REALMLIST(unk);
-        }
+        var unk = await reader.ReadArrayAsync(4);
+        return new RS_REALMLIST(unk);
     }
 }

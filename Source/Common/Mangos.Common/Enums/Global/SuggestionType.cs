@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum SuggestionType
 {
-    public enum SuggestionType
-    {
-        TYPE_BUG_REPORT = 0,
-        TYPE_SUGGESTION = 1
-    }
+    TYPE_BUG_REPORT = 0,
+    TYPE_SUGGESTION = 1
 }

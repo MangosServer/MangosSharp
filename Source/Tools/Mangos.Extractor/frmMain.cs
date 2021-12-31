@@ -18,37 +18,36 @@
 
 using System;
 
-namespace Mangos.Extractor
+namespace Mangos.Extractor;
+
+public partial class frmMain
 {
-    public partial class frmMain
+    public frmMain()
     {
-        public frmMain()
-        {
-            InitializeComponent();
-            _btnExtractUpdateFields.Name = "btnExtractUpdateFields";
-            _btnExtractOpcodes.Name = "btnExtractOpcodes";
-            _btnExtractSpellFailedReasons.Name = "btnExtractSpellFailedReasons";
-            _btnExtractChatTypes.Name = "btnExtractChatTypes";
-        }
+        InitializeComponent();
+        _btnExtractUpdateFields.Name = "btnExtractUpdateFields";
+        _btnExtractOpcodes.Name = "btnExtractOpcodes";
+        _btnExtractSpellFailedReasons.Name = "btnExtractSpellFailedReasons";
+        _btnExtractChatTypes.Name = "btnExtractChatTypes";
+    }
 
-        private void btnExtractUpdateFields_Click(object sender, EventArgs e)
-        {
-            Functions.ExtractUpdateFields();
-        }
+    private void btnExtractUpdateFields_Click(object sender, EventArgs e)
+    {
+        Functions.ExtractUpdateFields();
+    }
 
-        private void btnExtractOpcodes_Click(object sender, EventArgs e)
-        {
-            Functions.ExtractOpcodes();
-        }
+    private void btnExtractOpcodes_Click(object sender, EventArgs e)
+    {
+        Functions.ExtractOpcodes();
+    }
 
-        private void btnExtractSpellFailedReasons_Click(object sender, EventArgs e)
-        {
-            Functions.ExtractSpellFailedReason();
-        }
+    private void btnExtractSpellFailedReasons_Click(object sender, EventArgs e)
+    {
+        Functions.ExtractSpellFailedReason();
+    }
 
-        private void btnExtractChatTypes_Click(object sender, EventArgs e)
-        {
-            Functions.ExtractChatTypes();
-        }
+    private void btnExtractChatTypes_Click(object sender, EventArgs e)
+    {
+        Functions.ExtractChatTypes();
     }
 }

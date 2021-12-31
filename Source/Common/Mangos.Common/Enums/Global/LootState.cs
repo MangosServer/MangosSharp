@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum LootState : uint
 {
-    public enum LootState : uint
-    {
-        NORMAL = 0U,
-        PASSING = 1U
-    }
+    NORMAL = 0U,
+    PASSING = 1U
 }

@@ -21,54 +21,53 @@ using Mangos.World.Player;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Mangos.World.AI
-{
-    public partial class WS_Creatures_AI
-    {
-        public class BossAI : DefaultAI
-        {
-            public BossAI(ref WS_Creatures.CreatureObject Creature)
-                : base(ref Creature)
-            {
-            }
+namespace Mangos.World.AI;
 
-            public override void OnEnterCombat()
+public partial class WS_Creatures_AI
+{
+    public class BossAI : DefaultAI
+    {
+        public BossAI(ref WS_Creatures.CreatureObject Creature)
+            : base(ref Creature)
+        {
+        }
+
+        public override void OnEnterCombat()
+        {
+            base.OnEnterCombat();
+            foreach (var Unit in aiHateTable)
             {
-                base.OnEnterCombat();
-                foreach (KeyValuePair<WS_Base.BaseUnit, int> Unit in aiHateTable)
+                if (Unit.Key is not WS_PlayerData.CharacterObject)
                 {
-                    if (Unit.Key is not WS_PlayerData.CharacterObject)
+                    continue;
+                }
+                WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)Unit.Key;
+                if (characterObject.IsInGroup)
+                {
+                    var array = characterObject.Group.LocalMembers.ToArray();
+                    foreach (var member in array)
                     {
-                        continue;
-                    }
-                    WS_PlayerData.CharacterObject characterObject = (WS_PlayerData.CharacterObject)Unit.Key;
-                    if (characterObject.IsInGroup)
-                    {
-                        ulong[] array = characterObject.Group.LocalMembers.ToArray();
-                        foreach (ulong member in array)
+                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(member) && WorldServiceLocator._WorldServer.CHARACTERs[member].MapID == characterObject.MapID && WorldServiceLocator._WorldServer.CHARACTERs[member].instance == characterObject.instance)
                         {
-                            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(member) && WorldServiceLocator._WorldServer.CHARACTERs[member].MapID == characterObject.MapID && WorldServiceLocator._WorldServer.CHARACTERs[member].instance == characterObject.instance)
-                            {
-                                aiHateTable.Add(WorldServiceLocator._WorldServer.CHARACTERs[member], 0);
-                            }
+                            aiHateTable.Add(WorldServiceLocator._WorldServer.CHARACTERs[member], 0);
                         }
-                        break;
                     }
+                    break;
                 }
             }
+        }
 
-            public override void DoThink()
+        public override void DoThink()
+        {
+            base.DoThink();
+            new Thread(OnThink)
             {
-                base.DoThink();
-                new Thread(OnThink)
-                {
-                    Name = "Boss Thinking"
-                }.Start();
-            }
+                Name = "Boss Thinking"
+            }.Start();
+        }
 
-            public virtual void OnThink()
-            {
-            }
+        public virtual void OnThink()
+        {
         }
     }
 }

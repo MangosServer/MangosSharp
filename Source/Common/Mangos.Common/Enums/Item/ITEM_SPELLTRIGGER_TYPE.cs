@@ -16,15 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Item
+namespace Mangos.Common.Enums.Item;
+
+public enum ITEM_SPELLTRIGGER_TYPE : byte
 {
-    public enum ITEM_SPELLTRIGGER_TYPE : byte
-    {
-        USE = 0,
-        ON_EQUIP = 1,
-        CHANCE_ON_HIT = 2,
-        SOULSTONE = 4,
-        NO_DELAY_USE = 5,
-        LEARN_SPELL = 6
-    }
+    USE = 0,
+    ON_EQUIP = 1,
+    CHANCE_ON_HIT = 2,
+    SOULSTONE = 4,
+    NO_DELAY_USE = 5,
+    LEARN_SPELL = 6
 }

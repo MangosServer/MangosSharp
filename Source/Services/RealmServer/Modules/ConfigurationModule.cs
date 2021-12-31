@@ -21,16 +21,15 @@ using Mangos.Configuration;
 using Mangos.Configuration.Xml;
 using Mangos.Realm.Configuration;
 
-namespace RealmServer.Modules
+namespace RealmServer.Modules;
+
+public class ConfigurationModule : Module
 {
-    public class ConfigurationModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<XmlConfigurationProvider<RealmServerConfiguration>>()
-                .As<IConfigurationProvider<RealmServerConfiguration>>()
-                .AsSelf()
-                .SingleInstance();
-        }
+        builder.RegisterType<XmlConfigurationProvider<RealmServerConfiguration>>()
+            .As<IConfigurationProvider<RealmServerConfiguration>>()
+            .AsSelf()
+            .SingleInstance();
     }
 }

@@ -22,119 +22,118 @@ using Mangos.World.AI;
 using Mangos.World.Objects;
 using System;
 
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Lord_Pythas : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Lord_Pythas : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int SLUMBER_CD = 10000;
+    private const int Lightning_Bolt_CD = 6000;
+    private const int Thunder_Clap_CD = 9000;
+    private const int Thunderclap_Spell = 8147;
+    private const int Slumber_Spell = 8040;
+    private const int Healing_Spell = 23381;
+    private const int Spell_Serpent_Form = 8041; // Not sure how this will work.
+    private const int Spell_Lightning_Bolt = 9532;
+    public int NextWaypoint;
+    public int NextThunderClap;
+    public int NextLightningBolt;
+    public int NextSlumber;
+    public int CurrentWaypoint;
+    public int NextHealingTouch;
+
+    public CreatureAI_Lord_Pythas(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int SLUMBER_CD = 10000;
-        private const int Lightning_Bolt_CD = 6000;
-        private const int Thunder_Clap_CD = 9000;
-        private const int Thunderclap_Spell = 8147;
-        private const int Slumber_Spell = 8040;
-        private const int Healing_Spell = 23381;
-        private const int Spell_Serpent_Form = 8041; // Not sure how this will work.
-        private const int Spell_Lightning_Bolt = 9532;
-        public int NextWaypoint;
-        public int NextThunderClap;
-        public int NextLightningBolt;
-        public int NextSlumber;
-        public int CurrentWaypoint;
-        public int NextHealingTouch;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Lord_Pythas(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnEnterCombat()
+    {
+        base.OnEnterCombat();
+        aiCreature.SendChatMessage("The coils of death... Will crush you.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL); // If you can do anything, then go serpent form.
+    }
+
+    public override void OnThink()
+    {
+        NextLightningBolt -= AI_UPDATE;
+        NextHealingTouch -= AI_UPDATE;
+        NextSlumber -= AI_UPDATE;
+        NextThunderClap -= AI_UPDATE;
+        if (NextLightningBolt <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextLightningBolt = Lightning_Bolt_CD;
+            aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget); // Lightning bolt on current target.
         }
 
-        public override void OnEnterCombat()
+        if (NextSlumber <= 0)
         {
-            base.OnEnterCombat();
-            aiCreature.SendChatMessage("The coils of death... Will crush you.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL); // If you can do anything, then go serpent form.
-        }
-
-        public override void OnThink()
-        {
-            NextLightningBolt -= AI_UPDATE;
-            NextHealingTouch -= AI_UPDATE;
-            NextSlumber -= AI_UPDATE;
-            NextThunderClap -= AI_UPDATE;
-            if (NextLightningBolt <= 0)
-            {
-                NextLightningBolt = Lightning_Bolt_CD;
-                aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget); // Lightning bolt on current target.
-            }
-
-            if (NextSlumber <= 0)
-            {
-                NextSlumber = SLUMBER_CD;
-                aiCreature.CastSpell(Slumber_Spell, aiCreature.GetRandomTarget());
-            }
-
-            if (NextThunderClap <= 0)
-            {
-                NextThunderClap = Thunder_Clap_CD;
-                aiCreature.CastSpell(Thunderclap_Spell, aiTarget); // TODO: Make this an AoE cast.
-            }
-        }
-
-        public void CastLightning()
-        {
-            for (int i = 0; i <= 3; i++)
-            {
-                WS_Base.BaseUnit Target = aiCreature;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
-            }
-        }
-
-        public void CastSlumber()
-        {
-            for (int i = 1; i <= 3; i++)
-            {
-                WS_Base.BaseUnit target = aiCreature.GetRandomTarget();
-                if (target is null)
-                {
-                    return;
-                }
-            }
-
+            NextSlumber = SLUMBER_CD;
             aiCreature.CastSpell(Slumber_Spell, aiCreature.GetRandomTarget());
         }
 
-        public void CastThunderClap()
+        if (NextThunderClap <= 0)
         {
-            for (int i = 2; i <= 3; i++)
+            NextThunderClap = Thunder_Clap_CD;
+            aiCreature.CastSpell(Thunderclap_Spell, aiTarget); // TODO: Make this an AoE cast.
+        }
+    }
+
+    public void CastLightning()
+    {
+        for (var i = 0; i <= 3; i++)
+        {
+            WS_Base.BaseUnit Target = aiCreature;
+            if (Target is null)
             {
-                WS_Base.BaseUnit target = aiCreature;
-                if (target is null)
-                {
-                    return;
-                }
+                return;
             }
 
-            aiCreature.CastSpell(Thunder_Clap_CD, aiTarget);
+            aiCreature.CastSpell(Spell_Lightning_Bolt, aiTarget);
+        }
+    }
+
+    public void CastSlumber()
+    {
+        for (var i = 1; i <= 3; i++)
+        {
+            var target = aiCreature.GetRandomTarget();
+            if (target is null)
+            {
+                return;
+            }
         }
 
-        public override void OnHealthChange(int Percent)
+        aiCreature.CastSpell(Slumber_Spell, aiCreature.GetRandomTarget());
+    }
+
+    public void CastThunderClap()
+    {
+        for (var i = 2; i <= 3; i++)
         {
-            base.OnHealthChange(Percent);
-            if (Percent <= 10)
+            WS_Base.BaseUnit target = aiCreature;
+            if (target is null)
             {
-                try
-                {
-                    aiCreature.CastSpellOnSelf(Healing_Spell);
-                }
-                catch (Exception)
-                {
-                    aiCreature.SendChatMessage("I was unable to cast healing touch on myself. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
-                }
+                return;
+            }
+        }
+
+        aiCreature.CastSpell(Thunder_Clap_CD, aiTarget);
+    }
+
+    public override void OnHealthChange(int Percent)
+    {
+        base.OnHealthChange(Percent);
+        if (Percent <= 10)
+        {
+            try
+            {
+                aiCreature.CastSpellOnSelf(Healing_Spell);
+            }
+            catch (Exception)
+            {
+                aiCreature.SendChatMessage("I was unable to cast healing touch on myself. This is a problem. Please report this to the developers.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
             }
         }
     }

@@ -1,15 +1,83 @@
-root = true
+root=true
 
 [*]
-indent_style = space
-end_of_line = crlf
+indent_style=space
+end_of_line=crlf
 
 [*.{csproj, props}]
-indent_size = 2
+indent_size=2
 
 [*.cs]
 file_header_template=\r\nCopyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>\r\n\r\nThis program is free software. You can redistribute it and/or modify\r\nit under the terms of the GNU General Public License as published by\r\nthe Free Software Foundation. either version 2 of the License, or\r\n(at your option) any later version.\r\n\r\nThis program is distributed in the hope that it will be useful,\r\nbut WITHOUT ANY WARRANTY. Without even the implied warranty of\r\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\r\nGNU General Public License for more details.\r\n\r\nYou should have received a copy of the GNU General Public License\r\nalong with this program. If not, write to the Free Software\r\nFoundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\r\n
-indent_size = 4
-insert_final_newline = true
-charset = utf-8
-trim_trailing_whitespace = true
+indent_size=4
+insert_final_newline=true
+charset=utf-8
+trim_trailing_whitespace=true
+
+dotnet_style_qualification_for_field=false:error
+dotnet_style_qualification_for_property=false:error
+dotnet_style_qualification_for_method=false:error
+dotnet_style_predefined_type_for_locals_parameters_members=true:error
+dotnet_style_predefined_type_for_member_access=true:error
+dotnet_style_require_accessibility_modifiers=always:error
+dotnet_style_readonly_field=true:error
+dotnet_style_coalesce_expression=true:error
+dotnet_style_null_propagation=true:error
+dotnet_style_prefer_is_null_check_over_reference_equality_method=true:error
+csharp_style_throw_expression=true:error
+csharp_style_var_for_built_in_types=true:error
+csharp_style_var_when_type_is_apparent=truee:error
+csharp_style_var_elsewhere=true:error
+csharp_style_expression_bodied_constructors=false:error
+csharp_style_expression_bodied_methods=false:error
+csharp_style_expression_bodied_operators=false:error
+csharp_style_expression_bodied_properties=true:error
+csharp_style_expression_bodied_indexers=false:error
+csharp_style_expression_bodied_accessors=true:error
+csharp_style_expression_bodied_lambdas=true:error
+csharp_style_pattern_matching_over_as_with_null_check=true:error
+csharp_style_pattern_matching_over_is_with_cast_check=true:error
+csharp_style_prefer_switch_expression=true:error
+csharp_style_prefer_not_pattern=true:error
+csharp_prefer_braces=true:error
+csharp_prefer_simple_using_statement=true:error
+csharp_using_directive_placement=outside_namespace:error
+#dotnet_code_quality_unused_parameters=all:error
+dotnet_style_namespace_match_folder=true:error
+csharp_using_directive_placement=outside_namespace:error
+csharp_style_namespace_declarations=file_scoped:error
+
+csharp_new_line_before_open_brace=all
+csharp_new_line_before_else=true
+csharp_new_line_before_catch=true
+csharp_new_line_before_finally=true
+csharp_new_line_before_members_in_object_initializers=true
+csharp_new_line_before_members_in_anonymous_types=true
+csharp_indent_case_contents=true
+csharp_indent_switch_labels=true
+csharp_indent_block_contents=true
+csharp_indent_case_contents_when_block=true
+csharp_space_after_cast=false
+csharp_space_after_keywords_in_control_flow_statements=true
+csharp_space_before_colon_in_inheritance_clause=true
+csharp_space_after_colon_in_inheritance_clause=true
+csharp_space_between_method_declaration_parameter_list_parentheses=false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses=false
+csharp_space_between_method_declaration_name_and_open_parenthesis=false
+csharp_space_between_method_call_parameter_list_parentheses=false
+csharp_space_between_method_call_empty_parameter_list_parentheses=false
+csharp_space_between_method_call_name_and_opening_parenthesis=false
+csharp_space_after_comma=true
+csharp_space_before_comma=false
+csharp_space_after_dot=false
+csharp_space_after_semicolon_in_for_statement=true
+csharp_space_before_semicolon_in_for_statement=false
+csharp_space_around_declaration_statements=false
+csharp_space_before_open_square_brackets=false
+csharp_space_between_empty_square_brackets=false
+csharp_space_between_square_brackets=false
+csharp_preserve_single_line_statements=true
+csharp_preserve_single_line_blocks=true
+csharp_space_before_dot=false
+csharp_space_between_parentheses=false
+csharp_new_line_between_query_expression_clauses=true

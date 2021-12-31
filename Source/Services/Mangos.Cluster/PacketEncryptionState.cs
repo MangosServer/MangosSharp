@@ -16,12 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Cluster
+namespace Mangos.Cluster;
+
+public class PacketEncryptionState
 {
-    public class PacketEncryptionState
-    {
-        public bool IsEncryptionEnabled { get; set; }
-        public byte[] Hash { get; set; }
-        public byte[] Key { get; } = new byte[4];
-    }
+    public bool IsEncryptionEnabled { get; set; }
+    public byte[] Hash { get; set; }
+    public byte[] Key { get; } = new byte[4];
 }

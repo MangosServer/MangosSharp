@@ -16,20 +16,19 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.AuctionHouse
+namespace Mangos.Common.Enums.AuctionHouse;
+
+public enum AuctionHouses
 {
-    public enum AuctionHouses
-    {
-        AUCTION_UNDEFINED = 0,
-        AUCTION_ALLIANCE = 2,
-        AUCTION_HORDE = 6,
-        AUCTION_NEUTRAL = 7,
-        AUCTION_STORMWIND = 1,
-        AUCTION_IRONFORGE = 2,
-        AUCTION_DARNASSYS = 3,
-        AUCTION_UNDERCITY = 4,
-        AUCTION_THUNDER_BLUFF = 5,
-        AUCTION_ORGRIMMAR = 6,
-        AUCTION_BLACKWATER = 7
-    }
+    AUCTION_UNDEFINED = 0,
+    AUCTION_ALLIANCE = 2,
+    AUCTION_HORDE = 6,
+    AUCTION_NEUTRAL = 7,
+    AUCTION_STORMWIND = 1,
+    AUCTION_IRONFORGE = 2,
+    AUCTION_DARNASSYS = 3,
+    AUCTION_UNDERCITY = 4,
+    AUCTION_THUNDER_BLUFF = 5,
+    AUCTION_ORGRIMMAR = 6,
+    AUCTION_BLACKWATER = 7
 }

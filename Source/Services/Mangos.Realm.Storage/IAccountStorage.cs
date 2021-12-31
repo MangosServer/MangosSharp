@@ -20,16 +20,15 @@ using Mangos.Realm.Storage.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mangos.Storage.Account
+namespace Mangos.Storage.Account;
+
+public interface IAccountStorage
 {
-    public interface IAccountStorage
-    {
-        Task<bool> IsBannedAccountAsync(string id);
+    Task<bool> IsBannedAccountAsync(string id);
 
-        Task<AccountInfoEntity> GetAccountInfoAsync(string accountName);
+    Task<AccountInfoEntity> GetAccountInfoAsync(string accountName);
 
-        Task<List<RealmListItemEntitiy>> GetRealmListAsync();
+    Task<List<RealmListItemEntitiy>> GetRealmListAsync();
 
-        Task UpdateAccountAsync(string sessionkey, string last_ip, string last_login, string username);
-    }
+    Task UpdateAccountAsync(string sessionkey, string last_ip, string last_login, string username);
 }

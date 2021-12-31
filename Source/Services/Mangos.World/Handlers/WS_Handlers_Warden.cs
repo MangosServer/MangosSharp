@@ -27,215 +27,215 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Mangos.World.Handlers
+namespace Mangos.World.Handlers;
+
+public class WS_Handlers_Warden
 {
-    public class WS_Handlers_Warden
+    public class WardenData
     {
-        public class WardenData
+        public byte Failed;
+
+        public bool Ready;
+
+        public byte[] KeyOut;
+
+        public byte[] KeyIn;
+
+        public byte[] Seed;
+
+        public byte[] K;
+
+        public byte[] ClientSeed;
+
+        public byte xorByte;
+
+        public WS_Warden.WardenScan Scan;
+
+        public WardenData()
         {
-            public byte Failed;
+            Failed = 0;
+            Ready = false;
+            KeyOut = null;
+            KeyIn = null;
+            Seed = null;
+            K = null;
+            ClientSeed = null;
+            xorByte = 0;
+            Scan = null;
+        }
+    }
 
-            public bool Ready;
+    public class MaievData
+    {
+        public int index;
 
-            public byte[] KeyOut;
+        public byte[] source1;
 
-            public byte[] KeyIn;
+        public byte[] source2;
 
-            public byte[] Seed;
+        public byte[] data;
 
-            public byte[] K;
+        public MaievData(byte[] seed)
+        {
+            index = 0;
+            data = new byte[20];
+            SHA1Managed sha1 = new();
+            source1 = sha1.ComputeHash(seed, 0, 20);
+            source2 = sha1.ComputeHash(seed, 20, 20);
+            Update();
+        }
 
-            public byte[] ClientSeed;
+        public void Update()
+        {
+            var buffer1 = new byte[60];
+            SHA1Managed sha1 = new();
+            Buffer.BlockCopy(source1, 0, buffer1, 0, 20);
+            Buffer.BlockCopy(data, 0, buffer1, 20, 20);
+            Buffer.BlockCopy(source2, 0, buffer1, 40, 20);
+            data = sha1.ComputeHash(buffer1);
+        }
 
-            public byte xorByte;
-
-            public WS_Warden.WardenScan Scan;
-
-            public WardenData()
+        private byte GetByte()
+        {
+            var r = data[index];
+            checked
             {
-                Failed = 0;
-                Ready = false;
-                KeyOut = null;
-                KeyIn = null;
-                Seed = null;
-                K = null;
-                ClientSeed = null;
-                xorByte = 0;
-                Scan = null;
+                index++;
+                if (index >= 20)
+                {
+                    Update();
+                    index = 0;
+                }
+                return r;
             }
         }
 
-        public class MaievData
+        public byte[] GetBytes(int count)
         {
-            public int index;
-
-            public byte[] source1;
-
-            public byte[] source2;
-
-            public byte[] data;
-
-            public MaievData(byte[] seed)
+            checked
             {
-                index = 0;
-                data = new byte[20];
-                SHA1Managed sha1 = new();
-                source1 = sha1.ComputeHash(seed, 0, 20);
-                source2 = sha1.ComputeHash(seed, 20, 20);
-                Update();
-            }
-
-            public void Update()
-            {
-                byte[] buffer1 = new byte[60];
-                SHA1Managed sha1 = new();
-                Buffer.BlockCopy(source1, 0, buffer1, 0, 20);
-                Buffer.BlockCopy(data, 0, buffer1, 20, 20);
-                Buffer.BlockCopy(source2, 0, buffer1, 40, 20);
-                data = sha1.ComputeHash(buffer1);
-            }
-
-            private byte GetByte()
-            {
-                byte r = data[index];
-                checked
+                var b = new byte[count - 1 + 1];
+                var num = count - 1;
+                for (var i = 0; i <= num; i++)
                 {
-                    index++;
-                    if (index >= 20)
-                    {
-                        Update();
-                        index = 0;
-                    }
-                    return r;
+                    b[i] = GetByte();
                 }
+                return b;
             }
+        }
+    }
 
-            public byte[] GetBytes(int count)
+    public class RC4
+    {
+        public static byte[] Init(byte[] @base)
+        {
+            var val = 0;
+            var position = 0;
+            var key = new byte[258];
+            var j = 0;
+            checked
             {
-                checked
+                do
                 {
-                    byte[] b = new byte[count - 1 + 1];
-                    int num = count - 1;
-                    for (int i = 0; i <= num; i++)
-                    {
-                        b[i] = GetByte();
-                    }
-                    return b;
+                    key[j] = (byte)j;
+                    j++;
                 }
+                while (j <= 255);
+                key[256] = 0;
+                key[257] = 0;
+                var i = 1;
+                do
+                {
+                    val = val + key[checked((i * 4) - 4)] + @base[position % @base.Length];
+                    val &= 0xFF;
+                    position++;
+                    var temp = key[(i * 4) - 4];
+                    key[(i * 4) - 4] = key[val & 0xFF];
+                    key[val & 0xFF] = temp;
+                    val = val + key[checked((i * 4) - 3)] + @base[position % @base.Length];
+                    val &= 0xFF;
+                    position++;
+                    temp = key[(i * 4) - 3];
+                    key[(i * 4) - 3] = key[val & 0xFF];
+                    key[val & 0xFF] = temp;
+                    val = val + key[checked((i * 4) - 2)] + @base[position % @base.Length];
+                    val &= 0xFF;
+                    position++;
+                    temp = key[(i * 4) - 2];
+                    key[(i * 4) - 2] = key[val & 0xFF];
+                    key[val & 0xFF] = temp;
+                    val = val + key[checked((i * 4) - 1)] + @base[position % @base.Length];
+                    val &= 0xFF;
+                    position++;
+                    temp = key[(i * 4) - 1];
+                    key[(i * 4) - 1] = key[val & 0xFF];
+                    key[val & 0xFF] = temp;
+                    i++;
+                }
+                while (i <= 64);
+                return key;
             }
         }
 
-        public class RC4
+        public static void Crypt(ref byte[] data, byte[] key)
         {
-            public static byte[] Init(byte[] @base)
+            checked
             {
-                int val = 0;
-                int position = 0;
-                byte[] key = new byte[258];
-                int j = 0;
-                checked
+                var num = data.Length - 1;
+                for (var i = 0; i <= num; i++)
                 {
-                    do
+                    key[256] = (byte)((key[256] + 1) & 0xFF);
+                    key[257] = (byte)((key[257] + key[key[256]]) & 0xFF);
+                    var temp = key[key[257] & 0xFF];
+                    key[key[257]] = key[key[256]];
+                    key[key[256]] = temp;
+                    unchecked
                     {
-                        key[j] = (byte)j;
-                        j++;
-                    }
-                    while (j <= 255);
-                    key[256] = 0;
-                    key[257] = 0;
-                    int i = 1;
-                    do
-                    {
-                        val = val + key[checked((i * 4) - 4)] + @base[position % @base.Length];
-                        val &= 0xFF;
-                        position++;
-                        byte temp = key[(i * 4) - 4];
-                        key[(i * 4) - 4] = key[val & 0xFF];
-                        key[val & 0xFF] = temp;
-                        val = val + key[checked((i * 4) - 3)] + @base[position % @base.Length];
-                        val &= 0xFF;
-                        position++;
-                        temp = key[(i * 4) - 3];
-                        key[(i * 4) - 3] = key[val & 0xFF];
-                        key[val & 0xFF] = temp;
-                        val = val + key[checked((i * 4) - 2)] + @base[position % @base.Length];
-                        val &= 0xFF;
-                        position++;
-                        temp = key[(i * 4) - 2];
-                        key[(i * 4) - 2] = key[val & 0xFF];
-                        key[val & 0xFF] = temp;
-                        val = val + key[checked((i * 4) - 1)] + @base[position % @base.Length];
-                        val &= 0xFF;
-                        position++;
-                        temp = key[(i * 4) - 1];
-                        key[(i * 4) - 1] = key[val & 0xFF];
-                        key[val & 0xFF] = temp;
-                        i++;
-                    }
-                    while (i <= 64);
-                    return key;
-                }
-            }
-
-            public static void Crypt(ref byte[] data, byte[] key)
-            {
-                checked
-                {
-                    int num = data.Length - 1;
-                    for (int i = 0; i <= num; i++)
-                    {
-                        key[256] = (byte)((key[256] + 1) & 0xFF);
-                        key[257] = (byte)((key[257] + key[key[256]]) & 0xFF);
-                        byte temp = key[key[257] & 0xFF];
-                        key[key[257]] = key[key[256]];
-                        key[key[256]] = temp;
-                        unchecked
-                        {
-                            data[i] = (byte)(data[i] ^ key[checked(key[key[257]] + key[key[256]]) & 0xFF]);
-                        }
+                        data[i] = (byte)(data[i] ^ key[checked(key[key[257]] + key[key[256]]) & 0xFF]);
                     }
                 }
             }
         }
+    }
 
-        private readonly int OutKeyAdr;
+    private readonly int OutKeyAdr;
 
-        private readonly int InKeyAdr;
+    private readonly int InKeyAdr;
 
-        public void On_CMSG_WARDEN_DATA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    public void On_CMSG_WARDEN_DATA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        var b = new byte[checked(packet.Data.Length - 6 - 1 + 1)];
+        Buffer.BlockCopy(packet.Data, 6, b, 0, b.Length);
+        RC4.Crypt(ref b, client.Character.WardenData.KeyOut);
+        Buffer.BlockCopy(b, 0, packet.Data, 6, b.Length);
+        packet.GetInt16();
+        MaievResponse Response = (MaievResponse)packet.GetInt8();
+        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_WARDEN_DATA [{2}]", client.IP, client.Port, Response);
+        if (!client.Character.WardenData.Ready)
         {
-            byte[] b = new byte[checked(packet.Data.Length - 6 - 1 + 1)];
-            Buffer.BlockCopy(packet.Data, 6, b, 0, b.Length);
-            RC4.Crypt(ref b, client.Character.WardenData.KeyOut);
-            Buffer.BlockCopy(b, 0, packet.Data, 6, b.Length);
-            packet.GetInt16();
-            MaievResponse Response = (MaievResponse)packet.GetInt8();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_WARDEN_DATA [{2}]", client.IP, client.Port, Response);
-            if (!client.Character.WardenData.Ready)
-            {
-                return;
-            }
-            switch (Response)
-            {
-                case MaievResponse.MAIEV_RESPONSE_FAILED_OR_MISSING:
-                    MaievSendTransfer(ref client.Character);
-                    break;
+            return;
+        }
+        switch (Response)
+        {
+            case MaievResponse.MAIEV_RESPONSE_FAILED_OR_MISSING:
+                MaievSendTransfer(ref client.Character);
+                break;
 
-                case MaievResponse.MAIEV_RESPONSE_SUCCESS:
-                    MaievSendSeed(ref client.Character);
-                    break;
+            case MaievResponse.MAIEV_RESPONSE_SUCCESS:
+                MaievSendSeed(ref client.Character);
+                break;
 
-                case MaievResponse.MAIEV_RESPONSE_RESULT:
-                    MaievResult(ref client.Character, ref packet);
-                    break;
+            case MaievResponse.MAIEV_RESPONSE_RESULT:
+                MaievResult(ref client.Character, ref packet);
+                break;
 
-                case MaievResponse.MAIEV_RESPONSE_HASH:
+            case MaievResponse.MAIEV_RESPONSE_HASH:
+                {
+                    var hash = new byte[20];
+                    Buffer.BlockCopy(packet.Data, packet.Offset, hash, 0, 20);
+                    WorldServiceLocator._WS_Warden.Maiev.GenerateNewRC4Keys(client.Character.WardenData.K);
+                    var PacketData = new byte[17]
                     {
-                        byte[] hash = new byte[20];
-                        Buffer.BlockCopy(packet.Data, packet.Offset, hash, 0, 20);
-                        WorldServiceLocator._WS_Warden.Maiev.GenerateNewRC4Keys(client.Character.WardenData.K);
-                        byte[] PacketData = new byte[17]
-                        {
                     5,
                     0,
                     0,
@@ -253,125 +253,125 @@ namespace Mangos.World.Handlers
                     0,
                     0,
                     0
-                        };
-                        Buffer.BlockCopy(client.Character.WardenData.Seed, 0, PacketData, 1, 16);
-                        int HandledBytes = WorldServiceLocator._WS_Warden.Maiev.HandlePacket(PacketData);
-                        if (HandledBytes <= 0)
-                        {
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to handle 0x05 packet.");
-                            break;
-                        }
-                        byte[] thePacket = WorldServiceLocator._WS_Warden.Maiev.ReadPacket();
-                        byte[] ourHash = new byte[20];
-                        Array.Copy(thePacket, 1, ourHash, 0, ourHash.Length);
-                        WorldServiceLocator._WS_Warden.Maiev.ReadXorByte(ref client.Character);
-                        WorldServiceLocator._WS_Warden.Maiev.ReadKeys(ref client.Character);
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[WARDEN] XorByte: {0}", client.Character.WardenData.xorByte);
-                        bool HashCorrect = true;
-                        int i = 0;
-                        do
-                        {
-                            if (hash[i] != ourHash[i])
-                            {
-                                HashCorrect = false;
-                                break;
-                            }
-                            i = checked(i + 1);
-                        }
-                        while (i <= 19);
-                        if (!HashCorrect)
-                        {
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Hashes in packet 0x05 didn't match. Cheater?");
-                        }
+                    };
+                    Buffer.BlockCopy(client.Character.WardenData.Seed, 0, PacketData, 1, 16);
+                    var HandledBytes = WorldServiceLocator._WS_Warden.Maiev.HandlePacket(PacketData);
+                    if (HandledBytes <= 0)
+                    {
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to handle 0x05 packet.");
                         break;
                     }
-                case (MaievResponse)3:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void MaievInit(ref WS_PlayerData.CharacterObject objCharacter)
-        {
-            byte[] i = WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientGetCryptKey(objCharacter.client.Index);
-            MaievData j = new(i);
-            byte[] seedOut = j.GetBytes(16);
-            byte[] seedIn = j.GetBytes(16);
-            objCharacter.WardenData.KeyOut = RC4.Init(seedOut);
-            objCharacter.WardenData.KeyIn = RC4.Init(seedIn);
-            objCharacter.WardenData.Ready = true;
-            objCharacter.WardenData.Scan = new WS_Warden.WardenScan(ref objCharacter);
-            objCharacter.WardenData.xorByte = 0;
-            objCharacter.WardenData.K = i;
-            WorldServiceLocator._Functions.RAND_bytes(ref objCharacter.WardenData.Seed, 16);
-            MaievSendModule(ref objCharacter);
-        }
-
-        public void MaievSendModule(ref WS_PlayerData.CharacterObject objCharacter)
-        {
-            if (!objCharacter.WardenData.Ready)
-            {
-                throw new ApplicationException("Maiev.mod not ready!");
-            }
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [{2}]", objCharacter.client.IP, objCharacter.client.Port, WorldServiceLocator._WS_Warden.Maiev.ModuleName);
-            Packets.PacketClass r = new(Opcodes.SMSG_WARDEN_DATA);
-            r.AddInt8(0);
-            r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.WardenModule);
-            r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.ModuleKey);
-            r.AddUInt32(checked((uint)WorldServiceLocator._WS_Warden.Maiev.ModuleSize));
-            WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
-        }
-
-        public void MaievSendTransfer(ref WS_PlayerData.CharacterObject objCharacter)
-        {
-            if (!objCharacter.WardenData.Ready)
-            {
-                throw new ApplicationException("Maiev.mod not ready!");
-            }
-            FileStream file = new($"warden\\{WorldServiceLocator._WS_Warden.Maiev.ModuleName}.bin", FileMode.Open, FileAccess.Read);
-            checked
-            {
-                int size;
-                for (size = (int)file.Length; size > 500; size -= 500)
-                {
-                    Packets.PacketClass r = new(Opcodes.SMSG_WARDEN_DATA);
-                    r.AddInt8(1);
-                    r.AddInt16(500);
-                    int i = 1;
+                    var thePacket = WorldServiceLocator._WS_Warden.Maiev.ReadPacket();
+                    var ourHash = new byte[20];
+                    Array.Copy(thePacket, 1, ourHash, 0, ourHash.Length);
+                    WorldServiceLocator._WS_Warden.Maiev.ReadXorByte(ref client.Character);
+                    WorldServiceLocator._WS_Warden.Maiev.ReadKeys(ref client.Character);
+                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[WARDEN] XorByte: {0}", client.Character.WardenData.xorByte);
+                    var HashCorrect = true;
+                    var i = 0;
                     do
                     {
-                        r.AddInt8((byte)file.ReadByte());
-                        i++;
+                        if (hash[i] != ourHash[i])
+                        {
+                            HashCorrect = false;
+                            break;
+                        }
+                        i = checked(i + 1);
                     }
-                    while (i <= 500);
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [data]", objCharacter.client.IP, objCharacter.client.Port);
-                    WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
-                }
-                if (size > 0)
-                {
-                    Packets.PacketClass r2 = new(Opcodes.SMSG_WARDEN_DATA);
-                    r2.AddInt8(1);
-                    r2.AddUInt16((ushort)size);
-                    int num = size;
-                    for (int j = 1; j <= num; j++)
+                    while (i <= 19);
+                    if (!HashCorrect)
                     {
-                        r2.AddInt8((byte)file.ReadByte());
+                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Hashes in packet 0x05 didn't match. Cheater?");
                     }
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [done]", objCharacter.client.IP, objCharacter.client.Port);
-                    WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r2);
+                    break;
                 }
+            case (MaievResponse)3:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void MaievInit(ref WS_PlayerData.CharacterObject objCharacter)
+    {
+        var i = WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientGetCryptKey(objCharacter.client.Index);
+        MaievData j = new(i);
+        var seedOut = j.GetBytes(16);
+        var seedIn = j.GetBytes(16);
+        objCharacter.WardenData.KeyOut = RC4.Init(seedOut);
+        objCharacter.WardenData.KeyIn = RC4.Init(seedIn);
+        objCharacter.WardenData.Ready = true;
+        objCharacter.WardenData.Scan = new WS_Warden.WardenScan(ref objCharacter);
+        objCharacter.WardenData.xorByte = 0;
+        objCharacter.WardenData.K = i;
+        WorldServiceLocator._Functions.RAND_bytes(ref objCharacter.WardenData.Seed, 16);
+        MaievSendModule(ref objCharacter);
+    }
+
+    public void MaievSendModule(ref WS_PlayerData.CharacterObject objCharacter)
+    {
+        if (!objCharacter.WardenData.Ready)
+        {
+            throw new ApplicationException("Maiev.mod not ready!");
+        }
+        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [{2}]", objCharacter.client.IP, objCharacter.client.Port, WorldServiceLocator._WS_Warden.Maiev.ModuleName);
+        Packets.PacketClass r = new(Opcodes.SMSG_WARDEN_DATA);
+        r.AddInt8(0);
+        r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.WardenModule);
+        r.AddByteArray(WorldServiceLocator._WS_Warden.Maiev.ModuleKey);
+        r.AddUInt32(checked((uint)WorldServiceLocator._WS_Warden.Maiev.ModuleSize));
+        WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
+    }
+
+    public void MaievSendTransfer(ref WS_PlayerData.CharacterObject objCharacter)
+    {
+        if (!objCharacter.WardenData.Ready)
+        {
+            throw new ApplicationException("Maiev.mod not ready!");
+        }
+        FileStream file = new($"warden\\{WorldServiceLocator._WS_Warden.Maiev.ModuleName}.bin", FileMode.Open, FileAccess.Read);
+        checked
+        {
+            int size;
+            for (size = (int)file.Length; size > 500; size -= 500)
+            {
+                Packets.PacketClass r = new(Opcodes.SMSG_WARDEN_DATA);
+                r.AddInt8(1);
+                r.AddInt16(500);
+                var i = 1;
+                do
+                {
+                    r.AddInt8((byte)file.ReadByte());
+                    i++;
+                }
+                while (i <= 500);
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [data]", objCharacter.client.IP, objCharacter.client.Port);
+                WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
+            }
+            if (size > 0)
+            {
+                Packets.PacketClass r2 = new(Opcodes.SMSG_WARDEN_DATA);
+                r2.AddInt8(1);
+                r2.AddUInt16((ushort)size);
+                var num = size;
+                for (var j = 1; j <= num; j++)
+                {
+                    r2.AddInt8((byte)file.ReadByte());
+                }
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_WARDEN_DATA [done]", objCharacter.client.IP, objCharacter.client.Port);
+                WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r2);
             }
         }
+    }
 
-        public void MaievSendUnk(ref WS_PlayerData.CharacterObject objCharacter)
+    public void MaievSendUnk(ref WS_PlayerData.CharacterObject objCharacter)
+    {
+        Packets.PacketClass unk = new(Opcodes.SMSG_WARDEN_DATA);
+        try
         {
-            Packets.PacketClass unk = new(Opcodes.SMSG_WARDEN_DATA);
-            try
+            unk.AddInt8(3);
+            unk.AddByteArray(new byte[56]
             {
-                unk.AddInt8(3);
-                unk.AddByteArray(new byte[56]
-                {
                     20,
                     0,
                     96,
@@ -428,93 +428,92 @@ namespace Mangos.World.Handlers
                     69,
                     0,
                     1
-                });
-                WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref unk);
-            }
-            finally
-            {
-                unk.Dispose();
-            }
+            });
+            WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref unk);
         }
-
-        public void MaievSendCheck(ref WS_PlayerData.CharacterObject objCharacter)
+        finally
         {
-            if (!objCharacter.WardenData.Ready)
-            {
-                throw new ApplicationException("Maiev.mod not ready!");
-            }
-            objCharacter.WardenData.Scan.Do_TIMING_CHECK();
-            Packets.PacketClass packet = objCharacter.WardenData.Scan.GetPacket();
-            try
-            {
-                WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref packet);
-            }
-            finally
-            {
-                packet.Dispose();
-            }
+            unk.Dispose();
         }
+    }
 
-        public void MaievSendSeed(ref WS_PlayerData.CharacterObject objCharacter)
+    public void MaievSendCheck(ref WS_PlayerData.CharacterObject objCharacter)
+    {
+        if (!objCharacter.WardenData.Ready)
         {
-            Packets.PacketClass r = new(Opcodes.SMSG_WARDEN_DATA);
-            r.AddInt8(5);
-            r.AddByteArray(objCharacter.WardenData.Seed);
-            WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
+            throw new ApplicationException("Maiev.mod not ready!");
         }
-
-        public void MaievResult(ref WS_PlayerData.CharacterObject objCharacter, ref Packets.PacketClass Packet)
+        objCharacter.WardenData.Scan.Do_TIMING_CHECK();
+        var packet = objCharacter.WardenData.Scan.GetPacket();
+        try
         {
-            ushort bufLen = Packet.GetUInt16();
-            uint checkSum = Packet.GetUInt32();
-            int tmpOffset = Packet.Offset;
-            byte[] data = Packet.GetByteArray();
-            Packet.Offset = tmpOffset;
-            if (!ControlChecksum(checkSum, data))
-            {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed checkSum at result packet. Cheater?");
-                objCharacter.CommandResponse("[WARDEN] Pack your bags cheater, you're going!");
-                return;
-            }
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[WARDEN] Result bufLen:{0} checkSum:{1:X}", bufLen, checkSum);
-            objCharacter.WardenData.Scan.HandleResponse(ref Packet);
+            WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref packet);
         }
-
-        public bool ControlChecksum(uint checkSum, byte[] data)
+        finally
         {
-            SHA1Managed sha1 = new();
-            byte[] hash = sha1.ComputeHash(data);
-            uint[] ints = new uint[5];
-            int i = 0;
-            checked
-            {
-                do
-                {
-                    ints[i] = BitConverter.ToUInt32(hash, i * 4);
-                    i++;
-                }
-                while (i <= 4);
-                uint ourCheckSum = ints[0] ^ ints[1] ^ ints[2] ^ ints[3] ^ ints[4];
-                return checkSum == ourCheckSum;
-            }
+            packet.Dispose();
         }
+    }
 
-        private byte[] FixWardenSHA(byte[] hash)
+    public void MaievSendSeed(ref WS_PlayerData.CharacterObject objCharacter)
+    {
+        Packets.PacketClass r = new(Opcodes.SMSG_WARDEN_DATA);
+        r.AddInt8(5);
+        r.AddByteArray(objCharacter.WardenData.Seed);
+        WorldServiceLocator._WS_Warden.SendWardenPacket(ref objCharacter, ref r);
+    }
+
+    public void MaievResult(ref WS_PlayerData.CharacterObject objCharacter, ref Packets.PacketClass Packet)
+    {
+        var bufLen = Packet.GetUInt16();
+        var checkSum = Packet.GetUInt32();
+        var tmpOffset = Packet.Offset;
+        var data = Packet.GetByteArray();
+        Packet.Offset = tmpOffset;
+        if (!ControlChecksum(checkSum, data))
         {
-            checked
+            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed checkSum at result packet. Cheater?");
+            objCharacter.CommandResponse("[WARDEN] Pack your bags cheater, you're going!");
+            return;
+        }
+        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[WARDEN] Result bufLen:{0} checkSum:{1:X}", bufLen, checkSum);
+        objCharacter.WardenData.Scan.HandleResponse(ref Packet);
+    }
+
+    public bool ControlChecksum(uint checkSum, byte[] data)
+    {
+        SHA1Managed sha1 = new();
+        var hash = sha1.ComputeHash(data);
+        var ints = new uint[5];
+        var i = 0;
+        checked
+        {
+            do
             {
-                int num = hash.Length - 1;
-                for (int i = 0; i <= num; i += 4)
-                {
-                    byte tmp = hash[i + 3];
-                    hash[i + 3] = hash[i];
-                    hash[i] = tmp;
-                    tmp = hash[i + 2];
-                    hash[i + 2] = hash[i + 1];
-                    hash[i + 1] = tmp;
-                }
-                return hash;
+                ints[i] = BitConverter.ToUInt32(hash, i * 4);
+                i++;
             }
+            while (i <= 4);
+            var ourCheckSum = ints[0] ^ ints[1] ^ ints[2] ^ ints[3] ^ ints[4];
+            return checkSum == ourCheckSum;
+        }
+    }
+
+    private byte[] FixWardenSHA(byte[] hash)
+    {
+        checked
+        {
+            var num = hash.Length - 1;
+            for (var i = 0; i <= num; i += 4)
+            {
+                var tmp = hash[i + 3];
+                hash[i + 3] = hash[i];
+                hash[i] = tmp;
+                tmp = hash[i + 2];
+                hash[i + 2] = hash[i + 1];
+                hash[i + 1] = tmp;
+            }
+            return hash;
         }
     }
 }

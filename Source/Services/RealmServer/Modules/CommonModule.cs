@@ -19,13 +19,12 @@
 using Autofac;
 using Mangos.Common.Globals;
 
-namespace RealmServer.Modules
+namespace RealmServer.Modules;
+
+public class CommonModule : Module
 {
-    public class CommonModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
-        }
+        builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
     }
 }

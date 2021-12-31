@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Spell
+namespace Mangos.Common.Enums.Spell;
+
+internal enum SpellFailure : byte
 {
-    internal enum SpellFailure : byte
-    {
-        SELL_ERR_CANT_FIND_ITEM = 1,
-        SELL_ERR_CANT_SELL_ITEM = 2,
-        SELL_ERR_CANT_FIND_VENDOR = 3
-    }
+    SELL_ERR_CANT_FIND_ITEM = 1,
+    SELL_ERR_CANT_SELL_ITEM = 2,
+    SELL_ERR_CANT_FIND_VENDOR = 3
 }

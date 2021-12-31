@@ -23,42 +23,41 @@ using Mangos.Network.Tcp;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace Mangos.Cluster.Network
+namespace Mangos.Cluster.Network;
+
+public class ClusterTcpClientFactory : ITcpClientFactory
 {
-    public class ClusterTcpClientFactory : ITcpClientFactory
+    private readonly ClusterServiceLocator _clusterServiceLocator;
+    private readonly ILogger logger;
+    private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
+
+    public ClusterTcpClientFactory(
+        ClusterServiceLocator clusterServiceLocator,
+        ILogger logger,
+        IConfigurationProvider<ClusterConfiguration> configurationProvider)
     {
-        private readonly ClusterServiceLocator _clusterServiceLocator;
-        private readonly ILogger logger;
-        private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
+        _clusterServiceLocator = clusterServiceLocator;
+        this.logger = logger;
+        this.configurationProvider = configurationProvider;
+    }
 
-        public ClusterTcpClientFactory(
-            ClusterServiceLocator clusterServiceLocator,
-            ILogger logger,
-            IConfigurationProvider<ClusterConfiguration> configurationProvider)
-        {
-            _clusterServiceLocator = clusterServiceLocator;
-            this.logger = logger;
-            this.configurationProvider = configurationProvider;
-        }
+    public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
+    {
+        Client client = new();
 
-        public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
-        {
-            Client client = new();
+        ClientClass clientClass = new(
+            client,
+            clientSocket,
+            _clusterServiceLocator,
+            configurationProvider);
 
-            ClientClass clientClass = new(
-                client,
-                clientSocket,
-                _clusterServiceLocator,
-                configurationProvider);
+        await clientClass.OnConnectAsync();
 
-            await clientClass.OnConnectAsync();
+        ClusterTcpClient clusterTcpClient = new(
+            logger,
+            client,
+            clientClass);
 
-            ClusterTcpClient clusterTcpClient = new(
-                logger,
-                client,
-                clientClass);
-
-            return clusterTcpClient;
-        }
+        return clusterTcpClient;
     }
 }

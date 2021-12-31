@@ -16,17 +16,16 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum AIState
 {
-    public enum AIState
-    {
-        AI_DO_NOTHING,
-        AI_DEAD,
-        AI_MOVING_TO_SPAWN,
-        AI_ATTACKING,
-        AI_MOVE_FOR_ATTACK,
-        AI_MOVING,
-        AI_WANDERING,
-        AI_RESPAWN
-    }
+    AI_DO_NOTHING,
+    AI_DEAD,
+    AI_MOVING_TO_SPAWN,
+    AI_ATTACKING,
+    AI_MOVE_FOR_ATTACK,
+    AI_MOVING,
+    AI_WANDERING,
+    AI_RESPAWN
 }

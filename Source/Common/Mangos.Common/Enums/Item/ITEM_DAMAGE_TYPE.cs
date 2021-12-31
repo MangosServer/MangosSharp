@@ -16,18 +16,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Item
-{
-    public enum ITEM_DAMAGE_TYPE : byte
-    {
-        NORMAL_DAMAGE = 0,
-        HOLY_DAMAGE = 1,
-        FIRE_DAMAGE = 2,
-        NATURE_DAMAGE = 3,
-        FROST_DAMAGE = 4,
-        SHADOW_DAMAGE = 5,
-        ARCANE_DAMAGE = 6
-    }
+namespace Mangos.Common.Enums.Item;
 
-    // Got them from ItemSubClass.dbc
+public enum ITEM_DAMAGE_TYPE : byte
+{
+    NORMAL_DAMAGE = 0,
+    HOLY_DAMAGE = 1,
+    FIRE_DAMAGE = 2,
+    NATURE_DAMAGE = 3,
+    FROST_DAMAGE = 4,
+    SHADOW_DAMAGE = 5,
+    ARCANE_DAMAGE = 6
 }

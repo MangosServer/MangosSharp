@@ -16,14 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Social
+namespace Mangos.Common.Enums.Social;
+
+public enum FriendStatus : byte
 {
-    public enum FriendStatus : byte
-    {
-        FRIEND_STATUS_OFFLINE = 0,
-        FRIEND_STATUS_ONLINE = 1,
-        FRIEND_STATUS_AFK = 2,
-        FRIEND_STATUS_UNK3 = 3,
-        FRIEND_STATUS_DND = 4
-    }
+    FRIEND_STATUS_OFFLINE = 0,
+    FRIEND_STATUS_ONLINE = 1,
+    FRIEND_STATUS_AFK = 2,
+    FRIEND_STATUS_UNK3 = 3,
+    FRIEND_STATUS_DND = 4
 }

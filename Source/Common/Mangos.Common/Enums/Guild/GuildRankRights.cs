@@ -16,26 +16,22 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Guild
-{
-    public enum GuildRankRights
-    {
-        GR_RIGHT_EMPTY = 0x40,
-        GR_RIGHT_GCHATLISTEN = 0x41,
-        GR_RIGHT_GCHATSPEAK = 0x42,
-        GR_RIGHT_OFFCHATLISTEN = 0x44,
-        GR_RIGHT_OFFCHATSPEAK = 0x48,
-        GR_RIGHT_PROMOTE = 0xC0,
-        GR_RIGHT_DEMOTE = 0x140,
-        GR_RIGHT_INVITE = 0x50,
-        GR_RIGHT_REMOVE = 0x60,
-        GR_RIGHT_SETMOTD = 0x1040,
-        GR_RIGHT_EPNOTE = 0x2040,
-        GR_RIGHT_VIEWOFFNOTE = 0x4040,
-        GR_RIGHT_EOFFNOTE = 0x8040,
-        GR_RIGHT_ALL = 0xF1FF
-    }
+namespace Mangos.Common.Enums.Guild;
 
-    // Default Guild Ranks
-    // TODO: Set the ranks during guild creation
+public enum GuildRankRights
+{
+    GR_RIGHT_EMPTY = 0x40,
+    GR_RIGHT_GCHATLISTEN = 0x41,
+    GR_RIGHT_GCHATSPEAK = 0x42,
+    GR_RIGHT_OFFCHATLISTEN = 0x44,
+    GR_RIGHT_OFFCHATSPEAK = 0x48,
+    GR_RIGHT_PROMOTE = 0xC0,
+    GR_RIGHT_DEMOTE = 0x140,
+    GR_RIGHT_INVITE = 0x50,
+    GR_RIGHT_REMOVE = 0x60,
+    GR_RIGHT_SETMOTD = 0x1040,
+    GR_RIGHT_EPNOTE = 0x2040,
+    GR_RIGHT_VIEWOFFNOTE = 0x4040,
+    GR_RIGHT_EOFFNOTE = 0x8040,
+    GR_RIGHT_ALL = 0xF1FF
 }

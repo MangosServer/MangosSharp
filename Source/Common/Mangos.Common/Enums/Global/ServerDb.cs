@@ -16,16 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
-{
-    public enum ServerDb : byte
-    {
-        None = 0,
-        Realm = 1,
-        Character = 2,
-        World = 3
-    }
+namespace Mangos.Common.Enums.Global;
 
-    // indexes of BattlemasterList.dbc
-    // This did not exist in Vanilla, Revisit in future!
+public enum ServerDb : byte
+{
+    None = 0,
+    Realm = 1,
+    Character = 2,
+    World = 3
 }

@@ -16,15 +16,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum EnvironmentalDamage
 {
-    public enum EnvironmentalDamage
-    {
-        DAMAGE_EXHAUSTED = 0,
-        DAMAGE_DROWNING = 1,
-        DAMAGE_FALL = 2,
-        DAMAGE_LAVA = 3,
-        DAMAGE_SLIME = 4,
-        DAMAGE_FIRE = 5
-    }
+    DAMAGE_EXHAUSTED = 0,
+    DAMAGE_DROWNING = 1,
+    DAMAGE_FALL = 2,
+    DAMAGE_LAVA = 3,
+    DAMAGE_SLIME = 4,
+    DAMAGE_FIRE = 5
 }

@@ -25,78 +25,77 @@ using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
 
-namespace Mangos.World.Loots
+namespace Mangos.World.Loots;
+
+public partial class WS_Loot
 {
-    public partial class WS_Loot
+    public class LootStore
     {
-        public class LootStore
+        private readonly string Name;
+
+        private readonly Dictionary<int, LootTemplate> Templates;
+
+        public LootStore(string Name)
         {
-            private readonly string Name;
+            Templates = new Dictionary<int, LootTemplate>();
+            this.Name = Name;
+        }
 
-            private readonly Dictionary<int, LootTemplate> Templates;
+        public LootTemplate GetLoot(int Entry)
+        {
+            return Templates.ContainsKey(Entry) ? Templates[Entry] : CreateTemplate(Entry);
+        }
 
-            public LootStore(string Name)
+        private LootTemplate CreateTemplate(int Entry)
+        {
+            LootTemplate newTemplate = new();
+            Templates.Add(Entry, newTemplate);
+            DataTable MysqlQuery = new();
+            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT {0}.*,conditions.type,conditions.value1, conditions.value2 FROM {0} LEFT JOIN conditions ON {0}.`condition_id`=conditions.`condition_entry` WHERE entry = {1};", Name, Entry), ref MysqlQuery);
+            if (MysqlQuery.Rows.Count == 0)
             {
-                Templates = new Dictionary<int, LootTemplate>();
-                this.Name = Name;
+                Templates[Entry] = null;
+                return null;
             }
-
-            public LootTemplate GetLoot(int Entry)
+            IEnumerator enumerator = default;
+            try
             {
-                return Templates.ContainsKey(Entry) ? Templates[Entry] : CreateTemplate(Entry);
-            }
-
-            private LootTemplate CreateTemplate(int Entry)
-            {
-                LootTemplate newTemplate = new();
-                Templates.Add(Entry, newTemplate);
-                DataTable MysqlQuery = new();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT {0}.*,conditions.type,conditions.value1, conditions.value2 FROM {0} LEFT JOIN conditions ON {0}.`condition_id`=conditions.`condition_entry` WHERE entry = {1};", Name, Entry), ref MysqlQuery);
-                if (MysqlQuery.Rows.Count == 0)
+                enumerator = MysqlQuery.Rows.GetEnumerator();
+                while (enumerator.MoveNext())
                 {
-                    Templates[Entry] = null;
-                    return null;
-                }
-                IEnumerator enumerator = default;
-                try
-                {
-                    enumerator = MysqlQuery.Rows.GetEnumerator();
-                    while (enumerator.MoveNext())
+                    DataRow row = (DataRow)enumerator.Current;
+                    var Item = row.As<int>("item");
+                    var ChanceOrQuestChance = row.As<float>("ChanceOrQuestChance");
+                    var GroupID = row.As<byte>("groupid");
+                    var MinCountOrRef = row.As<int>("mincountOrRef");
+                    var MaxCount = row.As<byte>("maxcount");
+                    var LootCondition = ConditionType.CONDITION_NONE;
+                    if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(row["type"])))
                     {
-                        DataRow row = (DataRow)enumerator.Current;
-                        int Item = row.As<int>("item");
-                        float ChanceOrQuestChance = row.As<float>("ChanceOrQuestChance");
-                        byte GroupID = row.As<byte>("groupid");
-                        int MinCountOrRef = row.As<int>("mincountOrRef");
-                        byte MaxCount = row.As<byte>("maxcount");
-                        ConditionType LootCondition = ConditionType.CONDITION_NONE;
-                        if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(row["type"])))
-                        {
-                            LootCondition = (ConditionType)row.As<int>("type");
-                        }
-                        int ConditionValue1 = 0;
-                        if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(row["value1"])))
-                        {
-                            ConditionValue1 = row.As<int>("value1");
-                        }
-                        int ConditionValue2 = 0;
-                        if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(row["value2"])))
-                        {
-                            ConditionValue2 = row.As<int>("value2");
-                        }
-                        LootStoreItem newItem = new(Item, Math.Abs(ChanceOrQuestChance), GroupID, MinCountOrRef, MaxCount, LootCondition, ConditionValue1, ConditionValue2, ChanceOrQuestChance < 0f);
-                        newTemplate.AddItem(ref newItem);
+                        LootCondition = (ConditionType)row.As<int>("type");
                     }
-                }
-                finally
-                {
-                    if (enumerator is IDisposable)
+                    var ConditionValue1 = 0;
+                    if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(row["value1"])))
                     {
-                        (enumerator as IDisposable).Dispose();
+                        ConditionValue1 = row.As<int>("value1");
                     }
+                    var ConditionValue2 = 0;
+                    if (!Information.IsDBNull(RuntimeHelpers.GetObjectValue(row["value2"])))
+                    {
+                        ConditionValue2 = row.As<int>("value2");
+                    }
+                    LootStoreItem newItem = new(Item, Math.Abs(ChanceOrQuestChance), GroupID, MinCountOrRef, MaxCount, LootCondition, ConditionValue1, ConditionValue2, ChanceOrQuestChance < 0f);
+                    newTemplate.AddItem(ref newItem);
                 }
-                return newTemplate;
             }
+            finally
+            {
+                if (enumerator is IDisposable)
+                {
+                    (enumerator as IDisposable).Dispose();
+                }
+            }
+            return newTemplate;
         }
     }
 }

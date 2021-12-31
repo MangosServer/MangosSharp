@@ -23,110 +23,109 @@ using Mangos.World.Objects;
 using System;
 
 // AI TODO: Implement a workaround (Or fix, fixes work too!) for Armageddon.
-namespace Mangos.World.Scripts.Creatures
+namespace Mangos.World.Scripts.Creatures;
+
+public class CreatureAI_Baron_Geddon : WS_Creatures_AI.BossAI
 {
-    public class CreatureAI_Baron_Geddon : WS_Creatures_AI.BossAI
+    private const int AI_UPDATE = 1000;
+    private const int Inferno_CD = 45000;
+    private const int Ignite_CD = 30000;
+    private const int Living_Bomb_CD = 35000;
+    private const int Spell_Inferno = 19695;
+    private const int Spell_Ignite = 19659; // Drains a random targets mana.
+    private const int Spell_Living_Bomb = 20475;
+    private const int Spell_Armageddon = 20478; // Cast at 2% to make self invincible, this spell won't work so we'll make a workaround.
+    public int NextWaypoint;
+    public int CurrentWaypoint;
+    public int NextInferno;
+    public int NextIgnite;
+    public int NextLivingBomb;
+
+    public CreatureAI_Baron_Geddon(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
     {
-        private const int AI_UPDATE = 1000;
-        private const int Inferno_CD = 45000;
-        private const int Ignite_CD = 30000;
-        private const int Living_Bomb_CD = 35000;
-        private const int Spell_Inferno = 19695;
-        private const int Spell_Ignite = 19659; // Drains a random targets mana.
-        private const int Spell_Living_Bomb = 20475;
-        private const int Spell_Armageddon = 20478; // Cast at 2% to make self invincible, this spell won't work so we'll make a workaround.
-        public int NextWaypoint;
-        public int CurrentWaypoint;
-        public int NextInferno;
-        public int NextIgnite;
-        public int NextLivingBomb;
+        AllowedMove = false;
+        Creature.Flying = false;
+        Creature.VisibleDistance = 700f;
+    }
 
-        public CreatureAI_Baron_Geddon(ref WS_Creatures.CreatureObject Creature) : base(ref Creature)
+    public override void OnThink()
+    {
+        NextInferno -= AI_UPDATE;
+        NextIgnite -= AI_UPDATE;
+        NextLivingBomb -= AI_UPDATE;
+        if (NextInferno <= 0)
         {
-            AllowedMove = false;
-            Creature.Flying = false;
-            Creature.VisibleDistance = 700f;
+            NextInferno = Inferno_CD;
+            aiCreature.CastSpell(Spell_Inferno, aiTarget);
         }
 
-        public override void OnThink()
+        if (NextIgnite <= 0)
         {
-            NextInferno -= AI_UPDATE;
-            NextIgnite -= AI_UPDATE;
-            NextLivingBomb -= AI_UPDATE;
-            if (NextInferno <= 0)
-            {
-                NextInferno = Inferno_CD;
-                aiCreature.CastSpell(Spell_Inferno, aiTarget);
-            }
-
-            if (NextIgnite <= 0)
-            {
-                NextIgnite = Ignite_CD;
-                aiCreature.CastSpell(Spell_Ignite, aiCreature.GetRandomTarget());
-            }
-
-            if (NextLivingBomb <= 0)
-            {
-                NextLivingBomb = Living_Bomb_CD;
-                aiCreature.CastSpell(Spell_Living_Bomb, aiCreature.GetRandomTarget());
-            }
+            NextIgnite = Ignite_CD;
+            aiCreature.CastSpell(Spell_Ignite, aiCreature.GetRandomTarget());
         }
 
-        public void CastInferno()
+        if (NextLivingBomb <= 0)
         {
-            for (int i = 0; i <= 3; i++)
-            {
-                WS_Base.BaseUnit Target = aiTarget;
-                if (Target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(Spell_Inferno, aiTarget); // This spell should be mitigated with fire resistance and nothing more.
-            }
+            NextLivingBomb = Living_Bomb_CD;
+            aiCreature.CastSpell(Spell_Living_Bomb, aiCreature.GetRandomTarget());
         }
+    }
 
-        public void CastIgnite()
+    public void CastInferno()
+    {
+        for (var i = 0; i <= 3; i++)
         {
-            for (int i = 1; i <= 3; i++)
+            var Target = aiTarget;
+            if (Target is null)
             {
-                WS_Base.BaseUnit target = aiCreature.GetRandomTarget();
-                if (target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(Spell_Ignite, aiCreature.GetRandomTarget()); // This spell drains 400 mana per second and MUST be dispelled immediately or your healers will wipe the group.
+                return;
             }
+
+            aiCreature.CastSpell(Spell_Inferno, aiTarget); // This spell should be mitigated with fire resistance and nothing more.
         }
+    }
 
-        public void CastLivingBomb()
+    public void CastIgnite()
+    {
+        for (var i = 1; i <= 3; i++)
         {
-            for (int i = 2; i <= 3; i++)
+            var target = aiCreature.GetRandomTarget();
+            if (target is null)
             {
-                WS_Base.BaseUnit target = aiCreature.GetRandomTarget();
-                if (target is null)
-                {
-                    return;
-                }
-
-                aiCreature.CastSpell(Spell_Living_Bomb, aiCreature.GetRandomTarget()); // The traditional way of getting away of this is to run where the dead trash is from your group so they don't die, but we may need to fix AoE implementations for this.
+                return;
             }
-        }
 
-        public override void OnHealthChange(int Percent)
+            aiCreature.CastSpell(Spell_Ignite, aiCreature.GetRandomTarget()); // This spell drains 400 mana per second and MUST be dispelled immediately or your healers will wipe the group.
+        }
+    }
+
+    public void CastLivingBomb()
+    {
+        for (var i = 2; i <= 3; i++)
         {
-            base.OnHealthChange(Percent);
-            if (Percent <= 2)
+            var target = aiCreature.GetRandomTarget();
+            if (target is null)
             {
-                try
-                {
-                    aiCreature.CastSpellOnSelf(Spell_Armageddon); // I think during this time he's supposed to have a kamakazie of sorts.
-                }
-                catch (Exception)
-                {
-                    aiCreature.SendChatMessage("I have failed to become invincible at 2% or less HP. this is a problem.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
-                }
+                return;
+            }
+
+            aiCreature.CastSpell(Spell_Living_Bomb, aiCreature.GetRandomTarget()); // The traditional way of getting away of this is to run where the dead trash is from your group so they don't die, but we may need to fix AoE implementations for this.
+        }
+    }
+
+    public override void OnHealthChange(int Percent)
+    {
+        base.OnHealthChange(Percent);
+        if (Percent <= 2)
+        {
+            try
+            {
+                aiCreature.CastSpellOnSelf(Spell_Armageddon); // I think during this time he's supposed to have a kamakazie of sorts.
+            }
+            catch (Exception)
+            {
+                aiCreature.SendChatMessage("I have failed to become invincible at 2% or less HP. this is a problem.", ChatMsg.CHAT_MSG_YELL, LANGUAGES.LANG_GLOBAL);
             }
         }
     }

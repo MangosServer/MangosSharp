@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum BattlegroundStatus
 {
-    public enum BattlegroundStatus
-    {
-        STATUS_CLEAR = 0,
-        STATUS_WAIT_QUEUE = 1,
-        STATUS_WAIT_JOIN = 2,
-        STATUS_IN_PROGRESS = 3
-    }
+    STATUS_CLEAR = 0,
+    STATUS_WAIT_QUEUE = 1,
+    STATUS_WAIT_JOIN = 2,
+    STATUS_IN_PROGRESS = 3
 }

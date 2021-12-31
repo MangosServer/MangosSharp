@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.World.AntiCheat
+namespace Mangos.World.AntiCheat;
+
+public enum ViolationType
 {
-    public enum ViolationType
-    {
-        AC_VIOLATION_NONE = 0,
-        AC_VIOLATION_SPEEDHACK_TIME = 1,
-        AC_VIOLATION_SPEEDHACK_MEM = 2,
-        AC_VIOLATION_MOVEMENT_Z = 3
-    }
+    AC_VIOLATION_NONE = 0,
+    AC_VIOLATION_SPEEDHACK_TIME = 1,
+    AC_VIOLATION_SPEEDHACK_MEM = 2,
+    AC_VIOLATION_MOVEMENT_Z = 3
 }

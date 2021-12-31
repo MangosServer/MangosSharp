@@ -22,64 +22,63 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Mangos.World.Server
+namespace Mangos.World.Server;
+
+public partial class WS_TimerBasedEvents
 {
-    public partial class WS_TimerBasedEvents
+    public class TWeatherChanger : IDisposable
     {
-        public class TWeatherChanger : IDisposable
+        public Timer WeatherTimer;
+
+        private bool WeatherWorking;
+
+        public int UPDATE_TIMER;
+
+        private bool _disposedValue;
+
+        public TWeatherChanger()
         {
-            public Timer WeatherTimer;
+            WeatherTimer = null;
+            WeatherWorking = false;
+            UPDATE_TIMER = WorldServiceLocator._ConfigurationProvider.GetConfiguration().WeatherTimer;
+            WeatherTimer = new Timer(Update, null, 10000, UPDATE_TIMER);
+        }
 
-            private bool WeatherWorking;
-
-            public int UPDATE_TIMER;
-
-            private bool _disposedValue;
-
-            public TWeatherChanger()
+        private void Update(object state)
+        {
+            if (WeatherWorking)
             {
+                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Weather changer skipping update");
+                return;
+            }
+            WeatherWorking = true;
+            foreach (var weatherZone in WorldServiceLocator._WS_Weather.WeatherZones)
+            {
+                weatherZone.Value.Update();
+            }
+            WeatherWorking = false;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                WeatherTimer.Dispose();
                 WeatherTimer = null;
-                WeatherWorking = false;
-                UPDATE_TIMER = WorldServiceLocator._ConfigurationProvider.GetConfiguration().WeatherTimer;
-                WeatherTimer = new Timer(Update, null, 10000, UPDATE_TIMER);
             }
+            _disposedValue = true;
+        }
 
-            private void Update(object state)
-            {
-                if (WeatherWorking)
-                {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Weather changer skipping update");
-                    return;
-                }
-                WeatherWorking = true;
-                foreach (KeyValuePair<int, WS_Weather.WeatherZone> weatherZone in WorldServiceLocator._WS_Weather.WeatherZones)
-                {
-                    weatherZone.Value.Update();
-                }
-                WeatherWorking = false;
-            }
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
 
-            protected virtual void Dispose(bool disposing)
-            {
-                if (!_disposedValue)
-                {
-                    WeatherTimer.Dispose();
-                    WeatherTimer = null;
-                }
-                _disposedValue = true;
-            }
-
-            public void Dispose()
-            {
-                Dispose(disposing: true);
-                GC.SuppressFinalize(this);
-            }
-
-            void IDisposable.Dispose()
-            {
-                //ILSpy generated this explicit interface implementation from .override directive in Dispose
-                Dispose();
-            }
+        void IDisposable.Dispose()
+        {
+            //ILSpy generated this explicit interface implementation from .override directive in Dispose
+            Dispose();
         }
     }
 }

@@ -16,14 +16,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum LootType : byte
 {
-    public enum LootType : byte
-    {
-        LOOTTYPE_CORPSE = 1,
-        LOOTTYPE_PICKPOCKETING = 2,
-        LOOTTYPE_FISHING = 3,
-        LOOTTYPE_DISENCHANTING = 4,
-        LOOTTYPE_SKINNING = 6
-    }
+    LOOTTYPE_CORPSE = 1,
+    LOOTTYPE_PICKPOCKETING = 2,
+    LOOTTYPE_FISHING = 3,
+    LOOTTYPE_DISENCHANTING = 4,
+    LOOTTYPE_SKINNING = 6
 }

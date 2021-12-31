@@ -16,12 +16,14 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Realm.Network.Requests
-{
-    public class RS_REALMLIST
-    {
-        public byte[] Unk { get; }
+namespace Mangos.Realm.Network.Requests;
 
-        public RS_REALMLIST(byte[] unk) => Unk = unk;
+public class RS_REALMLIST
+{
+    public byte[] Unk { get; }
+
+    public RS_REALMLIST(byte[] unk)
+    {
+        Unk = unk;
     }
 }

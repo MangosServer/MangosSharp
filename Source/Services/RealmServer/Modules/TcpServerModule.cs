@@ -20,14 +20,13 @@ using Autofac;
 using Mangos.Network.Tcp;
 using Mangos.Realm.Network;
 
-namespace RealmServer.Modules
+namespace RealmServer.Modules;
+
+public class TcpServerModule : Module
 {
-    public class TcpServerModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<TcpServer>().AsSelf().SingleInstance();
-            builder.RegisterType<RealmTcpClientFactory>().As<ITcpClientFactory>().SingleInstance();
-        }
+        builder.RegisterType<TcpServer>().AsSelf().SingleInstance();
+        builder.RegisterType<RealmTcpClientFactory>().As<ITcpClientFactory>().SingleInstance();
     }
 }

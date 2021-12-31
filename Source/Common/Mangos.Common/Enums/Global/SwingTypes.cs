@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum SwingTypes : byte
 {
-    public enum SwingTypes : byte
-    {
-        NOSWING = 0,
-        SINGLEHANDEDSWING = 1,
-        TWOHANDEDSWING = 2
-    }
+    NOSWING = 0,
+    SINGLEHANDEDSWING = 1,
+    TWOHANDEDSWING = 2
 }

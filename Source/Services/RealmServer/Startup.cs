@@ -26,72 +26,71 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Mangos.Realm
+namespace Mangos.Realm;
+
+public class Startup
 {
-    public class Startup
+    private readonly ILogger logger;
+    private readonly AccountStorage accountStorage;
+    private readonly XmlConfigurationProvider<RealmServerConfiguration> configurationProvider;
+
+    private readonly TcpServer tcpServer;
+
+    public Startup(
+        ILogger logger,
+        AccountStorage accountStorage,
+        XmlConfigurationProvider<RealmServerConfiguration> configurationProvider,
+        TcpServer tcpServer)
     {
-        private readonly ILogger logger;
-        private readonly AccountStorage accountStorage;
-        private readonly XmlConfigurationProvider<RealmServerConfiguration> configurationProvider;
+        this.logger = logger;
+        this.accountStorage = accountStorage;
+        this.configurationProvider = configurationProvider;
+        this.tcpServer = tcpServer;
+    }
 
-        private readonly TcpServer tcpServer;
+    public async Task StartAsync()
+    {
+        WriteServiceInformation();
+        LoadConfiguration();
+        await ConnectToDatabaseAsync().ConfigureAwait(false);
+        StartTcpServer();
+    }
 
-        public Startup(
-            ILogger logger,
-            AccountStorage accountStorage,
-            XmlConfigurationProvider<RealmServerConfiguration> configurationProvider,
-            TcpServer tcpServer)
-        {
-            this.logger = logger;
-            this.accountStorage = accountStorage;
-            this.configurationProvider = configurationProvider;
-            this.tcpServer = tcpServer;
-        }
+    private void LoadConfiguration()
+    {
+        configurationProvider.LoadFromFile("configs/RealmServer.ini");
+        logger.Debug("Realm configuration has been loaded");
+    }
 
-        public async Task StartAsync()
-        {
-            WriteServiceInformation();
-            LoadConfiguration();
-            await ConnectToDatabaseAsync().ConfigureAwait(false);
-            StartTcpServer();
-        }
+    private async Task ConnectToDatabaseAsync()
+    {
+        await accountStorage.ConnectAsync();
+        logger.Debug("Connection to account database has been established");
+    }
 
-        private void LoadConfiguration()
-        {
-            configurationProvider.LoadFromFile("configs/RealmServer.ini");
-            logger.Debug("Realm configuration has been loaded");
-        }
+    private void StartTcpServer()
+    {
+        var configuration = configurationProvider.GetConfiguration();
+        IPEndPoint endpoint = IPEndPoint.Parse(configuration.RealmServerEndpoint);
+        tcpServer.Start(endpoint, 10);
+        logger.Debug("Tcp server has been started");
+    }
 
-        private async Task ConnectToDatabaseAsync()
-        {
-            await accountStorage.ConnectAsync();
-            logger.Debug("Connection to account database has been established");
-        }
+    private void WriteServiceInformation()
+    {
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        var assemblyTitle = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
+        var product = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+        var copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
 
-        private void StartTcpServer()
-        {
-            RealmServerConfiguration configuration = configurationProvider.GetConfiguration();
-            IPEndPoint endpoint = IPEndPoint.Parse(configuration.RealmServerEndpoint);
-            tcpServer.Start(endpoint, 10);
-            logger.Debug("Tcp server has been started");
-        }
-
-        private void WriteServiceInformation()
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string assemblyTitle = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
-            string product = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
-            string copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
-
-            Console.Title = $"{assemblyTitle} v{Assembly.GetExecutingAssembly().GetName().Version}";
-            logger.Debug(product);
-            logger.Debug(copyright);
-            logger.Message(@" __  __      _  _  ___  ___  ___               ");
-            logger.Message(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
-            logger.Message(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
-            logger.Message(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
-            logger.Message("                                                ");
-            logger.Message("Website / Forum / Support: https://getmangos.eu/");
-        }
+        Console.Title = $"{assemblyTitle} v{Assembly.GetExecutingAssembly().GetName().Version}";
+        logger.Debug(product);
+        logger.Debug(copyright);
+        logger.Message(@" __  __      _  _  ___  ___  ___               ");
+        logger.Message(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
+        logger.Message(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
+        logger.Message(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
+        logger.Message("                                                ");
+        logger.Message("Website / Forum / Support: https://getmangos.eu/");
     }
 }

@@ -16,9 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Realm.Network.Requests
+namespace Mangos.Realm.Network.Requests;
+
+public class CMD_XFER_RESUME
 {
-    public class CMD_XFER_RESUME
-    {
-    }
 }

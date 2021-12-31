@@ -20,28 +20,30 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Mangos.DataStores
+namespace Mangos.DataStores;
+
+public class DataStoreProvider
 {
-    public class DataStoreProvider
+    private readonly string dbcDirectory = "dbc";
+
+    private readonly Dictionary<string, DataStore> dataStores;
+
+    public DataStoreProvider()
     {
-        private readonly string dbcDirectory = "dbc";
+        dataStores = new Dictionary<string, DataStore>();
+    }
 
-        private readonly Dictionary<string, DataStore> dataStores;
-
-        public DataStoreProvider() => dataStores = new Dictionary<string, DataStore>();
-
-        public async ValueTask<DataStore> GetDataStoreAsync(string dbcFileName)
+    public async ValueTask<DataStore> GetDataStoreAsync(string dbcFileName)
+    {
+        if (dataStores.ContainsKey(dbcFileName))
         {
-            if (dataStores.ContainsKey(dbcFileName))
-            {
-                return dataStores[dbcFileName];
-            }
-
-            string path = Path.Combine(dbcDirectory, dbcFileName);
-            DataStore dataStore = new();
-            await dataStore.LoadFromFileAsync(path);
-            dataStores[dbcFileName] = dataStore;
-            return dataStore;
+            return dataStores[dbcFileName];
         }
+
+        var path = Path.Combine(dbcDirectory, dbcFileName);
+        DataStore dataStore = new();
+        await dataStore.LoadFromFileAsync(path);
+        dataStores[dbcFileName] = dataStore;
+        return dataStore;
     }
 }

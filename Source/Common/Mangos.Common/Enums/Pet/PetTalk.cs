@@ -16,11 +16,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Pet
+namespace Mangos.Common.Enums.Pet;
+
+public enum PetTalk : byte
 {
-    public enum PetTalk : byte
-    {
-        PET_TALK_SPECIAL_SPELL = 0,
-        PET_TALK_ATTACK = 1
-    }
+    PET_TALK_SPECIAL_SPELL = 0,
+    PET_TALK_ATTACK = 1
 }

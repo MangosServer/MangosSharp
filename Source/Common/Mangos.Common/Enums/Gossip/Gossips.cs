@@ -16,22 +16,21 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Gossip
+namespace Mangos.Common.Enums.Gossip;
+
+// TODO: Need to fix this for all to have values
+public enum Gossips
 {
-    // TODO: Need to fix this for all to have values
-    public enum Gossips
-    {
-        Thunderbluff = 0,
-        Darnassus,
-        DunMorogh,
-        Durotar,
-        ElwynnForest,
-        Ironforge,
-        Mulgore,
-        Orgrimmar,
-        Stormwind,
-        Teldrassil,
-        Tirisfall,
-        Undercity
-    }
+    Thunderbluff = 0,
+    Darnassus,
+    DunMorogh,
+    Durotar,
+    ElwynnForest,
+    Ironforge,
+    Mulgore,
+    Orgrimmar,
+    Stormwind,
+    Teldrassil,
+    Tirisfall,
+    Undercity
 }

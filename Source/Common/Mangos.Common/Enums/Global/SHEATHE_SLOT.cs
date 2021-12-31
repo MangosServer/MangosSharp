@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum SHEATHE_SLOT : byte
 {
-    public enum SHEATHE_SLOT : byte
-    {
-        SHEATHE_NONE = 0,
-        SHEATHE_WEAPON = 1,
-        SHEATHE_RANGED = 2
-    }
+    SHEATHE_NONE = 0,
+    SHEATHE_WEAPON = 1,
+    SHEATHE_RANGED = 2
 }

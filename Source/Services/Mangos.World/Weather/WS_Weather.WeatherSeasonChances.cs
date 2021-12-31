@@ -16,24 +16,23 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.World.Weather
+namespace Mangos.World.Weather;
+
+public partial class WS_Weather
 {
-    public partial class WS_Weather
+    public class WeatherSeasonChances
     {
-        public class WeatherSeasonChances
+        public int RainChance;
+
+        public int SnowChance;
+
+        public int StormChance;
+
+        public WeatherSeasonChances(int RainChance, int SnowChance, int StormChance)
         {
-            public int RainChance;
-
-            public int SnowChance;
-
-            public int StormChance;
-
-            public WeatherSeasonChances(int RainChance, int SnowChance, int StormChance)
-            {
-                this.RainChance = RainChance;
-                this.SnowChance = SnowChance;
-                this.StormChance = StormChance;
-            }
+            this.RainChance = RainChance;
+            this.SnowChance = SnowChance;
+            this.StormChance = StormChance;
         }
     }
 }

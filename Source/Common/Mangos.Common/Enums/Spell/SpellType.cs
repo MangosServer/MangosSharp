@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Spell
+namespace Mangos.Common.Enums.Spell;
+
+public enum SpellType : byte
 {
-    public enum SpellType : byte
-    {
-        SPELL_TYPE_NONMELEE = 0,
-        SPELL_TYPE_DOT = 1,
-        SPELL_TYPE_HEAL = 2,
-        SPELL_TYPE_HEALDOT = 3
-    }
+    SPELL_TYPE_NONMELEE = 0,
+    SPELL_TYPE_DOT = 1,
+    SPELL_TYPE_HEAL = 2,
+    SPELL_TYPE_HEALDOT = 3
 }

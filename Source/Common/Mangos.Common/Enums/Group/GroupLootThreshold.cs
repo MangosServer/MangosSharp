@@ -16,12 +16,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Group
+namespace Mangos.Common.Enums.Group;
+
+public enum GroupLootThreshold : byte
 {
-    public enum GroupLootThreshold : byte
-    {
-        Uncommon = 2,
-        Rare = 3,
-        Epic = 4
-    }
+    Uncommon = 2,
+    Rare = 3,
+    Epic = 4
 }

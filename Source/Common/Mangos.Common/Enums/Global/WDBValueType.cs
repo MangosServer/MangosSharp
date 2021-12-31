@@ -16,13 +16,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Global
+namespace Mangos.Common.Enums.Global;
+
+public enum WDBValueType
 {
-    public enum WDBValueType
-    {
-        WDB_STRING,
-        WDB_INTEGER,
-        WDB_BYTE,
-        WDB_FLOAT
-    }
+    WDB_STRING,
+    WDB_INTEGER,
+    WDB_BYTE,
+    WDB_FLOAT
 }
