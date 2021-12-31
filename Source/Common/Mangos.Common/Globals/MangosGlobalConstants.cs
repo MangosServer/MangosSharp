@@ -32,12 +32,12 @@ public class MangosGlobalConstants
         MAX_NEGATIVE_AURA_EFFECTs = MAX_AURA_EFFECTs_VISIBLE - MAX_POSITIVE_AURA_EFFECTs;
     }
 
-    public readonly int RevisionDbCharactersVersion = 21;
+    public readonly int RevisionDbCharactersVersion = 1;
     public readonly int RevisionDbCharactersStructure;
     public readonly int RevisionDbCharactersContent;
     public readonly int RevisionDbMangosVersion = 21;
-    public readonly int RevisionDbMangosStructure = 7;
-    public readonly int RevisionDbMangosContent = 77;
+    public readonly int RevisionDbMangosStructure = 1;
+    public readonly int RevisionDbMangosContent = 0;
     public readonly int RevisionDbRealmVersion = 21;
     public readonly int RevisionDbRealmStructure = 2;
     public readonly int RevisionDbRealmContent = 1;
