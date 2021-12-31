@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -38,64 +38,70 @@ namespace Mangos.Extractor
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            _btnExtractUpdateFields = new Button();
-            _btnExtractUpdateFields.Click += new EventHandler(btnExtractUpdateFields_Click);
-            _btnExtractOpcodes = new Button();
-            _btnExtractOpcodes.Click += new EventHandler(btnExtractOpcodes_Click);
-            _btnExtractSpellFailedReasons = new Button();
-            _btnExtractSpellFailedReasons.Click += new EventHandler(btnExtractSpellFailedReasons_Click);
-            _btnExtractChatTypes = new Button();
-            _btnExtractChatTypes.Click += new EventHandler(btnExtractChatTypes_Click);
-            SuspendLayout();
+            this._btnExtractUpdateFields = new System.Windows.Forms.Button();
+            this._btnExtractOpcodes = new System.Windows.Forms.Button();
+            this._btnExtractSpellFailedReasons = new System.Windows.Forms.Button();
+            this._btnExtractChatTypes = new System.Windows.Forms.Button();
+            this.SuspendLayout();
             // 
-            // btnExtractUpdateFields
+            // _btnExtractUpdateFields
             // 
-            _btnExtractUpdateFields.Location = new Point(12, 74);
-            _btnExtractUpdateFields.Name = "_btnExtractUpdateFields";
-            _btnExtractUpdateFields.Size = new Size(161, 56);
-            _btnExtractUpdateFields.TabIndex = 0;
-            _btnExtractUpdateFields.Text = "Extract UPDATE FIELDs";
-            _btnExtractUpdateFields.UseVisualStyleBackColor = true;
+            this._btnExtractUpdateFields.Location = new System.Drawing.Point(14, 85);
+            this._btnExtractUpdateFields.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnExtractUpdateFields.Name = "_btnExtractUpdateFields";
+            this._btnExtractUpdateFields.Size = new System.Drawing.Size(188, 65);
+            this._btnExtractUpdateFields.TabIndex = 0;
+            this._btnExtractUpdateFields.Text = "Extract UPDATE FIELDs";
+            this._btnExtractUpdateFields.UseVisualStyleBackColor = true;
+            this._btnExtractUpdateFields.Click += new System.EventHandler(this.btnExtractUpdateFields_Click);
             // 
-            // btnExtractOpcodes
+            // _btnExtractOpcodes
             // 
-            _btnExtractOpcodes.Location = new Point(12, 12);
-            _btnExtractOpcodes.Name = "_btnExtractOpcodes";
-            _btnExtractOpcodes.Size = new Size(161, 56);
-            _btnExtractOpcodes.TabIndex = 1;
-            _btnExtractOpcodes.Text = "Extract OPCODEs";
-            _btnExtractOpcodes.UseVisualStyleBackColor = true;
+            this._btnExtractOpcodes.Location = new System.Drawing.Point(14, 14);
+            this._btnExtractOpcodes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnExtractOpcodes.Name = "_btnExtractOpcodes";
+            this._btnExtractOpcodes.Size = new System.Drawing.Size(188, 65);
+            this._btnExtractOpcodes.TabIndex = 1;
+            this._btnExtractOpcodes.Text = "Extract OPCODEs";
+            this._btnExtractOpcodes.UseVisualStyleBackColor = true;
+            this._btnExtractOpcodes.Click += new System.EventHandler(this.btnExtractOpcodes_Click);
             // 
-            // btnExtractSpellFailedReasons
+            // _btnExtractSpellFailedReasons
             // 
-            _btnExtractSpellFailedReasons.Location = new Point(12, 136);
-            _btnExtractSpellFailedReasons.Name = "_btnExtractSpellFailedReasons";
-            _btnExtractSpellFailedReasons.Size = new Size(161, 56);
-            _btnExtractSpellFailedReasons.TabIndex = 2;
-            _btnExtractSpellFailedReasons.Text = "Extract SpellFailedReasons";
-            _btnExtractSpellFailedReasons.UseVisualStyleBackColor = true;
+            this._btnExtractSpellFailedReasons.Location = new System.Drawing.Point(14, 157);
+            this._btnExtractSpellFailedReasons.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnExtractSpellFailedReasons.Name = "_btnExtractSpellFailedReasons";
+            this._btnExtractSpellFailedReasons.Size = new System.Drawing.Size(188, 65);
+            this._btnExtractSpellFailedReasons.TabIndex = 2;
+            this._btnExtractSpellFailedReasons.Text = "Extract SpellFailedReasons";
+            this._btnExtractSpellFailedReasons.UseVisualStyleBackColor = true;
+            this._btnExtractSpellFailedReasons.Click += new System.EventHandler(this.btnExtractSpellFailedReasons_Click);
             // 
-            // btnExtractChatTypes
+            // _btnExtractChatTypes
             // 
-            _btnExtractChatTypes.Location = new Point(12, 198);
-            _btnExtractChatTypes.Name = "_btnExtractChatTypes";
-            _btnExtractChatTypes.Size = new Size(161, 56);
-            _btnExtractChatTypes.TabIndex = 3;
-            _btnExtractChatTypes.Text = "Extract ChatTypes";
-            _btnExtractChatTypes.UseVisualStyleBackColor = true;
+            this._btnExtractChatTypes.Location = new System.Drawing.Point(14, 228);
+            this._btnExtractChatTypes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnExtractChatTypes.Name = "_btnExtractChatTypes";
+            this._btnExtractChatTypes.Size = new System.Drawing.Size(188, 65);
+            this._btnExtractChatTypes.TabIndex = 3;
+            this._btnExtractChatTypes.Text = "Extract ChatTypes";
+            this._btnExtractChatTypes.UseVisualStyleBackColor = true;
+            this._btnExtractChatTypes.Click += new System.EventHandler(this.btnExtractChatTypes_Click);
             // 
             // frmMain
             // 
-            AutoScaleDimensions = new SizeF(6.0f, 13.0f);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(188, 263);
-            Controls.Add(_btnExtractChatTypes);
-            Controls.Add(_btnExtractSpellFailedReasons);
-            Controls.Add(_btnExtractOpcodes);
-            Controls.Add(_btnExtractUpdateFields);
-            Name = "frmMain";
-            Text = "WoW Extractor";
-            ResumeLayout(false);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(219, 303);
+            this.Controls.Add(this._btnExtractChatTypes);
+            this.Controls.Add(this._btnExtractSpellFailedReasons);
+            this.Controls.Add(this._btnExtractOpcodes);
+            this.Controls.Add(this._btnExtractUpdateFields);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Name = "frmMain";
+            this.Text = "WoW Extractor";
+            this.ResumeLayout(false);
+
         }
 
         private Button _btnExtractUpdateFields;

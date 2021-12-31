@@ -1,15 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../Mangos.props" />
+
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.27" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Mangos.DataStores\Mangos.DataStores.csproj" />
     <ProjectReference Include="..\Mangos.Zip\Mangos.Zip.csproj" />
     <ProjectReference Include="..\Mangos.Common\Mangos.Common.csproj" />
     <ProjectReference Include="..\Mangos.Loggers\Mangos.Loggers.csproj" />
   </ItemGroup>
+
 </Project>

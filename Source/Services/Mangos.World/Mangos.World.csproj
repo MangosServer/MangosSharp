@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../Mangos.props" />
+
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <OutputType>Exe</OutputType>
@@ -7,21 +8,13 @@
     <ApplicationIcon>MangosCS.ico</ApplicationIcon>
     <OutputPath>..\..\..\Bin\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <Nullable>disable</Nullable>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.Configuration.Xml\Mangos.Configuration.Xml.csproj" />
@@ -30,4 +23,5 @@
     <ProjectReference Include="..\..\Common\Mangos.Loggers\Mangos.Loggers.csproj" />
     <ProjectReference Include="..\..\Common\Mangos.SignalR\Mangos.SignalR.csproj" />
   </ItemGroup>
+
 </Project>
