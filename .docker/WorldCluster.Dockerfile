@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 COPY ./Source/ .
-RUN dotnet publish ./Services/WorldCluster/WorldCluster.csproj -c Release -o bin
+RUN dotnet publish ./WorldCluster/WorldCluster.csproj -c Release -o bin
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
