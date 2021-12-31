@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
 //
 //  This program is free software. You can redistribute it and/or modify

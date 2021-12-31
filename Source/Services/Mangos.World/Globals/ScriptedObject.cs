@@ -174,7 +174,7 @@ namespace Mangos.World.Globals
                 }
                 WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Compiling: Unsupported file type: {0}", AssemblySourceFile);
                 goto end_IL_0068;
-                IL_01b5:
+            IL_01b5:
                 if (cResults.Errors.HasErrors)
                 {
                     IEnumerator enumerator2 = default;
@@ -199,7 +199,7 @@ namespace Mangos.World.Globals
                 {
                     ass = cResults.CompiledAssembly;
                 }
-                end_IL_0068:;
+            end_IL_0068:;
             }
             catch (Exception e)
             {

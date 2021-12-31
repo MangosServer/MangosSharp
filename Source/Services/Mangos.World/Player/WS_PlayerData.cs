@@ -4105,7 +4105,7 @@ namespace Mangos.World.Player
                             tmp = null;
                             goto IL_0ec5;
                         }
-                        IL_06f5:
+                    IL_06f5:
                         SendItemAndCharacterUpdate(Items[srcBag]);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {GUID} WHERE item_guid = {Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         if (Items[srcBag].Items.ContainsKey(srcSlot))
@@ -4113,7 +4113,7 @@ namespace Mangos.World.Player
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {Items[srcBag].GUID} WHERE item_guid = {Items[srcBag].Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
                         goto end_IL_0080;
-                        IL_0ab8:
+                    IL_0ab8:
                         SendItemAndCharacterUpdate(Items[dstBag]);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {Items[dstBag].GUID} WHERE item_guid = {Items[dstBag].Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         if (Items.ContainsKey(srcSlot))
@@ -4121,7 +4121,7 @@ namespace Mangos.World.Player
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {GUID} WHERE item_guid = {Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
                         goto end_IL_0080;
-                        IL_0ec5:
+                    IL_0ec5:
                         SendItemAndCharacterUpdate(Items[dstSlot]);
                         WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {dstSlot}, item_bag = {GUID} WHERE item_guid = {Items[dstSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         if (Items.ContainsKey(srcSlot))
@@ -4129,7 +4129,7 @@ namespace Mangos.World.Player
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {GUID} WHERE item_guid = {Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
                         goto end_IL_0080;
-                        IL_02e9:
+                    IL_02e9:
                         SendItemUpdate(Items[srcBag]);
                         if (dstBag != srcBag)
                         {
@@ -4140,7 +4140,7 @@ namespace Mangos.World.Player
                         {
                             WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_inventory SET item_slot = {srcSlot}, item_bag = {Items[srcBag].GUID} WHERE item_guid = {Items[srcBag].Items[srcSlot].GUID - WorldServiceLocator._Global_Constants.GUID_ITEM};");
                         }
-                        end_IL_0080:;
+                    end_IL_0080:;
                     }
                     catch (Exception ex)
                     {

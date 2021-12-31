@@ -213,7 +213,7 @@ namespace Mangos.World.Objects
                         obj4.SendGossip(cGuid, cTextID4, Menu, qMenu2);
                     }
                     goto end_IL_002c;
-                    IL_0431:
+                IL_0431:
                     if (((uint)creatureInfo.cNpcFlags & 0x20u) != 0)
                     {
                         textID = 580;
@@ -311,7 +311,7 @@ namespace Mangos.World.Objects
                     int cTextID5 = textID;
                     qMenu2 = null;
                     obj5.SendGossip(cGuid, cTextID5, npcMenu, qMenu2);
-                    end_IL_002c:;
+                end_IL_002c:;
                 }
                 catch (Exception ex2)
                 {

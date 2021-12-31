@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
 //
 //  This program is free software. You can redistribute it and/or modify
@@ -94,15 +94,15 @@ namespace Mangos.DBCExtractor
                 Console.WriteLine("Unable to extract DBC Files. Error: " + ex.Message);
             }
 
-            // Try
-            // ExtractMaps()
-            // Catch ex As Exception
-            // Console.ForegroundColor = ConsoleColor.Red
-            // Console.WriteLine("Unable to extract Maps. Error: " & ex.Message)
-            // GoTo ExitNow
-            // End Try
+        // Try
+        // ExtractMaps()
+        // Catch ex As Exception
+        // Console.ForegroundColor = ConsoleColor.Red
+        // Console.WriteLine("Unable to extract Maps. Error: " & ex.Message)
+        // GoTo ExitNow
+        // End Try
 
-            ExitNow:
+        ExitNow:
             ;
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine();

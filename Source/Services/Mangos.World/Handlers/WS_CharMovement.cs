@@ -425,7 +425,7 @@ namespace Mangos.World.Handlers
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] AreaTrigger [{2}] not found!", client.IP, client.Port, triggerID);
                 }
                 goto end_IL_0001;
-                IL_029d:
+            IL_029d:
                 if (reqLevel != 0 && client.Character.Level < (uint)reqLevel)
                 {
                     SendAreaTriggerMessage(ref client, "Your level is too low");
@@ -434,7 +434,7 @@ namespace Mangos.World.Handlers
                 {
                     client.Character.Teleport(posX, posY, posZ, ori, tMap);
                 }
-                end_IL_0001:;
+            end_IL_0001:;
             }
             catch (Exception ex)
             {

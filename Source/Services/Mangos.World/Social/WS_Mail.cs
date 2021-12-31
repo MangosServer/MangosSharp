@@ -268,7 +268,7 @@ namespace Mangos.World.Social
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_mail SET mail_cod = 0 WHERE mail_id = {MailID};");
                     int MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
                     WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO characters_mail (mail_sender, mail_receiver, mail_subject, mail_body, mail_item_guid, mail_money, mail_COD, mail_time, mail_read, mail_type) VALUES \r\n                        ({0},{1},'{2}','{3}',{4},{5},{6},{7},{8},{9});", client.Character.GUID, MySQLQuery.Rows[0]["mail_sender"], "", "", 0, MySQLQuery.Rows[0]["mail_cod"], 0, MailTime, MailReadInfo.COD, 0));
-                    IL_02b9:
+                IL_02b9:
                     if (Operators.ConditionalCompareObjectEqual(MySQLQuery.Rows[0]["item_guid"], 0, TextCompare: false))
                     {
                         Packets.PacketClass response3 = new(Opcodes.SMSG_SEND_MAIL_RESULT);

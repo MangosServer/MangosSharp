@@ -1547,7 +1547,7 @@ namespace Mangos.World.Spells
                     }
                 }
 
-                IL_028d:
+            IL_028d:
                 if (((uint)Attributes & 0x20000u & (0u - ((Character.Invisibility != InvisibilityLevel.STEALTH) ? 1u : 0u))) != 0)
                 {
                     return SpellFailedReason.SPELL_FAILED_ONLY_STEALTHED;
@@ -1678,7 +1678,7 @@ namespace Mangos.World.Spells
                             break;
                         }
 
-                        IL_0721:
+                    IL_0721:
                         i = checked(i + 1);
                     }
                     while (i <= 20);
@@ -4574,7 +4574,7 @@ namespace Mangos.World.Spells
             }
             return result;
         }
-        
+
         /// <summary>
         /// SPELL_EFFECT_APPLY_AREA_AURA
         /// </summary>
@@ -5151,7 +5151,7 @@ namespace Mangos.World.Spells
                             SpellFailedReason SPELL_EFFECT_SUMMON_TOTEM = default;
                             return SPELL_EFFECT_SUMMON_TOTEM;
                         }
-                        IL_0041:
+                    IL_0041:
                         WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Totem Slot [{0}].", Slot);
                         if (Slot < 4)
                         {
@@ -6140,7 +6140,7 @@ namespace Mangos.World.Spells
                     case AuraAction.AURA_REMOVEBYDURATION:
                         Target.DispellImmunity = (uint)(Target.DispellImmunity & ~(1 << EffectInfo.MiscValue));
                         break;
-                default:
+                    default:
                         break;
                 }
             }
@@ -7523,19 +7523,23 @@ namespace Mangos.World.Spells
                     target.ApplySpell(3025);
                 }
                 if (EffectInfo.MiscValue == 5)
-                {WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
+                {
+                    WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                     target.ApplySpell(1178);
                 }
                 if (EffectInfo.MiscValue == 8)
-                {WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
+                {
+                    WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                     target.ApplySpell(9635);
                 }
                 if (EffectInfo.MiscValue == 4)
-                {WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
+                {
+                    WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                     target.ApplySpell(5421);
                 }
                 if (EffectInfo.MiscValue == 31)
-                {WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
+                {
+                    WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                     target.ApplySpell(24905);
                 }
                 if (EffectInfo.MiscValue == 29)
@@ -7551,15 +7555,18 @@ namespace Mangos.World.Spells
                     target.ApplySpell(40122);
                 }
                 if (EffectInfo.MiscValue == 17)
-                {WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
+                {
+                    WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                     target.ApplySpell(21156);
                 }
                 if (EffectInfo.MiscValue == 19)
-                {WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
+                {
+                    WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                     target.ApplySpell(7381);
                 }
                 if (EffectInfo.MiscValue == 18)
-                {WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
+                {
+                    WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                     target.ApplySpell(7376);
                 }
                 return;

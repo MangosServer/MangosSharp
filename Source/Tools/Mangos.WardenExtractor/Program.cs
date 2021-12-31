@@ -1,4 +1,4 @@
-﻿//
+//
 //  Copyright (C) 2013-2021 getMaNGOS <https://getmangos.eu>
 //
 //  This program is free software. You can redistribute it and/or modify
@@ -30,7 +30,7 @@ namespace Mangos.WardenExtractor
             Console.WriteLine("WardenExtractor by UniX");
             Console.WriteLine("");
             Console.WriteLine("");
-            TryAgain:
+        TryAgain:
             ;
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Menu:");

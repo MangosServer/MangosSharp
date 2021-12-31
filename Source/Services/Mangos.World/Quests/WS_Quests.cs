@@ -1961,7 +1961,7 @@ namespace Mangos.World.Quests
                             errorPacket.Dispose();
                         }
                         goto end_IL_0055;
-                        IL_01d2:
+                    IL_01d2:
                         int k = 0;
                         while (client.Character.TalkCurrentQuest.ObjectivesItem[k] != 0)
                         {
@@ -1998,7 +1998,7 @@ namespace Mangos.World.Quests
                             return;
                         }
                         client.Character.LogLootItem(tmpItem2, 1, Recieved: true, Created: false);
-                        IL_034e:
+                    IL_034e:
                         if (client.Character.TalkCurrentQuest.RewardGold > 0)
                         {
                             ref uint copper3 = ref client.Character.Copper;
@@ -2104,7 +2104,7 @@ namespace Mangos.World.Quests
                             }
                             SendQuestDetails(ref client, ref client.Character.TalkCurrentQuest, guid, acceptActive: true);
                         }
-                        end_IL_0055:;
+                    end_IL_0055:;
                     }
                     catch (Exception ex)
                     {
@@ -2144,7 +2144,7 @@ namespace Mangos.World.Quests
                         errorPacket4.Dispose();
                     }
                     goto end_IL_0886;
-                    IL_0a03:
+                IL_0a03:
                     int j = 0;
                     while (client.Character.TalkCurrentQuest.ObjectivesItem[j] != 0)
                     {
@@ -2181,7 +2181,7 @@ namespace Mangos.World.Quests
                         return;
                     }
                     client.Character.LogLootItem(tmpItem, 1, Recieved: true, Created: false);
-                    IL_0b7f:
+                IL_0b7f:
                     if (client.Character.TalkCurrentQuest.RewardGold > 0)
                     {
                         ref uint copper7 = ref client.Character.Copper;
@@ -2287,7 +2287,7 @@ namespace Mangos.World.Quests
                         }
                         SendQuestDetails(ref client, ref client.Character.TalkCurrentQuest, guid, acceptActive: true);
                     }
-                    end_IL_0886:;
+                end_IL_0886:;
                 }
                 catch (Exception ex2)
                 {
