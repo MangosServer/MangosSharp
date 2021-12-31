@@ -27,5 +27,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: Build application
+    - name: Build
       run: dotnet build $env:Solution_Path /p:Configuration=$env:Configuration
+
+    - name: Codetyle check
+      run: dotnet format --verify-no-changes $env:Solution_Path
