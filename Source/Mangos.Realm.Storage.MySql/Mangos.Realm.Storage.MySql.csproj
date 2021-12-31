@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Mangos.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Storage.MySql\Mangos.Storage.MySql.csproj" />
+    <ProjectReference Include="..\Mangos.Realm.Configuration\Mangos.Realm.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Realm.Storage\Mangos.Realm.Storage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Queries\*.sql" />
+    <EmbeddedResource Include="Queries\*.sql" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Mangos.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Loggers\Mangos.Loggers.csproj" />
+  </ItemGroup>
+
+</Project>

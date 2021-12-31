@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Mangos.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>WorldServer</AssemblyName>
+    <ApplicationIcon>MangosCS.ico</ApplicationIcon>
+    <OutputPath>..\..\Bin\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="System.CodeDom" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
+    <ProjectReference Include="..\Mangos.Configuration.Xml\Mangos.Configuration.Xml.csproj" />
+    <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Loggers.Console\Mangos.Loggers.Console.csproj" />
+    <ProjectReference Include="..\Mangos.Loggers\Mangos.Loggers.csproj" />
+    <ProjectReference Include="..\Mangos.SignalR\Mangos.SignalR.csproj" />
+  </ItemGroup>
+
+</Project>

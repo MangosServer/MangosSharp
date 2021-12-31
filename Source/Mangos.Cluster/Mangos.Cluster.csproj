@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Mangos.props" />
+  
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Async" Version="5.1.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
+    <ProjectReference Include="..\Mangos.Loggers\Mangos.Loggers.csproj" />
+    <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.SignalR\Mangos.SignalR.csproj" />
+    <ProjectReference Include="..\Mangos.Cluster.Configuration\Mangos.Cluster.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Cluster.Storage\Mangos.Cluster.Storage.csproj" />
+  </ItemGroup>
+  
+</Project>

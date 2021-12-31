@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Mangos.props" />
+  
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>WowExeExtractor</AssemblyName>
+  </PropertyGroup>
+
+</Project>

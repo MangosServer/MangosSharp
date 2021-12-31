@@ -9,43 +9,41 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{BD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{E4030417-3F95-48BA-8A9A-6E1B4A5B5873}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Common", "Common\Mangos.Common\Mangos.Common.csproj", "{04260F96-938F-0597-3F8B-F751EEEF0CDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.SignalR", "Mangos.SignalR\Mangos.SignalR.csproj", "{6BB15C91-C4A4-025E-3DD3-F1C93973F589}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.SignalR", "Common\Mangos.SignalR\Mangos.SignalR.csproj", "{6BB15C91-C4A4-025E-3DD3-F1C93973F589}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.DBCExtractor", "Mangos.DBCExtractor\Mangos.DBCExtractor.csproj", "{0BFFCD0A-10B2-036B-31D9-4A0783642434}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.DBCExtractor", "Tools\Mangos.DBCExtractor\Mangos.DBCExtractor.csproj", "{0BFFCD0A-10B2-036B-31D9-4A0783642434}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.DBCReader", "Mangos.DBCReader\Mangos.DBCReader.csproj", "{B155447B-4A9E-03D6-20C4-4BC96D74C5F7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.DBCReader", "Tools\Mangos.DBCReader\Mangos.DBCReader.csproj", "{B155447B-4A9E-03D6-20C4-4BC96D74C5F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Extractor", "Mangos.Extractor\Mangos.Extractor.csproj", "{9A0CE171-EBBC-0837-0B36-BD2766405A64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Extractor", "Tools\Mangos.Extractor\Mangos.Extractor.csproj", "{9A0CE171-EBBC-0837-0B36-BD2766405A64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.WardenExtractor", "Mangos.WardenExtractor\Mangos.WardenExtractor.csproj", "{657E9F79-D661-09B5-2CE5-69EF21BD2AB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.WardenExtractor", "Tools\Mangos.WardenExtractor\Mangos.WardenExtractor.csproj", "{657E9F79-D661-09B5-2CE5-69EF21BD2AB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.WoWFakeClient", "Mangos.WoWFakeClient\Mangos.WoWFakeClient.csproj", "{BE0DFB69-24E3-0D94-11CE-AA0D226E5059}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.WoWFakeClient", "Tools\Mangos.WoWFakeClient\Mangos.WoWFakeClient.csproj", "{BE0DFB69-24E3-0D94-11CE-AA0D226E5059}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster", "Mangos.Cluster\Mangos.Cluster.csproj", "{10A6150C-A108-0B9D-235E-DD3FA72FEAD0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster", "Services\Mangos.Cluster\Mangos.Cluster.csproj", "{10A6150C-A108-0B9D-235E-DD3FA72FEAD0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.World", "Services\Mangos.World\Mangos.World.csproj", "{770BB034-1DF6-0635-2795-21DE373A2FA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.World", "Mangos.World\Mangos.World.csproj", "{770BB034-1DF6-0635-2795-21DE373A2FA0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{7B6C0310-8E34-42CE-A29F-22F24BBC8381}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration", "Common\Mangos.Configuration\Mangos.Configuration.csproj", "{E27D5071-163D-0D73-30C7-056D3063F13B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration", "Mangos.Configuration\Mangos.Configuration.csproj", "{E27D5071-163D-0D73-30C7-056D3063F13B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration.Xml", "Common\Mangos.Configuration.Xml\Mangos.Configuration.Xml.csproj", "{EB435360-64EE-0849-15BF-759DA3CB6753}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration.Xml", "Mangos.Configuration.Xml\Mangos.Configuration.Xml.csproj", "{EB435360-64EE-0849-15BF-759DA3CB6753}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Loggers", "Loggers", "{E0A07FF5-16B1-444C-8D29-7EFEF8776E3A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Loggers", "Common\Mangos.Loggers\Mangos.Loggers.csproj", "{BF4757A9-ACFF-465C-80DD-22217B4258A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Loggers", "Mangos.Loggers\Mangos.Loggers.csproj", "{BF4757A9-ACFF-465C-80DD-22217B4258A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Loggers.Console", "Common\Mangos.Loggers.Console\Mangos.Loggers.Console.csproj", "{0EB75BE3-253C-4AB8-AFCC-9CD78F7CFB91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Loggers.Console", "Mangos.Loggers.Console\Mangos.Loggers.Console.csproj", "{0EB75BE3-253C-4AB8-AFCC-9CD78F7CFB91}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage", "Storage", "{A53CD0FF-C516-4D61-AF74-F6FE1661FEAC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Storage.MySql", "Common\Mangos.Storage.MySql\Mangos.Storage.MySql.csproj", "{54D40A46-35D2-4299-8F3A-FDC650B389F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Storage.MySql", "Mangos.Storage.MySql\Mangos.Storage.MySql.csproj", "{54D40A46-35D2-4299-8F3A-FDC650B389F2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Network", "Network", "{9EF781C4-F7AE-4720-A231-8F4C58737310}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Network.Tcp", "Common\Mangos.Network.Tcp\Mangos.Network.Tcp.csproj", "{C4D428E9-9272-4F1D-9A23-973D160082F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Network.Tcp", "Mangos.Network.Tcp\Mangos.Network.Tcp.csproj", "{C4D428E9-9272-4F1D-9A23-973D160082F8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".development", ".development", "{97868233-E3E0-4477-A5F2-7522A82F077C}"
 	ProjectSection(SolutionItems) = preProject
@@ -53,9 +51,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".development", ".developmen
 		Mangos.props = Mangos.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Zip", "Common\Mangos.Zip\Mangos.Zip.csproj", "{2D28CF25-F3D8-4488-825A-20C05D144C9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Zip", "Mangos.Zip\Mangos.Zip.csproj", "{2D28CF25-F3D8-4488-825A-20C05D144C9D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.DataStores", "Common\Mangos.DataStores\Mangos.DataStores.csproj", "{862688BC-7C41-422F-BFD8-43C3B8B8761E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.DataStores", "Mangos.DataStores\Mangos.DataStores.csproj", "{862688BC-7C41-422F-BFD8-43C3B8B8761E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cluster", "Cluster", "{404E091A-3BC2-4F2B-B634-1CC8891405C3}"
 EndProject
@@ -63,31 +61,33 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Realm", "Realm", "{4E5FCE8C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "World", "World", "{C64D07D2-0EDD-4AFA-8A4C-B32BC3B7889B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.World.Scripts", "Services\Mangos.World.Scripts\Mangos.World.Scripts.csproj", "{D5ABFC37-7893-477D-A675-7BE7FE95C5B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.World.Scripts", "Mangos.World.Scripts\Mangos.World.Scripts.csproj", "{D5ABFC37-7893-477D-A675-7BE7FE95C5B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmServer", "Services\RealmServer\RealmServer.csproj", "{776C99A9-C8F5-4116-B05C-A4D588A7930D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RealmServer", "RealmServer\RealmServer.csproj", "{776C99A9-C8F5-4116-B05C-A4D588A7930D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Storage", "Services\Mangos.Realm.Storage\Mangos.Realm.Storage.csproj", "{64568E09-999F-4DF6-AD8A-D85C2EF95422}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Storage", "Mangos.Realm.Storage\Mangos.Realm.Storage.csproj", "{64568E09-999F-4DF6-AD8A-D85C2EF95422}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Storage.MySql", "Services\Mangos.Realm.Storage.MySql\Mangos.Realm.Storage.MySql.csproj", "{DBB23113-3E1C-48C6-A189-78416FC1FD02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Storage.MySql", "Mangos.Realm.Storage.MySql\Mangos.Realm.Storage.MySql.csproj", "{DBB23113-3E1C-48C6-A189-78416FC1FD02}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Common.Legacy", "Common\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj", "{B0E58AD5-A0CA-4207-B3A6-E45FF1A30C23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Common.Legacy", "Mangos.Common.Legacy\Mangos.Common.Legacy.csproj", "{B0E58AD5-A0CA-4207-B3A6-E45FF1A30C23}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm", "Services\Mangos.Realm\Mangos.Realm.csproj", "{AE464C7F-76DE-4D3C-B024-C31E2CC950B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm", "Mangos.Realm\Mangos.Realm.csproj", "{AE464C7F-76DE-4D3C-B024-C31E2CC950B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Configuration", "Services\Mangos.Realm.Configuration\Mangos.Realm.Configuration.csproj", "{D191D7DB-1212-4538-8364-EDE5DD2C0A2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Configuration", "Mangos.Realm.Configuration\Mangos.Realm.Configuration.csproj", "{D191D7DB-1212-4538-8364-EDE5DD2C0A2B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorldCluster", "Services\WorldCluster\WorldCluster.csproj", "{1C33ECF2-7D8F-4EAB-824F-375B200C9E03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorldCluster", "WorldCluster\WorldCluster.csproj", "{1C33ECF2-7D8F-4EAB-824F-375B200C9E03}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Configuration", "Services\Mangos.Cluster.Configuration\Mangos.Cluster.Configuration.csproj", "{64A97B9F-FB45-44EA-9723-F4EBD7F41D9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Configuration", "Mangos.Cluster.Configuration\Mangos.Cluster.Configuration.csproj", "{64A97B9F-FB45-44EA-9723-F4EBD7F41D9C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Storage", "Services\Mangos.Cluster.Storage\Mangos.Cluster.Storage.csproj", "{E182F827-2D18-444E-9023-AC485E7DCE81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Storage", "Mangos.Cluster.Storage\Mangos.Cluster.Storage.csproj", "{E182F827-2D18-444E-9023-AC485E7DCE81}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Storage.MySql", "Services\Mangos.Cluster.Storage.MySql\Mangos.Cluster.Storage.MySql.csproj", "{AF692FEF-C973-4F38-8180-7946F3587671}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Storage.MySql", "Mangos.Cluster.Storage.MySql\Mangos.Cluster.Storage.MySql.csproj", "{AF692FEF-C973-4F38-8180-7946F3587671}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Network", "Services\Mangos.Realm.Network\Mangos.Realm.Network.csproj", "{2C5C22D6-CAD7-48FA-A318-F16A540BEEE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Realm.Network", "Mangos.Realm.Network\Mangos.Realm.Network.csproj", "{2C5C22D6-CAD7-48FA-A318-F16A540BEEE6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Network", "Services\Mangos.Cluster.Network\Mangos.Cluster.Network.csproj", "{6D77F314-5722-41F1-839A-026BF782F19C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Cluster.Network", "Mangos.Cluster.Network\Mangos.Cluster.Network.csproj", "{6D77F314-5722-41F1-839A-026BF782F19C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Common", "Mangos.Common\Mangos.Common.csproj", "{26F1703D-EDDF-479C-98FF-C48B1FDECB2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,10 +95,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{04260F96-938F-0597-3F8B-F751EEEF0CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04260F96-938F-0597-3F8B-F751EEEF0CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{04260F96-938F-0597-3F8B-F751EEEF0CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{04260F96-938F-0597-3F8B-F751EEEF0CDE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6BB15C91-C4A4-025E-3DD3-F1C93973F589}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6BB15C91-C4A4-025E-3DD3-F1C93973F589}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BB15C91-C4A4-025E-3DD3-F1C93973F589}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -215,12 +211,15 @@ Global
 		{6D77F314-5722-41F1-839A-026BF782F19C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D77F314-5722-41F1-839A-026BF782F19C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D77F314-5722-41F1-839A-026BF782F19C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26F1703D-EDDF-479C-98FF-C48B1FDECB2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26F1703D-EDDF-479C-98FF-C48B1FDECB2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26F1703D-EDDF-479C-98FF-C48B1FDECB2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26F1703D-EDDF-479C-98FF-C48B1FDECB2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{04260F96-938F-0597-3F8B-F751EEEF0CDE} = {E4030417-3F95-48BA-8A9A-6E1B4A5B5873}
 		{6BB15C91-C4A4-025E-3DD3-F1C93973F589} = {E4030417-3F95-48BA-8A9A-6E1B4A5B5873}
 		{0BFFCD0A-10B2-036B-31D9-4A0783642434} = {86D392EB-75DF-4211-A482-1F826079BC6B}
 		{B155447B-4A9E-03D6-20C4-4BC96D74C5F7} = {86D392EB-75DF-4211-A482-1F826079BC6B}
@@ -257,6 +256,7 @@ Global
 		{AF692FEF-C973-4F38-8180-7946F3587671} = {404E091A-3BC2-4F2B-B634-1CC8891405C3}
 		{2C5C22D6-CAD7-48FA-A318-F16A540BEEE6} = {4E5FCE8C-FE93-42A3-A3D9-4721A6A67CCC}
 		{6D77F314-5722-41F1-839A-026BF782F19C} = {404E091A-3BC2-4F2B-B634-1CC8891405C3}
+		{26F1703D-EDDF-479C-98FF-C48B1FDECB2F} = {E4030417-3F95-48BA-8A9A-6E1B4A5B5873}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADB1D01A-F2D8-411D-8C5E-9B125F8FE64E}
