@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30503.244
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{86D392EB-75DF-4211-A482-1F826079BC6B}"
 EndProject
@@ -50,6 +50,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".development", ".development", "{97868233-E3E0-4477-A5F2-7522A82F077C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Mangos.props = Mangos.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Zip", "Common\Mangos.Zip\Mangos.Zip.csproj", "{2D28CF25-F3D8-4488-825A-20C05D144C9D}"
