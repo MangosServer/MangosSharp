@@ -311,7 +311,6 @@ public static class WS_WardenClient
         public byte[] ModKeyIn = Array.Empty<byte>();
         public byte[] ModKeyOut = Array.Empty<byte>();
 
-
         public bool LoadModule(string Name, ref byte[] Data, byte[] Key)
         {
             Key = RC4.Init(Key);

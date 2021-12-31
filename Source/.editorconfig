@@ -54,6 +54,7 @@ csharp_style_prefer_pattern_matching=true:error
 csharp_style_prefer_null_check_over_type_check=true:error
 csharp_prefer_simple_default_expression=true:error
 csharp_style_inlined_variable_declaration=true:error
+dotnet_style_allow_multiple_blank_lines_experimental=false:error
 
 csharp_new_line_before_open_brace=all
 csharp_new_line_before_else=true

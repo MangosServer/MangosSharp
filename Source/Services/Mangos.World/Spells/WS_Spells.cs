@@ -4785,7 +4785,6 @@ public class WS_Spells
         return SpellFailedReason.SPELL_NO_ERROR;
     }
 
-
     /// <summary>
     /// SPELL_EFFECT_RESURRECT_NEW
     /// </summary>
@@ -5385,7 +5384,6 @@ public class WS_Spells
         return SpellFailedReason.SPELL_NO_ERROR;
     }
 
-
     /// <summary>
     /// SPELL_EFFECT_CHARGE
     /// </summary>
@@ -5470,7 +5468,6 @@ public class WS_Spells
         }
         return SpellFailedReason.SPELL_NO_ERROR;
     }
-
 
     /// <summary>
     /// SPELL_EFFECT_SCRIPT_EFFECT
