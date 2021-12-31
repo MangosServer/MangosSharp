@@ -27,8 +27,14 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: Build
-      run: dotnet build $env:Solution_Path /p:Configuration=$env:Configuration
+    - name: Restore
+      run: dotnet restore $env:Solution_Path
 
-    - name: Codetyle check
-      run: dotnet format --verify-no-changes $env:Solution_Path
+    - name: Build
+      run: dotnet build --no-restore $env:Solution_Path
+
+    - name: Test
+      run: dotnet test --no-restore $env:Solution_Path
+
+    - name: Verify
+      run: dotnet format --verify-no-changes --no-restore $env:Solution_Path
