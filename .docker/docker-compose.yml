@@ -1,7 +1,6 @@
-version: '3.8'
 services:
   realm:
-    image: mangosvb/realm
+    image: mangos-realm
     container_name: realm
     depends_on:
       - mysql
@@ -11,10 +10,10 @@ services:
       context: ..
       dockerfile: ./.docker/RealmServer.Dockerfile
     networks:
-      - mangosvb
+      - mangosSharp
 
   cluster:
-    image: mangosvb/cluster
+    image: mangos-cluster
     container_name: cluster
     depends_on:
       - mysql
@@ -24,10 +23,10 @@ services:
       context: ..
       dockerfile: ./.docker/WorldCluster.Dockerfile
     networks:
-      - mangosvb
+      - mangosSharp
   
   world:
-    image: mangosvb/world
+    image: mangos-world
     container_name: world
     depends_on:
       - mysql
@@ -35,23 +34,23 @@ services:
       context: ..
       dockerfile: ./.docker/WorldServer.Dockerfile
     networks:
-      - mangosvb
+      - mangosSharp
 
   mysql:
     image: mysql:8.0
     container_name: mysql
     volumes:
-      - mangosvb:/var/lib/mysql
+      - mangosSharp:/var/lib/mysql
     ports: 
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: 'rootpass'
     networks:
-      - mangosvb
+      - mangosSharp
 
 volumes:
-  mangosvb:
-    name: mangosvb
+  mangosSharp:
+    name: MangosSharp
 
 networks:
-  mangosvb:
+  mangosSharp:
