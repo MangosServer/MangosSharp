@@ -35,11 +35,11 @@ namespace Mangos.Realm.Network
             this.logger = logger;
         }
 
-        public async Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
+        public Task<ITcpClient> CreateTcpClientAsync(Socket clientSocket)
         {
             Client clientModel = new((IPEndPoint)clientSocket.RemoteEndPoint);
 
-            return new RealmTcpClient(logger, router, clientModel);
+            return Task.FromResult(new RealmTcpClient(logger, router, clientModel));
         }
     }
 }

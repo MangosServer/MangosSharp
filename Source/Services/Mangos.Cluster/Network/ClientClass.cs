@@ -68,7 +68,7 @@ namespace Mangos.Cluster.Network
             return ci;
         }
 
-        public async Task OnConnectAsync()
+        public Task OnConnectAsync()
         {
             if (_socket is null)
             {
@@ -95,7 +95,7 @@ namespace Mangos.Cluster.Network
                 {
                     _socket.Close();
                     Dispose();
-                    return;
+                    return Task.CompletedTask;
                 }
             }
             else
@@ -116,6 +116,7 @@ namespace Mangos.Cluster.Network
             }
 
             _clusterServiceLocator.WcStats.ConnectionsIncrement();
+            return Task.CompletedTask;
         }
 
         public void OnPacket(PacketClass p)
