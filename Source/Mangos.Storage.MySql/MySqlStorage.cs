@@ -34,17 +34,17 @@ public class MySqlStorage : IAsyncDisposable
     private MySqlConnection connection;
     private Dictionary<string, string> queries;
 
-    public async Task ConnectAsync(object queriesTarget, string conenctionString)
+    public async Task ConnectAsync(object queriesTarget, string connectionString)
     {
         if (connection != null)
         {
             throw new Exception("MySql connection has already been opened");
         }
 
-        connection = new MySqlConnection(conenctionString);
-        var conenctionTask = connection.OpenAsync();
+        connection = new MySqlConnection(connectionString);
+        var connectionTask = connection.OpenAsync();
         queries = GetEmbeddedQueries(queriesTarget);
-        await conenctionTask;
+        await connectionTask;
     }
 
     public async ValueTask DisposeAsync()
