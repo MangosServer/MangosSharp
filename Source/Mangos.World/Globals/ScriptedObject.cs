@@ -56,7 +56,7 @@ public class ScriptedObject : IDisposable
                 LastDate = FileSystem.FileDateTime(Source);
             }
         }
-        if (Operators.CompareString(FileSystem.Dir(AssemblyFile), "", TextCompare: false) != 0 && DateTime.Compare(LastDate, FileSystem.FileDateTime(AssemblyFile)) < 0)
+        if (Operators.CompareString(Path.GetFileName(AssemblyFile), "", TextCompare: false) != 0 && DateTime.Compare(LastDate, FileSystem.FileDateTime(AssemblyFile)) < 0)
         {
             LoadAssemblyObject(AssemblyFile);
             return;
