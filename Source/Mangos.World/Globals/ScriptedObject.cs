@@ -125,7 +125,7 @@ public class ScriptedObject : IDisposable
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public ScriptedObject(string AssemblySourceFile, string AssemblyFile, bool InMemory)
     {
-        if (!InMemory && Operators.CompareString(FileSystem.Dir(AssemblyFile), "", TextCompare: false) != 0 && DateTime.Compare(FileSystem.FileDateTime(AssemblySourceFile), FileSystem.FileDateTime(AssemblyFile)) < 0)
+        if (!InMemory && Operators.CompareString(Path.GetFileName(AssemblyFile), "", TextCompare: false) != 0 && DateTime.Compare(FileSystem.FileDateTime(AssemblySourceFile), FileSystem.FileDateTime(AssemblyFile)) < 0)
         {
             LoadAssemblyObject(AssemblyFile);
             return;
