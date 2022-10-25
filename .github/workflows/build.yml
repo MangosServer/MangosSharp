@@ -9,7 +9,6 @@ jobs:
 
     env:
       Solution_Path: ./Source/Mangos.sln
-      Configuration: Release
 
     steps:
     - name: Install .NET Core
