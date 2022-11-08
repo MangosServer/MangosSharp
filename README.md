@@ -29,10 +29,10 @@ namely [patch 1.12.1][4], [patch 1.12.2][5] & [patch 1.12.3][6].
 
 Requirements
 ------------
-    Supported platforms: Windows 8+, Linux, MacOS, Docker
+    Supported platforms: Windows 8.1+ , Linux, MacOS, Docker
     .NET 7 SDK
     MySQL 8.0
-    Visual Studio 2022 or any other editor with .NET 6 support
+    Visual Studio 2022 or any other editor with .NET 7 support
 
 
 Dependencies
