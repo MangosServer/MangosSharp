@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.4.0" />
-    <PackageReference Include="System.CodeDom" Version="6.0.0" />
+    <PackageReference Include="System.CodeDom" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
