@@ -1827,10 +1827,7 @@ public class WS_Commands
         }
         creature.SetToRealPosition(Forced: true);
         var MoveTime = creature.MoveTo(objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation);
-        if (creature.aiScript != null)
-        {
-            creature.aiScript.Pause(MoveTime);
-        }
+        creature.aiScript?.Pause(MoveTime);
         return true;
     }
 

@@ -313,10 +313,7 @@ public class ClientClass : ClientInfo
             // On Error Resume Next
             // May have to trap and use exception handler rather than the on error resume next rubbish
 
-            if (_socket is not null)
-            {
-                _socket.Close();
-            }
+            _socket?.Close();
 
             lock (((ICollection)_clusterServiceLocator.WorldCluster.ClienTs).SyncRoot)
             {

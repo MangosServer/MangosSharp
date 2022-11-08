@@ -2406,10 +2406,7 @@ public class WS_PlayerData
                             SMSG_LEVELUP_INFO.AddInt32(Stamina.Base - oldStamina);
                             SMSG_LEVELUP_INFO.AddInt32(Intellect.Base - oldIntellect);
                             SMSG_LEVELUP_INFO.AddInt32(Spirit.Base - oldSpirit);
-                            if (client != null)
-                            {
-                                client.Send(ref SMSG_LEVELUP_INFO);
-                            }
+                            client?.Send(ref SMSG_LEVELUP_INFO);
                         }
                         finally
                         {
@@ -5179,10 +5176,7 @@ public class WS_PlayerData
                     ProjectData.SetProjectError(ex);
                     var e = ex;
                     WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error at HandleDrowning():", e.ToString());
-                    if (underWaterTimer != null)
-                    {
-                        underWaterTimer.Dispose();
-                    }
+                    underWaterTimer?.Dispose();
                     underWaterTimer = null;
                     ProjectData.ClearProjectError();
                 }
@@ -5944,10 +5938,7 @@ public class WS_PlayerData
             if (!_disposedValue)
             {
                 WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM characters_inventory WHERE item_bag = {GUID} AND item_slot >= {69} AND item_slot <= {79}");
-                if (underWaterTimer != null)
-                {
-                    underWaterTimer.Dispose();
-                }
+                underWaterTimer?.Dispose();
                 if (repopTimer != null)
                 {
                     repopTimer.Dispose();
@@ -5957,10 +5948,7 @@ public class WS_PlayerData
                     myCorpse.Save();
                     myCorpse.AddToWorld();
                 }
-                if (NonCombatPet != null)
-                {
-                    NonCombatPet.Destroy();
-                }
+                NonCombatPet?.Destroy();
                 if (IsInGroup)
                 {
                     Group.LocalMembers.Remove(GUID);
@@ -5989,10 +5977,7 @@ public class WS_PlayerData
                 {
                     client.Character = null;
                 }
-                if (LogoutTimer != null)
-                {
-                    LogoutTimer.Dispose();
-                }
+                LogoutTimer?.Dispose();
                 LogoutTimer = null;
                 GC.Collect();
             }

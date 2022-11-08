@@ -797,10 +797,7 @@ public class WS_GameObjects
                 SendToNearPlayers(ref packet);
                 packet.Dispose();
                 Despawned = true;
-                if (Loot != null)
-                {
-                    Loot.Dispose();
-                }
+                Loot?.Dispose();
                 RemoveFromWorld();
                 if (SpawnTime > 0)
                 {

@@ -40,10 +40,7 @@ public class WS_Totems
             Caster = null;
             Duration = 0;
             Type = TotemType.TOTEM_PASSIVE;
-            if (aiScript != null)
-            {
-                aiScript.Dispose();
-            }
+            aiScript?.Dispose();
             aiScript = null;
             Duration = Duration_;
         }

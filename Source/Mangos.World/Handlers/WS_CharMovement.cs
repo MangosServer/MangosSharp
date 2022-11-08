@@ -682,10 +682,7 @@ public class WS_CharMovement
         }
         WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[Character.CellX, Character.CellY].PlayersHere.Add(Character.GUID);
         UpdateCell(ref Character);
-        if (Character.Pet != null)
-        {
-            Character.Pet.Spawn();
-        }
+        Character.Pet?.Spawn();
     }
 
     public void RemoveFromWorld(ref WS_PlayerData.CharacterObject Character)
@@ -760,10 +757,7 @@ public class WS_CharMovement
             }
         }
         Character.corpseObjectsNear.Clear();
-        if (Character.Pet != null)
-        {
-            Character.Pet.Hide();
-        }
+        Character.Pet?.Hide();
     }
 
     public void MoveCell(ref WS_PlayerData.CharacterObject Character)
@@ -777,10 +771,7 @@ public class WS_CharMovement
         }
         if ((Character.CellX != oldX) || (Character.CellY != oldY) && Character != null)
         {
-            if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles != null)
-            {
-                WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[oldX, oldY].PlayersHere.Remove(Character.GUID);
-            }
+            WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles?[oldX, oldY].PlayersHere.Remove(Character.GUID);
             WorldServiceLocator._WS_Maps.Maps[Character.MapID].Tiles[Character.CellX, Character.CellY].PlayersHere.Add(Character.GUID);
         }
     }

@@ -447,10 +447,7 @@ public class WcHandlersGroup
 
                     packet.AddInt8((byte)LootThreshold);
                     packet.AddInt16(0);
-                    if (Members[i].Client is not null)
-                    {
-                        Members[i].Client.Send(packet);
-                    }
+                    Members[i].Client?.Send(packet);
 
                     packet.Dispose();
                 }

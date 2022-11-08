@@ -457,14 +457,8 @@ public class WS_Handlers_Trade
         try
         {
             response.AddInt32(3);
-            if (client.Character.tradeInfo.Target != null)
-            {
-                client.Character.tradeInfo.Target.client.SendMultiplyPackets(ref response);
-            }
-            if (client.Character.tradeInfo.Trader != null)
-            {
-                client.Character.tradeInfo.Trader.client.SendMultiplyPackets(ref response);
-            }
+            client.Character.tradeInfo.Target?.client.SendMultiplyPackets(ref response);
+            client.Character.tradeInfo.Trader?.client.SendMultiplyPackets(ref response);
         }
         finally
         {
