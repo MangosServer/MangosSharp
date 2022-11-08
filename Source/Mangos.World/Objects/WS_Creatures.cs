@@ -579,10 +579,7 @@ public class WS_Creatures
                 aiScript.State = AIState.AI_DEAD;
                 aiScript.DoThink();
             }
-            if (aiScript != null)
-            {
-                aiScript.OnDeath();
-            }
+            aiScript?.OnDeath();
             if (Attacker != null && Attacker is CreatureObject @object && @object.aiScript != null)
             {
                 var tBaseAI = @object.aiScript;
@@ -656,10 +653,7 @@ public class WS_Creatures
                 if (tmpPercent != LastPercent)
                 {
                     LastPercent = tmpPercent;
-                    if (aiScript != null)
-                    {
-                        aiScript.OnHealthChange(LastPercent);
-                    }
+                    aiScript?.OnHealthChange(LastPercent);
                 }
             }
             if (SeenBy.Count > 0)
@@ -1028,10 +1022,7 @@ public class WS_Creatures
                 DestroyAtNoCombat = true
             };
             tmpCreature.AddToWorld();
-            if (tmpCreature.aiScript != null)
-            {
-                tmpCreature.aiScript.Dispose();
-            }
+            tmpCreature.aiScript?.Dispose();
             tmpCreature.aiScript = new WS_Creatures_AI.DefaultAI(ref tmpCreature);
             tmpCreature.aiScript.aiHateTable = aiScript.aiHateTable;
             tmpCreature.aiScript.OnEnterCombat();
@@ -1462,10 +1453,7 @@ public class WS_Creatures
         {
             if (!_disposedValue)
             {
-                if (aiScript != null)
-                {
-                    aiScript.Dispose();
-                }
+                aiScript?.Dispose();
                 RemoveFromWorld();
                 try
                 {
@@ -1473,10 +1461,7 @@ public class WS_Creatures
                     WorldServiceLocator._WorldServer.WORLD_CREATUREs.Remove(GUID);
                     WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys.Remove(GUID);
                     WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.ReleaseWriterLock();
-                    if (ExpireTimer != null)
-                    {
-                        ExpireTimer.Dispose();
-                    }
+                    ExpireTimer?.Dispose();
                 }
                 catch (Exception ex2)
                 {

@@ -148,10 +148,7 @@ public partial class WS_Maps
                         var j = 0;
                         do
                         {
-                            if (Tiles[i, j] != null)
-                            {
-                                Tiles[i, j].Dispose();
-                            }
+                            Tiles[i, j]?.Dispose();
                             j++;
                         }
                         while (j <= 63);

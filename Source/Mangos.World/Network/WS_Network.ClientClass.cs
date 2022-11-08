@@ -182,10 +182,7 @@ public partial class WS_Network
                         }
                         packet.UpdateLength();
 
-                        if (WorldServiceLocator._WorldServer.ClsWorldServer.Cluster != null)
-                        {
-                            WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSend(Index, packet.Data);
-                        }
+                        WorldServiceLocator._WorldServer.ClsWorldServer.Cluster?.ClientSend(Index, packet.Data);
                     }
                 }
                 catch (Exception ex)
@@ -216,10 +213,7 @@ public partial class WS_Network
                     packet.UpdateLength();
                     var data = (byte[])packet.Data.Clone();
 
-                    if (WorldServiceLocator._WorldServer.ClsWorldServer.Cluster != null)
-                    {
-                        WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientSend(Index, data);
-                    }
+                    WorldServiceLocator._WorldServer.ClsWorldServer.Cluster?.ClientSend(Index, data);
                 }
                 catch (Exception ex)
                 {
@@ -307,10 +301,7 @@ public partial class WS_Network
                     WorldServiceLocator._WorldServer.CLIENTs.Remove(Index);
                 }
 
-                if (WorldServiceLocator._WorldServer.ClsWorldServer.Cluster != null)
-                {
-                    WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.ClientDrop(Index);
-                }
+                WorldServiceLocator._WorldServer.ClsWorldServer.Cluster?.ClientDrop(Index);
 
                 if (WorldServiceLocator._WorldServer.CLIENTs.ContainsKey(Index))
                 {

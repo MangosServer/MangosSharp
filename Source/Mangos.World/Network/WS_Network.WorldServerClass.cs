@@ -183,10 +183,7 @@ public partial class WS_Network
         public void ClientDisconnect(uint id)
         {
             WorldServiceLocator._WorldServer.Log.WriteLine(LogType.NETWORK, "[{0:000000}] Client disconnected", id);
-            if (WorldServiceLocator._WorldServer.CLIENTs[id].Character != null)
-            {
-                WorldServiceLocator._WorldServer.CLIENTs[id].Character.Save();
-            }
+            WorldServiceLocator._WorldServer.CLIENTs[id].Character?.Save();
             WorldServiceLocator._WorldServer.CLIENTs[id].Delete();
             WorldServiceLocator._WorldServer.CLIENTs.Remove(id);
         }

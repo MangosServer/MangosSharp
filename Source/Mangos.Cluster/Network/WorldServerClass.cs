@@ -294,10 +294,7 @@ public class WorldServerClass : Hub, ICluster
             var withBlock = _clusterServiceLocator.WcHandlersGroup.GrouPs[groupId];
             for (byte i = 0, loopTo = (byte)(withBlock.Members.Length - 1); i <= loopTo; i++)
             {
-                if (withBlock.Members[i] is not null)
-                {
-                    withBlock.Members[i].Client.Send((byte[])data.Clone());
-                }
+                withBlock.Members[i]?.Client.Send((byte[])data.Clone());
             }
         }
     }
@@ -370,10 +367,7 @@ public class WorldServerClass : Hub, ICluster
                 return false;
             }
 
-            if (parentMap.InstanceCreateAsync(mapId) != null)
-            {
-                parentMap.InstanceCreateAsync(mapId).Wait();
-            }
+            parentMap.InstanceCreateAsync(mapId)?.Wait();
 
             lock (((ICollection)Worlds).SyncRoot)
             {
