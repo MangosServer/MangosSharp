@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
-using Mangos.Configuration;
+using Mangos.Configurations;
 using Mangos.SignalR;
 using Microsoft.AspNetCore.SignalR;
 using System;

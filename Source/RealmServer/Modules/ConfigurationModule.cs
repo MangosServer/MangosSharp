@@ -17,8 +17,8 @@
 //
 
 using Autofac;
-using Mangos.Configuration;
-using Mangos.Configuration.Xml;
+using Mangos.Configurations;
+using Mangos.Configurations.Xml;
 using Mangos.Realm.Configuration;
 
 namespace RealmServer.Modules;

@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Configuration.Xml;
+using Mangos.Configurations.Xml;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
 using Mangos.Realm.Configuration;

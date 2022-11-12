@@ -26,7 +26,7 @@ using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
-using Mangos.Configuration;
+using Mangos.Configurations;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;

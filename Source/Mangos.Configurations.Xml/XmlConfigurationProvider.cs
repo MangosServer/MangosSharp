@@ -20,7 +20,7 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Mangos.Configuration.Xml;
+namespace Mangos.Configurations.Xml;
 
 public class XmlConfigurationProvider<T> : IConfigurationProvider<T>
     where T : class

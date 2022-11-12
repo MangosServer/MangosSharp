@@ -27,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.World", "Mangos.Worl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{7B6C0310-8E34-42CE-A29F-22F24BBC8381}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration", "Mangos.Configuration\Mangos.Configuration.csproj", "{E27D5071-163D-0D73-30C7-056D3063F13B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configurations", "Mangos.Configurations\Mangos.Configurations.csproj", "{E27D5071-163D-0D73-30C7-056D3063F13B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configuration.Xml", "Mangos.Configuration.Xml\Mangos.Configuration.Xml.csproj", "{EB435360-64EE-0849-15BF-759DA3CB6753}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Configurations.Xml", "Mangos.Configurations.Xml\Mangos.Configurations.Xml.csproj", "{EB435360-64EE-0849-15BF-759DA3CB6753}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Loggers", "Loggers", "{E0A07FF5-16B1-444C-8D29-7EFEF8776E3A}"
 EndProject

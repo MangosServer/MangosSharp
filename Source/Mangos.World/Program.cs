@@ -18,8 +18,8 @@
 
 using Autofac;
 using Mangos.Common.Globals;
-using Mangos.Configuration;
-using Mangos.Configuration.Xml;
+using Mangos.Configurations;
+using Mangos.Configurations.Xml;
 using Mangos.DataStores;
 using Mangos.Loggers;
 using Mangos.Loggers.Console;

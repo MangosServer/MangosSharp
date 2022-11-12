@@ -18,7 +18,7 @@
 
 using Autofac;
 using Mangos.Common.Globals;
-using Mangos.Configuration;
+using Mangos.Configurations;
 using Mangos.DataStores;
 using Mangos.World.AI;
 using Mangos.World.Auction;

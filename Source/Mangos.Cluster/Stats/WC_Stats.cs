@@ -21,7 +21,7 @@ using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
-using Mangos.Configuration;
+using Mangos.Configurations;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;

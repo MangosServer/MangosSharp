@@ -17,7 +17,7 @@
 //
 
 using Mangos.Cluster.Configuration;
-using Mangos.Configuration.Xml;
+using Mangos.Configurations.Xml;
 using Mangos.Loggers;
 using Mangos.Network.Tcp;
 using System;

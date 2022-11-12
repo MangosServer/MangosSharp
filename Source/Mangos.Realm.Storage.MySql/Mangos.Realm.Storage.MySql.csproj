@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Configurations\Mangos.Configurations.csproj" />
     <ProjectReference Include="..\Mangos.Storage.MySql\Mangos.Storage.MySql.csproj" />
     <ProjectReference Include="..\Mangos.Realm.Configuration\Mangos.Realm.Configuration.csproj" />
     <ProjectReference Include="..\Mangos.Realm.Storage\Mangos.Realm.Storage.csproj" />

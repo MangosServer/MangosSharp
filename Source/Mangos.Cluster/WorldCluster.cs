@@ -24,7 +24,7 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Common.Legacy.Logging;
-using Mangos.Configuration;
+using Mangos.Configurations;
 using Mangos.SignalR;
 using Microsoft.VisualBasic;
 using System;

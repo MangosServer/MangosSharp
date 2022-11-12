@@ -23,7 +23,7 @@ using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
-using Mangos.Configuration;
+using Mangos.Configurations;
 using System;
 using System.Collections;
 using System.Collections.Generic;

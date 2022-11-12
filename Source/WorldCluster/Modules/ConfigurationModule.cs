@@ -18,8 +18,8 @@
 
 using Autofac;
 using Mangos.Cluster.Configuration;
-using Mangos.Configuration;
-using Mangos.Configuration.Xml;
+using Mangos.Configurations;
+using Mangos.Configurations.Xml;
 
 namespace WorldCluster.Modules;
 
