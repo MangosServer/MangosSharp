@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{86D392EB-75DF-4211-A482-1F826079BC6B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{BD151E63-D321-4AC1-A2CD-80283D4FC70C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{BD151E63-D321-4AC1-A2CD-80283D4FC70C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{E4030417-3F95-48BA-8A9A-6E1B4A5B5873}"
 EndProject
@@ -45,7 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Network", "Network", "{9EF7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Network.Tcp", "Mangos.Network.Tcp\Mangos.Network.Tcp.csproj", "{C4D428E9-9272-4F1D-9A23-973D160082F8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".development", ".development", "{97868233-E3E0-4477-A5F2-7522A82F077C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".global", ".global", "{97868233-E3E0-4477-A5F2-7522A82F077C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		Mangos.props = Mangos.props
