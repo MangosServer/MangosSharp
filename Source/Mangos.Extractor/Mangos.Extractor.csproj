@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../Mangos.props" />
   
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>

@@ -48,7 +48,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".global", ".global", "{97868233-E3E0-4477-A5F2-7522A82F077C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		Mangos.props = Mangos.props
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Zip", "Mangos.Zip\Mangos.Zip.csproj", "{2D28CF25-F3D8-4488-825A-20C05D144C9D}"
