@@ -20,13 +20,13 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Restore
-      run: dotnet restore ./Source/Mangos.sln
+      run: dotnet restore $env:Solution_Path
 
     - name: Build
-      run: dotnet build --no-restore $Solution_Path
+      run: dotnet build --no-restore $env:Solution_Path
 
     - name: Test
-      run: dotnet test --no-build --no-restore $Solution_Path
+      run: dotnet test --no-build --no-restore $env:Solution_Path
 
     - name: Verify
-      run: dotnet format --verify-no-changes --no-restore $Solution_Path
+      run: dotnet format --verify-no-changes --no-restore $env:Solution_Path
