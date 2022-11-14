@@ -20,8 +20,6 @@
     <ProjectReference Include="..\Mangos.Loggers\Mangos.Loggers.csproj" />
     <ProjectReference Include="..\Mangos.Cluster.Configuration\Mangos.Cluster.Configuration.csproj" />
     <ProjectReference Include="..\Mangos.Cluster.Network\Mangos.Cluster.Network.csproj" />
-    <ProjectReference Include="..\Mangos.Cluster.Storage.MySql\Mangos.Cluster.Storage.MySql.csproj" />
-    <ProjectReference Include="..\Mangos.Cluster.Storage\Mangos.Cluster.Storage.csproj" />
     <ProjectReference Include="..\Mangos.Cluster\Mangos.Cluster.csproj" />
     <ProjectReference Include="..\Mangos.World\Mangos.World.csproj" />
   </ItemGroup>
