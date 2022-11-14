@@ -1,0 +1,4 @@
+﻿{
+  "RealmServerEndpoint": "0.0.0.0:3724",
+  "AccountDataBaseConnectionString": "Server=mysql;Port=3306;User ID=root;Password=rootpass;Database=mangosVBaccounts;Compress=false;Connection Timeout=5;"
+}

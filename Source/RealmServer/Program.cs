@@ -25,8 +25,14 @@ using Mangos.MySql.Implementation;
 using Mangos.Tcp.Implementation;
 using RealmServer;
 
-var container = CreateApplicationContainer();
+var builder = new ContainerBuilder();
+builder.RegisterModule<ConfigurationModule>();
+builder.RegisterModule<LoggingModule>();
+builder.RegisterModule<MySqlModule>();
+builder.RegisterModule<TcpModule>();
+builder.RegisterModule<RealmModule>();
 
+var container = builder.Build();
 var configuration = container.Resolve<MangosConfiguration>();
 var logger = container.Resolve<IMangosLogger>();
 var tcptServer = container.Resolve<TcpServer>();
@@ -37,17 +43,6 @@ logger.Trace(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
 logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
 logger.Trace("                                                ");
 logger.Trace("Website / Forum / Support: https://getmangos.eu/");
+
 logger.Information("Starting tcp server");
 await tcptServer.StartAsync(configuration.RealmServerEndpoint);
-
-IContainer CreateApplicationContainer()
-{
-    var builder = new ContainerBuilder();
-    builder.RegisterModule<ConfigurationModule>();
-    builder.RegisterModule<LoggingModule>();
-    builder.RegisterModule<MySqlModule>();
-    builder.RegisterModule<TcpModule>();
-
-    builder.RegisterModule<RealmModule>();
-    return builder.Build();
-}
