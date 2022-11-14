@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="SharpZipLib" Version="1.4.1" />
+  </ItemGroup>
+  
+</Project>
