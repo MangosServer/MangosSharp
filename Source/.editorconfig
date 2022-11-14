@@ -90,3 +90,8 @@ csharp_preserve_single_line_blocks=true
 csharp_space_before_dot=false
 csharp_space_between_parentheses=false
 csharp_new_line_between_query_expression_clauses=true
+
+dotnet_diagnostic.CA1852.severity = error
+
+[*Program*.cs]
+dotnet_diagnostic.CA1852.severity = none

@@ -17,30 +17,37 @@
 //
 
 using Autofac;
-using Mangos.Realm;
-using RealmServer.Modules;
-using System.Threading;
-using System.Threading.Tasks;
+using Mangos.Configuration;
+using Mangos.Configuration.Implementation;
+using Mangos.Logging;
+using Mangos.Logging.Implementation;
+using Mangos.MySql.Implementation;
+using Mangos.Tcp.Implementation;
+using RealmServer;
 
-namespace RealmServer;
+var container = CreateApplicationContainer();
+var logger = container.Resolve<IMangosLogger>();
+logger.Trace(@" __  __      _  _  ___  ___  ___               ");
+logger.Trace(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
+logger.Trace(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
+logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
+logger.Trace("                                                ");
+logger.Trace("Website / Forum / Support: https://getmangos.eu/");
 
-public class Program
+var configuration = container.Resolve<MangosConfiguration>();
+var tcptServer = container.Resolve<TcpServer>();
+
+logger.Information("Starting tcp server");
+await tcptServer.StartAsync(configuration.RealmServerEndpoint);
+
+IContainer CreateApplicationContainer()
 {
-    public static async Task Main(string[] args)
-    {
-        ContainerBuilder builder = new();
-        builder
-            .RegisterModule<LoggerModule>()
-            .RegisterModule<ConfigurationModule>()
-            .RegisterModule<StorageModule>()
-            .RegisterModule<TcpServerModule>()
-            .RegisterModule<CommonModule>()
-            .RegisterModule<RealmModule>();
+    var builder = new ContainerBuilder();
+    builder.RegisterModule<ConfigurationModule>();
+    builder.RegisterModule<LoggingModule>();
+    builder.RegisterModule<MySqlModule>();
+    builder.RegisterModule<TcpModule>();
 
-        var container = builder.Build();
-        var startup = container.Resolve<Startup>();
-        await startup.StartAsync();
-
-        Thread.CurrentThread.Join();
-    }
+    builder.RegisterModule<RealmModule>();
+    return builder.Build();
 }

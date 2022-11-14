@@ -4,23 +4,16 @@
     <TargetFramework>net7.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <ApplicationIcon>realmd.ico</ApplicationIcon>
-    <OutputPath>..\..\Bin\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ApplicationIcon>realmd.ico</ApplicationIcon>    
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Mangos.Configurations.Xml\Mangos.Configurations.Xml.csproj" />
-    <ProjectReference Include="..\Mangos.Loggers.Console\Mangos.Loggers.Console.csproj" />
-    <ProjectReference Include="..\Mangos.Realm.Configuration\Mangos.Realm.Configuration.csproj" />
-    <ProjectReference Include="..\Mangos.Realm.Network\Mangos.Realm.Network.csproj" />
-    <ProjectReference Include="..\Mangos.Realm.Storage\Mangos.Realm.Storage.csproj" />
-    <ProjectReference Include="..\Mangos.Realm\Mangos.Realm.csproj" />
-    <ProjectReference Include="..\Mangos.Realm.Storage.MySql\Mangos.Realm.Storage.MySql.csproj" />
+    <ProjectReference Include="..\Mangos.Configuration.Implementation\Mangos.Configuration.Implementation.csproj" />
+    <ProjectReference Include="..\Mangos.Logging.Implementation\Mangos.Logging.Implementation.csproj" />
+    <ProjectReference Include="..\Mangos.MySql.Implementation\Mangos.MySql.Implementation.csproj" />
+    <ProjectReference Include="..\Mangos.Tcp.Implementation\Mangos.Tcp.Implementation.csproj" />
   </ItemGroup>
 
 </Project>

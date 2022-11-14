@@ -1,0 +1,4 @@
+﻿{
+  "RealmServerEndpoint": "127.0.0.1:3724",
+  "AccountDataBaseConnectionString": "Server=localhost;Port=3306;User ID=root;Password=rootpass;Database=mangosVBaccounts;Compress=false;Connection Timeout=5;"
+}

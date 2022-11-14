@@ -6,10 +6,6 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Mangos.Realm.Storage.MySql\Mangos.Realm.Storage.MySql.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <None Remove="Queries\*.sql" />
     <EmbeddedResource Include="Queries\*.sql" />
   </ItemGroup>
