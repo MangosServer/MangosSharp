@@ -26,17 +26,17 @@ using Mangos.Tcp.Implementation;
 using RealmServer;
 
 var container = CreateApplicationContainer();
+
+var configuration = container.Resolve<MangosConfiguration>();
 var logger = container.Resolve<IMangosLogger>();
+var tcptServer = container.Resolve<TcpServer>();
+
 logger.Trace(@" __  __      _  _  ___  ___  ___               ");
 logger.Trace(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
 logger.Trace(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
 logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
 logger.Trace("                                                ");
 logger.Trace("Website / Forum / Support: https://getmangos.eu/");
-
-var configuration = container.Resolve<MangosConfiguration>();
-var tcptServer = container.Resolve<TcpServer>();
-
 logger.Information("Starting tcp server");
 await tcptServer.StartAsync(configuration.RealmServerEndpoint);
 
