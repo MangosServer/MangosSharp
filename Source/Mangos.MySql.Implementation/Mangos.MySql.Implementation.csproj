@@ -21,11 +21,5 @@
   <ItemGroup>
     <EmbeddedResource Include="**\*.sql" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Scripts\GetRealmListQuery.sql" />
-    <None Remove="Scripts\IsBannedAccountQuery.sql" />
-    <None Remove="Scripts\UpdateAccountCommand.sql" />
-  </ItemGroup>
   
 </Project>

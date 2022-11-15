@@ -63,14 +63,10 @@ public sealed class TcpServer
         try
         {
             using var scope = lifetimeScope.BeginLifetimeScope();
-            var tcpHandler = scope.Resolve<ITcpHandler>();
+            var tcpHandler = scope.Resolve<ITcpClientHandler>();
             var reader = new TcpReader(arrayPool, socket, cancellationToken);
             var writer = new TcpWriter(arrayPool, socket);
-
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                await tcpHandler.ExectueAsync(reader, writer, endpoint.Address);
-            }
+            await tcpHandler.ExectueAsync(reader, writer, endpoint.Address, cancellationToken, socket);
         }
         catch (SocketException exception) when (exception.SocketErrorCode == SocketError.ConnectionAborted)
         {

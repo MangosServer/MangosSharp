@@ -19,24 +19,37 @@
 using Mangos.Tcp;
 using RealmServer.Domain;
 using System.Net;
+using System.Net.Sockets;
 
 namespace RealmServer.Network;
 
-internal sealed class RealmRouterTcpHandler : ITcpHandler
+internal sealed class RealmRouterTcpClientHandler : ITcpClientHandler
 {
     private readonly IHandlerDispatcher[] dispatchers;
     private readonly ClientState clientState;
 
-    public RealmRouterTcpHandler(IEnumerable<IHandlerDispatcher> dispatchers, ClientState clientState)
+    public RealmRouterTcpClientHandler(IEnumerable<IHandlerDispatcher> dispatchers, ClientState clientState)
     {
         this.dispatchers = dispatchers.ToArray();
         this.clientState = clientState;
     }
 
-    public async Task ExectueAsync(ITcpReader reader, ITcpWriter writer, IPAddress remoteAddress)
+    public async Task ExectueAsync(
+        ITcpReader reader,
+        ITcpWriter writer,
+        IPAddress remoteAddress,
+        CancellationToken cancellationToken,
+        Socket socket)
     {
         clientState.IPAddress = remoteAddress;
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            await ExecuteMessageAsync(reader, writer);
+        }
+    }
 
+    private async Task ExecuteMessageAsync(ITcpReader reader, ITcpWriter writer)
+    {
         var opcode = (TcpPacketOpCodes)await reader.ReadByteAsync();
 
         var dispatcher = dispatchers.FirstOrDefault(x => x.Opcode == opcode);

@@ -21,7 +21,6 @@ using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
-using Mangos.Cluster.Stats;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Zip;
@@ -36,14 +35,13 @@ public class ClusterServiceLocator
     public Common.Legacy.Functions CommonFunctions { get; set; }
     public ZipService GlobalZip { get; set; }
     public NativeMethods NativeMethods { get; set; }
-    public WorldCluster WorldCluster { get; set; }
+    public LegacyWorldCluster WorldCluster { get; set; }
     public WorldServerClass WorldServerClass { get; set; }
     public WsDbcDatabase WsDbcDatabase { get; set; }
     public WsDbcLoad WsDbcLoad { get; set; }
     public Globals.Functions Functions { get; set; }
     public Packets Packets { get; set; }
     public WcGuild WcGuild { get; set; }
-    public WcStats WcStats { get; set; }
     public WcNetwork WcNetwork { get; set; }
     public WcHandlers WcHandlers { get; set; }
     public WcHandlersAuth WcHandlersAuth { get; set; }

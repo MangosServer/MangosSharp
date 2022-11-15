@@ -18,6 +18,19 @@
 
 namespace Mangos.Configuration;
 
-public sealed record MangosConfiguration(
-    string RealmServerEndpoint,
-    string AccountDataBaseConnectionString);
+public sealed class MangosConfiguration
+{
+    public required string RealmServerEndpoint { get; init; }
+    public required string ClusterServerEndpoint { get; init; }
+
+    public required string ClusterListenAddress { get; init; }
+    public required int ClusterListenPort { get; init; }
+
+    public required int ServerPlayerLimit { get; init; }
+
+    public required string AccountDataBaseConnectionString { get; init; }
+
+    public required string AccountDatabase { get; init; }
+    public required string CharacterDatabase { get; init; }
+    public required string WorldDatabase { get; init; }
+}

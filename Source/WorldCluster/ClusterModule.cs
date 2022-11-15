@@ -17,19 +17,15 @@
 //
 
 using Autofac;
-using Mangos.Cluster.Configuration;
-using Mangos.Configurations;
-using Mangos.Configurations.Xml;
+using Mangos.Tcp;
+using WorldCluster.Network;
 
-namespace WorldCluster.Modules;
+namespace WorldCluster;
 
-public class ConfigurationModule : Module
+internal sealed class ClusterModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterType<XmlConfigurationProvider<ClusterConfiguration>>()
-            .As<IConfigurationProvider<ClusterConfiguration>>()
-            .AsSelf()
-            .SingleInstance();
+        builder.RegisterType<ClusterRouterTcpHandler>().As<ITcpClientHandler>().InstancePerLifetimeScope();
     }
 }

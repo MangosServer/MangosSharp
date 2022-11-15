@@ -16,14 +16,13 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Cluster.Configuration;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
-using Mangos.Configurations;
+using Mangos.Configuration;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,23 +35,20 @@ namespace Mangos.Cluster.Network;
 
 public class ClientClass : ClientInfo
 {
-    private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
+    private readonly MangosConfiguration mangosConfiguration;
     private readonly ClusterServiceLocator _clusterServiceLocator;
 
-    public Client Client { get; }
+    public Client Client { get; } = new();
 
-    public ClientClass(Client client,
-        Socket socket,
+    public ClientClass(
         ClusterServiceLocator clusterServiceLocator,
-        IConfigurationProvider<ClusterConfiguration> configurationProvider)
+        MangosConfiguration mangosConfiguration)
     {
         _clusterServiceLocator = clusterServiceLocator;
-        _socket = socket;
-        this.configurationProvider = configurationProvider;
-        Client = client;
+        this.mangosConfiguration = mangosConfiguration;
     }
 
-    private readonly Socket _socket;
+    public Socket Socket { get; set; }
     public WcHandlerCharacter.CharacterObject Character;
 
     public ClientInfo GetClientInfo()
@@ -70,7 +66,7 @@ public class ClientClass : ClientInfo
 
     public Task OnConnectAsync()
     {
-        if (_socket is null)
+        if (Socket is null)
         {
             throw new ApplicationException("socket doesn't exist!");
         }
@@ -80,7 +76,7 @@ public class ClientClass : ClientInfo
             throw new ApplicationException("Clients doesn't exist!");
         }
 
-        IPEndPoint remoteEndPoint = (IPEndPoint)_socket.RemoteEndPoint;
+        IPEndPoint remoteEndPoint = (IPEndPoint)Socket.RemoteEndPoint;
         IP = remoteEndPoint.Address.ToString();
         Port = (uint)remoteEndPoint.Port;
 
@@ -93,7 +89,7 @@ public class ClientClass : ClientInfo
             }
             else
             {
-                _socket.Close();
+                Socket.Close();
                 Dispose();
                 return Task.CompletedTask;
             }
@@ -115,13 +111,12 @@ public class ClientClass : ClientInfo
             _clusterServiceLocator.WorldCluster.ClienTs.Add(Index, this);
         }
 
-        _clusterServiceLocator.WcStats.ConnectionsIncrement();
         return Task.CompletedTask;
     }
 
     public void OnPacket(PacketClass p)
     {
-        if (_socket is null)
+        if (Socket is null)
         {
             throw new ApplicationException("socket is Null!");
         }
@@ -138,18 +133,12 @@ public class ClientClass : ClientInfo
 
         var client = this;
 
-        if (configurationProvider.GetConfiguration().PacketLogging)
-        {
-            var argclient = this;
-            _clusterServiceLocator.Packets.LogPacket(p.Data, false, client);
-        }
-
         if (!_clusterServiceLocator.WorldCluster.GetPacketHandlers().ContainsKey(p.OpCode))
         {
             if (Character is null || !Character.IsInWorld)
             {
-                _socket?.Dispose();
-                _socket?.Close();
+                Socket?.Dispose();
+                Socket?.Close();
 
                 _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Unknown Opcode 0x{2:X} [{2}], DataLen={4}", IP, Port, p.OpCode, Environment.NewLine, p.Length);
                 _clusterServiceLocator.Packets.DumpPacket(p.Data, client);
@@ -181,25 +170,19 @@ public class ClientClass : ClientInfo
 
     public void Send(byte[] data)
     {
-        if (!_socket.Connected)
+        if (!Socket.Connected)
         {
             return;
         }
 
         try
         {
-            if (configurationProvider.GetConfiguration().PacketLogging)
-            {
-                var argclient = this;
-                _clusterServiceLocator.Packets.LogPacket(data, true, argclient);
-            }
-
             if (Client.PacketEncryption.IsEncryptionEnabled)
             {
                 Encode(data);
             }
 
-            _socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
+            Socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
         }
         catch (Exception err)
         {
@@ -216,12 +199,12 @@ public class ClientClass : ClientInfo
             throw new ApplicationException("Packet doesn't contain data!");
         }
 
-        if (_socket == null)
+        if (Socket == null)
         {
             return;
         }
 
-        if (!_socket.Connected)
+        if (!Socket.Connected)
         {
             return;
         }
@@ -231,18 +214,12 @@ public class ClientClass : ClientInfo
             try
             {
                 var data = packet.Data;
-                if (configurationProvider.GetConfiguration().PacketLogging)
-                {
-                    var argclient = this;
-                    _clusterServiceLocator.Packets.LogPacket(data, true, argclient);
-                }
-
                 if (Client.PacketEncryption.IsEncryptionEnabled)
                 {
                     Encode(data);
                 }
 
-                _socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
+                Socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
             }
             catch (Exception err)
             {
@@ -260,7 +237,7 @@ public class ClientClass : ClientInfo
             throw new ApplicationException("Packet doesn't contain data!");
         }
 
-        if (!_socket.Connected)
+        if (!Socket.Connected)
         {
             return;
         }
@@ -268,18 +245,13 @@ public class ClientClass : ClientInfo
         try
         {
             var data = (byte[])packet.Data.Clone();
-            if (configurationProvider.GetConfiguration().PacketLogging)
-            {
-                var argclient = this;
-                _clusterServiceLocator.Packets.LogPacket(data, true, argclient);
-            }
 
             if (Client.PacketEncryption.IsEncryptionEnabled)
             {
                 Encode(data);
             }
 
-            _socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
+            Socket.BeginSend(data, 0, data.Length, SocketFlags.None, OnSendComplete, null);
         }
         catch (Exception err)
         {
@@ -293,10 +265,9 @@ public class ClientClass : ClientInfo
 
     public void OnSendComplete(IAsyncResult ar)
     {
-        if (_socket is not null)
+        if (Socket is not null)
         {
-            var bytesSent = _socket.EndSend(ar);
-            Interlocked.Add(ref _clusterServiceLocator.WcStats.DataTransferOut, bytesSent);
+            var bytesSent = Socket.EndSend(ar);
         }
     }
 
@@ -313,7 +284,7 @@ public class ClientClass : ClientInfo
             // On Error Resume Next
             // May have to trap and use exception handler rather than the on error resume next rubbish
 
-            _socket?.Close();
+            Socket?.Close();
 
             lock (((ICollection)_clusterServiceLocator.WorldCluster.ClienTs).SyncRoot)
             {
@@ -332,7 +303,6 @@ public class ClientClass : ClientInfo
             }
 
             Character = null;
-            _clusterServiceLocator.WcStats.ConnectionsDecrement();
         }
 
         _disposedValue = true;
@@ -348,7 +318,7 @@ public class ClientClass : ClientInfo
 
     public void Delete()
     {
-        _socket.Close();
+        Socket.Close();
         Dispose();
     }
 
@@ -366,9 +336,9 @@ public class ClientClass : ClientInfo
 
     public void EnQueue(object state)
     {
-        while (_clusterServiceLocator.WorldCluster.CharacteRs.Count > configurationProvider.GetConfiguration().ServerPlayerLimit)
+        while (_clusterServiceLocator.WorldCluster.CharacteRs.Count > mangosConfiguration.ServerPlayerLimit)
         {
-            if (!_socket.Connected)
+            if (!Socket.Connected)
             {
                 return;
             }

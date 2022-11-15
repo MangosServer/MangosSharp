@@ -16,13 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Cluster.Configuration;
 using Mangos.Cluster.Globals;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
-using Mangos.Configurations;
 using Mangos.SignalR;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -35,37 +33,19 @@ namespace Mangos.Cluster.Network;
 public class WorldServerClass : Hub, ICluster
 {
     private readonly ClusterServiceLocator _clusterServiceLocator;
-    private readonly IConfigurationProvider<ClusterConfiguration> configurationProvider;
 
     public bool MFlagStopListen;
     private Timer _mTimerPing;
-    private Timer _mTimerStats;
-    private Timer _mTimerCpu;
 
-    public WorldServerClass(ClusterServiceLocator clusterServiceLocator,
-        IConfigurationProvider<ClusterConfiguration> configurationProvider)
+    public WorldServerClass(ClusterServiceLocator clusterServiceLocator)
     {
         _clusterServiceLocator = clusterServiceLocator;
-        this.configurationProvider = configurationProvider;
     }
 
     public void Start()
     {
         // Creating ping timer
         _mTimerPing = new Timer(Ping, null, 0, 15000);
-
-        // Creating stats timer
-        if (configurationProvider.GetConfiguration().StatsEnabled)
-        {
-            _mTimerStats = new Timer(
-                _clusterServiceLocator.WcStats.GenerateStats,
-                null,
-                configurationProvider.GetConfiguration().StatsTimer,
-                configurationProvider.GetConfiguration().StatsTimer);
-        }
-
-        // Creating CPU check timer
-        _mTimerCpu = new Timer(_clusterServiceLocator.WcStats.CheckCpu, null, 1000, 1000);
     }
 
     public Dictionary<uint, IWorld> Worlds = new();

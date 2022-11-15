@@ -17,26 +17,38 @@
 //
 
 using Autofac;
-using System.Threading.Tasks;
-using WorldCluster.Modules;
+using Mangos.Cluster;
+using Mangos.Configuration;
+using Mangos.Configuration.Implementation;
+using Mangos.Logging;
+using Mangos.Logging.Implementation;
+using Mangos.MySql.Implementation;
+using Mangos.Tcp.Implementation;
+using WorldCluster;
 
-namespace WorldCluster;
+var builder = new ContainerBuilder();
+builder.RegisterModule<LegacyClusterModule>();
+builder.RegisterModule<ConfigurationModule>();
+builder.RegisterModule<LoggingModule>();
+builder.RegisterModule<MySqlModule>();
+builder.RegisterModule<TcpModule>();
+builder.RegisterModule<ClusterModule>();
 
-public class Program
-{
-    public static async Task Main(string[] args)
-    {
-        ContainerBuilder builder = new();
+var container = builder.Build();
+var configuration = container.Resolve<MangosConfiguration>();
+var logger = container.Resolve<IMangosLogger>();
+var tcpServer = container.Resolve<TcpServer>();
+var legacyWorldCluster = container.Resolve<LegacyWorldCluster>();
 
-        builder
-            .RegisterModule<LoggerModule>()
-            .RegisterModule<ConfigurationModule>()
-            .RegisterModule<TcpServerModule>()
-            .RegisterModule<DataStoreModule>()
-            .RegisterModule<ClusterModule>();
+logger.Trace(@" __  __      _  _  ___  ___  ___               ");
+logger.Trace(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
+logger.Trace(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
+logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
+logger.Trace("                                                ");
+logger.Trace("Website / Forum / Support: https://getmangos.eu/");
 
-        var container = builder.Build();
-        var startup = container.Resolve<Startup>();
-        await startup.StartAsync();
-    }
-}
+logger.Information("Starting legacy cluster server");
+await legacyWorldCluster.StartAsync();
+
+logger.Information("Starting cluster tcp server");
+await tcpServer.StartAsync(configuration.ClusterServerEndpoint);

@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mangos.Configurations\Mangos.Configurations.csproj" />
-    <ProjectReference Include="..\Mangos.Loggers\Mangos.Loggers.csproj" />
   </ItemGroup>
 
 </Project>

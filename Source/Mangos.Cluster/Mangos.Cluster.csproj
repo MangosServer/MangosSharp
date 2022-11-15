@@ -6,15 +6,14 @@
   
   <ItemGroup>
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="Autofac" Version="6.4.0" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
-    <ProjectReference Include="..\Mangos.Loggers\Mangos.Loggers.csproj" />
-    <ProjectReference Include="..\Mangos.Configurations\Mangos.Configurations.csproj" />
+    <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
     <ProjectReference Include="..\Mangos.SignalR\Mangos.SignalR.csproj" />
-    <ProjectReference Include="..\Mangos.Cluster.Configuration\Mangos.Cluster.Configuration.csproj" />
-    <ProjectReference Include="..\Mangos.Cluster.Storage\Mangos.Cluster.Storage.csproj" />
+    <ProjectReference Include="..\Mangos.Tcp\Mangos.Tcp.csproj" />
   </ItemGroup>
   
 </Project>

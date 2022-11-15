@@ -1,4 +1,11 @@
 ﻿{
   "RealmServerEndpoint": "0.0.0.0:3724",
-  "AccountDataBaseConnectionString": "Server=mysql;Port=3306;User ID=root;Password=rootpass;Database=mangosVBaccounts;Compress=false;Connection Timeout=5;"
+  "ClusterServerEndpoint": "0.0.0.0:8085",
+  "AccountDataBaseConnectionString": "Server=mysql;Port=3306;User ID=root;Password=rootpass;Database=mangosVBaccounts;Compress=false;Connection Timeout=5;",
+  "ClusterListenAddress": "0.0.0.0",
+  "ClusterListenPort": 50001,
+  "ServerPlayerLimit": 100,
+  "AccountDatabase": "rootpass;mysql;3306;mangosVBaccounts;MySQL",
+  "CharacterDatabase": "rootpass;mysql;3306;mangosVBcharacters;MySQL",
+  "WorldDatabase": "root;rootpass;mysql;3306;mangosVBworld;MySQL"
 }

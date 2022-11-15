@@ -21,7 +21,7 @@
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
-using Mangos.Loggers;
+using Mangos.Logging;
 using Microsoft.VisualBasic;
 using System.Data;
 
@@ -30,9 +30,9 @@ namespace Mangos.Common.Legacy.Globals;
 public class Functions
 {
     private readonly MangosGlobalConstants mangosGlobalConstants;
-    private readonly ILogger logger;
+    private readonly IMangosLogger logger;
 
-    public Functions(ILogger logger, MangosGlobalConstants mangosGlobalConstants)
+    public Functions(IMangosLogger logger, MangosGlobalConstants mangosGlobalConstants)
     {
         this.logger = logger;
         this.mangosGlobalConstants = mangosGlobalConstants;
@@ -293,7 +293,7 @@ public class Functions
 
             case 0:
                 {
-                    logger.Warning("Default switch fallback has occured with an error, data output: ThisServerDb {0}, CoreDbVersion {1}, CoreDbContent {2}, CoreDbVersion {3}", thisServerDb, coreDbVersion, coreDbContent, coreDbVersion);
+                    logger.Warning(string.Format("Default switch fallback has occured with an error, data output: ThisServerDb {0}, CoreDbVersion {1}, CoreDbContent {2}, CoreDbVersion {3}", thisServerDb, coreDbVersion, coreDbContent, coreDbVersion));
                     break;
                 }
         }
@@ -311,7 +311,7 @@ public class Functions
 
             if (dbVersion == coreDbVersion && dbStructure == coreDbStructure && dbContent == coreDbContent) // Full Match
             {
-                logger.Debug("[{0}] Db Version Matched", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"));
+                logger.Trace(string.Format("[{0}] Db Version Matched", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss")));
                 return true;
             }
 
@@ -321,7 +321,7 @@ public class Functions
                 logger.Warning("-- WARNING: CONTENT VERSION MISMATCH                        --");
                 logger.Warning("--------------------------------------------------------------");
                 logger.Warning("Your Database " + thisDatabase.SQLDBName + " requires updating.");
-                logger.Warning("You have: Rev{0}.{1}.{2}, however the core expects Rev{3}.{4}.{5}", dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent);
+                logger.Warning(string.Format("You have: Rev{0}.{1}.{2}, however the core expects Rev{3}.{4}.{5}", dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent));
                 logger.Warning("The server will run, but you may be missing some database fixes");
                 return true;
             }
@@ -330,21 +330,21 @@ public class Functions
             logger.Error("-- FATAL ERROR: VERSION MISMATCH                            --");
             logger.Error("--------------------------------------------------------------");
             logger.Error("Your Database " + thisDatabase.SQLDBName + " requires updating.");
-            logger.Error("You have: Rev{0}.{1}.{2}, however the core expects Rev{3}.{4}.{5}", dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent);
+            logger.Error(string.Format("You have: Rev{0}.{1}.{2}, however the core expects Rev{3}.{4}.{5}", dbVersion, dbStructure, dbContent, coreDbVersion, coreDbStructure, coreDbContent));
             logger.Error("The server is unable to run until the required updates are run");
             logger.Error("--------------------------------------------------------------");
-            logger.Error("You must apply all updates after Rev{1}.{2}.{3} ", coreDbVersion, coreDbStructure, coreDbContent);
+            logger.Error(string.Format("You must apply all updates after Rev{1}.{2}.{3} ", coreDbVersion, coreDbStructure, coreDbContent));
             logger.Error("These updates are included in the sql/updates folder.");
             logger.Error("--------------------------------------------------------------");
             return false;
         }
 
-        logger.Debug("--------------------------------------------------------------");
-        logger.Debug("The table `db_version` in database " + thisDatabase.SQLDBName + " is missing");
-        logger.Debug("--------------------------------------------------------------");
-        logger.Debug("MaNGOSVB cannot find the version info required, please update", "hh:mm:ss");
-        logger.Debug("your database to check that the db is up to date.", "hh:mm:ss");
-        logger.Debug("your database to Rev{0}.{1}.{2} ", coreDbVersion, coreDbStructure, coreDbContent);
+        logger.Trace("--------------------------------------------------------------");
+        logger.Trace("The table `db_version` in database " + thisDatabase.SQLDBName + " is missing");
+        logger.Trace("--------------------------------------------------------------");
+        logger.Trace(string.Format("MaNGOSVB cannot find the version info required, please update"));
+        logger.Trace(string.Format("your database to check that the db is up to date."));
+        logger.Trace(string.Format("your database to Rev{0}.{1}.{2} ", coreDbVersion, coreDbStructure, coreDbContent));
         return false;
     }
 }

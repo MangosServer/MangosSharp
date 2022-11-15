@@ -16,17 +16,17 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Autofac;
-using Mangos.Cluster.Network;
-using Mangos.Network.Tcp;
+using System.Net;
+using System.Net.Sockets;
 
-namespace WorldCluster.Modules;
+namespace Mangos.Tcp;
 
-public class TcpServerModule : Module
+public interface ITcpClientHandler
 {
-    protected override void Load(ContainerBuilder builder)
-    {
-        builder.RegisterType<TcpServer>().AsSelf().SingleInstance();
-        builder.RegisterType<ClusterTcpClientFactory>().As<ITcpClientFactory>().SingleInstance();
-    }
+    Task ExectueAsync(
+        ITcpReader reader,
+        ITcpWriter writer,
+        IPAddress remoteAddress,
+        CancellationToken cancellationToken,
+        Socket socket);
 }

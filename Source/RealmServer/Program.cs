@@ -35,7 +35,7 @@ builder.RegisterModule<RealmModule>();
 var container = builder.Build();
 var configuration = container.Resolve<MangosConfiguration>();
 var logger = container.Resolve<IMangosLogger>();
-var tcptServer = container.Resolve<TcpServer>();
+var tcpServer = container.Resolve<TcpServer>();
 
 logger.Trace(@" __  __      _  _  ___  ___  ___               ");
 logger.Trace(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
@@ -44,5 +44,5 @@ logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
 logger.Trace("                                                ");
 logger.Trace("Website / Forum / Support: https://getmangos.eu/");
 
-logger.Information("Starting tcp server");
-await tcptServer.StartAsync(configuration.RealmServerEndpoint);
+logger.Information("Starting realm tcp server");
+await tcpServer.StartAsync(configuration.RealmServerEndpoint);

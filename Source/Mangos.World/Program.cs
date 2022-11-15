@@ -21,8 +21,7 @@ using Mangos.Common.Globals;
 using Mangos.Configurations;
 using Mangos.Configurations.Xml;
 using Mangos.DataStores;
-using Mangos.Loggers;
-using Mangos.Loggers.Console;
+using Mangos.Logging.Implementation;
 using Mangos.World.AI;
 using Mangos.World.Auction;
 using Mangos.World.Battlegrounds;
@@ -67,7 +66,7 @@ public sealed class Program
 
     public static void RegisterLoggers(ContainerBuilder builder)
     {
-        builder.RegisterType<ConsoleLogger>().As<ILogger>();
+        builder.RegisterModule<LoggingModule>();
     }
 
     public static void RegisterConfiguration(ContainerBuilder builder)
