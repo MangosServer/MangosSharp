@@ -50,7 +50,7 @@ public sealed class Program
 {
     public static async Task Main()
     {
-        var container = WorldServiceLocator._Container;
+        var container = WorldServiceLocator.Container;
         var worldServer = container.Resolve<WorldServer>();
         await worldServer.StartAsync();
     }

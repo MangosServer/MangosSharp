@@ -37,20 +37,20 @@ public partial class WS_Loot
         {
             get
             {
-                if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(ItemID))
+                if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(ItemID))
                 {
                     try
                     {
-                        WorldServiceLocator._WorldServer.ITEMDatabase.Remove(ItemID);
+                        WorldServiceLocator.WorldServer.ITEMDatabase.Remove(ItemID);
                         WS_Items.ItemInfo tmpItem = new(ItemID);
-                        WorldServiceLocator._WorldServer.ITEMDatabase.Add(ItemID, tmpItem);
+                        WorldServiceLocator.WorldServer.ITEMDatabase.Add(ItemID, tmpItem);
                     }
                     catch (Exception ex)
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error on ItemModel [Item ID {0} : Exception {1}]", ItemID, ex);
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Error on ItemModel [Item ID {0} : Exception {1}]", ItemID, ex);
                     }
                 }
-                return WorldServiceLocator._WorldServer.ITEMDatabase[ItemID].Model;
+                return WorldServiceLocator.WorldServer.ITEMDatabase[ItemID].Model;
             }
         }
 
@@ -61,7 +61,7 @@ public partial class WS_Loot
             ItemID = Item.ItemID;
             checked
             {
-                ItemCount = (byte)WorldServiceLocator._WorldServer.Rnd.Next(Item.MinCountOrRef, Item.MaxCount + 1);
+                ItemCount = (byte)WorldServiceLocator.WorldServer.Rnd.Next(Item.MinCountOrRef, Item.MaxCount + 1);
             }
         }
 

@@ -203,7 +203,7 @@ public class WS_QuestsBase : IDisposable
             ObjectivesDeliver = Quest.ObjectivesDeliver;
             if (Quest.TimeLimit > 0)
             {
-                TimeEnd = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + Quest.TimeLimit);
+                TimeEnd = (int)(WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now) + Quest.TimeLimit);
             }
         }
     }
@@ -218,7 +218,7 @@ public class WS_QuestsBase : IDisposable
                 if (ObjectivesItem[i] != 0)
                 {
                     ProgressItem[i] = (byte)objCharacter.ItemCOUNT(ObjectivesItem[i]);
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "ITEM COUNT UPDATED TO: {0}", ProgressItem[i]);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "ITEM COUNT UPDATED TO: {0}", ProgressItem[i]);
                 }
                 i = (byte)unchecked((uint)(i + 1));
             }
@@ -352,7 +352,7 @@ public class WS_QuestsBase : IDisposable
             Progress[index]++;
             IsCompleted();
             objCharacter.TalkUpdateQuest(Slot);
-            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
+            WorldServiceLocator.WorldServer.ALLQUESTS.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
         }
     }
 
@@ -363,7 +363,7 @@ public class WS_QuestsBase : IDisposable
             Progress[index]++;
             IsCompleted();
             objCharacter.TalkUpdateQuest(Slot);
-            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
+            WorldServiceLocator.WorldServer.ALLQUESTS.SendQuestMessageAddKill(ref objCharacter.client, ID, oGUID, ObjectivesObject[index], Progress[index], ObjectivesCount[index]);
         }
     }
 
@@ -372,7 +372,7 @@ public class WS_QuestsBase : IDisposable
         Explored = true;
         IsCompleted();
         objCharacter.TalkUpdateQuest(Slot);
-        WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageComplete(ref objCharacter.client, ID);
+        WorldServiceLocator.WorldServer.ALLQUESTS.SendQuestMessageComplete(ref objCharacter.client, ID);
     }
 
     public void AddEmote(WS_PlayerData.CharacterObject objCharacter, byte index)
@@ -382,7 +382,7 @@ public class WS_QuestsBase : IDisposable
             Progress[index]++;
             IsCompleted();
             objCharacter.TalkUpdateQuest(Slot);
-            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageComplete(ref objCharacter.client, ID);
+            WorldServiceLocator.WorldServer.ALLQUESTS.SendQuestMessageComplete(ref objCharacter.client, ID);
         }
     }
 
@@ -402,7 +402,7 @@ public class WS_QuestsBase : IDisposable
             IsCompleted();
             objCharacter.TalkUpdateQuest(Slot);
             var ItemCount = Count - 1;
-            WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMessageAddItem(ref objCharacter.client, ObjectivesItem[index], ItemCount);
+            WorldServiceLocator.WorldServer.ALLQUESTS.SendQuestMessageAddItem(ref objCharacter.client, ObjectivesItem[index], ItemCount);
         }
     }
 

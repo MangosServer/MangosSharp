@@ -87,7 +87,7 @@ public class WS_Base
             CorpseType = CorpseType.CORPSE_BONES;
             SpawnID = 0;
             SeenBy = new List<ulong>();
-            VisibleDistance = WorldServiceLocator._Global_Constants.DEFAULT_DISTANCE_VISIBLE;
+            VisibleDistance = WorldServiceLocator.GlobalConstants.DEFAULT_DISTANCE_VISIBLE;
             Invisibility = InvisibilityLevel.VISIBLE;
             Invisibility_Value = 0;
             Invisibility_Bonus = 0;
@@ -111,7 +111,7 @@ public class WS_Base
             {
                 return false;
             }
-            if (objCharacter.Invisibility == InvisibilityLevel.STEALTH && Math.Sqrt(Math.Pow(objCharacter.positionX - positionX, 2.0) + Math.Pow(objCharacter.positionY - positionY, 2.0)) < WorldServiceLocator._Global_Constants.DEFAULT_DISTANCE_DETECTION)
+            if (objCharacter.Invisibility == InvisibilityLevel.STEALTH && Math.Sqrt(Math.Pow(objCharacter.positionX - positionX, 2.0) + Math.Pow(objCharacter.positionY - positionY, 2.0)) < WorldServiceLocator.GlobalConstants.DEFAULT_DISTANCE_DETECTION)
             {
                 return true;
             }
@@ -166,9 +166,9 @@ public class WS_Base
             var array = SeenBy.ToArray();
             foreach (var objCharacter in array)
             {
-                if (objCharacter != NotTo && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter) && WorldServiceLocator._WorldServer.CHARACTERs[objCharacter].client != null)
+                if (objCharacter != NotTo && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter) && WorldServiceLocator.WorldServer.CHARACTERs[objCharacter].client != null)
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[objCharacter].client.SendMultiplyPackets(ref packet);
+                    WorldServiceLocator.WorldServer.CHARACTERs[objCharacter].client.SendMultiplyPackets(ref packet);
                 }
             }
         }
@@ -315,9 +315,9 @@ public class WS_Base
             {
                 if (this is WS_PlayerData.CharacterObject)
                 {
-                    return WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID);
+                    return WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(GUID);
                 }
-                return this is WS_Creatures.CreatureObject && WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID);
+                return this is WS_Creatures.CreatureObject && WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(GUID);
             }
         }
 
@@ -331,22 +331,22 @@ public class WS_Base
 
         public virtual void Die(ref BaseUnit Attacker)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "BaseUnit can't die.");
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "BaseUnit can't die.");
         }
 
         public virtual void DealDamage(int Damage, BaseUnit Attacker = null)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "No damage dealt.");
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "No damage dealt.");
         }
 
         public virtual void Heal(int Damage, BaseUnit Attacker = null)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "No healing done.");
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "No healing done.");
         }
 
         public virtual void Energize(int Damage, ManaTypes Power, BaseUnit Attacker = null)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "No mana increase done.");
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "No mana increase done.");
         }
 
         public virtual bool IsFriendlyTo(ref BaseUnit Unit)
@@ -361,7 +361,7 @@ public class WS_Base
 
         public void SetAura(int SpellID, int Slot, int Duration, bool SendUpdate = true)
         {
-            if (ActiveSpells[Slot] == null || (SpellID != 0 && WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(SpellID) && WorldServiceLocator._WS_Spells.SPELLs[SpellID].IsPassive))
+            if (ActiveSpells[Slot] == null || (SpellID != 0 && WorldServiceLocator.WSSpells.SPELLs.ContainsKey(SpellID) && WorldServiceLocator.WSSpells.SPELLs[SpellID].IsPassive))
             {
                 return;
             }
@@ -379,7 +379,7 @@ public class WS_Base
             {
                 if (SpellID != 0)
                 {
-                    tmpLevel = (byte)WorldServiceLocator._WS_Spells.SPELLs[SpellID].spellLevel;
+                    tmpLevel = (byte)WorldServiceLocator.WSSpells.SPELLs[SpellID].spellLevel;
                 }
                 SetAuraStackCount(Slot, 0);
                 SetAuraSlotLevel(Slot, tmpLevel);
@@ -407,7 +407,7 @@ public class WS_Base
                     }
                     return;
                 }
-                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
                 Packets.UpdatePacketClass tmpPacket = new();
                 try
                 {
@@ -457,7 +457,7 @@ public class WS_Base
         {
             checked
             {
-                var b = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1);
+                var b = (byte)(WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs - 1);
                 byte i = 0;
                 while (i <= (uint)b)
                 {
@@ -475,7 +475,7 @@ public class WS_Base
         {
             checked
             {
-                var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                 for (var i = 0; i <= num; i++)
                 {
                     if (ActiveSpells[i] == null)
@@ -501,7 +501,7 @@ public class WS_Base
         {
             checked
             {
-                var b = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1);
+                var b = (byte)(WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1);
                 byte i = 0;
                 while (i <= (uint)b)
                 {
@@ -519,8 +519,8 @@ public class WS_Base
         {
             checked
             {
-                var b = (byte)WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE;
-                var b2 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1);
+                var b = (byte)WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE;
+                var b2 = (byte)(WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs - 1);
                 var i = b;
                 while (i <= (uint)b2)
                 {
@@ -561,7 +561,7 @@ public class WS_Base
                 }
                 while (i <= 2u);
             }
-            if (SendUpdate && Slot < WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE)
+            if (SendUpdate && Slot < WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE)
             {
                 SetAura(0, Slot, 0);
             }
@@ -572,7 +572,7 @@ public class WS_Base
         {
             checked
             {
-                var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1;
+                var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs - 1;
                 for (var i = 0; i <= num; i++)
                 {
                     if (ActiveSpells[i] != null && ActiveSpells[i].SpellID == SpellID)
@@ -580,7 +580,7 @@ public class WS_Base
                         RemoveAura(i, ref ActiveSpells[i].SpellCaster);
                         if (this is WS_PlayerData.CharacterObject @object && decimal.Compare(new decimal(@object.DuelArbiter), 0m) != 0 && @object.DuelPartner == null)
                         {
-                            WorldServiceLocator._WorldServer.WORLD_CREATUREs[@object.DuelArbiter].RemoveAuraBySpell(SpellID);
+                            WorldServiceLocator.WorldServer.WORLD_CREATUREs[@object.DuelArbiter].RemoveAuraBySpell(SpellID);
                             @object.DuelArbiter = 0uL;
                         }
                         break;
@@ -593,7 +593,7 @@ public class WS_Base
         {
             checked
             {
-                var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                 for (var i = 0; i <= num; i++)
                 {
                     if (ActiveSpells[i] == null || ActiveSpells[i].SpellID == NotSpellID)
@@ -619,10 +619,10 @@ public class WS_Base
         {
             checked
             {
-                var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                 for (var i = 0; i <= num; i++)
                 {
-                    if (ActiveSpells[i] != null && WorldServiceLocator._WS_Spells.SPELLs[ActiveSpells[i].SpellID].Mechanic == Mechanic)
+                    if (ActiveSpells[i] != null && WorldServiceLocator.WSSpells.SPELLs[ActiveSpells[i].SpellID].Mechanic == Mechanic)
                     {
                         RemoveAura(i, ref ActiveSpells[i].SpellCaster);
                     }
@@ -634,10 +634,10 @@ public class WS_Base
         {
             checked
             {
-                var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                 for (var i = 0; i <= num; i++)
                 {
-                    if (ActiveSpells[i] != null && WorldServiceLocator._WS_Spells.SPELLs[ActiveSpells[i].SpellID].DispellType == DispellType)
+                    if (ActiveSpells[i] != null && WorldServiceLocator.WSSpells.SPELLs[ActiveSpells[i].SpellID].DispellType == DispellType)
                     {
                         RemoveAura(i, ref ActiveSpells[i].SpellCaster);
                         Amount--;
@@ -654,10 +654,10 @@ public class WS_Base
         {
             checked
             {
-                var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                 for (var i = 0; i <= num; i++)
                 {
-                    if (ActiveSpells[i] != null && WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(ActiveSpells[i].SpellID) && (WorldServiceLocator._WS_Spells.SPELLs[ActiveSpells[i].SpellID].auraInterruptFlags & AuraInterruptFlag) != 0 && (WorldServiceLocator._WS_Spells.SPELLs[ActiveSpells[i].SpellID].procFlags & 0x8000000) == 0)
+                    if (ActiveSpells[i] != null && WorldServiceLocator.WSSpells.SPELLs.ContainsKey(ActiveSpells[i].SpellID) && (WorldServiceLocator.WSSpells.SPELLs[ActiveSpells[i].SpellID].auraInterruptFlags & AuraInterruptFlag) != 0 && (WorldServiceLocator.WSSpells.SPELLs[ActiveSpells[i].SpellID].procFlags & 0x8000000) == 0)
                     {
                         RemoveAura(i, ref ActiveSpells[i].SpellCaster);
                     }
@@ -684,7 +684,7 @@ public class WS_Base
             var Modifier = 0;
             checked
             {
-                var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                 for (var i = 0; i <= num; i++)
                 {
                     if (ActiveSpells[i] == null)
@@ -711,7 +711,7 @@ public class WS_Base
             var Modifier = 0;
             checked
             {
-                var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                 for (var i = 0; i <= num; i++)
                 {
                     if (ActiveSpells[i] == null)
@@ -738,23 +738,23 @@ public class WS_Base
             var AuraStart = 0;
             checked
             {
-                var AuraEnd = WorldServiceLocator._Global_Constants.MAX_POSITIVE_AURA_EFFECTs - 1;
-                if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].IsPassive)
+                var AuraEnd = WorldServiceLocator.GlobalConstants.MAX_POSITIVE_AURA_EFFECTs - 1;
+                if (WorldServiceLocator.WSSpells.SPELLs[SpellID].IsPassive)
                 {
-                    AuraStart = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE;
-                    AuraEnd = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs;
+                    AuraStart = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE;
+                    AuraEnd = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs;
                 }
-                else if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].IsNegative)
+                else if (WorldServiceLocator.WSSpells.SPELLs[SpellID].IsNegative)
                 {
-                    AuraStart = WorldServiceLocator._Global_Constants.MAX_POSITIVE_AURA_EFFECTs;
-                    AuraEnd = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                    AuraStart = WorldServiceLocator.GlobalConstants.MAX_POSITIVE_AURA_EFFECTs;
+                    AuraEnd = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                 }
                 try
                 {
-                    if (!WorldServiceLocator._WS_Spells.SPELLs[SpellID].IsPassive)
+                    if (!WorldServiceLocator.WSSpells.SPELLs[SpellID].IsPassive)
                     {
-                        var SpellInfo = WorldServiceLocator._WS_Spells.SPELLs[SpellID];
-                        var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                        var SpellInfo = WorldServiceLocator.WSSpells.SPELLs[SpellID];
+                        var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                         for (var slot2 = 0; slot2 <= num; slot2++)
                         {
                             if (ActiveSpells[slot2] != null && ActiveSpells[slot2].GetSpellInfo.Target == SpellInfo.Target && ActiveSpells[slot2].GetSpellInfo.Category == SpellInfo.Category && ActiveSpells[slot2].GetSpellInfo.SpellIconID == SpellInfo.SpellIconID && ActiveSpells[slot2].GetSpellInfo.SpellVisual == SpellInfo.SpellVisual && ActiveSpells[slot2].GetSpellInfo.Attributes == SpellInfo.Attributes && ActiveSpells[slot2].GetSpellInfo.AttributesEx == SpellInfo.AttributesEx && ActiveSpells[slot2].GetSpellInfo.AttributesEx2 == SpellInfo.AttributesEx2)
@@ -768,7 +768,7 @@ public class WS_Base
                 {
                     ProjectData.SetProjectError(ex2);
                     var ex = ex2;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "ERROR ADDING AURA!{0}{1}", Environment.NewLine, ex.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "ERROR ADDING AURA!{0}{1}", Environment.NewLine, ex.ToString());
                     ProjectData.ClearProjectError();
                 }
                 var num2 = AuraStart;
@@ -781,7 +781,7 @@ public class WS_Base
                         {
                             SpellCaster = Caster
                         };
-                        if (slot < WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE)
+                        if (slot < WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE)
                         {
                             SetAura(SpellID, slot, Duration);
                         }
@@ -803,7 +803,7 @@ public class WS_Base
 
         public void UpdateAura(int Slot)
         {
-            if (ActiveSpells[Slot] == null || Slot >= WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE)
+            if (ActiveSpells[Slot] == null || Slot >= WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE)
             {
                 return;
             }
@@ -829,7 +829,7 @@ public class WS_Base
                     }
                     return;
                 }
-                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
                 Packets.UpdatePacketClass tmpPacket = new();
                 try
                 {
@@ -897,7 +897,7 @@ public class WS_Base
                     var i = 0;
                     do
                     {
-                        if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].SpellEffects[i] != null)
+                        if (WorldServiceLocator.WSSpells.SPELLs[SpellID].SpellEffects[i] != null)
                         {
                             EffectCount++;
                         }
@@ -911,7 +911,7 @@ public class WS_Base
                     var SpellDamage = (!IsHeal) ? @object.spellDamage[(uint)DamageType].Value : @object.healing.Value;
                     if (IsDot)
                     {
-                        var TickAmount = (int)Math.Round(WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration / (double)EffectInfo.Amplitude);
+                        var TickAmount = (int)Math.Round(WorldServiceLocator.WSSpells.SPELLs[SpellID].GetDuration / (double)EffectInfo.Amplitude);
                         if (TickAmount < 5)
                         {
                             TickAmount = 5;
@@ -920,7 +920,7 @@ public class WS_Base
                     }
                     else
                     {
-                        var CastTime = WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetCastTime;
+                        var CastTime = WorldServiceLocator.WSSpells.SPELLs[SpellID].GetCastTime;
                         if (CastTime < 1500)
                         {
                             CastTime = 1500;
@@ -931,14 +931,14 @@ public class WS_Base
                         }
                         SpellDamageBenefit = (int)(SpellDamage * (CastTime / 1000f) * ((100 - PenaltyFactor) / 100.0) / 3.5);
                     }
-                    if (WorldServiceLocator._WS_Spells.SPELLs[SpellID].IsAOE)
+                    if (WorldServiceLocator.WSSpells.SPELLs[SpellID].IsAOE)
                     {
                         SpellDamageBenefit /= 3;
                     }
                 }
                 Damage += SpellDamageBenefit;
                 IsCrit = false;
-                if (!IsDot && Caster is WS_PlayerData.CharacterObject object1 && WorldServiceLocator._Functions.RollChance(object1.GetCriticalWithSpells))
+                if (!IsDot && Caster is WS_PlayerData.CharacterObject object1 && WorldServiceLocator.Functions.RollChance(object1.GetCriticalWithSpells))
                 {
                     Damage = (int)(1.5f * Damage);
                     IsCrit = true;
@@ -976,28 +976,28 @@ public class WS_Base
             {
                 case SpellType.SPELL_TYPE_NONMELEE:
                     {
-                        var wS_Spells4 = WorldServiceLocator._WS_Spells;
+                        var wS_Spells4 = WorldServiceLocator.WSSpells;
                         var Target = this;
                         wS_Spells4.SendNonMeleeDamageLog(ref Caster, ref Target, SpellID, (int)DamageType, Damage, Resist, Absorb, IsCrit);
                         break;
                     }
                 case SpellType.SPELL_TYPE_DOT:
                     {
-                        var wS_Spells3 = WorldServiceLocator._WS_Spells;
+                        var wS_Spells3 = WorldServiceLocator.WSSpells;
                         var Target = this;
                         wS_Spells3.SendPeriodicAuraLog(ref Caster, ref Target, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
                         break;
                     }
                 case SpellType.SPELL_TYPE_HEAL:
                     {
-                        var wS_Spells2 = WorldServiceLocator._WS_Spells;
+                        var wS_Spells2 = WorldServiceLocator.WSSpells;
                         var Target = this;
                         wS_Spells2.SendHealSpellLog(ref Caster, ref Target, SpellID, Damage, IsCrit);
                         break;
                     }
                 case SpellType.SPELL_TYPE_HEALDOT:
                     {
-                        var wS_Spells = WorldServiceLocator._WS_Spells;
+                        var wS_Spells = WorldServiceLocator.WSSpells;
                         var Target = this;
                         wS_Spells.SendPeriodicAuraLog(ref Caster, ref Target, SpellID, (int)DamageType, Damage, EffectInfo.ApplyAuraIndex);
                         break;
@@ -1057,7 +1057,7 @@ public class WS_Base
                     HitChance = 10000;
                 }
                 var tmp = 10000 - HitChance;
-                var rand = WorldServiceLocator._WorldServer.Rnd.Next(0, 10001);
+                var rand = WorldServiceLocator.WorldServer.Rnd.Next(0, 10001);
                 return rand < tmp ? SpellMissInfo.SPELL_MISS_RESIST : SpellMissInfo.SPELL_MISS_NONE;
             }
         }
@@ -1077,7 +1077,7 @@ public class WS_Base
             {
                 var skillDiff = attackerWeaponSkill - (Level * 5);
                 var fullSkillDiff = attackerWeaponSkill - GetDefenceSkill(ref Caster);
-                var roll = WorldServiceLocator._WorldServer.Rnd.Next(0, 10001);
+                var roll = WorldServiceLocator.WorldServer.Rnd.Next(0, 10001);
                 var missChance = 0;
                 var tmp = missChance;
                 if (roll < tmp)
@@ -1231,7 +1231,7 @@ public class WS_Base
                     34,
                     11
             })));
-            var ran = WorldServiceLocator._WorldServer.Rnd.Next(0, 101);
+            var ran = WorldServiceLocator.WorldServer.Rnd.Next(0, 101);
             var j = 0;
             var val = 0;
             var i = 0;
@@ -1262,17 +1262,17 @@ public class WS_Base
         {
             Dictionary<int, uint> ListChange = new();
             var StartDmg = Damage;
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Damage: {0} [{1}]", Damage, School);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Damage: {0} [{1}]", Damage, School);
             checked
             {
                 foreach (var tmpSpell in AbsorbSpellLeft)
                 {
                     var Schools = (int)(tmpSpell.Value >> 23);
                     var AbsorbDamage = (int)(tmpSpell.Value & 0x7FFFFFL);
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Spell: {0} [{1}]", AbsorbDamage, Schools);
-                    if (WorldServiceLocator._Functions.HaveFlag((uint)Schools, (byte)School))
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Spell: {0} [{1}]", AbsorbDamage, Schools);
+                    if (WorldServiceLocator.Functions.HaveFlag((uint)Schools, (byte)School))
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Apmongo, yes?!");
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Apmongo, yes?!");
                         if (Damage == AbsorbDamage)
                         {
                             ListChange.Add(tmpSpell.Key, 0u);
@@ -1315,7 +1315,7 @@ public class WS_Base
             }
             checked
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Absorbed: {0}", StartDmg - Damage);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Absorbed: {0}", StartDmg - Damage);
                 return StartDmg - Damage;
             }
         }
@@ -1360,10 +1360,10 @@ public class WS_Base
             gameObjects = new List<WS_GameObjects.GameObject>();
             checked
             {
-                ActiveSpells = new BaseActiveSpell[WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1 + 1];
-                ActiveSpells_Flags = new int[WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_FLAGs - 1 + 1];
-                ActiveSpells_Count = new int[WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_LEVELSs - 1 + 1];
-                ActiveSpells_Level = new int[WorldServiceLocator._Global_Constants.MAX_AURA_EFFECT_LEVELSs - 1 + 1];
+                ActiveSpells = new BaseActiveSpell[WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs - 1 + 1];
+                ActiveSpells_Flags = new int[WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECT_FLAGs - 1 + 1];
+                ActiveSpells_Count = new int[WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECT_LEVELSs - 1 + 1];
+                ActiveSpells_Level = new int[WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECT_LEVELSs - 1 + 1];
                 byte i = 0;
                 do
                 {
@@ -1395,7 +1395,7 @@ public class WS_Base
 
         public WS_Spells.SpellEffect[] Aura_Info;
 
-        public WS_Spells.SpellInfo GetSpellInfo => WorldServiceLocator._WS_Spells.SPELLs[SpellID];
+        public WS_Spells.SpellInfo GetSpellInfo => WorldServiceLocator.WSSpells.SPELLs[SpellID];
 
         public BaseActiveSpell(int ID, int Duration)
         {

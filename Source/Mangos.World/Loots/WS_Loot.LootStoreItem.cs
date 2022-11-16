@@ -66,7 +66,7 @@ public partial class WS_Loot
 
         public bool Roll()
         {
-            return Chance >= 100f || WorldServiceLocator._Functions.RollChance(Chance);
+            return Chance >= 100f || WorldServiceLocator.Functions.RollChance(Chance);
         }
     }
 }

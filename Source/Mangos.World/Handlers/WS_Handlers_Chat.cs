@@ -43,7 +43,7 @@ public class WS_Handlers_Chat
 
     public void On_CMSG_MESSAGECHAT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MESSAGECHAT", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MESSAGECHAT", client.IP, client.Port);
         if (checked(packet.Data.Length - 1) < 14 && client.Character != null)
         {
             return;
@@ -51,7 +51,7 @@ public class WS_Handlers_Chat
         packet.GetInt16();
         ChatMsg msgType = (ChatMsg)packet.GetInt32();
         LANGUAGES msgLanguage = (LANGUAGES)packet.GetInt32();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MESSAGECHAT [{2}:{3}]", client.IP, client.Port, msgType, msgLanguage);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MESSAGECHAT [{2}:{3}]", client.IP, client.Port, msgType, msgLanguage);
         if (client.Character.Spell_Language != (LANGUAGES)(-1))
         {
             msgLanguage = client.Character.Spell_Language;
@@ -64,10 +64,10 @@ public class WS_Handlers_Chat
             case ChatMsg.CHAT_MSG_EMOTE:
                 {
                     var MessageString = packet.GetString();
-                    if (MessageString.StartsWith(WorldServiceLocator._ConfigurationProvider.GetConfiguration().CommandCharacter) && client.Character.Access > AccessLevel.Player)
+                    if (MessageString.StartsWith(WorldServiceLocator.ConfigurationProvider.GetConfiguration().CommandCharacter) && client.Character.Access > AccessLevel.Player)
                     {
                         MessageString = MessageString.Remove(0, 1);
-                        var toCommand = WorldServiceLocator._Functions.BuildChatMessage(2147483647uL, MessageString, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
+                        var toCommand = WorldServiceLocator.Functions.BuildChatMessage(2147483647uL, MessageString, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);
                         try
                         {
                             client.Send(ref toCommand);
@@ -76,7 +76,7 @@ public class WS_Handlers_Chat
                         {
                             toCommand.Dispose();
                         }
-                        WorldServiceLocator._WS_Commands.OnCommand(ref client, MessageString);
+                        WorldServiceLocator.WSCommands.OnCommand(ref client, MessageString);
                     }
                     else
                     {
@@ -119,12 +119,12 @@ public class WS_Handlers_Chat
             case ChatMsg.CHAT_MSG_CHANNEL:
             case ChatMsg.CHAT_MSG_RAID_LEADER:
             case ChatMsg.CHAT_MSG_RAID_WARNING:
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "This chat message type should not be here!");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "This chat message type should not be here!");
                 break;
 
             default:
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Unknown chat message [msgType={2}, msgLanguage={3}]", client.IP, client.Port, msgType, msgLanguage);
-                WorldServiceLocator._Packets.DumpPacket(packet.Data, client);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Unknown chat message [msgType={2}, msgLanguage={3}]", client.IP, client.Port, msgType, msgLanguage);
+                WorldServiceLocator.Packets.DumpPacket(packet.Data, client);
                 break;
         }
     }

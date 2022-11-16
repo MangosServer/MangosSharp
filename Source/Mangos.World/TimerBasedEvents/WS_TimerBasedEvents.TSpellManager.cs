@@ -52,7 +52,7 @@ public partial class WS_TimerBasedEvents
         {
             if (SpellManagerWorking)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Spell Manager skipping update");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Update: Spell Manager skipping update");
                 return;
             }
             SpellManagerWorking = true;
@@ -60,17 +60,17 @@ public partial class WS_TimerBasedEvents
             {
                 try
                 {
-                    WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                    long num = WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys.Count - 1;
+                    WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    long num = WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys.Count - 1;
                     for (var i = 0L; i <= num; i++)
                     {
-                        var creatureObject = WorldServiceLocator._WorldServer.WORLD_CREATUREs[Conversions.ToULong(WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys[(int)i])];
+                        var creatureObject = WorldServiceLocator.WorldServer.WORLD_CREATUREs[Conversions.ToULong(WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys[(int)i])];
                         if (creatureObject != null)
                         {
                             ulong key;
                             Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
-                            var value = WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys[(int)i];
-                            WS_Base.BaseUnit objCharacter = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = Conversions.ToULong(value)];
+                            var value = WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys[(int)i];
+                            WS_Base.BaseUnit objCharacter = (wORLD_CREATUREs = WorldServiceLocator.WorldServer.WORLD_CREATUREs)[key = Conversions.ToULong(value)];
                             UpdateSpells(ref objCharacter);
                             wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)objCharacter;
                         }
@@ -80,20 +80,20 @@ public partial class WS_TimerBasedEvents
                 {
                     ProjectData.SetProjectError(ex4);
                     var ex3 = ex4;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, ex3.ToString(), null);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, ex3.ToString(), null);
                     ProjectData.ClearProjectError();
                 }
                 finally
                 {
-                    if (WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.IsReaderLockHeld)
+                    if (WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.IsReaderLockHeld)
                     {
-                        WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
+                        WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
                     }
                 }
                 try
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                    foreach (var Character in WorldServiceLocator._WorldServer.CHARACTERs.Where(Character => Character.Value != null))
+                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    foreach (var Character in WorldServiceLocator.WorldServer.CHARACTERs.Where(Character => Character.Value != null))
                     {
                         WS_Base.BaseUnit objCharacter = Character.Value;
                         UpdateSpells(ref objCharacter);
@@ -103,18 +103,18 @@ public partial class WS_TimerBasedEvents
                 {
                     ProjectData.SetProjectError(ex5);
                     var ex2 = ex5;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, ex2.ToString(), null);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, ex2.ToString(), null);
                     ProjectData.ClearProjectError();
                 }
                 finally
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                 }
                 List<WS_DynamicObjects.DynamicObject> DynamicObjectsToDelete = new();
                 try
                 {
-                    WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                    foreach (var Dynamic in WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs)
+                    WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    foreach (var Dynamic in WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs)
                     {
                         if (Dynamic.Value != null && Dynamic.Value.Update())
                         {
@@ -126,12 +126,12 @@ public partial class WS_TimerBasedEvents
                 {
                     ProjectData.SetProjectError(ex6);
                     var ex = ex6;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, ex.ToString(), null);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, ex.ToString(), null);
                     ProjectData.ClearProjectError();
                 }
                 finally
                 {
-                    WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs_Lock.ReleaseReaderLock();
+                    WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs_Lock.ReleaseReaderLock();
                 }
                 foreach (var item in DynamicObjectsToDelete)
                 {
@@ -172,13 +172,13 @@ public partial class WS_TimerBasedEvents
             }
             checked
             {
-                for (var i = 0; i <= WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1; i++)
+                for (var i = 0; i <= WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs - 1; i++)
                 {
                     if (objCharacter.ActiveSpells[i] == null)
                     {
                         continue;
                     }
-                    if (objCharacter.ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
+                    if (objCharacter.ActiveSpells[i].SpellDuration != WorldServiceLocator.GlobalConstants.SPELL_DURATION_INFINITE)
                     {
                         objCharacter.ActiveSpells[i].SpellDuration -= 1000;
                         byte j = 0;
@@ -195,7 +195,7 @@ public partial class WS_TimerBasedEvents
                             j = (byte)unchecked((uint)(j + 1));
                         }
                         while (j <= 2u);
-                        if (objCharacter.ActiveSpells[i] != null && objCharacter.ActiveSpells[i].SpellDuration <= 0 && objCharacter.ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
+                        if (objCharacter.ActiveSpells[i] != null && objCharacter.ActiveSpells[i].SpellDuration <= 0 && objCharacter.ActiveSpells[i].SpellDuration != WorldServiceLocator.GlobalConstants.SPELL_DURATION_INFINITE)
                         {
                             objCharacter.RemoveAura(i, ref objCharacter.ActiveSpells[i].SpellCaster, RemovedByDuration: true);
                         }
@@ -212,7 +212,7 @@ public partial class WS_TimerBasedEvents
                                 {
                                     case WS_PlayerData.CharacterObject _:
                                         {
-                                            var wS_Spells = WorldServiceLocator._WS_Spells;
+                                            var wS_Spells = WorldServiceLocator.WSSpells;
                                             WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)objCharacter;
                                             Targets = wS_Spells.GetPartyMembersAroundMe(ref objCharacter2, objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius);
                                             break;
@@ -220,7 +220,7 @@ public partial class WS_TimerBasedEvents
 
                                     case WS_Totems.TotemObject _ when ((WS_Totems.TotemObject)objCharacter).Caster is not null and WS_PlayerData.CharacterObject:
                                         {
-                                            var wS_Spells2 = WorldServiceLocator._WS_Spells;
+                                            var wS_Spells2 = WorldServiceLocator.WSSpells;
                                             ref var caster2 = ref ((WS_Totems.TotemObject)objCharacter).Caster;
                                             ref var reference = ref caster2;
                                             WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)caster2;
@@ -235,7 +235,7 @@ public partial class WS_TimerBasedEvents
                                     var Unit = item;
                                     if (!Unit.HaveAura(objCharacter.ActiveSpells[i].SpellID))
                                     {
-                                        var wS_Spells3 = WorldServiceLocator._WS_Spells;
+                                        var wS_Spells3 = WorldServiceLocator.WSSpells;
                                         WS_Base.BaseObject Caster = objCharacter;
                                         wS_Spells3.ApplyAura(ref Unit, ref Caster, ref objCharacter.ActiveSpells[i].Aura_Info[k], objCharacter.ActiveSpells[i].SpellID);
                                         objCharacter = (WS_Base.BaseUnit)Caster;
@@ -263,7 +263,7 @@ public partial class WS_TimerBasedEvents
                                 {
                                     objCharacter.RemoveAura(i, ref objCharacter.ActiveSpells[i].SpellCaster);
                                 }
-                                else if (WorldServiceLocator._WS_Combat.GetDistance(objCharacter, objCharacter.ActiveSpells[i].SpellCaster) > objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius)
+                                else if (WorldServiceLocator.WSCombat.GetDistance(objCharacter, objCharacter.ActiveSpells[i].SpellCaster) > objCharacter.ActiveSpells[i].Aura_Info[k].GetRadius)
                                 {
                                     objCharacter.RemoveAura(i, ref objCharacter.ActiveSpells[i].SpellCaster);
                                 }

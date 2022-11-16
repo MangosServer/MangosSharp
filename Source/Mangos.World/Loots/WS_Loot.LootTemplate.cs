@@ -71,7 +71,7 @@ public partial class WS_Loot
                     }
                     if (Items[i].MinCountOrRef < 0)
                     {
-                        var Referenced = WorldServiceLocator._WS_Loot.LootTemplates_Reference.GetLoot(-Items[i].MinCountOrRef);
+                        var Referenced = WorldServiceLocator.WSLoot.LootTemplates_Reference.GetLoot(-Items[i].MinCountOrRef);
                         if (Referenced != null)
                         {
                             int maxCount = Items[i].MaxCount;

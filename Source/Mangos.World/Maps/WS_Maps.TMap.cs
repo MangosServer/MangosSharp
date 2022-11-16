@@ -57,30 +57,30 @@ public partial class WS_Maps
                     switch (Type)
                     {
                         case MapTypes.MAP_BATTLEGROUND:
-                            return WorldServiceLocator._Global_Constants.DEFAULT_BATTLEFIELD_EXPIRE_TIME;
+                            return WorldServiceLocator.GlobalConstants.DEFAULT_BATTLEFIELD_EXPIRE_TIME;
 
                         case MapTypes.MAP_INSTANCE:
                         case MapTypes.MAP_RAID:
                             switch (ID)
                             {
                                 case 249:
-                                    return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(5, 3).Subtract(DateAndTime.Now).TotalSeconds);
+                                    return (int)Math.Round(WorldServiceLocator.Functions.GetNextDate(5, 3).Subtract(DateAndTime.Now).TotalSeconds);
 
                                 case 309:
                                 case 509:
-                                    return (int)Math.Round(WorldServiceLocator._Functions.GetNextDate(3, 3).Subtract(DateAndTime.Now).TotalSeconds);
+                                    return (int)Math.Round(WorldServiceLocator.Functions.GetNextDate(3, 3).Subtract(DateAndTime.Now).TotalSeconds);
 
                                 case 409:
                                 case 469:
                                 case 531:
                                 case 533:
-                                    return (int)Math.Round(WorldServiceLocator._Functions.GetNextDay(DayOfWeek.Tuesday, 3).Subtract(DateAndTime.Now).TotalSeconds);
+                                    return (int)Math.Round(WorldServiceLocator.Functions.GetNextDay(DayOfWeek.Tuesday, 3).Subtract(DateAndTime.Now).TotalSeconds);
                             }
                             break;
                         default:
                             break;
                     }
-                    return WorldServiceLocator._Global_Constants.DEFAULT_INSTANCE_EXPIRE_TIME;
+                    return WorldServiceLocator.GlobalConstants.DEFAULT_INSTANCE_EXPIRE_TIME;
                 }
             }
         }
@@ -93,11 +93,11 @@ public partial class WS_Maps
             Tiles = new TMapTile[64, 64];
             checked
             {
-                if (WorldServiceLocator._WS_Maps.Maps.ContainsKey((uint)Map))
+                if (WorldServiceLocator.WSMaps.Maps.ContainsKey((uint)Map))
                 {
                     return;
                 }
-                WorldServiceLocator._WS_Maps.Maps.Add((uint)Map, this);
+                WorldServiceLocator.WSMaps.Maps.Add((uint)Map, this);
                 var x = 0;
                 do
                 {
@@ -123,7 +123,7 @@ public partial class WS_Maps
                             break;
                         }
                     }
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: 1 Map initialized.", mapDataStore.Rows - 1);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: 1 Map initialized.", mapDataStore.Rows - 1);
                 }
                 catch (DirectoryNotFoundException ex)
                 {
@@ -155,7 +155,7 @@ public partial class WS_Maps
                         i++;
                     }
                     while (i <= 63);
-                    WorldServiceLocator._WS_Maps.Maps.Remove((uint)ID);
+                    WorldServiceLocator.WSMaps.Maps.Remove((uint)ID);
                 }
                 _disposedValue = true;
             }

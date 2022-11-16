@@ -71,7 +71,7 @@ public partial class WS_Loot
         {
             packet.GetInt16();
             var slot = packet.GetInt8();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTOSTORE_LOOT_ITEM [slot={2}]", client.IP, client.Port, slot);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTOSTORE_LOOT_ITEM [slot={2}]", client.IP, client.Port, slot);
             if (LootTable.ContainsKey(client.Character.lootGUID))
             {
                 LootTable[client.Character.lootGUID].GetLoot(ref client, slot);
@@ -87,13 +87,13 @@ public partial class WS_Loot
         }
         catch (Exception e)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error looting item.{0}", Environment.NewLine + e);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Error looting item.{0}", Environment.NewLine + e);
         }
     }
 
     public void On_CMSG_LOOT_MONEY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT_MONEY", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT_MONEY", client.IP, client.Port);
         if (!LootTable.ContainsKey(client.Character.lootGUID))
         {
             return;
@@ -102,7 +102,7 @@ public partial class WS_Loot
         {
             if (client.Character.IsInGroup)
             {
-                var members = WorldServiceLocator._WS_Spells.GetPartyMembersAroundMe(ref client.Character, 100f);
+                var members = WorldServiceLocator.WSSpells.GetPartyMembersAroundMe(ref client.Character, 100f);
                 LootTable[client.Character.lootGUID].Money = 0;
                 Packets.PacketClass sharePcket = new(Opcodes.SMSG_LOOT_MONEY_NOTIFY);
                 var copper2 = (LootTable[client.Character.lootGUID].Money / members.Count) + 1;
@@ -146,7 +146,7 @@ public partial class WS_Loot
         {
             packet.GetInt16();
             var GUID = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT [GUID={2:X}]", client.IP, client.Port, GUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT [GUID={2:X}]", client.IP, client.Port, GUID);
             client.Character.cUnitFlags |= 0x400;
             client.Character.SetUpdateFlag(46, client.Character.cUnitFlags);
             client.Character.SendCharacterUpdate();
@@ -169,7 +169,7 @@ public partial class WS_Loot
         }
         packet.GetInt16();
         var GUID = packet.GetUInt64();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT_RELEASE [lootGUID={2:X}]", client.IP, client.Port, GUID);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT_RELEASE [lootGUID={2:X}]", client.IP, client.Port, GUID);
         if (client.Character.spellCasted[1] != null)
         {
             client.Character.spellCasted[1].State = SpellCastState.SPELL_STATE_IDLE;
@@ -184,116 +184,116 @@ public partial class WS_Loot
             if (LootTable[GUID].IsEmpty)
             {
                 LootTable[GUID].Dispose();
-                if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
+                if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(GUID))
                 {
                     switch (LootTable[GUID].LootType)
                     {
                         case LootType.LOOTTYPE_CORPSE:
                             {
-                                if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.SkinLootID > 0)
+                                if (WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.SkinLootID > 0)
                                 {
-                                    WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags = WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags | 0x4000000;
+                                    WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cUnitFlags = WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cUnitFlags | 0x4000000;
                                 }
-                                WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 0;
+                                WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 0;
                                 Packets.PacketClass response3 = new(Opcodes.SMSG_UPDATE_OBJECT);
                                 response3.AddInt32(1);
                                 response3.AddInt8(0);
-                                Packets.UpdateClass UpdateData4 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                                UpdateData4.SetUpdateFlag(143, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
-                                UpdateData4.SetUpdateFlag(46, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
+                                Packets.UpdateClass UpdateData4 = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
+                                UpdateData4.SetUpdateFlag(143, WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
+                                UpdateData4.SetUpdateFlag(46, WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
                                 ulong key;
                                 Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
-                                var updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
+                                var updateObject = (wORLD_CREATUREs = WorldServiceLocator.WorldServer.WORLD_CREATUREs)[key = GUID];
                                 UpdateData4.AddToPacket(ref response3, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                                 wORLD_CREATUREs[key] = updateObject;
-                                WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response3);
+                                WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response3);
                                 response3.Dispose();
                                 UpdateData4.Dispose();
                                 break;
                             }
                         case LootType.LOOTTYPE_SKINNING:
-                            WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Despawn();
+                            WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].Despawn();
                             break;
                         default:
                             break;
                     }
                 }
-                else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(GUID) && WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID))
+                else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsGameObject(GUID) && WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID))
                 {
-                    if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].IsConsumeable)
+                    if (WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID].IsConsumeable)
                     {
-                        WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].State = GameObjectLootState.LOOT_LOOTED;
-                        WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].Despawn();
+                        WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID].State = GameObjectLootState.LOOT_LOOTED;
+                        WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID].Despawn();
                     }
                     else
                     {
-                        WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].State = GameObjectLootState.DOOR_CLOSED;
+                        WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID].State = GameObjectLootState.DOOR_CLOSED;
                     }
                 }
-                else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsItem(GUID))
+                else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsItem(GUID))
                 {
                     client.Character.ItemREMOVE(GUID, Destroy: true, Update: true);
                 }
             }
-            else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
+            else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(GUID))
             {
                 switch (LootTable[GUID].LootType)
                 {
                     case LootType.LOOTTYPE_CORPSE:
                         {
-                            if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID))
+                            if (!WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(GUID))
                             {
                                 LootTable[GUID].Dispose();
                                 break;
                             }
-                            WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 1;
+                            WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 1;
                             Packets.PacketClass response4 = new(Opcodes.SMSG_UPDATE_OBJECT);
                             response4.AddInt32(1);
                             response4.AddInt8(0);
-                            Packets.UpdateClass UpdateData3 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                            UpdateData3.SetUpdateFlag(143, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
+                            Packets.UpdateClass UpdateData3 = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
+                            UpdateData3.SetUpdateFlag(143, WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
                             Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                             ulong key;
-                            var updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
+                            var updateObject = (wORLD_CREATUREs = WorldServiceLocator.WorldServer.WORLD_CREATUREs)[key = GUID];
                             UpdateData3.AddToPacket(ref response4, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                             wORLD_CREATUREs[key] = updateObject;
-                            WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response4);
+                            WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response4);
                             response4.Dispose();
                             UpdateData3.Dispose();
                             break;
                         }
                     case LootType.LOOTTYPE_SKINNING:
-                        WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Despawn();
+                        WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].Despawn();
                         break;
                     default:
                         break;
                 }
             }
-            else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(GUID))
+            else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsGameObject(GUID))
             {
-                if (!WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID) || LootTable[GUID].LootType == LootType.LOOTTYPE_FISHING)
+                if (!WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID) || LootTable[GUID].LootType == LootType.LOOTTYPE_FISHING)
                 {
                     LootTable[GUID].Dispose();
                 }
                 else
                 {
-                    WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].State = GameObjectLootState.DOOR_CLOSED;
+                    WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID].State = GameObjectLootState.DOOR_CLOSED;
                     Packets.PacketClass response2 = new(Opcodes.SMSG_UPDATE_OBJECT);
                     response2.AddInt32(1);
                     response2.AddInt8(0);
-                    Packets.UpdateClass UpdateData2 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                    UpdateData2.SetUpdateFlag(14, 0, (byte)WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].State);
+                    Packets.UpdateClass UpdateData2 = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
+                    UpdateData2.SetUpdateFlag(14, 0, (byte)WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID].State);
                     ulong key;
                     Dictionary<ulong, WS_GameObjects.GameObject> wORLD_GAMEOBJECTs;
-                    var updateObject2 = (wORLD_GAMEOBJECTs = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
+                    var updateObject2 = (wORLD_GAMEOBJECTs = WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs)[key = GUID];
                     UpdateData2.AddToPacket(ref response2, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject2);
                     wORLD_GAMEOBJECTs[key] = updateObject2;
-                    WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].SendToNearPlayers(ref response2);
+                    WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID].SendToNearPlayers(ref response2);
                     response2.Dispose();
                     UpdateData2.Dispose();
                 }
             }
-            else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsItem(GUID))
+            else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsItem(GUID))
             {
                 LootTable[GUID].Dispose();
                 client.Character.ItemREMOVE(GUID, Destroy: true, Update: true);
@@ -310,25 +310,25 @@ public partial class WS_Loot
             responseRelease.AddInt8(1);
             client.Send(ref responseRelease);
             responseRelease.Dispose();
-            if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
+            if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(GUID))
             {
-                if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.SkinLootID > 0)
+                if (WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.SkinLootID > 0)
                 {
-                    WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags = WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags | 0x4000000;
+                    WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cUnitFlags = WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cUnitFlags | 0x4000000;
                 }
-                WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 0;
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags = 0;
                 Packets.PacketClass response = new(Opcodes.SMSG_UPDATE_OBJECT);
                 response.AddInt32(1);
                 response.AddInt8(0);
-                Packets.UpdateClass UpdateData = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
-                UpdateData.SetUpdateFlag(143, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
-                UpdateData.SetUpdateFlag(46, WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
+                Packets.UpdateClass UpdateData = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
+                UpdateData.SetUpdateFlag(143, WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cDynamicFlags);
+                UpdateData.SetUpdateFlag(46, WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].cUnitFlags);
                 ulong key;
                 Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
-                var updateObject = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
+                var updateObject = (wORLD_CREATUREs = WorldServiceLocator.WorldServer.WORLD_CREATUREs)[key = GUID];
                 UpdateData.AddToPacket(ref response, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                 wORLD_CREATUREs[key] = updateObject;
-                WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response);
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].SendToNearPlayers(ref response);
                 response.Dispose();
                 UpdateData.Dispose();
             }
@@ -345,7 +345,7 @@ public partial class WS_Loot
         response.AddInt8(0);
         client.Send(ref response);
         response.Dispose();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Empty loot for GUID [{2:X}].", client.IP, client.Port, GUID);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Empty loot for GUID [{2:X}].", client.IP, client.Port, GUID);
     }
 
     public void StartRoll(ulong LootGUID, byte Slot, ref WS_PlayerData.CharacterObject Character)
@@ -358,7 +358,7 @@ public partial class WS_Loot
         {
             if (Character.playersNear.Contains(GUID))
             {
-                rollCharacters.Add(WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
+                rollCharacters.Add(WorldServiceLocator.WorldServer.CHARACTERs[GUID]);
             }
         }
         Packets.PacketClass startRoll = new(Opcodes.SMSG_LOOT_START_ROLL);
@@ -387,7 +387,7 @@ public partial class WS_Loot
                 var GUID = packet.GetUInt64();
                 var Slot = (byte)packet.GetInt32();
                 var rollType = packet.GetInt8();
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT_ROLL [loot={2} roll={3}]", client.IP, client.Port, GUID, rollType);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT_ROLL [loot={2} roll={3}]", client.IP, client.Port, GUID, rollType);
                 Packets.PacketClass response = new(Opcodes.SMSG_LOOT_ROLL);
                 response.AddUInt64(GUID);
                 response.AddInt32(Slot);

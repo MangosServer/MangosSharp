@@ -58,7 +58,7 @@ public partial class WS_Loot
                         {
                             return ExplicitlyChanced[i];
                         }
-                        var rollChance = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 100.0);
+                        var rollChance = (float)(WorldServiceLocator.WorldServer.Rnd.NextDouble() * 100.0);
                         rollChance -= ExplicitlyChanced[i].Chance;
                         if (rollChance <= 0f)
                         {
@@ -66,7 +66,7 @@ public partial class WS_Loot
                         }
                     }
                 }
-                return EqualChanced.Count > 0 ? EqualChanced[WorldServiceLocator._WorldServer.Rnd.Next(0, EqualChanced.Count)] : null;
+                return EqualChanced.Count > 0 ? EqualChanced[WorldServiceLocator.WorldServer.Rnd.Next(0, EqualChanced.Count)] : null;
             }
         }
 

@@ -40,7 +40,7 @@ public partial class WS_TimerBasedEvents
         {
             WeatherTimer = null;
             WeatherWorking = false;
-            UPDATE_TIMER = WorldServiceLocator._ConfigurationProvider.GetConfiguration().WeatherTimer;
+            UPDATE_TIMER = WorldServiceLocator.ConfigurationProvider.GetConfiguration().WeatherTimer;
             WeatherTimer = new Timer(Update, null, 10000, UPDATE_TIMER);
         }
 
@@ -48,11 +48,11 @@ public partial class WS_TimerBasedEvents
         {
             if (WeatherWorking)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Weather changer skipping update");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Update: Weather changer skipping update");
                 return;
             }
             WeatherWorking = true;
-            foreach (var weatherZone in WorldServiceLocator._WS_Weather.WeatherZones)
+            foreach (var weatherZone in WorldServiceLocator.WSWeather.WeatherZones)
             {
                 weatherZone.Value.Update();
             }

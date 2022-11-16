@@ -274,8 +274,8 @@ public class Functions
     public string CapitalizeName(ref string Name)
     {
         return Name.Length > 1
-            ? WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Strings.Left(Name, 1)) + WorldServiceLocator._CommonFunctions.LowercaseFirstLetter(Strings.Right(Name, checked(Name.Length - 1)))
-            : WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Name);
+            ? WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(Strings.Left(Name, 1)) + WorldServiceLocator.CommonFunctions.LowercaseFirstLetter(Strings.Right(Name, checked(Name.Length - 1)))
+            : WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(Name);
     }
 
     public bool ValidateName(string strName)
@@ -325,31 +325,31 @@ public class Functions
     {
         DataTable account = new();
         DataTable bannedAccount = new();
-        WorldServiceLocator._WorldServer.AccountDatabase.Query($"SELECT id, username FROM account WHERE username = {Name};", ref account);
+        WorldServiceLocator.WorldServer.AccountDatabase.Query($"SELECT id, username FROM account WHERE username = {Name};", ref account);
         switch (account.Rows.Count)
         {
             case > 0:
                 {
                     var accID = Conversions.ToInteger(account.Rows[0]["id"]);
-                    WorldServiceLocator._WorldServer.AccountDatabase.Query($"SELECT id, active FROM account_banned WHERE id = {accID};", ref bannedAccount);
+                    WorldServiceLocator.WorldServer.AccountDatabase.Query($"SELECT id, active FROM account_banned WHERE id = {accID};", ref bannedAccount);
                     switch (bannedAccount.Rows.Count)
                     {
                         case > 0:
-                            WorldServiceLocator._WorldServer.AccountDatabase.Update("UPDATE account_banned SET active = 1 WHERE id = '" + Conversions.ToString(accID) + "';");
+                            WorldServiceLocator.WorldServer.AccountDatabase.Update("UPDATE account_banned SET active = 1 WHERE id = '" + Conversions.ToString(accID) + "';");
                             break;
                         default:
                             {
                                 var tempBanDate = Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongDate) + " " + Strings.FormatDateTime(Conversions.ToDate(DateTime.Now.ToFileTimeUtc().ToString()), DateFormat.LongTime);
-                                WorldServiceLocator._WorldServer.AccountDatabase.Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP('{1}'), UNIX_TIMESTAMP('{2}'), '{3}', '{4}', active = 1);", accID, tempBanDate, "0000-00-00 00:00:00", Name, Reason));
+                                WorldServiceLocator.WorldServer.AccountDatabase.Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP('{1}'), UNIX_TIMESTAMP('{2}'), '{3}', '{4}', active = 1);", accID, tempBanDate, "0000-00-00 00:00:00", Name, Reason));
                                 break;
                             }
                     }
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Account [{0}] banned by server. Reason: [{1}].", Name, Reason);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Account [{0}] banned by server. Reason: [{1}].", Name, Reason);
                     break;
                 }
 
             default:
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Account [{0}] NOT Found in Database.", Name);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Account [{0}] NOT Found in Database.", Name);
                 break;
         }
     }
@@ -429,7 +429,7 @@ public class Functions
     public bool RollChance(float Chance)
     {
         var nChance = checked((int)Math.Round(Chance * 100f));
-        return WorldServiceLocator._WorldServer.Rnd.Next(1, 10001) <= nChance;
+        return WorldServiceLocator.WorldServer.Rnd.Next(1, 10001) <= nChance;
     }
 
     public void SendMessageMOTD(ref WS_Network.ClientClass client, string Message)
@@ -467,15 +467,15 @@ public class Functions
 
     public void Broadcast(string Message)
     {
-        WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-        foreach (var Character in WorldServiceLocator._WorldServer.CHARACTERs)
+        WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+        foreach (var Character in WorldServiceLocator.WorldServer.CHARACTERs)
         {
             if (Character.Value.client != null)
             {
                 SendMessageSystem(Character.Value.client, "System Message: " + SetColor(Message, byte.MaxValue, 0, 0));
             }
         }
-        WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+        WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
     }
 
     public void SendAccountMD5(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
@@ -501,7 +501,7 @@ public class Functions
         {
             SMSG_ACCOUNT_DATA_TIMES.Dispose();
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_ACCOUNT_DATA_MD5", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_ACCOUNT_DATA_MD5", client.IP, client.Port);
     }
 
     public void SendTriggerCinematic(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
@@ -509,24 +509,24 @@ public class Functions
         Packets.PacketClass packet = new(Opcodes.SMSG_TRIGGER_CINEMATIC);
         try
         {
-            if (!WorldServiceLocator._WS_DBCDatabase.CharRaces.ContainsKey((int)Character.Race))
+            if (!WorldServiceLocator.WSDBCDatabase.CharRaces.ContainsKey((int)Character.Race))
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC [Error: RACE={2} CLASS={3}]", client.IP, client.Port, Character.Race, Character.Classe);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC [Error: RACE={2} CLASS={3}]", client.IP, client.Port, Character.Race, Character.Classe);
                 return;
             }
-            packet.AddInt32(WorldServiceLocator._WS_DBCDatabase.CharRaces[(int)Character.Race].CinematicID);
+            packet.AddInt32(WorldServiceLocator.WSDBCDatabase.CharRaces[(int)Character.Race].CinematicID);
             client.Send(ref packet);
         }
         finally
         {
             packet.Dispose();
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRIGGER_CINEMATIC", client.IP, client.Port);
     }
 
     public void SendTimeSyncReq(ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SendTimeSyncReq", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SendTimeSyncReq", client.IP, client.Port);
     }
 
     public void SendGameTime(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)
@@ -551,7 +551,7 @@ public class Functions
             {
                 SMSG_LOGIN_SETTIMESPEED.Dispose();
             }
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGIN_SETTIMESPEED", client.IP, client.Port);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGIN_SETTIMESPEED", client.IP, client.Port);
         }
     }
 
@@ -568,7 +568,7 @@ public class Functions
         {
             packet.Dispose();
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_SET_PROFICIENCY", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_SET_PROFICIENCY", client.IP, client.Port);
     }
 
     public void SendCorpseReclaimDelay(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character, int Seconds = 30)
@@ -583,7 +583,7 @@ public class Functions
         {
             packet.Dispose();
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CORPSE_RECLAIM_DELAY [{2}s]", client.IP, client.Port, Seconds);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CORPSE_RECLAIM_DELAY [{2}s]", client.IP, client.Port, Seconds);
     }
 
     public Packets.PacketClass BuildChatMessage(ulong SenderGUID, string Message, ChatMsg msgType, LANGUAGES msgLanguage, byte Flag = 0, string msgChannel = "Global")
@@ -627,11 +627,11 @@ public class Functions
                 case ChatMsg.CHAT_MSG_MONSTER_SAY:
                 case ChatMsg.CHAT_MSG_MONSTER_YELL:
                 case ChatMsg.CHAT_MSG_MONSTER_EMOTE:
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Use Creature.SendChatMessage() for this message type - {0}!", msgType);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Use Creature.SendChatMessage() for this message type - {0}!", msgType);
                     break;
 
                 default:
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Unknown chat message type - {0}!", msgType);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Unknown chat message type - {0}!", msgType);
                     break;
             }
             packet.AddUInt32(checked((uint)(Encoding.UTF8.GetByteCount(Message) + 1)));
@@ -640,7 +640,7 @@ public class Functions
         }
         catch (Exception ex)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "failed chat message type - {0}!", msgType, ex);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "failed chat message type - {0}!", msgType, ex);
         }
         return packet;
     }

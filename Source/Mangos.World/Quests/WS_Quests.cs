@@ -44,8 +44,8 @@ public class WS_Quests
     public void LoadAllQuests()
     {
         DataTable cQuests = new();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Loading Quests...");
-        WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT entry FROM quests;", ref cQuests);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Loading Quests...");
+        WorldServiceLocator.WorldServer.WorldDatabase.Query("SELECT entry FROM quests;", ref cQuests);
         IEnumerator enumerator = default;
         try
         {
@@ -65,7 +65,7 @@ public class WS_Quests
                 (enumerator as IDisposable).Dispose();
             }
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Loading Quests...Complete");
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Loading Quests...Complete");
     }
 
     public int ReturnQuestIdByName(string searchValue)
@@ -163,7 +163,7 @@ public class WS_Quests
         catch (Exception ex2)
         {
             ProjectData.SetProjectError(ex2);
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "ReturnQuestInfoById returned error on QuestId {0}", questId);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "ReturnQuestInfoById returned error on QuestId {0}", questId);
             ProjectData.ClearProjectError();
         }
         return ret;
@@ -172,11 +172,11 @@ public class WS_Quests
     public QuestMenu GetQuestMenu(ref WS_PlayerData.CharacterObject objCharacter, ulong guid)
     {
         QuestMenu questMenu = new();
-        var creatureEntry = WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].ID;
+        var creatureEntry = WorldServiceLocator.WorldServer.WORLD_CREATUREs[guid].ID;
         List<int> alreadyHave = new();
         checked
         {
-            if (WorldServiceLocator._WorldServer.CreatureQuestFinishers.ContainsKey(creatureEntry))
+            if (WorldServiceLocator.WorldServer.CreatureQuestFinishers.ContainsKey(creatureEntry))
             {
                 try
                 {
@@ -186,7 +186,7 @@ public class WS_Quests
                         if (objCharacter.TalkQuests[i] != null)
                         {
                             alreadyHave.Add(objCharacter.TalkQuests[i].ID);
-                            if (WorldServiceLocator._WorldServer.CreatureQuestFinishers[creatureEntry].Contains(objCharacter.TalkQuests[i].ID))
+                            if (WorldServiceLocator.WorldServer.CreatureQuestFinishers[creatureEntry].Contains(objCharacter.TalkQuests[i].ID))
                             {
                                 questMenu.AddMenu(objCharacter.TalkQuests[i].Title, (short)objCharacter.TalkQuests[i].ID, 0, 3);
                             }
@@ -199,21 +199,21 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex4);
                     var ex3 = ex4;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenu Failed: ", ex3.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenu Failed: ", ex3.ToString());
                     ProjectData.ClearProjectError();
                 }
             }
-            if (WorldServiceLocator._WorldServer.CreatureQuestStarters.ContainsKey(creatureEntry))
+            if (WorldServiceLocator.WorldServer.CreatureQuestStarters.ContainsKey(creatureEntry))
             {
                 try
                 {
-                    foreach (var questID in WorldServiceLocator._WorldServer.CreatureQuestStarters[creatureEntry])
+                    foreach (var questID in WorldServiceLocator.WorldServer.CreatureQuestStarters[creatureEntry])
                     {
                         if (alreadyHave.Contains(questID))
                         {
                             continue;
                         }
-                        if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
+                        if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(questID))
                         {
                             try
                             {
@@ -227,13 +227,13 @@ public class WS_Quests
                             {
                                 ProjectData.SetProjectError(ex5);
                                 var ex2 = ex5;
-                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "GetQuestMenu returned error for QuestId {0}", questID);
+                                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "GetQuestMenu returned error for QuestId {0}", questID);
                                 ProjectData.ClearProjectError();
                             }
                         }
-                        else if (WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).CanSeeQuest(ref objCharacter) && WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).SatisfyQuestLevel(ref objCharacter))
+                        else if (WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).CanSeeQuest(ref objCharacter) && WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).SatisfyQuestLevel(ref objCharacter))
                         {
-                            questMenu.AddMenu(WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Title, (short)questID, WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Level_Normal, 5);
+                            questMenu.AddMenu(WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Title, (short)questID, WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Level_Normal, 5);
                         }
                     }
                 }
@@ -241,7 +241,7 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex6);
                     var ex = ex6;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenu Failed: ", ex.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenu Failed: ", ex.ToString());
                     ProjectData.ClearProjectError();
                 }
             }
@@ -252,11 +252,11 @@ public class WS_Quests
     public QuestMenu GetQuestMenuGO(ref WS_PlayerData.CharacterObject objCharacter, ulong guid)
     {
         QuestMenu questMenu = new();
-        var gOEntry = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[guid].ID;
+        var gOEntry = WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[guid].ID;
         List<int> alreadyHave = new();
         checked
         {
-            if (WorldServiceLocator._WorldServer.GameobjectQuestFinishers.ContainsKey(gOEntry))
+            if (WorldServiceLocator.WorldServer.GameobjectQuestFinishers.ContainsKey(gOEntry))
             {
                 try
                 {
@@ -266,7 +266,7 @@ public class WS_Quests
                         if (objCharacter.TalkQuests[i] != null)
                         {
                             alreadyHave.Add(objCharacter.TalkQuests[i].ID);
-                            if (WorldServiceLocator._WorldServer.GameobjectQuestFinishers[gOEntry].Contains(objCharacter.TalkQuests[i].ID))
+                            if (WorldServiceLocator.WorldServer.GameobjectQuestFinishers[gOEntry].Contains(objCharacter.TalkQuests[i].ID))
                             {
                                 questMenu.AddMenu(objCharacter.TalkQuests[i].Title, (short)objCharacter.TalkQuests[i].ID, 0, 3);
                             }
@@ -279,21 +279,21 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex3);
                     var ex2 = ex3;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenuGO Failed: ", ex2.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenuGO Failed: ", ex2.ToString());
                     ProjectData.ClearProjectError();
                 }
             }
-            if (WorldServiceLocator._WorldServer.GameobjectQuestStarters.ContainsKey(gOEntry))
+            if (WorldServiceLocator.WorldServer.GameobjectQuestStarters.ContainsKey(gOEntry))
             {
                 try
                 {
-                    foreach (var questID in WorldServiceLocator._WorldServer.GameobjectQuestStarters[gOEntry])
+                    foreach (var questID in WorldServiceLocator.WorldServer.GameobjectQuestStarters[gOEntry])
                     {
                         if (alreadyHave.Contains(questID))
                         {
                             continue;
                         }
-                        if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
+                        if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(questID))
                         {
                             WS_QuestInfo tmpQuest = new(questID);
                             if (tmpQuest.CanSeeQuest(ref objCharacter) && tmpQuest.SatisfyQuestLevel(ref objCharacter))
@@ -301,9 +301,9 @@ public class WS_Quests
                                 questMenu.AddMenu(tmpQuest.Title, (short)questID, tmpQuest.Level_Normal, 5);
                             }
                         }
-                        else if (WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).CanSeeQuest(ref objCharacter) && WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).SatisfyQuestLevel(ref objCharacter))
+                        else if (WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).CanSeeQuest(ref objCharacter) && WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).SatisfyQuestLevel(ref objCharacter))
                         {
-                            questMenu.AddMenu(WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Title, (short)questID, WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Level_Normal, 5);
+                            questMenu.AddMenu(WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Title, (short)questID, WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).Level_Normal, 5);
                         }
                     }
                 }
@@ -311,7 +311,7 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex4);
                     var ex = ex4;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenuGO Failed: ", ex.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenuGO Failed: ", ex.ToString());
                     ProjectData.ClearProjectError();
                 }
             }
@@ -350,7 +350,7 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex2);
                     var ex = ex2;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenu Failed: ", ex.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "GetQuestMenu Failed: ", ex.ToString());
                     ProjectData.ClearProjectError();
                 }
                 objCharacter.client.Send(ref packet);
@@ -393,7 +393,7 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex4);
                     var ex3 = ex4;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "SendQuestDetails Failed: ", ex3.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "SendQuestDetails Failed: ", ex3.ToString());
                     ProjectData.ClearProjectError();
                 }
                 packet.AddInt32(questRewardsCount);
@@ -404,7 +404,7 @@ public class WS_Quests
                     {
                         if (quest.RewardItems[i2] != 0)
                         {
-                            if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.RewardItems[i2]))
+                            if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(quest.RewardItems[i2]))
                             {
                                 WS_Items.ItemInfo tmpItem3 = new(quest.RewardItems[i2]);
                                 packet.AddInt32(tmpItem3.Id);
@@ -414,7 +414,7 @@ public class WS_Quests
                                 packet.AddInt32(quest.RewardItems[i2]);
                             }
                             packet.AddInt32(quest.RewardItems_Count[i2]);
-                            packet.AddInt32(WorldServiceLocator._WorldServer.ITEMDatabase[quest.RewardItems[i2]].Model);
+                            packet.AddInt32(WorldServiceLocator.WorldServer.ITEMDatabase[quest.RewardItems[i2]].Model);
                         }
                         else
                         {
@@ -430,7 +430,7 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex5);
                     var ex2 = ex5;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "SendQuestDetails Failed: ", ex2.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "SendQuestDetails Failed: ", ex2.ToString());
                     ProjectData.ClearProjectError();
                 }
                 questRewardsCount = 0;
@@ -452,7 +452,7 @@ public class WS_Quests
                     {
                         if (quest.RewardStaticItems[m] != 0)
                         {
-                            if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.RewardStaticItems[m]))
+                            if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(quest.RewardStaticItems[m]))
                             {
                                 WS_Items.ItemInfo tmpItem2 = new(quest.RewardStaticItems[m]);
                                 packet.AddInt32(tmpItem2.Id);
@@ -462,7 +462,7 @@ public class WS_Quests
                                 packet.AddInt32(quest.RewardStaticItems[m]);
                             }
                             packet.AddInt32(quest.RewardStaticItems_Count[m]);
-                            packet.AddInt32(WorldServiceLocator._WorldServer.ITEMDatabase[quest.RewardStaticItems[m]].Model);
+                            packet.AddInt32(WorldServiceLocator.WorldServer.ITEMDatabase[quest.RewardStaticItems[m]].Model);
                         }
                         else
                         {
@@ -478,7 +478,7 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex6);
                     var ex = ex6;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "SendQuestDetails Failed: ", ex.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "SendQuestDetails Failed: ", ex.ToString());
                     ProjectData.ClearProjectError();
                 }
                 packet.AddInt32(quest.RewardGold);
@@ -495,7 +495,7 @@ public class WS_Quests
                 var upperBound2 = quest.ObjectivesItem.GetUpperBound(0);
                 for (var k = 0; k <= upperBound2; k++)
                 {
-                    if (quest.ObjectivesItem[k] != 0 && !WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.ObjectivesItem[k]))
+                    if (quest.ObjectivesItem[k] != 0 && !WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(quest.ObjectivesItem[k]))
                     {
                         WS_Items.ItemInfo tmpItem = new(quest.ObjectivesItem[k]);
                         packet.AddInt32(tmpItem.Id);
@@ -522,7 +522,7 @@ public class WS_Quests
                     packet.AddUInt32((uint)quest.ObjectivesKill[i]);
                     packet.AddInt32(quest.ObjectivesKill_Count[i]);
                 }
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_QUESTGIVER_QUEST_DETAILS [GUID={2:X} Quest={3}]", client.IP, client.Port, guid, quest.ID);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_QUESTGIVER_QUEST_DETAILS [GUID={2:X} Quest={3}]", client.IP, client.Port, guid, quest.ID);
                 client.Send(ref packet);
             }
             finally
@@ -590,7 +590,7 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex4);
                     var ex3 = ex4;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "SendQuest Failed: ", ex3.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "SendQuest Failed: ", ex3.ToString());
                     ProjectData.ClearProjectError();
                 }
                 try
@@ -608,7 +608,7 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex5);
                     var ex2 = ex5;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "SendQuest Failed: ", ex2.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "SendQuest Failed: ", ex2.ToString());
                     ProjectData.ClearProjectError();
                 }
                 packet.AddUInt32((uint)quest.PointMapID);
@@ -628,7 +628,7 @@ public class WS_Quests
                     packet.AddUInt32((uint)quest.ObjectivesItem_Count[j]);
                     if (quest.ObjectivesItem[j] != 0)
                     {
-                        WorldServiceLocator._WS_Items.SendItemInfo(ref client, quest.ObjectivesItem[j]);
+                        WorldServiceLocator.WSItems.SendItemInfo(ref client, quest.ObjectivesItem[j]);
                     }
                     j++;
                 }
@@ -640,14 +640,14 @@ public class WS_Quests
                     i++;
                 }
                 while (i <= 3);
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_QUEST_QUERY_RESPONSE [Quest={2}]", client.IP, client.Port, quest.ID);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_QUEST_QUERY_RESPONSE [Quest={2}]", client.IP, client.Port, quest.ID);
                 client.Send(ref packet);
             }
             catch (Exception ex6)
             {
                 ProjectData.SetProjectError(ex6);
                 var ex = ex6;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SendQuest Failed [Quest={2}] {3}", client.IP, client.Port, quest.ID, ex.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SendQuest Failed [Quest={2}] {3}", client.IP, client.Port, quest.ID, ex.ToString());
                 ProjectData.ClearProjectError();
             }
             finally
@@ -829,14 +829,14 @@ public class WS_Quests
                     {
                         packet.AddInt32(quest.RewardItems[k]);
                         packet.AddInt32(quest.RewardItems_Count[k]);
-                        if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.RewardItems[k]))
+                        if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(quest.RewardItems[k]))
                         {
                             WS_Items.ItemInfo tmpItem2 = new(quest.RewardItems[k]);
                             packet.AddInt32(tmpItem2.Model);
                         }
                         else
                         {
-                            packet.AddInt32(WorldServiceLocator._WorldServer.ITEMDatabase[quest.RewardItems[k]].Model);
+                            packet.AddInt32(WorldServiceLocator.WorldServer.ITEMDatabase[quest.RewardItems[k]].Model);
                         }
                     }
                     k++;
@@ -861,11 +861,11 @@ public class WS_Quests
                     {
                         packet.AddInt32(quest.RewardStaticItems[i]);
                         packet.AddInt32(quest.RewardStaticItems_Count[i]);
-                        if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.RewardStaticItems[i]))
+                        if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(quest.RewardStaticItems[i]))
                         {
                             WS_Items.ItemInfo tmpItem = new(quest.RewardStaticItems[i]);
                         }
-                        packet.AddInt32(WorldServiceLocator._WorldServer.ITEMDatabase[quest.RewardStaticItems[i]].Model);
+                        packet.AddInt32(WorldServiceLocator.WorldServer.ITEMDatabase[quest.RewardStaticItems[i]].Model);
                     }
                     i++;
                 }
@@ -874,11 +874,11 @@ public class WS_Quests
                 packet.AddInt32(0);
                 if (quest.RewardSpell > 0)
                 {
-                    if (WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(quest.RewardSpell))
+                    if (WorldServiceLocator.WSSpells.SPELLs.ContainsKey(quest.RewardSpell))
                     {
-                        if (WorldServiceLocator._WS_Spells.SPELLs[quest.RewardSpell].SpellEffects[0] != null && WorldServiceLocator._WS_Spells.SPELLs[quest.RewardSpell].SpellEffects[0].ID == SpellEffects_Names.SPELL_EFFECT_LEARN_SPELL)
+                        if (WorldServiceLocator.WSSpells.SPELLs[quest.RewardSpell].SpellEffects[0] != null && WorldServiceLocator.WSSpells.SPELLs[quest.RewardSpell].SpellEffects[0].ID == SpellEffects_Names.SPELL_EFFECT_LEARN_SPELL)
                         {
-                            packet.AddInt32(WorldServiceLocator._WS_Spells.SPELLs[quest.RewardSpell].SpellEffects[0].TriggerSpell);
+                            packet.AddInt32(WorldServiceLocator.WSSpells.SPELLs[quest.RewardSpell].SpellEffects[0].TriggerSpell);
                         }
                         else
                         {
@@ -949,7 +949,7 @@ public class WS_Quests
                     {
                         if (quest.ObjectivesItem[i] != 0)
                         {
-                            if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.ObjectivesItem[i]))
+                            if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(quest.ObjectivesItem[i]))
                             {
                                 WS_Items.ItemInfo tmpItem = new(quest.ObjectivesItem[i]);
                                 packet.AddInt32(tmpItem.Id);
@@ -959,9 +959,9 @@ public class WS_Quests
                                 packet.AddInt32(quest.ObjectivesItem[i]);
                             }
                             packet.AddInt32(quest.ObjectivesItem_Count[i]);
-                            if (WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(quest.ObjectivesItem[i]))
+                            if (WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(quest.ObjectivesItem[i]))
                             {
-                                packet.AddInt32(WorldServiceLocator._WorldServer.ITEMDatabase[quest.ObjectivesItem[i]].Model);
+                                packet.AddInt32(WorldServiceLocator.WorldServer.ITEMDatabase[quest.ObjectivesItem[i]].Model);
                             }
                             else
                             {
@@ -995,7 +995,7 @@ public class WS_Quests
     {
         DataTable cQuests = new();
         var i = 0;
-        WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT quest_id, quest_status FROM characters_quests q WHERE q.char_guid = {objCharacter.GUID};", ref cQuests);
+        WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT quest_id, quest_status FROM characters_quests q WHERE q.char_guid = {objCharacter.GUID};", ref cQuests);
         checked
         {
             IEnumerator enumerator = default;
@@ -1207,7 +1207,7 @@ public class WS_Quests
         {
             foreach (var guid in objCharacter.Group.LocalMembers)
             {
-                var characterObject = WorldServiceLocator._WorldServer.CHARACTERs[guid];
+                var characterObject = WorldServiceLocator.WorldServer.CHARACTERs[guid];
                 var j = 0;
                 do
                 {
@@ -1451,24 +1451,24 @@ public class WS_Quests
     {
         var status = QuestgiverStatusFlag.DIALOG_STATUS_NONE;
         List<int> alreadyHave = new();
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(cGuid))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(cGuid))
         {
-            if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGuid))
+            if (!WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(cGuid))
             {
                 return QuestgiverStatusFlag.DIALOG_STATUS_NONE;
             }
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "QuestStatus ID: {0} NPC Name: {1}", WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].ID, WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].Name);
-            var creatureQuestId = WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].ID;
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "QuestStatus ID: {0} NPC Name: {1}", WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGuid].ID, WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGuid].Name);
+            var creatureQuestId = WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGuid].ID;
             if (IsValidQuest(creatureQuestId))
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "QuestStatus ID: {0} Valid Quest: {1}", WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].ID, IsValidQuest(creatureQuestId));
-                if (WorldServiceLocator._WorldServer.CreatureQuestStarters.ContainsKey(creatureQuestId))
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "QuestStatus ID: {0} Valid Quest: {1}", WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGuid].ID, IsValidQuest(creatureQuestId));
+                if (WorldServiceLocator.WorldServer.CreatureQuestStarters.ContainsKey(creatureQuestId))
                 {
-                    foreach (var questID in WorldServiceLocator._WorldServer.CreatureQuestStarters[creatureQuestId])
+                    foreach (var questID in WorldServiceLocator.WorldServer.CreatureQuestStarters[creatureQuestId])
                     {
                         try
                         {
-                            if (WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).CanSeeQuest(ref objCharacter))
+                            if (WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID).CanSeeQuest(ref objCharacter))
                             {
                                 return QuestgiverStatusFlag.DIALOG_STATUS_AVAILABLE;
                             }
@@ -1476,17 +1476,17 @@ public class WS_Quests
                         catch (Exception ex3)
                         {
                             ProjectData.SetProjectError(ex3);
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "GetQuestGiverStatus Error");
+                            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "GetQuestGiverStatus Error");
                             ProjectData.ClearProjectError();
                         }
                     }
-                    if (WorldServiceLocator._WorldServer.CreatureQuestFinishers.ContainsKey(creatureQuestId))
+                    if (WorldServiceLocator.WorldServer.CreatureQuestFinishers.ContainsKey(creatureQuestId))
                     {
-                        foreach (var questID2 in WorldServiceLocator._WorldServer.CreatureQuestFinishers[creatureQuestId])
+                        foreach (var questID2 in WorldServiceLocator.WorldServer.CreatureQuestFinishers[creatureQuestId])
                         {
                             try
                             {
-                                if (WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID2).CanSeeQuest(ref objCharacter) && objCharacter.IsQuestInProgress(questID2))
+                                if (WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID2).CanSeeQuest(ref objCharacter) && objCharacter.IsQuestInProgress(questID2))
                                 {
                                     return QuestgiverStatusFlag.DIALOG_STATUS_REWARD;
                                 }
@@ -1494,18 +1494,18 @@ public class WS_Quests
                             catch (Exception ex4)
                             {
                                 ProjectData.SetProjectError(ex4);
-                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "GetQuestGiverStatus Error");
+                                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "GetQuestGiverStatus Error");
                                 ProjectData.ClearProjectError();
                             }
                         }
                     }
                 }
             }
-            return (QuestgiverStatusFlag)WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].CreatureInfo.TalkScript.OnQuestStatus(ref objCharacter, cGuid);
+            return (QuestgiverStatusFlag)WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGuid].CreatureInfo.TalkScript.OnQuestStatus(ref objCharacter, cGuid);
         }
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(cGuid))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsGameObject(cGuid))
         {
-            if (!WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(cGuid))
+            if (!WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(cGuid))
             {
                 return QuestgiverStatusFlag.DIALOG_STATUS_NONE;
             }
@@ -1515,9 +1515,9 @@ public class WS_Quests
                 if (objCharacter.TalkQuests[i] != null)
                 {
                     alreadyHave.Add(objCharacter.TalkQuests[i].ID);
-                    if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(cGuid))
+                    if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(cGuid))
                     {
-                        if (WorldServiceLocator._WorldServer.CreatureQuestFinishers.ContainsKey(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].ID) && WorldServiceLocator._WorldServer.CreatureQuestFinishers[WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGuid].ID].Contains(objCharacter.TalkQuests[i].ID))
+                        if (WorldServiceLocator.WorldServer.CreatureQuestFinishers.ContainsKey(WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGuid].ID) && WorldServiceLocator.WorldServer.CreatureQuestFinishers[WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGuid].ID].Contains(objCharacter.TalkQuests[i].ID))
                         {
                             if (objCharacter.TalkQuests[i].Complete)
                             {
@@ -1527,7 +1527,7 @@ public class WS_Quests
                             status = QuestgiverStatusFlag.DIALOG_STATUS_INCOMPLETE;
                         }
                     }
-                    else if (WorldServiceLocator._WorldServer.GameobjectQuestFinishers.ContainsKey(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[cGuid].ID) && WorldServiceLocator._WorldServer.GameobjectQuestFinishers[WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[cGuid].ID].Contains(objCharacter.TalkQuests[i].ID))
+                    else if (WorldServiceLocator.WorldServer.GameobjectQuestFinishers.ContainsKey(WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[cGuid].ID) && WorldServiceLocator.WorldServer.GameobjectQuestFinishers[WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[cGuid].ID].Contains(objCharacter.TalkQuests[i].ID))
                     {
                         if (objCharacter.TalkQuests[i].Complete)
                         {
@@ -1573,7 +1573,7 @@ public class WS_Quests
             {
                 ProjectData.SetProjectError(ex);
                 var e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_STATUS_QUERY - Error in questgiver status query.{0}", Environment.NewLine + e);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_STATUS_QUERY - Error in questgiver status query.{0}", Environment.NewLine + e);
                 ProjectData.ClearProjectError();
             }
         }
@@ -1589,18 +1589,18 @@ public class WS_Quests
             }
             packet.GetInt16();
             var guid = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_HELLO [GUID={2:X}]", client.IP, client.Port, guid);
-            if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].Evade)
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_HELLO [GUID={2:X}]", client.IP, client.Port, guid);
+            if (!WorldServiceLocator.WorldServer.WORLD_CREATUREs[guid].Evade)
             {
-                WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].StopMoving();
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs[guid].StopMoving();
                 client.Character.RemoveAurasByInterruptFlag(1024);
-                if (WorldServiceLocator._WorldServer.CREATURESDatabase[WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].ID].TalkScript == null)
+                if (WorldServiceLocator.WorldServer.CREATURESDatabase[WorldServiceLocator.WorldServer.WORLD_CREATUREs[guid].ID].TalkScript == null)
                 {
                     SendQuestMenu(ref client.Character, guid, "I have some tasks for you, $N.");
                 }
                 else
                 {
-                    WorldServiceLocator._WorldServer.CREATURESDatabase[WorldServiceLocator._WorldServer.WORLD_CREATUREs[guid].ID].TalkScript.OnGossipHello(ref client.Character, guid);
+                    WorldServiceLocator.WorldServer.CREATURESDatabase[WorldServiceLocator.WorldServer.WORLD_CREATUREs[guid].ID].TalkScript.OnGossipHello(ref client.Character, guid);
                 }
             }
         }
@@ -1608,7 +1608,7 @@ public class WS_Quests
         {
             ProjectData.SetProjectError(ex);
             var e = ex;
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_HELLO - Error when sending quest menu.{0}", Environment.NewLine + e);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_HELLO - Error when sending quest menu.{0}", Environment.NewLine + e);
             ProjectData.ClearProjectError();
         }
     }
@@ -1622,8 +1622,8 @@ public class WS_Quests
         packet.GetInt16();
         var guid = packet.GetUInt64();
         var questID = packet.GetInt32();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_QUERY_QUEST [GUID={2:X} QuestID={3}]", client.IP, client.Port, guid, questID);
-        if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_QUERY_QUEST [GUID={2:X} QuestID={3}]", client.IP, client.Port, guid, questID);
+        if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(questID))
         {
             WS_QuestInfo tmpQuest = new(questID);
             try
@@ -1635,7 +1635,7 @@ public class WS_Quests
             {
                 ProjectData.SetProjectError(ex3);
                 var ex2 = ex3;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_QUERY_QUEST - Error while querying a quest.{0}{1}", Environment.NewLine, ex2.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_QUERY_QUEST - Error while querying a quest.{0}{1}", Environment.NewLine, ex2.ToString());
                 ProjectData.ClearProjectError();
             }
         }
@@ -1643,14 +1643,14 @@ public class WS_Quests
         {
             try
             {
-                client.Character.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+                client.Character.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
                 SendQuestDetails(ref client, ref client.Character.TalkCurrentQuest, guid, acceptActive: true);
             }
             catch (Exception ex4)
             {
                 ProjectData.SetProjectError(ex4);
                 var ex = ex4;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_QUERY_QUEST - Error while querying a quest.{0}{1}", Environment.NewLine, ex.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_QUERY_QUEST - Error while querying a quest.{0}{1}", Environment.NewLine, ex.ToString());
                 ProjectData.ClearProjectError();
             }
         }
@@ -1665,8 +1665,8 @@ public class WS_Quests
         packet.GetInt16();
         var guid = packet.GetUInt64();
         var questID = packet.GetInt32();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_ACCEPT_QUEST [GUID={2:X} QuestID={3}]", client.IP, client.Port, guid, questID);
-        if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_ACCEPT_QUEST [GUID={2:X} QuestID={3}]", client.IP, client.Port, guid, questID);
+        if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(questID))
         {
             WS_QuestInfo tmpQuest = new(questID);
             if (client.Character.TalkCurrentQuest.ID != questID)
@@ -1676,7 +1676,7 @@ public class WS_Quests
         }
         else if (client.Character.TalkCurrentQuest.ID != questID)
         {
-            client.Character.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+            client.Character.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
         }
         if (!client.Character.TalkCanAccept(ref client.Character.TalkCurrentQuest))
         {
@@ -1684,7 +1684,7 @@ public class WS_Quests
         }
         if (client.Character.TalkAddQuest(ref client.Character.TalkCurrentQuest))
         {
-            if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(guid))
+            if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(guid))
             {
                 Packets.PacketClass response3 = new(Opcodes.MSG_QUEST_PUSH_RESULT);
                 try
@@ -1692,7 +1692,7 @@ public class WS_Quests
                     response3.AddUInt64(client.Character.GUID);
                     response3.AddInt8(2);
                     response3.AddInt32(0);
-                    WorldServiceLocator._WorldServer.CHARACTERs[guid].client.Send(ref response3);
+                    WorldServiceLocator.WorldServer.CHARACTERs[guid].client.Send(ref response3);
                 }
                 finally
                 {
@@ -1735,7 +1735,7 @@ public class WS_Quests
         {
             packet.GetInt16();
             var slot = packet.GetInt8();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTLOG_REMOVE_QUEST [Slot={2}]", client.IP, client.Port, slot);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTLOG_REMOVE_QUEST [Slot={2}]", client.IP, client.Port, slot);
             client.Character.TalkDeleteQuest(slot);
         }
     }
@@ -1748,8 +1748,8 @@ public class WS_Quests
         }
         packet.GetInt16();
         var questID = packet.GetInt32();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUEST_QUERY [QuestID={2}]", client.IP, client.Port, questID);
-        if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUEST_QUERY [QuestID={2}]", client.IP, client.Port, questID);
+        if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(questID))
         {
             WS_QuestInfo tmpQuest = new(questID);
             if (client.Character.TalkCurrentQuest == null)
@@ -1767,7 +1767,7 @@ public class WS_Quests
         }
         else if (client.Character.TalkCurrentQuest == null)
         {
-            var quest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+            var quest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
             SendQuest(ref client, ref quest);
         }
         else if (client.Character.TalkCurrentQuest.ID == questID)
@@ -1776,14 +1776,14 @@ public class WS_Quests
         }
         else
         {
-            var quest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+            var quest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
             SendQuest(ref client, ref quest);
         }
     }
 
     public void CompleteQuest(ref WS_PlayerData.CharacterObject objCharacter, int questID, ulong questGiverGuid)
     {
-        if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
+        if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(questID))
         {
             WS_QuestInfo tmpQuest = new(questID);
             var j = 0;
@@ -1828,11 +1828,11 @@ public class WS_Quests
             {
                 if (objCharacter.TalkCurrentQuest == null)
                 {
-                    objCharacter.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+                    objCharacter.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
                 }
                 if (objCharacter.TalkCurrentQuest.ID != questID)
                 {
-                    objCharacter.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+                    objCharacter.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
                 }
                 if (objCharacter.TalkQuests[i].Complete)
                 {
@@ -1863,7 +1863,7 @@ public class WS_Quests
             packet.GetInt16();
             var guid = packet.GetUInt64();
             var questID = packet.GetInt32();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_COMPLETE_QUEST [GUID={2:X} Quest={3}]", client.IP, client.Port, guid, questID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_COMPLETE_QUEST [GUID={2:X} Quest={3}]", client.IP, client.Port, guid, questID);
             CompleteQuest(ref client.Character, questID, guid);
         }
     }
@@ -1879,8 +1879,8 @@ public class WS_Quests
             packet.GetInt16();
             var guid = packet.GetUInt64();
             var questID = packet.GetInt32();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_REQUEST_REWARD [GUID={2:X} Quest={3}]", client.IP, client.Port, guid, questID);
-            if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_REQUEST_REWARD [GUID={2:X} Quest={3}]", client.IP, client.Port, guid, questID);
+            if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(questID))
             {
                 WS_QuestInfo tmpQuest = new(questID);
                 var j = 0;
@@ -1907,7 +1907,7 @@ public class WS_Quests
                 {
                     if (client.Character.TalkCurrentQuest.ID != questID)
                     {
-                        client.Character.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+                        client.Character.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
                     }
                     SendQuestReward(ref client, ref client.Character.TalkCurrentQuest, guid, ref client.Character.TalkQuests[i]);
                     break;
@@ -1930,20 +1930,20 @@ public class WS_Quests
             var guid = packet.GetUInt64();
             var questID = packet.GetInt32();
             var rewardIndex = packet.GetInt32();
-            if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
+            if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(questID))
             {
                 try
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_CHOOSE_REWARD [GUID={2:X} Quest={3} Reward={4}]", client.IP, client.Port, guid, questID, rewardIndex);
-                    if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(guid))
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_CHOOSE_REWARD [GUID={2:X} Quest={3} Reward={4}]", client.IP, client.Port, guid, questID, rewardIndex);
+                    if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(guid))
                     {
                         if (client.Character.TalkCurrentQuest == null)
                         {
-                            client.Character.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+                            client.Character.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
                         }
                         if (client.Character.TalkCurrentQuest.ID != questID)
                         {
-                            client.Character.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+                            client.Character.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
                         }
                         if (client.Character.TalkCurrentQuest.RewardGold >= 0)
                         {
@@ -2020,7 +2020,7 @@ public class WS_Quests
                         reference = (WS_PlayerData.CharacterObject)objCharacter;
                         Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                         ulong key;
-                        WS_Base.BaseObject Caster = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = guid];
+                        WS_Base.BaseObject Caster = (wORLD_CREATUREs = WorldServiceLocator.WorldServer.WORLD_CREATUREs)[key = guid];
                         WS_Spells.CastSpellParameters castSpellParameters = new(ref spellTargets2, ref Caster, client.Character.TalkCurrentQuest.RewardSpell, Instant: true);
                         wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)Caster;
                         var castParams2 = castSpellParameters;
@@ -2045,7 +2045,7 @@ public class WS_Quests
                         int pLevel2 = client.Character.Level;
                         int qLevel2 = client.Character.TalkCurrentQuest.Level_Normal;
                         var fullxp2 = 0f;
-                        if (pLevel2 <= WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL)
+                        if (pLevel2 <= WorldServiceLocator.WSPlayerInitializator.DEFAULT_MAX_LEVEL)
                         {
                             if (qLevel2 >= 65)
                             {
@@ -2093,14 +2093,14 @@ public class WS_Quests
                     SendQuestComplete(ref client, ref client.Character.TalkCurrentQuest, xp2, gold2);
                     if (client.Character.TalkCurrentQuest.NextQuest != 0)
                     {
-                        if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(client.Character.TalkCurrentQuest.NextQuest))
+                        if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(client.Character.TalkCurrentQuest.NextQuest))
                         {
                             WS_QuestInfo tmpQuest2 = new(client.Character.TalkCurrentQuest.NextQuest);
                             client.Character.TalkCurrentQuest = tmpQuest2;
                         }
                         else
                         {
-                            client.Character.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(client.Character.TalkCurrentQuest.NextQuest);
+                            client.Character.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(client.Character.TalkCurrentQuest.NextQuest);
                         }
                         SendQuestDetails(ref client, ref client.Character.TalkCurrentQuest, guid, acceptActive: true);
                     }
@@ -2111,23 +2111,23 @@ public class WS_Quests
                 {
                     ProjectData.SetProjectError(ex);
                     var e2 = ex;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_CHOOSE_REWARD - Error while choosing reward.{0}", Environment.NewLine + e2);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_CHOOSE_REWARD - Error while choosing reward.{0}", Environment.NewLine + e2);
                     ProjectData.ClearProjectError();
                 }
                 return;
             }
             try
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_CHOOSE_REWARD [GUID={2:X} Quest={3} Reward={4}]", client.IP, client.Port, guid, questID, rewardIndex);
-                if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(guid))
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_QUESTGIVER_CHOOSE_REWARD [GUID={2:X} Quest={3} Reward={4}]", client.IP, client.Port, guid, questID, rewardIndex);
+                if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(guid))
                 {
                     if (client.Character.TalkCurrentQuest == null)
                     {
-                        client.Character.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+                        client.Character.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
                     }
                     if (client.Character.TalkCurrentQuest.ID != questID)
                     {
-                        client.Character.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+                        client.Character.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
                     }
                     if (client.Character.TalkCurrentQuest.RewardGold >= 0)
                     {
@@ -2204,7 +2204,7 @@ public class WS_Quests
                     reference = (WS_PlayerData.CharacterObject)objCharacter;
                     Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
                     ulong key;
-                    WS_Base.BaseObject Caster = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = guid];
+                    WS_Base.BaseObject Caster = (wORLD_CREATUREs = WorldServiceLocator.WorldServer.WORLD_CREATUREs)[key = guid];
                     WS_Spells.CastSpellParameters castSpellParameters = new(ref spellTargets, ref Caster, client.Character.TalkCurrentQuest.RewardSpell, Instant: true);
                     wORLD_CREATUREs[key] = (WS_Creatures.CreatureObject)Caster;
                     var castParams = castSpellParameters;
@@ -2229,7 +2229,7 @@ public class WS_Quests
                     int pLevel = client.Character.Level;
                     int qLevel = client.Character.TalkCurrentQuest.Level_Normal;
                     var fullxp = 0f;
-                    if (pLevel <= WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL)
+                    if (pLevel <= WorldServiceLocator.WSPlayerInitializator.DEFAULT_MAX_LEVEL)
                     {
                         if (qLevel >= 65)
                         {
@@ -2277,14 +2277,14 @@ public class WS_Quests
                 SendQuestComplete(ref client, ref client.Character.TalkCurrentQuest, xp, gold);
                 if (client.Character.TalkCurrentQuest.NextQuest != 0)
                 {
-                    if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(client.Character.TalkCurrentQuest.NextQuest))
+                    if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(client.Character.TalkCurrentQuest.NextQuest))
                     {
                         WS_QuestInfo tmpQuest3 = new(client.Character.TalkCurrentQuest.NextQuest);
                         client.Character.TalkCurrentQuest = tmpQuest3;
                     }
                     else
                     {
-                        client.Character.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(client.Character.TalkCurrentQuest.NextQuest);
+                        client.Character.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(client.Character.TalkCurrentQuest.NextQuest);
                     }
                     SendQuestDetails(ref client, ref client.Character.TalkCurrentQuest, guid, acceptActive: true);
                 }
@@ -2295,7 +2295,7 @@ public class WS_Quests
             {
                 ProjectData.SetProjectError(ex2);
                 var e = ex2;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_CHOOSE_REWARD - Error while choosing reward.{0}", Environment.NewLine + e);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "On_CMSG_QUESTGIVER_CHOOSE_REWARD - Error while choosing reward.{0}", Environment.NewLine + e);
                 ProjectData.ClearProjectError();
             }
         }
@@ -2309,12 +2309,12 @@ public class WS_Quests
         }
         packet.GetInt16();
         var questID = packet.GetInt32();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PUSHQUESTTOPARTY [{2}]", client.IP, client.Port, questID);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PUSHQUESTTOPARTY [{2}]", client.IP, client.Port, questID);
         if (!client.Character.IsInGroup)
         {
             return;
         }
-        if (!WorldServiceLocator._WorldServer.ALLQUESTS.IsValidQuest(questID))
+        if (!WorldServiceLocator.WorldServer.ALLQUESTS.IsValidQuest(questID))
         {
             WS_QuestInfo tmpQuest = new(questID);
             foreach (var guid in client.Character.Group.LocalMembers)
@@ -2323,7 +2323,7 @@ public class WS_Quests
                 {
                     continue;
                 }
-                var characterObject = WorldServiceLocator._WorldServer.CHARACTERs[guid];
+                var characterObject = WorldServiceLocator.WorldServer.CHARACTERs[guid];
                 Packets.PacketClass response2 = new(Opcodes.MSG_QUEST_PUSH_RESULT);
                 response2.AddUInt64(guid);
                 response2.AddInt32(0);
@@ -2376,7 +2376,7 @@ public class WS_Quests
             {
                 continue;
             }
-            var characterObject2 = WorldServiceLocator._WorldServer.CHARACTERs[guid2];
+            var characterObject2 = WorldServiceLocator.WorldServer.CHARACTERs[guid2];
             Packets.PacketClass response = new(Opcodes.MSG_QUEST_PUSH_RESULT);
             response.AddUInt64(guid2);
             response.AddInt32(0);
@@ -2400,7 +2400,7 @@ public class WS_Quests
             {
                 if (characterObject2.TalkCurrentQuest == null || characterObject2.TalkCurrentQuest.ID != questID)
                 {
-                    characterObject2.TalkCurrentQuest = WorldServiceLocator._WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
+                    characterObject2.TalkCurrentQuest = WorldServiceLocator.WorldServer.ALLQUESTS.ReturnQuestInfoById(questID);
                 }
                 if (characterObject2.TalkCanAccept(ref characterObject2.TalkCurrentQuest))
                 {
@@ -2430,7 +2430,7 @@ public class WS_Quests
             packet.GetInt16();
             var guid = packet.GetUInt64();
             QuestPartyPushError message = (QuestPartyPushError)packet.GetInt8();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_QUEST_PUSH_RESULT [{2:X} {3}]", client.IP, client.Port, guid, message);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_QUEST_PUSH_RESULT [{2:X} {3}]", client.IP, client.Port, guid, message);
             Packets.PacketClass response = new(Opcodes.MSG_QUEST_PUSH_RESULT);
             response.AddUInt64(guid);
             response.AddInt8(2);

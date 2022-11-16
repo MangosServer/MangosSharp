@@ -93,5 +93,22 @@ csharp_new_line_between_query_expression_clauses=true
 
 dotnet_diagnostic.CA1852.severity = error
 
+# naming styles
+dotnet_naming_style.pascal_case_style.capitalization=pascal_case
+dotnet_naming_style.camel_case_style.capitalization=camel_case
+dotnet_naming_style.interface_style.capitalization=pascal_case
+dotnet_naming_style.interface_style.required_prefix=I
+dotnet_naming_style.test_method_style.capitalization=pascal_case
+dotnet_naming_style.test_method_style.required_prefix=When_
+dotnet_naming_style.test_method_style.word_separator=_
+
+# general naming rule
+dotnet_naming_symbols.type_symbols.applicable_kinds=namespace,class,struct,enum,property,event,delegate,local_function
+dotnet_naming_symbols.type_symbols.applicable_accessibilities=*
+dotnet_naming_symbols.type_symbols.required_modifiers=
+dotnet_naming_rule.type_rule.symbols=type_symbols
+dotnet_naming_rule.type_rule.style=pascal_case_style
+dotnet_naming_rule.type_rule.severity=error
+
 [*Program*.cs]
 dotnet_diagnostic.CA1852.severity = none

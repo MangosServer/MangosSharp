@@ -155,7 +155,7 @@ public class WorldServer
         CHARACTERs = new Dictionary<ulong, WS_PlayerData.CharacterObject>();
         CHARACTERs_Lock = new System.Threading.ReaderWriterLock();
         ALLQUESTS = new WS_Quests();
-        AllGraveYards = new WS_GraveYards(WorldServiceLocator._DataStoreProvider);
+        AllGraveYards = new WS_GraveYards(WorldServiceLocator.DataStoreProvider);
         CreatureQuestStarters = new Dictionary<int, List<int>>();
         CreatureQuestFinishers = new Dictionary<int, List<int>>();
         GameobjectQuestStarters = new Dictionary<int, List<int>>();
@@ -173,12 +173,12 @@ public class WorldServer
         ITEMDatabase = new Dictionary<int, WS_Items.ItemInfo>();
         CREATURESDatabase = new Dictionary<int, CreatureInfo>();
         GAMEOBJECTSDatabase = new Dictionary<int, WS_GameObjects.GameObjectInfo>();
-        itemGuidCounter = WorldServiceLocator._Global_Constants.GUID_ITEM;
-        CreatureGUIDCounter = WorldServiceLocator._Global_Constants.GUID_UNIT;
-        GameObjectsGUIDCounter = WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT;
-        CorpseGUIDCounter = WorldServiceLocator._Global_Constants.GUID_CORPSE;
-        DynamicObjectsGUIDCounter = WorldServiceLocator._Global_Constants.GUID_DYNAMICOBJECT;
-        TransportGUIDCounter = WorldServiceLocator._Global_Constants.GUID_MO_TRANSPORT;
+        itemGuidCounter = WorldServiceLocator.GlobalConstants.GUID_ITEM;
+        CreatureGUIDCounter = WorldServiceLocator.GlobalConstants.GUID_UNIT;
+        GameObjectsGUIDCounter = WorldServiceLocator.GlobalConstants.GUID_GAMEOBJECT;
+        CorpseGUIDCounter = WorldServiceLocator.GlobalConstants.GUID_CORPSE;
+        DynamicObjectsGUIDCounter = WorldServiceLocator.GlobalConstants.GUID_DYNAMICOBJECT;
+        TransportGUIDCounter = WorldServiceLocator.GlobalConstants.GUID_MO_TRANSPORT;
         Log = new BaseWriter();
         PacketHandlers = new Dictionary<Opcodes, HandlePacket>();
         Rnd = new Random();
@@ -212,7 +212,7 @@ public class WorldServer
                 Console.ReadKey();
             }
             Console.Write("[{0}] Loading Configuration from {1}...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), FileName);
-            var configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
+            var configuration = WorldServiceLocator.ConfigurationProvider.GetConfiguration();
             Console.WriteLine(".[done]");
             if (!configuration.VMapsEnabled)
             {
@@ -261,14 +261,14 @@ public class WorldServer
             {
                 Console.WriteLine("Invalid connect string for the world database!");
             }
-            WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP = checked(configuration.MapResolution - 1);
-            if (WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP < 63)
+            WorldServiceLocator.WSMaps.RESOLUTION_ZMAP = checked(configuration.MapResolution - 1);
+            if (WorldServiceLocator.WSMaps.RESOLUTION_ZMAP < 63)
             {
-                WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP = 63;
+                WorldServiceLocator.WSMaps.RESOLUTION_ZMAP = 63;
             }
-            if (WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP > 255)
+            if (WorldServiceLocator.WSMaps.RESOLUTION_ZMAP > 255)
             {
-                WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP = 255;
+                WorldServiceLocator.WSMaps.RESOLUTION_ZMAP = 255;
             }
             Log = BaseWriter.CreateLog(configuration.LogType, configuration.LogConfig);
             Log.LogLevel = configuration.LogLevel;
@@ -403,15 +403,15 @@ public class WorldServer
         }
         WorldDatabase.Update("SET NAMES 'utf8';");
         var areDbVersionsOk = true;
-        if (!WorldServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(AccountDatabase, ServerDb.Realm))
+        if (!WorldServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(AccountDatabase, ServerDb.Realm))
         {
             areDbVersionsOk = false;
         }
-        if (!WorldServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(CharacterDatabase, ServerDb.Character))
+        if (!WorldServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(CharacterDatabase, ServerDb.Character))
         {
             areDbVersionsOk = false;
         }
-        if (!WorldServiceLocator._CommonGlobalFunctions.CheckRequiredDbVersion(WorldDatabase, ServerDb.World))
+        if (!WorldServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(WorldDatabase, ServerDb.World))
         {
             areDbVersionsOk = false;
         }
@@ -422,13 +422,13 @@ public class WorldServer
             Console.WriteLine("*************************");
             Console.ReadKey();
         }
-        await WorldServiceLocator._WS_DBCDatabase.InitializeInternalDatabaseAsync();
-        WorldServiceLocator._WS_Handlers.IntializePacketHandlers();
+        await WorldServiceLocator.WSDBCDatabase.InitializeInternalDatabaseAsync();
+        WorldServiceLocator.WSHandlers.IntializePacketHandlers();
         ALLQUESTS.LoadAllQuests();
         await AllGraveYards.InitializeGraveyardsAsync();
-        WorldServiceLocator._WS_Transports.LoadTransports();
-        ClsWorldServer = new WS_Network.WorldServerClass(WorldServiceLocator._DataStoreProvider);
-        var configuration = WorldServiceLocator._ConfigurationProvider.GetConfiguration();
+        WorldServiceLocator.WSTransports.LoadTransports();
+        ClsWorldServer = new WS_Network.WorldServerClass(WorldServiceLocator.DataStoreProvider);
+        var configuration = WorldServiceLocator.ConfigurationProvider.GetConfiguration();
         server = new ProxyServer<WS_Network.WorldServerClass>(Dns.GetHostAddresses(configuration.LocalConnectHost)[0], configuration.LocalConnectPort, ClsWorldServer);
         ClsWorldServer.ClusterConnect();
         Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}", ClsWorldServer.LocalURI);
@@ -450,7 +450,7 @@ public class WorldServer
         catch (Exception ex2)
         {
             var ex = ex2;
-            WorldServiceLocator._WS_TimerBasedEvents.Regenerator.Dispose();
+            WorldServiceLocator.WSTimerBasedEvents.Regenerator.Dispose();
             AreaTriggers.Dispose();
         }
     }

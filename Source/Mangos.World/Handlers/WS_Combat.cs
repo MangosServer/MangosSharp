@@ -161,24 +161,24 @@ public class WS_Combat
                 {
                     return;
                 }
-                WorldServiceLocator._WS_Combat.SendAttackStop(Character.GUID, Victim.GUID, ref Character.client);
+                WorldServiceLocator.WSCombat.SendAttackStop(Character.GUID, Victim.GUID, ref Character.client);
                 Victim = Victim_;
                 combatReach = 2f + Victim.BoundingRadius + Character.CombatReach;
                 minRanged = Victim.BoundingRadius + 8f;
             }
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             ref var character = ref Character;
             var flag = false;
             var AttackSpeed = wS_Combat.GetAttackTime(ref character, ref flag);
             checked
             {
-                if (WorldServiceLocator._NativeMethods.timeGetTime("") - LastAttack >= AttackSpeed)
+                if (WorldServiceLocator.NativeMethods.timeGetTime("") - LastAttack >= AttackSpeed)
                 {
                     DoAttack(null);
                 }
                 else
                 {
-                    NextAttackTimer.Change(WorldServiceLocator._NativeMethods.timeGetTime("") - LastAttack, -1);
+                    NextAttackTimer.Change(WorldServiceLocator.NativeMethods.timeGetTime("") - LastAttack, -1);
                 }
             }
         }
@@ -191,7 +191,7 @@ public class WS_Combat
                 AttackStop();
                 return;
             }
-            LastAttack = WorldServiceLocator._NativeMethods.timeGetTime("");
+            LastAttack = WorldServiceLocator.NativeMethods.timeGetTime("");
             Character.RemoveAurasByInterruptFlag(4096);
             try
             {
@@ -208,7 +208,7 @@ public class WS_Combat
             {
                 ProjectData.SetProjectError(ex2);
                 var ex = ex2;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error doing attack.{0}{1}", Environment.NewLine, ex.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error doing attack.{0}{1}", Environment.NewLine, ex.ToString());
                 ProjectData.ClearProjectError();
             }
         }
@@ -231,9 +231,9 @@ public class WS_Combat
                     bool flag;
                     if (Character.spellCasted[1] != null && !Character.spellCasted[1].Finished)
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "AttackStop: Casting Spell");
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "AttackStop: Casting Spell");
                         var nextAttackTimer = NextAttackTimer;
-                        var wS_Combat = WorldServiceLocator._WS_Combat;
+                        var wS_Combat = WorldServiceLocator.WSCombat;
                         ref var character = ref Character;
                         flag = false;
                         nextAttackTimer.Change(wS_Combat.GetAttackTime(ref character, ref flag), -1);
@@ -273,7 +273,7 @@ public class WS_Combat
                     var tmpPosX = Victim.positionX;
                     var tmpPosY = Victim.positionY;
                     var tmpPosZ = Victim.positionZ;
-                    var tmpDist = WorldServiceLocator._WS_Combat.GetDistance(Character, tmpPosX, tmpPosY, tmpPosZ);
+                    var tmpDist = WorldServiceLocator.WSCombat.GetDistance(Character, tmpPosX, tmpPosY, tmpPosZ);
                     if (tmpDist > 8f + Victim.CombatReach)
                     {
                         if (Character.CanShootRanged)
@@ -296,7 +296,7 @@ public class WS_Combat
                         SMSG_ATTACKSWING_NOTINRANGE.Dispose();
                         return;
                     }
-                    var wS_Combat2 = WorldServiceLocator._WS_Combat;
+                    var wS_Combat2 = WorldServiceLocator.WSCombat;
                     ref var character2 = ref Character;
                     WS_Base.BaseObject Object = character2;
                     flag = wS_Combat2.IsInFrontOf(ref Object, tmpPosX, tmpPosY);
@@ -321,7 +321,7 @@ public class WS_Combat
                         combatNextAttack.Set();
                         combatNextAttackSpell = false;
                     }
-                    var NextAttack = WorldServiceLocator._WS_Combat.GetAttackTime(ref Character, ref combatDualWield);
+                    var NextAttack = WorldServiceLocator.WSCombat.GetAttackTime(ref Character, ref combatDualWield);
                     if (HaveMainHand && HaveOffHand)
                     {
                         if (combatDualWield)
@@ -373,7 +373,7 @@ public class WS_Combat
                         SMSG_ATTACKSWING_CANT_ATTACK.Dispose();
                     }
                     AttackStop();
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Error while doing melee attack.{0}", Environment.NewLine + e);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Error while doing melee attack.{0}", Environment.NewLine + e);
                     ProjectData.ClearProjectError();
                 }
             }
@@ -391,9 +391,9 @@ public class WS_Combat
             bool flag;
             if (Character.spellCasted[1] != null && !Character.spellCasted[1].Finished)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "AttackPause: Casting Spell");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "AttackPause: Casting Spell");
                 var nextAttackTimer = NextAttackTimer;
-                var wS_Combat = WorldServiceLocator._WS_Combat;
+                var wS_Combat = WorldServiceLocator.WSCombat;
                 ref var character = ref Character;
                 flag = false;
                 nextAttackTimer.Change(wS_Combat.GetAttackTime(ref character, ref flag), -1);
@@ -426,7 +426,7 @@ public class WS_Combat
                 AttackStop();
                 return;
             }
-            var tmpDist = WorldServiceLocator._WS_Combat.GetDistance(Character, tmpPosX, tmpPosY, tmpPosZ);
+            var tmpDist = WorldServiceLocator.WSCombat.GetDistance(Character, tmpPosX, tmpPosY, tmpPosZ);
             if (tmpDist < combatReach)
             {
                 Ranged = false;
@@ -441,7 +441,7 @@ public class WS_Combat
                 SMSG_ATTACKSWING_NOTINRANGE.Dispose();
                 return;
             }
-            var wS_Combat2 = WorldServiceLocator._WS_Combat;
+            var wS_Combat2 = WorldServiceLocator.WSCombat;
             ref var character2 = ref Character;
             WS_Base.BaseObject Object = character2;
             flag = wS_Combat2.IsInFrontOf(ref Object, tmpPosX, tmpPosY);
@@ -457,7 +457,7 @@ public class WS_Combat
             {
                 DoRangedDamage();
                 var nextAttackTimer2 = NextAttackTimer;
-                var wS_Combat3 = WorldServiceLocator._WS_Combat;
+                var wS_Combat3 = WorldServiceLocator.WSCombat;
                 ref var character3 = ref Character;
                 flag = false;
                 nextAttackTimer2.Change(wS_Combat3.GetAttackTime(ref character3, ref flag), -1);
@@ -466,14 +466,14 @@ public class WS_Combat
 
         public void DoMeleeDamage()
         {
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             ref var character = ref Character;
             ref var reference = ref character;
             WS_Base.BaseUnit Attacker = character;
             var damageInfo2 = wS_Combat.CalculateDamage(ref Attacker, ref Victim, combatDualWield, Ranged: false);
             reference = (WS_PlayerData.CharacterObject)Attacker;
             var damageInfo = damageInfo2;
-            var wS_Combat2 = WorldServiceLocator._WS_Combat;
+            var wS_Combat2 = WorldServiceLocator.WSCombat;
             ref var character2 = ref Character;
             reference = ref character2;
             WS_Base.BaseObject Attacker2 = character2;
@@ -492,7 +492,7 @@ public class WS_Combat
             reference = (WS_PlayerData.CharacterObject)Attacker;
             checked
             {
-                var b = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1);
+                var b = (byte)(WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1);
                 byte i = 0;
                 while (i <= (uint)b)
                 {
@@ -501,7 +501,7 @@ public class WS_Combat
                         byte j = 0;
                         do
                         {
-                            if (Victim.ActiveSpells[i].Aura_Info[j] != null && Victim.ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == 42 && WorldServiceLocator._Functions.RollChance(Victim.ActiveSpells[i].GetSpellInfo.procChance))
+                            if (Victim.ActiveSpells[i].Aura_Info[j] != null && Victim.ActiveSpells[i].Aura_Info[j].ApplyAuraIndex == 42 && WorldServiceLocator.Functions.RollChance(Victim.ActiveSpells[i].GetSpellInfo.procChance))
                             {
                                 ref var victim2 = ref Victim;
                                 reference2 = ref victim2;
@@ -519,7 +519,7 @@ public class WS_Combat
                 }
                 if (Character.Classe == Classes.CLASS_WARRIOR || (Character.Classe == Classes.CLASS_DRUID && (Character.ShapeshiftForm == ShapeshiftForm.FORM_BEAR || Character.ShapeshiftForm == ShapeshiftForm.FORM_DIREBEAR)))
                 {
-                    Character.Rage.Increment((int)(((7.5 * damageInfo.Damage / Character.GetRageConversion) + (Character.GetHitFactor((damageInfo.HitInfo & 4) == 0, (damageInfo.HitInfo & 0x200) != 0) * WorldServiceLocator._WS_Combat.GetAttackTime(ref Character, ref combatDualWield))) / 2.0));
+                    Character.Rage.Increment((int)(((7.5 * damageInfo.Damage / Character.GetRageConversion) + (Character.GetHitFactor((damageInfo.HitInfo & 4) == 0, (damageInfo.HitInfo & 0x200) != 0) * WorldServiceLocator.WSCombat.GetAttackTime(ref Character, ref combatDualWield))) / 2.0));
                     Character.SetUpdateFlag(24, Character.Rage.Current);
                     Character.SendCharacterUpdate();
                 }
@@ -552,10 +552,10 @@ public class WS_Combat
 
         public void DoMeleeDamageBySpell(ref WS_PlayerData.CharacterObject Character, ref WS_Base.BaseObject Victim2, int BonusDamage, int SpellID)
         {
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             WS_Base.BaseUnit Attacker = Character;
             WS_Base.BaseUnit baseUnit = (WS_Base.BaseUnit)Victim2;
-            var damageInfo2 = wS_Combat.CalculateDamage(ref Attacker, ref baseUnit, DualWield: false, Ranged: false, WorldServiceLocator._WS_Spells.SPELLs[SpellID]);
+            var damageInfo2 = wS_Combat.CalculateDamage(ref Attacker, ref baseUnit, DualWield: false, Ranged: false, WorldServiceLocator.WSSpells.SPELLs[SpellID]);
             Victim2 = baseUnit;
             Character = (WS_PlayerData.CharacterObject)Attacker;
             var damageInfo = damageInfo2;
@@ -571,7 +571,7 @@ public class WS_Combat
                     damageInfo.Damage += BonusDamage;
                     IsCrit = true;
                 }
-                var wS_Spells = WorldServiceLocator._WS_Spells;
+                var wS_Spells = WorldServiceLocator.WSSpells;
                 baseUnit = Character;
                 Attacker = (WS_Base.BaseUnit)Victim2;
                 wS_Spells.SendNonMeleeDamageLog(ref baseUnit, ref Attacker, SpellID, (int)damageInfo.DamageType, damageInfo.Damage, 0, damageInfo.Absorbed, IsCrit);
@@ -915,7 +915,7 @@ public class WS_Combat
             var DamageReduction = Victim.GetDamageReduction(ref Attacker, result.DamageType, result.Damage);
             ref var damage = ref result.Damage;
             damage = (int)Math.Round(damage - (result.Damage * DamageReduction));
-            var roll = (float)(WorldServiceLocator._WorldServer.Rnd.Next(0, 10000) / 100.0);
+            var roll = (float)(WorldServiceLocator.WorldServer.Rnd.Next(0, 10000) / 100.0);
             var num = roll;
             if (num < chanceToMiss)
             {
@@ -1210,18 +1210,18 @@ public class WS_Combat
                     case SHEATHE_SLOT.SHEATHE_WEAPON:
                         if (DualWield && characterObject.Items.ContainsKey(16))
                         {
-                            tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.Items[16].ItemEntry].GetReqSkill;
+                            tmpSkill = WorldServiceLocator.WorldServer.ITEMDatabase[characterObject.Items[16].ItemEntry].GetReqSkill;
                         }
                         else if (characterObject.Items.ContainsKey(15))
                         {
-                            tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.Items[15].ItemEntry].GetReqSkill;
+                            tmpSkill = WorldServiceLocator.WorldServer.ITEMDatabase[characterObject.Items[15].ItemEntry].GetReqSkill;
                         }
                         break;
 
                     case SHEATHE_SLOT.SHEATHE_RANGED:
                         if (characterObject.Items.ContainsKey(17))
                         {
-                            tmpSkill = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.Items[17].ItemEntry].GetReqSkill;
+                            tmpSkill = WorldServiceLocator.WorldServer.ITEMDatabase[characterObject.Items[17].ItemEntry].GetReqSkill;
                         }
                         break;
                 }
@@ -1291,7 +1291,7 @@ public class WS_Combat
                     case SHEATHE_SLOT.SHEATHE_NONE:
                         result.HitInfo = 0;
                         result.DamageType = DamageTypes.DMG_PHYSICAL;
-                        result.Damage = WorldServiceLocator._WorldServer.Rnd.Next(characterObject.BaseUnarmedDamage, characterObject.BaseUnarmedDamage + 1);
+                        result.Damage = WorldServiceLocator.WorldServer.Rnd.Next(characterObject.BaseUnarmedDamage, characterObject.BaseUnarmedDamage + 1);
                         break;
 
                     case SHEATHE_SLOT.SHEATHE_WEAPON:
@@ -1299,20 +1299,20 @@ public class WS_Combat
                         {
                             result.HitInfo = 6;
                             result.DamageType = DamageTypes.DMG_PHYSICAL;
-                            result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.OffHandDamage.Minimum / 2f), (int)Math.Round((characterObject.OffHandDamage.Maximum / 2f) + 1f)) + characterObject.BaseUnarmedDamage;
+                            result.Damage = WorldServiceLocator.WorldServer.Rnd.Next((int)Math.Round(characterObject.OffHandDamage.Minimum / 2f), (int)Math.Round((characterObject.OffHandDamage.Maximum / 2f) + 1f)) + characterObject.BaseUnarmedDamage;
                         }
                         else
                         {
                             result.HitInfo = 2;
                             result.DamageType = DamageTypes.DMG_PHYSICAL;
-                            result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.Damage.Minimum), (int)Math.Round(characterObject.Damage.Maximum + 1f)) + characterObject.BaseUnarmedDamage;
+                            result.Damage = WorldServiceLocator.WorldServer.Rnd.Next((int)Math.Round(characterObject.Damage.Minimum), (int)Math.Round(characterObject.Damage.Maximum + 1f)) + characterObject.BaseUnarmedDamage;
                         }
                         break;
 
                     case SHEATHE_SLOT.SHEATHE_RANGED:
                         result.HitInfo = 10;
                         result.DamageType = DamageTypes.DMG_PHYSICAL;
-                        result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(characterObject.RangedDamage.Minimum), (int)Math.Round(characterObject.RangedDamage.Maximum + 1f)) + characterObject.BaseRangedDamage;
+                        result.Damage = WorldServiceLocator.WorldServer.Rnd.Next((int)Math.Round(characterObject.RangedDamage.Minimum), (int)Math.Round(characterObject.RangedDamage.Maximum + 1f)) + characterObject.BaseRangedDamage;
                         break;
                 }
             }
@@ -1320,7 +1320,7 @@ public class WS_Combat
             {
                 WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)objCharacter;
                 result.DamageType = DamageTypes.DMG_PHYSICAL;
-                result.Damage = WorldServiceLocator._WorldServer.Rnd.Next((int)Math.Round(WorldServiceLocator._WorldServer.CREATURESDatabase[creatureObject.ID].Damage.Minimum), (int)Math.Round(WorldServiceLocator._WorldServer.CREATURESDatabase[creatureObject.ID].Damage.Maximum + 1f));
+                result.Damage = WorldServiceLocator.WorldServer.Rnd.Next((int)Math.Round(WorldServiceLocator.WorldServer.CREATURESDatabase[creatureObject.ID].Damage.Minimum), (int)Math.Round(WorldServiceLocator.WorldServer.CREATURESDatabase[creatureObject.ID].Damage.Maximum + 1f));
             }
         }
     }
@@ -1360,7 +1360,7 @@ public class WS_Combat
         {
             packet.GetInt16();
             var GUID = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ATTACKSWING [GUID={2:X}]", client.IP, client.Port, GUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ATTACKSWING [GUID={2:X}]", client.IP, client.Port, GUID);
             if (client.Character.Spell_Pacifyed)
             {
                 Packets.PacketClass SMSG_ATTACKSWING_CANT_ATTACK2 = new(Opcodes.SMSG_ATTACKSWING_CANT_ATTACK);
@@ -1368,13 +1368,13 @@ public class WS_Combat
                 SMSG_ATTACKSWING_CANT_ATTACK2.Dispose();
                 SendAttackStop(client.Character.GUID, GUID, ref client);
             }
-            else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
+            else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(GUID))
             {
-                client.Character.attackState.AttackStart(WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID]);
+                client.Character.attackState.AttackStart(WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID]);
             }
-            else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(GUID))
+            else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(GUID))
             {
-                client.Character.attackState.AttackStart(WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
+                client.Character.attackState.AttackStart(WorldServiceLocator.WorldServer.CHARACTERs[GUID]);
             }
             else
             {
@@ -1391,7 +1391,7 @@ public class WS_Combat
         try
         {
             packet.GetInt16();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ATTACKSTOP", client.IP, client.Port);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ATTACKSTOP", client.IP, client.Port);
             SendAttackStop(client.Character.GUID, client.Character.TargetGUID, ref client);
             client.Character.attackState.AttackStop();
         }
@@ -1399,7 +1399,7 @@ public class WS_Combat
         {
             ProjectData.SetProjectError(ex);
             var e = ex;
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error stopping attack: {0}", e.ToString());
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Error stopping attack: {0}", e.ToString());
             ProjectData.ClearProjectError();
         }
     }
@@ -1412,28 +1412,28 @@ public class WS_Combat
         }
         packet.GetInt16();
         var AmmoID = packet.GetInt32();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_AMMO [{2}]", client.IP, client.Port, AmmoID);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_AMMO [{2}]", client.IP, client.Port, AmmoID);
         if (client.Character.IsDead)
         {
-            WorldServiceLocator._WS_Items.SendInventoryChangeFailure(ref client.Character, InventoryChangeFailure.EQUIP_ERR_YOU_ARE_DEAD, 0uL, 0uL);
+            WorldServiceLocator.WSItems.SendInventoryChangeFailure(ref client.Character, InventoryChangeFailure.EQUIP_ERR_YOU_ARE_DEAD, 0uL, 0uL);
         }
         else if (AmmoID != 0)
         {
             client.Character.AmmoID = AmmoID;
-            if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(AmmoID))
+            if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(AmmoID))
             {
                 WS_Items.ItemInfo tmpItem = new(AmmoID);
             }
-            var CanUse = WorldServiceLocator._CharManagementHandler.CanUseAmmo(ref client.Character, AmmoID);
+            var CanUse = WorldServiceLocator.CharManagementHandler.CanUseAmmo(ref client.Character, AmmoID);
             if (CanUse != 0)
             {
-                WorldServiceLocator._WS_Items.SendInventoryChangeFailure(ref client.Character, CanUse, 0uL, 0uL);
+                WorldServiceLocator.WSItems.SendInventoryChangeFailure(ref client.Character, CanUse, 0uL, 0uL);
                 return;
             }
             var currentDPS = 0f;
-            if ((WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(AmmoID) && WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].ObjectClass == ITEM_CLASS.ITEM_CLASS_PROJECTILE) || WorldServiceLocator._CharManagementHandler.CheckAmmoCompatibility(ref client.Character, AmmoID))
+            if ((WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(AmmoID) && WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].ObjectClass == ITEM_CLASS.ITEM_CLASS_PROJECTILE) || WorldServiceLocator.CharManagementHandler.CheckAmmoCompatibility(ref client.Character, AmmoID))
             {
-                currentDPS = WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].Damage[0].Minimum;
+                currentDPS = WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].Damage[0].Minimum;
             }
             if (client.Character.AmmoDPS != currentDPS)
             {
@@ -1460,7 +1460,7 @@ public class WS_Combat
         {
             packet.GetInt16();
             SHEATHE_SLOT sheathed = (SHEATHE_SLOT)checked((byte)packet.GetInt32());
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SETSHEATHED [{2}]", client.IP, client.Port, sheathed);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SETSHEATHED [{2}]", client.IP, client.Port, sheathed);
             SetSheath(ref client.Character, sheathed);
         }
     }
@@ -1473,7 +1473,7 @@ public class WS_Combat
         objCharacter.SetUpdateFlag(164, objCharacter.cBytes2);
         if (objCharacter is null)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1} Account:{2} CharName:{3} CharGUID:{4}] Client is Null!", objCharacter.client.IP, objCharacter.client.Port, objCharacter.client.Account, objCharacter.client.Character.UnitName, objCharacter.client.Character.GUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1} Account:{2} CharName:{3} CharGUID:{4}] Client is Null!", objCharacter.client.IP, objCharacter.client.Port, objCharacter.client.Account, objCharacter.client.Character.UnitName, objCharacter.client.Character.GUID);
             return;
         }
         switch (State)
@@ -1516,8 +1516,8 @@ public class WS_Combat
                         Item = (items = objCharacter.Items)[16];
                         SetVirtualItemInfo(objChar10, 1, ref Item);
                         items[16] = Item;
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "spellCanDualWeild = {0}", objCharacter.spellCanDualWeild);
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "objectClass = {0}", objCharacter.Items[16].ItemInfo.ObjectClass);
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "spellCanDualWeild = {0}", objCharacter.spellCanDualWeild);
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "objectClass = {0}", objCharacter.Items[16].ItemInfo.ObjectClass);
                         if (objCharacter.spellCanDualWeild && objCharacter.Items[16].ItemInfo.ObjectClass == ITEM_CLASS.ITEM_CLASS_WEAPON)
                         {
                             objCharacter.combatCanDualWield = true;
@@ -1561,7 +1561,7 @@ public class WS_Combat
                 }
             default:
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Unhandled sheathe state [{0}]", State);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Unhandled sheathe state [{0}]", State);
                     var objChar = objCharacter;
                     ItemObject Item = null;
                     SetVirtualItemInfo(objChar, 0, ref Item);

@@ -82,7 +82,7 @@ public class WS_Corpses
 
         public void ConvertToBones()
         {
-            WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM corpse WHERE player = \"{Owner}\";");
+            WorldServiceLocator.WorldServer.CharacterDatabase.Update($"DELETE FROM corpse WHERE player = \"{Owner}\";");
             Flags = 5;
             Owner = 0uL;
             var j = 0;
@@ -99,7 +99,7 @@ public class WS_Corpses
                 {
                     packet.AddInt32(1);
                     packet.AddInt8(0);
-                    Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
+                    Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_CORPSE);
                     try
                     {
                         tmpUpdate.SetUpdateFlag(6, 0);
@@ -130,7 +130,7 @@ public class WS_Corpses
         public void Save()
         {
             var tmpCmd = "INSERT INTO corpse (guid";
-            var tmpValues = " VALUES (" + Conversions.ToString(checked(GUID - WorldServiceLocator._Global_Constants.GUID_CORPSE));
+            var tmpValues = " VALUES (" + Conversions.ToString(checked(GUID - WorldServiceLocator.GlobalConstants.GUID_CORPSE));
             tmpCmd += ", player";
             tmpValues = tmpValues + ", " + Conversions.ToString(Owner);
             tmpCmd += ", position_x";
@@ -150,7 +150,7 @@ public class WS_Corpses
             tmpCmd += ", corpse_type";
             tmpValues = tmpValues + ", " + Conversions.ToString((int)CorpseType);
             tmpCmd = tmpCmd + ") " + tmpValues + ");";
-            WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmpCmd);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Update(tmpCmd);
         }
 
         public void Destroy()
@@ -173,7 +173,7 @@ public class WS_Corpses
             if (!_disposedValue)
             {
                 RemoveFromWorld();
-                WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Remove(GUID);
+                WorldServiceLocator.WorldServer.WORLD_CORPSEOBJECTs.Remove(GUID);
             }
             _disposedValue = true;
         }
@@ -200,7 +200,7 @@ public class WS_Corpses
             Model = 0;
             Guild = 0;
             Items = new int[19];
-            GUID = WorldServiceLocator._WS_Corpses.GetNewGUID();
+            GUID = WorldServiceLocator.WSCorpses.GetNewGUID();
             checked
             {
                 Bytes1 = unchecked((int)((uint)Character.Race << 8)) + unchecked((int)((uint)Character.Gender << 16)) + (Character.Skin << 24);
@@ -217,7 +217,7 @@ public class WS_Corpses
                 Character.corpsePositionY = positionY;
                 Character.corpsePositionZ = positionZ;
                 Character.corpseMapID = (int)MapID;
-                Character.corpseCorpseType = Character.isPvP ? CorpseType.CORPSE_RESURRECTABLE_PVP : CorpseType.CORPSE_RESURRECTABLE_PVE;
+                Character.corpseCorpseType = Character.IsPvP ? CorpseType.CORPSE_RESURRECTABLE_PVP : CorpseType.CORPSE_RESURRECTABLE_PVE;
                 Character.corpseCorpseType = CorpseType;
                 byte i = 0;
                 do
@@ -229,7 +229,7 @@ public class WS_Corpses
                 }
                 while (i <= 18u);
                 Flags = 4;
-                WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Add(GUID, this);
+                WorldServiceLocator.WorldServer.WORLD_CORPSEOBJECTs.Add(GUID, this);
             }
         }
 
@@ -246,10 +246,10 @@ public class WS_Corpses
             if (Info == null)
             {
                 DataTable MySQLQuery = new();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM corpse WHERE guid = {cGUID};", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT * FROM corpse WHERE guid = {cGUID};", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count <= 0)
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Corpse not found in database. [corpseGUID={0:X}]", cGUID);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Corpse not found in database. [corpseGUID={0:X}]", cGUID);
                     return;
                 }
                 Info = MySQLQuery.Rows[0];
@@ -263,24 +263,24 @@ public class WS_Corpses
             Owner = Conversions.ToULong(Info["player"]);
             CorpseType = (CorpseType)Conversions.ToInteger(Info["corpse_type"]);
             Flags = 4;
-            GUID = checked(cGUID + WorldServiceLocator._Global_Constants.GUID_CORPSE);
-            WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.Add(GUID, this);
+            GUID = checked(cGUID + WorldServiceLocator.GlobalConstants.GUID_CORPSE);
+            WorldServiceLocator.WorldServer.WORLD_CORPSEOBJECTs.Add(GUID, this);
         }
 
         public void AddToWorld()
         {
-            WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
-            if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
+            WorldServiceLocator.WSMaps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+            if (WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY] == null)
             {
-                WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+                WorldServiceLocator.WSCharMovement.MAP_Load(CellX, CellY, MapID);
             }
-            WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Add(GUID);
+            WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Add(GUID);
             Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
             checked
             {
                 try
                 {
-                    Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_CORPSE);
+                    Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_CORPSE);
                     try
                     {
                         packet.AddInt32(1);
@@ -300,17 +300,17 @@ public class WS_Corpses
                         short j = -1;
                         do
                         {
-                            if ((short)unchecked(CellX + i) >= 0 && (short)unchecked(CellX + i) <= 63 && (short)unchecked(CellY + j) >= 0 && (short)unchecked(CellY + j) <= 63 && WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)] != null && WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)].PlayersHere.Count > 0)
+                            if ((short)unchecked(CellX + i) >= 0 && (short)unchecked(CellX + i) <= 63 && (short)unchecked(CellY + j) >= 0 && (short)unchecked(CellY + j) <= 63 && WorldServiceLocator.WSMaps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)] != null && WorldServiceLocator.WSMaps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)].PlayersHere.Count > 0)
                             {
-                                var tMapTile = WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)];
+                                var tMapTile = WorldServiceLocator.WSMaps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)];
                                 var list = tMapTile.PlayersHere.ToArray();
                                 var array = list;
                                 foreach (var plGUID in array)
                                 {
                                     int num;
-                                    if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID))
+                                    if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(plGUID))
                                     {
-                                        var characterObject = WorldServiceLocator._WorldServer.CHARACTERs[plGUID];
+                                        var characterObject = WorldServiceLocator.WorldServer.CHARACTERs[plGUID];
                                         WS_Base.BaseObject objCharacter = this;
                                         num = characterObject.CanSee(ref objCharacter) ? 1 : 0;
                                     }
@@ -320,8 +320,8 @@ public class WS_Corpses
                                     }
                                     if (num != 0)
                                     {
-                                        WorldServiceLocator._WorldServer.CHARACTERs[plGUID].client.SendMultiplyPackets(ref packet);
-                                        WorldServiceLocator._WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Add(GUID);
+                                        WorldServiceLocator.WorldServer.CHARACTERs[plGUID].client.SendMultiplyPackets(ref packet);
+                                        WorldServiceLocator.WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Add(GUID);
                                         SeenBy.Add(plGUID);
                                     }
                                 }
@@ -342,23 +342,23 @@ public class WS_Corpses
 
         public void RemoveFromWorld()
         {
-            WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
-            WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Remove(GUID);
-            if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].PlayersHere.Count <= 0)
+            WorldServiceLocator.WSMaps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+            WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY].CorpseObjectsHere.Remove(GUID);
+            if (WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY].PlayersHere.Count <= 0)
             {
                 return;
             }
-            var tMapTile = WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY];
+            var tMapTile = WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY];
             var list = tMapTile.PlayersHere.ToArray();
             var array = list;
             foreach (var plGUID in array)
             {
-                if (WorldServiceLocator._WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Contains(GUID))
+                if (WorldServiceLocator.WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Contains(GUID))
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Remove(GUID);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Remove(GUID);
                 }
             }
         }
@@ -367,8 +367,8 @@ public class WS_Corpses
     [MethodImpl(MethodImplOptions.Synchronized)]
     private ulong GetNewGUID()
     {
-        ref var corpseGUIDCounter = ref WorldServiceLocator._WorldServer.CorpseGUIDCounter;
+        ref var corpseGUIDCounter = ref WorldServiceLocator.WorldServer.CorpseGUIDCounter;
         corpseGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(corpseGUIDCounter), 1m));
-        return WorldServiceLocator._WorldServer.CorpseGUIDCounter;
+        return WorldServiceLocator.WorldServer.CorpseGUIDCounter;
     }
 }

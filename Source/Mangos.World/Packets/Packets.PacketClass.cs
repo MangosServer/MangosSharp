@@ -73,7 +73,7 @@ public partial class Packets
             if (OpCode == Opcodes.SMSG_UPDATE_OBJECT && Data.Length >= 200)
             {
                 var uncompressedSize = Data.Length;
-                var compressedBuffer = WorldServiceLocator._GlobalZip.Compress(Data, 4, checked(Data.Length - 4));
+                var compressedBuffer = WorldServiceLocator.GlobalZip.Compress(Data, 4, checked(Data.Length - 4));
                 if (compressedBuffer.Length != 0)
                 {
                     Data = new byte[4];
@@ -366,7 +366,7 @@ public partial class Packets
                     Offset++;
                 }
                 Offset++;
-                return WorldServiceLocator._Functions.EscapeString(Encoding.UTF8.GetString(Data, start, i));
+                return WorldServiceLocator.Functions.EscapeString(Encoding.UTF8.GetString(Data, start, i));
             }
         }
 
@@ -377,7 +377,7 @@ public partial class Packets
             {
                 var start = Offset + 1;
                 Offset += thisLength + 1;
-                return WorldServiceLocator._Functions.EscapeString(Encoding.UTF8.GetString(Data, start, thisLength));
+                return WorldServiceLocator.Functions.EscapeString(Encoding.UTF8.GetString(Data, start, thisLength));
             }
         }
 

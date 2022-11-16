@@ -45,311 +45,311 @@ namespace Mangos.World;
 
 public sealed class WorldServiceLocator
 {
-    public static IContainer _Container
+    public static IContainer Container
     {
         get;
         set;
     } = Program.CreateContainer();
 
-    public static DataStoreProvider _DataStoreProvider => _Container.Resolve<DataStoreProvider>();
+    public static DataStoreProvider DataStoreProvider => Container.Resolve<DataStoreProvider>();
 
-    public static IConfigurationProvider<WorldServerConfiguration> _ConfigurationProvider
+    public static IConfigurationProvider<WorldServerConfiguration> ConfigurationProvider
     {
         get;
         set;
-    } = _Container.Resolve<IConfigurationProvider<WorldServerConfiguration>>();
+    } = Container.Resolve<IConfigurationProvider<WorldServerConfiguration>>();
 
-    public static MangosGlobalConstants _Global_Constants
+    public static MangosGlobalConstants GlobalConstants
     {
         get;
         set;
-    } = _Container.Resolve<MangosGlobalConstants>();
+    } = Container.Resolve<MangosGlobalConstants>();
 
-    public static Functions _CommonGlobalFunctions
+    public static Functions CommonGlobalFunctions
     {
         get;
         set;
-    } = _Container.Resolve<Functions>();
+    } = Container.Resolve<Functions>();
 
-    public static Common.Legacy.Functions _CommonFunctions
+    public static Common.Legacy.Functions CommonFunctions
     {
         get;
         set;
-    } = _Container.Resolve<Common.Legacy.Functions>();
+    } = Container.Resolve<Common.Legacy.Functions>();
 
-    public static ZipService _GlobalZip
+    public static ZipService GlobalZip
     {
         get;
         set;
-    } = _Container.Resolve<ZipService>();
+    } = Container.Resolve<ZipService>();
 
-    public static NativeMethods _NativeMethods
+    public static NativeMethods NativeMethods
     {
         get;
         set;
-    } = _Container.Resolve<NativeMethods>();
+    } = Container.Resolve<NativeMethods>();
 
-    public static WorldServer _WorldServer
+    public static WorldServer WorldServer
     {
         get;
         set;
-    } = _Container.Resolve<WorldServer>();
+    } = Container.Resolve<WorldServer>();
 
-    public static Globals.Functions _Functions
+    public static Globals.Functions Functions
     {
         get;
         set;
-    } = _Container.Resolve<Globals.Functions>();
+    } = Container.Resolve<Globals.Functions>();
 
-    public static WS_Creatures_AI _WS_Creatures_AI
+    public static WS_Creatures_AI WSCreaturesAI
     {
         get;
         set;
-    } = _Container.Resolve<WS_Creatures_AI>();
+    } = Container.Resolve<WS_Creatures_AI>();
 
-    public static WS_Auction _WS_Auction
+    public static WS_Auction WSAuction
     {
         get;
         set;
-    } = _Container.Resolve<WS_Auction>();
+    } = Container.Resolve<WS_Auction>();
 
-    public static WS_Battlegrounds _WS_Battlegrounds
+    public static WS_Battlegrounds WSBattlegrounds
     {
         get;
         set;
-    } = _Container.Resolve<WS_Battlegrounds>();
+    } = Container.Resolve<WS_Battlegrounds>();
 
-    public static WS_DBCDatabase _WS_DBCDatabase
+    public static WS_DBCDatabase WSDBCDatabase
     {
         get;
         set;
-    } = _Container.Resolve<WS_DBCDatabase>();
+    } = Container.Resolve<WS_DBCDatabase>();
 
-    public static WS_DBCLoad _WS_DBCLoad
+    public static WS_DBCLoad WSDBCLoad
     {
         get;
         set;
-    } = _Container.Resolve<WS_DBCLoad>();
+    } = Container.Resolve<WS_DBCLoad>();
 
-    public static Packets _Packets
+    public static Packets Packets
     {
         get;
         set;
-    } = _Container.Resolve<Packets>();
+    } = Container.Resolve<Packets>();
 
-    public static WS_GuardGossip _WS_GuardGossip
+    public static WS_GuardGossip WSGuardGossip
     {
         get;
         set;
-    } = _Container.Resolve<WS_GuardGossip>();
+    } = Container.Resolve<WS_GuardGossip>();
 
-    public static WS_Loot _WS_Loot
+    public static WS_Loot WSLoot
     {
         get;
         set;
-    } = _Container.Resolve<WS_Loot>();
+    } = Container.Resolve<WS_Loot>();
 
-    public static WS_Maps _WS_Maps
+    public static WS_Maps WSMaps
     {
         get;
         set;
-    } = _Container.Resolve<WS_Maps>();
+    } = Container.Resolve<WS_Maps>();
 
-    public static WS_Corpses _WS_Corpses
+    public static WS_Corpses WSCorpses
     {
         get;
         set;
-    } = _Container.Resolve<WS_Corpses>();
+    } = Container.Resolve<WS_Corpses>();
 
-    public static WS_Creatures _WS_Creatures
+    public static WS_Creatures WSCreatures
     {
         get;
         set;
-    } = _Container.Resolve<WS_Creatures>();
+    } = Container.Resolve<WS_Creatures>();
 
-    public static WS_DynamicObjects _WS_DynamicObjects
+    public static WS_DynamicObjects WSDynamicObjects
     {
         get;
         set;
-    } = _Container.Resolve<WS_DynamicObjects>();
+    } = Container.Resolve<WS_DynamicObjects>();
 
-    public static WS_GameObjects _WS_GameObjects
+    public static WS_GameObjects WSGameObjects
     {
         get;
         set;
-    } = _Container.Resolve<WS_GameObjects>();
+    } = Container.Resolve<WS_GameObjects>();
 
-    public static WS_Items _WS_Items
+    public static WS_Items WSItems
     {
         get;
         set;
-    } = _Container.Resolve<WS_Items>();
+    } = Container.Resolve<WS_Items>();
 
-    public static WS_NPCs _WS_NPCs
+    public static WS_NPCs WSNPCs
     {
         get;
         set;
-    } = _Container.Resolve<WS_NPCs>();
+    } = Container.Resolve<WS_NPCs>();
 
-    public static WS_Pets _WS_Pets
+    public static WS_Pets WSPets
     {
         get;
         set;
-    } = _Container.Resolve<WS_Pets>();
+    } = Container.Resolve<WS_Pets>();
 
-    public static WS_Transports _WS_Transports
+    public static WS_Transports WSTransports
     {
         get;
         set;
-    } = _Container.Resolve<WS_Transports>();
+    } = Container.Resolve<WS_Transports>();
 
-    public static CharManagementHandler _CharManagementHandler
+    public static CharManagementHandler CharManagementHandler
     {
         get;
         set;
-    } = _Container.Resolve<CharManagementHandler>();
+    } = Container.Resolve<CharManagementHandler>();
 
-    public static WS_CharMovement _WS_CharMovement
+    public static WS_CharMovement WSCharMovement
     {
         get;
         set;
-    } = _Container.Resolve<WS_CharMovement>();
+    } = Container.Resolve<WS_CharMovement>();
 
-    public static WS_Combat _WS_Combat
+    public static WS_Combat WSCombat
     {
         get;
         set;
-    } = _Container.Resolve<WS_Combat>();
+    } = Container.Resolve<WS_Combat>();
 
-    public static WS_Commands _WS_Commands
+    public static WS_Commands WSCommands
     {
         get;
         set;
-    } = _Container.Resolve<WS_Commands>();
+    } = Container.Resolve<WS_Commands>();
 
-    public static WS_Handlers _WS_Handlers
+    public static WS_Handlers WSHandlers
     {
         get;
         set;
-    } = _Container.Resolve<WS_Handlers>();
+    } = Container.Resolve<WS_Handlers>();
 
-    public static WS_Handlers_Battleground _WS_Handlers_Battleground
+    public static WS_Handlers_Battleground WSHandlersBattleground
     {
         get;
         set;
-    } = _Container.Resolve<WS_Handlers_Battleground>();
+    } = Container.Resolve<WS_Handlers_Battleground>();
 
-    public static WS_Handlers_Chat _WS_Handlers_Chat
+    public static WS_Handlers_Chat WSHandlersChat
     {
         get;
         set;
-    } = _Container.Resolve<WS_Handlers_Chat>();
+    } = Container.Resolve<WS_Handlers_Chat>();
 
-    public static WS_Handlers_Gamemaster _WS_Handlers_Gamemaster
+    public static WS_Handlers_Gamemaster WSHandlersGamemaster
     {
         get;
         set;
-    } = _Container.Resolve<WS_Handlers_Gamemaster>();
+    } = Container.Resolve<WS_Handlers_Gamemaster>();
 
-    public static WS_Handlers_Instance _WS_Handlers_Instance
+    public static WS_Handlers_Instance WSHandlersInstance
     {
         get;
         set;
-    } = _Container.Resolve<WS_Handlers_Instance>();
+    } = Container.Resolve<WS_Handlers_Instance>();
 
-    public static WS_Handlers_Misc _WS_Handlers_Misc
+    public static WS_Handlers_Misc WSHandlersMisc
     {
         get;
         set;
-    } = _Container.Resolve<WS_Handlers_Misc>();
+    } = Container.Resolve<WS_Handlers_Misc>();
 
-    public static WS_Handlers_Taxi _WS_Handlers_Taxi
+    public static WS_Handlers_Taxi WSHandlersTaxi
     {
         get;
         set;
-    } = _Container.Resolve<WS_Handlers_Taxi>();
+    } = Container.Resolve<WS_Handlers_Taxi>();
 
-    public static WS_Handlers_Trade _WS_Handlers_Trade
+    public static WS_Handlers_Trade WSHandlersTrade
     {
         get;
         set;
-    } = _Container.Resolve<WS_Handlers_Trade>();
+    } = Container.Resolve<WS_Handlers_Trade>();
 
-    public static WS_Handlers_Warden _WS_Handlers_Warden
+    public static WS_Handlers_Warden WSHandlersWarden
     {
         get;
         set;
-    } = _Container.Resolve<WS_Handlers_Warden>();
+    } = Container.Resolve<WS_Handlers_Warden>();
 
-    public static WS_Player_Creation _WS_Player_Creation
+    public static WS_Player_Creation WSPlayerCreation
     {
         get;
         set;
-    } = _Container.Resolve<WS_Player_Creation>();
+    } = Container.Resolve<WS_Player_Creation>();
 
-    public static WS_Player_Initializator _WS_Player_Initializator
+    public static WS_Player_Initializator WSPlayerInitializator
     {
         get;
         set;
-    } = _Container.Resolve<WS_Player_Initializator>();
+    } = Container.Resolve<WS_Player_Initializator>();
 
-    public static WS_PlayerData _WS_PlayerData
+    public static WS_PlayerData WSPlayerData
     {
         get;
         set;
-    } = _Container.Resolve<WS_PlayerData>();
+    } = Container.Resolve<WS_PlayerData>();
 
-    public static WS_PlayerHelper _WS_PlayerHelper
+    public static WS_PlayerHelper WSPlayerHelper
     {
         get;
         set;
-    } = _Container.Resolve<WS_PlayerHelper>();
+    } = Container.Resolve<WS_PlayerHelper>();
 
-    public static WS_Network _WS_Network
+    public static WS_Network WSNetwork
     {
         get;
         set;
-    } = _Container.Resolve<WS_Network>();
+    } = Container.Resolve<WS_Network>();
 
-    public static WS_TimerBasedEvents _WS_TimerBasedEvents
+    public static WS_TimerBasedEvents WSTimerBasedEvents
     {
         get;
         set;
-    } = _Container.Resolve<WS_TimerBasedEvents>();
+    } = Container.Resolve<WS_TimerBasedEvents>();
 
-    public static WS_Group _WS_Group
+    public static WS_Group WSGroup
     {
         get;
         set;
-    } = _Container.Resolve<WS_Group>();
+    } = Container.Resolve<WS_Group>();
 
-    public static WS_Guilds _WS_Guilds
+    public static WS_Guilds WSGuilds
     {
         get;
         set;
-    } = _Container.Resolve<WS_Guilds>();
+    } = Container.Resolve<WS_Guilds>();
 
-    public static WS_Mail _WS_Mail
+    public static WS_Mail WSMail
     {
         get;
         set;
-    } = _Container.Resolve<WS_Mail>();
+    } = Container.Resolve<WS_Mail>();
 
-    public static WS_Spells _WS_Spells
+    public static WS_Spells WSSpells
     {
         get;
         set;
-    } = _Container.Resolve<WS_Spells>();
+    } = Container.Resolve<WS_Spells>();
 
-    public static WS_Warden _WS_Warden
+    public static WS_Warden WSWarden
     {
         get;
         set;
-    } = _Container.Resolve<WS_Warden>();
+    } = Container.Resolve<WS_Warden>();
 
-    public static WS_Weather _WS_Weather
+    public static WS_Weather WSWeather
     {
         get;
         set;
-    } = _Container.Resolve<WS_Weather>();
+    } = Container.Resolve<WS_Weather>();
 }

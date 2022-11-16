@@ -89,10 +89,10 @@ public class WS_Commands
                         {
                             CommandHelp = info.GetcmdHelp,
                             CommandAccess = info.GetcmdAccess,
-                            CommandDelegate = (ChatCommandDelegate)Delegate.CreateDelegate(typeof(ChatCommandDelegate), WorldServiceLocator._WS_Commands, tmpMethod)
+                            CommandDelegate = (ChatCommandDelegate)Delegate.CreateDelegate(typeof(ChatCommandDelegate), WorldServiceLocator.WSCommands, tmpMethod)
                         };
                         var cmd = chatCommand;
-                        ChatCommands.Add(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(info.GetcmdName), cmd);
+                        ChatCommands.Add(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(info.GetcmdName), cmd);
                     }
                 }
             }
@@ -105,9 +105,9 @@ public class WS_Commands
         {
             var tmp = Strings.Split(Message, " ", 2);
             ChatCommand Command = null;
-            if (ChatCommands.ContainsKey(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(tmp[0])))
+            if (ChatCommands.ContainsKey(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(tmp[0])))
             {
-                Command = ChatCommands[WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(tmp[0])];
+                Command = ChatCommands[WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(tmp[0])];
             }
             var Arguments = "";
             if (tmp.Length == 2)
@@ -130,11 +130,11 @@ public class WS_Commands
                 client.Character.CommandResponse(Command.CommandHelp);
                 return;
             }
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.USER, "[{0}:{1}] {2} used command: {3}", client.IP, client.Port, Name, Message);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.USER, "[{0}:{1}] {2} used command: {3}", client.IP, client.Port, Name, Message);
         }
         catch (Exception err)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Client command caused error! {3}{2}", client.IP, client.Port, err.ToString(), Environment.NewLine);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "[{0}:{1}] Client command caused error! {3}{2}", client.IP, client.Port, err.ToString(), Environment.NewLine);
             client.Character.CommandResponse(string.Format("Your command caused error:" + Environment.NewLine + " [{0}]", err.Message));
         }
     }
@@ -144,7 +144,7 @@ public class WS_Commands
     {
         if (Operators.CompareString(Strings.Trim(Message), "", TextCompare: false) != 0)
         {
-            var Command2 = ChatCommands[Strings.Trim(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Message))];
+            var Command2 = ChatCommands[Strings.Trim(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(Message))];
             switch (Command2)
             {
                 case null:
@@ -170,7 +170,7 @@ public class WS_Commands
             {
                 if (Command.Value.CommandAccess <= objCharacter.Access)
                 {
-                    cmdList = cmdList + WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Command.Key) + Environment.NewLine;
+                    cmdList = cmdList + WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(Command.Key) + Environment.NewLine;
                 }
             }
             cmdList = cmdList + Environment.NewLine + "Use help #command for usage information about particular command.";
@@ -188,28 +188,28 @@ public class WS_Commands
             return false;
         }
         var SpellID = Conversions.ToInteger(tmp[0]);
-        var Target = WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(tmp[1]);
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+        var Target = WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(tmp[1]);
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) && WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
         {
             if (Operators.CompareString(Target, "ME", TextCompare: false) != 0)
             {
                 if (Operators.CompareString(Target, "SELF", TextCompare: false) == 0)
                 {
-                    WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].CastSpell(SpellID, WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID]);
+                    WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].CastSpell(SpellID, WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID]);
                 }
             }
             else
             {
-                WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].CastSpell(SpellID, objCharacter);
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].CastSpell(SpellID, objCharacter);
             }
         }
-        else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             if (Operators.CompareString(Target, "ME", TextCompare: false) != 0)
             {
                 if (Operators.CompareString(Target, "SELF", TextCompare: false) == 0)
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].CastOnSelf(SpellID);
+                    WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].CastOnSelf(SpellID);
                 }
             }
             else
@@ -220,7 +220,7 @@ public class WS_Commands
                 objCharacter = (WS_PlayerData.CharacterObject)objCharacter2;
                 ulong targetGUID;
                 Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
-                WS_Base.BaseObject Caster = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
+                WS_Base.BaseObject Caster = (cHARACTERs = WorldServiceLocator.WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
                 cHARACTERs[targetGUID] = (WS_PlayerData.CharacterObject)Caster;
                 WS_Spells.CastSpellParameters castParams = new(ref Targets, ref Caster, SpellID);
                 ThreadPool.QueueUserWorkItem(callBack: castParams.Cast);
@@ -259,23 +259,23 @@ public class WS_Commands
             objCharacter.CommandResponse("Removed control over the unit.");
             return true;
         }
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             Packets.PacketClass packet2 = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
             packet2.AddPackGUID(objCharacter.TargetGUID);
             packet2.AddInt8(0);
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].client.Send(ref packet2);
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].client.Send(ref packet2);
             packet2.Dispose();
-            objCharacter.MindControl = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID];
+            objCharacter.MindControl = WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID];
         }
         else
         {
-            if (!WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) || !WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+            if (!WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) || !WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
             {
                 objCharacter.CommandResponse("You need a target.");
                 return true;
             }
-            objCharacter.MindControl = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
+            objCharacter.MindControl = WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
         }
         Packets.PacketClass packet3 = new(Opcodes.SMSG_DEATH_NOTIFY_OBSOLETE);
         packet3.AddPackGUID(objCharacter.TargetGUID);
@@ -301,31 +301,31 @@ public class WS_Commands
     {
         var tmp = Strings.Split(Message, " ", 2);
         var SpellID = Conversions.ToInteger(tmp[0]);
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) && WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
         {
             WS_Spells.SpellTargets Targets2 = new();
             ulong targetGUID;
             Dictionary<ulong, WS_Creatures.CreatureObject> wORLD_CREATUREs;
-            WS_Base.BaseUnit objCharacter2 = (wORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[targetGUID = objCharacter.TargetGUID];
+            WS_Base.BaseUnit objCharacter2 = (wORLD_CREATUREs = WorldServiceLocator.WorldServer.WORLD_CREATUREs)[targetGUID = objCharacter.TargetGUID];
             Targets2.SetTarget_UNIT(ref objCharacter2);
             wORLD_CREATUREs[targetGUID] = (WS_Creatures.CreatureObject)objCharacter2;
             WS_Base.BaseObject Caster = objCharacter;
             objCharacter = (WS_PlayerData.CharacterObject)Caster;
             ThreadPool.QueueUserWorkItem(new WS_Spells.CastSpellParameters(ref Targets2, ref Caster, SpellID).Cast);
-            objCharacter.CommandResponse("You are now casting [" + Conversions.ToString(SpellID) + "] at [" + WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].Name + "].");
+            objCharacter.CommandResponse("You are now casting [" + Conversions.ToString(SpellID) + "] at [" + WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].Name + "].");
         }
-        else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             WS_Spells.SpellTargets Targets = new();
             Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
             ulong targetGUID;
-            WS_Base.BaseUnit objCharacter2 = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
+            WS_Base.BaseUnit objCharacter2 = (cHARACTERs = WorldServiceLocator.WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
             Targets.SetTarget_UNIT(ref objCharacter2);
             cHARACTERs[targetGUID] = (WS_PlayerData.CharacterObject)objCharacter2;
             WS_Base.BaseObject Caster = objCharacter;
             objCharacter = (WS_PlayerData.CharacterObject)Caster;
             ThreadPool.QueueUserWorkItem(new WS_Spells.CastSpellParameters(ref Targets, ref Caster, SpellID).Cast);
-            objCharacter.CommandResponse("You are now casting [" + Conversions.ToString(SpellID) + "] at [" + WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Name + "].");
+            objCharacter.CommandResponse("You are now casting [" + Conversions.ToString(SpellID) + "] at [" + WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Name + "].");
         }
         else
         {
@@ -337,10 +337,10 @@ public class WS_Commands
     [ChatCommand("save", "save - Saves selected character.", AccessLevel.Developer)]
     public bool cmdSave(ref WS_PlayerData.CharacterObject objCharacter, string Message)
     {
-        if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) != 0 && WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID))
+        if (decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) != 0 && WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Save();
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].CommandResponse($"Character {WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Name} saved.");
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Save();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].CommandResponse($"Character {WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Name} saved.");
         }
         else
         {
@@ -355,8 +355,8 @@ public class WS_Commands
     {
         objCharacter.CommandResponse("Spawns loaded in server memory:");
         objCharacter.CommandResponse("-------------------------------");
-        objCharacter.CommandResponse("Creatures: " + Conversions.ToString(WorldServiceLocator._WorldServer.WORLD_CREATUREs.Count));
-        objCharacter.CommandResponse("GameObjects: " + Conversions.ToString(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.Count));
+        objCharacter.CommandResponse("Creatures: " + Conversions.ToString(WorldServiceLocator.WorldServer.WORLD_CREATUREs.Count));
+        objCharacter.CommandResponse("GameObjects: " + Conversions.ToString(WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.Count));
         return true;
     }
 
@@ -377,18 +377,18 @@ public class WS_Commands
     [ChatCommand("npcai", "npcai #enable/disable - Enables/Disables  Creature AI updating.", AccessLevel.Developer)]
     public bool cmdAI(ref WS_PlayerData.CharacterObject objCharacter, string Message)
     {
-        if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Message), "ENABLE", TextCompare: false) == 0)
+        if (Operators.CompareString(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(Message), "ENABLE", TextCompare: false) == 0)
         {
-            WorldServiceLocator._WS_TimerBasedEvents.AIManager.AIManagerTimer.Change(1000, 1000);
+            WorldServiceLocator.WSTimerBasedEvents.AIManager.AIManagerTimer.Change(1000, 1000);
             objCharacter.CommandResponse("AI is enabled.");
         }
         else
         {
-            if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Message), "DISABLE", TextCompare: false) != 0)
+            if (Operators.CompareString(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(Message), "DISABLE", TextCompare: false) != 0)
             {
                 return false;
             }
-            WorldServiceLocator._WS_TimerBasedEvents.AIManager.AIManagerTimer.Change(-1, -1);
+            WorldServiceLocator.WSTimerBasedEvents.AIManager.AIManagerTimer.Change(-1, -1);
             objCharacter.CommandResponse("AI is disabled.");
         }
         return true;
@@ -402,17 +402,17 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return false;
         }
-        if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+        if (!WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
         {
             objCharacter.CommandResponse("Selected target is not creature!");
             return false;
         }
-        if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].aiScript == null)
+        if (WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].aiScript == null)
         {
             objCharacter.CommandResponse("This creature doesn't have AI");
             return false;
         }
-        var creatureObject = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
+        var creatureObject = WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
         objCharacter.CommandResponse(string.Format("Information for creature [{0}]:{1}ai = {2}{1}state = {3}{1}maxdist = {4}", creatureObject.Name, Environment.NewLine, creatureObject.aiScript, creatureObject.aiScript.State.ToString(), creatureObject.MaxDistance));
         objCharacter.CommandResponse("Hate table:");
         foreach (var u in creatureObject.aiScript.aiHateTable)
@@ -433,7 +433,7 @@ public class WS_Commands
         Packets.PacketClass packet = new(Opcodes.SMSG_NOTIFICATION);
         packet.AddString(Text);
         packet.UpdateLength();
-        WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
+        WorldServiceLocator.WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
         packet.Dispose();
         return true;
     }
@@ -490,7 +490,7 @@ public class WS_Commands
         packet.AddInt32(Type);
         packet.AddString(Text);
         packet.UpdateLength();
-        WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
+        WorldServiceLocator.WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
         packet.Dispose();
         return true;
     }
@@ -506,9 +506,9 @@ public class WS_Commands
         {
             return false;
         }
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].SendChatMessage(Message, ChatMsg.CHAT_MSG_MONSTER_SAY, LANGUAGES.LANG_GLOBAL, objCharacter.GUID);
+            WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].SendChatMessage(Message, ChatMsg.CHAT_MSG_MONSTER_SAY, LANGUAGES.LANG_GLOBAL, objCharacter.GUID);
             return true;
         }
         return false;
@@ -517,18 +517,18 @@ public class WS_Commands
     [ChatCommand("resetfactions", "resetfactions - Resets character reputation standings.", AccessLevel.Admin)]
     public bool cmdResetFactions(ref WS_PlayerData.CharacterObject objCharacter, string Message)
     {
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             ulong targetGUID;
             Dictionary<ulong, WS_PlayerData.CharacterObject> Characters;
-            var objCharacter2 = (Characters = WorldServiceLocator._WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
-            WorldServiceLocator._WS_Player_Initializator.InitializeReputations(ref objCharacter2);
+            var objCharacter2 = (Characters = WorldServiceLocator.WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
+            WorldServiceLocator.WSPlayerInitializator.InitializeReputations(ref objCharacter2);
             Characters[targetGUID] = objCharacter2;
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SaveCharacter();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SaveCharacter();
         }
         else
         {
-            WorldServiceLocator._WS_Player_Initializator.InitializeReputations(ref objCharacter);
+            WorldServiceLocator.WSPlayerInitializator.InitializeReputations(ref objCharacter);
             objCharacter.SaveCharacter();
         }
         return true;
@@ -557,16 +557,16 @@ public class WS_Commands
             return false;
         }
         var Level = Conversions.ToInteger(tLevel);
-        if (Level > WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL)
+        if (Level > WorldServiceLocator.WSPlayerInitializator.DEFAULT_MAX_LEVEL)
         {
-            Level = WorldServiceLocator._WS_Player_Initializator.DEFAULT_MAX_LEVEL;
+            Level = WorldServiceLocator.WSPlayerInitializator.DEFAULT_MAX_LEVEL;
         }
-        if (!WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (!WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             objCharacter.CommandResponse("Target not found or not character.");
             return true;
         }
-        WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetLevel(checked((byte)Level));
+        WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SetLevel(checked((byte)Level));
         return true;
     }
 
@@ -579,10 +579,10 @@ public class WS_Commands
         }
         checked
         {
-            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+            if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
                 var XP = Conversions.ToInteger(tXP);
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].AddXP(XP, 0);
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].AddXP(XP, 0);
             }
             else
             {
@@ -601,14 +601,14 @@ public class WS_Commands
         }
         checked
         {
-            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+            if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
                 var XP = Conversions.ToInteger(tXP);
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].RestBonus += XP;
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].RestState = XPSTATE.Rested;
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(1175, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].RestBonus);
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(194, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].cPlayerBytes2);
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SendCharacterUpdate();
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].RestBonus += XP;
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].RestState = XPSTATE.Rested;
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(1175, WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].RestBonus);
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(194, WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].cPlayerBytes2);
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SendCharacterUpdate();
             }
             else
             {
@@ -632,7 +632,7 @@ public class WS_Commands
     [ChatCommand("combatlist", "combatlist - Lists everyone in your targets combatlist.", AccessLevel.Developer)]
     public bool cmdCombatList(ref WS_PlayerData.CharacterObject objCharacter, string Message)
     {
-        var combatList = decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0 || !WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) ? objCharacter.inCombatWith.ToArray() : WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].inCombatWith.ToArray();
+        var combatList = decimal.Compare(new decimal(objCharacter.TargetGUID), 0m) == 0 || !WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) ? objCharacter.inCombatWith.ToArray() : WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].inCombatWith.ToArray();
         objCharacter.CommandResponse("Combat List (" + Conversions.ToString(combatList.Length) + "):");
         foreach (var Guid in combatList)
         {
@@ -645,16 +645,16 @@ public class WS_Commands
     public bool cmdCooldownList(ref WS_PlayerData.CharacterObject objCharacter, string Message)
     {
         WS_Base.BaseUnit targetUnit = null;
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID))
         {
-            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+            if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
-                targetUnit = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID];
+                targetUnit = WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID];
             }
         }
-        else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+        else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) && WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
         {
-            targetUnit = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
+            targetUnit = WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
         }
         if (targetUnit == null)
         {
@@ -673,7 +673,7 @@ public class WS_Commands
             case WS_PlayerData.CharacterObject _:
                 {
                     var sCooldowns = "";
-                    var timeNow = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
+                    var timeNow = WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now);
                     foreach (var Spell in ((WS_PlayerData.CharacterObject)targetUnit).Spells)
                     {
                         if (Spell.Value.Cooldown != 0)
@@ -685,7 +685,7 @@ public class WS_Commands
                             }
                             if (timeLeft > 0L)
                             {
-                                sCooldowns = sCooldowns + "* Spell: " + Conversions.ToString(Spell.Key) + " - TimeLeft: " + WorldServiceLocator._Functions.GetTimeLeftString(timeLeft) + " sec - Item: " + Conversions.ToString(Spell.Value.CooldownItem) + Environment.NewLine;
+                                sCooldowns = sCooldowns + "* Spell: " + Conversions.ToString(Spell.Key) + " - TimeLeft: " + WorldServiceLocator.Functions.GetTimeLeftString(timeLeft) + " sec - Item: " + Conversions.ToString(Spell.Value.CooldownItem) + Environment.NewLine;
                             }
                         }
                     }
@@ -704,16 +704,16 @@ public class WS_Commands
     public bool cmdClearCooldowns(ref WS_PlayerData.CharacterObject objCharacter, string Message)
     {
         WS_Base.BaseUnit targetUnit = null;
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID))
         {
-            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+            if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
-                targetUnit = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID];
+                targetUnit = WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID];
             }
         }
-        else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+        else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID) && WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
         {
-            targetUnit = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
+            targetUnit = WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
         }
         if (targetUnit == null)
         {
@@ -731,7 +731,7 @@ public class WS_Commands
                         {
                             Spell.Value.Cooldown = 0u;
                             Spell.Value.CooldownItem = 0;
-                            WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_spells SET cooldown={2}, cooldownitem={3} WHERE guid = {0} AND spellid = {1};", objCharacter.GUID, Spell.Key, 0, 0));
+                            WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_spells SET cooldown={2}, cooldownitem={3} WHERE guid = {0} AND spellid = {1};", objCharacter.GUID, Spell.Key, 0, 0));
                             cooldownSpells.Add(Spell.Key);
                         }
                     }
@@ -770,15 +770,15 @@ public class WS_Commands
         checked
         {
             var id = Conversions.ToInteger(tmp[0]);
-            if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+            if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
                 ItemObject newItem2 = new(id, objCharacter.TargetGUID)
                 {
                     StackCount = Count
                 };
-                if (WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].ItemADD(ref newItem2))
+                if (WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].ItemADD(ref newItem2))
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].LogLootItem(newItem2, (byte)Count, Recieved: true, Created: false);
+                    WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].LogLootItem(newItem2, (byte)Count, Recieved: true, Created: false);
                 }
                 else
                 {
@@ -813,19 +813,19 @@ public class WS_Commands
             return false;
         }
         var id = Conversions.ToInteger(tmp[0]);
-        if (WorldServiceLocator._WS_DBCDatabase.ItemSet.ContainsKey(id))
+        if (WorldServiceLocator.WSDBCDatabase.ItemSet.ContainsKey(id))
         {
-            if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+            if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(objCharacter.TargetGUID) && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
-                foreach (var item in WorldServiceLocator._WS_DBCDatabase.ItemSet[id].ItemID)
+                foreach (var item in WorldServiceLocator.WSDBCDatabase.ItemSet[id].ItemID)
                 {
                     ItemObject newItem = new(item, objCharacter.TargetGUID)
                     {
                         StackCount = 1
                     };
-                    if (WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].ItemADD(ref newItem))
+                    if (WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].ItemADD(ref newItem))
                     {
-                        WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].LogLootItem(newItem, 1, Recieved: false, Created: true);
+                        WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].LogLootItem(newItem, 1, Recieved: false, Created: true);
                     }
                     else
                     {
@@ -835,7 +835,7 @@ public class WS_Commands
             }
             else
             {
-                foreach (var item2 in WorldServiceLocator._WS_DBCDatabase.ItemSet[id].ItemID)
+                foreach (var item2 in WorldServiceLocator.WSDBCDatabase.ItemSet[id].ItemID)
                 {
                     ItemObject newItem2 = new(item2, objCharacter.GUID)
                     {
@@ -890,23 +890,23 @@ public class WS_Commands
         {
             return false;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             var tmp = Strings.Split(Strings.Trim(Message));
             var SkillID = Conversions.ToInteger(tmp[0]);
             var Current = Conversions.ToShort(tmp[1]);
             var Maximum = Conversions.ToShort(tmp[2]);
-            if (WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Skills.ContainsKey(SkillID))
+            if (WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Skills.ContainsKey(SkillID))
             {
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Skills[SkillID].Base = Maximum;
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Skills[SkillID].Current = Current;
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Skills[SkillID].Base = Maximum;
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Skills[SkillID].Current = Current;
             }
             else
             {
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].LearnSkill(SkillID, Current, Maximum);
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].LearnSkill(SkillID, Current, Maximum);
             }
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].FillAllUpdateFlags();
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SendUpdate();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].FillAllUpdateFlags();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SendUpdate();
         }
         else
         {
@@ -926,21 +926,21 @@ public class WS_Commands
         {
             return false;
         }
-        if (!WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(ID))
+        if (!WorldServiceLocator.WSSpells.SPELLs.ContainsKey(ID))
         {
             objCharacter.CommandResponse("You tried learning a spell that did not exist.");
             return false;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].LearnSpell(ID);
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].LearnSpell(ID);
             if (objCharacter.TargetGUID == objCharacter.GUID)
             {
                 objCharacter.CommandResponse("You learned spell: " + Conversions.ToString(ID));
             }
             else
             {
-                objCharacter.CommandResponse(WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Name + " has learned spell: " + Conversions.ToString(ID));
+                objCharacter.CommandResponse(WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Name + " has learned spell: " + Conversions.ToString(ID));
             }
         }
         else
@@ -957,17 +957,17 @@ public class WS_Commands
         {
             return false;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             var ID = Conversions.ToInteger(tID);
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].UnLearnSpell(ID);
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].UnLearnSpell(ID);
             if (objCharacter.TargetGUID == objCharacter.GUID)
             {
                 objCharacter.CommandResponse("You unlearned spell: " + Conversions.ToString(ID));
             }
             else
             {
-                objCharacter.CommandResponse(WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Name + " has unlearned spell: " + Conversions.ToString(ID));
+                objCharacter.CommandResponse(WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Name + " has unlearned spell: " + Conversions.ToString(ID));
             }
         }
         else
@@ -1020,10 +1020,10 @@ public class WS_Commands
         {
             return false;
         }
-        if (WorldServiceLocator._WS_DBCDatabase.CreatureModel.ContainsKey(value))
+        if (WorldServiceLocator.WSDBCDatabase.CreatureModel.ContainsKey(value))
         {
-            objCharacter.BoundingRadius = WorldServiceLocator._WS_DBCDatabase.CreatureModel[value].BoundingRadius;
-            objCharacter.CombatReach = WorldServiceLocator._WS_DBCDatabase.CreatureModel[value].CombatReach;
+            objCharacter.BoundingRadius = WorldServiceLocator.WSDBCDatabase.CreatureModel[value].BoundingRadius;
+            objCharacter.CombatReach = WorldServiceLocator.WSDBCDatabase.CreatureModel[value].CombatReach;
         }
         objCharacter.SetUpdateFlag(129, objCharacter.BoundingRadius);
         objCharacter.SetUpdateFlag(130, objCharacter.CombatReach);
@@ -1052,9 +1052,9 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetHover();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SetHover();
             return true;
         }
         return true;
@@ -1068,9 +1068,9 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].ShowBank();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].ShowBank();
             return true;
         }
         return true;
@@ -1084,12 +1084,12 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             WS_PlayerHelper.TStatBar life;
-            (life = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life).Current = checked((int)Math.Round(life.Current - (WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Maximum * 0.1)));
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(22, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Current);
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SendCharacterUpdate();
+            (life = WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Life).Current = checked((int)Math.Round(life.Current - (WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Maximum * 0.1)));
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(22, WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Life.Current);
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SendCharacterUpdate();
             return true;
         }
         return true;
@@ -1103,10 +1103,10 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(2, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].charMovementFlags); // Need proper update flag or a way to set the Swim MovementFlag
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SplineStartSwim();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SetUpdateFlag(2, WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].charMovementFlags); // Need proper update flag or a way to set the Swim MovementFlag
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SplineStartSwim();
             return true;
         }
         return true;
@@ -1120,9 +1120,9 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SplineStopSwim();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SplineStopSwim();
             return true;
         }
         return true;
@@ -1136,9 +1136,9 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetWaterWalk();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SetWaterWalk();
             return true;
         }
         return true;
@@ -1152,9 +1152,9 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetLandWalk();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SetLandWalk();
             return true;
         }
         return true;
@@ -1168,9 +1168,9 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetMoveRoot();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SetMoveRoot();
             return true;
         }
         return true;
@@ -1184,9 +1184,9 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].SetMoveUnroot();
+            WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].SetMoveUnroot();
             return true;
         }
         return true;
@@ -1200,12 +1200,12 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             ulong targetGUID;
             Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
-            var Character = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
-            WorldServiceLocator._WS_Handlers_Misc.CharacterResurrect(ref Character);
+            var Character = (cHARACTERs = WorldServiceLocator.WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
+            WorldServiceLocator.WSHandlersMisc.CharacterResurrect(ref Character);
             cHARACTERs[targetGUID] = Character;
             return true;
         }
@@ -1220,12 +1220,12 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             ulong targetGUID;
             Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
-            var Character = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
-            WorldServiceLocator._WorldServer.AllGraveYards.GoToNearestGraveyard(ref Character, Alive: false, Teleport: true);
+            var Character = (cHARACTERs = WorldServiceLocator.WorldServer.CHARACTERs)[targetGUID = objCharacter.TargetGUID];
+            WorldServiceLocator.WorldServer.AllGraveYards.GoToNearestGraveyard(ref Character, Alive: false, Teleport: true);
             cHARACTERs[targetGUID] = Character;
             return true;
         }
@@ -1240,10 +1240,10 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
             Races Race;
-            switch (WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(StringRace))
+            switch (WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(StringRace))
             {
                 case "DWARF":
                 case "DW":
@@ -1290,8 +1290,8 @@ public class WS_Commands
                     return true;
             }
             DataTable Info = new();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM playercreateinfo WHERE race = {(int)Race};", ref Info);
-            var Character = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID];
+            WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM playercreateinfo WHERE race = {(int)Race};", ref Info);
+            var Character = WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID];
             Character.Teleport(Conversions.ToSingle(Info.Rows[0]["position_x"]), Conversions.ToSingle(Info.Rows[0]["position_y"]), Conversions.ToSingle(Info.Rows[0]["position_z"]), Conversions.ToSingle(Info.Rows[0]["orientation"]), Conversions.ToInteger(Info.Rows[0]["map"]));
             return true;
         }
@@ -1303,17 +1303,17 @@ public class WS_Commands
     {
         checked
         {
-            var GUID = GetGUID(WorldServiceLocator._Functions.CapitalizeName(ref Name));
-            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID))
+            var GUID = GetGUID(WorldServiceLocator.Functions.CapitalizeName(ref Name));
+            if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(GUID))
             {
                 if (objCharacter.OnTransport != null)
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[GUID].OnTransport = objCharacter.OnTransport;
-                    WorldServiceLocator._WorldServer.CHARACTERs[GUID].Transfer(objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation, (int)objCharacter.MapID);
+                    WorldServiceLocator.WorldServer.CHARACTERs[GUID].OnTransport = objCharacter.OnTransport;
+                    WorldServiceLocator.WorldServer.CHARACTERs[GUID].Transfer(objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation, (int)objCharacter.MapID);
                 }
                 else
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[GUID].Teleport(objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation, (int)objCharacter.MapID);
+                    WorldServiceLocator.WorldServer.CHARACTERs[GUID].Teleport(objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation, (int)objCharacter.MapID);
                 }
                 return true;
             }
@@ -1325,12 +1325,12 @@ public class WS_Commands
     [ChatCommand("appear", "appear #name - Instantly teleports you to the player.")]
     public bool cmdAppear(ref WS_PlayerData.CharacterObject objCharacter, string Name)
     {
-        var GUID = GetGUID(WorldServiceLocator._Functions.CapitalizeName(ref Name));
+        var GUID = GetGUID(WorldServiceLocator.Functions.CapitalizeName(ref Name));
         checked
         {
-            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID))
+            if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(GUID))
             {
-                var characterObject = WorldServiceLocator._WorldServer.CHARACTERs[GUID];
+                var characterObject = WorldServiceLocator.WorldServer.CHARACTERs[GUID];
                 if (characterObject.OnTransport != null)
                 {
                     objCharacter.OnTransport = characterObject.OnTransport;
@@ -1353,7 +1353,7 @@ public class WS_Commands
     {
         if (Operators.CompareString(Message.ToUpper(), "on", TextCompare: false) == 0)
         {
-            WorldServiceLocator._ConfigurationProvider.GetConfiguration().LineOfSightEnabled = true;
+            WorldServiceLocator.ConfigurationProvider.GetConfiguration().LineOfSightEnabled = true;
             objCharacter.CommandResponse("Line of Sight Calculation is now Enabled.");
         }
         else
@@ -1362,7 +1362,7 @@ public class WS_Commands
             {
                 return false;
             }
-            WorldServiceLocator._ConfigurationProvider.GetConfiguration().LineOfSightEnabled = false;
+            WorldServiceLocator.ConfigurationProvider.GetConfiguration().LineOfSightEnabled = false;
             objCharacter.CommandResponse("Line of Sight Calculation is now Disabled.");
         }
         return true;
@@ -1425,10 +1425,10 @@ public class WS_Commands
         {
             return false;
         }
-        if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(location), "LIST", TextCompare: false) == 0)
+        if (Operators.CompareString(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(location), "LIST", TextCompare: false) == 0)
         {
             DataTable listSqlQuery = new();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM game_tele order by name", ref listSqlQuery);
+            WorldServiceLocator.WorldServer.WorldDatabase.Query("SELECT * FROM game_tele order by name", ref listSqlQuery);
             IEnumerator enumerator = default;
             var cmdList = "Listing of available locations:" + Environment.NewLine;
             try
@@ -1456,11 +1456,11 @@ public class WS_Commands
         if (location.Contains("*"))
         {
             location = location.Replace("*", "");
-            WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM game_tele WHERE name like '{location}%' order by name;", ref mySqlQuery);
+            WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM game_tele WHERE name like '{location}%' order by name;", ref mySqlQuery);
         }
         else
         {
-            WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM game_tele WHERE name = '{location}' order by name LIMIT 1;", ref mySqlQuery);
+            WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM game_tele WHERE name = '{location}' order by name LIMIT 1;", ref mySqlQuery);
         }
         if (mySqlQuery.Rows.Count > 0)
         {
@@ -1510,12 +1510,12 @@ public class WS_Commands
             {
                 objCharacter.CommandResponse("No target selected.");
             }
-            else if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+            else if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
             {
-                objCharacter.CommandResponse($"Character [{WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Name}] kicked from server.");
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "[{0}:{1}] Character [{3}] kicked by [{2}].", objCharacter.client.IP, objCharacter.client.Port, objCharacter.client.Character.Name, WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Name);
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Logout();
-                WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID].Dispose();
+                objCharacter.CommandResponse($"Character [{WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Name}] kicked from server.");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "[{0}:{1}] Character [{3}] kicked by [{2}].", objCharacter.client.IP, objCharacter.client.Port, objCharacter.client.Character.Name, WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Name);
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Logout();
+                WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID].Dispose();
             }
             else
             {
@@ -1524,20 +1524,20 @@ public class WS_Commands
         }
         else
         {
-            WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-            foreach (var Character in WorldServiceLocator._WorldServer.CHARACTERs)
+            WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+            foreach (var Character in WorldServiceLocator.WorldServer.CHARACTERs)
             {
-                if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(Character.Value.Name), Name, TextCompare: false) == 0)
+                if (Operators.CompareString(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(Character.Value.Name), Name, TextCompare: false) == 0)
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                     Character.Value.Logout();
                     Character.Value.Dispose();
                     objCharacter.CommandResponse($"Character [{Character.Value.Name}] kicked from server.");
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "[{0}:{1}] Character [{3}] kicked by [{2}].", objCharacter.client.IP, objCharacter.client.Port, objCharacter.client.Character.Name, Name);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "[{0}:{1}] Character [{3}] kicked by [{2}].", objCharacter.client.IP, objCharacter.client.Port, objCharacter.client.Character.Name, Name);
                     return true;
                 }
             }
-            WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+            WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
             objCharacter.CommandResponse($"Character [{Name:X}] not found.");
         }
         return true;
@@ -1550,9 +1550,9 @@ public class WS_Commands
         {
             objCharacter.CommandResponse("No target selected.");
         }
-        else if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        else if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters SET force_restrictions = 1 WHERE char_guid = {objCharacter.TargetGUID};");
+            WorldServiceLocator.WorldServer.CharacterDatabase.Update($"UPDATE characters SET force_restrictions = 1 WHERE char_guid = {objCharacter.TargetGUID};");
             objCharacter.CommandResponse("Player will be asked to change their name on next logon.");
         }
         else
@@ -1569,9 +1569,9 @@ public class WS_Commands
         {
             objCharacter.CommandResponse("No target selected.");
         }
-        else if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        else if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters SET force_restrictions = 2 WHERE char_guid = {objCharacter.TargetGUID};");
+            WorldServiceLocator.WorldServer.CharacterDatabase.Update($"UPDATE characters SET force_restrictions = 2 WHERE char_guid = {objCharacter.TargetGUID};");
             objCharacter.CommandResponse("Character disabled.");
         }
         else
@@ -1589,11 +1589,11 @@ public class WS_Commands
             return false;
         }
         DataTable account = new();
-        WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, last_ip FROM account WHERE username = \"" + Name + "\";", ref account);
+        WorldServiceLocator.WorldServer.AccountDatabase.Query("SELECT id, last_ip FROM account WHERE username = \"" + Name + "\";", ref account);
         var accountID = Conversions.ToULong(account.Rows[0]["id"]);
         var IP = Conversions.ToInteger(account.Rows[0]["last_ip"]);
         DataTable result = new();
-        WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT active FROM account_banned WHERE id = " + Conversions.ToString(accountID) + ";", ref result);
+        WorldServiceLocator.WorldServer.AccountDatabase.Query("SELECT active FROM account_banned WHERE id = " + Conversions.ToString(accountID) + ";", ref result);
         if (result.Rows.Count > 0)
         {
             if (Operators.ConditionalCompareObjectEqual(result.Rows[0]["active"], 1, TextCompare: false))
@@ -1602,10 +1602,10 @@ public class WS_Commands
             }
             else
             {
-                WorldServiceLocator._WorldServer.AccountDatabase.Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP({1}), UNIX_TIMESTAMP({2}), '{3}', '{4}', active = 1);", accountID, Strings.Format(DateAndTime.Now, "yyyy-MM-dd hh:mm:ss"), "0000-00-00 00:00:00", objCharacter.Name, "No Reason Specified."));
-                WorldServiceLocator._WorldServer.AccountDatabase.Update(string.Format("INSERT INTO `ip_banned` VALUES ('{0}', UNIX_TIMESTAMP({1}), UNIX_TIMESTAMP({2}), '{3}', '{4}');", IP, Strings.Format(DateAndTime.Now, "yyyy-MM-dd hh:mm:ss"), "0000-00-00 00:00:00", objCharacter.Name, "No Reason Specified."));
+                WorldServiceLocator.WorldServer.AccountDatabase.Update(string.Format("INSERT INTO `account_banned` VALUES ('{0}', UNIX_TIMESTAMP({1}), UNIX_TIMESTAMP({2}), '{3}', '{4}', active = 1);", accountID, Strings.Format(DateAndTime.Now, "yyyy-MM-dd hh:mm:ss"), "0000-00-00 00:00:00", objCharacter.Name, "No Reason Specified."));
+                WorldServiceLocator.WorldServer.AccountDatabase.Update(string.Format("INSERT INTO `ip_banned` VALUES ('{0}', UNIX_TIMESTAMP({1}), UNIX_TIMESTAMP({2}), '{3}', '{4}');", IP, Strings.Format(DateAndTime.Now, "yyyy-MM-dd hh:mm:ss"), "0000-00-00 00:00:00", objCharacter.Name, "No Reason Specified."));
                 objCharacter.CommandResponse($"Account [{Name}] banned.");
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "[{0}:{1}] Account [{3}] banned by [{2}].", objCharacter.client.IP, objCharacter.client.Port, objCharacter.Name, Name);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "[{0}:{1}] Account [{3}] banned by [{2}].", objCharacter.client.IP, objCharacter.client.Port, objCharacter.Name, Name);
             }
         }
         else
@@ -1623,11 +1623,11 @@ public class WS_Commands
             return false;
         }
         DataTable account = new();
-        WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, last_ip FROM account WHERE username = \"" + Name + "\";", ref account);
+        WorldServiceLocator.WorldServer.AccountDatabase.Query("SELECT id, last_ip FROM account WHERE username = \"" + Name + "\";", ref account);
         var accountID = Conversions.ToULong(account.Rows[0]["id"]);
         var IP = Conversions.ToInteger(account.Rows[0]["last_ip"]);
         DataTable result = new();
-        WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT active FROM account_banned WHERE id = '" + Conversions.ToString(accountID) + "';", ref result);
+        WorldServiceLocator.WorldServer.AccountDatabase.Query("SELECT active FROM account_banned WHERE id = '" + Conversions.ToString(accountID) + "';", ref result);
         if (result.Rows.Count > 0)
         {
             if (Operators.ConditionalCompareObjectEqual(result.Rows[0]["active"], 0, TextCompare: false))
@@ -1636,10 +1636,10 @@ public class WS_Commands
             }
             else
             {
-                WorldServiceLocator._WorldServer.AccountDatabase.Update("UPDATE account_banned SET active = 0 WHERE id = '" + Conversions.ToString(accountID) + "';");
-                WorldServiceLocator._WorldServer.AccountDatabase.Update($"DELETE FROM `ip_banned` WHERE `ip` = '{IP}';");
+                WorldServiceLocator.WorldServer.AccountDatabase.Update("UPDATE account_banned SET active = 0 WHERE id = '" + Conversions.ToString(accountID) + "';");
+                WorldServiceLocator.WorldServer.AccountDatabase.Update($"DELETE FROM `ip_banned` WHERE `ip` = '{IP}';");
                 objCharacter.CommandResponse($"Account [{Name}] unbanned.");
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "[{0}:{1}] Account [{3}] unbanned by [{2}].", objCharacter.client.IP, objCharacter.client.Port, objCharacter.Name, Name);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "[{0}:{1}] Account [{3}] unbanned by [{2}].", objCharacter.client.IP, objCharacter.client.Port, objCharacter.Name, Name);
             }
         }
         else
@@ -1655,14 +1655,14 @@ public class WS_Commands
         var tmp = Strings.Split(Message, " ", 2);
         var value1 = tmp[0];
         var value2 = tmp[1];
-        switch (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(value1), "on", TextCompare: false))
+        switch (Operators.CompareString(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(value1), "on", TextCompare: false))
         {
             case 0:
                 objCharacter.GM = true;
                 objCharacter.CommandResponse("GameMaster Flag turned on.");
                 break;
             default:
-                if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(value1), "off", TextCompare: false) == 0)
+                if (Operators.CompareString(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(value1), "off", TextCompare: false) == 0)
                 {
                     objCharacter.GM = false;
                     objCharacter.CommandResponse("GameMaster Flag turned off.");
@@ -1670,7 +1670,7 @@ public class WS_Commands
 
                 break;
         }
-        switch (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(value2), "on", TextCompare: false))
+        switch (Operators.CompareString(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(value2), "on", TextCompare: false))
         {
             case 1:
                 objCharacter.Invisibility = InvisibilityLevel.GM;
@@ -1679,7 +1679,7 @@ public class WS_Commands
                 objCharacter.CommandResponse("GameMaster Invisibility turned on.");
                 break;
             default:
-                if (Operators.CompareString(WorldServiceLocator._CommonFunctions.UppercaseFirstLetter(value2), "off", TextCompare: false) == 0)
+                if (Operators.CompareString(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(value2), "off", TextCompare: false) == 0)
                 {
                     objCharacter.Invisibility = InvisibilityLevel.VISIBLE;
                     objCharacter.CanSeeInvisibility = InvisibilityLevel.VISIBLE;
@@ -1691,7 +1691,7 @@ public class WS_Commands
         }
         objCharacter.SetUpdateFlag(190, (int)objCharacter.cPlayerFlags);
         objCharacter.SendCharacterUpdate(true);
-        WorldServiceLocator._WS_CharMovement.UpdateCell(ref objCharacter);
+        WorldServiceLocator.WSCharMovement.UpdateCell(ref objCharacter);
         return true;
     }
 
@@ -1701,15 +1701,15 @@ public class WS_Commands
         var tmp = Strings.Split(Message, " ", 2);
         var Type = Conversions.ToInteger(tmp[0]);
         var Intensity = Conversions.ToSingle(tmp[1]);
-        if (!WorldServiceLocator._WS_Weather.WeatherZones.ContainsKey(objCharacter.ZoneID))
+        if (!WorldServiceLocator.WSWeather.WeatherZones.ContainsKey(objCharacter.ZoneID))
         {
             objCharacter.CommandResponse("No weather for this zone is found!");
         }
         else
         {
-            WorldServiceLocator._WS_Weather.WeatherZones[objCharacter.ZoneID].CurrentWeather = (WeatherType)Type;
-            WorldServiceLocator._WS_Weather.WeatherZones[objCharacter.ZoneID].Intensity = Intensity;
-            WorldServiceLocator._WS_Weather.SendWeather(objCharacter.ZoneID, ref objCharacter.client);
+            WorldServiceLocator.WSWeather.WeatherZones[objCharacter.ZoneID].CurrentWeather = (WeatherType)Type;
+            WorldServiceLocator.WSWeather.WeatherZones[objCharacter.ZoneID].Intensity = Intensity;
+            WorldServiceLocator.WSWeather.SendWeather(objCharacter.ZoneID, ref objCharacter.client);
         }
         return true;
     }
@@ -1722,24 +1722,24 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID))
         {
-            if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+            if (!WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
             {
                 objCharacter.CommandResponse("Selected target is not creature!");
                 return true;
             }
-            WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].Destroy();
+            WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].Destroy();
             objCharacter.CommandResponse("Creature deleted.");
         }
-        else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(objCharacter.TargetGUID))
+        else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsGameObject(objCharacter.TargetGUID))
         {
-            if (!WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(objCharacter.TargetGUID))
+            if (!WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(objCharacter.TargetGUID))
             {
                 objCharacter.CommandResponse("Selected target is not game object!");
                 return true;
             }
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].Destroy(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID]);
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].Destroy(WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID]);
             objCharacter.CommandResponse("Game object deleted.");
         }
         return true;
@@ -1753,25 +1753,25 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(objCharacter.TargetGUID))
         {
-            if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+            if (!WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
             {
                 objCharacter.CommandResponse("Selected target is not creature!");
                 return true;
             }
-            WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].TurnTo(objCharacter.positionX, objCharacter.positionY);
+            WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].TurnTo(objCharacter.positionX, objCharacter.positionY);
         }
-        else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(objCharacter.TargetGUID))
+        else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsGameObject(objCharacter.TargetGUID))
         {
-            if (!WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(objCharacter.TargetGUID))
+            if (!WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(objCharacter.TargetGUID))
             {
                 objCharacter.CommandResponse("Selected target is not game object!");
                 return true;
             }
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].TurnTo(objCharacter.positionX, objCharacter.positionY);
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].TurnTo(objCharacter.positionX, objCharacter.positionY);
             DataTable _ = new();
-            var _2 = checked(objCharacter.TargetGUID - WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT);
+            var _2 = checked(objCharacter.TargetGUID - WorldServiceLocator.GlobalConstants.GUID_GAMEOBJECT);
             objCharacter.CommandResponse("Object rotation will be visible when the object is reloaded!");
         }
         return true;
@@ -1782,7 +1782,7 @@ public class WS_Commands
     {
         WS_Creatures.CreatureObject tmpCr = new(Conversions.ToInteger(Message), objCharacter.positionX, objCharacter.positionY, objCharacter.positionZ, objCharacter.orientation, checked((int)objCharacter.MapID));
         tmpCr.AddToWorld();
-        objCharacter.CommandResponse("Creature [" + WorldServiceLocator._Functions.SetColor(tmpCr.Name, 4, 147, 11) + "] spawned.");
+        objCharacter.CommandResponse("Creature [" + WorldServiceLocator.Functions.SetColor(tmpCr.Name, 4, 147, 11) + "] spawned.");
         return true;
     }
 
@@ -1794,15 +1794,15 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+        if (!WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
         {
             objCharacter.CommandResponse("Selected target is not creature!");
             return true;
         }
-        var creature = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
+        var creature = WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
         creature.SetToRealPosition(Forced: true);
         creature.Respawn();
-        objCharacter.CommandResponse("Creature [" + WorldServiceLocator._Functions.SetColor(creature.Name, 4, 147, 11) + "] Respawned.");
+        objCharacter.CommandResponse("Creature [" + WorldServiceLocator.Functions.SetColor(creature.Name, 4, 147, 11) + "] Respawned.");
         return true;
     }
 
@@ -1814,12 +1814,12 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+        if (!WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
         {
             objCharacter.CommandResponse("Selected target is not creature!");
             return true;
         }
-        var creature = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
+        var creature = WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
         if (creature.aiScript != null && creature.aiScript.InCombat)
         {
             objCharacter.CommandResponse("Creature is in combat. It has to be out of combat first.");
@@ -1839,18 +1839,18 @@ public class WS_Commands
             objCharacter.CommandResponse("Select target first!");
             return true;
         }
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(objCharacter.TargetGUID))
         {
-            var characterObject = WorldServiceLocator._WorldServer.CHARACTERs[objCharacter.TargetGUID];
+            var characterObject = WorldServiceLocator.WorldServer.CHARACTERs[objCharacter.TargetGUID];
             WS_Base.BaseUnit Attacker = objCharacter;
             characterObject.Die(ref Attacker);
             objCharacter = (WS_PlayerData.CharacterObject)Attacker;
             return true;
         }
-        if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
+        if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(objCharacter.TargetGUID))
         {
-            var creatureObject = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
-            var maximum = WorldServiceLocator._WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].Life.Maximum;
+            var creatureObject = WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID];
+            var maximum = WorldServiceLocator.WorldServer.WORLD_CREATUREs[objCharacter.TargetGUID].Life.Maximum;
             WS_Base.BaseUnit Attacker = null;
             creatureObject.DealDamage(maximum, Attacker);
             return true;
@@ -1861,7 +1861,7 @@ public class WS_Commands
     [ChatCommand("gobjecttarget", "gobjecttarget - Nearest game object will be selected.", AccessLevel.Developer)]
     public bool cmdTargetGameObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
     {
-        var wS_GameObjects = WorldServiceLocator._WS_GameObjects;
+        var wS_GameObjects = WorldServiceLocator.WSGameObjects;
         WS_Base.BaseUnit unit = objCharacter;
         var closestGameobject = wS_GameObjects.GetClosestGameobject(ref unit);
         objCharacter = (WS_PlayerData.CharacterObject)unit;
@@ -1872,7 +1872,7 @@ public class WS_Commands
         }
         else
         {
-            var distance = WorldServiceLocator._WS_Combat.GetDistance(targetGO, objCharacter);
+            var distance = WorldServiceLocator.WSCombat.GetDistance(targetGO, objCharacter);
             objCharacter.CommandResponse($"Selected [{targetGO.ID}][{targetGO.Name}] game object at distance {distance}.");
         }
         return true;
@@ -1881,21 +1881,21 @@ public class WS_Commands
     [ChatCommand("activatego", "activatego - Activates your targetted game object.", AccessLevel.Developer)]
     public bool cmdActivateGameObject(ref WS_PlayerData.CharacterObject objCharacter, string Message)
     {
-        if (!WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(objCharacter.TargetGUID))
+        if (!WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(objCharacter.TargetGUID))
         {
             return false;
         }
-        if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].State == GameObjectLootState.DOOR_CLOSED)
+        if (WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].State == GameObjectLootState.DOOR_CLOSED)
         {
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].State = GameObjectLootState.DOOR_OPEN;
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].SetState(GameObjectLootState.DOOR_OPEN);
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].State = GameObjectLootState.DOOR_OPEN;
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].SetState(GameObjectLootState.DOOR_OPEN);
         }
         else
         {
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].State = GameObjectLootState.DOOR_CLOSED;
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].SetState(GameObjectLootState.DOOR_CLOSED);
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].State = GameObjectLootState.DOOR_CLOSED;
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].SetState(GameObjectLootState.DOOR_CLOSED);
         }
-        objCharacter.CommandResponse($"Activated game object [{WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].Name}] to state [{WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].State}].");
+        objCharacter.CommandResponse($"Activated game object [{WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].Name}] to state [{WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.TargetGUID].State}].");
         return true;
     }
 
@@ -1926,7 +1926,7 @@ public class WS_Commands
         var aName = acct[0];
         var aPassword = acct[1];
         var aEmail = acct[2];
-        WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT username FROM account WHERE username = \"" + aName + "\";", ref result);
+        WorldServiceLocator.WorldServer.AccountDatabase.Query("SELECT username FROM account WHERE username = \"" + aName + "\";", ref result);
         if (result.Rows.Count > 0)
         {
             objCharacter.CommandResponse($"Account [{aName}] already exists.");
@@ -1936,7 +1936,7 @@ public class WS_Commands
             var passwordStr = Encoding.ASCII.GetBytes(aName.ToUpper() + ":" + aPassword.ToUpper());
             var passwordHash = new SHA1Managed().ComputeHash(passwordStr);
             var hashStr = BitConverter.ToString(passwordHash).Replace("-", "");
-            WorldServiceLocator._WorldServer.AccountDatabase.Insert(string.Format("INSERT INTO account (username, sha_pass_hash, email, joindate, last_ip) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')", aName, hashStr, aEmail, Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), "0.0.0.0"));
+            WorldServiceLocator.WorldServer.AccountDatabase.Insert(string.Format("INSERT INTO account (username, sha_pass_hash, email, joindate, last_ip) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')", aName, hashStr, aEmail, Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), "0.0.0.0"));
             objCharacter.CommandResponse($"Account [{aName}] has been created.");
         }
         return true;
@@ -1957,7 +1957,7 @@ public class WS_Commands
         }
         var aName = acct[0];
         var aPassword = acct[1];
-        WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, gmlevel FROM account WHERE username = \"" + aName + "\";", ref result);
+        WorldServiceLocator.WorldServer.AccountDatabase.Query("SELECT id, gmlevel FROM account WHERE username = \"" + aName + "\";", ref result);
         if (result.Rows.Count == 0)
         {
             objCharacter.CommandResponse($"Account [{aName}] does not exist.");
@@ -1974,7 +1974,7 @@ public class WS_Commands
                 var passwordStr = Encoding.ASCII.GetBytes(aName.ToUpper() + ":" + aPassword.ToUpper());
                 var passwordHash = new SHA1Managed().ComputeHash(passwordStr);
                 var hashStr = BitConverter.ToString(passwordHash).Replace("-", "");
-                WorldServiceLocator._WorldServer.AccountDatabase.Update(string.Format("UPDATE account SET password='{0}' WHERE id={1}", hashStr, RuntimeHelpers.GetObjectValue(result.Rows[0]["id"])));
+                WorldServiceLocator.WorldServer.AccountDatabase.Update(string.Format("UPDATE account SET password='{0}' WHERE id={1}", hashStr, RuntimeHelpers.GetObjectValue(result.Rows[0]["id"])));
                 objCharacter.CommandResponse($"Account [{aName}] now has a new password [{aPassword}].");
             }
         }
@@ -2010,7 +2010,7 @@ public class WS_Commands
             objCharacter.CommandResponse("You cannot set access levels to your own or above your own access level.");
             return true;
         }
-        WorldServiceLocator._WorldServer.AccountDatabase.Query("SELECT id, gmlevel FROM account WHERE username = \"" + aName + "\";", ref result);
+        WorldServiceLocator.WorldServer.AccountDatabase.Query("SELECT id, gmlevel FROM account WHERE username = \"" + aName + "\";", ref result);
         if (result.Rows.Count == 0)
         {
             objCharacter.CommandResponse($"Account [{aName}] does not exist.");
@@ -2024,7 +2024,7 @@ public class WS_Commands
             }
             else
             {
-                WorldServiceLocator._WorldServer.AccountDatabase.Update(string.Format("UPDATE account SET gmlevel={0} WHERE id={1}", (byte)newLevel, RuntimeHelpers.GetObjectValue(result.Rows[0]["id"])));
+                WorldServiceLocator.WorldServer.AccountDatabase.Update(string.Format("UPDATE account SET gmlevel={0} WHERE id={1}", (byte)newLevel, RuntimeHelpers.GetObjectValue(result.Rows[0]["id"])));
                 objCharacter.CommandResponse($"Account [{aName}] now has access level [{newLevel}].");
             }
         }
@@ -2034,15 +2034,15 @@ public class WS_Commands
     public ulong GetGUID(string Name)
     {
         DataTable MySQLQuery = new();
-        WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT char_guid FROM characters WHERE char_name = \"{Name}\";", ref MySQLQuery);
+        WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT char_guid FROM characters WHERE char_name = \"{Name}\";", ref MySQLQuery);
         return MySQLQuery.Rows.Count > 0 ? MySQLQuery.Rows[0].As<ulong>("char_guid") : 0uL;
     }
 
     public void SystemMessage(string Message)
     {
-        var packet = WorldServiceLocator._Functions.BuildChatMessage(0uL, "System Message: " + Message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL, 0, "");
+        var packet = WorldServiceLocator.Functions.BuildChatMessage(0uL, "System Message: " + Message, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL, 0, "");
         packet.UpdateLength();
-        WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
+        WorldServiceLocator.WorldServer.ClsWorldServer.Cluster.Broadcast(packet.Data);
         packet.Dispose();
     }
 
@@ -2054,23 +2054,23 @@ public class WS_Commands
             Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
             packet.AddInt32(1);
             packet.AddInt8(0);
-            Packets.UpdateClass UpdateData = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+            Packets.UpdateClass UpdateData = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
             UpdateData.SetUpdateFlag(Index, Value);
-            if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID))
+            if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(GUID))
             {
                 ulong key;
                 Dictionary<ulong, WS_Creatures.CreatureObject> WORLD_CREATUREs;
-                var updateObject = (WORLD_CREATUREs = WorldServiceLocator._WorldServer.WORLD_CREATUREs)[key = GUID];
+                var updateObject = (WORLD_CREATUREs = WorldServiceLocator.WorldServer.WORLD_CREATUREs)[key = GUID];
                 UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
                 WORLD_CREATUREs[key] = updateObject;
             }
-            else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(GUID))
+            else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(GUID))
             {
                 if (GUID == client.Character.GUID)
                 {
                     ulong key;
                     Dictionary<ulong, WS_PlayerData.CharacterObject> CHARACTERs;
-                    var updateObject2 = (CHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = GUID];
+                    var updateObject2 = (CHARACTERs = WorldServiceLocator.WorldServer.CHARACTERs)[key = GUID];
                     UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject2);
                     CHARACTERs[key] = updateObject2;
                 }
@@ -2078,7 +2078,7 @@ public class WS_Commands
                 {
                     ulong key;
                     Dictionary<ulong, WS_PlayerData.CharacterObject> CHARACTERs;
-                    var updateObject2 = (CHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = GUID];
+                    var updateObject2 = (CHARACTERs = WorldServiceLocator.WorldServer.CHARACTERs)[key = GUID];
                     UpdateData.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject2);
                     CHARACTERs[key] = updateObject2;
                 }
@@ -2089,7 +2089,7 @@ public class WS_Commands
         }
         catch (DataException ex)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WS_Commands: SetUpdateValue DataException", ex);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "WS_Commands: SetUpdateValue DataException", ex);
             noErrors = false;
         }
         return noErrors;

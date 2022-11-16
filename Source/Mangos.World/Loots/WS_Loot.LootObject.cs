@@ -76,7 +76,7 @@ public partial class WS_Loot
             LootType = LootType.LOOTTYPE_CORPSE;
             LootOwner = 0uL;
             GroupLootInfo = new Dictionary<int, GroupLootInfo>(0);
-            WorldServiceLocator._WS_Loot.LootTable[GUID_] = this;
+            WorldServiceLocator.WSLoot.LootTable[GUID_] = this;
             LootType = LootType_;
             GUID = GUID_;
         }
@@ -85,7 +85,7 @@ public partial class WS_Loot
         {
             if (Items.Count == 0)
             {
-                WorldServiceLocator._WS_Loot.SendEmptyLoot(GUID, LootType, ref client);
+                WorldServiceLocator.WSLoot.SendEmptyLoot(GUID, LootType, ref client);
                 return;
             }
             if (decimal.Compare(new decimal(LootOwner), 0m) != 0 && client.Character.GUID != LootOwner)
@@ -152,7 +152,7 @@ public partial class WS_Loot
             }
             while (i <= (uint)b2)
             {
-                if (Items[i] != null && WorldServiceLocator._WorldServer.ITEMDatabase[Items[i].ItemID].Quality >= (int)client.Character.Group.LootThreshold)
+                if (Items[i] != null && WorldServiceLocator.WorldServer.ITEMDatabase[Items[i].ItemID].Quality >= (int)client.Character.Group.LootThreshold)
                 {
                     GroupLootInfo[i] = new GroupLootInfo
                     {
@@ -160,7 +160,7 @@ public partial class WS_Loot
                         LootSlot = i,
                         Item = Items[i]
                     };
-                    WorldServiceLocator._WS_Loot.StartRoll(GUID, i, ref client.Character);
+                    WorldServiceLocator.WSLoot.StartRoll(GUID, i, ref client.Character);
                     break;
                 }
                 checked
@@ -236,7 +236,7 @@ public partial class WS_Loot
             }
             catch (Exception e)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Error getting loot.{0}", Environment.NewLine + e);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Error getting loot.{0}", Environment.NewLine + e);
             }
         }
 
@@ -253,8 +253,8 @@ public partial class WS_Loot
         {
             if (!_disposedValue)
             {
-                WorldServiceLocator._WS_Loot.LootTable.Remove(GUID);
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Loot destroyed.");
+                WorldServiceLocator.WSLoot.LootTable.Remove(GUID);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Loot destroyed.");
             }
             _disposedValue = true;
         }

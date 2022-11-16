@@ -59,63 +59,63 @@ public partial class WS_Maps
         {
             checked
             {
-                AreaFlag = new ushort[WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS + 1, WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS + 1];
-                AreaTerrain = new byte[WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN + 1, WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN + 1];
-                WaterLevel = new float[WorldServiceLocator._Global_Constants.RESOLUTION_WATER + 1, WorldServiceLocator._Global_Constants.RESOLUTION_WATER + 1];
+                AreaFlag = new ushort[WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS + 1, WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS + 1];
+                AreaTerrain = new byte[WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN + 1, WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN + 1];
+                WaterLevel = new float[WorldServiceLocator.GlobalConstants.RESOLUTION_WATER + 1, WorldServiceLocator.GlobalConstants.RESOLUTION_WATER + 1];
                 PlayersHere = new List<ulong>();
                 CreaturesHere = new List<ulong>();
                 GameObjectsHere = new List<ulong>();
                 CorpseObjectsHere = new List<ulong>();
                 DynamicObjectsHere = new List<ulong>();
-                if (!WorldServiceLocator._WS_Maps.Maps.ContainsKey(tileMap))
+                if (!WorldServiceLocator.WSMaps.Maps.ContainsKey(tileMap))
                 {
                     return;
                 }
-                ZCoord = new float[WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP + 1, WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP + 1];
+                ZCoord = new float[WorldServiceLocator.WSMaps.RESOLUTION_ZMAP + 1, WorldServiceLocator.WSMaps.RESOLUTION_ZMAP + 1];
                 CellX = tileX;
                 CellY = tileY;
                 CellMap = tileMap;
                 var fileName = string.Format("{0}{1}{2}.map", Strings.Format(tileMap, "000"), Strings.Format(tileX, "00"), Strings.Format(tileY, "00"));
                 if (!File.Exists("maps\\" + fileName))
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Map file [{0}] not found", fileName);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Map file [{0}] not found", fileName);
                     return;
                 }
                 FileStream f = new("maps\\" + fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 82704, FileOptions.SequentialScan);
                 BinaryReader b = new(f);
                 var fileVersion = Encoding.ASCII.GetString(b.ReadBytes(8), 0, 8);
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading map file [{0}] version [{1}]", fileName, fileVersion);
-                var rESOLUTION_FLAGS = WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS;
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading map file [{0}] version [{1}]", fileName, fileVersion);
+                var rESOLUTION_FLAGS = WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS;
                 for (var x = 0; x <= rESOLUTION_FLAGS; x++)
                 {
-                    var rESOLUTION_FLAGS2 = WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS;
+                    var rESOLUTION_FLAGS2 = WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS;
                     for (var y = 0; y <= rESOLUTION_FLAGS2; y++)
                     {
                         AreaFlag[x, y] = b.ReadUInt16();
                     }
                 }
-                var rESOLUTION_TERRAIN = WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN;
+                var rESOLUTION_TERRAIN = WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN;
                 for (var x = 0; x <= rESOLUTION_TERRAIN; x++)
                 {
-                    var rESOLUTION_TERRAIN2 = WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN;
+                    var rESOLUTION_TERRAIN2 = WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN;
                     for (var y = 0; y <= rESOLUTION_TERRAIN2; y++)
                     {
                         AreaTerrain[x, y] = b.ReadByte();
                     }
                 }
-                var rESOLUTION_WATER = WorldServiceLocator._Global_Constants.RESOLUTION_WATER;
+                var rESOLUTION_WATER = WorldServiceLocator.GlobalConstants.RESOLUTION_WATER;
                 for (var x = 0; x <= rESOLUTION_WATER; x++)
                 {
-                    var rESOLUTION_WATER2 = WorldServiceLocator._Global_Constants.RESOLUTION_WATER;
+                    var rESOLUTION_WATER2 = WorldServiceLocator.GlobalConstants.RESOLUTION_WATER;
                     for (var y = 0; y <= rESOLUTION_WATER2; y++)
                     {
                         WaterLevel[x, y] = b.ReadSingle();
                     }
                 }
-                var rESOLUTION_ZMAP = WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP;
+                var rESOLUTION_ZMAP = WorldServiceLocator.WSMaps.RESOLUTION_ZMAP;
                 for (var x = 0; x <= rESOLUTION_ZMAP; x++)
                 {
-                    var rESOLUTION_ZMAP2 = WorldServiceLocator._WS_Maps.RESOLUTION_ZMAP;
+                    var rESOLUTION_ZMAP2 = WorldServiceLocator.WSMaps.RESOLUTION_ZMAP;
                     for (var y = 0; y <= rESOLUTION_ZMAP2; y++)
                     {
                         ZCoord[x, y] = b.ReadSingle();
@@ -129,7 +129,7 @@ public partial class WS_Maps
         {
             if (!_disposedValue)
             {
-                WorldServiceLocator._WS_Maps.UnloadSpawns(CellX, CellY, CellMap);
+                WorldServiceLocator.WSMaps.UnloadSpawns(CellX, CellY, CellMap);
             }
             _disposedValue = true;
         }

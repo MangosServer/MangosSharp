@@ -154,8 +154,8 @@ public class WorldServerClass : Hub, ICluster
 
                             // Query CPU and Memory usage
                             var serverInfo = w.Value.GetServerInfo();
-                            WorldsInfo[w.Key].CpuUsage = serverInfo.cpuUsage;
-                            WorldsInfo[w.Key].MemoryUsage = serverInfo.memoryUsage;
+                            WorldsInfo[w.Key].CpuUsage = serverInfo.CpuUsage;
+                            WorldsInfo[w.Key].MemoryUsage = serverInfo.MemoryUsage;
                         }
                         else
                         {

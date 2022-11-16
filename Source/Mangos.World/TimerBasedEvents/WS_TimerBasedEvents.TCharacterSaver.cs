@@ -41,7 +41,7 @@ public partial class WS_TimerBasedEvents
         {
             CharacterSaverTimer = null;
             CharacterSaverWorking = false;
-            UPDATE_TIMER = WorldServiceLocator._ConfigurationProvider.GetConfiguration().SaveTimer;
+            UPDATE_TIMER = WorldServiceLocator.ConfigurationProvider.GetConfiguration().SaveTimer;
             CharacterSaverTimer = new Timer(Update, null, 10000, UPDATE_TIMER);
         }
 
@@ -49,14 +49,14 @@ public partial class WS_TimerBasedEvents
         {
             if (CharacterSaverWorking)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Character Saver skipping update");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Update: Character Saver skipping update");
                 return;
             }
             CharacterSaverWorking = true;
             try
             {
-                WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                foreach (var cHARACTER in WorldServiceLocator._WorldServer.CHARACTERs)
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                foreach (var cHARACTER in WorldServiceLocator.WorldServer.CHARACTERs)
                 {
                     cHARACTER.Value.SaveCharacter();
                 }
@@ -65,14 +65,14 @@ public partial class WS_TimerBasedEvents
             {
                 ProjectData.SetProjectError(ex2);
                 var ex = ex2;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, ex.ToString(), null);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, ex.ToString(), null);
                 ProjectData.ClearProjectError();
             }
             finally
             {
-                WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
             }
-            WorldServiceLocator._WS_Handlers_Instance.InstanceMapUpdate();
+            WorldServiceLocator.WSHandlersInstance.InstanceMapUpdate();
             CharacterSaverWorking = false;
         }
 

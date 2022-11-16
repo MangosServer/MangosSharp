@@ -101,26 +101,26 @@ public class WS_GraveYards : IDisposable
             {
                 Graveyards.Clear();
                 var tmpDBC = await dataStoreProvider.GetDataStoreAsync("WorldSafeLocs.dbc");
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading.... {0} Graveyard Locations", tmpDBC.Rows - 1);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading.... {0} Graveyard Locations", tmpDBC.Rows - 1);
                 for (var i = 0; i <= tmpDBC.Rows - 1; i++)
                 {
                     var locationMapID = tmpDBC.ReadInt(i, 1);
-                    if (WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.Contains(locationMapID.ToString()))
+                    if (WorldServiceLocator.ConfigurationProvider.GetConfiguration().Maps.Contains(locationMapID.ToString()))
                     {
                         var locationIndex = tmpDBC.ReadInt(i, 0);
                         var locationPosX = tmpDBC.ReadFloat(i, 2);
                         var locationPosY = tmpDBC.ReadFloat(i, 3);
                         var locationPosZ = tmpDBC.ReadFloat(i, 4);
                         Graveyards.Add(locationIndex, new TGraveyard(locationPosX, locationPosY, locationPosZ, locationMapID));
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, ": Map: {0}  X: {1}  Y: {2}  Z: {3}", locationMapID, locationPosX, locationPosY, locationPosZ);
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, ": Map: {0}  X: {1}  Y: {2}  Z: {3}", locationMapID, locationPosX, locationPosY, locationPosZ);
                     }
                 }
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Finished loading Graveyard Locations", tmpDBC.Rows - 1);
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Graveyards initialized.", tmpDBC.Rows - 1);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Finished loading Graveyard Locations", tmpDBC.Rows - 1);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "DBC: {0} Graveyards initialized.", tmpDBC.Rows - 1);
             }
             catch (DirectoryNotFoundException ex)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "DBC File : WorldSafeLocs is Missing", ex);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "DBC File : WorldSafeLocs is Missing", ex);
             }
         }
     }
@@ -134,17 +134,17 @@ public class WS_GraveYards : IDisposable
             var distNear = 0f;
             TGraveyard entryNear = default;
             TGraveyard entryFar = default;
-            if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsDungeon | WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsBattleGround | WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsRaid)
+            if (WorldServiceLocator.WSMaps.Maps[Character.MapID].IsDungeon | WorldServiceLocator.WSMaps.Maps[Character.MapID].IsBattleGround | WorldServiceLocator.WSMaps.Maps[Character.MapID].IsRaid)
             {
                 Character.ZoneCheckInstance();
-                var Ghostzone = WorldServiceLocator._WS_Maps.AreaTable[WorldServiceLocator._WS_Maps.GetAreaIDByMapandParent((int)Character.MapID, WorldServiceLocator._WS_Maps.AreaTable[WorldServiceLocator._WS_Maps.GetAreaFlag(Character.resurrectPositionX, Character.resurrectPositionY, (int)Character.MapID)].Zone)].ID;
-                WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT id, faction FROM game_graveyard_zone WHERE ghost_zone = {Ghostzone} and (faction = 0 or faction = {Character.Team}) ", ref GraveQuery);
+                var Ghostzone = WorldServiceLocator.WSMaps.AreaTable[WorldServiceLocator.WSMaps.GetAreaIDByMapandParent((int)Character.MapID, WorldServiceLocator.WSMaps.AreaTable[WorldServiceLocator.WSMaps.GetAreaFlag(Character.resurrectPositionX, Character.resurrectPositionY, (int)Character.MapID)].Zone)].ID;
+                WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT id, faction FROM game_graveyard_zone WHERE ghost_zone = {Ghostzone} and (faction = 0 or faction = {Character.Team}) ", ref GraveQuery);
                 if (GraveQuery.Rows.Count == 0)
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: No near graveyards for map [{0}], zone [{1}]", Character.MapID, Character.ZoneID);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: No near graveyards for map [{0}], zone [{1}]", Character.MapID, Character.ZoneID);
                     return;
                 }
-                if (WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsDungeon | WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsBattleGround | WorldServiceLocator._WS_Maps.Maps[Character.MapID].IsRaid)
+                if (WorldServiceLocator.WSMaps.Maps[Character.MapID].IsDungeon | WorldServiceLocator.WSMaps.Maps[Character.MapID].IsBattleGround | WorldServiceLocator.WSMaps.Maps[Character.MapID].IsRaid)
                 {
                     if (Graveyards.ContainsKey(Conversions.ToInteger(GraveQuery.Rows[0]["id"])))
                     {
@@ -153,7 +153,7 @@ public class WS_GraveYards : IDisposable
                     }
                     else
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYard: {0} is missing for map [{1}], zone [{2}]", GraveQuery.Rows[0]["id"], Character.MapID, Character.ZoneID);
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYard: {0} is missing for map [{1}], zone [{2}]", GraveQuery.Rows[0]["id"], Character.MapID, Character.ZoneID);
                     }
                 }
                 else
@@ -169,7 +169,7 @@ public class WS_GraveYards : IDisposable
                             var GraveyardFaction2 = row.As<int>("faction");
                             if (!Graveyards.ContainsKey(GraveyardID2))
                             {
-                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: Graveyard link invalid [{0}]", GraveyardID2);
+                                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: Graveyard link invalid [{0}]", GraveyardID2);
                             }
                             else if (Character.MapID != Graveyards[GraveyardID2].Map)
                             {
@@ -184,7 +184,7 @@ public class WS_GraveYards : IDisposable
                                 {
                                     continue;
                                 }
-                                var dist3 = WorldServiceLocator._WS_Combat.GetDistance(Character.positionX, Graveyards[GraveyardID2].X, Character.positionY, Graveyards[GraveyardID2].Y, Character.positionZ, Graveyards[GraveyardID2].Z);
+                                var dist3 = WorldServiceLocator.WSCombat.GetDistance(Character.positionX, Graveyards[GraveyardID2].X, Character.positionY, Graveyards[GraveyardID2].Y, Character.positionZ, Graveyards[GraveyardID2].Z);
                                 if (foundNear)
                                 {
                                     if (dist3 < distNear)
@@ -215,16 +215,16 @@ public class WS_GraveYards : IDisposable
                 {
                     selectedGraveyard2 = entryFar;
                 }
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: GraveYard.Map[{0}], GraveYard.X[{1}], GraveYard.Y[{2}], GraveYard.Z[{3}]", selectedGraveyard2.Map, selectedGraveyard2.X, selectedGraveyard2.Y, selectedGraveyard2.Z);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: GraveYard.Map[{0}], GraveYard.X[{1}], GraveYard.Y[{2}], GraveYard.Z[{3}]", selectedGraveyard2.Map, selectedGraveyard2.X, selectedGraveyard2.Y, selectedGraveyard2.Z);
                 Character.Teleport(selectedGraveyard2.X, selectedGraveyard2.Y, selectedGraveyard2.Z, 0f, selectedGraveyard2.Map);
                 Character.SendDeathReleaseLoc(selectedGraveyard2.X, selectedGraveyard2.Y, selectedGraveyard2.Z, selectedGraveyard2.Map);
                 return;
             }
             Character.ZoneCheck();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT id, faction FROM game_graveyard_zone WHERE ghost_zone = {Character.ZoneID}", ref GraveQuery);
+            WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT id, faction FROM game_graveyard_zone WHERE ghost_zone = {Character.ZoneID}", ref GraveQuery);
             if (GraveQuery.Rows.Count == 0)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: No near graveyards for map [{0}], zone [{1}]", Character.MapID, Character.ZoneID);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: No near graveyards for map [{0}], zone [{1}]", Character.MapID, Character.ZoneID);
                 return;
             }
             IEnumerator enumerator2 = default;
@@ -238,7 +238,7 @@ public class WS_GraveYards : IDisposable
                     var GraveyardFaction = row.As<int>("faction");
                     if (!Graveyards.ContainsKey(GraveyardID))
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: Graveyard link invalid [{0}]", GraveyardID);
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: Graveyard link invalid [{0}]", GraveyardID);
                     }
                     else if (Character.MapID != Graveyards[GraveyardID].Map)
                     {
@@ -253,7 +253,7 @@ public class WS_GraveYards : IDisposable
                         {
                             continue;
                         }
-                        var dist2 = WorldServiceLocator._WS_Combat.GetDistance(Character.positionX, Graveyards[GraveyardID].X, Character.positionY, Graveyards[GraveyardID].Y, Character.positionZ, Graveyards[GraveyardID].Z);
+                        var dist2 = WorldServiceLocator.WSCombat.GetDistance(Character.positionX, Graveyards[GraveyardID].X, Character.positionY, Graveyards[GraveyardID].Y, Character.positionZ, Graveyards[GraveyardID].Z);
                         if (foundNear)
                         {
                             if (dist2 < distNear)
@@ -287,7 +287,7 @@ public class WS_GraveYards : IDisposable
             {
                 if (Alive & Character.DEAD)
                 {
-                    WorldServiceLocator._WS_Handlers_Misc.CharacterResurrect(ref Character);
+                    WorldServiceLocator.WSHandlersMisc.CharacterResurrect(ref Character);
                     Character.Life.Current = Character.Life.Maximum;
                     if (Character.ManaType == ManaTypes.TYPE_MANA)
                     {
@@ -303,7 +303,7 @@ public class WS_GraveYards : IDisposable
                         Character.SendCharacterUpdate();
                     }
                 }
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: GraveYard.Map[{0}], GraveYard.X[{1}], GraveYard.Y[{2}], GraveYard.Z[{3}]", selectedGraveyard.Map, selectedGraveyard.X, selectedGraveyard.Y, selectedGraveyard.Z);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "GraveYards: GraveYard.Map[{0}], GraveYard.X[{1}], GraveYard.Y[{2}], GraveYard.Z[{3}]", selectedGraveyard.Map, selectedGraveyard.X, selectedGraveyard.Y, selectedGraveyard.Z);
                 Character.Teleport(selectedGraveyard.X, selectedGraveyard.Y, selectedGraveyard.Z, 0f, selectedGraveyard.Map);
                 Character.SendDeathReleaseLoc(selectedGraveyard.X, selectedGraveyard.Y, selectedGraveyard.Z, selectedGraveyard.Map);
             }

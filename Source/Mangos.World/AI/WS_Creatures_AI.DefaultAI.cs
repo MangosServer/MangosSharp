@@ -95,7 +95,7 @@ public partial class WS_Creatures_AI
             aiTarget = null;
         }
 
-        public override bool IsMoving => checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature?.LastMove) < aiTimer
+        public override bool IsMoving => checked(WorldServiceLocator.NativeMethods.timeGetTime("") - aiCreature?.LastMove) < aiTimer
             && (State switch
             {
                 AIState.AI_MOVE_FOR_ATTACK => true,
@@ -250,7 +250,7 @@ public partial class WS_Creatures_AI
             }
             catch (Exception ex)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error selecting target.{0}{1}", Environment.NewLine, ex.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error selecting target.{0}{1}", Environment.NewLine, ex.ToString());
                 Reset();
             }
             if (aiTarget == null)
@@ -315,13 +315,13 @@ public partial class WS_Creatures_AI
                             if (aiHateTable?.Count > 0)
                             {
                                 OnLeaveCombat(Reset: false);
-                                aiTimer = WorldServiceLocator._WS_Creatures.CorpseDecay[aiCreature.CreatureInfo.Elite] * 1000;
+                                aiTimer = WorldServiceLocator.WSCreatures.CorpseDecay[aiCreature.CreatureInfo.Elite] * 1000;
                                 ignoreLoot = false;
                                 break;
                             }
-                            if (!ignoreLoot && WorldServiceLocator._WS_Loot.LootTable.ContainsKey(aiCreature.GUID))
+                            if (!ignoreLoot && WorldServiceLocator.WSLoot.LootTable.ContainsKey(aiCreature.GUID))
                             {
-                                aiTimer = WorldServiceLocator._WS_Creatures.CorpseDecay[aiCreature.CreatureInfo.Elite] * 1000;
+                                aiTimer = WorldServiceLocator.WSCreatures.CorpseDecay[aiCreature.CreatureInfo.Elite] * 1000;
                                 ignoreLoot = true;
                                 break;
                             }
@@ -354,7 +354,7 @@ public partial class WS_Creatures_AI
                         {
                             State = AIState.AI_DO_NOTHING;
                         }
-                        else if (IsWaypoint || WorldServiceLocator._WorldServer.Rnd.NextDouble() > 0.20000000298023224)
+                        else if (IsWaypoint || WorldServiceLocator.WorldServer.Rnd.NextDouble() > 0.20000000298023224)
                         {
                             DoMove();
                         }
@@ -430,7 +430,7 @@ public partial class WS_Creatures_AI
                     {
                         return;
                     }
-                    var distance = WorldServiceLocator._WS_Combat.GetDistance(aiCreature, aiTarget);
+                    var distance = WorldServiceLocator.WSCombat.GetDistance(aiCreature, aiTarget);
                     if (distance > 2f + aiCreature.CombatReach + aiTarget.BoundingRadius)
                     {
                         State = AIState.AI_MOVE_FOR_ATTACK;
@@ -447,7 +447,7 @@ public partial class WS_Creatures_AI
                         ref var aiTarget = ref this.aiTarget;
                         ref var reference3 = ref aiTarget;
                         WS_Base.BaseObject Object2 = aiTarget;
-                        var flag = WorldServiceLocator._WS_Combat.IsInFrontOf(ref Object, ref Object2);
+                        var flag = WorldServiceLocator.WSCombat.IsInFrontOf(ref Object, ref Object2);
                         reference3 = (WS_Base.BaseUnit)Object2;
                         reference2 = (WS_Creatures.CreatureObject)Object;
                         if (!flag)
@@ -462,7 +462,7 @@ public partial class WS_Creatures_AI
                         reference2 = ref reference4;
                         WS_Base.BaseUnit Attacker = reference4;
                         reference2 = (WS_Creatures.CreatureObject)Attacker;
-                        var damageInfo = WorldServiceLocator._WS_Combat.CalculateDamage(ref Attacker, ref this.aiTarget, DualWield: false, Ranged: false);
+                        var damageInfo = WorldServiceLocator.WSCombat.CalculateDamage(ref Attacker, ref this.aiTarget, DualWield: false, Ranged: false);
                         ref var reference5 = ref aiCreature;
                         reference2 = ref reference5;
                         Object2 = reference5;
@@ -470,7 +470,7 @@ public partial class WS_Creatures_AI
                         reference3 = ref aiTarget3;
                         Object = aiTarget3;
                         WS_Network.ClientClass client = null;
-                        WorldServiceLocator._WS_Combat.SendAttackerStateUpdate(Attacker: ref Object2, Victim: ref Object, damageInfo, client);
+                        WorldServiceLocator.WSCombat.SendAttackerStateUpdate(Attacker: ref Object2, Victim: ref Object, damageInfo, client);
                         reference3 = (WS_Base.BaseUnit)Object;
                         reference2 = (WS_Creatures.CreatureObject)Object2;
                         ref var reference6 = ref aiCreature;
@@ -478,13 +478,13 @@ public partial class WS_Creatures_AI
                         Attacker = reference6;
                         this.aiTarget.DealDamage(damageInfo.GetDamage, Attacker);
                         reference2 = (WS_Creatures.CreatureObject)Attacker;
-                        nextAttack = WorldServiceLocator._WorldServer.CREATURESDatabase[aiCreature.ID].BaseAttackTime;
+                        nextAttack = WorldServiceLocator.WorldServer.CREATURESDatabase[aiCreature.ID].BaseAttackTime;
                         aiTimer = 1000;
                     }
                 }
                 catch (Exception ex)
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WS_Creatures:DoAttack failed - Guid: {1} ID: {2}  {0}", ex.Message);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "WS_Creatures:DoAttack failed - Guid: {1} ID: {2}  {0}", ex.Message);
                     Reset();
                 }
             }
@@ -496,7 +496,7 @@ public partial class WS_Creatures_AI
             {
                 case null:
                     {
-                        var distanceToSpawn = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
+                        var distanceToSpawn = WorldServiceLocator.WSCombat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
                         if (!IsWaypoint && aiCreature?.SpawnID > 0 && distanceToSpawn > aiCreature?.MaxDistance)
                         {
                             GoBackToSpawn();
@@ -508,7 +508,7 @@ public partial class WS_Creatures_AI
 
                 default:
                     {
-                        var distanceToLastHit = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, LastHitX, aiCreature.positionY, LastHitY, aiCreature.positionZ, LastHitZ);
+                        var distanceToLastHit = WorldServiceLocator.WSCombat.GetDistance(aiCreature.positionX, LastHitX, aiCreature.positionY, LastHitY, aiCreature.positionZ, LastHitZ);
                         if (distanceToLastHit > aiCreature?.MaxDistance)
                         {
                             OnLeaveCombat();
@@ -537,18 +537,18 @@ public partial class WS_Creatures_AI
                         return;
                     }
                     var distance2 = (float)(3.0 * aiCreature?.CreatureInfo?.WalkSpeed);
-                    var angle2 = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 6.2831854820251465);
+                    var angle2 = (float)(WorldServiceLocator.WorldServer.Rnd.NextDouble() * 6.2831854820251465);
                     aiCreature?.SetToRealPosition();
                     aiCreature.orientation = angle2;
                     selectedX2 = (float)(aiCreature?.positionX + (Math.Cos(angle2) * distance2));
                     selectedY2 = (float)(aiCreature?.positionY + (Math.Sin(angle2) * distance2));
-                    selectedZ2 = WorldServiceLocator._WS_Maps.GetZCoord(selectedX2, selectedY2, aiCreature.positionZ, aiCreature.MapID);
+                    selectedZ2 = WorldServiceLocator.WSMaps.GetZCoord(selectedX2, selectedY2, aiCreature.positionZ, aiCreature.MapID);
                     MoveTries = checked(MoveTries + 1);
                     if (!(Math.Abs(aiCreature.positionZ - selectedZ2) > 5f))
                     {
                         ref var reference = ref aiCreature;
                         WS_Base.BaseObject obj = reference;
-                        var flag = WorldServiceLocator._WS_Maps.IsInLineOfSight(ref obj, selectedX2, selectedY2, selectedZ2 + 1f);
+                        var flag = WorldServiceLocator.WSMaps.IsInLineOfSight(ref obj, selectedX2, selectedY2, selectedZ2 + 1f);
                         reference = (WS_Creatures.CreatureObject)obj;
                         if (flag)
                         {
@@ -578,7 +578,7 @@ public partial class WS_Creatures_AI
                 object1?.SetToRealPosition();
             }
             var distance = 1000f * aiCreature.CreatureInfo.RunSpeed;
-            var distanceToTarget = WorldServiceLocator._WS_Combat.GetDistance(aiCreature, aiTarget);
+            var distanceToTarget = WorldServiceLocator.WSCombat.GetDistance(aiCreature, aiTarget);
             if (distanceToTarget < distance)
             {
                 State = AIState.AI_ATTACKING;
@@ -592,14 +592,14 @@ public partial class WS_Creatures_AI
                 NearX = (!(aiTarget?.positionX > aiCreature?.positionX)) ? (NearX + destDist) : (NearX - destDist);
                 var NearY = aiTarget.positionY;
                 NearY = (!(aiTarget?.positionY > aiCreature?.positionY)) ? (NearY + destDist) : (NearY - destDist);
-                var NearZ = WorldServiceLocator._WS_Maps.GetZCoord(NearX, NearY, aiCreature.positionZ, aiCreature.MapID);
+                var NearZ = WorldServiceLocator.WSMaps.GetZCoord(NearX, NearY, aiCreature.positionZ, aiCreature.MapID);
                 if ((NearZ > aiTarget?.positionZ + 2f) || (NearZ < aiTarget?.positionZ - 2f))
                 {
                     NearZ = aiTarget.positionZ;
                 }
                 if (aiCreature.CanMoveTo(NearX, NearY, NearZ))
                 {
-                    aiCreature.orientation = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, NearX, aiCreature.positionY, NearY);
+                    aiCreature.orientation = WorldServiceLocator.WSCombat.GetOrientation(aiCreature.positionX, NearX, aiCreature.positionY, NearY);
                     aiTimer = aiCreature.MoveTo(NearX, NearY, NearZ, 0f, Running: true);
                     return;
                 }
@@ -613,11 +613,11 @@ public partial class WS_Creatures_AI
                 return;
             }
             State = AIState.AI_MOVE_FOR_ATTACK;
-            var angle = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, aiTarget.positionX, aiCreature.positionY, aiTarget.positionY);
+            var angle = WorldServiceLocator.WSCombat.GetOrientation(aiCreature.positionX, aiTarget.positionX, aiCreature.positionY, aiTarget.positionY);
             aiCreature.orientation = angle;
             var selectedX = (float)(aiCreature?.positionX + (Math.Cos(angle) * distance));
             var selectedY = (float)(aiCreature?.positionY + (Math.Sin(angle) * distance));
-            var selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
+            var selectedZ = WorldServiceLocator.WSMaps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
             if (aiCreature.CanMoveTo(selectedX, selectedY, selectedZ))
             {
                 aiTimer = aiCreature.MoveTo(selectedX, selectedY, selectedZ, 0f, Running: true);
@@ -636,9 +636,9 @@ public partial class WS_Creatures_AI
         {
             var distance = (!ResetRun) ? ((float)(3.0 * aiCreature?.CreatureInfo?.WalkSpeed)) : ((float)(3.0 * aiCreature?.CreatureInfo?.RunSpeed));
             aiCreature?.SetToRealPosition(Forced: true);
-            var angle = WorldServiceLocator._WS_Combat.GetOrientation(aiCreature.positionX, ResetX, aiCreature.positionY, ResetY);
+            var angle = WorldServiceLocator.WSCombat.GetOrientation(aiCreature.positionX, ResetX, aiCreature.positionY, ResetY);
             aiCreature.orientation = angle;
-            var tmpDist = WorldServiceLocator._WS_Combat.GetDistance(aiCreature, ResetX, ResetY, ResetZ);
+            var tmpDist = WorldServiceLocator.WSCombat.GetDistance(aiCreature, ResetX, ResetY, ResetZ);
             if (tmpDist < distance)
             {
                 aiTimer = aiCreature.MoveTo(ResetX, ResetY, ResetZ, ResetO, ResetRun);
@@ -647,7 +647,7 @@ public partial class WS_Creatures_AI
             }
             var selectedX = (float)(aiCreature?.positionX + (Math.Cos(angle) * distance));
             var selectedY = (float)(aiCreature?.positionY + (Math.Sin(angle) * distance));
-            var selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
+            var selectedZ = WorldServiceLocator.WSMaps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
             aiTimer = checked(aiCreature.MoveTo(selectedX, selectedY, selectedZ, 0f, ResetRun) - 50);
         }
     }

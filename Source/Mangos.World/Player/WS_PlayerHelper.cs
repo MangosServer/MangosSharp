@@ -286,7 +286,7 @@ public class WS_PlayerHelper
             tmp = tmp + ", kills_dishonorableLifetime =" + Conversions.ToString(KillsDisHonorableLifetime);
             tmp = tmp + ", kills_honorableLifetime =" + Conversions.ToString(KillsHonorableLifetime);
             tmp += $" WHERE char_guid = \"{CharGUID}\";";
-            WorldServiceLocator._WorldServer.CharacterDatabase.Update(tmp);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Update(tmp);
         }
 
         public void Load(ulong GUID)
@@ -362,9 +362,9 @@ public class WS_PlayerHelper
                     DrowningTimer.Dispose();
                     DrowningTimer = null;
                 }
-                if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(CharacterGUID))
+                if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(CharacterGUID))
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[CharacterGUID].StopMirrorTimer(MirrorTimer.DROWNING);
+                    WorldServiceLocator.WorldServer.CHARACTERs[CharacterGUID].StopMirrorTimer(MirrorTimer.DROWNING);
                 }
             }
             _disposedValue = true;
@@ -401,7 +401,7 @@ public class WS_PlayerHelper
 
         public void Repop(object Obj)
         {
-            WorldServiceLocator._WS_Handlers_Misc.CharacterRepop(ref Character.client);
+            WorldServiceLocator.WSHandlersMisc.CharacterRepop(ref Character.client);
             Character.repopTimer = null;
             Dispose();
         }
@@ -452,7 +452,7 @@ public class WS_PlayerHelper
         Packets.PacketClass SMSG_SET_REST_START = new(Opcodes.SMSG_SET_REST_START);
         try
         {
-            SMSG_SET_REST_START.AddInt32(WorldServiceLocator._WS_Network.MsTime());
+            SMSG_SET_REST_START.AddInt32(WorldServiceLocator.WSNetwork.MsTime());
             client.Send(ref SMSG_SET_REST_START);
         }
         finally
@@ -646,17 +646,17 @@ public class WS_PlayerHelper
                 packet.AddInt16(0);
                 foreach (var Cooldown in spellCooldowns)
                 {
-                    if (WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(Cooldown.Key))
+                    if (WorldServiceLocator.WSSpells.SPELLs.ContainsKey(Cooldown.Key))
                     {
                         packet.AddUInt16((ushort)Cooldown.Key);
                         var timeLeft = 0;
-                        if (Cooldown.Value.Key > WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))
+                        if (Cooldown.Value.Key > WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now))
                         {
-                            timeLeft = (int)(checked(Cooldown.Value.Key - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) * 1000L);
+                            timeLeft = (int)(checked(Cooldown.Value.Key - WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now)) * 1000L);
                         }
                         packet.AddUInt16((ushort)Cooldown.Value.Value);
-                        packet.AddUInt16((ushort)WorldServiceLocator._WS_Spells.SPELLs[Cooldown.Key].Category);
-                        if (WorldServiceLocator._WS_Spells.SPELLs[Cooldown.Key].CategoryCooldown > 0)
+                        packet.AddUInt16((ushort)WorldServiceLocator.WSSpells.SPELLs[Cooldown.Key].Category);
+                        if (WorldServiceLocator.WSSpells.SPELLs[Cooldown.Key].CategoryCooldown > 0)
                         {
                             packet.AddInt32(0);
                             packet.AddInt32(timeLeft);
@@ -687,16 +687,16 @@ public class WS_PlayerHelper
         objCharacter = (WS_PlayerData.CharacterObject)objCharacter2;
         foreach (var Spell in objCharacter.Spells)
         {
-            if (WorldServiceLocator._WS_Spells.SPELLs.ContainsKey(Spell.Key) && WorldServiceLocator._WS_Spells.SPELLs[Spell.Key].IsPassive)
+            if (WorldServiceLocator.WSSpells.SPELLs.ContainsKey(Spell.Key) && WorldServiceLocator.WSSpells.SPELLs[Spell.Key].IsPassive)
             {
-                if (!objCharacter.HavePassiveAura(Spell.Key) && WorldServiceLocator._WS_Spells.SPELLs[Spell.Key].CanCast(ref objCharacter, t, FirstCheck: false) == SpellFailedReason.SPELL_NO_ERROR)
+                if (!objCharacter.HavePassiveAura(Spell.Key) && WorldServiceLocator.WSSpells.SPELLs[Spell.Key].CanCast(ref objCharacter, t, FirstCheck: false) == SpellFailedReason.SPELL_NO_ERROR)
                 {
-                    var spellInfo = WorldServiceLocator._WS_Spells.SPELLs[Spell.Key];
+                    var spellInfo = WorldServiceLocator.WSSpells.SPELLs[Spell.Key];
                     WS_Base.BaseObject caster = objCharacter;
                     spellInfo.Apply(ref caster, t);
                     objCharacter = (WS_PlayerData.CharacterObject)caster;
                 }
-                else if (objCharacter.HavePassiveAura(Spell.Key) && WorldServiceLocator._WS_Spells.SPELLs[Spell.Key].CanCast(ref objCharacter, t, FirstCheck: false) != SpellFailedReason.SPELL_NO_ERROR)
+                else if (objCharacter.HavePassiveAura(Spell.Key) && WorldServiceLocator.WSSpells.SPELLs[Spell.Key].CanCast(ref objCharacter, t, FirstCheck: false) != SpellFailedReason.SPELL_NO_ERROR)
                 {
                     objCharacter.RemoveAuraBySpell(Spell.Key);
                 }

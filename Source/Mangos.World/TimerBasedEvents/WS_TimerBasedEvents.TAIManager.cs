@@ -50,12 +50,12 @@ public partial class WS_TimerBasedEvents
             {
                 return;
             }
-            var StartTime = WorldServiceLocator._NativeMethods.timeGetTime("");
+            var StartTime = WorldServiceLocator.NativeMethods.timeGetTime("");
             AIManagerWorking = true;
             try
             {
-                WorldServiceLocator._WorldServer.WORLD_TRANSPORTs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                foreach (var wORLD_TRANSPORT in WorldServiceLocator._WorldServer.WORLD_TRANSPORTs)
+                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                foreach (var wORLD_TRANSPORT in WorldServiceLocator.WorldServer.WORLD_TRANSPORTs)
                 {
                     wORLD_TRANSPORT.Value.Update();
                 }
@@ -64,26 +64,26 @@ public partial class WS_TimerBasedEvents
             {
                 ProjectData.SetProjectError(ex5);
                 var ex4 = ex5;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error updating transports.{0}{1}", Environment.NewLine, ex4.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error updating transports.{0}{1}", Environment.NewLine, ex4.ToString());
                 ProjectData.ClearProjectError();
             }
             finally
             {
-                WorldServiceLocator._WorldServer.WORLD_TRANSPORTs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ReleaseReaderLock();
             }
             checked
             {
                 try
                 {
-                    WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
                     try
                     {
-                        long num = WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys.Count - 1;
+                        long num = WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys.Count - 1;
                         for (var i = 0L; i <= num; i++)
                         {
-                            if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[Conversions.ToULong(WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys[(int)i])] != null && WorldServiceLocator._WorldServer.WORLD_CREATUREs[Conversions.ToULong(WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys[(int)i])].aiScript != null)
+                            if (WorldServiceLocator.WorldServer.WORLD_CREATUREs[Conversions.ToULong(WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys[(int)i])] != null && WorldServiceLocator.WorldServer.WORLD_CREATUREs[Conversions.ToULong(WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys[(int)i])].aiScript != null)
                             {
-                                WorldServiceLocator._WorldServer.WORLD_CREATUREs[Conversions.ToULong(WorldServiceLocator._WorldServer.WORLD_CREATUREsKeys[(int)i])].aiScript.DoThink();
+                                WorldServiceLocator.WorldServer.WORLD_CREATUREs[Conversions.ToULong(WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys[(int)i])].aiScript.DoThink();
                             }
                         }
                     }
@@ -91,26 +91,26 @@ public partial class WS_TimerBasedEvents
                     {
                         ProjectData.SetProjectError(ex6);
                         var ex3 = ex6;
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error updating AI.{0}{1}", Environment.NewLine, ex3.ToString());
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error updating AI.{0}{1}", Environment.NewLine, ex3.ToString());
                         ProjectData.ClearProjectError();
                     }
                     finally
                     {
-                        WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
+                        WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
                     }
                 }
                 catch (ApplicationException ex7)
                 {
                     ProjectData.SetProjectError(ex7);
                     var ex2 = ex7;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: AI Manager timed out");
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Update: AI Manager timed out");
                     ProjectData.ClearProjectError();
                 }
                 catch (Exception ex8)
                 {
                     ProjectData.SetProjectError(ex8);
                     var ex = ex8;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error updating AI.{0}{1}", Environment.NewLine, ex.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error updating AI.{0}{1}", Environment.NewLine, ex.ToString());
                     ProjectData.ClearProjectError();
                 }
                 AIManagerWorking = false;

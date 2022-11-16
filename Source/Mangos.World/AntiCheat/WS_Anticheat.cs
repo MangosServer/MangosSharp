@@ -49,10 +49,10 @@ public sealed class WS_Anticheat
             if (sData.LastViolation != 0)
             {
                 sData.Violations += (int)sData.LastViolation;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "[AntiCheat] Player {0} triggered a speedhack violation. ({1}) {2}", client.Character.Name, sData.Violations, sData.LastMessage);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "[AntiCheat] Player {0} triggered a speedhack violation. ({1}) {2}", client.Character.Name, sData.Violations, sData.LastMessage);
                 if (sData.Violations >= 10)
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.USER, "[AntiCheat] Player {0} exceeded violation value. Taking action.", client.Character.Name);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.USER, "[AntiCheat] Player {0} exceeded violation value. Taking action.", client.Character.Name);
                     client.Character.Logout();
                     SpeedHacks.Remove(sData);
                 }

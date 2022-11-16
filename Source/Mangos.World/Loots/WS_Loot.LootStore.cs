@@ -51,7 +51,7 @@ public partial class WS_Loot
             LootTemplate newTemplate = new();
             Templates.Add(Entry, newTemplate);
             DataTable MysqlQuery = new();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query(string.Format("SELECT {0}.*,conditions.type,conditions.value1, conditions.value2 FROM {0} LEFT JOIN conditions ON {0}.`condition_id`=conditions.`condition_entry` WHERE entry = {1};", Name, Entry), ref MysqlQuery);
+            WorldServiceLocator.WorldServer.WorldDatabase.Query(string.Format("SELECT {0}.*,conditions.type,conditions.value1, conditions.value2 FROM {0} LEFT JOIN conditions ON {0}.`condition_id`=conditions.`condition_entry` WHERE entry = {1};", Name, Entry), ref MysqlQuery);
             if (MysqlQuery.Rows.Count == 0)
             {
                 Templates[Entry] = null;

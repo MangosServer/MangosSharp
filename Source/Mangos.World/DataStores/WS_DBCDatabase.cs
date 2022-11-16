@@ -597,7 +597,7 @@ public class WS_DBCDatabase
         {
             if (TaxiNode.Value.MapID == map)
             {
-                var tmp = WorldServiceLocator._WS_Combat.GetDistance(x, TaxiNode.Value.x, y, TaxiNode.Value.y);
+                var tmp = WorldServiceLocator.WSCombat.GetDistance(x, TaxiNode.Value.x, y, TaxiNode.Value.y);
                 var minDistance = 1E+08f;
                 if (tmp < minDistance)
                 {
@@ -626,7 +626,7 @@ public class WS_DBCDatabase
         DataTable result = null;
         try
         {
-            WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM player_xp_for_level order by lvl;", ref result);
+            WorldServiceLocator.WorldServer.WorldDatabase.Query("SELECT * FROM player_xp_for_level order by lvl;", ref result);
             if (result.Rows.Count > 0)
             {
                 IEnumerator enumerator = default;
@@ -638,7 +638,7 @@ public class WS_DBCDatabase
                         DataRow row = (DataRow)enumerator.Current;
                         var dbLvl = row.As<int>("lvl");
                         var dbXp = row.As<long>("xp_for_next_level");
-                        WorldServiceLocator._WS_Player_Initializator.XPTable[dbLvl] = checked((int)dbXp);
+                        WorldServiceLocator.WSPlayerInitializator.XPTable[dbLvl] = checked((int)dbXp);
                     }
                 }
                 finally
@@ -649,18 +649,18 @@ public class WS_DBCDatabase
                     }
                 }
             }
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: XPTable initialized.");
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: XPTable initialized.");
         }
         catch (Exception ex)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "XPTable initialization failed.", ex);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "XPTable initialization failed.", ex);
         }
     }
 
     public void InitializeBattlemasters()
     {
         DataTable MySQLQuery = new();
-        WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM battlemaster_entry", ref MySQLQuery);
+        WorldServiceLocator.WorldServer.WorldDatabase.Query("SELECT * FROM battlemaster_entry", ref MySQLQuery);
         IEnumerator enumerator = default;
         try
         {
@@ -678,13 +678,13 @@ public class WS_DBCDatabase
                 (enumerator as IDisposable).Dispose();
             }
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: {0} Battlemasters Loaded.", MySQLQuery.Rows.Count);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "World: {0} Battlemasters Loaded.", MySQLQuery.Rows.Count);
     }
 
     public void InitializeBattlegrounds()
     {
         DataTable mySqlQuery = new();
-        WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM battleground_template", ref mySqlQuery);
+        WorldServiceLocator.WorldServer.WorldDatabase.Query("SELECT * FROM battleground_template", ref mySqlQuery);
         IEnumerator enumerator = default;
         try
         {
@@ -711,13 +711,13 @@ public class WS_DBCDatabase
                 (enumerator as IDisposable).Dispose();
             }
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: {0} Battlegrounds Loaded.", mySqlQuery.Rows.Count);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "World: {0} Battlegrounds Loaded.", mySqlQuery.Rows.Count);
     }
 
     public void InitializeTeleportCoords()
     {
         DataTable MySQLQuery = new();
-        WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT * FROM spells_teleport_coords", ref MySQLQuery);
+        WorldServiceLocator.WorldServer.WorldDatabase.Query("SELECT * FROM spells_teleport_coords", ref MySQLQuery);
         IEnumerator enumerator = default;
         try
         {
@@ -741,123 +741,123 @@ public class WS_DBCDatabase
                 (enumerator as IDisposable).Dispose();
             }
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: {0} Teleport Coords Loaded.", MySQLQuery.Rows.Count);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "World: {0} Teleport Coords Loaded.", MySQLQuery.Rows.Count);
     }
 
     public async Task InitializeInternalDatabaseAsync()
     {
         await InitializeLoadDBCsAsync();
-        WorldServiceLocator._WS_Spells.InitializeSpellDB();
-        WorldServiceLocator._WS_Commands.RegisterChatCommands();
+        WorldServiceLocator.WSSpells.InitializeSpellDB();
+        WorldServiceLocator.WSCommands.RegisterChatCommands();
         try
         {
-            WorldServiceLocator._WS_TimerBasedEvents.Regenerator = new WS_TimerBasedEvents.TRegenerator();
-            WorldServiceLocator._WS_TimerBasedEvents.AIManager = new WS_TimerBasedEvents.TAIManager();
-            WorldServiceLocator._WS_TimerBasedEvents.SpellManager = new WS_TimerBasedEvents.TSpellManager();
-            WorldServiceLocator._WS_TimerBasedEvents.CharacterSaver = new WS_TimerBasedEvents.TCharacterSaver();
-            WorldServiceLocator._WS_TimerBasedEvents.WeatherChanger = new WS_TimerBasedEvents.TWeatherChanger();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "World: Loading Maps and Spawns....");
+            WorldServiceLocator.WSTimerBasedEvents.Regenerator = new WS_TimerBasedEvents.TRegenerator();
+            WorldServiceLocator.WSTimerBasedEvents.AIManager = new WS_TimerBasedEvents.TAIManager();
+            WorldServiceLocator.WSTimerBasedEvents.SpellManager = new WS_TimerBasedEvents.TSpellManager();
+            WorldServiceLocator.WSTimerBasedEvents.CharacterSaver = new WS_TimerBasedEvents.TCharacterSaver();
+            WorldServiceLocator.WSTimerBasedEvents.WeatherChanger = new WS_TimerBasedEvents.TWeatherChanger();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "World: Loading Maps and Spawns....");
             DataTable MySQLQuery = new();
             try
             {
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT MAX(item_guid) FROM characters_inventory;", ref MySQLQuery);
-                WorldServiceLocator._WorldServer.itemGuidCounter = MySQLQuery.Rows[0][0] != DBNull.Value
-                    ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_ITEM))
-                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_ITEM)));
+                WorldServiceLocator.WorldServer.CharacterDatabase.Query("SELECT MAX(item_guid) FROM characters_inventory;", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.itemGuidCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                    ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator.GlobalConstants.GUID_ITEM))
+                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator.GlobalConstants.GUID_ITEM)));
             }
             catch (Exception ex)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading characters_inventory....", ex);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading characters_inventory....", ex);
             }
             MySQLQuery = new DataTable();
             try
             {
-                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT MAX(guid) FROM creature;", ref MySQLQuery);
-                WorldServiceLocator._WorldServer.CreatureGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
-                    ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_UNIT))
-                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_UNIT)));
+                WorldServiceLocator.WorldServer.WorldDatabase.Query("SELECT MAX(guid) FROM creature;", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.CreatureGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                    ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator.GlobalConstants.GUID_UNIT))
+                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator.GlobalConstants.GUID_UNIT)));
             }
             catch (Exception ex)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading creatures....", ex);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading creatures....", ex);
             }
             MySQLQuery = new DataTable();
             try
             {
-                WorldServiceLocator._WorldServer.WorldDatabase.Query("SELECT MAX(guid) FROM gameobject;", ref MySQLQuery);
-                WorldServiceLocator._WorldServer.GameObjectsGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
-                    ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT))
-                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT)));
+                WorldServiceLocator.WorldServer.WorldDatabase.Query("SELECT MAX(guid) FROM gameobject;", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.GameObjectsGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                    ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator.GlobalConstants.GUID_GAMEOBJECT))
+                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator.GlobalConstants.GUID_GAMEOBJECT)));
             }
             catch (Exception ex)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading gameobjects....", ex);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading gameobjects....", ex);
             }
             MySQLQuery = new DataTable();
             try
             {
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT MAX(guid) FROM corpse", ref MySQLQuery);
-                WorldServiceLocator._WorldServer.CorpseGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
-                    ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator._Global_Constants.GUID_CORPSE))
-                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator._Global_Constants.GUID_CORPSE)));
+                WorldServiceLocator.WorldServer.CharacterDatabase.Query("SELECT MAX(guid) FROM corpse", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.CorpseGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
+                    ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator.GlobalConstants.GUID_CORPSE))
+                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator.GlobalConstants.GUID_CORPSE)));
             }
             catch (Exception ex)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading corpse....", ex);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "World: Failed loading corpse....", ex);
             }
         }
         catch (Exception ex)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Internal database initialization failed! [{0}]{1}{2}", ex.Message, Environment.NewLine, ex.ToString());
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Internal database initialization failed! [{0}]{1}{2}", ex.Message, Environment.NewLine, ex.ToString());
         }
     }
 
     public async Task InitializeLoadDBCsAsync()
     {
         InitializeXpTableFromDb();
-        WorldServiceLocator._WS_DBCLoad.LoadLootStores();
-        WorldServiceLocator._WS_DBCLoad.LoadWeather();
+        WorldServiceLocator.WSDBCLoad.LoadLootStores();
+        WorldServiceLocator.WSDBCLoad.LoadWeather();
         InitializeBattlemasters();
         InitializeBattlegrounds();
         InitializeTeleportCoords();
-        WorldServiceLocator._WS_DBCLoad.LoadCreatureMovements();
-        WorldServiceLocator._WS_DBCLoad.LoadCreatureEquipTable();
-        WorldServiceLocator._WS_DBCLoad.LoadCreatureModelInfo();
-        WorldServiceLocator._WS_DBCLoad.LoadQuestStartersAndFinishers();
-        WorldServiceLocator._WS_DBCLoad.InitializeSpellChains();
-        WorldServiceLocator._WS_DBCLoad.LoadCreatureGossip();
+        WorldServiceLocator.WSDBCLoad.LoadCreatureMovements();
+        WorldServiceLocator.WSDBCLoad.LoadCreatureEquipTable();
+        WorldServiceLocator.WSDBCLoad.LoadCreatureModelInfo();
+        WorldServiceLocator.WSDBCLoad.LoadQuestStartersAndFinishers();
+        WorldServiceLocator.WSDBCLoad.InitializeSpellChains();
+        WorldServiceLocator.WSDBCLoad.LoadCreatureGossip();
 
         await Task.WhenAll(
-            WorldServiceLocator._WS_Maps.InitializeMapsAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeEmotesAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeEmotesTextAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeAreaTableAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeFactionsAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeFactionTemplatesAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeCharRacesAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeCharClassesAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeSkillLinesAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeSkillLineAbilityAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeLocksAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeTaxiNodesAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeTaxiPathsAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeTaxiPathNodesAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeDurabilityCostsAsync(),
-            WorldServiceLocator._WS_DBCLoad.LoadSpellItemEnchantmentsAsync(),
-            WorldServiceLocator._WS_DBCLoad.LoadItemSetAsync(),
-            WorldServiceLocator._WS_DBCLoad.LoadItemDisplayInfoDbcAsync(),
-            WorldServiceLocator._WS_DBCLoad.LoadItemRandomPropertiesDbcAsync(),
-            WorldServiceLocator._WS_DBCLoad.LoadTalentDbcAsync(),
-            WorldServiceLocator._WS_DBCLoad.LoadTalentTabDbcAsync(),
-            WorldServiceLocator._WS_DBCLoad.LoadAuctionHouseDbcAsync(),
-            WorldServiceLocator._WS_DBCLoad.LoadCreatureFamilyDbcAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeSpellRadiusAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeSpellDurationAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeSpellCastTimeAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeSpellRangeAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeSpellFocusObjectAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeSpellsAsync(),
-            WorldServiceLocator._WS_DBCLoad.InitializeSpellShapeShiftAsync()
+            WorldServiceLocator.WSMaps.InitializeMapsAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeEmotesAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeEmotesTextAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeAreaTableAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeFactionsAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeFactionTemplatesAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeCharRacesAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeCharClassesAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeSkillLinesAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeSkillLineAbilityAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeLocksAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeTaxiNodesAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeTaxiPathsAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeTaxiPathNodesAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeDurabilityCostsAsync(),
+            WorldServiceLocator.WSDBCLoad.LoadSpellItemEnchantmentsAsync(),
+            WorldServiceLocator.WSDBCLoad.LoadItemSetAsync(),
+            WorldServiceLocator.WSDBCLoad.LoadItemDisplayInfoDbcAsync(),
+            WorldServiceLocator.WSDBCLoad.LoadItemRandomPropertiesDbcAsync(),
+            WorldServiceLocator.WSDBCLoad.LoadTalentDbcAsync(),
+            WorldServiceLocator.WSDBCLoad.LoadTalentTabDbcAsync(),
+            WorldServiceLocator.WSDBCLoad.LoadAuctionHouseDbcAsync(),
+            WorldServiceLocator.WSDBCLoad.LoadCreatureFamilyDbcAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeSpellRadiusAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeSpellDurationAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeSpellCastTimeAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeSpellRangeAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeSpellFocusObjectAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeSpellsAsync(),
+            WorldServiceLocator.WSDBCLoad.InitializeSpellShapeShiftAsync()
             );
     }
 }

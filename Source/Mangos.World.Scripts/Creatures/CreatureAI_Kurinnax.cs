@@ -103,7 +103,7 @@ public class CreatureAI_Kurinnax : WS_Creatures_AI.BossAI
             }
             catch (Exception)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Mortal Wound failed to cast!");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Mortal Wound failed to cast!");
             }
         }
 

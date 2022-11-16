@@ -54,18 +54,18 @@ public class WS_Totems
         {
             checked
             {
-                var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1;
+                var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs - 1;
                 for (var i = 0; i <= num; i++)
                 {
                     if (ActiveSpells[i] == null)
                     {
                         continue;
                     }
-                    if (ActiveSpells[i].SpellDuration == WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
+                    if (ActiveSpells[i].SpellDuration == WorldServiceLocator.GlobalConstants.SPELL_DURATION_INFINITE)
                     {
                         ActiveSpells[i].SpellDuration = Duration;
                     }
-                    if (ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
+                    if (ActiveSpells[i].SpellDuration != WorldServiceLocator.GlobalConstants.SPELL_DURATION_INFINITE)
                     {
                         ActiveSpells[i].SpellDuration -= 1000;
                         byte k = 0;
@@ -83,7 +83,7 @@ public class WS_Totems
                             k = (byte)unchecked((uint)(k + 1));
                         }
                         while (k <= 2u);
-                        if (ActiveSpells[i] != null && ActiveSpells[i].SpellDuration <= 0 && ActiveSpells[i].SpellDuration != WorldServiceLocator._Global_Constants.SPELL_DURATION_INFINITE)
+                        if (ActiveSpells[i] != null && ActiveSpells[i].SpellDuration <= 0 && ActiveSpells[i].SpellDuration != WorldServiceLocator.GlobalConstants.SPELL_DURATION_INFINITE)
                         {
                             RemoveAura(i, ref ActiveSpells[i].SpellCaster, RemovedByDuration: true);
                         }
@@ -98,7 +98,7 @@ public class WS_Totems
                             {
                                 case WS_PlayerData.CharacterObject _:
                                     {
-                                        var wS_Spells = WorldServiceLocator._WS_Spells;
+                                        var wS_Spells = WorldServiceLocator.WSSpells;
                                         WS_PlayerData.CharacterObject objCharacter = (WS_PlayerData.CharacterObject)Caster;
                                         Targets = wS_Spells.GetPartyMembersAtPoint(ref objCharacter, ActiveSpells[i].Aura_Info[j].GetRadius, positionX, positionY, positionZ);
                                         break;
@@ -106,7 +106,7 @@ public class WS_Totems
 
                                 default:
                                     {
-                                        var wS_Spells2 = WorldServiceLocator._WS_Spells;
+                                        var wS_Spells2 = WorldServiceLocator.WSSpells;
                                         WS_Base.BaseUnit Target = this;
                                         Targets = wS_Spells2.GetFriendAroundMe(ref Target, ActiveSpells[i].Aura_Info[j].GetRadius);
                                         break;
@@ -117,7 +117,7 @@ public class WS_Totems
                                 var Unit = item;
                                 if (!Unit.HaveAura(ActiveSpells[i].SpellID))
                                 {
-                                    var wS_Spells3 = WorldServiceLocator._WS_Spells;
+                                    var wS_Spells3 = WorldServiceLocator.WSSpells;
                                     WS_Base.BaseObject baseObject = this;
                                     wS_Spells3.ApplyAura(ref Unit, ref baseObject, ref ActiveSpells[i].Aura_Info[j], ActiveSpells[i].SpellID);
                                 }

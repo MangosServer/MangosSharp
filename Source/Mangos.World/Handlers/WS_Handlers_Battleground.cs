@@ -34,19 +34,19 @@ public class WS_Handlers_Battleground
         }
         packet.GetInt16();
         var GUID = packet.GetUInt64();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEMASTER_HELLO [{2:X}]", client.IP, client.Port, GUID);
-        if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID) || (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.cNpcFlags & 0x800) == 0 || !WorldServiceLocator._WS_DBCDatabase.Battlemasters.ContainsKey(WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].ID))
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEMASTER_HELLO [{2:X}]", client.IP, client.Port, GUID);
+        if (!WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(GUID) || (WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.cNpcFlags & 0x800) == 0 || !WorldServiceLocator.WSDBCDatabase.Battlemasters.ContainsKey(WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].ID))
         {
             return;
         }
-        var BGType = WorldServiceLocator._WS_DBCDatabase.Battlemasters[WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].ID];
-        if (!WorldServiceLocator._WS_DBCDatabase.Battlegrounds.ContainsKey(BGType))
+        var BGType = WorldServiceLocator.WSDBCDatabase.Battlemasters[WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].ID];
+        if (!WorldServiceLocator.WSDBCDatabase.Battlegrounds.ContainsKey(BGType))
         {
             return;
         }
-        if (WorldServiceLocator._WS_DBCDatabase.Battlegrounds[BGType].MinLevel > (uint)client.Character.Level || WorldServiceLocator._WS_DBCDatabase.Battlegrounds[BGType].MaxLevel < (uint)client.Character.Level)
+        if (WorldServiceLocator.WSDBCDatabase.Battlegrounds[BGType].MinLevel > (uint)client.Character.Level || WorldServiceLocator.WSDBCDatabase.Battlegrounds[BGType].MaxLevel < (uint)client.Character.Level)
         {
-            WorldServiceLocator._Functions.SendMessageNotification(ref client, "You don't meet Battleground level requirements");
+            WorldServiceLocator.Functions.SendMessageNotification(ref client, "You don't meet Battleground level requirements");
             return;
         }
         Packets.PacketClass response = new(Opcodes.SMSG_BATTLEFIELD_LIST);
@@ -55,7 +55,7 @@ public class WS_Handlers_Battleground
             response.AddUInt64(client.Character.GUID);
             response.AddInt32(BGType);
             response.AddInt8(0);
-            var Battlegrounds = WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.BattlefieldList(BGType);
+            var Battlegrounds = WorldServiceLocator.WorldServer.ClsWorldServer.Cluster.BattlefieldList(BGType);
             response.AddInt32(Battlegrounds.Count);
             foreach (var Instance in Battlegrounds)
             {

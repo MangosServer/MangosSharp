@@ -55,14 +55,14 @@ public class WS_Group
             LootMethod = GroupLootMethod.LOOT_GROUP;
             LootThreshold = GroupLootThreshold.Uncommon;
             ID = groupID;
-            WorldServiceLocator._WS_Group.Groups.Add(ID, this);
+            WorldServiceLocator.WSGroup.Groups.Add(ID, this);
         }
 
         private void Dispose(bool disposing)
         {
             if (!_disposedValue)
             {
-                WorldServiceLocator._WS_Group.Groups.Remove(ID);
+                WorldServiceLocator.WSGroup.Groups.Remove(ID);
             }
             _disposedValue = true;
         }
@@ -82,7 +82,7 @@ public class WS_Group
         public void Broadcast(Packets.PacketClass p)
         {
             p.UpdateLength();
-            WorldServiceLocator._WorldServer.ClsWorldServer.Cluster.BroadcastGroup(ID, p.Data);
+            WorldServiceLocator.WorldServer.ClsWorldServer.Cluster.BroadcastGroup(ID, p.Data);
         }
 
         public WS_PlayerData.CharacterObject GetNextLooter()
@@ -93,20 +93,20 @@ public class WS_Group
             {
                 if (nextIsLooter)
                 {
-                    WorldServiceLocator._WS_Group._lastLooter = guid;
+                    WorldServiceLocator.WSGroup._lastLooter = guid;
                     nextLooterFound = true;
                     break;
                 }
-                if (guid == WorldServiceLocator._WS_Group._lastLooter)
+                if (guid == WorldServiceLocator.WSGroup._lastLooter)
                 {
                     nextIsLooter = true;
                 }
             }
             if (!nextLooterFound)
             {
-                WorldServiceLocator._WS_Group._lastLooter = LocalMembers[0];
+                WorldServiceLocator.WSGroup._lastLooter = LocalMembers[0];
             }
-            return WorldServiceLocator._WorldServer.CHARACTERs[WorldServiceLocator._WS_Group._lastLooter];
+            return WorldServiceLocator.WorldServer.CHARACTERs[WorldServiceLocator.WSGroup._lastLooter];
         }
 
         public int GetMembersCount()
@@ -142,7 +142,7 @@ public class WS_Group
         if ((flag & (true ? 1u : 0u)) != 0)
         {
             byte memberFlags = 1;
-            if (objCharacter.isPvP)
+            if (objCharacter.IsPvP)
             {
                 memberFlags = (byte)(memberFlags | 2);
             }
@@ -214,7 +214,7 @@ public class WS_Group
                 var auraMask2 = 0uL;
                 var auraPos2 = packet.Data.Length;
                 packet.AddUInt64(0uL);
-                var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                 for (var j = 0; j <= num; j++)
                 {
                     if (objCharacter.ActiveSpells[j] != null)
@@ -324,7 +324,7 @@ public class WS_Group
                     var auraMask = 0uL;
                     var auraPos = packet.Data.Length;
                     packet.AddUInt64(0uL);
-                    var num2 = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                    var num2 = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                     for (var i = 0; i <= num2; i++)
                     {
                         if (objCharacter.Pet.ActiveSpells[i] != null)

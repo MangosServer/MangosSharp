@@ -61,7 +61,7 @@ public class ScriptedObject : IDisposable
             LoadAssemblyObject(AssemblyFile);
             return;
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.SUCCESS, "Compiling: \\Scripts\\*.*");
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.SUCCESS, "Compiling: \\Scripts\\*.*");
         try
         {
             CSharpCodeProvider CSCP = new();
@@ -70,7 +70,7 @@ public class ScriptedObject : IDisposable
             IEnumerator enumerator = default;
             try
             {
-                enumerator = WorldServiceLocator._ConfigurationProvider.GetConfiguration().CompilerInclude.GetEnumerator();
+                enumerator = WorldServiceLocator.ConfigurationProvider.GetConfiguration().CompilerInclude.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     var include = Conversions.ToString(enumerator.Current);
@@ -100,7 +100,7 @@ public class ScriptedObject : IDisposable
                     while (enumerator2.MoveNext())
                     {
                         CompilerError err = (CompilerError)enumerator2.Current;
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Compiling: Error on line {1} in {3}:{0}{2}", Environment.NewLine, err.Line, err.ErrorText, err.FileName);
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Compiling: Error on line {1} in {3}:{0}{2}", Environment.NewLine, err.Line, err.ErrorText, err.FileName);
                     }
                 }
                 finally
@@ -118,7 +118,7 @@ public class ScriptedObject : IDisposable
         }
         catch (Exception e)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Unable to compile scripts. {1}{0}", e.ToString(), Environment.NewLine);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Unable to compile scripts. {1}{0}", e.ToString(), Environment.NewLine);
         }
     }
 
@@ -130,7 +130,7 @@ public class ScriptedObject : IDisposable
             LoadAssemblyObject(AssemblyFile);
             return;
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.SUCCESS, "Compiling: {0}", AssemblySourceFile);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.SUCCESS, "Compiling: {0}", AssemblySourceFile);
         try
         {
             CSharpCodeProvider CSCP = new();
@@ -143,7 +143,7 @@ public class ScriptedObject : IDisposable
             IEnumerator enumerator = default;
             try
             {
-                enumerator = WorldServiceLocator._ConfigurationProvider.GetConfiguration().CompilerInclude.GetEnumerator();
+                enumerator = WorldServiceLocator.ConfigurationProvider.GetConfiguration().CompilerInclude.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     var Include = Conversions.ToString(enumerator.Current);
@@ -172,7 +172,7 @@ public class ScriptedObject : IDisposable
                 cResults = VBCP.CompileAssemblyFromFile(cParameters, AppDomain.CurrentDomain.BaseDirectory + AssemblySourceFile);
                 goto IL_01b5;
             }
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Compiling: Unsupported file type: {0}", AssemblySourceFile);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Compiling: Unsupported file type: {0}", AssemblySourceFile);
             goto end_IL_0068;
         IL_01b5:
             if (cResults.Errors.HasErrors)
@@ -184,7 +184,7 @@ public class ScriptedObject : IDisposable
                     while (enumerator2.MoveNext())
                     {
                         CompilerError err = (CompilerError)enumerator2.Current;
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Compiling: Error on line {1}:{0}{2}", Environment.NewLine, err.Line, err.ErrorText);
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Compiling: Error on line {1}:{0}{2}", Environment.NewLine, err.Line, err.ErrorText);
                     }
                 }
                 finally
@@ -204,7 +204,7 @@ public class ScriptedObject : IDisposable
         }
         catch (Exception e)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Unable to compile script [{0}]. {2}{1}", AssemblySourceFile, e.ToString(), Environment.NewLine);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Unable to compile script [{0}]. {2}{1}", AssemblySourceFile, e.ToString(), Environment.NewLine);
         }
     }
 
@@ -218,11 +218,11 @@ public class ScriptedObject : IDisposable
         }
         catch (TargetInvocationException e2)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Script execution error:{1}{0}", e2.GetBaseException().ToString(), Environment.NewLine);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Script execution error:{1}{0}", e2.GetBaseException().ToString(), Environment.NewLine);
         }
         catch (Exception ex2)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Script Method [{0}] not found in [Scripts.{1}]!", MyMethod, MyModule, ex2);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Script Method [{0}] not found in [Scripts.{1}]!", MyMethod, MyModule, ex2);
         }
     }
 
@@ -236,11 +236,11 @@ public class ScriptedObject : IDisposable
         }
         catch (NullReferenceException ex)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Scripted Class [{0}] not found in [Scripts]!", MyBaseClass, ex);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Scripted Class [{0}] not found in [Scripts]!", MyBaseClass, ex);
         }
         catch (Exception e)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Script execution error:{1}{0}", e.GetBaseException().ToString(), Environment.NewLine);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Script execution error:{1}{0}", e.GetBaseException().ToString(), Environment.NewLine);
         }
         return null;
     }
@@ -255,11 +255,11 @@ public class ScriptedObject : IDisposable
         }
         catch (NullReferenceException ex)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Scripted Property [{1}] not found in [Scripts.{1}]!", MyModule, MyProperty, ex);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Scripted Property [{1}] not found in [Scripts.{1}]!", MyModule, MyProperty, ex);
         }
         catch (Exception e)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Script execution error:{1}{0}", e.GetBaseException().ToString(), Environment.NewLine);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Script execution error:{1}{0}", e.GetBaseException().ToString(), Environment.NewLine);
         }
         return null;
     }
@@ -274,11 +274,11 @@ public class ScriptedObject : IDisposable
         }
         catch (NullReferenceException ex)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Scripted Field [{1}] not found in [Scripts.{0}]!", MyModule, MyField, ex);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Scripted Field [{1}] not found in [Scripts.{0}]!", MyModule, MyField, ex);
         }
         catch (Exception e)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Script execution error:{1}{0}", e.GetBaseException().ToString(), Environment.NewLine);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Script execution error:{1}{0}", e.GetBaseException().ToString(), Environment.NewLine);
         }
         return null;
     }
@@ -298,15 +298,15 @@ public class ScriptedObject : IDisposable
         }
         catch (FileNotFoundException ex)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DLL not found error:{1}{0}", ex.GetBaseException().ToString(), Environment.NewLine);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "DLL not found error:{1}{0}", ex.GetBaseException().ToString(), Environment.NewLine);
         }
         catch (ArgumentNullException ex2)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DLL NULL error:{1}{0}", ex2.GetBaseException().ToString(), Environment.NewLine);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "DLL NULL error:{1}{0}", ex2.GetBaseException().ToString(), Environment.NewLine);
         }
         catch (BadImageFormatException ex3)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "DLL not a valid assembly error:{1}{0}", ex3.GetBaseException().ToString(), Environment.NewLine);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "DLL not a valid assembly error:{1}{0}", ex3.GetBaseException().ToString(), Environment.NewLine);
         }
     }
 

@@ -75,12 +75,12 @@ public class WS_GameObjects
             ScriptName = "";
             found_ = false;
             ID = ID_;
-            WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.Add(ID, this);
+            WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase.Add(ID, this);
             DataTable MySQLQuery = new();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM gameobject_template WHERE entry = {ID_};", ref MySQLQuery);
+            WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM gameobject_template WHERE entry = {ID_};", ref MySQLQuery);
             if (MySQLQuery.Rows.Count == 0)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "gameobject_template {0} not found in SQL database!", ID_);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "gameobject_template {0} not found in SQL database!", ID_);
                 found_ = false;
                 return;
             }
@@ -107,7 +107,7 @@ public class WS_GameObjects
         {
             if (!_disposedValue)
             {
-                WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.Remove(ID);
+                WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase.Remove(ID);
             }
             _disposedValue = true;
         }
@@ -165,7 +165,7 @@ public class WS_GameObjects
 
         private bool _disposedValue;
 
-        public GameObjectInfo ObjectInfo => WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID];
+        public GameObjectInfo ObjectInfo => WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID];
 
         public string Name => ObjectInfo.Name;
 
@@ -244,7 +244,7 @@ public class WS_GameObjects
             var DynFlags = 0;
             if (Type == GameObjectType.GAMEOBJECT_TYPE_CHEST)
             {
-                var aLLQUESTS = WorldServiceLocator._WorldServer.ALLQUESTS;
+                var aLLQUESTS = WorldServiceLocator.WorldServer.ALLQUESTS;
                 var gameobject = this;
                 var UsedForQuest = aLLQUESTS.IsGameObjectUsedForQuest(ref gameobject, ref Character);
                 if (UsedForQuest > 0)
@@ -290,14 +290,14 @@ public class WS_GameObjects
                 }
                 if (this is WS_Transports.TransportObject)
                 {
-                    WorldServiceLocator._WorldServer.WORLD_TRANSPORTs_Lock.AcquireWriterLock(-1);
-                    WorldServiceLocator._WorldServer.WORLD_TRANSPORTs.Remove(GUID);
-                    WorldServiceLocator._WorldServer.WORLD_TRANSPORTs_Lock.ReleaseWriterLock();
+                    WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.AcquireWriterLock(-1);
+                    WorldServiceLocator.WorldServer.WORLD_TRANSPORTs.Remove(GUID);
+                    WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ReleaseWriterLock();
                     RespawnTimer.Dispose();
                 }
                 else
                 {
-                    WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.Remove(GUID);
+                    WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.Remove(GUID);
                 }
             }
             _disposedValue = true;
@@ -334,16 +334,16 @@ public class WS_GameObjects
             ToDespawn = false;
             IncludesQuestItems = new List<int>();
             RespawnTimer = null;
-            if (!WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID_))
+            if (!WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID_))
             {
                 GameObjectInfo baseGameObject = new(ID_);
             }
             ID = ID_;
-            GUID = WorldServiceLocator._WS_GameObjects.GetNewGUID();
-            Flags = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Flags;
-            Faction = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Faction;
-            Size = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Size;
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.Add(GUID, this);
+            GUID = WorldServiceLocator.WSGameObjects.GetNewGUID();
+            Flags = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Flags;
+            Faction = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Faction;
+            Size = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Size;
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.Add(GUID, this);
         }
 
         public GameObject(int ID_, ulong GUID_)
@@ -365,15 +365,15 @@ public class WS_GameObjects
             ToDespawn = false;
             IncludesQuestItems = new List<int>();
             RespawnTimer = null;
-            if (!WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID_))
+            if (!WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID_))
             {
                 GameObjectInfo baseGameObject = new(ID_);
             }
             ID = ID_;
             GUID = GUID_;
-            Flags = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Flags;
-            Faction = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Faction;
-            Size = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Size;
+            Flags = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Flags;
+            Faction = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Faction;
+            Size = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Size;
         }
 
         public GameObject(int ID_, uint MapID_, float PosX, float PosY, float PosZ, float Rotation, ulong Owner_ = 0uL)
@@ -395,27 +395,27 @@ public class WS_GameObjects
             ToDespawn = false;
             IncludesQuestItems = new List<int>();
             RespawnTimer = null;
-            if (!WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID_))
+            if (!WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID_))
             {
                 GameObjectInfo baseGameObject = new(ID_);
             }
             ID = ID_;
-            GUID = WorldServiceLocator._WS_GameObjects.GetNewGUID();
+            GUID = WorldServiceLocator.WSGameObjects.GetNewGUID();
             MapID = MapID_;
             positionX = PosX;
             positionY = PosY;
             positionZ = PosZ;
             orientation = Rotation;
             Owner = Owner_;
-            Flags = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Flags;
-            Faction = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Faction;
-            Size = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Size;
+            Flags = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Flags;
+            Faction = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Faction;
+            Size = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Size;
             if (Type == GameObjectType.GAMEOBJECT_TYPE_TRANSPORT)
             {
                 VisibleDistance = 99999f;
                 State = GameObjectLootState.DOOR_CLOSED;
             }
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.Add(GUID, this);
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.Add(GUID, this);
         }
 
         public GameObject(ulong cGUID, DataRow Info = null)
@@ -440,10 +440,10 @@ public class WS_GameObjects
             if (Info == null)
             {
                 DataTable MySQLQuery = new();
-                WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM gameobject LEFT OUTER JOIN game_event_gameobject ON gameobject.guid = game_event_gameobject.guid WHERE gameobject.guid = {cGUID};", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM gameobject LEFT OUTER JOIN game_event_gameobject ON gameobject.guid = game_event_gameobject.guid WHERE gameobject.guid = {cGUID};", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count <= 0)
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "GameObject Spawn not found in database. [cGUID={0:X}]", cGUID);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "GameObject Spawn not found in database. [cGUID={0:X}]", cGUID);
                     return;
                 }
                 Info = MySQLQuery.Rows[0];
@@ -461,28 +461,28 @@ public class WS_GameObjects
             AnimProgress = Conversions.ToInteger(Info["animprogress"]);
             SpawnTime = Conversions.ToInteger(Info["spawntimesecs"]);
             State = (GameObjectLootState)Conversions.ToByte(Info["state"]);
-            if (!WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID))
+            if (!WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase.ContainsKey(ID))
             {
                 GameObjectInfo baseGameObject = new(ID);
             }
-            Flags = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Flags;
-            Faction = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Faction;
-            Size = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[ID].Size;
+            Flags = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Flags;
+            Faction = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Faction;
+            Size = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[ID].Size;
             checked
             {
                 if (Type == GameObjectType.GAMEOBJECT_TYPE_TRANSPORT)
                 {
                     VisibleDistance = 99999f;
-                    GUID = cGUID + WorldServiceLocator._Global_Constants.GUID_TRANSPORT;
+                    GUID = cGUID + WorldServiceLocator.GlobalConstants.GUID_TRANSPORT;
                 }
                 else
                 {
-                    GUID = cGUID + WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT;
+                    GUID = cGUID + WorldServiceLocator.GlobalConstants.GUID_GAMEOBJECT;
                 }
-                WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.Add(GUID, this);
-                if (WorldServiceLocator._WS_Loot.LootTable.ContainsKey(GUID))
+                WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.Add(GUID, this);
+                if (WorldServiceLocator.WSLoot.LootTable.ContainsKey(GUID))
                 {
-                    Loot = WorldServiceLocator._WS_Loot.LootTable[GUID];
+                    Loot = WorldServiceLocator.WSLoot.LootTable[GUID];
                 }
                 CalculateMineRemaning(Force: true);
             }
@@ -490,14 +490,14 @@ public class WS_GameObjects
 
         public void AddToWorld()
         {
-            WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
-            if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
+            WorldServiceLocator.WSMaps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+            if (WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY] == null)
             {
-                WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+                WorldServiceLocator.WSCharMovement.MAP_Load(CellX, CellY, MapID);
             }
             try
             {
-                WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].GameObjectsHere.Add(GUID);
+                WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY].GameObjectsHere.Add(GUID);
             }
             catch (Exception projectError)
             {
@@ -517,17 +517,17 @@ public class WS_GameObjects
                     short j = -1;
                     do
                     {
-                        if ((short)unchecked(CellX + i) >= 0 && (short)unchecked(CellX + i) <= 63 && (short)unchecked(CellY + j) >= 0 && (short)unchecked(CellY + j) <= 63 && WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)] != null && WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)].PlayersHere.Count > 0)
+                        if ((short)unchecked(CellX + i) >= 0 && (short)unchecked(CellX + i) <= 63 && (short)unchecked(CellY + j) >= 0 && (short)unchecked(CellY + j) <= 63 && WorldServiceLocator.WSMaps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)] != null && WorldServiceLocator.WSMaps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)].PlayersHere.Count > 0)
                         {
-                            var tMapTile = WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)];
+                            var tMapTile = WorldServiceLocator.WSMaps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)];
                             var list = tMapTile.PlayersHere.ToArray();
                             var array = list;
                             foreach (var plGUID in array)
                             {
                                 int num;
-                                if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID))
+                                if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(plGUID))
                                 {
-                                    var characterObject = WorldServiceLocator._WorldServer.CHARACTERs[plGUID];
+                                    var characterObject = WorldServiceLocator.WorldServer.CHARACTERs[plGUID];
                                     WS_Base.BaseObject objCharacter = this;
                                     num = characterObject.CanSee(ref objCharacter) ? 1 : 0;
                                 }
@@ -540,18 +540,18 @@ public class WS_GameObjects
                                     Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                                     packet.AddInt32(1);
                                     packet.AddInt8(0);
-                                    Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                                    Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_GAMEOBJECT);
                                     Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
                                     ulong key;
-                                    var Character = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = plGUID];
+                                    var Character = (cHARACTERs = WorldServiceLocator.WorldServer.CHARACTERs)[key = plGUID];
                                     FillAllUpdateFlags(ref tmpUpdate, ref Character);
                                     cHARACTERs[key] = Character;
                                     var updateClass = tmpUpdate;
                                     var updateObject = this;
                                     updateClass.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_CREATE_OBJECT, ref updateObject);
                                     tmpUpdate.Dispose();
-                                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].client.SendMultiplyPackets(ref packet);
-                                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].gameObjectsNear.Add(GUID);
+                                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].client.SendMultiplyPackets(ref packet);
+                                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].gameObjectsNear.Add(GUID);
                                     SeenBy.Add(plGUID);
                                     packet.Dispose();
                                 }
@@ -568,21 +568,21 @@ public class WS_GameObjects
 
         public void RemoveFromWorld()
         {
-            if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
+            if (WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY] == null)
             {
                 return;
             }
-            WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
-            WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].GameObjectsHere.Remove(GUID);
+            WorldServiceLocator.WSMaps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+            WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY].GameObjectsHere.Remove(GUID);
             var array = SeenBy.ToArray();
             foreach (var plGUID in array)
             {
-                if (WorldServiceLocator._WorldServer.CHARACTERs[plGUID].gameObjectsNear.Contains(GUID))
+                if (WorldServiceLocator.WorldServer.CHARACTERs[plGUID].gameObjectsNear.Contains(GUID))
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].gameObjectsNear.Remove(GUID);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].gameObjectsNear.Remove(GUID);
                 }
             }
         }
@@ -592,7 +592,7 @@ public class WS_GameObjects
             Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
             packet.AddInt32(1);
             packet.AddInt8(0);
-            Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+            Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_GAMEOBJECT);
             tmpUpdate.SetUpdateFlag(14, 0, (byte)State);
             var updateObject = this;
             tmpUpdate.AddToPacket(ref packet, ObjectUpdateType.UPDATETYPE_VALUES, ref updateObject);
@@ -605,7 +605,7 @@ public class WS_GameObjects
         {
             Flags |= 1;
             State = GameObjectLootState.DOOR_OPEN;
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "AutoCloseTime: {0}", AutoCloseTime);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "AutoCloseTime: {0}", AutoCloseTime);
             if (AutoCloseTime > 0)
             {
                 ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(initialState: false), CloseDoor, null, AutoCloseTime, executeOnlyOnce: true);
@@ -613,7 +613,7 @@ public class WS_GameObjects
             Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
             packet.AddInt32(1);
             packet.AddInt8(0);
-            Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+            Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_GAMEOBJECT);
             tmpUpdate.SetUpdateFlag(9, Flags);
             tmpUpdate.SetUpdateFlag(14, 0, (byte)State);
             var updateObject = this;
@@ -630,7 +630,7 @@ public class WS_GameObjects
             Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
             packet.AddInt32(1);
             packet.AddInt8(0);
-            Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+            Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_GAMEOBJECT);
             tmpUpdate.SetUpdateFlag(9, Flags);
             tmpUpdate.SetUpdateFlag(14, 0, Conversions.ToByte(state));
             var updateObject = this;
@@ -674,14 +674,14 @@ public class WS_GameObjects
                 return false;
             }
             Loot = new WS_Loot.LootObject(GUID, LootType.LOOTTYPE_SKINNING);
-            WorldServiceLocator._WS_Loot.LootTemplates_Gameobject.GetLoot(LootID)?.Process(ref Loot, 0);
+            WorldServiceLocator.WSLoot.LootTemplates_Gameobject.GetLoot(LootID)?.Process(ref Loot, 0);
             Loot.LootOwner = 0uL;
             return true;
         }
 
         public void SetupFishingNode()
         {
-            var RandomTime = WorldServiceLocator._WorldServer.Rnd.Next(3000, 17000);
+            var RandomTime = WorldServiceLocator.WorldServer.Rnd.Next(3000, 17000);
             ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(initialState: false), SetFishHooked, null, RandomTime, executeOnlyOnce: true);
             State = GameObjectLootState.DOOR_CLOSED;
         }
@@ -696,13 +696,13 @@ public class WS_GameObjects
                 {
                     LootOwner = Owner
                 };
-                var AreaFlag = WorldServiceLocator._WS_Maps.GetAreaFlag(positionX, positionY, checked((int)MapID));
-                var AreaID = WorldServiceLocator._WS_Maps.AreaTable[AreaFlag].ID;
-                WorldServiceLocator._WS_Loot.LootTemplates_Fishing.GetLoot(AreaID)?.Process(ref Loot, 0);
+                var AreaFlag = WorldServiceLocator.WSMaps.GetAreaFlag(positionX, positionY, checked((int)MapID));
+                var AreaID = WorldServiceLocator.WSMaps.AreaTable[AreaFlag].ID;
+                WorldServiceLocator.WSLoot.LootTemplates_Fishing.GetLoot(AreaID)?.Process(ref Loot, 0);
                 Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(1);
                 packet.AddInt8(0);
-                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_GAMEOBJECT);
                 tmpUpdate.SetUpdateFlag(9, Flags);
                 tmpUpdate.SetUpdateFlag(14, 0, Conversions.ToByte(state));
                 var updateObject = this;
@@ -730,19 +730,19 @@ public class WS_GameObjects
                     Loot.Dispose();
                     Loot = null;
                 }
-                if (decimal.Compare(new decimal(Owner), 0m) > 0 && WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(Owner) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Owner))
+                if (decimal.Compare(new decimal(Owner), 0m) > 0 && WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(Owner) && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(Owner))
                 {
                     Packets.PacketClass fishEscaped = new(Opcodes.SMSG_FISH_ESCAPED);
-                    WorldServiceLocator._WorldServer.CHARACTERs[Owner].client.Send(ref fishEscaped);
+                    WorldServiceLocator.WorldServer.CHARACTERs[Owner].client.Send(ref fishEscaped);
                     fishEscaped.Dispose();
-                    WorldServiceLocator._WorldServer.CHARACTERs[Owner].FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL, OK: true);
+                    WorldServiceLocator.WorldServer.CHARACTERs[Owner].FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL, OK: true);
                 }
             }
         }
 
         public void CalculateMineRemaning(bool Force = false)
         {
-            if (Type != GameObjectType.GAMEOBJECT_TYPE_CHEST || !WorldServiceLocator._WS_Loot.Locks.ContainsKey(LockID))
+            if (Type != GameObjectType.GAMEOBJECT_TYPE_CHEST || !WorldServiceLocator.WSLoot.Locks.ContainsKey(LockID))
             {
                 return;
             }
@@ -751,11 +751,11 @@ public class WS_GameObjects
             {
                 do
                 {
-                    if (WorldServiceLocator._WS_Loot.Locks[LockID].KeyType[i] is 2 and (3 or 2))
+                    if (WorldServiceLocator.WSLoot.Locks[LockID].KeyType[i] is 2 and (3 or 2))
                     {
                         if (Force || MineRemaining == 0)
                         {
-                            MineRemaining = WorldServiceLocator._WorldServer.Rnd.Next((int)GetSound(4), (int)(GetSound(5) + 1L));
+                            MineRemaining = WorldServiceLocator.WorldServer.Rnd.Next((int)GetSound(4), (int)(GetSound(5) + 1L));
                         }
                         break;
                     }
@@ -775,7 +775,7 @@ public class WS_GameObjects
 
         public void Respawn(object state)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Gameobject {0:X} respawning.", GUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Gameobject {0:X} respawning.", GUID);
             if (RespawnTimer != null)
             {
                 RespawnTimer.Dispose();
@@ -791,7 +791,7 @@ public class WS_GameObjects
         {
             if (Delay == 0)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Gameobject {0:X} despawning.", GUID);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Gameobject {0:X} despawning.", GUID);
                 Packets.PacketClass packet = new(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
                 packet.AddUInt64(GUID);
                 SendToNearPlayers(ref packet);
@@ -819,14 +819,14 @@ public class WS_GameObjects
                 RespawnTimer = null;
                 Despawned = false;
             }
-            if (CreatedBySpell > 0 && decimal.Compare(new decimal(Owner), 0m) > 0 && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Owner) && WorldServiceLocator._WorldServer.CHARACTERs[Owner].gameObjects.Contains(this))
+            if (CreatedBySpell > 0 && decimal.Compare(new decimal(Owner), 0m) > 0 && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(Owner) && WorldServiceLocator.WorldServer.CHARACTERs[Owner].gameObjects.Contains(this))
             {
-                WorldServiceLocator._WorldServer.CHARACTERs[Owner].gameObjects.Remove(this);
+                WorldServiceLocator.WorldServer.CHARACTERs[Owner].gameObjects.Remove(this);
             }
             if (ToDespawn)
             {
                 ToDespawn = false;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Gameobject {0:X} despawning.", GUID);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Gameobject {0:X} despawning.", GUID);
                 Packets.PacketClass despawnPacket = new(Opcodes.SMSG_GAMEOBJECT_DESPAWN_ANIM);
                 despawnPacket.AddUInt64(GUID);
                 SendToNearPlayers(ref despawnPacket);
@@ -846,7 +846,7 @@ public class WS_GameObjects
 
         public void TurnTo(float x, float y)
         {
-            orientation = WorldServiceLocator._WS_Combat.GetOrientation(positionX, x, positionY, y);
+            orientation = WorldServiceLocator.WSCombat.GetOrientation(positionX, x, positionY, y);
             Rotations[2] = (float)Math.Sin(orientation / 2f);
             Rotations[3] = (float)Math.Cos(orientation / 2f);
             if (SeenBy.Count > 0)
@@ -854,7 +854,7 @@ public class WS_GameObjects
                 Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
                 packet.AddInt32(2);
                 packet.AddInt8(0);
-                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_GAMEOBJECT);
+                Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_GAMEOBJECT);
                 tmpUpdate.SetUpdateFlag(18, orientation);
                 tmpUpdate.SetUpdateFlag(10, Rotations[0]);
                 tmpUpdate.SetUpdateFlag(11, Rotations[1]);
@@ -872,9 +872,9 @@ public class WS_GameObjects
     [MethodImpl(MethodImplOptions.Synchronized)]
     private ulong GetNewGUID()
     {
-        ref var gameObjectsGUIDCounter = ref WorldServiceLocator._WorldServer.GameObjectsGUIDCounter;
+        ref var gameObjectsGUIDCounter = ref WorldServiceLocator.WorldServer.GameObjectsGUIDCounter;
         gameObjectsGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(gameObjectsGUIDCounter), 1m));
-        return WorldServiceLocator._WorldServer.GameObjectsGUIDCounter;
+        return WorldServiceLocator.WorldServer.GameObjectsGUIDCounter;
     }
 
     public GameObject GetClosestGameobject(ref WS_Base.BaseUnit unit, int GameObjectEntry = 0)
@@ -886,13 +886,13 @@ public class WS_GameObjects
             var array = @object.gameObjectsNear.ToArray();
             foreach (var GUID2 in array)
             {
-                if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID2) && (GameObjectEntry == 0 || WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2].ID == GameObjectEntry))
+                if (WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID2) && (GameObjectEntry == 0 || WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID2].ID == GameObjectEntry))
                 {
-                    var tmpDistance = WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2], unit);
+                    var tmpDistance = WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID2], unit);
                     if (tmpDistance < minDistance)
                     {
                         minDistance = tmpDistance;
-                        targetGameobject = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2];
+                        targetGameobject = WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID2];
                     }
                 }
             }
@@ -900,7 +900,7 @@ public class WS_GameObjects
         }
         byte cellX = default;
         byte cellY = default;
-        WorldServiceLocator._WS_Maps.GetMapTile(unit.positionX, unit.positionY, ref cellX, ref cellY);
+        WorldServiceLocator.WSMaps.GetMapTile(unit.positionX, unit.positionY, ref cellX, ref cellY);
         var x = -1;
         checked
         {
@@ -909,19 +909,19 @@ public class WS_GameObjects
                 var y = -1;
                 do
                 {
-                    if (x + cellX > -1 && x + cellX < 64 && y + cellY > -1 && y + cellY < 64 && WorldServiceLocator._WS_Maps.Maps[unit.MapID].Tiles[x + cellX, y + cellY] != null)
+                    if (x + cellX > -1 && x + cellX < 64 && y + cellY > -1 && y + cellY < 64 && WorldServiceLocator.WSMaps.Maps[unit.MapID].Tiles[x + cellX, y + cellY] != null)
                     {
-                        var gameobjects = WorldServiceLocator._WS_Maps.Maps[unit.MapID].Tiles[x + cellX, y + cellY].GameObjectsHere.ToArray();
+                        var gameobjects = WorldServiceLocator.WSMaps.Maps[unit.MapID].Tiles[x + cellX, y + cellY].GameObjectsHere.ToArray();
                         var array2 = gameobjects;
                         foreach (var GUID in array2)
                         {
-                            if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID) && (GameObjectEntry == 0 || WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].ID == GameObjectEntry))
+                            if (WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GUID) && (GameObjectEntry == 0 || WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID].ID == GameObjectEntry))
                             {
-                                var tmpDistance = WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID], unit);
+                                var tmpDistance = WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID], unit);
                                 if (tmpDistance < minDistance)
                                 {
                                     minDistance = tmpDistance;
-                                    targetGameobject = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID];
+                                    targetGameobject = WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID];
                                 }
                             }
                         }
@@ -950,15 +950,15 @@ public class WS_GameObjects
             var GameObjectGUID = packet.GetUInt64();
             try
             {
-                if (!WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(GameObjectID))
+                if (!WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase.ContainsKey(GameObjectID))
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GAMEOBJECT_QUERY [GameObject {2} not loaded.]", client.IP, client.Port, GameObjectID);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GAMEOBJECT_QUERY [GameObject {2} not loaded.]", client.IP, client.Port, GameObjectID);
                     response.AddUInt32((uint)(GameObjectID | int.MinValue));
                     client.Send(ref response);
                     response.Dispose();
                     return;
                 }
-                var GameObject = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[GameObjectID];
+                var GameObject = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[GameObjectID];
                 response.AddInt32(GameObject.ID);
                 response.AddInt32((int)GameObject.Type);
                 response.AddInt32(GameObject.Model);
@@ -979,7 +979,7 @@ public class WS_GameObjects
             catch (Exception ex)
             {
                 ProjectData.SetProjectError(ex);
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Unknown Error: Unable to find GameObjectID={0} in database.", GameObjectID);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Unknown Error: Unable to find GameObjectID={0} in database.", GameObjectID);
                 ProjectData.ClearProjectError();
             }
         }
@@ -995,22 +995,22 @@ public class WS_GameObjects
             }
             packet.GetInt16();
             var GameObjectGUID = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GAMEOBJ_USE [GUID={2:X}]", client.IP, client.Port, GameObjectGUID);
-            if (!WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GameObjectGUID))
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GAMEOBJ_USE [GUID={2:X}]", client.IP, client.Port, GameObjectGUID);
+            if (!WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(GameObjectGUID))
             {
                 return;
             }
-            var GO = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID];
+            var GO = WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID];
             client.Character.RemoveAurasByInterruptFlag(2048);
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "GameObjectType: {0}", WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].Type);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "GameObjectType: {0}", WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].Type);
             var type = GO.Type;
             switch (type)
             {
                 case GameObjectType.GAMEOBJECT_TYPE_QUESTGIVER:
                     if (type == GameObjectType.GAMEOBJECT_TYPE_QUESTGIVER)
                     {
-                        var qm = WorldServiceLocator._WorldServer.ALLQUESTS.GetQuestMenuGO(ref client.Character, GameObjectGUID);
-                        WorldServiceLocator._WorldServer.ALLQUESTS.SendQuestMenu(ref client.Character, GameObjectGUID, "Available quests", qm);
+                        var qm = WorldServiceLocator.WorldServer.ALLQUESTS.GetQuestMenuGO(ref client.Character, GameObjectGUID);
+                        WorldServiceLocator.WorldServer.ALLQUESTS.SendQuestMenu(ref client.Character, GameObjectGUID, "Available quests", qm);
                     }
                     break;
 
@@ -1024,7 +1024,7 @@ public class WS_GameObjects
                         Packets.PacketClass StandState = new(Opcodes.CMSG_STANDSTATECHANGE);
                         try
                         {
-                            StandState.AddInt8((byte)(4L + WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound(1)));
+                            StandState.AddInt8((byte)(4L + WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound(1)));
                             client.Character.Teleport(GO.positionX, GO.positionY, GO.positionZ, GO.orientation, (int)GO.MapID);
                             client.Send(ref StandState);
                         }
@@ -1053,38 +1053,38 @@ public class WS_GameObjects
                         break;
                     }
                 case GameObjectType.GAMEOBJECT_TYPE_RITUAL:
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Clicked a ritual.");
-                    if ((GO.Owner == client.Character.GUID || client.Character.IsInGroup) && (GO.Owner == client.Character.GUID || (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GO.Owner) && WorldServiceLocator._WorldServer.CHARACTERs[GO.Owner].IsInGroup && WorldServiceLocator._WorldServer.CHARACTERs[GO.Owner].Group == client.Character.Group)))
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Clicked a ritual.");
+                    if ((GO.Owner == client.Character.GUID || client.Character.IsInGroup) && (GO.Owner == client.Character.GUID || (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(GO.Owner) && WorldServiceLocator.WorldServer.CHARACTERs[GO.Owner].IsInGroup && WorldServiceLocator.WorldServer.CHARACTERs[GO.Owner].Group == client.Character.Group)))
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Casting ritual spell.");
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Casting ritual spell.");
                         client.Character.CastOnSelf((int)GO.GetSound(1));
                     }
                     break;
 
                 case GameObjectType.GAMEOBJECT_TYPE_SPELLCASTER:
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Clicked a spellcaster.");
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Clicked a spellcaster.");
                     GO.Flags = 2;
                     if (GO.GetSound(2) != 0)
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Spellcaster requires same group.");
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Owner: {0:X}  You: {1:X}", WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].Owner, client.Character.GUID);
-                        if ((GO.Owner != client.Character.GUID && !client.Character.IsInGroup) || (GO.Owner != client.Character.GUID && (!WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GO.Owner) || !WorldServiceLocator._WorldServer.CHARACTERs[GO.Owner].IsInGroup || WorldServiceLocator._WorldServer.CHARACTERs[GO.Owner].Group != client.Character.Group)))
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Spellcaster requires same group.");
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Owner: {0:X}  You: {1:X}", WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].Owner, client.Character.GUID);
+                        if ((GO.Owner != client.Character.GUID && !client.Character.IsInGroup) || (GO.Owner != client.Character.GUID && (!WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(GO.Owner) || !WorldServiceLocator.WorldServer.CHARACTERs[GO.Owner].IsInGroup || WorldServiceLocator.WorldServer.CHARACTERs[GO.Owner].Group != client.Character.Group)))
                         {
                             break;
                         }
                     }
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Casted spellcaster spell.");
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Casted spellcaster spell.");
                     client.Character.CastOnSelf((int)GO.GetSound(0));
                     break;
 
                 case GameObjectType.GAMEOBJECT_TYPE_MEETINGSTONE:
                     if (client.Character.Level < GO.GetSound(0))
                     {
-                        WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_LEVEL_REQUIREMENT, ref client, 23598);
+                        WorldServiceLocator.WSSpells.SendCastResult(SpellFailedReason.SPELL_FAILED_LEVEL_REQUIREMENT, ref client, 23598);
                     }
-                    else if (client.Character.Level > WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound(1))
+                    else if (client.Character.Level > WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GameObjectGUID].GetSound(1))
                     {
-                        WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_LEVEL_REQUIREMENT, ref client, 23598);
+                        WorldServiceLocator.WSSpells.SendCastResult(SpellFailedReason.SPELL_FAILED_LEVEL_REQUIREMENT, ref client, 23598);
                     }
                     else
                     {
@@ -1109,15 +1109,15 @@ public class WS_GameObjects
                     }
                     else
                     {
-                        var AreaFlag = WorldServiceLocator._WS_Maps.GetAreaFlag(GO.positionX, GO.positionY, (int)GO.MapID);
-                        var AreaID = WorldServiceLocator._WS_Maps.AreaTable[AreaFlag].ID;
+                        var AreaFlag = WorldServiceLocator.WSMaps.GetAreaFlag(GO.positionX, GO.positionY, (int)GO.MapID);
+                        var AreaID = WorldServiceLocator.WSMaps.AreaTable[AreaFlag].ID;
                         DataTable MySQLQuery = new();
-                        WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM skill_fishing_base_level WHERE entry = {AreaID};", ref MySQLQuery);
+                        WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM skill_fishing_base_level WHERE entry = {AreaID};", ref MySQLQuery);
                         if (MySQLQuery.Rows.Count == 0)
                         {
-                            AreaID = WorldServiceLocator._WS_Maps.AreaTable[AreaFlag].Zone;
+                            AreaID = WorldServiceLocator.WSMaps.AreaTable[AreaFlag].Zone;
                             MySQLQuery.Clear();
-                            WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM skill_fishing_base_level WHERE entry = {AreaID};", ref MySQLQuery);
+                            WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM skill_fishing_base_level WHERE entry = {AreaID};", ref MySQLQuery);
                         }
                         var zoneSkill = 0;
                         if (MySQLQuery.Rows.Count > 0)
@@ -1126,11 +1126,11 @@ public class WS_GameObjects
                         }
                         else
                         {
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "No fishing entry in 'skill_fishing_base_level' for area [{0}] in zone [{1}]", WorldServiceLocator._WS_Maps.AreaTable[AreaFlag].ID, WorldServiceLocator._WS_Maps.AreaTable[AreaFlag].Zone);
+                            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "No fishing entry in 'skill_fishing_base_level' for area [{0}] in zone [{1}]", WorldServiceLocator.WSMaps.AreaTable[AreaFlag].ID, WorldServiceLocator.WSMaps.AreaTable[AreaFlag].Zone);
                         }
                         int skill = client.Character.Skills[356].CurrentWithBonus;
                         var chance = skill - zoneSkill + 5;
-                        var roll = WorldServiceLocator._WorldServer.Rnd.Next(1, 101);
+                        var roll = WorldServiceLocator.WorldServer.Rnd.Next(1, 101);
                         if (skill > zoneSkill && roll >= chance)
                         {
                             GO.State = GameObjectLootState.DOOR_CLOSED;

@@ -297,7 +297,7 @@ public class WS_Player_Initializator
             }
             foreach (var Skill in objCharacter.Skills)
             {
-                if (WorldServiceLocator._WS_DBCDatabase.SkillLines[Skill.Key] == 6)
+                if (WorldServiceLocator.WSDBCDatabase.SkillLines[Skill.Key] == 6)
                 {
                     Skill.Value.Base += 5;
                 }
@@ -328,7 +328,7 @@ public class WS_Player_Initializator
             };
             checked
             {
-                foreach (var tmpFactionInfo in WorldServiceLocator._WS_DBCDatabase.FactionInfo)
+                foreach (var tmpFactionInfo in WorldServiceLocator.WSDBCDatabase.FactionInfo)
                 {
                     if (tmpFactionInfo.Value.VisibleID != i)
                     {
@@ -337,7 +337,7 @@ public class WS_Player_Initializator
                     byte j = 0;
                     do
                     {
-                        if (WorldServiceLocator._Functions.HaveFlag((uint)tmpFactionInfo.Value.flags[j], (byte)((int)objCharacter.Race - 1)))
+                        if (WorldServiceLocator.Functions.HaveFlag((uint)tmpFactionInfo.Value.flags[j], (byte)((int)objCharacter.Race - 1)))
                         {
                             objCharacter.Reputation[i].Flags = tmpFactionInfo.Value.rep_flags[j];
                             objCharacter.Reputation[i].Value = tmpFactionInfo.Value.rep_stats[j];

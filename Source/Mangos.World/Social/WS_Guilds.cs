@@ -34,10 +34,10 @@ public class WS_Guilds
 {
     public void SendPetitionActivate(ref WS_PlayerData.CharacterObject objCharacter, ulong cGUID)
     {
-        if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID))
+        if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(cGUID))
         {
             byte Count = 3;
-            if (((uint)WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].CreatureInfo.cNpcFlags & 4u) != 0)
+            if (((uint)WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID].CreatureInfo.cNpcFlags & 4u) != 0)
             {
                 Count = 1;
             }
@@ -47,9 +47,9 @@ public class WS_Guilds
             if (Count == 1)
             {
                 packet.AddInt32(1);
-                packet.AddInt32(WorldServiceLocator._Global_Constants.PETITION_GUILD);
+                packet.AddInt32(WorldServiceLocator.GlobalConstants.PETITION_GUILD);
                 packet.AddInt32(16161);
-                packet.AddInt32(WorldServiceLocator._Global_Constants.PETITION_GUILD_PRICE);
+                packet.AddInt32(WorldServiceLocator.GlobalConstants.PETITION_GUILD_PRICE);
                 packet.AddInt32(0);
                 packet.AddInt32(9);
             }
@@ -64,7 +64,7 @@ public class WS_Guilds
         {
             packet.GetInt16();
             var GUID = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_SHOWLIST [GUID={2:X}]", client.IP, client.Port, GUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_SHOWLIST [GUID={2:X}]", client.IP, client.Port, GUID);
             SendPetitionActivate(ref client.Character, GUID);
         }
     }
@@ -95,29 +95,29 @@ public class WS_Guilds
             packet.GetInt8();
             var Index = packet.GetInt32();
             packet.GetInt32();
-            if (!WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID) || (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.cNpcFlags & 0x200) == 0)
+            if (!WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(GUID) || (WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].CreatureInfo.cNpcFlags & 0x200) == 0)
             {
                 return;
             }
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_BUY [GuildName={2}]", client.IP, client.Port, Name);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_BUY [GuildName={2}]", client.IP, client.Port, Name);
             if ((ulong)client.Character.GuildID != 0)
             {
                 return;
             }
-            var CharterID = WorldServiceLocator._Global_Constants.PETITION_GUILD;
-            var CharterPrice = WorldServiceLocator._Global_Constants.PETITION_GUILD_PRICE;
+            var CharterID = WorldServiceLocator.GlobalConstants.PETITION_GUILD;
+            var CharterPrice = WorldServiceLocator.GlobalConstants.PETITION_GUILD_PRICE;
             DataTable q = new();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT guild_id FROM guilds WHERE guild_name = '{Name}'", ref q);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT guild_id FROM guilds WHERE guild_name = '{Name}'", ref q);
             if (q.Rows.Count > 0)
             {
                 SendGuildResult(ref client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_NAME_EXISTS, Name);
             }
             q.Clear();
-            if (!WorldServiceLocator._Functions.ValidateGuildName(Name))
+            if (!WorldServiceLocator.Functions.ValidateGuildName(Name))
             {
                 SendGuildResult(ref client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_NAME_INVALID, Name);
             }
-            if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(CharterID))
+            if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(CharterID))
             {
                 Packets.PacketClass response2 = new(Opcodes.SMSG_BUY_FAILED);
                 response2.AddUInt64(GUID);
@@ -145,10 +145,10 @@ public class WS_Guilds
             {
                 StackCount = 1
             };
-            tmpItem.AddEnchantment((int)(tmpItem.GUID - WorldServiceLocator._Global_Constants.GUID_ITEM), 0);
+            tmpItem.AddEnchantment((int)(tmpItem.GUID - WorldServiceLocator.GlobalConstants.GUID_ITEM), 0);
             if (client.Character.ItemADD(ref tmpItem))
             {
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO petitions (petition_id, petition_itemGuid, petition_owner, petition_name, petition_type, petition_signedMembers) VALUES ({0}, {0}, {1}, '{2}', {3}, 0);", tmpItem.GUID - WorldServiceLocator._Global_Constants.GUID_ITEM, client.Character.GUID - WorldServiceLocator._Global_Constants.GUID_PLAYER, Name, 9));
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO petitions (petition_id, petition_itemGuid, petition_owner, petition_name, petition_type, petition_signedMembers) VALUES ({0}, {0}, {1}, '{2}', {3}, 0);", tmpItem.GUID - WorldServiceLocator.GlobalConstants.GUID_ITEM, client.Character.GUID - WorldServiceLocator.GlobalConstants.GUID_PLAYER, Name, 9));
             }
             else
             {
@@ -162,7 +162,7 @@ public class WS_Guilds
         DataTable MySQLQuery = new();
         checked
         {
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(iGUID - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";", ref MySQLQuery);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query("SELECT * FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(iGUID - WorldServiceLocator.GlobalConstants.GUID_ITEM) + ";", ref MySQLQuery);
             if (MySQLQuery.Rows.Count != 0)
             {
                 Packets.PacketClass response = new(Opcodes.SMSG_PETITION_SHOW_SIGNATURES);
@@ -190,7 +190,7 @@ public class WS_Guilds
         {
             packet.GetInt16();
             var GUID = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_SHOW_SIGNATURES [GUID={2:X}]", client.IP, client.Port, GUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_SHOW_SIGNATURES [GUID={2:X}]", client.IP, client.Port, GUID);
             SendPetitionSignatures(ref client.Character, GUID);
         }
     }
@@ -206,9 +206,9 @@ public class WS_Guilds
             packet.GetInt16();
             var PetitionGUID = packet.GetInt32();
             var itemGuid = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_QUERY [pGUID={3} iGUID={2:X}]", client.IP, client.Port, itemGuid, PetitionGUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_QUERY [pGUID={3} iGUID={2:X}]", client.IP, client.Port, itemGuid, PetitionGUID);
             DataTable MySQLQuery = new();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT * FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";", ref MySQLQuery);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query("SELECT * FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator.GlobalConstants.GUID_ITEM) + ";", ref MySQLQuery);
             if (MySQLQuery.Rows.Count != 0)
             {
                 Packets.PacketClass response = new(Opcodes.SMSG_PETITION_QUERY_RESPONSE);
@@ -260,12 +260,12 @@ public class WS_Guilds
                 packet.GetInt16();
                 var itemGuid = packet.GetUInt64();
                 var NewName = packet.GetString();
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_PETITION_RENAME [NewName={3} GUID={2:X}]", client.IP, client.Port, itemGuid, NewName);
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update("UPDATE petitions SET petition_name = '" + NewName + "' WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_PETITION_RENAME [NewName={3} GUID={2:X}]", client.IP, client.Port, itemGuid, NewName);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update("UPDATE petitions SET petition_name = '" + NewName + "' WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator.GlobalConstants.GUID_ITEM) + ";");
                 Packets.PacketClass response = new(Opcodes.MSG_PETITION_RENAME);
                 response.AddUInt64(itemGuid);
                 response.AddString(NewName);
-                response.AddInt32((int)(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM));
+                response.AddInt32((int)(itemGuid - WorldServiceLocator.GlobalConstants.GUID_ITEM));
                 client.Send(ref response);
                 response.Dispose();
             }
@@ -280,12 +280,12 @@ public class WS_Guilds
             var PetitionType = packet.GetInt32();
             var itemGuid = packet.GetUInt64();
             var GUID = packet.GetUInt64();
-            if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID) && WorldServiceLocator._WorldServer.CHARACTERs[GUID].IsHorde == client.Character.IsHorde)
+            if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(GUID) && WorldServiceLocator.WorldServer.CHARACTERs[GUID].IsHorde == client.Character.IsHorde)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_OFFER_PETITION [GUID={2:X} Petition={3}]", client.IP, client.Port, GUID, itemGuid);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_OFFER_PETITION [GUID={2:X} Petition={3}]", client.IP, client.Port, GUID, itemGuid);
                 Dictionary<ulong, WS_PlayerData.CharacterObject> cHARACTERs;
                 ulong key;
-                var objCharacter = (cHARACTERs = WorldServiceLocator._WorldServer.CHARACTERs)[key = GUID];
+                var objCharacter = (cHARACTERs = WorldServiceLocator.WorldServer.CHARACTERs)[key = GUID];
                 SendPetitionSignatures(ref objCharacter, itemGuid);
                 cHARACTERs[key] = objCharacter;
             }
@@ -303,20 +303,20 @@ public class WS_Guilds
             packet.GetInt16();
             var itemGuid = packet.GetUInt64();
             int Unk = packet.GetInt8();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_SIGN [GUID={2:X} Unk={3}]", client.IP, client.Port, itemGuid, Unk);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PETITION_SIGN [GUID={2:X} Unk={3}]", client.IP, client.Port, itemGuid, Unk);
             DataTable MySQLQuery = new();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT petition_signedMembers, petition_owner FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM) + ";", ref MySQLQuery);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query("SELECT petition_signedMembers, petition_owner FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator.GlobalConstants.GUID_ITEM) + ";", ref MySQLQuery);
             if (MySQLQuery.Rows.Count != 0)
             {
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE petitions SET petition_signedMembers = petition_signedMembers + 1, petition_signedMember", Operators.AddObject(MySQLQuery.Rows[0]["petition_signedMembers"], 1)), " = "), client.Character.GUID), " WHERE petition_itemGuid = "), itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM), ";")));
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE petitions SET petition_signedMembers = petition_signedMembers + 1, petition_signedMember", Operators.AddObject(MySQLQuery.Rows[0]["petition_signedMembers"], 1)), " = "), client.Character.GUID), " WHERE petition_itemGuid = "), itemGuid - WorldServiceLocator.GlobalConstants.GUID_ITEM), ";")));
                 Packets.PacketClass response = new(Opcodes.SMSG_PETITION_SIGN_RESULTS);
                 response.AddUInt64(itemGuid);
                 response.AddUInt64(client.Character.GUID);
                 response.AddInt32(0);
                 client.SendMultiplyPackets(ref response);
-                if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(MySQLQuery.Rows[0].As<ulong>("petition_owner")))
+                if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(MySQLQuery.Rows[0].As<ulong>("petition_owner")))
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[MySQLQuery.Rows[0].As<ulong>("petition_owner")].client.SendMultiplyPackets(ref response);
+                    WorldServiceLocator.WorldServer.CHARACTERs[MySQLQuery.Rows[0].As<ulong>("petition_owner")].client.SendMultiplyPackets(ref response);
                 }
                 response.Dispose();
             }
@@ -331,14 +331,14 @@ public class WS_Guilds
             {
                 packet.GetInt16();
                 var itemGuid = packet.GetUInt64();
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_PETITION_DECLINE [GUID={2:X}]", client.IP, client.Port, itemGuid);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_PETITION_DECLINE [GUID={2:X}]", client.IP, client.Port, itemGuid);
                 DataTable q = new();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT petition_owner FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator._Global_Constants.GUID_ITEM) + " LIMIT 1;", ref q);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Query("SELECT petition_owner FROM petitions WHERE petition_itemGuid = " + Conversions.ToString(itemGuid - WorldServiceLocator.GlobalConstants.GUID_ITEM) + " LIMIT 1;", ref q);
                 Packets.PacketClass response = new(Opcodes.MSG_PETITION_DECLINE);
                 response.AddUInt64(client.Character.GUID);
-                if (q.Rows.Count > 0 && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("petition_owner")))
+                if (q.Rows.Count > 0 && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(q.Rows[0].As<ulong>("petition_owner")))
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[q.Rows[0].As<ulong>("petition_owner")].client.SendMultiplyPackets(ref response);
+                    WorldServiceLocator.WorldServer.CHARACTERs[q.Rows[0].As<ulong>("petition_owner")].client.SendMultiplyPackets(ref response);
                 }
                 response.Dispose();
             }
@@ -351,7 +351,7 @@ public class WS_Guilds
         {
             packet.GetInt16();
             var itemGuid = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TURN_IN_PETITION [GUID={2:X}]", client.IP, client.Port, itemGuid);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TURN_IN_PETITION [GUID={2:X}]", client.IP, client.Port, itemGuid);
             client.Character.ItemREMOVE(itemGuid, Destroy: true, Update: true);
         }
     }
@@ -370,7 +370,7 @@ public class WS_Guilds
         {
             packet.GetInt16();
             var GUID = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_TABARDVENDOR_ACTIVATE [GUID={2}]", client.IP, client.Port, GUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_TABARDVENDOR_ACTIVATE [GUID={2}]", client.IP, client.Port, GUID);
             SendTabardActivate(ref client.Character, GUID);
         }
     }

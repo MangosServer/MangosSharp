@@ -52,7 +52,7 @@ public class WS_DynamicObjects
         {
             if (!_disposedValue)
             {
-                WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs.Remove(GUID);
+                WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs.Remove(GUID);
             }
             _disposedValue = true;
         }
@@ -77,8 +77,8 @@ public class WS_DynamicObjects
             Radius = 0f;
             CastTime = 0;
             Bytes = 1;
-            GUID = WorldServiceLocator._WS_DynamicObjects.GetNewGUID();
-            WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs.Add(GUID, this);
+            GUID = WorldServiceLocator.WSDynamicObjects.GetNewGUID();
+            WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs.Add(GUID, this);
             Caster = Caster_;
             SpellID = SpellID_;
             positionX = PosX;
@@ -89,7 +89,7 @@ public class WS_DynamicObjects
             instance = Caster.instance;
             Duration = Duration_;
             Radius = Radius_;
-            CastTime = WorldServiceLocator._NativeMethods.timeGetTime("");
+            CastTime = WorldServiceLocator.NativeMethods.timeGetTime("");
         }
 
         public void FillAllUpdateFlags(ref Packets.UpdateClass Update)
@@ -109,26 +109,26 @@ public class WS_DynamicObjects
 
         public void AddToWorld()
         {
-            WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
-            if (WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY] == null)
+            WorldServiceLocator.WSMaps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+            if (WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY] == null)
             {
-                WorldServiceLocator._WS_CharMovement.MAP_Load(CellX, CellY, MapID);
+                WorldServiceLocator.WSCharMovement.MAP_Load(CellX, CellY, MapID);
             }
             try
             {
-                WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].DynamicObjectsHere.Add(GUID);
+                WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY].DynamicObjectsHere.Add(GUID);
             }
             catch (Exception projectError)
             {
                 ProjectData.SetProjectError(projectError);
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "AddToWorld failed MapId: {0} Tile XY: {1} {2} GUID: {3}", MapID, CellX, CellY, GUID);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "AddToWorld failed MapId: {0} Tile XY: {1} {2} GUID: {3}", MapID, CellX, CellY, GUID);
                 ProjectData.ClearProjectError();
                 return;
             }
             Packets.PacketClass packet = new(Opcodes.SMSG_UPDATE_OBJECT);
             packet.AddInt32(1);
             packet.AddInt8(0);
-            Packets.UpdateClass tmpUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_DYNAMICOBJECT);
+            Packets.UpdateClass tmpUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_DYNAMICOBJECT);
             FillAllUpdateFlags(ref tmpUpdate);
             var updateClass = tmpUpdate;
             var updateObject = this;
@@ -142,17 +142,17 @@ public class WS_DynamicObjects
                     short j = -1;
                     do
                     {
-                        if ((short)unchecked(CellX + i) >= 0 && (short)unchecked(CellX + i) <= 63 && (short)unchecked(CellY + j) >= 0 && (short)unchecked(CellY + j) <= 63 && WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)] != null && WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)].PlayersHere.Count > 0)
+                        if ((short)unchecked(CellX + i) >= 0 && (short)unchecked(CellX + i) <= 63 && (short)unchecked(CellY + j) >= 0 && (short)unchecked(CellY + j) <= 63 && WorldServiceLocator.WSMaps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)] != null && WorldServiceLocator.WSMaps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)].PlayersHere.Count > 0)
                         {
-                            var tMapTile = WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)];
+                            var tMapTile = WorldServiceLocator.WSMaps.Maps[MapID].Tiles[(short)unchecked(CellX + i), (short)unchecked(CellY + j)];
                             var list = tMapTile.PlayersHere.ToArray();
                             var array = list;
                             foreach (var plGUID in array)
                             {
                                 int num;
-                                if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(plGUID))
+                                if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(plGUID))
                                 {
-                                    var characterObject = WorldServiceLocator._WorldServer.CHARACTERs[plGUID];
+                                    var characterObject = WorldServiceLocator.WorldServer.CHARACTERs[plGUID];
                                     WS_Base.BaseObject objCharacter = this;
                                     num = characterObject.CanSee(ref objCharacter) ? 1 : 0;
                                 }
@@ -162,8 +162,8 @@ public class WS_DynamicObjects
                                 }
                                 if (num != 0)
                                 {
-                                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].client.SendMultiplyPackets(ref packet);
-                                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].dynamicObjectsNear.Add(GUID);
+                                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].client.SendMultiplyPackets(ref packet);
+                                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].dynamicObjectsNear.Add(GUID);
                                     SeenBy.Add(plGUID);
                                 }
                             }
@@ -180,17 +180,17 @@ public class WS_DynamicObjects
 
         public void RemoveFromWorld()
         {
-            WorldServiceLocator._WS_Maps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
-            WorldServiceLocator._WS_Maps.Maps[MapID].Tiles[CellX, CellY].DynamicObjectsHere.Remove(GUID);
+            WorldServiceLocator.WSMaps.GetMapTile(positionX, positionY, ref CellX, ref CellY);
+            WorldServiceLocator.WSMaps.Maps[MapID].Tiles[CellX, CellY].DynamicObjectsHere.Remove(GUID);
             var array = SeenBy.ToArray();
             foreach (var plGUID in array)
             {
-                if (WorldServiceLocator._WorldServer.CHARACTERs[plGUID].dynamicObjectsNear.Contains(GUID))
+                if (WorldServiceLocator.WorldServer.CHARACTERs[plGUID].dynamicObjectsNear.Contains(GUID))
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
-                    WorldServiceLocator._WorldServer.CHARACTERs[plGUID].dynamicObjectsNear.Remove(GUID);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].dynamicObjectsNear.Remove(GUID);
                 }
             }
         }
@@ -228,22 +228,22 @@ public class WS_DynamicObjects
                 var Effect = effect;
                 if (Effect.GetRadius == 0f)
                 {
-                    if (Effect.Amplitude == 0 || checked(WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration - Duration) % Effect.Amplitude == 0)
+                    if (Effect.Amplitude == 0 || checked(WorldServiceLocator.WSSpells.SPELLs[SpellID].GetDuration - Duration) % Effect.Amplitude == 0)
                     {
-                        var obj = WorldServiceLocator._WS_Spells.AURAs[Effect.ApplyAuraIndex];
+                        var obj = WorldServiceLocator.WSSpells.AURAs[Effect.ApplyAuraIndex];
                         ref var caster = ref Caster;
                         WS_Base.BaseObject baseObject = this;
                         obj(ref caster, ref baseObject, ref Effect, SpellID, 1, AuraAction.AURA_UPDATE);
                     }
                     continue;
                 }
-                var Targets = WorldServiceLocator._WS_Spells.GetEnemyAtPoint(ref Caster, positionX, positionY, positionZ, Effect.GetRadius);
+                var Targets = WorldServiceLocator.WSSpells.GetEnemyAtPoint(ref Caster, positionX, positionY, positionZ, Effect.GetRadius);
                 foreach (var item in Targets)
                 {
                     var Target = item;
-                    if (Effect.Amplitude == 0 || checked(WorldServiceLocator._WS_Spells.SPELLs[SpellID].GetDuration - Duration) % Effect.Amplitude == 0)
+                    if (Effect.Amplitude == 0 || checked(WorldServiceLocator.WSSpells.SPELLs[SpellID].GetDuration - Duration) % Effect.Amplitude == 0)
                     {
-                        var obj2 = WorldServiceLocator._WS_Spells.AURAs[Effect.ApplyAuraIndex];
+                        var obj2 = WorldServiceLocator.WSSpells.AURAs[Effect.ApplyAuraIndex];
                         WS_Base.BaseObject baseObject = this;
                         obj2(ref Target, ref baseObject, ref Effect, SpellID, 1, AuraAction.AURA_UPDATE);
                     }
@@ -283,8 +283,8 @@ public class WS_DynamicObjects
 
     private ulong GetNewGUID()
     {
-        ref var dynamicObjectsGUIDCounter = ref WorldServiceLocator._WorldServer.DynamicObjectsGUIDCounter;
+        ref var dynamicObjectsGUIDCounter = ref WorldServiceLocator.WorldServer.DynamicObjectsGUIDCounter;
         dynamicObjectsGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(dynamicObjectsGUIDCounter), 1m));
-        return WorldServiceLocator._WorldServer.DynamicObjectsGUIDCounter;
+        return WorldServiceLocator.WorldServer.DynamicObjectsGUIDCounter;
     }
 }

@@ -44,14 +44,14 @@ public partial class WS_Battlegrounds
         {
             MembersTeam1 = new List<WS_PlayerData.CharacterObject>();
             MembersTeam2 = new List<WS_PlayerData.CharacterObject>();
-            WorldServiceLocator._WS_Battlegrounds.BATTLEFIELDs.Add(ID, this);
+            WorldServiceLocator.WSBattlegrounds.BATTLEFIELDs.Add(ID, this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
             {
-                WorldServiceLocator._WS_Battlegrounds.BATTLEFIELDs.Remove(ID);
+                WorldServiceLocator.WSBattlegrounds.BATTLEFIELDs.Remove(ID);
             }
             _disposedValue = true;
         }

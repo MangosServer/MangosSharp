@@ -73,13 +73,13 @@ public partial class Packets
                     buffer += new string(' ', 16 - (checked(data.Length - start) % 16));
                     buffer = buffer + " |" + Environment.NewLine;
                 }
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, buffer, null);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, buffer, null);
             }
             catch (Exception ex)
             {
                 ProjectData.SetProjectError(ex);
                 var e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error dumping packet: {0}{1}", Environment.NewLine, e.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Error dumping packet: {0}{1}", Environment.NewLine, e.ToString());
                 ProjectData.ClearProjectError();
             }
         }

@@ -51,7 +51,7 @@ public partial class WS_Creatures_AI
             aiTarget = null;
         }
 
-        public override bool IsMoving => checked(WorldServiceLocator._NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer
+        public override bool IsMoving => checked(WorldServiceLocator.NativeMethods.timeGetTime("") - aiCreature.LastMove) < aiTimer
             && (State switch
             {
                 AIState.AI_MOVE_FOR_ATTACK => true,
@@ -153,7 +153,7 @@ public partial class WS_Creatures_AI
                         break;
 
                     case AIState.AI_WANDERING:
-                        if (WorldServiceLocator._WorldServer.Rnd.NextDouble() > 0.20000000298023224)
+                        if (WorldServiceLocator.WorldServer.Rnd.NextDouble() > 0.20000000298023224)
                         {
                             DoMove();
                         }
@@ -221,19 +221,19 @@ public partial class WS_Creatures_AI
                         }
                     }
                     var distance = (!DoRun) ? ((float)(3.0 * aiCreature?.CreatureInfo?.WalkSpeed)) : ((float)(3.0 * aiCreature?.CreatureInfo?.RunSpeed * aiCreature?.SpeedMod));
-                    var angle = (float)(WorldServiceLocator._WorldServer.Rnd.NextDouble() * 6.2831854820251465);
+                    var angle = (float)(WorldServiceLocator.WorldServer.Rnd.NextDouble() * 6.2831854820251465);
                     aiCreature?.SetToRealPosition();
                     aiCreature.orientation = angle;
                     selectedX = (float)(aiCreature?.positionX + (Math.Cos(angle) * distance));
                     selectedY = (float)(aiCreature?.positionY + (Math.Sin(angle) * distance));
-                    selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
+                    selectedZ = WorldServiceLocator.WSMaps.GetZCoord(selectedX, selectedY, aiCreature.positionZ, aiCreature.MapID);
                     MoveTries = (byte)(MoveTries + 1);
                     if (!(Math.Abs(aiCreature.positionZ - selectedZ) > 5f))
                     {
                         ref var reference = ref aiCreature;
                         WS_Base.BaseObject obj = reference;
                         reference = (WS_Creatures.CreatureObject)obj;
-                        var flag = WorldServiceLocator._WS_Maps.IsInLineOfSight(ref obj, selectedX, selectedY, selectedZ + 2f);
+                        var flag = WorldServiceLocator.WSMaps.IsInLineOfSight(ref obj, selectedX, selectedY, selectedZ + 2f);
                         if (flag)
                         {
                             break;

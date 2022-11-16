@@ -87,7 +87,7 @@ public partial class WS_Loot
                 {
                     if (looter.Value == maxRollType)
                     {
-                        var rollValue = (byte)WorldServiceLocator._WorldServer.Rnd.Next(0, 100);
+                        var rollValue = (byte)WorldServiceLocator.WorldServer.Rnd.Next(0, 100);
                         if (rollValue > maxRoll)
                         {
                             maxRoll = rollValue;

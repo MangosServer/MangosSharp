@@ -70,7 +70,7 @@ public partial class WS_Maps
 
     public async Task InitializeMapsAsync()
     {
-        IEnumerator e = WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps.GetEnumerator();
+        IEnumerator e = WorldServiceLocator.ConfigurationProvider.GetConfiguration().Maps.GetEnumerator();
         e.Reset();
         if (e.MoveNext())
         {
@@ -80,23 +80,23 @@ public partial class WS_Maps
                 MapList = Conversions.ToString(Operators.AddObject(MapList, Operators.ConcatenateObject(", ", e.Current)));
             }
         }
-        foreach (var map2 in WorldServiceLocator._ConfigurationProvider.GetConfiguration().Maps)
+        foreach (var map2 in WorldServiceLocator.ConfigurationProvider.GetConfiguration().Maps)
         {
             var id = Conversions.ToUInteger(map2);
             TMap map = new(checked((int)id), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: {0} Maps initialized.", Maps.Count);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: {0} Maps initialized.", Maps.Count);
     }
 
     public float ValidateMapCoord(float coord)
     {
-        if (coord > 32f * WorldServiceLocator._Global_Constants.SIZE)
+        if (coord > 32f * WorldServiceLocator.GlobalConstants.SIZE)
         {
-            coord = 32f * WorldServiceLocator._Global_Constants.SIZE;
+            coord = 32f * WorldServiceLocator.GlobalConstants.SIZE;
         }
-        else if (coord < -32f * WorldServiceLocator._Global_Constants.SIZE)
+        else if (coord < -32f * WorldServiceLocator.GlobalConstants.SIZE)
         {
-            coord = -32f * WorldServiceLocator._Global_Constants.SIZE;
+            coord = -32f * WorldServiceLocator.GlobalConstants.SIZE;
         }
         return coord;
     }
@@ -105,29 +105,29 @@ public partial class WS_Maps
     {
         checked
         {
-            MapTileX = (byte)(32f - (ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE));
-            MapTileY = (byte)(32f - (ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE));
+            MapTileX = (byte)(32f - (ValidateMapCoord(x) / WorldServiceLocator.GlobalConstants.SIZE));
+            MapTileY = (byte)(32f - (ValidateMapCoord(y) / WorldServiceLocator.GlobalConstants.SIZE));
         }
     }
 
     public byte GetMapTileX(float x)
     {
-        return checked((byte)(32f - (ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE)));
+        return checked((byte)(32f - (ValidateMapCoord(x) / WorldServiceLocator.GlobalConstants.SIZE)));
     }
 
     public byte GetMapTileY(float y)
     {
-        return checked((byte)(32f - (ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE)));
+        return checked((byte)(32f - (ValidateMapCoord(y) / WorldServiceLocator.GlobalConstants.SIZE)));
     }
 
     public byte GetSubMapTileX(float x)
     {
-        return checked((byte)(RESOLUTION_ZMAP * (32f - (ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE) - Conversion.Fix(32f - (ValidateMapCoord(x) / WorldServiceLocator._Global_Constants.SIZE)))));
+        return checked((byte)(RESOLUTION_ZMAP * (32f - (ValidateMapCoord(x) / WorldServiceLocator.GlobalConstants.SIZE) - Conversion.Fix(32f - (ValidateMapCoord(x) / WorldServiceLocator.GlobalConstants.SIZE)))));
     }
 
     public byte GetSubMapTileY(float y)
     {
-        return checked((byte)(RESOLUTION_ZMAP * (32f - (ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE) - Conversion.Fix(32f - (ValidateMapCoord(y) / WorldServiceLocator._Global_Constants.SIZE)))));
+        return checked((byte)(RESOLUTION_ZMAP * (32f - (ValidateMapCoord(y) / WorldServiceLocator.GlobalConstants.SIZE) - Conversion.Fix(32f - (ValidateMapCoord(y) / WorldServiceLocator.GlobalConstants.SIZE)))));
     }
 
     public float GetZCoord(float x, float y, uint Map)
@@ -138,16 +138,16 @@ public partial class WS_Maps
             {
                 x = ValidateMapCoord(x);
                 y = ValidateMapCoord(y);
-                var MapTileX = (byte)(32f - (x / WorldServiceLocator._Global_Constants.SIZE));
-                var MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
-                var MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
-                var MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
+                var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
+                var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
+                var MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
+                var MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
                 float xNormalized;
                 float yNormalized;
                 unchecked
                 {
-                    xNormalized = (RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX)) - MapTile_LocalX;
-                    yNormalized = (RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY)) - MapTile_LocalY;
+                    xNormalized = (RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX)) - MapTile_LocalX;
+                    yNormalized = (RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY)) - MapTile_LocalY;
                     if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
                     {
                         return 0f;
@@ -155,21 +155,21 @@ public partial class WS_Maps
                 }
                 try
                 {
-                    var topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), MapTile_LocalY), xNormalized);
-                    var bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(MapTile_LocalY + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), (byte)(MapTile_LocalY + 1)), xNormalized);
-                    return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
+                    var topHeight = WorldServiceLocator.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), MapTile_LocalY), xNormalized);
+                    var bottomHeight = WorldServiceLocator.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(MapTile_LocalY + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), (byte)(MapTile_LocalY + 1)), xNormalized);
+                    return WorldServiceLocator.Functions.MathLerp(topHeight, bottomHeight, yNormalized);
                 }
                 catch (Exception ex)
                 {
                     var GetZCoord = Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY];
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "GetHeight threw an Exception : GetZCoord {0}, {1}", GetZCoord, ex);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "GetHeight threw an Exception : GetZCoord {0}, {1}", GetZCoord, ex);
                     return GetZCoord;
                 }
             }
             catch (Exception ex2)
             {
                 var GetZCoord = 0f;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "GetZCoord threw an Exception : Coord X {0} Coord Y {1} Coord Z {2}, {3}", x, y, GetZCoord, ex2);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "GetZCoord threw an Exception : Coord X {0} Coord Y {1} Coord Z {2}, {3}", x, y, GetZCoord, ex2);
                 return GetZCoord;
             }
         }
@@ -181,10 +181,10 @@ public partial class WS_Maps
         y = ValidateMapCoord(y);
         checked
         {
-            var MapTileX = (byte)(32f - (x / WorldServiceLocator._Global_Constants.SIZE));
-            var MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
-            var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
-            var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_WATER * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
+            var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
+            var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
+            var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_WATER * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
+            var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_WATER * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
             return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
                 ? 0f
                 : Maps[(uint)Map].Tiles[MapTileX, MapTileY].WaterLevel[MapTile_LocalX, MapTile_LocalY];
@@ -197,10 +197,10 @@ public partial class WS_Maps
         y = ValidateMapCoord(y);
         checked
         {
-            var MapTileX = (byte)(32f - (x / WorldServiceLocator._Global_Constants.SIZE));
-            var MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
-            var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
-            var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_TERRAIN * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
+            var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
+            var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
+            var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
+            var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
             return (byte)(Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
                 ? 0
                 : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaTerrain[MapTile_LocalX, MapTile_LocalY]);
@@ -213,10 +213,10 @@ public partial class WS_Maps
         y = ValidateMapCoord(y);
         checked
         {
-            var MapTileX = (byte)(32f - (x / WorldServiceLocator._Global_Constants.SIZE));
-            var MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
-            var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
-            var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator._Global_Constants.RESOLUTION_FLAGS * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
+            var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
+            var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
+            var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
+            var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
             return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
                 ? 0
                 : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaFlag[MapTile_LocalX, MapTile_LocalY];
@@ -237,25 +237,25 @@ public partial class WS_Maps
                 x = ValidateMapCoord(x);
                 y = ValidateMapCoord(y);
                 z = ValidateMapCoord(z);
-                var MapTileX = (byte)(32f - (x / WorldServiceLocator._Global_Constants.SIZE));
-                var MapTileY = (byte)(32f - (y / WorldServiceLocator._Global_Constants.SIZE));
-                var MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX));
-                var MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY));
+                var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
+                var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
+                var MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
+                var MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
                 float xNormalized;
                 float yNormalized;
                 unchecked
                 {
-                    xNormalized = (RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator._Global_Constants.SIZE) - MapTileX)) - MapTile_LocalX;
-                    yNormalized = (RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator._Global_Constants.SIZE) - MapTileY)) - MapTile_LocalY;
+                    xNormalized = (RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX)) - MapTile_LocalX;
+                    yNormalized = (RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY)) - MapTile_LocalY;
                     if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
                     {
                         var VMapHeight2 = GetVMapHeight(Map, x, y, z + 5f);
-                        return VMapHeight2 != WorldServiceLocator._Global_Constants.VMAP_INVALID_HEIGHT_VALUE ? VMapHeight2 : 0f;
+                        return VMapHeight2 != WorldServiceLocator.GlobalConstants.VMAP_INVALID_HEIGHT_VALUE ? VMapHeight2 : 0f;
                     }
                     if (Math.Abs(Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY] - z) >= 2f)
                     {
                         var VMapHeight = GetVMapHeight(Map, x, y, z + 5f);
-                        if (VMapHeight != WorldServiceLocator._Global_Constants.VMAP_INVALID_HEIGHT_VALUE)
+                        if (VMapHeight != WorldServiceLocator.GlobalConstants.VMAP_INVALID_HEIGHT_VALUE)
                         {
                             return VMapHeight;
                         }
@@ -263,20 +263,20 @@ public partial class WS_Maps
                 }
                 try
                 {
-                    var topHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
-                    var bottomHeight = WorldServiceLocator._Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
-                    return WorldServiceLocator._Functions.MathLerp(topHeight, bottomHeight, yNormalized);
+                    var topHeight = WorldServiceLocator.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
+                    var bottomHeight = WorldServiceLocator.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
+                    return WorldServiceLocator.Functions.MathLerp(topHeight, bottomHeight, yNormalized);
                 }
                 catch (Exception ex)
                 {
                     var GetZCoord = Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY];
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "GetZCoord threw an Exception : Coord X {0} Coord Y {1} Coord Z {2}, {3}", x, y, GetZCoord, ex);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "GetZCoord threw an Exception : Coord X {0} Coord Y {1} Coord Z {2}, {3}", x, y, GetZCoord, ex);
                     return GetZCoord;
                 }
             }
             catch (Exception ex2)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, ex2.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, ex2.ToString());
                 var GetZCoord = z;
                 return GetZCoord;
             }
@@ -340,7 +340,7 @@ public partial class WS_Maps
         x = ValidateMapCoord(x);
         y = ValidateMapCoord(y);
         z = ValidateMapCoord(z);
-        return WorldServiceLocator._Global_Constants.VMAP_INVALID_HEIGHT_VALUE;
+        return WorldServiceLocator.GlobalConstants.VMAP_INVALID_HEIGHT_VALUE;
     }
 
     public bool GetObjectHitPos(ref WS_Base.BaseObject obj, ref WS_Base.BaseObject obj2, ref float rx, ref float ry, ref float rz, float pModifyDist)
@@ -377,10 +377,10 @@ public partial class WS_Maps
     {
         checked
         {
-            var MinX = (32 - TileX) * WorldServiceLocator._Global_Constants.SIZE;
-            var MaxX = (32 - (TileX + 1)) * WorldServiceLocator._Global_Constants.SIZE;
-            var MinY = (32 - TileY) * WorldServiceLocator._Global_Constants.SIZE;
-            var MaxY = (32 - (TileY + 1)) * WorldServiceLocator._Global_Constants.SIZE;
+            var MinX = (32 - TileX) * WorldServiceLocator.GlobalConstants.SIZE;
+            var MaxX = (32 - (TileX + 1)) * WorldServiceLocator.GlobalConstants.SIZE;
+            var MinY = (32 - TileY) * WorldServiceLocator.GlobalConstants.SIZE;
+            var MaxY = (32 - (TileY + 1)) * WorldServiceLocator.GlobalConstants.SIZE;
             if (MinX > MaxX)
             {
                 var tmpSng2 = MinX;
@@ -399,7 +399,7 @@ public partial class WS_Maps
                 InstanceGuidAdd = Convert.ToUInt64(decimal.Add(new decimal(1000000L), decimal.Multiply(new decimal(TileInstance - 1L), new decimal(100000L))));
             }
             DataTable MysqlQuery = new();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM creature LEFT OUTER JOIN game_event_creature ON creature.guid = game_event_creature.guid WHERE map={TileMap} AND position_X BETWEEN '{MinX}' AND '{MaxX}' AND position_Y BETWEEN '{MinY}' AND '{MaxY}';", ref MysqlQuery);
+            WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM creature LEFT OUTER JOIN game_event_creature ON creature.guid = game_event_creature.guid WHERE map={TileMap} AND position_X BETWEEN '{MinX}' AND '{MaxX}' AND position_Y BETWEEN '{MinY}' AND '{MaxY}';", ref MysqlQuery);
             IEnumerator enumerator = default;
             try
             {
@@ -407,7 +407,7 @@ public partial class WS_Maps
                 while (enumerator.MoveNext())
                 {
                     DataRow row = (DataRow)enumerator.Current;
-                    if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(Convert.ToUInt64(decimal.Add(decimal.Add(new decimal(row.As<long>("guid")), new decimal(InstanceGuidAdd)), new decimal(WorldServiceLocator._Global_Constants.GUID_UNIT)))))
+                    if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(Convert.ToUInt64(decimal.Add(decimal.Add(new decimal(row.As<long>("guid")), new decimal(InstanceGuidAdd)), new decimal(WorldServiceLocator.GlobalConstants.GUID_UNIT)))))
                     {
                         continue;
                     }
@@ -422,7 +422,7 @@ public partial class WS_Maps
                     }
                     catch (Exception ex4)
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating creature [{0}].{1}{2}", row["id"], Environment.NewLine, ex4.ToString());
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating creature [{0}].{1}{2}", row["id"], Environment.NewLine, ex4.ToString());
                     }
                 }
             }
@@ -434,7 +434,7 @@ public partial class WS_Maps
                 }
             }
             MysqlQuery.Clear();
-            WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM gameobject LEFT OUTER JOIN game_event_gameobject ON gameobject.guid = game_event_gameobject.guid WHERE map={TileMap} AND spawntimesecs>=0 AND position_X BETWEEN '{MinX}' AND '{MaxX}' AND position_Y BETWEEN '{MinY}' AND '{MaxY}';", ref MysqlQuery);
+            WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM gameobject LEFT OUTER JOIN game_event_gameobject ON gameobject.guid = game_event_gameobject.guid WHERE map={TileMap} AND spawntimesecs>=0 AND position_X BETWEEN '{MinX}' AND '{MaxX}' AND position_Y BETWEEN '{MinY}' AND '{MaxY}';", ref MysqlQuery);
             IEnumerator enumerator2 = default;
             try
             {
@@ -442,7 +442,7 @@ public partial class WS_Maps
                 while (enumerator2.MoveNext())
                 {
                     DataRow row = (DataRow)enumerator2.Current;
-                    if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(row.As<ulong>("guid") + InstanceGuidAdd + WorldServiceLocator._Global_Constants.GUID_GAMEOBJECT) || WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(row.As<ulong>("guid") + InstanceGuidAdd + WorldServiceLocator._Global_Constants.GUID_TRANSPORT))
+                    if (WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(row.As<ulong>("guid") + InstanceGuidAdd + WorldServiceLocator.GlobalConstants.GUID_GAMEOBJECT) || WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(row.As<ulong>("guid") + InstanceGuidAdd + WorldServiceLocator.GlobalConstants.GUID_TRANSPORT))
                     {
                         continue;
                     }
@@ -457,7 +457,7 @@ public partial class WS_Maps
                     }
                     catch (Exception ex3)
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating gameobject [{0}].{1}{2}", row["id"], Environment.NewLine, ex3.ToString());
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating gameobject [{0}].{1}{2}", row["id"], Environment.NewLine, ex3.ToString());
                     }
                 }
             }
@@ -469,7 +469,7 @@ public partial class WS_Maps
                 }
             }
             MysqlQuery.Clear();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM corpse WHERE map={0} AND instance={5} AND position_x BETWEEN '{1}' AND '{2}' AND position_y BETWEEN '{3}' AND '{4}';", TileMap, MinX, MaxX, MinY, MaxY, TileInstance), ref MysqlQuery);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query(string.Format("SELECT * FROM corpse WHERE map={0} AND instance={5} AND position_x BETWEEN '{1}' AND '{2}' AND position_y BETWEEN '{3}' AND '{4}';", TileMap, MinX, MaxX, MinY, MaxY, TileInstance), ref MysqlQuery);
             IEnumerator enumerator3 = default;
             try
             {
@@ -477,7 +477,7 @@ public partial class WS_Maps
                 while (enumerator3.MoveNext())
                 {
                     DataRow InfoRow = (DataRow)enumerator3.Current;
-                    if (!WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs.ContainsKey(Conversions.ToULong(InfoRow["guid"]) + WorldServiceLocator._Global_Constants.GUID_CORPSE))
+                    if (!WorldServiceLocator.WorldServer.WORLD_CORPSEOBJECTs.ContainsKey(Conversions.ToULong(InfoRow["guid"]) + WorldServiceLocator.GlobalConstants.GUID_CORPSE))
                     {
                         try
                         {
@@ -491,7 +491,7 @@ public partial class WS_Maps
                         {
                             ProjectData.SetProjectError(ex7);
                             var ex2 = ex7;
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating corpse [{0}].{1}{2}", InfoRow["guid"], Environment.NewLine, ex2.ToString());
+                            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating corpse [{0}].{1}{2}", InfoRow["guid"], Environment.NewLine, ex2.ToString());
                             ProjectData.ClearProjectError();
                         }
                     }
@@ -506,8 +506,8 @@ public partial class WS_Maps
             }
             try
             {
-                WorldServiceLocator._WorldServer.WORLD_TRANSPORTs_Lock.AcquireReaderLock(1000);
-                foreach (var Transport in WorldServiceLocator._WorldServer.WORLD_TRANSPORTs)
+                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.AcquireReaderLock(1000);
+                foreach (var Transport in WorldServiceLocator.WorldServer.WORLD_TRANSPORTs)
                 {
                     try
                     {
@@ -524,7 +524,7 @@ public partial class WS_Maps
                     {
                         ProjectData.SetProjectError(ex8);
                         var ex = ex8;
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating transport [{0}].{1}{2}", Transport.Key - WorldServiceLocator._Global_Constants.GUID_MO_TRANSPORT, Environment.NewLine, ex.ToString());
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error when creating transport [{0}].{1}{2}", Transport.Key - WorldServiceLocator.GlobalConstants.GUID_MO_TRANSPORT, Environment.NewLine, ex.ToString());
                         ProjectData.ClearProjectError();
                     }
                 }
@@ -536,7 +536,7 @@ public partial class WS_Maps
             }
             finally
             {
-                WorldServiceLocator._WorldServer.WORLD_TRANSPORTs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ReleaseReaderLock();
             }
         }
     }
@@ -545,10 +545,10 @@ public partial class WS_Maps
     {
         checked
         {
-            var MinX = (32 - TileX) * WorldServiceLocator._Global_Constants.SIZE;
-            var MaxX = (32 - (TileX + 1)) * WorldServiceLocator._Global_Constants.SIZE;
-            var MinY = (32 - TileY) * WorldServiceLocator._Global_Constants.SIZE;
-            var MaxY = (32 - (TileY + 1)) * WorldServiceLocator._Global_Constants.SIZE;
+            var MinX = (32 - TileX) * WorldServiceLocator.GlobalConstants.SIZE;
+            var MaxX = (32 - (TileX + 1)) * WorldServiceLocator.GlobalConstants.SIZE;
+            var MinY = (32 - TileY) * WorldServiceLocator.GlobalConstants.SIZE;
+            var MaxY = (32 - (TileY + 1)) * WorldServiceLocator.GlobalConstants.SIZE;
             if (MinX > MaxX)
             {
                 var tmpSng2 = MinX;
@@ -563,8 +563,8 @@ public partial class WS_Maps
             }
             try
             {
-                WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                foreach (var Creature in WorldServiceLocator._WorldServer.WORLD_CREATUREs)
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                foreach (var Creature in WorldServiceLocator.WorldServer.WORLD_CREATUREs)
                 {
                     if (Creature.Value.MapID == TileMap && Creature.Value.SpawnX >= MinX && Creature.Value.SpawnX <= MaxX && Creature.Value.SpawnY >= MinY && Creature.Value.SpawnY <= MaxY)
                     {
@@ -576,21 +576,21 @@ public partial class WS_Maps
             {
                 ProjectData.SetProjectError(ex2);
                 var ex = ex2;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, ex.ToString(), null);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, ex.ToString(), null);
                 ProjectData.ClearProjectError();
             }
             finally
             {
-                WorldServiceLocator._WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
             }
-            foreach (var Gameobject in WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs)
+            foreach (var Gameobject in WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs)
             {
                 if (Gameobject.Value.MapID == TileMap && Gameobject.Value.positionX >= MinX && Gameobject.Value.positionX <= MaxX && Gameobject.Value.positionY >= MinY && Gameobject.Value.positionY <= MaxY)
                 {
                     Gameobject.Value.Destroy(Gameobject);
                 }
             }
-            foreach (var Corpseobject in WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs)
+            foreach (var Corpseobject in WorldServiceLocator.WorldServer.WORLD_CORPSEOBJECTs)
             {
                 if (Corpseobject.Value.MapID == TileMap && Corpseobject.Value.positionX >= MinX && Corpseobject.Value.positionX <= MaxX && Corpseobject.Value.positionY >= MinY && Corpseobject.Value.positionY <= MaxY)
                 {
@@ -602,7 +602,7 @@ public partial class WS_Maps
 
     public void SendTransferAborted(ref WS_Network.ClientClass client, int Map, TransferAbortReason Reason)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRANSFER_ABORTED [{2}:{3}]", client.IP, client.Port, Map, Reason);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_TRANSFER_ABORTED [{2}:{3}]", client.IP, client.Port, Map, Reason);
         Packets.PacketClass p = new(Opcodes.SMSG_TRANSFER_ABORTED);
         try
         {

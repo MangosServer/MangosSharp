@@ -45,9 +45,9 @@ public class WS_Mail
                 packet.GetInt16();
                 var GameObjectGUID = packet.GetUInt64();
                 var MailID = packet.GetInt32();
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_RETURN_TO_SENDER [MailID={2}]", client.IP, client.Port, MailID);
-                var MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_mail SET mail_time = {1}, mail_read = 0, mail_receiver = (mail_receiver + mail_sender), mail_sender = (mail_receiver - mail_sender), mail_receiver = (mail_receiver - mail_sender) WHERE mail_id = {0};", MailID, MailTime));
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_RETURN_TO_SENDER [MailID={2}]", client.IP, client.Port, MailID);
+                var MailTime = (int)(WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_mail SET mail_time = {1}, mail_read = 0, mail_receiver = (mail_receiver + mail_sender), mail_sender = (mail_receiver - mail_sender), mail_receiver = (mail_receiver - mail_sender) WHERE mail_id = {0};", MailID, MailTime));
                 Packets.PacketClass response = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                 response.AddInt32(MailID);
                 response.AddInt32(3);
@@ -65,8 +65,8 @@ public class WS_Mail
             packet.GetInt16();
             var GameObjectGUID = packet.GetUInt64();
             var MailID = packet.GetInt32();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_DELETE [MailID={2}]", client.IP, client.Port, MailID);
-            WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM characters_mail WHERE mail_id = {MailID};");
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_DELETE [MailID={2}]", client.IP, client.Port, MailID);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Update($"DELETE FROM characters_mail WHERE mail_id = {MailID};");
             Packets.PacketClass response = new(Opcodes.SMSG_SEND_MAIL_RESULT);
             response.AddInt32(MailID);
             response.AddInt32(4);
@@ -85,18 +85,18 @@ public class WS_Mail
                 packet.GetInt16();
                 var GameObjectGUID = packet.GetUInt64();
                 var MailID = packet.GetInt32();
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_MARK_AS_READ [MailID={2}]", client.IP, client.Port, MailID);
-                var MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 259200L);
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_mail SET mail_read = 1, mail_time = {1} WHERE mail_id = {0} AND mail_read < 2;", MailID, MailTime));
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_MARK_AS_READ [MailID={2}]", client.IP, client.Port, MailID);
+                var MailTime = (int)(WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now) + 259200L);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_mail SET mail_read = 1, mail_time = {1} WHERE mail_id = {0} AND mail_read < 2;", MailID, MailTime));
             }
         }
     }
 
     public void On_MSG_QUERY_NEXT_MAIL_TIME(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_QUERY_NEXT_MAIL_TIME", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_QUERY_NEXT_MAIL_TIME", client.IP, client.Port);
         DataTable MySQLQuery = new();
-        WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT COUNT(*) FROM characters_mail WHERE mail_read = 0 AND mail_receiver = {client.Character.GUID} AND mail_time > {WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)};", ref MySQLQuery);
+        WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT COUNT(*) FROM characters_mail WHERE mail_read = 0 AND mail_receiver = {client.Character.GUID} AND mail_time > {WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now)};", ref MySQLQuery);
         if (Operators.ConditionalCompareObjectGreater(MySQLQuery.Rows[0][0], 0, TextCompare: false))
         {
             Packets.PacketClass response2 = new(Opcodes.MSG_QUERY_NEXT_MAIL_TIME);
@@ -126,22 +126,22 @@ public class WS_Mail
             }
             packet.GetInt16();
             var GameObjectGUID = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GET_MAIL_LIST [GUID={2:X}]", client.IP, client.Port, GameObjectGUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GET_MAIL_LIST [GUID={2:X}]", client.IP, client.Port, GameObjectGUID);
             try
             {
                 DataTable MySQLQuery = new();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_id FROM characters_mail WHERE mail_time < {WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)};", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT mail_id FROM characters_mail WHERE mail_time < {WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now)};", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count > 0)
                 {
                     var b = (byte)(MySQLQuery.Rows.Count - 1);
                     byte j = 0;
                     while (j <= (uint)b)
                     {
-                        WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("DELETE FROM characters_mail WHERE mail_id = {0};", RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[j]["mail_id"])));
+                        WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format("DELETE FROM characters_mail WHERE mail_id = {0};", RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[j]["mail_id"])));
                         j = (byte)unchecked((uint)(j + 1));
                     }
                 }
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_mail WHERE mail_receiver = {client.Character.GUID};", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_mail WHERE mail_receiver = {client.Character.GUID};", ref MySQLQuery);
                 Packets.PacketClass response = new(Opcodes.SMSG_MAIL_LIST_RESULT);
                 response.AddInt8((byte)MySQLQuery.Rows.Count);
                 if (MySQLQuery.Rows.Count > 0)
@@ -174,7 +174,7 @@ public class WS_Mail
                         response.AddInt32(MySQLQuery.Rows[i].As<int>("mail_stationary"));
                         if (decimal.Compare(new decimal(MySQLQuery.Rows[i].As<ulong>("item_guid")), 0m) > 0)
                         {
-                            var tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(MySQLQuery.Rows[i].As<ulong>("item_guid"));
+                            var tmpItem = WorldServiceLocator.WSItems.LoadItemByGUID(MySQLQuery.Rows[i].As<ulong>("item_guid"));
                             response.AddInt32(tmpItem.ItemEntry);
                             if (tmpItem.Enchantments.ContainsKey(0))
                             {
@@ -205,7 +205,7 @@ public class WS_Mail
                         response.AddUInt32(MySQLQuery.Rows[i].As<uint>("mail_money"));
                         response.AddUInt32(MySQLQuery.Rows[i].As<uint>("mail_COD"));
                         response.AddInt32(MySQLQuery.Rows[i].As<int>("mail_read"));
-                        response.AddSingle((float)((MySQLQuery.Rows[i].As<uint>("mail_time") - WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now)) / 86400.0));
+                        response.AddSingle((float)((MySQLQuery.Rows[i].As<uint>("mail_time") - WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now)) / 86400.0));
                         response.AddInt32(0);
                         i = (byte)unchecked((uint)(i + 1));
                     }
@@ -217,7 +217,7 @@ public class WS_Mail
             {
                 ProjectData.SetProjectError(ex);
                 var e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error getting mail list: {0}{1}", Environment.NewLine, e.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Error getting mail list: {0}{1}", Environment.NewLine, e.ToString());
                 ProjectData.ClearProjectError();
             }
         }
@@ -234,11 +234,11 @@ public class WS_Mail
             packet.GetInt16();
             var GameObjectGUID = packet.GetUInt64();
             var MailID = packet.GetInt32();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_TAKE_ITEM [MailID={2}]", client.IP, client.Port, MailID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_TAKE_ITEM [MailID={2}]", client.IP, client.Port, MailID);
             try
             {
                 DataTable MySQLQuery = new();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_cod, mail_sender, item_guid FROM characters_mail WHERE mail_id = {MailID} AND mail_receiver = {client.Character.GUID};", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT mail_cod, mail_sender, item_guid FROM characters_mail WHERE mail_id = {MailID} AND mail_receiver = {client.Character.GUID};", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count == 0)
                 {
                     Packets.PacketClass response4 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
@@ -265,9 +265,9 @@ public class WS_Mail
                 }
                 ref var copper = ref client.Character.Copper;
                 copper = Conversions.ToUInteger(Operators.SubtractObject(copper, MySQLQuery.Rows[0]["mail_cod"]));
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_mail SET mail_cod = 0 WHERE mail_id = {MailID};");
-                var MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO characters_mail (mail_sender, mail_receiver, mail_subject, mail_body, mail_item_guid, mail_money, mail_COD, mail_time, mail_read, mail_type) VALUES \r\n                        ({0},{1},'{2}','{3}',{4},{5},{6},{7},{8},{9});", client.Character.GUID, MySQLQuery.Rows[0]["mail_sender"], "", "", 0, MySQLQuery.Rows[0]["mail_cod"], 0, MailTime, MailReadInfo.COD, 0));
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update($"UPDATE characters_mail SET mail_cod = 0 WHERE mail_id = {MailID};");
+                var MailTime = (int)(WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO characters_mail (mail_sender, mail_receiver, mail_subject, mail_body, mail_item_guid, mail_money, mail_COD, mail_time, mail_read, mail_type) VALUES \r\n                        ({0},{1},'{2}','{3}',{4},{5},{6},{7},{8},{9});", client.Character.GUID, MySQLQuery.Rows[0]["mail_sender"], "", "", 0, MySQLQuery.Rows[0]["mail_cod"], 0, MailTime, MailReadInfo.COD, 0));
             IL_02b9:
                 if (Operators.ConditionalCompareObjectEqual(MySQLQuery.Rows[0]["item_guid"], 0, TextCompare: false))
                 {
@@ -279,13 +279,13 @@ public class WS_Mail
                     response3.Dispose();
                     return;
                 }
-                var tmpItem = WorldServiceLocator._WS_Items.LoadItemByGUID(MySQLQuery.Rows[0].As<ulong>("item_guid"));
+                var tmpItem = WorldServiceLocator.WSItems.LoadItemByGUID(MySQLQuery.Rows[0].As<ulong>("item_guid"));
                 tmpItem.OwnerGUID = client.Character.GUID;
                 tmpItem.Save();
                 if (client.Character.ItemADD(ref tmpItem))
                 {
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Update($"UPDATE characters_mail SET item_guid = 0 WHERE mail_id = {MailID};");
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM mail_items WHERE mail_id = {MailID};");
+                    WorldServiceLocator.WorldServer.CharacterDatabase.Update($"UPDATE characters_mail SET item_guid = 0 WHERE mail_id = {MailID};");
+                    WorldServiceLocator.WorldServer.CharacterDatabase.Update($"DELETE FROM mail_items WHERE mail_id = {MailID};");
                     Packets.PacketClass response2 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
                     response2.AddInt32(MailID);
                     response2.AddInt32(2);
@@ -309,7 +309,7 @@ public class WS_Mail
             {
                 ProjectData.SetProjectError(ex);
                 var e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error getting item from mail: {0}{1}", Environment.NewLine, e.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Error getting item from mail: {0}{1}", Environment.NewLine, e.ToString());
                 ProjectData.ClearProjectError();
             }
         }
@@ -324,9 +324,9 @@ public class WS_Mail
                 packet.GetInt16();
                 var GameObjectGUID = packet.GetUInt64();
                 var MailID = packet.GetInt32();
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_TAKE_MONEY [MailID={2}]", client.IP, client.Port, MailID);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_TAKE_MONEY [MailID={2}]", client.IP, client.Port, MailID);
                 DataTable MySQLQuery = new();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query(string.Format("SELECT mail_money FROM characters_mail WHERE mail_id = {0}; UPDATE characters_mail SET mail_money = 0 WHERE mail_id = {0};", MailID), ref MySQLQuery);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Query(string.Format("SELECT mail_money FROM characters_mail WHERE mail_id = {0}; UPDATE characters_mail SET mail_money = 0 WHERE mail_id = {0};", MailID), ref MySQLQuery);
                 if (client.Character.Copper + Conversions.ToLong(MySQLQuery.Rows[0]["mail_money"]) > uint.MaxValue)
                 {
                     client.Character.Copper = uint.MaxValue;
@@ -354,9 +354,9 @@ public class WS_Mail
         {
             packet.GetInt16();
             var MailID = packet.GetInt32();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ITEM_TEXT_QUERY [MailID={2}]", client.IP, client.Port, MailID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_ITEM_TEXT_QUERY [MailID={2}]", client.IP, client.Port, MailID);
             DataTable MySQLQuery = new();
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_body FROM characters_mail WHERE mail_id = {MailID};", ref MySQLQuery);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT mail_body FROM characters_mail WHERE mail_id = {MailID};", ref MySQLQuery);
             if (MySQLQuery.Rows.Count != 0)
             {
                 Packets.PacketClass response = new(Opcodes.SMSG_ITEM_TEXT_QUERY_RESPONSE);
@@ -375,7 +375,7 @@ public class WS_Mail
             packet.GetInt16();
             var GameObjectGUID = packet.GetUInt64();
             var MailID = packet.GetInt32();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_CREATE_TEXT_ITEM [MailID={2}]", client.IP, client.Port, MailID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MAIL_CREATE_TEXT_ITEM [MailID={2}]", client.IP, client.Port, MailID);
             ItemObject tmpItem = new(889, client.Character.GUID)
             {
                 ItemText = MailID
@@ -429,9 +429,9 @@ public class WS_Mail
             var COD = packet.GetUInt32();
             try
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SEND_MAIL [Receiver={2} Subject={3}]", client.IP, client.Port, Receiver, Subject);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SEND_MAIL [Receiver={2} Subject={3}]", client.IP, client.Port, Receiver, Subject);
                 DataTable MySQLQuery = new();
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query("SELECT char_guid, char_race FROM characters WHERE char_name Like '" + Receiver + "';", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Query("SELECT char_guid, char_race FROM characters WHERE char_name Like '" + Receiver + "';", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count == 0)
                 {
                     Packets.PacketClass response6 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
@@ -443,7 +443,7 @@ public class WS_Mail
                     return;
                 }
                 var ReceiverGUID = MySQLQuery.Rows[0].As<ulong>("char_guid");
-                var ReceiverSide = WorldServiceLocator._Functions.GetCharacterSide(MySQLQuery.Rows[0].As<byte>("char_race"));
+                var ReceiverSide = WorldServiceLocator.Functions.GetCharacterSide(MySQLQuery.Rows[0].As<byte>("char_race"));
                 if (client.Character.GUID == ReceiverGUID)
                 {
                     Packets.PacketClass response5 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
@@ -464,7 +464,7 @@ public class WS_Mail
                     response4.Dispose();
                     return;
                 }
-                WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT mail_id FROM characters_mail WHERE mail_receiver = {ReceiverGUID}", ref MySQLQuery);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT mail_id FROM characters_mail WHERE mail_receiver = {ReceiverGUID}", ref MySQLQuery);
                 if (MySQLQuery.Rows.Count >= 100)
                 {
                     Packets.PacketClass response3 = new(Opcodes.SMSG_SEND_MAIL_RESULT);
@@ -492,8 +492,8 @@ public class WS_Mail
                 ref var copper = ref client.Character.Copper;
                 copper = (uint)(copper - (30L + Money));
                 client.Character.SetUpdateFlag(1176, client.Character.Copper);
-                var MailTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO characters_mail (mail_sender, mail_receiver, mail_type, mail_stationary, mail_subject, mail_body, mail_money, mail_COD, mail_time, mail_read, item_guid) VALUES\r\n                ({0},{1},{2},{3},'{4}','{5}',{6},{7},{8},{9},{10});", client.Character.GUID, ReceiverGUID, 0, 41, Subject.Replace("'", "`"), Body.Replace("'", "`"), Money, COD, MailTime, (byte)0, itemGuid == WorldServiceLocator._Global_Constants.GUID_ITEM));
+                var MailTime = (int)(WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now) + 2592000L);
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format("INSERT INTO characters_mail (mail_sender, mail_receiver, mail_type, mail_stationary, mail_subject, mail_body, mail_money, mail_COD, mail_time, mail_read, item_guid) VALUES\r\n                ({0},{1},{2},{3},'{4}','{5}',{6},{7},{8},{9},{10});", client.Character.GUID, ReceiverGUID, 0, 41, Subject.Replace("'", "`"), Body.Replace("'", "`"), Money, COD, MailTime, (byte)0, itemGuid == WorldServiceLocator.GlobalConstants.GUID_ITEM));
                 if (decimal.Compare(new decimal(itemGuid), 0m) > 0)
                 {
                     client.Character.ItemREMOVE(itemGuid, Destroy: false, Update: true);
@@ -504,21 +504,21 @@ public class WS_Mail
                 sendOK.AddInt32(0);
                 client.Send(ref sendOK);
                 sendOK.Dispose();
-                WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(ReceiverGUID))
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(ReceiverGUID))
                 {
                     Packets.PacketClass response = new(Opcodes.SMSG_RECEIVED_MAIL);
                     response.AddInt32(0);
-                    WorldServiceLocator._WorldServer.CHARACTERs[ReceiverGUID].client.Send(ref response);
+                    WorldServiceLocator.WorldServer.CHARACTERs[ReceiverGUID].client.Send(ref response);
                     response.Dispose();
                 }
-                WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
             }
             catch (Exception ex)
             {
                 ProjectData.SetProjectError(ex);
                 var e = ex;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error sending mail: {0}{1}", Environment.NewLine, e.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Error sending mail: {0}{1}", Environment.NewLine, e.ToString());
                 ProjectData.ClearProjectError();
             }
         }

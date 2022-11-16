@@ -36,8 +36,8 @@ public class WS_Handlers_Instance
     public void InstanceMapUpdate()
     {
         DataTable q = new();
-        var TimeStamp = WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now);
-        WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE expire < {TimeStamp};", ref q);
+        var TimeStamp = WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now);
+        WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE expire < {TimeStamp};", ref q);
         IEnumerator enumerator = default;
         try
         {
@@ -45,7 +45,7 @@ public class WS_Handlers_Instance
             while (enumerator.MoveNext())
             {
                 DataRow row = (DataRow)enumerator.Current;
-                if (WorldServiceLocator._WS_Maps.Maps.ContainsKey(row.As<uint>("map")))
+                if (WorldServiceLocator.WSMaps.Maps.ContainsKey(row.As<uint>("map")))
                 {
                     InstanceMapExpire(row.As<uint>("map"), row.As<uint>("instance"));
                 }
@@ -63,7 +63,7 @@ public class WS_Handlers_Instance
     public uint InstanceMapCreate(uint Map)
     {
         DataTable q = new();
-        WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT MAX(instance) FROM characters_instances WHERE map = {Map};", ref q);
+        WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT MAX(instance) FROM characters_instances WHERE map = {Map};", ref q);
         return q.Rows[0][0] != DBNull.Value ? (uint)(q.Rows[0].As<int>(0) + 1) : 0u;
     }
 
@@ -77,15 +77,15 @@ public class WS_Handlers_Instance
                 short y = 0;
                 do
                 {
-                    if (!WorldServiceLocator._WS_Maps.Maps[Map].TileUsed[x, y] && File.Exists(string.Format("maps\\{0}{1}{2}.map", Strings.Format(Map, "000"), Strings.Format(x, "00"), Strings.Format(y, "00"))))
+                    if (!WorldServiceLocator.WSMaps.Maps[Map].TileUsed[x, y] && File.Exists(string.Format("maps\\{0}{1}{2}.map", Strings.Format(Map, "000"), Strings.Format(x, "00"), Strings.Format(y, "00"))))
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading map [{2}: {0},{1}]...", x, y, Map);
-                        WorldServiceLocator._WS_Maps.Maps[Map].TileUsed[x, y] = true;
-                        WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x, y] = new WS_Maps.TMapTile((byte)x, (byte)y, Map);
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading map [{2}: {0},{1}]...", x, y, Map);
+                        WorldServiceLocator.WSMaps.Maps[Map].TileUsed[x, y] = true;
+                        WorldServiceLocator.WSMaps.Maps[Map].Tiles[x, y] = new WS_Maps.TMapTile((byte)x, (byte)y, Map);
                     }
-                    if (WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x, y] != null)
+                    if (WorldServiceLocator.WSMaps.Maps[Map].Tiles[x, y] != null)
                     {
-                        WorldServiceLocator._WS_Maps.LoadSpawns((byte)x, (byte)y, Map, Instance);
+                        WorldServiceLocator.WSMaps.LoadSpawns((byte)x, (byte)y, Map, Instance);
                     }
                     y = (short)unchecked(y + 1);
                 }
@@ -109,11 +109,11 @@ public class WS_Handlers_Instance
                     short y = 0;
                     do
                     {
-                        if (WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x, y] != null)
+                        if (WorldServiceLocator.WSMaps.Maps[Map].Tiles[x, y] != null)
                         {
-                            foreach (var GUID7 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x, y].PlayersHere.ToArray())
+                            foreach (var GUID7 in WorldServiceLocator.WSMaps.Maps[Map].Tiles[x, y].PlayersHere.ToArray())
                             {
-                                if (WorldServiceLocator._WorldServer.CHARACTERs[GUID7].instance == Instance)
+                                if (WorldServiceLocator.WorldServer.CHARACTERs[GUID7].instance == Instance)
                                 {
                                     empty = false;
                                     break;
@@ -136,42 +136,42 @@ public class WS_Handlers_Instance
                 while (x <= 63);
                 if (empty)
                 {
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM characters_instances WHERE instance = {Instance} AND map = {Map};");
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Update($"DELETE FROM characters_instances_group WHERE instance = {Instance} AND map = {Map};");
+                    WorldServiceLocator.WorldServer.CharacterDatabase.Update($"DELETE FROM characters_instances WHERE instance = {Instance} AND map = {Map};");
+                    WorldServiceLocator.WorldServer.CharacterDatabase.Update($"DELETE FROM characters_instances_group WHERE instance = {Instance} AND map = {Map};");
                     short x3 = 0;
                     do
                     {
                         short y3 = 0;
                         do
                         {
-                            if (WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3] != null)
+                            if (WorldServiceLocator.WSMaps.Maps[Map].Tiles[x3, y3] != null)
                             {
-                                foreach (var GUID3 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].CreaturesHere.ToArray())
+                                foreach (var GUID3 in WorldServiceLocator.WSMaps.Maps[Map].Tiles[x3, y3].CreaturesHere.ToArray())
                                 {
-                                    if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID3].instance == Instance)
+                                    if (WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID3].instance == Instance)
                                     {
-                                        WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID3].Destroy();
+                                        WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID3].Destroy();
                                     }
                                 }
-                                foreach (var GUID4 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].GameObjectsHere.ToArray())
+                                foreach (var GUID4 in WorldServiceLocator.WSMaps.Maps[Map].Tiles[x3, y3].GameObjectsHere.ToArray())
                                 {
-                                    if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID4].instance == Instance)
+                                    if (WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID4].instance == Instance)
                                     {
-                                        WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID4].Destroy(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID4]);
+                                        WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID4].Destroy(WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID4]);
                                     }
                                 }
-                                foreach (var GUID5 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].CorpseObjectsHere.ToArray())
+                                foreach (var GUID5 in WorldServiceLocator.WSMaps.Maps[Map].Tiles[x3, y3].CorpseObjectsHere.ToArray())
                                 {
-                                    if (WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID5].instance == Instance)
+                                    if (WorldServiceLocator.WorldServer.WORLD_CORPSEOBJECTs[GUID5].instance == Instance)
                                     {
-                                        WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID5].Destroy();
+                                        WorldServiceLocator.WorldServer.WORLD_CORPSEOBJECTs[GUID5].Destroy();
                                     }
                                 }
-                                foreach (var GUID6 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x3, y3].DynamicObjectsHere.ToArray())
+                                foreach (var GUID6 in WorldServiceLocator.WSMaps.Maps[Map].Tiles[x3, y3].DynamicObjectsHere.ToArray())
                                 {
-                                    if (WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs[GUID6].instance == Instance)
+                                    if (WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs[GUID6].instance == Instance)
                                     {
-                                        WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs[GUID6].Delete();
+                                        WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs[GUID6].Delete();
                                     }
                                 }
                             }
@@ -183,28 +183,28 @@ public class WS_Handlers_Instance
                     while (x3 <= 63);
                     return;
                 }
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[Map].ResetTime));
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances_group SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[Map].ResetTime));
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator.WSMaps.Maps[Map].ResetTime));
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_instances_group SET expire = {2} WHERE instance = {0} AND map = {1};", Instance, Map, WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator.WSMaps.Maps[Map].ResetTime));
                 short x2 = 0;
                 do
                 {
                     short y2 = 0;
                     do
                     {
-                        if (WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x2, y2] != null)
+                        if (WorldServiceLocator.WSMaps.Maps[Map].Tiles[x2, y2] != null)
                         {
-                            foreach (var GUID in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x2, y2].CreaturesHere.ToArray())
+                            foreach (var GUID in WorldServiceLocator.WSMaps.Maps[Map].Tiles[x2, y2].CreaturesHere.ToArray())
                             {
-                                if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].instance == Instance)
+                                if (WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].instance == Instance)
                                 {
-                                    WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Respawn();
+                                    WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].Respawn();
                                 }
                             }
-                            foreach (var GUID2 in WorldServiceLocator._WS_Maps.Maps[Map].Tiles[x2, y2].GameObjectsHere.ToArray())
+                            foreach (var GUID2 in WorldServiceLocator.WSMaps.Maps[Map].Tiles[x2, y2].GameObjectsHere.ToArray())
                             {
-                                if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2].instance == Instance)
+                                if (WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID2].instance == Instance)
                                 {
-                                    WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2].Respawn(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID2]);
+                                    WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID2].Respawn(WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID2]);
                                 }
                             }
                         }
@@ -217,52 +217,52 @@ public class WS_Handlers_Instance
             }
             catch (Exception ex)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error expiring map instance.{0}{1}", Environment.NewLine, ex.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error expiring map instance.{0}{1}", Environment.NewLine, ex.ToString());
             }
         }
     }
 
     public void InstanceMapEnter(WS_PlayerData.CharacterObject objCharacter)
     {
-        if (WorldServiceLocator._WS_Maps.Maps[objCharacter.MapID].Type == MapTypes.MAP_COMMON)
+        if (WorldServiceLocator.WSMaps.Maps[objCharacter.MapID].Type == MapTypes.MAP_COMMON)
         {
             objCharacter.instance = 0u;
-            objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor("You are not in instance.", 200, 0, byte.MaxValue));
+            objCharacter.SystemMessage(WorldServiceLocator.Functions.SetColor("You are not in instance.", 200, 0, byte.MaxValue));
             return;
         }
         InstanceMapUpdate();
         DataTable q = new();
-        WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE char_guid = {objCharacter.GUID} AND map = {objCharacter.MapID};", ref q);
+        WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE char_guid = {objCharacter.GUID} AND map = {objCharacter.MapID};", ref q);
         if (q.Rows.Count > 0)
         {
             objCharacter.instance = Conversions.ToUInteger(q.Rows[0]["instance"]);
-            objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 0, 200, byte.MaxValue));
-            SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, Conversions.ToInteger(Operators.SubtractObject(q.Rows[0]["expire"], WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))));
+            objCharacter.SystemMessage(WorldServiceLocator.Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 0, 200, byte.MaxValue));
+            SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, Conversions.ToInteger(Operators.SubtractObject(q.Rows[0]["expire"], WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now))));
             return;
         }
         if (objCharacter.IsInGroup)
         {
-            WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances_group WHERE group_id = {objCharacter.Group.ID} AND map = {objCharacter.MapID};", ref q);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances_group WHERE group_id = {objCharacter.Group.ID} AND map = {objCharacter.MapID};", ref q);
             if (q.Rows.Count > 0)
             {
                 objCharacter.instance = Conversions.ToUInteger(q.Rows[0]["instance"]);
-                objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 245, 245, byte.MaxValue));
-                SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, Conversions.ToInteger(Operators.SubtractObject(q.Rows[0]["expire"], WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now))));
+                objCharacter.SystemMessage(WorldServiceLocator.Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 245, 245, byte.MaxValue));
+                SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, Conversions.ToInteger(Operators.SubtractObject(q.Rows[0]["expire"], WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now))));
                 return;
             }
         }
         checked
         {
             var instanceNewID = (int)InstanceMapCreate(objCharacter.MapID);
-            var instanceNewResetTime = (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator._WS_Maps.Maps[objCharacter.MapID].ResetTime);
+            var instanceNewResetTime = (int)(WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now) + WorldServiceLocator.WSMaps.Maps[objCharacter.MapID].ResetTime);
             objCharacter.instance = (uint)instanceNewID;
             if (objCharacter.IsInGroup)
             {
-                WorldServiceLocator._WorldServer.CharacterDatabase.Update($"INSERT INTO characters_instances_group (group_id, map, instance, expire) VALUES ({objCharacter.Group.ID}, {objCharacter.MapID}, {instanceNewID}, {instanceNewResetTime});");
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update($"INSERT INTO characters_instances_group (group_id, map, instance, expire) VALUES ({objCharacter.Group.ID}, {objCharacter.MapID}, {instanceNewID}, {instanceNewResetTime});");
             }
             InstanceMapSpawn(objCharacter.MapID, (uint)instanceNewID);
-            objCharacter.SystemMessage(WorldServiceLocator._Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 245, 245, byte.MaxValue));
-            SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, (int)(WorldServiceLocator._Functions.GetTimestamp(DateAndTime.Now) - instanceNewResetTime));
+            objCharacter.SystemMessage(WorldServiceLocator.Functions.SetColor($"You are in instance #{objCharacter.instance}, map {objCharacter.MapID}", 245, 245, byte.MaxValue));
+            SendInstanceMessage(ref objCharacter.client, objCharacter.MapID, (int)(WorldServiceLocator.Functions.GetTimestamp(DateAndTime.Now) - instanceNewResetTime));
         }
     }
 
@@ -288,18 +288,18 @@ public class WS_Handlers_Instance
 
     private void SendUpdateInstanceOwnership(ref WS_Network.ClientClass client, uint Saved)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_UPDATE_INSTANCE_OWNERSHIP", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_UPDATE_INSTANCE_OWNERSHIP", client.IP, client.Port);
     }
 
     private void SendUpdateLastInstance(ref WS_Network.ClientClass client, uint Map)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_UPDATE_LAST_INSTANCE", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_UPDATE_LAST_INSTANCE", client.IP, client.Port);
     }
 
     public void SendInstanceSaved(WS_PlayerData.CharacterObject Character)
     {
         DataTable q = new();
-        WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE char_guid = {Character.GUID};", ref q);
+        WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT * FROM characters_instances WHERE char_guid = {Character.GUID};", ref q);
         SendUpdateInstanceOwnership(ref Character.client, 0u - ((q.Rows.Count > 0) ? 1u : 0u));
         IEnumerator enumerator = default;
         try

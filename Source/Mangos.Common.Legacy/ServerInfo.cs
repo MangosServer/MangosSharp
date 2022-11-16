@@ -20,6 +20,6 @@ namespace Mangos.Common.Legacy;
 
 public class ServerInfo
 {
-    public float cpuUsage { get; set; }
-    public ulong memoryUsage { get; set; }
+    public float CpuUsage { get; set; }
+    public ulong MemoryUsage { get; set; }
 }

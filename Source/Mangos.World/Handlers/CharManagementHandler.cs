@@ -43,7 +43,7 @@ public class CharManagementHandler
         var actionType = packet.GetInt8();
         if (action == 0)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_SET_ACTION_BUTTON [Remove action from button {2}]", client.IP, client.Port, button);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_SET_ACTION_BUTTON [Remove action from button {2}]", client.IP, client.Port, button);
             client.Character.ActionButtons.Remove(button);
         }
         else
@@ -51,15 +51,15 @@ public class CharManagementHandler
             switch (actionType)
             {
                 case 64:
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTION_BUTTON [Added Macro {2} into button {3}]", client.IP, client.Port, action, button);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTION_BUTTON [Added Macro {2} into button {3}]", client.IP, client.Port, action, button);
                     break;
 
                 case 128:
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTION_BUTTON [Added Item {2} into button {3}]", client.IP, client.Port, action, button);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTION_BUTTON [Added Item {2} into button {3}]", client.IP, client.Port, action, button);
                     break;
 
                 default:
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTION_BUTTON [Added Action {2}:{4}:{5} into button {3}]", client.IP, client.Port, action, button, actionType, actionMisc);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTION_BUTTON [Added Action {2}:{4}:{5} into button {3}]", client.IP, client.Port, action, button, actionType, actionMisc);
                     break;
             }
         }
@@ -68,7 +68,7 @@ public class CharManagementHandler
 
     public void On_CMSG_LOGOUT_REQUEST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOGOUT_REQUEST", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOGOUT_REQUEST", client.IP, client.Port);
         client.Character.Save();
         if (client.Character.IsInCombat)
         {
@@ -85,9 +85,9 @@ public class CharManagementHandler
             }
             return;
         }
-        if (!(client.Character.positionZ <= WorldServiceLocator._WS_Maps.GetZCoord(client.Character.positionX, client.Character.positionY, client.Character.positionZ, client.Character.MapID) + 10f))
+        if (!(client.Character.positionZ <= WorldServiceLocator.WSMaps.GetZCoord(client.Character.positionX, client.Character.positionY, client.Character.positionZ, client.Character.MapID) + 10f))
         {
-            Packets.UpdateClass UpdateData = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+            Packets.UpdateClass UpdateData = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
             Packets.PacketClass SMSG_UPDATE_OBJECT = new(Opcodes.SMSG_UPDATE_OBJECT);
             try
             {
@@ -127,10 +127,10 @@ public class CharManagementHandler
         {
             SMSG_LOGOUT_RESPONSE.Dispose();
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGOUT_RESPONSE", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGOUT_RESPONSE", client.IP, client.Port);
         client.Character.SetMoveRoot();
         client.Character.ZoneCheck();
-        if (client.Character.isResting)
+        if (client.Character.IsResting)
         {
             client.Character.Logout();
         }
@@ -144,13 +144,13 @@ public class CharManagementHandler
     {
         try
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOGOUT_CANCEL", client.IP, client.Port);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOGOUT_CANCEL", client.IP, client.Port);
             if (client != null && client.Character != null && client.Character.LogoutTimer != null)
             {
                 client.Character.LogoutTimer?.Dispose();
                 client.Character.LogoutTimer = null;
 
-                Packets.UpdateClass UpdateData = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                Packets.UpdateClass UpdateData = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
                 Packets.PacketClass SMSG_UPDATE_OBJECT = new(Opcodes.SMSG_UPDATE_OBJECT);
                 try
                 {
@@ -187,13 +187,13 @@ public class CharManagementHandler
                 {
                     SMSG_LOGOUT_CANCEL_ACK.Dispose();
                 }
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGOUT_CANCEL_ACK", client.IP, client.Port);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_LOGOUT_CANCEL_ACK", client.IP, client.Port);
                 client.Character.SetMoveUnroot();
             }
         }
         catch (Exception e)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while trying to cancel logout.{0}", Environment.NewLine + e);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while trying to cancel logout.{0}", Environment.NewLine + e);
         }
     }
 
@@ -220,7 +220,7 @@ public class CharManagementHandler
             {
                 packetACK.Dispose();
             }
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_STANDSTATECHANGE [{2}]", client.IP, client.Port, client.Character.StandState);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_STANDSTATECHANGE [{2}]", client.IP, client.Port, client.Character.StandState);
         }
     }
 
@@ -230,38 +230,38 @@ public class CharManagementHandler
         {
             return InventoryChangeFailure.EQUIP_ERR_YOU_ARE_DEAD;
         }
-        if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(AmmoID))
+        if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(AmmoID))
         {
             return InventoryChangeFailure.EQUIP_ERR_ITEM_NOT_FOUND;
         }
-        if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].InventoryType != INVENTORY_TYPES.INVTYPE_AMMO)
+        if (WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].InventoryType != INVENTORY_TYPES.INVTYPE_AMMO)
         {
             return InventoryChangeFailure.EQUIP_ERR_ONLY_AMMO_CAN_GO_HERE;
         }
-        if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableClasses != 0L && (ulong)(WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableClasses & objCharacter.ClassMask) == 0)
+        if (WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].AvailableClasses != 0L && (ulong)(WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].AvailableClasses & objCharacter.ClassMask) == 0)
         {
             return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
         }
-        if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableRaces != 0L && (ulong)(WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].AvailableRaces & objCharacter.RaceMask) == 0)
+        if (WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].AvailableRaces != 0L && (ulong)(WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].AvailableRaces & objCharacter.RaceMask) == 0)
         {
             return InventoryChangeFailure.EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
         }
-        if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].ReqSkill != 0)
+        if (WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].ReqSkill != 0)
         {
-            if (!objCharacter.HaveSkill(WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].ReqSkill))
+            if (!objCharacter.HaveSkill(WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].ReqSkill))
             {
                 return InventoryChangeFailure.EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
             }
-            if (!objCharacter.HaveSkill(WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].ReqSkill, WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].ReqSkillRank))
+            if (!objCharacter.HaveSkill(WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].ReqSkill, WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].ReqSkillRank))
             {
                 return InventoryChangeFailure.EQUIP_ERR_SKILL_ISNT_HIGH_ENOUGH;
             }
         }
-        if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].ReqSpell != 0 && !objCharacter.HaveSpell(WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].ReqSpell))
+        if (WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].ReqSpell != 0 && !objCharacter.HaveSpell(WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].ReqSpell))
         {
             return InventoryChangeFailure.EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
         }
-        if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].ReqLevel > objCharacter.Level)
+        if (WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].ReqLevel > objCharacter.Level)
         {
             return InventoryChangeFailure.EQUIP_ERR_YOU_MUST_REACH_LEVEL_N;
         }
@@ -270,7 +270,7 @@ public class CharManagementHandler
 
     public bool CheckAmmoCompatibility(ref WS_PlayerData.CharacterObject objCharacter, int AmmoID)
     {
-        if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(AmmoID))
+        if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(AmmoID))
         {
             return false;
         }
@@ -286,14 +286,14 @@ public class CharManagementHandler
         {
             case ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID:
             case ITEM_SUBCLASS.ITEM_SUBCLASS_CROSSBOW:
-                if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].SubClass != ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID)
+                if (WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].SubClass != ITEM_SUBCLASS.ITEM_SUBCLASS_LIQUID)
                 {
                     return false;
                 }
                 break;
 
             case ITEM_SUBCLASS.ITEM_SUBCLASS_POTION:
-                if (WorldServiceLocator._WorldServer.ITEMDatabase[AmmoID].SubClass != ITEM_SUBCLASS.ITEM_SUBCLASS_POTION)
+                if (WorldServiceLocator.WorldServer.ITEMDatabase[AmmoID].SubClass != ITEM_SUBCLASS.ITEM_SUBCLASS_POTION)
                 {
                     return false;
                 }

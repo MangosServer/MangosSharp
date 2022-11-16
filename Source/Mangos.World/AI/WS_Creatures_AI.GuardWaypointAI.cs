@@ -53,33 +53,33 @@ public partial class WS_Creatures_AI
 
         public override void DoMove()
         {
-            var distanceToSpawn = WorldServiceLocator._WS_Combat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
+            var distanceToSpawn = WorldServiceLocator.WSCombat.GetDistance(aiCreature.positionX, aiCreature.SpawnX, aiCreature.positionY, aiCreature.SpawnY, aiCreature.positionZ, aiCreature.SpawnZ);
             checked
             {
                 switch (aiTarget)
                 {
                     case null:
                         {
-                            if (WorldServiceLocator._WS_DBCDatabase.CreatureMovement.ContainsKey(aiCreature.WaypointID))
+                            if (WorldServiceLocator.WSDBCDatabase.CreatureMovement.ContainsKey(aiCreature.WaypointID))
                             {
                                 try
                                 {
                                     CurrentWaypoint++;
-                                    if (!WorldServiceLocator._WS_DBCDatabase.CreatureMovement[aiCreature.WaypointID].ContainsKey(CurrentWaypoint))
+                                    if (!WorldServiceLocator.WSDBCDatabase.CreatureMovement[aiCreature.WaypointID].ContainsKey(CurrentWaypoint))
                                     {
                                         CurrentWaypoint = 1;
                                     }
-                                    var MovementPoint = WorldServiceLocator._WS_DBCDatabase.CreatureMovement[aiCreature.WaypointID][CurrentWaypoint];
+                                    var MovementPoint = WorldServiceLocator.WSDBCDatabase.CreatureMovement[aiCreature.WaypointID][CurrentWaypoint];
                                     aiTimer = aiCreature.MoveTo(MovementPoint.x, MovementPoint.y, MovementPoint.z) + MovementPoint.waittime;
                                 }
                                 catch (Exception ex)
                                 {
-                                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] waypoints are damaged. {1}", aiCreature?.GUID - WorldServiceLocator._Global_Constants.GUID_UNIT, ex.Message);
+                                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] waypoints are damaged. {1}", aiCreature?.GUID - WorldServiceLocator.GlobalConstants.GUID_UNIT, ex.Message);
                                     aiCreature.ResetAI();
                                 }
                                 break;
                             }
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] is missing waypoints.", aiCreature?.GUID - WorldServiceLocator._Global_Constants.GUID_UNIT);
+                            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Creature [{0:X}] is missing waypoints.", aiCreature?.GUID - WorldServiceLocator.GlobalConstants.GUID_UNIT);
                             aiCreature.ResetAI();
                             return;
                         }

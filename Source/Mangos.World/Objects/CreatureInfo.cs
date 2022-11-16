@@ -137,9 +137,9 @@ public class CreatureInfo : IDisposable
 
     public TBaseTalk TalkScript;
 
-    public int Life => WorldServiceLocator._WorldServer.Rnd.Next(MinLife, MaxLife);
+    public int Life => WorldServiceLocator.WorldServer.Rnd.Next(MinLife, MaxLife);
 
-    public int Mana => WorldServiceLocator._WorldServer.Rnd.Next(MinMana, MaxMana);
+    public int Mana => WorldServiceLocator.WorldServer.Rnd.Next(MinMana, MaxMana);
 
     public int GetRandomModel
     {
@@ -169,7 +169,7 @@ public class CreatureInfo : IDisposable
                     modelIDs[current] = ModelH2;
                     current++;
                 }
-                return current == 0 ? 0 : modelIDs[WorldServiceLocator._WorldServer.Rnd.Next(0, current)];
+                return current == 0 ? 0 : modelIDs[WorldServiceLocator.WorldServer.Rnd.Next(0, current)];
             }
         }
     }
@@ -198,12 +198,12 @@ public class CreatureInfo : IDisposable
         : this()
     {
         Id = CreatureID;
-        WorldServiceLocator._WorldServer.CREATURESDatabase.Add(Id, this);
+        WorldServiceLocator.WorldServer.CREATURESDatabase.Add(Id, this);
         DataTable MySQLQuery = new();
-        WorldServiceLocator._WorldServer.WorldDatabase.Query($"SELECT * FROM creature_template LEFT JOIN creature_template_spells ON creature_template.entry = creature_template_spells.`entry` WHERE creature_template.entry = {CreatureID};", ref MySQLQuery);
+        WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM creature_template LEFT JOIN creature_template_spells ON creature_template.entry = creature_template_spells.`entry` WHERE creature_template.entry = {CreatureID};", ref MySQLQuery);
         if (MySQLQuery.Rows.Count == 0)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "CreatureID {0} not found in SQL database.", CreatureID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "CreatureID {0} not found in SQL database.", CreatureID);
             found_ = false;
             return;
         }
@@ -274,9 +274,9 @@ public class CreatureInfo : IDisposable
         Resistances[6] = MySQLQuery.Rows[0].As<int>("ResistanceArcane");
         EquipmentID = MySQLQuery.Rows[0].As<int>("EquipmentTemplateId");
         MechanicImmune = MySQLQuery.Rows[0].As<uint>("SchoolImmuneMask");
-        if (File.Exists("scripts\\gossip\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb"))
+        if (File.Exists("scripts\\gossip\\" + WorldServiceLocator.Functions.FixName(Name) + ".vb"))
         {
-            ScriptedObject tmpScript = new("scripts\\gossip\\" + WorldServiceLocator._Functions.FixName(Name) + ".vb", "", InMemory: true);
+            ScriptedObject tmpScript = new("scripts\\gossip\\" + WorldServiceLocator.Functions.FixName(Name) + ".vb", "", InMemory: true);
             TalkScript = (TBaseTalk)tmpScript.InvokeConstructor("TalkScript");
             tmpScript.Dispose();
         }
@@ -324,8 +324,8 @@ public class CreatureInfo : IDisposable
         AttackPower = 0;
         RangedAttackPower = 0;
         Resistances = new int[7];
-        WalkSpeed = WorldServiceLocator._Global_Constants.UNIT_NORMAL_WALK_SPEED;
-        RunSpeed = WorldServiceLocator._Global_Constants.UNIT_NORMAL_RUN_SPEED;
+        WalkSpeed = WorldServiceLocator.GlobalConstants.UNIT_NORMAL_WALK_SPEED;
+        RunSpeed = WorldServiceLocator.GlobalConstants.UNIT_NORMAL_RUN_SPEED;
         BaseAttackTime = 2000;
         BaseRangedAttackTime = 2000;
         LevelMin = 1;
@@ -355,7 +355,7 @@ public class CreatureInfo : IDisposable
     {
         if (!_disposedValue)
         {
-            WorldServiceLocator._WorldServer.CREATURESDatabase.Remove(Id);
+            WorldServiceLocator.WorldServer.CREATURESDatabase.Remove(Id);
         }
         _disposedValue = true;
     }

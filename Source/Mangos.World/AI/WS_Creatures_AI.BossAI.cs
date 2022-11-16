@@ -47,9 +47,9 @@ public partial class WS_Creatures_AI
                     var array = characterObject.Group.LocalMembers.ToArray();
                     foreach (var member in array)
                     {
-                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(member) && WorldServiceLocator._WorldServer.CHARACTERs[member].MapID == characterObject.MapID && WorldServiceLocator._WorldServer.CHARACTERs[member].instance == characterObject.instance)
+                        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(member) && WorldServiceLocator.WorldServer.CHARACTERs[member].MapID == characterObject.MapID && WorldServiceLocator.WorldServer.CHARACTERs[member].instance == characterObject.instance)
                         {
-                            aiHateTable.Add(WorldServiceLocator._WorldServer.CHARACTERs[member], 0);
+                            aiHateTable.Add(WorldServiceLocator.WorldServer.CHARACTERs[member], 0);
                         }
                     }
                     break;

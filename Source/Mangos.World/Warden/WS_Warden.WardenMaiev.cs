@@ -293,11 +293,11 @@ public partial class WS_Warden
             ModuleData = File.ReadAllBytes("warden\\" + ModuleName + ".bin");
             if (LoadModule(ModuleName, ref ModuleData, ModuleKey))
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.SUCCESS, "[WARDEN] Load of module, success [{0}]", ModuleName);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.SUCCESS, "[WARDEN] Load of module, success [{0}]", ModuleName);
             }
             else
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to load module [{0}]", ModuleName);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to load module [{0}]", ModuleName);
             }
         }
 
@@ -308,7 +308,7 @@ public partial class WS_Warden
             var UncompressedLen = BitConverter.ToInt32(Data, 0);
             if (UncompressedLen < 0)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to decrypt {0}, incorrect length.", Name);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to decrypt {0}, incorrect length.", Name);
                 return false;
             }
             checked
@@ -319,7 +319,7 @@ public partial class WS_Warden
                 var Sign = Conversions.ToString(Strings.Chr(Data[dataPos + 3])) + Conversions.ToString(Strings.Chr(Data[dataPos + 2])) + Conversions.ToString(Strings.Chr(Data[dataPos + 1])) + Conversions.ToString(Strings.Chr(Data[dataPos]));
                 if (Operators.CompareString(Sign, "SIGN", TextCompare: false) != 0)
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to decrypt {0}, sign missing.", Name);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to decrypt {0}, sign missing.", Name);
                     return false;
                 }
                 dataPos += 4;
@@ -327,15 +327,15 @@ public partial class WS_Warden
                 Array.Copy(Data, dataPos, Signature, 0, Signature.Length);
                 if (!CheckSignature(Signature, Data, Data.Length - 260))
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Signature fail on Warden Module.");
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Signature fail on Warden Module.");
                     return false;
                 }
-                var DecompressedData = WorldServiceLocator._GlobalZip.DeCompress(CompressedData);
+                var DecompressedData = WorldServiceLocator.GlobalZip.DeCompress(CompressedData);
                 if (!PrepairModule(ref DecompressedData))
                 {
                     return false;
                 }
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.SUCCESS, "[WARDEN] Successfully prepaired Warden Module.");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.SUCCESS, "[WARDEN] Successfully prepaired Warden Module.");
                 try
                 {
                     if (!InitModule())
@@ -346,7 +346,7 @@ public partial class WS_Warden
                 catch (Exception ex2)
                 {
                     ProjectData.SetProjectError(ex2);
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] InitModule Failed.");
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] InitModule Failed.");
                     ProjectData.ClearProjectError();
                 }
                 return true;
@@ -665,13 +665,13 @@ public partial class WS_Warden
             {
                 try
                 {
-                    var pModule = WorldServiceLocator._WS_Warden.ByteArrPtr(ref data);
+                    var pModule = WorldServiceLocator.WSWarden.ByteArrPtr(ref data);
                     var obj = Marshal.PtrToStructure(new IntPtr(pModule), typeof(CHeader));
                     Header = (obj != null) ? ((CHeader)obj) : default;
                     dwModuleSize = Header.dwModuleSize;
                     if (dwModuleSize < int.MaxValue)
                     {
-                        m_Mod = WorldServiceLocator._WS_Warden.Malloc(dwModuleSize);
+                        m_Mod = WorldServiceLocator.WSWarden.Malloc(dwModuleSize);
                         if (m_Mod != 0)
                         {
                             Marshal.Copy(data, 0, (IntPtr)m_Mod, 40);
@@ -691,8 +691,8 @@ public partial class WS_Warden
                                 dwChunkDest += dwCurrentChunkSize;
                                 bCopyChunk = !bCopyChunk;
                             }
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[WARDEN] Update...");
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[WARDEN] Update: Adjusting references to global variables...");
+                            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[WARDEN] Update...");
+                            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[WARDEN] Update: Adjusting references to global variables...");
                             var pbRelocationTable = m_Mod + Header.dwSizeOfCode;
                             var dwRelocationIndex = 0;
                             var dwLastRelocation = 0;
@@ -719,14 +719,14 @@ public partial class WS_Warden
                                 dwRelocationIndex++;
                                 dwLastRelocation = dwValue;
                             }
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[WARDEN] Update: Updating API library references...");
+                            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[WARDEN] Update: Updating API library references...");
                             var dwLibraryIndex = 0;
                             while (dwLibraryIndex < Header.dwLibraryCount)
                             {
                                 var obj2 = Marshal.PtrToStructure(new IntPtr(m_Mod + Header.dwLibraryTable + (dwLibraryIndex * 8)), typeof(CLibraryEntry));
                                 var pLibraryTable = (obj2 != null) ? ((CLibraryEntry)obj2) : default;
                                 var procLib = Marshal.PtrToStringAnsi(new IntPtr(m_Mod + pLibraryTable.dwFileName));
-                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "    Library: {0}", procLib);
+                                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "    Library: {0}", procLib);
                                 var hModule = NativeMethods.LoadLibrary(procLib, "");
                                 if (hModule != 0)
                                 {
@@ -740,7 +740,7 @@ public partial class WS_Warden
                                         {
                                             dwCurrent &= 0x7FFFFFFF;
                                             procAddr = (int)(uint)NativeMethods.GetProcAddress((IntPtr)hModule, Convert.ToString(new IntPtr(dwCurrent)), "");
-                                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "        Ordinary: 0x{0:X8}", dwCurrent);
+                                            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "        Ordinary: 0x{0:X8}", dwCurrent);
                                         }
                                         else
                                         {
@@ -750,13 +750,13 @@ public partial class WS_Warden
                                             if (procRedirector is null || procDelegate is null)
                                             {
                                                 procAddr = (int)(uint)NativeMethods.GetProcAddress((IntPtr)hModule, procFunc, "");
-                                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "        Function: {0} @ 0x{1:X8}", procFunc, procAddr);
+                                                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "        Function: {0} @ 0x{1:X8}", procFunc, procAddr);
                                             }
                                             else
                                             {
                                                 delegateCache.Add(procFunc, Delegate.CreateDelegate(procDelegate, procRedirector));
                                                 procAddr = (int)Marshal.GetFunctionPointerForDelegate(delegateCache[procFunc]);
-                                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "        Function: {0} @ MY 0x{1:X8}", procFunc, procAddr);
+                                                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "        Function: {0} @ MY 0x{1:X8}", procFunc, procAddr);
                                             }
                                             Marshal.WriteInt32(new IntPtr(dwImports), procAddr);
                                         }
@@ -801,7 +801,7 @@ public partial class WS_Warden
                 {
                     ProjectData.SetProjectError(ex2);
                     var ex = ex2;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Failed to prepair module.{0}{1}", Environment.NewLine, ex.ToString());
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Failed to prepair module.{0}{1}", Environment.NewLine, ex.ToString());
                     var PrepairModule = false;
                     ProjectData.ClearProjectError();
                     return PrepairModule;
@@ -846,10 +846,10 @@ public partial class WS_Warden
                 Console.WriteLine("  ReleaseMemory: 0x{0:X}", myFunctionList.fpReleaseMemory);
                 Console.WriteLine("  SetRC4Data: 0x{0:X}", myFunctionList.fpSetRC4Data);
                 Console.WriteLine("  GetRC4Data: 0x{0:X}", myFunctionList.fpGetRC4Data);
-                myFuncList = new IntPtr(WorldServiceLocator._WS_Warden.Malloc(28));
+                myFuncList = new IntPtr(WorldServiceLocator.WSWarden.Malloc(28));
                 Marshal.StructureToPtr(myFunctionList, myFuncList, fDeleteOld: false);
                 pFuncList = myFuncList.ToInt32();
-                var wS_Warden = WorldServiceLocator._WS_Warden;
+                var wS_Warden = WorldServiceLocator.WSWarden;
                 ref var reference = ref pFuncList;
                 object obj = reference;
                 var num = wS_Warden.VarPtr(ref obj);
@@ -858,14 +858,14 @@ public partial class WS_Warden
                 Console.WriteLine("Initializing module");
                 try
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.SUCCESS, "[WARDEN] Successfully Initialized Module.");
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.SUCCESS, "[WARDEN] Successfully Initialized Module.");
                     init = (InitializeModule)Marshal.GetDelegateForFunctionPointer(new IntPtr(InitPointer), typeof(InitializeModule));
                 }
                 catch (Exception ex2)
                 {
                     ProjectData.SetProjectError(ex2);
                     var ex = ex2;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to Initialize Module.");
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "[WARDEN] Failed to Initialize Module.");
                     ProjectData.ClearProjectError();
                 }
                 pWardenList = Marshal.ReadInt32(new IntPtr(m_ModMem));
@@ -886,7 +886,7 @@ public partial class WS_Warden
 
         private void Unload_Module()
         {
-            WorldServiceLocator._WS_Warden.Free(m_Mod);
+            WorldServiceLocator.WSWarden.Free(m_Mod);
         }
 
         private void SendPacket(int ptrPacket, int dwSize)
@@ -914,13 +914,13 @@ public partial class WS_Warden
         private int AllocateMem(int dwSize)
         {
             Console.WriteLine("Warden.AllocateMem() Size={0}", dwSize);
-            return WorldServiceLocator._WS_Warden.Malloc(dwSize);
+            return WorldServiceLocator.WSWarden.Malloc(dwSize);
         }
 
         private void FreeMemory(int dwMemory)
         {
             Console.WriteLine("Warden.FreeMemory() Memory={0}", dwMemory);
-            WorldServiceLocator._WS_Warden.Free(dwMemory);
+            WorldServiceLocator.WSWarden.Free(dwMemory);
         }
 
         private int SetRC4Data(int lpKeys, int dwSize)
@@ -947,23 +947,23 @@ public partial class WS_Warden
         public void GenerateNewRC4Keys(byte[] K)
         {
             m_RC4 = 0;
-            var pK = WorldServiceLocator._WS_Warden.ByteArrPtr(ref K);
+            var pK = WorldServiceLocator.WSWarden.ByteArrPtr(ref K);
             GenerateRC4Keys(m_ModMem, pK, K.Length);
-            WorldServiceLocator._WS_Warden.Free(pK);
+            WorldServiceLocator.WSWarden.Free(pK);
         }
 
         public int HandlePacket(byte[] PacketData)
         {
             m_PKT = Array.Empty<byte>();
             var BytesRead = 0;
-            var wS_Warden = WorldServiceLocator._WS_Warden;
+            var wS_Warden = WorldServiceLocator.WSWarden;
             object obj = BytesRead;
             var num = wS_Warden.VarPtr(ref obj);
             BytesRead = Conversions.ToInteger(obj);
             BytesRead = num;
-            var pPacket = WorldServiceLocator._WS_Warden.ByteArrPtr(ref PacketData);
+            var pPacket = WorldServiceLocator.WSWarden.ByteArrPtr(ref PacketData);
             PacketHandler(m_ModMem, pPacket, PacketData.Length, BytesRead);
-            WorldServiceLocator._WS_Warden.Free(pPacket);
+            WorldServiceLocator.WSWarden.Free(pPacket);
             return Marshal.ReadInt32(new IntPtr(BytesRead));
         }
 

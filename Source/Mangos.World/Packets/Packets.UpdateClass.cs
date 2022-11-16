@@ -105,18 +105,18 @@ public partial class Packets
                 {
                     packet.AddInt8(112);
                     packet.AddInt32(8388608);
-                    packet.AddInt32(WorldServiceLocator._WS_Network.MsTime());
+                    packet.AddInt32(WorldServiceLocator.WSNetwork.MsTime());
                     packet.AddSingle(updateObject.positionX);
                     packet.AddSingle(updateObject.positionY);
                     packet.AddSingle(updateObject.positionZ);
                     packet.AddSingle(updateObject.orientation);
                     packet.AddSingle(0f);
-                    packet.AddSingle(WorldServiceLocator._WorldServer.CREATURESDatabase[updateObject.ID].WalkSpeed);
-                    packet.AddSingle(WorldServiceLocator._WorldServer.CREATURESDatabase[updateObject.ID].RunSpeed);
-                    packet.AddSingle(WorldServiceLocator._Global_Constants.UNIT_NORMAL_SWIM_BACK_SPEED);
-                    packet.AddSingle(WorldServiceLocator._Global_Constants.UNIT_NORMAL_SWIM_SPEED);
-                    packet.AddSingle(WorldServiceLocator._Global_Constants.UNIT_NORMAL_WALK_BACK_SPEED);
-                    packet.AddSingle(WorldServiceLocator._Global_Constants.UNIT_NORMAL_TURN_RATE);
+                    packet.AddSingle(WorldServiceLocator.WorldServer.CREATURESDatabase[updateObject.ID].WalkSpeed);
+                    packet.AddSingle(WorldServiceLocator.WorldServer.CREATURESDatabase[updateObject.ID].RunSpeed);
+                    packet.AddSingle(WorldServiceLocator.GlobalConstants.UNIT_NORMAL_SWIM_BACK_SPEED);
+                    packet.AddSingle(WorldServiceLocator.GlobalConstants.UNIT_NORMAL_SWIM_SPEED);
+                    packet.AddSingle(WorldServiceLocator.GlobalConstants.UNIT_NORMAL_WALK_BACK_SPEED);
+                    packet.AddSingle(WorldServiceLocator.GlobalConstants.UNIT_NORMAL_TURN_RATE);
                     packet.AddUInt32(1u);
                 }
                 if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_VALUES)
@@ -177,7 +177,7 @@ public partial class Packets
                 }
                 packet.AddInt8(112);
                 packet.AddInt32(flags2);
-                packet.AddInt32(WorldServiceLocator._WS_Network.MsTime());
+                packet.AddInt32(WorldServiceLocator.WSNetwork.MsTime());
                 packet.AddSingle(updateObject.positionX);
                 packet.AddSingle(updateObject.positionY);
                 packet.AddSingle(updateObject.positionZ);
@@ -197,7 +197,7 @@ public partial class Packets
                 packet.AddSingle(updateObject.SwimSpeed);
                 packet.AddSingle(updateObject.SwimBackSpeed);
                 packet.AddSingle(updateObject.TurnRate);
-                packet.AddUInt32(WorldServiceLocator._CommonGlobalFunctions.GuidLow(updateObject.GUID));
+                packet.AddUInt32(WorldServiceLocator.CommonGlobalFunctions.GuidLow(updateObject.GUID));
             }
             checked
             {
@@ -250,7 +250,7 @@ public partial class Packets
                 packet.AddPackGUID(updateObject.GUID);
                 if (updateType == ObjectUpdateType.UPDATETYPE_CREATE_OBJECT)
                 {
-                    if (WorldServiceLocator._WorldServer.ITEMDatabase[updateObject.ItemEntry].ContainerSlots > 0)
+                    if (WorldServiceLocator.WorldServer.ITEMDatabase[updateObject.ItemEntry].ContainerSlots > 0)
                     {
                         packet.AddInt8(2);
                     }
@@ -342,10 +342,10 @@ public partial class Packets
                         packet.AddSingle(updateObject.positionZ);
                         packet.AddSingle(updateObject.orientation);
                     }
-                    packet.AddUInt32(WorldServiceLocator._CommonGlobalFunctions.GuidHigh(updateObject.GUID));
+                    packet.AddUInt32(WorldServiceLocator.CommonGlobalFunctions.GuidHigh(updateObject.GUID));
                     if (updateObject.Type is GameObjectType.GAMEOBJECT_TYPE_TRANSPORT or GameObjectType.GAMEOBJECT_TYPE_MO_TRANSPORT)
                     {
-                        packet.AddInt32(WorldServiceLocator._WS_Network.MsTime());
+                        packet.AddInt32(WorldServiceLocator.WSNetwork.MsTime());
                     }
                 }
                 if (updateType is ObjectUpdateType.UPDATETYPE_CREATE_OBJECT or ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF or ObjectUpdateType.UPDATETYPE_VALUES)

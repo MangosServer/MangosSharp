@@ -68,7 +68,7 @@ public partial class WS_TimerBasedEvents
         {
             if (RegenerationWorking)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Update: Regenerator skipping update");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Update: Regenerator skipping update");
                 return;
             }
             RegenerationWorking = true;
@@ -77,8 +77,8 @@ public partial class WS_TimerBasedEvents
             {
                 try
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator._Global_Constants.DEFAULT_LOCK_TIMEOUT);
-                    foreach (var Character in WorldServiceLocator._WorldServer.CHARACTERs)
+                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    foreach (var Character in WorldServiceLocator.WorldServer.CHARACTERs)
                     {
                         if (Character.Value.DEAD || Character.Value.underWaterTimer != null || Character.Value.LogoutTimer != null || Character.Value.client == null)
                         {
@@ -215,7 +215,7 @@ public partial class WS_TimerBasedEvents
                             value.DuelOutOfBounds -= 2;
                             if (value.DuelOutOfBounds == 0)
                             {
-                                WorldServiceLocator._WS_Spells.DuelComplete(ref value.DuelPartner, ref value.client.Character);
+                                WorldServiceLocator.WSSpells.DuelComplete(ref value.DuelPartner, ref value.client.Character);
                             }
                         }
                         value.CheckCombat();
@@ -229,16 +229,16 @@ public partial class WS_TimerBasedEvents
                         }
                         value = null;
                     }
-                    if (WorldServiceLocator._WorldServer.CHARACTERs_Lock.IsReaderLockHeld)
+                    if (WorldServiceLocator.WorldServer.CHARACTERs_Lock.IsReaderLockHeld)
                     {
-                        WorldServiceLocator._WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                        WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
                     }
                 }
                 catch (Exception ex2)
                 {
                     ProjectData.SetProjectError(ex2);
                     var ex = ex2;
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Error at regenerate.{0}", Environment.NewLine + ex);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Error at regenerate.{0}", Environment.NewLine + ex);
                     ProjectData.ClearProjectError();
                 }
                 RegenerationWorking = false;

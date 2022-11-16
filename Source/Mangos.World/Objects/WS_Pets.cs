@@ -67,7 +67,7 @@ public class WS_Pets
             {
                 @object.GroupUpdateFlag |= 0x7FC00u;
             }
-            var wS_Pets = WorldServiceLocator._WS_Pets;
+            var wS_Pets = WorldServiceLocator.WSPets;
             ref var owner = ref Owner;
             WS_PlayerData.CharacterObject Caster = (WS_PlayerData.CharacterObject)owner;
             WS_Base.BaseUnit Pet = this;
@@ -135,14 +135,14 @@ public class WS_Pets
         packet.GetInt16();
         var PetNumber = packet.GetInt32();
         var PetGUID = packet.GetUInt64();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_NAME_QUERY [Number={0} GUID={1:X}", PetNumber, PetGUID);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_NAME_QUERY [Number={0} GUID={1:X}", PetNumber, PetGUID);
         SendPetNameQuery(ref client, PetGUID, PetNumber);
     }
 
     public void On_CMSG_REQUEST_PET_INFO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_REQUEST_PET_INFO");
-        WorldServiceLocator._Packets.DumpPacket(packet.Data, client, 6);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_REQUEST_PET_INFO");
+        WorldServiceLocator.Packets.DumpPacket(packet.Data, client, 6);
     }
 
     public void On_CMSG_PET_ACTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
@@ -152,20 +152,20 @@ public class WS_Pets
         var SpellID = packet.GetUInt16();
         var SpellFlag = packet.GetUInt16();
         var TargetGUID = packet.GetUInt64();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_ACTION [GUID={0:X} Spell={1} Flag={2:X} Target={3:X}]", PetGUID, SpellID, SpellFlag, TargetGUID);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_ACTION [GUID={0:X} Spell={1} Flag={2:X} Target={3:X}]", PetGUID, SpellID, SpellFlag, TargetGUID);
     }
 
     public void On_CMSG_PET_CANCEL_AURA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_CANCEL_AURA");
-        WorldServiceLocator._Packets.DumpPacket(packet.Data, client, 6);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_CANCEL_AURA");
+        WorldServiceLocator.Packets.DumpPacket(packet.Data, client, 6);
     }
 
     public void On_CMSG_PET_ABANDON(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
         packet.GetInt16();
         var PetGUID = packet.GetUInt64();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_ABANDON [GUID={0:X}]", PetGUID);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_ABANDON [GUID={0:X}]", PetGUID);
     }
 
     public void On_CMSG_PET_RENAME(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
@@ -173,7 +173,7 @@ public class WS_Pets
         packet.GetInt16();
         var PetGUID = packet.GetUInt64();
         var PetName = packet.GetString();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_RENAME [GUID={0:X} Name={1}]", PetGUID, PetName);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_RENAME [GUID={0:X} Name={1}]", PetGUID, PetName);
     }
 
     public void On_CMSG_PET_SET_ACTION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
@@ -183,35 +183,35 @@ public class WS_Pets
         var Position = packet.GetInt32();
         var SpellID = packet.GetUInt16();
         var ActionState = packet.GetInt16();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_SET_ACTION [GUID={0:X} Pos={1} Spell={2} Action={3}]", PetGUID, Position, SpellID, ActionState);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_SET_ACTION [GUID={0:X} Pos={1} Spell={2} Action={3}]", PetGUID, Position, SpellID, ActionState);
     }
 
     public void On_CMSG_PET_SPELL_AUTOCAST(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_SPELL_AUTOCAST");
-        WorldServiceLocator._Packets.DumpPacket(packet.Data, client, 6);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_SPELL_AUTOCAST");
+        WorldServiceLocator.Packets.DumpPacket(packet.Data, client, 6);
     }
 
     public void On_CMSG_PET_STOP_ATTACK(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_STOP_ATTACK");
-        WorldServiceLocator._Packets.DumpPacket(packet.Data, client, 6);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_STOP_ATTACK");
+        WorldServiceLocator.Packets.DumpPacket(packet.Data, client, 6);
     }
 
     public void On_CMSG_PET_UNLEARN(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_UNLEARN");
-        WorldServiceLocator._Packets.DumpPacket(packet.Data, client, 6);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "CMSG_PET_UNLEARN");
+        WorldServiceLocator.Packets.DumpPacket(packet.Data, client, 6);
     }
 
     public void SendPetNameQuery(ref WS_Network.ClientClass client, ulong PetGUID, int PetNumber)
     {
-        if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(PetGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[PetGUID] is PetObject @object)
+        if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(PetGUID) && WorldServiceLocator.WorldServer.WORLD_CREATUREs[PetGUID] is PetObject @object)
         {
             Packets.PacketClass response = new(Opcodes.SMSG_PET_NAME_QUERY_RESPONSE);
             response.AddInt32(PetNumber);
             response.AddString(@object.PetName);
-            response.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
+            response.AddInt32(WorldServiceLocator.NativeMethods.timeGetTime(""));
             client.Send(ref response);
             response.Dispose();
         }
@@ -224,11 +224,11 @@ public class WS_Pets
             return;
         }
         DataTable PetQuery = new();
-        WorldServiceLocator._WorldServer.CharacterDatabase.Query($"SELECT * FROM character_pet WHERE owner = '{objCharacter.GUID}';", ref PetQuery);
+        WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT * FROM character_pet WHERE owner = '{objCharacter.GUID}';", ref PetQuery);
         if (PetQuery.Rows.Count != 0)
         {
             var row = PetQuery.Rows[0];
-            objCharacter.Pet = new PetObject(checked(row.As<ulong>("id") + WorldServiceLocator._Global_Constants.GUID_PET), row.As<int>("entry"))
+            objCharacter.Pet = new PetObject(checked(row.As<ulong>("id") + WorldServiceLocator.GlobalConstants.GUID_PET), row.As<int>("entry"))
             {
                 Owner = objCharacter,
                 SummonedBy = objCharacter.GUID,
@@ -243,7 +243,7 @@ public class WS_Pets
             objCharacter.Pet.positionY = objCharacter.positionY;
             objCharacter.Pet.positionZ = objCharacter.positionZ;
             objCharacter.Pet.MapID = objCharacter.MapID;
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Loaded pet [{0}] for character [{1}].", objCharacter.Pet.GUID, objCharacter.GUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Loaded pet [{0}] for character [{1}].", objCharacter.Pet.GUID, objCharacter.GUID);
         }
     }
 

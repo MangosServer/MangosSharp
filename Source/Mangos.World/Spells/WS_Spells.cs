@@ -181,20 +181,20 @@ public class WS_Spells
 
         public SpellSchoolMask SchoolMask => (SpellSchoolMask)(1 << School);
 
-        public int GetDuration => WorldServiceLocator._WS_Spells.SpellDuration.ContainsKey(DurationIndex)
-                    ? WorldServiceLocator._WS_Spells.SpellDuration[DurationIndex]
+        public int GetDuration => WorldServiceLocator.WSSpells.SpellDuration.ContainsKey(DurationIndex)
+                    ? WorldServiceLocator.WSSpells.SpellDuration[DurationIndex]
                     : 0;
 
-        public int GetRange => WorldServiceLocator._WS_Spells.SpellRange.ContainsKey(rangeIndex)
-                    ? (int)Math.Round(WorldServiceLocator._WS_Spells.SpellRange[rangeIndex])
+        public int GetRange => WorldServiceLocator.WSSpells.SpellRange.ContainsKey(rangeIndex)
+                    ? (int)Math.Round(WorldServiceLocator.WSSpells.SpellRange[rangeIndex])
                     : 0;
 
-        public string GetFocusObject => WorldServiceLocator._WS_Spells.SpellFocusObject.ContainsKey(FocusObjectIndex)
-                    ? WorldServiceLocator._WS_Spells.SpellFocusObject[FocusObjectIndex]
+        public string GetFocusObject => WorldServiceLocator.WSSpells.SpellFocusObject.ContainsKey(FocusObjectIndex)
+                    ? WorldServiceLocator.WSSpells.SpellFocusObject[FocusObjectIndex]
                     : Conversions.ToString(0);
 
-        public int GetCastTime => WorldServiceLocator._WS_Spells.SpellCastTime.ContainsKey(SpellCastTimeIndex)
-                    ? WorldServiceLocator._WS_Spells.SpellCastTime[SpellCastTimeIndex]
+        public int GetCastTime => WorldServiceLocator.WSSpells.SpellCastTime.ContainsKey(SpellCastTimeIndex)
+                    ? WorldServiceLocator.WSSpells.SpellCastTime[SpellCastTimeIndex]
                     : 0;
 
         public int GetManaCost(int level, int Mana)
@@ -283,7 +283,7 @@ public class WS_Spells
         {
             get
             {
-                if (!WorldServiceLocator._WS_Spells.SpellChains.ContainsKey(ID) || WorldServiceLocator._WS_Spells.SpellChains[ID] == 0)
+                if (!WorldServiceLocator.WSSpells.SpellChains.ContainsKey(ID) || WorldServiceLocator.WSSpells.SpellChains[ID] == 0)
                 {
                     return true;
                 }
@@ -396,7 +396,7 @@ public class WS_Spells
             WS_Base.BaseUnit Ref = null;
             if (Caster is WS_Totems.TotemObject @object)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "[MapID:{0} X:{1} Y:{2} Z:{3}] Totem GetTargets [Caster = TotemObject: {4}]", Caster.MapID, Caster.positionX, Caster.positionY, Caster.positionZ, Caster is WS_Totems.TotemObject);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "[MapID:{0} X:{1} Y:{2} Z:{3}] Totem GetTargets [Caster = TotemObject: {4}]", Caster.MapID, Caster.positionX, Caster.positionY, Caster.positionZ, Caster is WS_Totems.TotemObject);
                 Ref = @object.Caster;
             }
             if (SpellEffects[Index] != null)
@@ -412,7 +412,7 @@ public class WS_Spells
                         var implicitTargetB = (byte)SpellEffects[Index].implicitTargetB;
                         ImplicitTarget = (SpellImplicitTargets)checked(implicitTargetB);
                     }
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "{0}: {1}", Conversions.ToString(Interaction.IIf(i == 1, "ImplicitTargetB", "ImplicitTargetA")), ImplicitTarget);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "{0}: {1}", Conversions.ToString(Interaction.IIf(i == 1, "ImplicitTargetB", "ImplicitTargetA")), ImplicitTarget);
                     checked
                     {
                         switch (ImplicitTarget)
@@ -426,19 +426,19 @@ public class WS_Spells
                                     {
                                         WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
                                         Caster = objCharacter;
-                                        var wS_Spells6 = WorldServiceLocator._WS_Spells;
+                                        var wS_Spells6 = WorldServiceLocator.WSSpells;
                                         var enemyAroundMe = wS_Spells6.GetEnemyAtPoint(ref objCharacter, Targets.dstX, Targets.dstY, Targets.dstZ, SpellEffects[Index].GetRadius);
                                         EnemyTargets2 = enemyAroundMe;
                                     }
                                     else if (Caster is WS_DynamicObjects.DynamicObject object1)
                                     {
-                                        EnemyTargets2 = WorldServiceLocator._WS_Spells.GetEnemyAtPoint(ref object1.Caster, Caster.positionX, Caster.positionY, Caster.positionZ, SpellEffects[Index].GetRadius);
+                                        EnemyTargets2 = WorldServiceLocator.WSSpells.GetEnemyAtPoint(ref object1.Caster, Caster.positionX, Caster.positionY, Caster.positionZ, SpellEffects[Index].GetRadius);
                                     }
                                     else
                                     {
                                         WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
                                         Caster = objCharacter;
-                                        var wS_Spells7 = WorldServiceLocator._WS_Spells;
+                                        var wS_Spells7 = WorldServiceLocator.WSSpells;
                                         var enemyAroundMe = wS_Spells7.GetEnemyAtPoint(ref objCharacter, Caster.positionX, Caster.positionY, Caster.positionZ, SpellEffects[Index].GetRadius);
                                         EnemyTargets2 = enemyAroundMe;
                                     }
@@ -455,7 +455,7 @@ public class WS_Spells
                                 {
                                     WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
                                     Caster = objCharacter;
-                                    var wS_Spells5 = WorldServiceLocator._WS_Spells;
+                                    var wS_Spells5 = WorldServiceLocator.WSSpells;
                                     var enemyAroundMe = wS_Spells5.GetEnemyAroundMe(ref objCharacter, SpellEffects[Index].GetRadius, Ref);
                                     var EnemyTargets6 = enemyAroundMe;
                                     foreach (var EnemyTarget5 in EnemyTargets6)
@@ -471,7 +471,7 @@ public class WS_Spells
                                 {
                                     WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)Caster;
                                     Caster = objCharacter2;
-                                    var wS_Spells10 = WorldServiceLocator._WS_Spells;
+                                    var wS_Spells10 = WorldServiceLocator.WSSpells;
                                     var enemyAroundMe = wS_Spells10.GetPartyMembersAroundMe(ref objCharacter2, 9999999f);
                                     var PartyTargets2 = enemyAroundMe;
                                     foreach (var PartyTarget2 in PartyTargets2)
@@ -495,7 +495,7 @@ public class WS_Spells
                                                 ref var caster = ref object2.Caster;
                                                 WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)caster;
                                                 caster = objCharacter2;
-                                                var wS_Spells8 = WorldServiceLocator._WS_Spells;
+                                                var wS_Spells8 = WorldServiceLocator.WSSpells;
                                                 var enemyAroundMe = wS_Spells8.GetPartyMembersAtPoint(ref objCharacter2, SpellEffects[Index].GetRadius, Caster.positionX, Caster.positionY, Caster.positionZ);
                                                 PartyTargets = enemyAroundMe;
                                                 break;
@@ -505,7 +505,7 @@ public class WS_Spells
                                             {
                                                 WS_PlayerData.CharacterObject objCharacter2 = (WS_PlayerData.CharacterObject)Caster;
                                                 Caster = objCharacter2;
-                                                var wS_Spells9 = WorldServiceLocator._WS_Spells;
+                                                var wS_Spells9 = WorldServiceLocator.WSSpells;
                                                 var enemyAroundMe = wS_Spells9.GetPartyMembersAroundMe(ref objCharacter2, SpellEffects[Index].GetRadius);
                                                 PartyTargets = enemyAroundMe;
                                                 break;
@@ -541,7 +541,7 @@ public class WS_Spells
                                     {
                                         WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
                                         Caster = objCharacter;
-                                        var wS_Spells2 = WorldServiceLocator._WS_Spells;
+                                        var wS_Spells2 = WorldServiceLocator.WSSpells;
                                         var enemyAroundMe = wS_Spells2.GetEnemyAroundMe(ref TargetUnit, 10f, objCharacter);
                                         var EnemyTargets = enemyAroundMe;
                                         TargetUnit = null;
@@ -576,7 +576,7 @@ public class WS_Spells
                                 {
                                     WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
                                     Caster = objCharacter;
-                                    var wS_Spells = WorldServiceLocator._WS_Spells;
+                                    var wS_Spells = WorldServiceLocator.WSSpells;
                                     var enemyAroundMe = wS_Spells.GetEnemyAroundMe(ref objCharacter, SpellEffects[Index].GetRadius, Ref);
                                     var EnemyTargets3 = enemyAroundMe;
                                     foreach (var EnemyTarget2 in EnemyTargets3)
@@ -600,7 +600,7 @@ public class WS_Spells
                                 {
                                     WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
                                     Caster = objCharacter;
-                                    var wS_Spells3 = WorldServiceLocator._WS_Spells;
+                                    var wS_Spells3 = WorldServiceLocator.WSSpells;
                                     var enemyAroundMe = wS_Spells3.GetEnemyInBehindMe(ref objCharacter, SpellEffects[Index].GetRadius);
                                     var EnemyTargets5 = enemyAroundMe;
                                     foreach (var EnemyTarget4 in EnemyTargets5)
@@ -619,7 +619,7 @@ public class WS_Spells
                                     }
                                     WS_Base.BaseUnit objCharacter = (WS_Base.BaseUnit)Caster;
                                     Caster = objCharacter;
-                                    var wS_Spells4 = WorldServiceLocator._WS_Spells;
+                                    var wS_Spells4 = WorldServiceLocator.WSSpells;
                                     var enemyAroundMe = wS_Spells4.GetEnemyInFrontOfMe(ref objCharacter, SpellEffects[Index].GetRadius);
                                     var EnemyTargets4 = enemyAroundMe;
                                     foreach (var EnemyTarget3 in EnemyTargets4)
@@ -1024,15 +1024,15 @@ public class WS_Spells
                     var SpellDistance = 0f;
                     if (((uint)Targets.targetMask & 2u) != 0 && Targets.unitTarget != null)
                     {
-                        SpellDistance = WorldServiceLocator._WS_Combat.GetDistance(Caster, Targets.unitTarget);
+                        SpellDistance = WorldServiceLocator.WSCombat.GetDistance(Caster, Targets.unitTarget);
                     }
                     if (((uint)Targets.targetMask & 0x40u) != 0 && (Targets.dstX != 0f || Targets.dstY != 0f || Targets.dstZ != 0f))
                     {
-                        SpellDistance = WorldServiceLocator._WS_Combat.GetDistance(Caster, Targets.dstX, Targets.dstY, Targets.dstZ);
+                        SpellDistance = WorldServiceLocator.WSCombat.GetDistance(Caster, Targets.dstX, Targets.dstY, Targets.dstZ);
                     }
                     if (((uint)Targets.targetMask & 0x800u) != 0 && Targets.goTarget != null)
                     {
-                        SpellDistance = WorldServiceLocator._WS_Combat.GetDistance(Caster, Targets.goTarget);
+                        SpellDistance = WorldServiceLocator.WSCombat.GetDistance(Caster, Targets.goTarget);
                     }
                     if (SpellDistance > 0f)
                     {
@@ -1046,7 +1046,7 @@ public class WS_Spells
                     SpellCastError = CanCast(ref Character, Targets, FirstCheck: false);
                     if (SpellCastError != SpellFailedReason.SPELL_NO_ERROR)
                     {
-                        WorldServiceLocator._WS_Spells.SendCastResult(SpellCastError, ref object1.client, ID);
+                        WorldServiceLocator.WSSpells.SendCastResult(SpellCastError, ref object1.client, ID);
                         castParams.State = SpellCastState.SPELL_STATE_IDLE;
                         castParams.Dispose();
                         return;
@@ -1063,7 +1063,7 @@ public class WS_Spells
                 {
                     if (object2.attackState.combatNextAttackSpell)
                     {
-                        WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_FAILED_SPELL_IN_PROGRESS, ref object2.client, ID);
+                        WorldServiceLocator.WSSpells.SendCastResult(SpellFailedReason.SPELL_FAILED_SPELL_IN_PROGRESS, ref object2.client, ID);
                         castParams.Dispose();
                         return;
                     }
@@ -1169,14 +1169,14 @@ public class WS_Spells
                         {
                             Character = (WS_PlayerData.CharacterObject)Caster;
                             var creature = object3;
-                            var aLLQUESTS = WorldServiceLocator._WorldServer.ALLQUESTS;
+                            var aLLQUESTS = WorldServiceLocator.WorldServer.ALLQUESTS;
                             aLLQUESTS.OnQuestCastSpell(ref Character, ref creature, ID);
                         }
                         if (Targets.goTarget != null)
                         {
                             Character = (WS_PlayerData.CharacterObject)Caster;
                             WS_GameObjects.GameObject gameObject = (WS_GameObjects.GameObject)Targets.goTarget;
-                            var aLLQUESTS2 = WorldServiceLocator._WorldServer.ALLQUESTS;
+                            var aLLQUESTS2 = WorldServiceLocator.WorldServer.ALLQUESTS;
                             aLLQUESTS2.OnQuestCastSpell(ref Character, ref gameObject, ID);
                         }
                         characterObject = null;
@@ -1188,7 +1188,7 @@ public class WS_Spells
                             case 0:
                                 {
                                     creatureObject.Mana.Current -= GetManaCost(creatureObject.Level, creatureObject.Mana.Base);
-                                    Packets.UpdateClass powerUpdate2 = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                                    Packets.UpdateClass powerUpdate2 = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
                                     powerUpdate2.SetUpdateFlag(23, creatureObject.Mana.Current);
                                     Packets.UpdatePacketClass updatePacket2 = new();
                                     Packets.PacketClass packet = updatePacket2;
@@ -1205,7 +1205,7 @@ public class WS_Spells
                             case -2:
                                 {
                                     creatureObject.Life.Current -= GetManaCost(creatureObject.Level, creatureObject.Life.Base);
-                                    Packets.UpdateClass powerUpdate = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+                                    Packets.UpdateClass powerUpdate = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
                                     powerUpdate.SetUpdateFlag(22, creatureObject.Life.Current);
                                     Packets.UpdatePacketClass updatePacket = new();
                                     Packets.PacketClass packet = updatePacket;
@@ -1227,7 +1227,7 @@ public class WS_Spells
                     castParams.State = SpellCastState.SPELL_STATE_FINISHED;
                     if (Caster is WS_PlayerData.CharacterObject object4)
                     {
-                        WorldServiceLocator._WS_Spells.SendCastResult(SpellFailedReason.SPELL_NO_ERROR, ref object4.client, ID);
+                        WorldServiceLocator.WSSpells.SendCastResult(SpellFailedReason.SPELL_NO_ERROR, ref object4.client, ID);
                     }
                     Dictionary<ulong, SpellMissInfo> tmpTargets = new();
                     byte j = 0;
@@ -1265,7 +1265,7 @@ public class WS_Spells
                             {
                                 byte bag = default;
                                 var slot = object5.ItemGetSLOTBAG(castParams.Item.GUID, ref bag);
-                                if ((bag != WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL) & (slot != WorldServiceLocator._Global_Constants.ITEM_SLOT_NULL))
+                                if ((bag != WorldServiceLocator.GlobalConstants.ITEM_SLOT_NULL) & (slot != WorldServiceLocator.GlobalConstants.ITEM_SLOT_NULL))
                                 {
                                     object5.ItemREMOVE(bag, slot, Destroy: true, Update: true);
                                 }
@@ -1296,9 +1296,9 @@ public class WS_Spells
                 {
                     if (SpellEffects[i] != null)
                     {
-                        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "DEBUG: Casting effect: {0}", SpellEffects[i].ID);
+                        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "DEBUG: Casting effect: {0}", SpellEffects[i].ID);
                         var iD = (int)SpellEffects[i].ID;
-                        SpellCastError = WorldServiceLocator._WS_Spells.SPELL_EFFECTs[iD](ref Targets, ref Caster, ref SpellEffects[i], ID, ref TargetHits[i], ref castParams.Item);
+                        SpellCastError = WorldServiceLocator.WSSpells.SPELL_EFFECTs[iD](ref Targets, ref Caster, ref SpellEffects[i], ID, ref TargetHits[i], ref castParams.Item);
                         if (SpellCastError != SpellFailedReason.SPELL_NO_ERROR)
                         {
                             break;
@@ -1317,7 +1317,7 @@ public class WS_Spells
                         case WS_PlayerData.CharacterObject:
                             {
                                 WS_PlayerData.CharacterObject caster = (WS_PlayerData.CharacterObject)Caster;
-                                WorldServiceLocator._WS_Spells.SendCastResult(SpellCastError, ref caster.client, ID);
+                                WorldServiceLocator.WSSpells.SendCastResult(SpellCastError, ref caster.client, ID);
                                 WS_Base.BaseUnit Caster2 = (WS_Base.BaseUnit)Caster;
                                 SendInterrupted(0, ref Caster2);
                                 Caster = Caster2;
@@ -1344,7 +1344,7 @@ public class WS_Spells
             }
             catch (Exception e)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error when casting spell. {0}", Environment.NewLine + e);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Error when casting spell. {0}", Environment.NewLine + e);
             }
             if (castParams != null)
             {
@@ -1354,7 +1354,7 @@ public class WS_Spells
                 }
                 catch (Exception ex)
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Unable to dispose of castParams. {0}:{1}", castParams, Environment.NewLine + ex);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Unable to dispose of castParams. {0}:{1}", castParams, Environment.NewLine + ex);
                 }
             }
         }
@@ -1376,7 +1376,7 @@ public class WS_Spells
             if (SpellEffects[0] != null)
             {
                 var iD = (int)SpellEffects[0].ID;
-                var obj = WorldServiceLocator._WS_Spells.SPELL_EFFECTs[iD];
+                var obj = WorldServiceLocator.WSSpells.SPELL_EFFECTs[iD];
                 ref var spellInfo = ref SpellEffects[0];
                 var iD1 = ID;
                 ref var infected = ref TargetsInfected[0];
@@ -1386,7 +1386,7 @@ public class WS_Spells
             if (SpellEffects[1] != null)
             {
                 var iD = (int)SpellEffects[1].ID;
-                var obj2 = WorldServiceLocator._WS_Spells.SPELL_EFFECTs[iD];
+                var obj2 = WorldServiceLocator.WSSpells.SPELL_EFFECTs[iD];
                 ref var spellInfo2 = ref SpellEffects[1];
                 var iD2 = ID;
                 ref var infected2 = ref TargetsInfected[1];
@@ -1396,7 +1396,7 @@ public class WS_Spells
             if (SpellEffects[2] != null)
             {
                 var iD = (int)SpellEffects[2].ID;
-                var obj3 = WorldServiceLocator._WS_Spells.SPELL_EFFECTs[iD];
+                var obj3 = WorldServiceLocator.WSSpells.SPELL_EFFECTs[iD];
                 ref var spellInfo3 = ref SpellEffects[2];
                 var iD3 = ID;
                 ref var infected3 = ref TargetsInfected[2];
@@ -1416,12 +1416,12 @@ public class WS_Spells
         {
             if (Character == null)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WS_Spells:CanCast Null Character Object");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "WS_Spells:CanCast Null Character Object");
                 return SpellFailedReason.SPELL_FAILED_ERROR;
             }
             if (Targets == null)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WS_Spells:CanCast Null Target Object");
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "WS_Spells:CanCast Null Target Object");
                 return SpellFailedReason.SPELL_FAILED_ERROR;
             }
             if (Character != null)
@@ -1440,7 +1440,7 @@ public class WS_Spells
             {
                 if (((uint)FacingCasterFlags & (true ? 1u : 0u)) != 0)
                 {
-                    var wS_Combat = WorldServiceLocator._WS_Combat;
+                    var wS_Combat = WorldServiceLocator.WSCombat;
                     WS_Base.BaseObject Object = Character;
                     WS_Base.BaseObject Object2 = Targets.unitTarget;
                     Character = (WS_PlayerData.CharacterObject)Object;
@@ -1452,7 +1452,7 @@ public class WS_Spells
                 }
                 if (((uint)FacingCasterFlags & 2u) != 0)
                 {
-                    var wS_Combat2 = WorldServiceLocator._WS_Combat;
+                    var wS_Combat2 = WorldServiceLocator.WSCombat;
                     WS_Base.BaseObject Object2 = Character;
                     WS_Base.BaseObject Object = Targets.unitTarget;
                     Character = (WS_PlayerData.CharacterObject)Object2;
@@ -1479,32 +1479,32 @@ public class WS_Spells
             // TODO: Move these into their own MovementHackViolation file under AntiCheat
             if (Character.IsInCombat && Character.IsDead)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsInCombat && IsDead at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsInCombat && IsDead at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
                 Character.Logout();
             }
             if (Character.IsInDuel && Character.IsDead)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsInDuel && IsDead at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsInDuel && IsDead at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
                 Character.Logout();
             }
             if (Character.IsRooted && Character.IsDead)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsRooted && IsDead at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsRooted && IsDead at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
                 Character.Logout();
             }
             if (Character.IsInFeralForm && Character.IsDead)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsInFeralForm && IsDead at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsInFeralForm && IsDead at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
                 Character.Logout();
             }
-            if (Character.isMovingOrTurning && Character.IsStunned)
+            if (Character.IsMovingOrTurning && Character.IsStunned)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsMovingOrTurning && IsStunned at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsMovingOrTurning && IsStunned at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
                 Character.Logout();
             }
-            if (Character.IsRooted && Character.isMoving)
+            if (Character.IsRooted && Character.IsMoving)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsRooted && IsMoving at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[Integrity Check Failed] Player:{0} IsRooted && IsMoving at [MapID:{1} X:{2} Y:{3} Z:{4}]", Character.Name, Character.MapID, Character.positionX, Character.positionY, Character.positionZ);
                 Character.Logout();
             }
             var StanceMask = 0;
@@ -1526,7 +1526,7 @@ public class WS_Spells
                 if (Character.ShapeshiftForm != 0)
                 {
                     var shapeshiftForm = (int)Character.ShapeshiftForm;
-                    var ShapeShift = WorldServiceLocator._WS_DBCDatabase.FindShapeshiftForm(shapeshiftForm);
+                    var ShapeShift = WorldServiceLocator.WSDBCDatabase.FindShapeshiftForm(shapeshiftForm);
                     if (ShapeShift == null)
                     {
                         goto IL_028d;
@@ -1555,7 +1555,7 @@ public class WS_Spells
             {
                 return SpellFailedReason.SPELL_FAILED_ONLY_STEALTHED;
             }
-            if ((Character.charMovementFlags & WorldServiceLocator._Global_Constants.movementFlagsMask) != 0 && ((Character.charMovementFlags & 0x4000) == 0 || SpellEffects[0].ID != SpellEffects_Names.SPELL_EFFECT_STUCK) && (IsAutoRepeat || ((uint)auraInterruptFlags & 0x40000u) != 0))
+            if ((Character.charMovementFlags & WorldServiceLocator.GlobalConstants.movementFlagsMask) != 0 && ((Character.charMovementFlags & 0x4000) == 0 || SpellEffects[0].ID != SpellEffects_Names.SPELL_EFFECT_STUCK) && (IsAutoRepeat || ((uint)auraInterruptFlags & 0x40000u) != 0))
             {
                 return SpellFailedReason.SPELL_FAILED_MOVING;
             }
@@ -1742,7 +1742,7 @@ public class WS_Spells
                                         selectedX = (float)(Character.positionX + (Math.Cos(Character.orientation) * GetRange));
                                         selectedY = (float)(Character.positionY + (Math.Sin(Character.orientation) * GetRange));
                                     }
-                                    if (WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Character.MapID) > WorldServiceLocator._WS_Maps.GetWaterLevel(selectedX, selectedY, (int)Character.MapID))
+                                    if (WorldServiceLocator.WSMaps.GetZCoord(selectedX, selectedY, Character.MapID) > WorldServiceLocator.WSMaps.GetWaterLevel(selectedX, selectedY, (int)Character.MapID))
                                     {
                                         return SpellFailedReason.SPELL_FAILED_NOT_FISHABLE;
                                     }
@@ -1756,7 +1756,7 @@ public class WS_Spells
             while (j <= 2u);
             if (Targets.unitTarget != null)
             {
-                var wS_Maps = WorldServiceLocator._WS_Maps;
+                var wS_Maps = WorldServiceLocator.WSMaps;
                 WS_Base.BaseObject Object = Character;
                 ref var unitTarget = ref Targets.unitTarget;
                 WS_Base.BaseObject Object2 = unitTarget;
@@ -1770,7 +1770,7 @@ public class WS_Spells
             }
             else if (((uint)Targets.targetMask & 0x40u) != 0)
             {
-                var wS_Maps2 = WorldServiceLocator._WS_Maps;
+                var wS_Maps2 = WorldServiceLocator.WSMaps;
                 WS_Base.BaseObject Object2 = Character;
                 Character = (WS_PlayerData.CharacterObject)Object2;
                 var flag = wS_Maps2.IsInLineOfSight(ref Object2, Targets.dstX, Targets.dstY, Targets.dstZ);
@@ -1812,7 +1812,7 @@ public class WS_Spells
                     break;
             }
             Packets.UpdatePacketClass updatePacket = new();
-            Packets.UpdateClass updateBlock = new(WorldServiceLocator._Global_Constants.FIELD_MASK_SIZE_PLAYER);
+            Packets.UpdateClass updateBlock = new(WorldServiceLocator.GlobalConstants.FIELD_MASK_SIZE_PLAYER);
             updateBlock.SetUpdateFlag(144, ID);
             if (Targets.unitTarget != null)
             {
@@ -1857,20 +1857,20 @@ public class WS_Spells
                     {
                         ItemInfo = RangedItem.ItemInfo;
                     }
-                    else if (characterObject.AmmoID != 0 && WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(characterObject.AmmoID))
+                    else if (characterObject.AmmoID != 0 && WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(characterObject.AmmoID))
                     {
-                        ItemInfo = WorldServiceLocator._WorldServer.ITEMDatabase[characterObject.AmmoID];
+                        ItemInfo = WorldServiceLocator.WorldServer.ITEMDatabase[characterObject.AmmoID];
                     }
                 }
             }
             if (ItemInfo == null)
             {
-                if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(2512))
+                if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(2512))
                 {
                     WS_Items.ItemInfo tmpInfo = new(2512);
-                    WorldServiceLocator._WorldServer.ITEMDatabase.Add(2512, tmpInfo);
+                    WorldServiceLocator.WorldServer.ITEMDatabase.Add(2512, tmpInfo);
                 }
-                ItemInfo = WorldServiceLocator._WorldServer.ITEMDatabase[2512];
+                ItemInfo = WorldServiceLocator.WorldServer.ITEMDatabase[2512];
             }
             Packet.AddInt32(ItemInfo.Model);
             Packet.AddInt32((int)ItemInfo.InventoryType);
@@ -2164,14 +2164,14 @@ public class WS_Spells
                 {
                     return;
                 }
-                objCharacter.Spells[ID].Cooldown = (uint)(WorldServiceLocator._Functions.GetTimestamp(DateTime.Now) + (Recovery / 1000));
+                objCharacter.Spells[ID].Cooldown = (uint)(WorldServiceLocator.Functions.GetTimestamp(DateTime.Now) + (Recovery / 1000));
                 if (castItem != null)
                 {
                     objCharacter.Spells[ID].CooldownItem = castItem.ItemEntry;
                 }
                 if (Recovery > 10000)
                 {
-                    WorldServiceLocator._WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_spells SET cooldown={2}, cooldownitem={3} WHERE guid = {0} AND spellid = {1};", objCharacter.GUID, ID, objCharacter.Spells[ID].Cooldown, objCharacter.Spells[ID].CooldownItem));
+                    WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format("UPDATE characters_spells SET cooldown={2}, cooldownitem={3} WHERE guid = {0} AND spellid = {1};", objCharacter.GUID, ID, objCharacter.Spells[ID].Cooldown, objCharacter.Spells[ID].CooldownItem));
                 }
                 Packets.PacketClass packet = new(Opcodes.SMSG_SPELL_COOLDOWN);
                 packet.AddUInt64(objCharacter.GUID);
@@ -2179,7 +2179,7 @@ public class WS_Spells
                 {
                     foreach (var Spell in objCharacter.Spells)
                     {
-                        if (WorldServiceLocator._WS_Spells.SPELLs[Spell.Key].Category == Category)
+                        if (WorldServiceLocator.WSSpells.SPELLs[Spell.Key].Category == Category)
                         {
                             packet.AddInt32(Spell.Key);
                             if (Spell.Key != ID || Recovery == 0)
@@ -2256,8 +2256,8 @@ public class WS_Spells
 
         public float DamageMultiplier;
 
-        public float GetRadius => WorldServiceLocator._WS_Spells.SpellRadius.ContainsKey(RadiusIndex)
-                    ? WorldServiceLocator._WS_Spells.SpellRadius[RadiusIndex]
+        public float GetRadius => WorldServiceLocator.WSSpells.SpellRadius.ContainsKey(RadiusIndex)
+                    ? WorldServiceLocator.WSSpells.SpellRadius[RadiusIndex]
                     : 0f;
 
         /// <summary>
@@ -2272,11 +2272,11 @@ public class WS_Spells
             {
                 try
                 {
-                    return valueBase + (Level * valuePerLevel) + (ComboPoints * valuePerComboPoint) + WorldServiceLocator._WorldServer.Rnd.Next(1, (int)Math.Round(valueDie + (Level * dicePerLevel)));
+                    return valueBase + (Level * valuePerLevel) + (ComboPoints * valuePerComboPoint) + WorldServiceLocator.WorldServer.Rnd.Next(1, (int)Math.Round(valueDie + (Level * dicePerLevel)));
                 }
                 catch (Exception ex)
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "GetValue returned an Exception:{0}, valueBase:{1}", ex, valueBase);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "GetValue returned an Exception:{0}, valueBase:{1}", ex, valueBase);
                     var GetValue = valueBase + (Level * valuePerLevel) + (ComboPoints * valuePerComboPoint) + 1;
                     return GetValue;
                 }
@@ -2466,33 +2466,33 @@ public class WS_Spells
             if ((targetMask1 & 2u) != 0)
             {
                 var GUID = packet.GetPackGuid();
-                if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCreature(GUID) || WorldServiceLocator._CommonGlobalFunctions.GuidIsPet(GUID))
+                if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCreature(GUID) || WorldServiceLocator.CommonGlobalFunctions.GuidIsPet(GUID))
                 {
-                    unitTarget = WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID];
+                    unitTarget = WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID];
                 }
-                else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsPlayer(GUID))
+                else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsPlayer(GUID))
                 {
-                    unitTarget = WorldServiceLocator._WorldServer.CHARACTERs[GUID];
+                    unitTarget = WorldServiceLocator.WorldServer.CHARACTERs[GUID];
                 }
             }
             if ((targetMask1 & 0x800u) != 0)
             {
                 var GUID3 = packet.GetPackGuid();
-                if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(GUID3))
+                if (WorldServiceLocator.CommonGlobalFunctions.GuidIsGameObject(GUID3))
                 {
-                    goTarget = WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID3];
+                    goTarget = WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID3];
                 }
-                else if (WorldServiceLocator._CommonGlobalFunctions.GuidIsDnyamicObject(GUID3))
+                else if (WorldServiceLocator.CommonGlobalFunctions.GuidIsDnyamicObject(GUID3))
                 {
-                    goTarget = WorldServiceLocator._WorldServer.WORLD_DYNAMICOBJECTs[GUID3];
+                    goTarget = WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs[GUID3];
                 }
             }
             if ((targetMask1 & 0x10u) != 0 || (targetMask1 & 0x1000u) != 0)
             {
                 var GUID4 = packet.GetPackGuid();
-                if (WorldServiceLocator._CommonGlobalFunctions.GuidIsItem(GUID4))
+                if (WorldServiceLocator.CommonGlobalFunctions.GuidIsItem(GUID4))
                 {
-                    itemTarget = WorldServiceLocator._WorldServer.WORLD_ITEMs[GUID4];
+                    itemTarget = WorldServiceLocator.WorldServer.WORLD_ITEMs[GUID4];
                 }
             }
             if ((targetMask1 & 0x20u) != 0)
@@ -2514,9 +2514,9 @@ public class WS_Spells
             if ((targetMask1 & 0x8000u) != 0 || (targetMask1 & 0x200u) != 0)
             {
                 var GUID2 = packet.GetPackGuid();
-                if (WorldServiceLocator._CommonGlobalFunctions.GuidIsCorpse(GUID2))
+                if (WorldServiceLocator.CommonGlobalFunctions.GuidIsCorpse(GUID2))
                 {
-                    corpseTarget = WorldServiceLocator._WorldServer.WORLD_CORPSEOBJECTs[GUID2];
+                    corpseTarget = WorldServiceLocator.WorldServer.WORLD_CORPSEOBJECTs[GUID2];
                 }
             }
         }
@@ -2684,7 +2684,7 @@ public class WS_Spells
 
         private bool _disposedValue;
 
-        public SpellInfo SpellInfo => WorldServiceLocator._WS_Spells.SPELLs[SpellID];
+        public SpellInfo SpellInfo => WorldServiceLocator.WSSpells.SPELLs[SpellID];
 
         public bool Finished => Stopped || State == SpellCastState.SPELL_STATE_FINISHED || State == SpellCastState.SPELL_STATE_IDLE;
 
@@ -2753,13 +2753,13 @@ public class WS_Spells
             try
             {
                 Stopped = false;
-                var spellInfo = WorldServiceLocator._WS_Spells.SPELLs[SpellID];
+                var spellInfo = WorldServiceLocator.WSSpells.SPELLs[SpellID];
                 var castParams = this;
                 await spellInfo.CastAsync(castParams);
             }
             catch (Exception ex)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "Cast Exception {0} : Interrupted {1} : Exception {2}", SpellID, Stopped, ex);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Cast Exception {0} : Interrupted {1} : Exception {2}", SpellID, Stopped, ex);
             }
         }
 
@@ -2774,7 +2774,7 @@ public class WS_Spells
             }
             catch (Exception ex2)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "StopCast Exception {0} : Interrupted {1} : Exception {2}", SpellID, Stopped, ex2);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "StopCast Exception {0} : Interrupted {1} : Exception {2}", SpellID, Stopped, ex2);
             }
         }
 
@@ -2789,7 +2789,7 @@ public class WS_Spells
                 {
                     WS_Base.BaseUnit caster = (WS_Base.BaseUnit)Caster;
                     var resistChance = caster.GetAuraModifier(AuraEffects_Names.SPELL_AURA_RESIST_PUSHBACK);
-                    if (resistChance <= 0 || resistChance <= WorldServiceLocator._WorldServer.Rnd.Next(0, 100))
+                    if (resistChance <= 0 || resistChance <= WorldServiceLocator.WorldServer.Rnd.Next(0, 100))
                     {
                         var delaytime = 200;
                         Delayed += delaytime;
@@ -3400,8 +3400,8 @@ public class WS_Spells
                     byte b2;
                     checked
                     {
-                        var b = (byte)WorldServiceLocator._Global_Constants.MAX_POSITIVE_AURA_EFFECTs;
-                        b2 = (byte)(WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1);
+                        var b = (byte)WorldServiceLocator.GlobalConstants.MAX_POSITIVE_AURA_EFFECTs;
+                        b2 = (byte)(WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1);
                         i = b;
                     }
 
@@ -3454,14 +3454,14 @@ public class WS_Spells
                 {
                     characterObject.Teleport(characterObject.bindpoint_positionX, characterObject.bindpoint_positionY, characterObject.bindpoint_positionZ, characterObject.orientation, characterObject.bindpoint_map_id);
                 }
-                else if (WorldServiceLocator._WS_DBCDatabase.TeleportCoords.ContainsKey(SpellID))
+                else if (WorldServiceLocator.WSDBCDatabase.TeleportCoords.ContainsKey(SpellID))
                 {
-                    var mapID = (int)WorldServiceLocator._WS_DBCDatabase.TeleportCoords[SpellID].MapID;
-                    characterObject.Teleport(WorldServiceLocator._WS_DBCDatabase.TeleportCoords[SpellID].PosX, WorldServiceLocator._WS_DBCDatabase.TeleportCoords[SpellID].PosY, WorldServiceLocator._WS_DBCDatabase.TeleportCoords[SpellID].PosZ, characterObject.orientation, checked(mapID));
+                    var mapID = (int)WorldServiceLocator.WSDBCDatabase.TeleportCoords[SpellID].MapID;
+                    characterObject.Teleport(WorldServiceLocator.WSDBCDatabase.TeleportCoords[SpellID].PosX, WorldServiceLocator.WSDBCDatabase.TeleportCoords[SpellID].PosY, WorldServiceLocator.WSDBCDatabase.TeleportCoords[SpellID].PosZ, characterObject.orientation, checked(mapID));
                 }
                 else
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "WARNING: Spell {0} did not have any teleport coordinates.", SpellID);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "WARNING: Spell {0} did not have any teleport coordinates.", SpellID);
                     return SpellFailedReason.SPELL_FAILED_UNKNOWN;
                 }
             }
@@ -3632,12 +3632,12 @@ public class WS_Spells
     {
         if (Caster is WS_PlayerData.CharacterObject)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "[MapID:{0} X:{1} Y:{2} Z:{3}] SPELL_EFFECT_HEAL [Caster = CharacterObject: {4}]", Caster.MapID, Caster.positionX, Caster.positionY, Caster.positionZ, Caster is WS_PlayerData.CharacterObject);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "[MapID:{0} X:{1} Y:{2} Z:{3}] SPELL_EFFECT_HEAL [Caster = CharacterObject: {4}]", Caster.MapID, Caster.positionX, Caster.positionY, Caster.positionZ, Caster is WS_PlayerData.CharacterObject);
         }
         else
         if (Caster is not WS_PlayerData.CharacterObject)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[MapID:{0} X:{1} Y:{2} Z:{3}] SPELL_EFFECT_HEAL [Caster = CharacterObject: {4}]", Caster.MapID, Caster.positionX, Caster.positionY, Caster.positionZ, Caster is not WS_PlayerData.CharacterObject);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[MapID:{0} X:{1} Y:{2} Z:{3}] SPELL_EFFECT_HEAL [Caster = CharacterObject: {4}]", Caster.MapID, Caster.positionX, Caster.positionY, Caster.positionZ, Caster is not WS_PlayerData.CharacterObject);
             return SpellFailedReason.SPELL_FAILED_ERROR;
         }
         for (var i = 0; i < Infected.Count; i++)
@@ -3793,27 +3793,27 @@ public class WS_Spells
         LootType LootType = LootType.LOOTTYPE_CORPSE;
         if (lockID == 0)
         {
-            if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(targetGUID) && WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(targetGUID))
+            if (WorldServiceLocator.CommonGlobalFunctions.GuidIsGameObject(targetGUID) && WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(targetGUID))
             {
                 WS_PlayerData.CharacterObject Character = (WS_PlayerData.CharacterObject)Caster;
-                WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[targetGUID].LootObject(ref Character, LootType);
+                WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[targetGUID].LootObject(ref Character, LootType);
             }
             return SpellFailedReason.SPELL_NO_ERROR;
         }
-        if (!WorldServiceLocator._WS_Loot.Locks.ContainsKey(lockID))
+        if (!WorldServiceLocator.WSLoot.Locks.ContainsKey(lockID))
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[DEBUG] Lock {0} did not exist.", lockID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[DEBUG] Lock {0} did not exist.", lockID);
             return SpellFailedReason.SPELL_FAILED_ERROR;
         }
         byte i = 0;
         do
         {
-            if (Item != null && WorldServiceLocator._WS_Loot.Locks[lockID].KeyType[i] == 1 && WorldServiceLocator._WS_Loot.Locks[lockID].Keys[i] == Item.ItemEntry)
+            if (Item != null && WorldServiceLocator.WSLoot.Locks[lockID].KeyType[i] == 1 && WorldServiceLocator.WSLoot.Locks[lockID].Keys[i] == Item.ItemEntry)
             {
-                if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(targetGUID) && WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(targetGUID))
+                if (WorldServiceLocator.CommonGlobalFunctions.GuidIsGameObject(targetGUID) && WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(targetGUID))
                 {
                     WS_PlayerData.CharacterObject Character = (WS_PlayerData.CharacterObject)Caster;
-                    WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[targetGUID].LootObject(ref Character, LootType);
+                    WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[targetGUID].LootObject(ref Character, LootType);
                 }
                 return SpellFailedReason.SPELL_NO_ERROR;
             }
@@ -3832,14 +3832,14 @@ public class WS_Spells
         {
             SkillID = 633;
         }
-        var ReqSkillValue = WorldServiceLocator._WS_Loot.Locks[lockID].RequiredMiningSkill;
-        if (WorldServiceLocator._WS_Loot.Locks[lockID].RequiredLockingSkill > 0)
+        var ReqSkillValue = WorldServiceLocator.WSLoot.Locks[lockID].RequiredMiningSkill;
+        if (WorldServiceLocator.WSLoot.Locks[lockID].RequiredLockingSkill > 0)
         {
             if (SkillID != 633)
             {
                 return SpellFailedReason.SPELL_FAILED_FIZZLE;
             }
-            ReqSkillValue = WorldServiceLocator._WS_Loot.Locks[lockID].RequiredLockingSkill;
+            ReqSkillValue = WorldServiceLocator.WSLoot.Locks[lockID].RequiredLockingSkill;
         }
         else if (SkillID == 633)
         {
@@ -3854,10 +3854,10 @@ public class WS_Spells
                 return SpellFailedReason.SPELL_FAILED_LOW_CASTLEVEL;
             }
         }
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(targetGUID) && WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(targetGUID))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsGameObject(targetGUID) && WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(targetGUID))
         {
             WS_PlayerData.CharacterObject Character = (WS_PlayerData.CharacterObject)Caster;
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[targetGUID].LootObject(ref Character, LootType);
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[targetGUID].LootObject(ref Character, LootType);
         }
         return SpellFailedReason.SPELL_NO_ERROR;
     }
@@ -3889,7 +3889,7 @@ public class WS_Spells
                     if (!creatureObject.IsDead)
                     {
                         var chance = 10 + caster.Level - creatureObject.Level;
-                        if (chance > WorldServiceLocator._WorldServer.Rnd.Next(0, 20))
+                        if (chance > WorldServiceLocator.WorldServer.Rnd.Next(0, 20))
                         {
                             if (creatureObject.CreatureInfo.PocketLootID > 0)
                             {
@@ -3897,7 +3897,7 @@ public class WS_Spells
                                 {
                                     LootOwner = Caster.GUID
                                 };
-                                WorldServiceLocator._WS_Loot.LootTemplates_Pickpocketing.GetLoot(creatureObject.CreatureInfo.PocketLootID)?.Process(ref Loot, 0);
+                                WorldServiceLocator.WSLoot.LootTemplates_Pickpocketing.GetLoot(creatureObject.CreatureInfo.PocketLootID)?.Process(ref Loot, 0);
                                 WS_PlayerData.CharacterObject caster1 = (WS_PlayerData.CharacterObject)Caster;
                                 new WS_Loot.LootObject(creatureObject.GUID, LootType.LOOTTYPE_PICKPOCKETING)
                                 {
@@ -3907,7 +3907,7 @@ public class WS_Spells
                             else
                             {
                                 WS_PlayerData.CharacterObject caster1 = (WS_PlayerData.CharacterObject)Caster;
-                                WorldServiceLocator._WS_Loot.SendEmptyLoot(creatureObject.GUID, LootType.LOOTTYPE_PICKPOCKETING, ref caster1.client);
+                                WorldServiceLocator.WSLoot.SendEmptyLoot(creatureObject.GUID, LootType.LOOTTYPE_PICKPOCKETING, ref caster1.client);
                             }
                         }
                         else
@@ -3950,7 +3950,7 @@ public class WS_Spells
                 {
                     using (WS_Creatures.CreatureObject creatureObject = (WS_Creatures.CreatureObject)Target.unitTarget)
                     {
-                        if (creatureObject.IsDead && WorldServiceLocator._Functions.HaveFlags(creatureObject.cUnitFlags, 67108864))
+                        if (creatureObject.IsDead && WorldServiceLocator.Functions.HaveFlags(creatureObject.cUnitFlags, 67108864))
                         {
                             creatureObject.cUnitFlags &= -67108865;
                             if (creatureObject.CreatureInfo.SkinLootID > 0)
@@ -3959,7 +3959,7 @@ public class WS_Spells
                                 {
                                     LootOwner = Caster.GUID
                                 };
-                                WorldServiceLocator._WS_Loot.LootTemplates_Skinning.GetLoot(creatureObject.CreatureInfo.SkinLootID)?.Process(ref Loot, 0);
+                                WorldServiceLocator.WSLoot.LootTemplates_Skinning.GetLoot(creatureObject.CreatureInfo.SkinLootID)?.Process(ref Loot, 0);
                                 WS_PlayerData.CharacterObject caster = (WS_PlayerData.CharacterObject)Caster;
                                 new WS_Loot.LootObject(creatureObject.GUID, LootType.LOOTTYPE_SKINNING)
                                 {
@@ -3969,7 +3969,7 @@ public class WS_Spells
                             else
                             {
                                 WS_PlayerData.CharacterObject caster = (WS_PlayerData.CharacterObject)Caster;
-                                WorldServiceLocator._WS_Loot.SendEmptyLoot(creatureObject.GUID, LootType.LOOTTYPE_SKINNING, ref caster.client);
+                                WorldServiceLocator.WSLoot.SendEmptyLoot(creatureObject.GUID, LootType.LOOTTYPE_SKINNING, ref caster.client);
                             }
                             Packets.UpdateClass TmpUpdate = new(188);
                             TmpUpdate.SetUpdateFlag(46, creatureObject.cUnitFlags);
@@ -4257,7 +4257,7 @@ public class WS_Spells
         foreach (WS_Base.BaseUnit item in Infected)
         {
             var Unit = item;
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             WS_Base.BaseUnit Attacker = (WS_Base.BaseUnit)Caster;
             Caster = Attacker;
             var damageInfo2 = wS_Combat.CalculateDamage(ref Attacker, ref Unit, Offhand, Ranged, SPELLs[SpellID], SpellInfo);
@@ -4340,7 +4340,7 @@ public class WS_Spells
         foreach (WS_Base.BaseUnit item in Infected)
         {
             var Unit = item;
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             WS_Base.BaseUnit Attacker = (WS_Base.BaseUnit)Caster;
             Caster = Attacker;
             var damageInfo2 = wS_Combat.CalculateDamage(ref Attacker, ref Unit, Offhand, Ranged, SPELLs[SpellID], SpellInfo);
@@ -4407,12 +4407,12 @@ public class WS_Spells
                 var spellCasted = -1;
                 do
                 {
-                    var AuraStart = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                    var AuraStart = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                     var AuraEnd = 0;
                     if (SPELLs[SpellID].IsPassive)
                     {
-                        AuraStart = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs - 1;
-                        AuraEnd = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE;
+                        AuraStart = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs - 1;
+                        AuraEnd = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE;
                     }
                     var Duration = SPELLs[SpellID].GetDuration;
                     if (SpellID == 15007)
@@ -4467,21 +4467,21 @@ public class WS_Spells
                             {
                                 auraTarget.ActiveSpells[i].Aura[0] = AURAs[SpellInfo.ApplyAuraIndex];
                                 auraTarget.ActiveSpells[i].Aura_Info[0] = SpellInfo;
-                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "APPLYING AURA[0] {0}", (AuraEffects_Names)SpellInfo.ApplyAuraIndex);
+                                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "APPLYING AURA[0] {0}", (AuraEffects_Names)SpellInfo.ApplyAuraIndex);
                                 break;
                             }
                             if (auraTarget.ActiveSpells[i].Aura[1] == null)
                             {
                                 auraTarget.ActiveSpells[i].Aura[1] = AURAs[SpellInfo.ApplyAuraIndex];
                                 auraTarget.ActiveSpells[i].Aura_Info[1] = SpellInfo;
-                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "APPLYING AURA[1] {0}", (AuraEffects_Names)SpellInfo.ApplyAuraIndex);
+                                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "APPLYING AURA[1] {0}", (AuraEffects_Names)SpellInfo.ApplyAuraIndex);
                                 break;
                             }
                             if (auraTarget.ActiveSpells[i].Aura[2] == null)
                             {
                                 auraTarget.ActiveSpells[i].Aura[2] = AURAs[SpellInfo.ApplyAuraIndex];
                                 auraTarget.ActiveSpells[i].Aura_Info[2] = SpellInfo;
-                                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "APPLYING AURA[2] {0}", (AuraEffects_Names)SpellInfo.ApplyAuraIndex);
+                                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "APPLYING AURA[2] {0}", (AuraEffects_Names)SpellInfo.ApplyAuraIndex);
                                 break;
                             }
                             spellCasted = int.MaxValue;
@@ -4513,7 +4513,7 @@ public class WS_Spells
             }
             catch (Exception e)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while applying aura for spell [Caster:{0}, SpellID:{1}, SpellInfo:{2}, AuraTarget:{3}, Exception:{4}]", Caster, SpellID, SpellInfo, auraTarget, Environment.NewLine + e);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error while applying aura for spell [Caster:{0}, SpellID:{1}, SpellInfo:{2}, AuraTarget:{3}, Exception:{4}]", Caster, SpellID, SpellInfo, auraTarget, Environment.NewLine + e);
             }
             return SpellFailedReason.SPELL_NO_ERROR;
         }
@@ -4614,7 +4614,7 @@ public class WS_Spells
         {
             return SpellFailedReason.SPELL_FAILED_BAD_IMPLICIT_TARGETS;
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "Amplitude: {0}", SpellInfo.Amplitude);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "Amplitude: {0}", SpellInfo.Amplitude);
         WS_Base.BaseUnit Caster_ = (WS_Base.BaseUnit)Caster;
         WS_DynamicObjects.DynamicObject dynamicObject = new(ref Caster_, SpellID, Target.dstX, Target.dstY, Target.dstZ, SPELLs[SpellID].GetDuration, SpellInfo.GetRadius);
         Caster = Caster_;
@@ -4650,14 +4650,14 @@ public class WS_Spells
             {
                 return SpellFailedReason.SPELL_FAILED_ERROR;
             }
-            if (!WorldServiceLocator._WorldServer.ITEMDatabase.ContainsKey(SpellInfo.ItemType))
+            if (!WorldServiceLocator.WorldServer.ITEMDatabase.ContainsKey(SpellInfo.ItemType))
             {
                 WS_Items.ItemInfo tmpInfo = new(SpellInfo.ItemType);
-                WorldServiceLocator._WorldServer.ITEMDatabase.Add(SpellInfo.ItemType, tmpInfo);
+                WorldServiceLocator.WorldServer.ITEMDatabase.Add(SpellInfo.ItemType, tmpInfo);
             }
-            if (Amount > WorldServiceLocator._WorldServer.ITEMDatabase[SpellInfo.ItemType].Stackable)
+            if (Amount > WorldServiceLocator.WorldServer.ITEMDatabase[SpellInfo.ItemType].Stackable)
             {
-                Amount = WorldServiceLocator._WorldServer.ITEMDatabase[SpellInfo.ItemType].Stackable;
+                Amount = WorldServiceLocator.WorldServer.ITEMDatabase[SpellInfo.ItemType].Stackable;
             }
             var objCharacter = caster;
             var friendPlayersAroundMe = GetFriendPlayersAroundMe(ref objCharacter, SpellInfo.GetRadius);
@@ -4758,9 +4758,9 @@ public class WS_Spells
                         break;
                     }
 
-                case WS_Corpses.CorpseObject when WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(unit.Owner):
+                case WS_Corpses.CorpseObject when WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(unit.Owner):
                     {
-                        var characterObject = WorldServiceLocator._WorldServer.CHARACTERs[unit.Owner];
+                        var characterObject = WorldServiceLocator.WorldServer.CHARACTERs[unit.Owner];
                         characterObject.resurrectGUID = Caster.GUID;
                         characterObject.resurrectMapID = checked((int)Caster.MapID);
                         characterObject.resurrectPositionX = Caster.positionX;
@@ -4856,23 +4856,23 @@ public class WS_Spells
                         break;
                     }
 
-                case WS_Corpses.CorpseObject when WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(unit1.Owner):
+                case WS_Corpses.CorpseObject when WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(unit1.Owner):
                     {
                         var unit = unit1;
-                        WorldServiceLocator._WorldServer.CHARACTERs[unit.Owner].resurrectGUID = Caster.GUID;
-                        WorldServiceLocator._WorldServer.CHARACTERs[unit.Owner].resurrectMapID = checked((int)Caster.MapID);
-                        WorldServiceLocator._WorldServer.CHARACTERs[unit.Owner].resurrectPositionX = Caster.positionX;
-                        WorldServiceLocator._WorldServer.CHARACTERs[unit.Owner].resurrectPositionY = Caster.positionY;
-                        WorldServiceLocator._WorldServer.CHARACTERs[unit.Owner].resurrectPositionZ = Caster.positionZ;
+                        WorldServiceLocator.WorldServer.CHARACTERs[unit.Owner].resurrectGUID = Caster.GUID;
+                        WorldServiceLocator.WorldServer.CHARACTERs[unit.Owner].resurrectMapID = checked((int)Caster.MapID);
+                        WorldServiceLocator.WorldServer.CHARACTERs[unit.Owner].resurrectPositionX = Caster.positionX;
+                        WorldServiceLocator.WorldServer.CHARACTERs[unit.Owner].resurrectPositionY = Caster.positionY;
+                        WorldServiceLocator.WorldServer.CHARACTERs[unit.Owner].resurrectPositionZ = Caster.positionZ;
                         WS_Base.BaseUnit caster = (WS_Base.BaseUnit)Caster;
-                        WorldServiceLocator._WorldServer.CHARACTERs[unit.Owner].resurrectHealth = SpellInfo.GetValue(caster.Level, 0);
-                        WorldServiceLocator._WorldServer.CHARACTERs[unit.Owner].resurrectMana = SpellInfo.MiscValue;
+                        WorldServiceLocator.WorldServer.CHARACTERs[unit.Owner].resurrectHealth = SpellInfo.GetValue(caster.Level, 0);
+                        WorldServiceLocator.WorldServer.CHARACTERs[unit.Owner].resurrectMana = SpellInfo.MiscValue;
                         Packets.PacketClass RessurectRequest = new(Opcodes.SMSG_RESURRECT_REQUEST);
                         RessurectRequest.AddUInt64(Caster.GUID);
                         RessurectRequest.AddUInt32(1u);
                         RessurectRequest.AddUInt16(0);
                         RessurectRequest.AddUInt32(1u);
-                        WorldServiceLocator._WorldServer.CHARACTERs[unit.Owner].client.Send(ref RessurectRequest);
+                        WorldServiceLocator.WorldServer.CHARACTERs[unit.Owner].client.Send(ref RessurectRequest);
                         RessurectRequest.Dispose();
                         break;
                     }
@@ -4901,7 +4901,7 @@ public class WS_Spells
             WS_Base.BaseUnit Unit = (WS_Base.BaseUnit)Infected[i];
             if (Unit is WS_PlayerData.CharacterObject @object)
             {
-                var allGraveYards = WorldServiceLocator._WorldServer.AllGraveYards;
+                var allGraveYards = WorldServiceLocator.WorldServer.AllGraveYards;
                 var Character = @object;
                 allGraveYards.GoToNearestGraveyard(ref Character, Alive: false, Teleport: true);
             }
@@ -4963,7 +4963,7 @@ public class WS_Spells
             checked
             {
                 var value = (uint)cBytes;
-                var functions = WorldServiceLocator._Functions;
+                var functions = WorldServiceLocator.Functions;
                 functions.SetFlag(ref value, 25, flagValue: true);
                 cBytes = (int)value;
                 Unit.Invisibility = InvisibilityLevel.INIVISIBILITY;
@@ -4972,7 +4972,7 @@ public class WS_Spells
             Unit.Invisibility_Value = SpellInfo.GetValue(Level: caster.Level, ComboPoints: 0);
             if (Unit is WS_PlayerData.CharacterObject @object)
             {
-                var wS_CharMovement = WorldServiceLocator._WS_CharMovement;
+                var wS_CharMovement = WorldServiceLocator.WSCharMovement;
                 var Character = @object;
                 wS_CharMovement.UpdateCell(ref Character);
             }
@@ -5000,7 +5000,7 @@ public class WS_Spells
             Unit.CanSeeInvisibility_Stealth = SpellInfo.GetValue(caster.Level, 0);
             if (Unit is WS_PlayerData.CharacterObject @object)
             {
-                var wS_CharMovement = WorldServiceLocator._WS_CharMovement;
+                var wS_CharMovement = WorldServiceLocator.WSCharMovement;
                 var Character = @object;
                 wS_CharMovement.UpdateCell(ref Character);
             }
@@ -5022,7 +5022,7 @@ public class WS_Spells
     {
         var selectedX = (float)(Caster.positionX + (Math.Cos(Caster.orientation) * SpellInfo.GetRadius));
         var selectedY = (float)(Caster.positionY + (Math.Sin(Caster.orientation) * SpellInfo.GetRadius));
-        var selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID);
+        var selectedZ = WorldServiceLocator.WSMaps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID);
         if (Math.Abs(Caster.positionZ - selectedZ) > SpellInfo.GetRadius)
         {
             selectedX = Caster.positionX;
@@ -5032,7 +5032,7 @@ public class WS_Spells
         float hitX = default;
         float hitY = default;
         float hitZ = default;
-        if (WorldServiceLocator._WS_Maps.GetObjectHitPos(ref Caster, selectedX, selectedY, selectedZ + 2f, ref hitX, ref hitY, ref hitZ, -1f))
+        if (WorldServiceLocator.WSMaps.GetObjectHitPos(ref Caster, selectedX, selectedY, selectedZ + 2f, ref hitX, ref hitY, ref hitZ, -1f))
         {
             selectedX = hitX;
             selectedY = hitY;
@@ -5154,15 +5154,15 @@ public class WS_Spells
                         return SPELL_EFFECT_SUMMON_TOTEM;
                     }
                 IL_0041:
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Totem Slot [{0}].", Slot);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Totem Slot [{0}].", Slot);
                     if (Slot < 4)
                     {
                         WS_PlayerData.CharacterObject caster = (WS_PlayerData.CharacterObject)Caster;
                         var GUID = caster.TotemSlot[Slot];
-                        if (decimal.Compare(new decimal(GUID), 0m) != 0 && WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(GUID))
+                        if (decimal.Compare(new decimal(GUID), 0m) != 0 && WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(GUID))
                         {
-                            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Destroyed old totem.");
-                            WorldServiceLocator._WorldServer.WORLD_CREATUREs[GUID].Destroy();
+                            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Destroyed old totem.");
+                            WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID].Destroy();
                         }
                     }
                     angle = 0f;
@@ -5172,7 +5172,7 @@ public class WS_Spells
                     }
                     selectedX = (float)(Caster.positionX + (Math.Cos(Caster.orientation) * 2.0));
                     selectedY = (float)(Caster.positionY + (Math.Sin(Caster.orientation) * 2.0));
-                    selectedZ = WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID);
+                    selectedZ = WorldServiceLocator.WSMaps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID);
                     WS_Totems.TotemObject NewTotem = new(SpellInfo.MiscValue, selectedX, selectedY, selectedZ, angle, (int)Caster.MapID, SPELLs[SpellID].GetDuration);
                     WS_Base.BaseUnit caster1 = (WS_Base.BaseUnit)Caster;
                     NewTotem.Life.Base = SpellInfo.GetValue(caster1.Level, 0);
@@ -5190,14 +5190,14 @@ public class WS_Spells
                     {
                         NewTotem.Faction = object2.Faction;
                     }
-                    if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(SpellInfo.MiscValue))
+                    if (!WorldServiceLocator.WorldServer.CREATURESDatabase.ContainsKey(SpellInfo.MiscValue))
                     {
                         CreatureInfo tmpInfo = new(SpellInfo.MiscValue);
-                        WorldServiceLocator._WorldServer.CREATURESDatabase.Add(SpellInfo.MiscValue, tmpInfo);
+                        WorldServiceLocator.WorldServer.CREATURESDatabase.Add(SpellInfo.MiscValue, tmpInfo);
                     }
-                    NewTotem.InitSpell(WorldServiceLocator._WorldServer.CREATURESDatabase[SpellInfo.MiscValue].Spells[0]);
+                    NewTotem.InitSpell(WorldServiceLocator.WorldServer.CREATURESDatabase[SpellInfo.MiscValue].Spells[0]);
                     NewTotem.AddToWorld();
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Totem spawned by [{0:X}].", NewTotem.GUID);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Totem spawned by [{0:X}].", NewTotem.GUID);
                     if (Slot < 4 && Caster is WS_PlayerData.CharacterObject object1)
                     {
                         object1.TotemSlot[Slot] = NewTotem.GUID;
@@ -5235,9 +5235,9 @@ public class WS_Spells
             selectedX = (float)(Caster.positionX + (Math.Cos(Caster.orientation) * SPELLs[SpellID].GetRange));
             selectedY = (float)(Caster.positionY + (Math.Sin(Caster.orientation) * SPELLs[SpellID].GetRange));
         }
-        var GameobjectInfo = WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase.ContainsKey(SpellInfo.MiscValue) ? WorldServiceLocator._WorldServer.GAMEOBJECTSDatabase[SpellInfo.MiscValue] : new WS_GameObjects.GameObjectInfo(SpellInfo.MiscValue);
+        var GameobjectInfo = WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase.ContainsKey(SpellInfo.MiscValue) ? WorldServiceLocator.WorldServer.GAMEOBJECTSDatabase[SpellInfo.MiscValue] : new WS_GameObjects.GameObjectInfo(SpellInfo.MiscValue);
         WS_Base.BaseUnit caster = (WS_Base.BaseUnit)Caster;
-        WS_GameObjects.GameObject gameObjectObject = new(PosZ: (GameobjectInfo.Type != GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE) ? WorldServiceLocator._WS_Maps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID) : WorldServiceLocator._WS_Maps.GetWaterLevel(selectedX, selectedY, checked((int)Caster.MapID)), ID_: SpellInfo.MiscValue, MapID_: Caster.MapID, PosX: selectedX, PosY: selectedY, Rotation: Caster.orientation, Owner_: Caster.GUID)
+        WS_GameObjects.GameObject gameObjectObject = new(PosZ: (GameobjectInfo.Type != GameObjectType.GAMEOBJECT_TYPE_FISHINGNODE) ? WorldServiceLocator.WSMaps.GetZCoord(selectedX, selectedY, Caster.positionZ, Caster.MapID) : WorldServiceLocator.WSMaps.GetWaterLevel(selectedX, selectedY, checked((int)Caster.MapID)), ID_: SpellInfo.MiscValue, MapID_: Caster.MapID, PosX: selectedX, PosY: selectedY, Rotation: Caster.orientation, Owner_: Caster.GUID)
         {
             CreatedBySpell = SpellID,
             Level = caster.Level,
@@ -5285,26 +5285,26 @@ public class WS_Spells
             return SpellFailedReason.SPELL_FAILED_ITEM_NOT_FOUND;
         }
         Target.itemTarget.AddEnchantment(SpellInfo.MiscValue, 0);
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Target.itemTarget.OwnerGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(Target.itemTarget.OwnerGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].SendItemUpdate(Target.itemTarget);
+            WorldServiceLocator.WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].SendItemUpdate(Target.itemTarget);
             Packets.PacketClass EnchantLog = new(Opcodes.SMSG_ENCHANTMENTLOG);
             EnchantLog.AddUInt64(Target.itemTarget.OwnerGUID);
             EnchantLog.AddUInt64(Caster.GUID);
             EnchantLog.AddInt32(Target.itemTarget.ItemEntry);
             EnchantLog.AddInt32(SpellInfo.MiscValue);
             EnchantLog.AddInt8(0);
-            var client = WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].client;
+            var client = WorldServiceLocator.WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].client;
             client.Send(ref EnchantLog);
-            if (WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].tradeInfo != null)
+            if (WorldServiceLocator.WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].tradeInfo != null)
             {
-                if (WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].tradeInfo.Trader == WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID])
+                if (WorldServiceLocator.WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].tradeInfo.Trader == WorldServiceLocator.WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID])
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].tradeInfo.SendTradeUpdateToTarget();
+                    WorldServiceLocator.WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].tradeInfo.SendTradeUpdateToTarget();
                 }
                 else
                 {
-                    WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].tradeInfo.SendTradeUpdateToTrader();
+                    WorldServiceLocator.WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].tradeInfo.SendTradeUpdateToTrader();
                 }
             }
             EnchantLog.Dispose();
@@ -5334,18 +5334,18 @@ public class WS_Spells
             Duration = (SPELLs[SpellID].SpellVisual == 563) ? 600 : ((SPELLs[SpellID].SpellFamilyName == 8) ? 3600 : ((SPELLs[SpellID].SpellFamilyName == 11) ? 1800 : ((SPELLs[SpellID].SpellVisual == 215) ? 1800 : ((SPELLs[SpellID].SpellVisual != 0) ? 3600 : 1800))));
             Duration = checked(Duration * 1000);
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Enchant duration [{0}]", Duration);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Enchant duration [{0}]", Duration);
         Target.itemTarget.AddEnchantment(SpellInfo.MiscValue, 1, Duration);
-        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(Target.itemTarget.OwnerGUID))
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(Target.itemTarget.OwnerGUID))
         {
-            WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].SendItemUpdate(Target.itemTarget);
+            WorldServiceLocator.WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].SendItemUpdate(Target.itemTarget);
             Packets.PacketClass EnchantLog = new(Opcodes.SMSG_ENCHANTMENTLOG);
             EnchantLog.AddUInt64(Target.itemTarget.OwnerGUID);
             EnchantLog.AddUInt64(Caster.GUID);
             EnchantLog.AddInt32(Target.itemTarget.ItemEntry);
             EnchantLog.AddInt32(SpellInfo.MiscValue);
             EnchantLog.AddInt8(0);
-            WorldServiceLocator._WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].client.Send(ref EnchantLog);
+            WorldServiceLocator.WorldServer.CHARACTERs[Target.itemTarget.OwnerGUID].client.Send(ref EnchantLog);
             EnchantLog.Dispose();
         }
         return SpellFailedReason.SPELL_NO_ERROR;
@@ -5372,7 +5372,7 @@ public class WS_Spells
         {
             Duration = 10000;
         }
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Enchant duration [{0}]({1})", Duration, SpellInfo.valueBase);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Enchant duration [{0}]({1})", Duration, SpellInfo.valueBase);
         foreach (WS_Base.BaseUnit Unit in Infected)
         {
             if (Unit is WS_PlayerData.CharacterObject @object && @object.Items.ContainsKey(15) && @object.Items[15].Enchantments.ContainsKey(1) && @object.Items[15].Enchantments[1].ID == SpellInfo.MiscValue)
@@ -5404,19 +5404,19 @@ public class WS_Spells
         NearX = (!(Target.unitTarget.positionX > Caster.positionX)) ? (NearX + 1f) : (NearX - 1f);
         var NearY = Target.unitTarget.positionY;
         NearY = (!(Target.unitTarget.positionY > Caster.positionY)) ? (NearY + 1f) : (NearY - 1f);
-        var NearZ = WorldServiceLocator._WS_Maps.GetZCoord(NearX, NearY, Caster.positionZ, Caster.MapID);
+        var NearZ = WorldServiceLocator.WSMaps.GetZCoord(NearX, NearY, Caster.positionZ, Caster.MapID);
         if ((NearZ > Target.unitTarget.positionZ + 2f) | (NearZ < Target.unitTarget.positionZ - 2f))
         {
             NearZ = Target.unitTarget.positionZ;
         }
-        var moveDist = WorldServiceLocator._WS_Combat.GetDistance(Caster, NearX, NearY, NearZ);
+        var moveDist = WorldServiceLocator.WSCombat.GetDistance(Caster, NearX, NearY, NearZ);
         var TimeToMove = checked((double)Math.Round(moveDist / SPELLs[SpellID].Speed * 1000f));
         Packets.PacketClass SMSG_MONSTER_MOVE = new(Opcodes.SMSG_MONSTER_MOVE);
         SMSG_MONSTER_MOVE.AddPackGUID(Caster.GUID);
         SMSG_MONSTER_MOVE.AddSingle(Caster.positionX);
         SMSG_MONSTER_MOVE.AddSingle(Caster.positionY);
         SMSG_MONSTER_MOVE.AddSingle(Caster.positionZ);
-        SMSG_MONSTER_MOVE.AddInt32(WorldServiceLocator._NativeMethods.timeGetTime(""));
+        SMSG_MONSTER_MOVE.AddInt32(WorldServiceLocator.NativeMethods.timeGetTime(""));
         SMSG_MONSTER_MOVE.AddInt8(0);
         SMSG_MONSTER_MOVE.AddInt32(256);
         var timeToMove = (int)TimeToMove;
@@ -5429,7 +5429,7 @@ public class WS_Spells
         SMSG_MONSTER_MOVE.Dispose();
         if (Caster is WS_PlayerData.CharacterObject object1)
         {
-            WorldServiceLocator._WS_Combat.SendAttackStart(attackerGUID: Caster.GUID, victimGUID: Target.unitTarget.GUID, client: object1.client);
+            WorldServiceLocator.WSCombat.SendAttackStart(attackerGUID: Caster.GUID, victimGUID: Target.unitTarget.GUID, client: object1.client);
             object1.attackState.AttackStart(Victim_: Target.unitTarget);
         }
         return SpellFailedReason.SPELL_NO_ERROR;
@@ -5450,7 +5450,7 @@ public class WS_Spells
         for (var i = 0; i < Infected.Count; i++)
         {
             WS_Base.BaseUnit Unit = (WS_Base.BaseUnit)Infected[i];
-            var Direction = WorldServiceLocator._WS_Combat.GetOrientation(Caster.positionX, Unit.positionX, Caster.positionY, Unit.positionY);
+            var Direction = WorldServiceLocator.WSCombat.GetOrientation(Caster.positionX, Unit.positionX, Caster.positionY, Unit.positionY);
             Packets.PacketClass packet = new(Opcodes.SMSG_MOVE_KNOCK_BACK);
             packet.AddPackGUID(Unit.GUID);
             packet.AddInt32(0);
@@ -5497,7 +5497,7 @@ public class WS_Spells
                 }
                 checked
                 {
-                    var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+                    var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
                     var SpellID2 = 0;
                     for (var i = 0; i <= num; i++)
                     {
@@ -5560,7 +5560,7 @@ public class WS_Spells
                 }
                 var flagX = Caster.positionX + ((Target.unitTarget.positionX - Caster.positionX) / 2f);
                 var flagY = Caster.positionY + ((Target.unitTarget.positionY - Caster.positionY) / 2f);
-                var flagZ = WorldServiceLocator._WS_Maps.GetZCoord(flagX, flagY, Caster.positionZ + 3f, Caster.MapID);
+                var flagZ = WorldServiceLocator.WSMaps.GetZCoord(flagX, flagY, Caster.positionZ + 3f, Caster.MapID);
                 WS_GameObjects.GameObject tmpGO = new(SpellInfo.MiscValue, Caster.MapID, flagX, flagY, flagZ, 0f, Caster.GUID);
                 tmpGO.AddToWorld();
                 unitTarget.DuelArbiter = tmpGO.GUID;
@@ -5597,7 +5597,7 @@ public class WS_Spells
             WS_Base.BaseUnit Unit = (WS_Base.BaseUnit)Infected[i];
             if (Unit is WS_PlayerData.CharacterObject @object)
             {
-                var aLLQUESTS = WorldServiceLocator._WorldServer.ALLQUESTS;
+                var aLLQUESTS = WorldServiceLocator.WorldServer.ALLQUESTS;
                 var objCharacter = @object;
                 aLLQUESTS.CompleteQuest(ref objCharacter, SpellInfo.MiscValue, Caster.GUID);
             }
@@ -5625,17 +5625,17 @@ public class WS_Spells
                     var array = objCharacter1.playersNear.ToArray();
                     foreach (var pGUID2 in array)
                     {
-                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && (objCharacter1.IsHorde != WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde || (objCharacter1.DuelPartner != null && objCharacter1.DuelPartner == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2])) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], PosX, PosY, PosZ) < Distance)
+                        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(pGUID2) && (objCharacter1.IsHorde != WorldServiceLocator.WorldServer.CHARACTERs[pGUID2].IsHorde || (objCharacter1.DuelPartner != null && objCharacter1.DuelPartner == WorldServiceLocator.WorldServer.CHARACTERs[pGUID2])) && !WorldServiceLocator.WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.CHARACTERs[pGUID2], PosX, PosY, PosZ) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]);
+                            result.Add(WorldServiceLocator.WorldServer.CHARACTERs[pGUID2]);
                         }
                     }
                     var array2 = objCharacter1.creaturesNear.ToArray();
                     foreach (var cGUID in array2)
                     {
-                        if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID] is not WS_Totems.TotemObject && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && objCharacter1.GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) <= TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], PosX, PosY, PosZ) < Distance)
+                        if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID] is not WS_Totems.TotemObject && !WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID].IsDead && objCharacter1.GetReaction(WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID].Faction) <= TReaction.NEUTRAL && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID], PosX, PosY, PosZ) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID]);
+                            result.Add(WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID]);
                         }
                     }
 
@@ -5647,9 +5647,9 @@ public class WS_Spells
                     var array3 = objCharacter.SeenBy.ToArray();
                     foreach (var pGUID in array3)
                     {
-                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) <= TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], PosX, PosY, PosZ) < Distance)
+                        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator.WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator.WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) <= TReaction.NEUTRAL && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.CHARACTERs[pGUID], PosX, PosY, PosZ) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID]);
+                            result.Add(WorldServiceLocator.WorldServer.CHARACTERs[pGUID]);
                         }
                     }
 
@@ -5684,17 +5684,17 @@ public class WS_Spells
                     var array = r1.playersNear.ToArray();
                     foreach (var pGUID2 in array)
                     {
-                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && (r1.IsHorde != WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde || (r1.DuelPartner != null && r1.DuelPartner == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2])) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
+                        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(pGUID2) && (r1.IsHorde != WorldServiceLocator.WorldServer.CHARACTERs[pGUID2].IsHorde || (r1.DuelPartner != null && r1.DuelPartner == WorldServiceLocator.WorldServer.CHARACTERs[pGUID2])) && !WorldServiceLocator.WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]);
+                            result.Add(WorldServiceLocator.WorldServer.CHARACTERs[pGUID2]);
                         }
                     }
                     var array2 = r1.creaturesNear.ToArray();
                     foreach (var cGUID in array2)
                     {
-                        if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID] is not WS_Totems.TotemObject && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && r1.GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) <= TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], objCharacter) < Distance)
+                        if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID] is not WS_Totems.TotemObject && !WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID].IsDead && r1.GetReaction(WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID].Faction) <= TReaction.NEUTRAL && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID], objCharacter) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID]);
+                            result.Add(WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID]);
                         }
                     }
 
@@ -5706,9 +5706,9 @@ public class WS_Spells
                     var array3 = r.SeenBy.ToArray();
                     foreach (var pGUID in array3)
                     {
-                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)r).Faction) <= TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
+                        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator.WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator.WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)r).Faction) <= TReaction.NEUTRAL && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID]);
+                            result.Add(WorldServiceLocator.WorldServer.CHARACTERs[pGUID]);
                         }
                     }
 
@@ -5738,17 +5738,17 @@ public class WS_Spells
                     var array = objCharacter1.playersNear.ToArray();
                     foreach (var pGUID2 in array)
                     {
-                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && objCharacter1.IsHorde == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
+                        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(pGUID2) && objCharacter1.IsHorde == WorldServiceLocator.WorldServer.CHARACTERs[pGUID2].IsHorde && !WorldServiceLocator.WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]);
+                            result.Add(WorldServiceLocator.WorldServer.CHARACTERs[pGUID2]);
                         }
                     }
                     var array2 = objCharacter1.creaturesNear.ToArray();
                     foreach (var cGUID in array2)
                     {
-                        if (WorldServiceLocator._WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID] is not WS_Totems.TotemObject && !WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].IsDead && objCharacter1.GetReaction(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID].Faction) > TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID], objCharacter) < Distance)
+                        if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(cGUID) && WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID] is not WS_Totems.TotemObject && !WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID].IsDead && objCharacter1.GetReaction(WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID].Faction) > TReaction.NEUTRAL && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID], objCharacter) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.WORLD_CREATUREs[cGUID]);
+                            result.Add(WorldServiceLocator.WorldServer.WORLD_CREATUREs[cGUID]);
                         }
                     }
 
@@ -5760,9 +5760,9 @@ public class WS_Spells
                     var array3 = objCharacter.SeenBy.ToArray();
                     foreach (var pGUID in array3)
                     {
-                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) > TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
+                        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator.WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator.WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) > TReaction.NEUTRAL && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID]);
+                            result.Add(WorldServiceLocator.WorldServer.CHARACTERs[pGUID]);
                         }
                     }
 
@@ -5792,9 +5792,9 @@ public class WS_Spells
                     var array = objCharacter1.playersNear.ToArray();
                     foreach (var pGUID2 in array)
                     {
-                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID2) && objCharacter1.IsHorde == WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsHorde && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
+                        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(pGUID2) && objCharacter1.IsHorde == WorldServiceLocator.WorldServer.CHARACTERs[pGUID2].IsHorde && !WorldServiceLocator.WorldServer.CHARACTERs[pGUID2].IsDead && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.CHARACTERs[pGUID2], objCharacter) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID2]);
+                            result.Add(WorldServiceLocator.WorldServer.CHARACTERs[pGUID2]);
                         }
                     }
 
@@ -5806,9 +5806,9 @@ public class WS_Spells
                     var array2 = objCharacter.SeenBy.ToArray();
                     foreach (var pGUID in array2)
                     {
-                        if (WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator._WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator._WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) > TReaction.NEUTRAL && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
+                        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(pGUID) && !WorldServiceLocator.WorldServer.CHARACTERs[pGUID].IsDead && WorldServiceLocator.WorldServer.CHARACTERs[pGUID].GetReaction(((WS_Creatures.CreatureObject)objCharacter).Faction) > TReaction.NEUTRAL && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.CHARACTERs[pGUID], objCharacter) < Distance)
                         {
-                            result.Add(WorldServiceLocator._WorldServer.CHARACTERs[pGUID]);
+                            result.Add(WorldServiceLocator.WorldServer.CHARACTERs[pGUID]);
                         }
                     }
 
@@ -5841,9 +5841,9 @@ public class WS_Spells
         var array = objCharacter.Group.LocalMembers.ToArray();
         foreach (var GUID in array)
         {
-            if (objCharacter.playersNear.Contains(GUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID) && WorldServiceLocator._WS_Combat.GetDistance(objCharacter, WorldServiceLocator._WorldServer.CHARACTERs[GUID]) < distance)
+            if (objCharacter.playersNear.Contains(GUID) && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(GUID) && WorldServiceLocator.WSCombat.GetDistance(objCharacter, WorldServiceLocator.WorldServer.CHARACTERs[GUID]) < distance)
             {
-                result.Add(WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
+                result.Add(WorldServiceLocator.WorldServer.CHARACTERs[GUID]);
             }
         }
         return result;
@@ -5861,7 +5861,7 @@ public class WS_Spells
     public List<WS_Base.BaseUnit> GetPartyMembersAtPoint(ref WS_PlayerData.CharacterObject objCharacter, float Distance, float PosX, float PosY, float PosZ)
     {
         List<WS_Base.BaseUnit> result = new();
-        if (WorldServiceLocator._WS_Combat.GetDistance(objCharacter, PosX, PosY, PosZ) < Distance)
+        if (WorldServiceLocator.WSCombat.GetDistance(objCharacter, PosX, PosY, PosZ) < Distance)
         {
             result.Add(objCharacter);
         }
@@ -5872,9 +5872,9 @@ public class WS_Spells
         var array = objCharacter.Group.LocalMembers.ToArray();
         foreach (var GUID in array)
         {
-            if (objCharacter.playersNear.Contains(GUID) && WorldServiceLocator._WorldServer.CHARACTERs.ContainsKey(GUID) && WorldServiceLocator._WS_Combat.GetDistance(WorldServiceLocator._WorldServer.CHARACTERs[GUID], PosX, PosY, PosZ) < Distance)
+            if (objCharacter.playersNear.Contains(GUID) && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(GUID) && WorldServiceLocator.WSCombat.GetDistance(WorldServiceLocator.WorldServer.CHARACTERs[GUID], PosX, PosY, PosZ) < Distance)
             {
-                result.Add(WorldServiceLocator._WorldServer.CHARACTERs[GUID]);
+                result.Add(WorldServiceLocator.WorldServer.CHARACTERs[GUID]);
             }
         }
         return result;
@@ -5893,7 +5893,7 @@ public class WS_Spells
         var tmp = GetEnemyAroundMe(ref objCharacter, Distance, r);
         foreach (var unit in tmp)
         {
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             WS_Base.BaseObject Object = objCharacter;
             WS_Base.BaseObject Object2 = unit;
             var flag = wS_Combat.IsInFrontOf(ref Object, ref Object2);
@@ -5920,7 +5920,7 @@ public class WS_Spells
         var tmp = GetEnemyAroundMe(ref objCharacter, Distance, r);
         foreach (var unit in tmp)
         {
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             WS_Base.BaseObject Object = objCharacter;
             WS_Base.BaseObject Object2 = unit;
             var flag = wS_Combat.IsInBackOf(ref Object, ref Object2);
@@ -5945,7 +5945,7 @@ public class WS_Spells
     /// <param name="Action"></param>
     public void SPELL_AURA_NONE(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Aura None for spell. [Target:{0} Caster:{1} EffectInfo:{2} SpellID:{3} StackCount:{4} Action:{5}]", Target, Caster, EffectInfo, SpellID, StackCount, Action);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Aura None for spell. [Target:{0} Caster:{1} EffectInfo:{2} SpellID:{3} StackCount:{4} Action:{5}]", Target, Caster, EffectInfo, SpellID, StackCount, Action);
     }
 
     /// <summary>
@@ -5959,7 +5959,7 @@ public class WS_Spells
     /// <param name="Action"></param>
     public void SPELL_AURA_DUMMY(ref WS_Base.BaseUnit Target, ref WS_Base.BaseObject Caster, ref SpellEffect EffectInfo, int SpellID, int StackCount, AuraAction Action)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Aura Dummy for spell. [Target:{0} Caster:{1} EffectInfo:{2} SpellID:{3} StackCount:{4} Action:{5}]", Target, Caster, EffectInfo, SpellID, StackCount, Action);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Aura Dummy for spell. [Target:{0} Caster:{1} EffectInfo:{2} SpellID:{3} StackCount:{4} Action:{5}]", Target, Caster, EffectInfo, SpellID, StackCount, Action);
         if (Action == AuraAction.AURA_REMOVEBYDURATION && SpellID == 33763)
         {
             WS_Base.BaseUnit caster = (WS_Base.BaseUnit)Caster;
@@ -6994,18 +6994,18 @@ public class WS_Spells
         switch (Action)
         {
             case AuraAction.AURA_ADD:
-                if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue))
+                if (!WorldServiceLocator.WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue))
                 {
                     CreatureInfo creature = new(EffectInfo.MiscValue);
-                    WorldServiceLocator._WorldServer.CREATURESDatabase.Add(EffectInfo.MiscValue, creature);
+                    WorldServiceLocator.WorldServer.CREATURESDatabase.Add(EffectInfo.MiscValue, creature);
                 }
-                Target.Model = WorldServiceLocator._WorldServer.CREATURESDatabase[EffectInfo.MiscValue].GetFirstModel;
+                Target.Model = WorldServiceLocator.WorldServer.CREATURESDatabase[EffectInfo.MiscValue].GetFirstModel;
                 break;
 
             case AuraAction.AURA_REMOVE:
             case AuraAction.AURA_REMOVEBYDURATION:
                 Target.Model = Target is WS_PlayerData.CharacterObject @object
-                    ? WorldServiceLocator._Functions.GetRaceModel(@object.Race, (int)@object.Gender)
+                    ? WorldServiceLocator.Functions.GetRaceModel(@object.Race, (int)@object.Gender)
                     : target.CreatureInfo.GetRandomModel;
                 break;
 
@@ -7057,7 +7057,7 @@ public class WS_Spells
                     {
                         Target.Invisibility = InvisibilityLevel.DEAD;
                         Target.CanSeeInvisibility = InvisibilityLevel.DEAD;
-                        var wS_CharMovement2 = WorldServiceLocator._WS_CharMovement;
+                        var wS_CharMovement2 = WorldServiceLocator.WSCharMovement;
                         var Character = @object;
                         wS_CharMovement2.UpdateCell(ref Character);
                         Target = Character;
@@ -7068,7 +7068,7 @@ public class WS_Spells
                     {
                         Target.Invisibility = InvisibilityLevel.VISIBLE;
                         Target.CanSeeInvisibility = InvisibilityLevel.INIVISIBILITY;
-                        var wS_CharMovement = WorldServiceLocator._WS_CharMovement;
+                        var wS_CharMovement = WorldServiceLocator.WSCharMovement;
                         var Character = @object;
                         wS_CharMovement.UpdateCell(ref Character);
                         Target = Character;
@@ -7120,7 +7120,7 @@ public class WS_Spells
             {
                 @object.SetUpdateFlag(1260, @object.cPlayerFieldBytes2);
                 @object.SendCharacterUpdate();
-                var wS_CharMovement = WorldServiceLocator._WS_CharMovement;
+                var wS_CharMovement = WorldServiceLocator.WSCharMovement;
                 var Character = @object;
                 wS_CharMovement.UpdateCell(ref Character);
             }
@@ -7159,7 +7159,7 @@ public class WS_Spells
                 default:
                     break;
             }
-            var wS_CharMovement = WorldServiceLocator._WS_CharMovement;
+            var wS_CharMovement = WorldServiceLocator.WSCharMovement;
             WS_PlayerData.CharacterObject Character = (WS_PlayerData.CharacterObject)Target;
             wS_CharMovement.UpdateCell(ref Character);
         }
@@ -7230,7 +7230,7 @@ public class WS_Spells
             }
             if (Target is WS_PlayerData.CharacterObject @object)
             {
-                var wS_CharMovement = WorldServiceLocator._WS_CharMovement;
+                var wS_CharMovement = WorldServiceLocator.WSCharMovement;
                 var Character = @object;
                 wS_CharMovement.UpdateCell(ref Character);
             }
@@ -7269,7 +7269,7 @@ public class WS_Spells
             }
             if (Target is WS_PlayerData.CharacterObject @object)
             {
-                var wS_CharMovement = WorldServiceLocator._WS_CharMovement;
+                var wS_CharMovement = WorldServiceLocator.WSCharMovement;
                 var Character = @object;
                 wS_CharMovement.UpdateCell(ref Character);
             }
@@ -7305,7 +7305,7 @@ public class WS_Spells
         }
         if (Target is WS_PlayerData.CharacterObject @object)
         {
-            var wS_CharMovement = WorldServiceLocator._WS_CharMovement;
+            var wS_CharMovement = WorldServiceLocator.WSCharMovement;
             var Character = @object;
             wS_CharMovement.UpdateCell(ref Character);
         }
@@ -7428,11 +7428,11 @@ public class WS_Spells
                         obj3.RemoveAurasOfType(AuraEffects_Names.SPELL_AURA_MOD_DECREASE_SPEED, NotSpellID);
                     }
                     Target.ShapeshiftForm = (ShapeshiftForm)checked((byte)EffectInfo.MiscValue);
-                    Target.ManaType = WorldServiceLocator._CommonGlobalFunctions.GetShapeshiftManaType((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), Target.ManaType);
+                    Target.ManaType = WorldServiceLocator.CommonGlobalFunctions.GetShapeshiftManaType((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), Target.ManaType);
                     Target.Model = Target switch
                     {
-                        WS_PlayerData.CharacterObject => WorldServiceLocator._CommonGlobalFunctions.GetShapeshiftModel((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), ((WS_PlayerData.CharacterObject)Target).Race, Target.Model),
-                        _ => WorldServiceLocator._CommonGlobalFunctions.GetShapeshiftModel((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), 0, Target.Model),
+                        WS_PlayerData.CharacterObject => WorldServiceLocator.CommonGlobalFunctions.GetShapeshiftModel((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), ((WS_PlayerData.CharacterObject)Target).Race, Target.Model),
+                        _ => WorldServiceLocator.CommonGlobalFunctions.GetShapeshiftModel((ShapeshiftForm)checked((byte)EffectInfo.MiscValue), 0, Target.Model),
                     };
                     break;
                 }
@@ -7441,8 +7441,8 @@ public class WS_Spells
                 Target.ShapeshiftForm = ShapeshiftForm.FORM_NORMAL;
                 if (Target is WS_PlayerData.CharacterObject @object)
                 {
-                    Target.ManaType = WorldServiceLocator._WS_Player_Initializator.GetClassManaType(@object.Classe);
-                    Target.Model = WorldServiceLocator._Functions.GetRaceModel(@object.Race, (int)@object.Gender);
+                    Target.ManaType = WorldServiceLocator.WSPlayerInitializator.GetClassManaType(@object.Classe);
+                    Target.Model = WorldServiceLocator.Functions.GetRaceModel(@object.Race, (int)@object.Gender);
                 }
                 else
                 {
@@ -7477,7 +7477,7 @@ public class WS_Spells
                 characterObject.SetUpdateFlag(26, characterObject.Energy.Current);
                 characterObject.SetUpdateFlag(26, characterObject.Energy.Maximum);
             }
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
             var objCharacter = target;
             wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
@@ -7487,7 +7487,7 @@ public class WS_Spells
             characterObject.GroupUpdateFlag |= 8u;
             characterObject.GroupUpdateFlag |= 16u;
             characterObject.GroupUpdateFlag |= 32u;
-            WorldServiceLocator._WS_PlayerHelper.InitializeTalentSpells(target);
+            WorldServiceLocator.WSPlayerHelper.InitializeTalentSpells(target);
         }
         else
         {
@@ -7980,13 +7980,13 @@ public class WS_Spells
                     obj.RemoveAurasOfType(AuraEffects_Names.SPELL_AURA_MOD_SHAPESHIFT, NotSpellID);
                     Target.RemoveAurasOfType(AuraEffects_Names.SPELL_AURA_MOUNTED, SpellID);
                     Target.RemoveAurasByInterruptFlag(131072);
-                    if (!WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue))
+                    if (!WorldServiceLocator.WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue))
                     {
                         CreatureInfo creature = new(EffectInfo.MiscValue);
-                        WorldServiceLocator._WorldServer.CREATURESDatabase.Add(EffectInfo.MiscValue, creature);
+                        WorldServiceLocator.WorldServer.CREATURESDatabase.Add(EffectInfo.MiscValue, creature);
                     }
-                    Target.Mount = WorldServiceLocator._WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue)
-                        ? WorldServiceLocator._WorldServer.CREATURESDatabase[EffectInfo.MiscValue].GetFirstModel
+                    Target.Mount = WorldServiceLocator.WorldServer.CREATURESDatabase.ContainsKey(EffectInfo.MiscValue)
+                        ? WorldServiceLocator.WorldServer.CREATURESDatabase[EffectInfo.MiscValue].GetFirstModel
                         : 0;
                     break;
                 }
@@ -8143,7 +8143,7 @@ public class WS_Spells
                 case AuraAction.AURA_UPDATE:
                     return;
             }
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             var objCharacter = @object;
             wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
             characterObject.SendCharacterUpdate(toNear: false);
@@ -8872,13 +8872,13 @@ public class WS_Spells
             target1.GroupUpdateFlag = target1.GroupUpdateFlag | 4u | 0x20u;
             target1.Resistances[0].Base += value * 2;
             target1.UpdateManaRegen();
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             var objCharacter = target1;
             wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
-            var wS_Combat2 = WorldServiceLocator._WS_Combat;
+            var wS_Combat2 = WorldServiceLocator.WSCombat;
             objCharacter = target1;
             wS_Combat2.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
-            var wS_Combat3 = WorldServiceLocator._WS_Combat;
+            var wS_Combat3 = WorldServiceLocator.WSCombat;
             objCharacter = target1;
             wS_Combat3.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
             target1.SetUpdateFlag(150, target1.Strength.Base);
@@ -8888,7 +8888,7 @@ public class WS_Spells
             target1.SetUpdateFlag(154, target1.Intellect.Base);
             target1.SetUpdateFlag(22, target1.Life.Current);
             target1.SetUpdateFlag(28, target1.Life.Maximum);
-            if (WorldServiceLocator._WS_Player_Initializator.GetClassManaType(target1.Classe) == ManaTypes.TYPE_MANA)
+            if (WorldServiceLocator.WSPlayerInitializator.GetClassManaType(target1.Classe) == ManaTypes.TYPE_MANA)
             {
                 target1.SetUpdateFlag(23, target1.Mana.Current);
                 target1.SetUpdateFlag(29, target1.Mana.Maximum);
@@ -8995,13 +8995,13 @@ public class WS_Spells
                 @object.Resistances[0].Base += (@object.Agility.Base - OldAgi) * 2;
                 @object.GroupUpdateFlag = @object.GroupUpdateFlag | 4u | 0x20u;
                 @object.UpdateManaRegen();
-                var wS_Combat = WorldServiceLocator._WS_Combat;
+                var wS_Combat = WorldServiceLocator.WSCombat;
                 var objCharacter = @object;
                 wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
-                var wS_Combat2 = WorldServiceLocator._WS_Combat;
+                var wS_Combat2 = WorldServiceLocator.WSCombat;
                 objCharacter = @object;
                 wS_Combat2.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
-                var wS_Combat3 = WorldServiceLocator._WS_Combat;
+                var wS_Combat3 = WorldServiceLocator.WSCombat;
                 objCharacter = @object;
                 wS_Combat3.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
                 @object.SetUpdateFlag(150, @object.Strength.Base);
@@ -9011,7 +9011,7 @@ public class WS_Spells
                 @object.SetUpdateFlag(154, @object.Intellect.Base);
                 @object.SetUpdateFlag(22, @object.Life.Current);
                 @object.SetUpdateFlag(28, @object.Life.Maximum);
-                if (WorldServiceLocator._WS_Player_Initializator.GetClassManaType(@object.Classe) == ManaTypes.TYPE_MANA)
+                if (WorldServiceLocator.WSPlayerInitializator.GetClassManaType(@object.Classe) == ManaTypes.TYPE_MANA)
                 {
                     @object.SetUpdateFlag(23, @object.Mana.Current);
                     @object.SetUpdateFlag(29, @object.Mana.Maximum);
@@ -9194,13 +9194,13 @@ public class WS_Spells
             target.Resistances[0].Base += (target.Agility.Base - OldAgi) * 2;
             target.GroupUpdateFlag = target.GroupUpdateFlag | 4u | 0x20u;
             target.UpdateManaRegen();
-            var wS_Combat = WorldServiceLocator._WS_Combat;
+            var wS_Combat = WorldServiceLocator.WSCombat;
             var objCharacter = target;
             wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
-            var wS_Combat2 = WorldServiceLocator._WS_Combat;
+            var wS_Combat2 = WorldServiceLocator.WSCombat;
             objCharacter = target;
             wS_Combat2.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
-            var wS_Combat3 = WorldServiceLocator._WS_Combat;
+            var wS_Combat3 = WorldServiceLocator.WSCombat;
             objCharacter = target;
             wS_Combat3.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
             target.SetUpdateFlag(150, target.Strength.Base);
@@ -9210,7 +9210,7 @@ public class WS_Spells
             target.SetUpdateFlag(154, target.Intellect.Base);
             target.SetUpdateFlag(22, target.Life.Current);
             target.SetUpdateFlag(28, target.Life.Maximum);
-            if (WorldServiceLocator._WS_Player_Initializator.GetClassManaType(target.Classe) == ManaTypes.TYPE_MANA)
+            if (WorldServiceLocator.WSPlayerInitializator.GetClassManaType(target.Classe) == ManaTypes.TYPE_MANA)
             {
                 target.SetUpdateFlag(23, target.Mana.Current);
                 target.SetUpdateFlag(29, target.Mana.Maximum);
@@ -9468,7 +9468,7 @@ public class WS_Spells
                     var i1 = (int)i;
                     do
                     {
-                        if (WorldServiceLocator._Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)i))
+                        if (WorldServiceLocator.Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)i))
                         {
                             WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                             ref var base3 = ref target.Resistances[(uint)i].Base;
@@ -9493,7 +9493,7 @@ public class WS_Spells
                     var j1 = (int)j;
                     do
                     {
-                        if (WorldServiceLocator._Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)j))
+                        if (WorldServiceLocator.Functions.HaveFlag(checked((uint)EffectInfo.MiscValue), (byte)j))
                         {
                             WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                             ref var @base = ref target.Resistances[(uint)j].Base;
@@ -9544,7 +9544,7 @@ public class WS_Spells
                     {
                         checked
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
+                            if (WorldServiceLocator.Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                             {
                                 WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                                 ref var base3 = ref target.Resistances[i].Base;
@@ -9569,7 +9569,7 @@ public class WS_Spells
                     {
                         checked
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
+                            if (WorldServiceLocator.Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                             {
                                 WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                                 ref var @base = ref target.Resistances[j].Base;
@@ -9621,7 +9621,7 @@ public class WS_Spells
                     {
                         checked
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
+                            if (WorldServiceLocator.Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                             {
                                 var target1 = target2;
                                 if (EffectInfo.GetValue(Target.Level, 0) > 0)
@@ -9662,7 +9662,7 @@ public class WS_Spells
                     {
                         checked
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
+                            if (WorldServiceLocator.Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                             {
                                 var target1 = target2;
                                 if (EffectInfo.GetValue(Target.Level, 0) > 0)
@@ -9731,7 +9731,7 @@ public class WS_Spells
                     {
                         checked
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
+                            if (WorldServiceLocator.Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                             {
                                 var target = target1;
                                 var OldBase = (short)target.Resistances[i].Base;
@@ -9771,7 +9771,7 @@ public class WS_Spells
                     {
                         checked
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
+                            if (WorldServiceLocator.Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                             {
                                 var target = target1;
                                 var OldBase2 = (short)target.Resistances[j].Base;
@@ -9839,7 +9839,7 @@ public class WS_Spells
                     {
                         checked
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
+                            if (WorldServiceLocator.Functions.HaveFlag((uint)EffectInfo.MiscValue, i))
                             {
                                 if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                 {
@@ -9880,7 +9880,7 @@ public class WS_Spells
                     {
                         checked
                         {
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
+                            if (WorldServiceLocator.Functions.HaveFlag((uint)EffectInfo.MiscValue, j))
                             {
                                 if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                 {
@@ -9951,10 +9951,10 @@ public class WS_Spells
             {
                 @object.SetUpdateFlag(165, @object.AttackPower);
                 @object.SetUpdateFlag(166, @object.AttackPowerMods);
-                var wS_Combat = WorldServiceLocator._WS_Combat;
+                var wS_Combat = WorldServiceLocator.WSCombat;
                 var objCharacter = @object;
                 wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.BASE_ATTACK);
-                var wS_Combat2 = WorldServiceLocator._WS_Combat;
+                var wS_Combat2 = WorldServiceLocator.WSCombat;
                 objCharacter = @object;
                 wS_Combat2.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.OFF_ATTACK);
                 @object.SendCharacterUpdate(toNear: false);
@@ -9996,7 +9996,7 @@ public class WS_Spells
             {
                 @object.SetUpdateFlag(168, @object.AttackPowerRanged);
                 @object.SetUpdateFlag(169, @object.AttackPowerModsRanged);
-                var wS_Combat = WorldServiceLocator._WS_Combat;
+                var wS_Combat = WorldServiceLocator.WSCombat;
                 var objCharacter = @object;
                 wS_Combat.CalculateMinMaxDamage(ref objCharacter, WeaponAttackType.RANGED_ATTACK);
                 @object.SendCharacterUpdate(toNear: false);
@@ -10106,7 +10106,7 @@ public class WS_Spells
                         checked
                         {
                             var i3 = (byte)i;
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, i3))
+                            if (WorldServiceLocator.Functions.HaveFlag((uint)EffectInfo.MiscValue, i3))
                             {
                                 if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                 {
@@ -10138,7 +10138,7 @@ public class WS_Spells
                         checked
                         {
                             var j3 = (byte)j;
-                            if (WorldServiceLocator._Functions.HaveFlag((uint)EffectInfo.MiscValue, j3))
+                            if (WorldServiceLocator.Functions.HaveFlag((uint)EffectInfo.MiscValue, j3))
                             {
                                 if (EffectInfo.GetValue(Target.Level, 0) > 0)
                                 {
@@ -10198,7 +10198,7 @@ public class WS_Spells
                     {
                         var miscValue = (uint)EffectInfo.MiscValue;
                         var i3 = (byte)i;
-                        if (WorldServiceLocator._Functions.HaveFlag(checked(miscValue), i3))
+                        if (WorldServiceLocator.Functions.HaveFlag(checked(miscValue), i3))
                         {
                             var target = target1;
                             var i2 = (uint)i;
@@ -10220,7 +10220,7 @@ public class WS_Spells
                     {
                         var miscValue = (uint)EffectInfo.MiscValue;
                         var j3 = (byte)j;
-                        if (WorldServiceLocator._Functions.HaveFlag(checked(miscValue), j3))
+                        if (WorldServiceLocator.Functions.HaveFlag(checked(miscValue), j3))
                         {
                             var target = target1;
                             var j2 = (uint)j;
@@ -10491,7 +10491,7 @@ public class WS_Spells
                     tmpUpdate.Dispose();
                     if (Caster is WS_PlayerData.CharacterObject @object)
                     {
-                        var wS_Pets = WorldServiceLocator._WS_Pets;
+                        var wS_Pets = WorldServiceLocator.WSPets;
                         var updateObject = @object;
                         wS_Pets.SendPetInitialize(ref updateObject, ref Target);
                         Caster = updateObject;
@@ -10711,9 +10711,9 @@ public class WS_Spells
                     WS_PlayerData.CharacterObject target = (WS_PlayerData.CharacterObject)Target;
                     foreach (var CreatureGUID in target.creaturesNear)
                     {
-                        if (WorldServiceLocator._WorldServer.WORLD_CREATUREs[CreatureGUID].aiScript != null && WorldServiceLocator._WorldServer.WORLD_CREATUREs[CreatureGUID].aiScript.aiHateTable.ContainsKey(Target))
+                        if (WorldServiceLocator.WorldServer.WORLD_CREATUREs[CreatureGUID].aiScript != null && WorldServiceLocator.WorldServer.WORLD_CREATUREs[CreatureGUID].aiScript.aiHateTable.ContainsKey(Target))
                         {
-                            WorldServiceLocator._WorldServer.WORLD_CREATUREs[CreatureGUID].aiScript.OnGenerateHate(ref Target, Value);
+                            WorldServiceLocator.WorldServer.WORLD_CREATUREs[CreatureGUID].aiScript.OnGenerateHate(ref Target, Value);
                         }
                     }
 
@@ -10782,11 +10782,11 @@ public class WS_Spells
     /// <param name="objCharacter"></param>
     public void CheckDuelDistance(ref WS_PlayerData.CharacterObject objCharacter)
     {
-        if (!WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(objCharacter.DuelArbiter))
+        if (!WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(objCharacter.DuelArbiter))
         {
             return;
         }
-        if (WorldServiceLocator._WS_Combat.GetDistance(objCharacter, WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[objCharacter.DuelArbiter]) > 40f)
+        if (WorldServiceLocator.WSCombat.GetDistance(objCharacter, WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[objCharacter.DuelArbiter]) > 40f)
         {
             if (objCharacter.DuelOutOfBounds == 11)
             {
@@ -10829,9 +10829,9 @@ public class WS_Spells
         Loser.FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL);
         Loser.AutoShotSpell = 0;
         Loser.attackState.AttackStop();
-        if (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs.ContainsKey(Winner.DuelArbiter))
+        if (WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs.ContainsKey(Winner.DuelArbiter))
         {
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[Winner.DuelArbiter].Destroy(WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[Winner.DuelArbiter]);
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[Winner.DuelArbiter].Destroy(WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[Winner.DuelArbiter]);
         }
         Winner.DuelOutOfBounds = 11;
         Winner.DuelArbiter = 0uL;
@@ -10845,7 +10845,7 @@ public class WS_Spells
         Loser.RemoveFromCombat(Winner);
         checked
         {
-            var num = WorldServiceLocator._Global_Constants.MAX_AURA_EFFECTs_VISIBLE - 1;
+            var num = WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs_VISIBLE - 1;
             for (var i = 0; i <= num; i++)
             {
                 if (Winner.ActiveSpells[i] != null)
@@ -10894,7 +10894,7 @@ public class WS_Spells
         {
             packet.GetInt16();
             var GUID = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_DUEL_ACCEPTED [{2:X}]", client.IP, client.Port, GUID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_DUEL_ACCEPTED [{2:X}]", client.IP, client.Port, GUID);
             if (client.Character.DuelArbiter == GUID)
             {
                 var c1 = client.Character.DuelPartner;
@@ -10930,8 +10930,8 @@ public class WS_Spells
         {
             packet.GetInt16();
             var GUID = packet.GetUInt64();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_DUEL_CANCELLED [{2:X}]", client.IP, client.Port, GUID);
-            WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[client.Character.DuelArbiter].Despawn();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_DUEL_CANCELLED [{2:X}]", client.IP, client.Port, GUID);
+            WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[client.Character.DuelArbiter].Despawn();
             client.Character.DuelArbiter = 0uL;
             client.Character.DuelPartner.DuelArbiter = 0uL;
             Packets.PacketClass response = new(Opcodes.SMSG_DUEL_COMPLETE);
@@ -10958,7 +10958,7 @@ public class WS_Spells
         packet.GetInt16();
         var GUID = packet.GetUInt64();
         var Status = packet.GetInt8();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_RESURRECT_RESPONSE [GUID={2:X} Status={3}]", client.IP, client.Port, GUID, Status);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_RESURRECT_RESPONSE [GUID={2:X} Status={3}]", client.IP, client.Port, GUID, Status);
         if (Status == 0)
         {
             client.Character.resurrectGUID = 0uL;
@@ -10971,7 +10971,7 @@ public class WS_Spells
         }
         else if (GUID == client.Character.resurrectGUID)
         {
-            WorldServiceLocator._WS_Handlers_Misc.CharacterResurrect(ref client.Character);
+            WorldServiceLocator.WSHandlersMisc.CharacterResurrect(ref client.Character);
             client.Character.Life.Current = client.Character.resurrectHealth;
             if (client.Character.ManaType == ManaTypes.TYPE_MANA)
             {
@@ -10996,24 +10996,24 @@ public class WS_Spells
     {
         packet.GetInt16();
         var spellID = packet.GetInt32();
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CSMG_CAST_SPELL [spellID={2}]", client.IP, client.Port, spellID);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CSMG_CAST_SPELL [spellID={2}]", client.IP, client.Port, spellID);
         if (client.Character == null)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] WS_Spells:On_CMSG_CAST_SPELL Null Character Object [spellID={2}]", client.IP, client.Port, spellID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] WS_Spells:On_CMSG_CAST_SPELL Null Character Object [spellID={2}]", client.IP, client.Port, spellID);
             return;
         }
         if (client.Character != null)
         {
             if (!client.Character.HaveSpell(spellID))
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] CHEAT: Character {2} casting unlearned spell {3}!", client.IP, client.Port, client.Character.Name, spellID);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] CHEAT: Character {2} casting unlearned spell {3}!", client.IP, client.Port, client.Character.Name, spellID);
                 return;
             }
         }
 
         if (!SPELLs.ContainsKey(spellID))
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Character tried to cast a spell that didn't exist: {2}!", client.IP, client.Port, spellID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "[{0}:{1}] Character tried to cast a spell that didn't exist: {2}!", client.IP, client.Port, spellID);
             return;
         }
         if (client.Character != null)
@@ -11021,7 +11021,7 @@ public class WS_Spells
             var spellCooldown = client.Character.Spells[spellID].Cooldown;
             if (spellCooldown >= 0)
             {
-                var timeNow = WorldServiceLocator._Functions.GetTimestamp(DateTime.Now);
+                var timeNow = WorldServiceLocator.Functions.GetTimestamp(DateTime.Now);
                 if (timeNow < spellCooldown)
                 {
                     return;
@@ -11044,7 +11044,7 @@ public class WS_Spells
                 }
                 catch (Exception ex)
                 {
-                    WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error casting auto-shoot {0}.{1}", spellID, Environment.NewLine + ex);
+                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Error casting auto-shoot {0}.{1}", spellID, Environment.NewLine + ex);
                 }
             }
             return;
@@ -11087,7 +11087,7 @@ public class WS_Spells
         }
         catch (Exception e)
         {
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error casting spell {0}.{1}", spellID, Environment.NewLine + e);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Error casting spell {0}.{1}", spellID, Environment.NewLine + e);
             SendCastResult(castResult, ref client, spellID);
         }
     }
@@ -11103,7 +11103,7 @@ public class WS_Spells
         {
             packet.GetInt16();
             var SpellID = packet.GetInt32();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_CAST", client.IP, client.Port);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_CAST", client.IP, client.Port);
             if (client.Character.spellCasted[1] != null && client.Character.spellCasted[1].SpellID == SpellID)
             {
                 client.Character.FinishSpell(CurrentSpellTypes.CURRENT_GENERIC_SPELL);
@@ -11130,7 +11130,7 @@ public class WS_Spells
     /// <param name="client"></param>
     public void On_CMSG_CANCEL_AUTO_REPEAT_SPELL(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_AUTO_REPEAT_SPELL", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_AUTO_REPEAT_SPELL", client.IP, client.Port);
         client.Character.FinishSpell(CurrentSpellTypes.CURRENT_AUTOREPEAT_SPELL);
     }
 
@@ -11141,7 +11141,7 @@ public class WS_Spells
     /// <param name="client"></param>
     public void On_CMSG_CANCEL_CHANNELLING(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_CHANNELLING", client.IP, client.Port);
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_CHANNELLING", client.IP, client.Port);
         client.Character.FinishSpell(CurrentSpellTypes.CURRENT_CHANNELED_SPELL);
     }
 
@@ -11156,7 +11156,7 @@ public class WS_Spells
         {
             packet.GetInt16();
             var spellID = packet.GetInt32();
-            WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_AURA [spellID={2}]", client.IP, client.Port, spellID);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_AURA [spellID={2}]", client.IP, client.Port, spellID);
             client.Character.RemoveAuraBySpell(spellID);
         }
     }
@@ -11180,22 +11180,22 @@ public class WS_Spells
                 var TalentID = packet.GetInt32();
                 var RequestedRank = packet.GetInt32();
                 var CurrentTalentPoints = client.Character.TalentPoints;
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LEARN_TALENT [{2}:{3}]", client.IP, client.Port, TalentID, RequestedRank);
-                if (CurrentTalentPoints == 0 || RequestedRank > 4 || (RequestedRank > 0 && !client.Character.HaveSpell(WorldServiceLocator._WS_DBCDatabase.Talents[TalentID].RankID[RequestedRank - 1])))
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LEARN_TALENT [{2}:{3}]", client.IP, client.Port, TalentID, RequestedRank);
+                if (CurrentTalentPoints == 0 || RequestedRank > 4 || (RequestedRank > 0 && !client.Character.HaveSpell(WorldServiceLocator.WSDBCDatabase.Talents[TalentID].RankID[RequestedRank - 1])))
                 {
                     return;
                 }
                 var k = 0;
                 do
                 {
-                    if (WorldServiceLocator._WS_DBCDatabase.Talents[TalentID].RequiredTalent[k] > 0)
+                    if (WorldServiceLocator.WSDBCDatabase.Talents[TalentID].RequiredTalent[k] > 0)
                     {
                         var HasEnoughRank = false;
-                        var DependsOn = WorldServiceLocator._WS_DBCDatabase.Talents[TalentID].RequiredTalent[k];
-                        var num = WorldServiceLocator._WS_DBCDatabase.Talents[TalentID].RequiredPoints[k];
+                        var DependsOn = WorldServiceLocator.WSDBCDatabase.Talents[TalentID].RequiredTalent[k];
+                        var num = WorldServiceLocator.WSDBCDatabase.Talents[TalentID].RequiredPoints[k];
                         for (var j = num; j <= 4; j++)
                         {
-                            if (WorldServiceLocator._WS_DBCDatabase.Talents[DependsOn].RankID[j] != 0 && client.Character.HaveSpell(WorldServiceLocator._WS_DBCDatabase.Talents[DependsOn].RankID[j]))
+                            if (WorldServiceLocator.WSDBCDatabase.Talents[DependsOn].RankID[j] != 0 && client.Character.HaveSpell(WorldServiceLocator.WSDBCDatabase.Talents[DependsOn].RankID[j]))
                             {
                                 HasEnoughRank = true;
                             }
@@ -11209,11 +11209,11 @@ public class WS_Spells
                 }
                 while (k <= 2);
                 var SpentPoints = 0;
-                if (WorldServiceLocator._WS_DBCDatabase.Talents[TalentID].Row > 0)
+                if (WorldServiceLocator.WSDBCDatabase.Talents[TalentID].Row > 0)
                 {
-                    foreach (var TalentInfo in WorldServiceLocator._WS_DBCDatabase.Talents)
+                    foreach (var TalentInfo in WorldServiceLocator.WSDBCDatabase.Talents)
                     {
-                        if (WorldServiceLocator._WS_DBCDatabase.Talents[TalentID].TalentTab != TalentInfo.Value.TalentTab)
+                        if (WorldServiceLocator.WSDBCDatabase.Talents[TalentID].TalentTab != TalentInfo.Value.TalentTab)
                         {
                             continue;
                         }
@@ -11229,12 +11229,12 @@ public class WS_Spells
                         while (i <= 4);
                     }
                 }
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.INFORMATION, "_WS_DBCDatabase.Talents spent: {0}", SpentPoints);
-                if (SpentPoints < WorldServiceLocator._WS_DBCDatabase.Talents[TalentID].Row * 5)
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "_WS_DBCDatabase.Talents spent: {0}", SpentPoints);
+                if (SpentPoints < WorldServiceLocator.WSDBCDatabase.Talents[TalentID].Row * 5)
                 {
                     return;
                 }
-                var SpellID = WorldServiceLocator._WS_DBCDatabase.Talents[TalentID].RankID[RequestedRank];
+                var SpellID = WorldServiceLocator.WSDBCDatabase.Talents[TalentID].RankID[RequestedRank];
                 if (SpellID != 0 && !client.Character.HaveSpell(SpellID))
                 {
                     client.Character.LearnSpell(SpellID);
@@ -11244,7 +11244,7 @@ public class WS_Spells
                     }
                     if (RequestedRank > 0)
                     {
-                        var ReSpellID = WorldServiceLocator._WS_DBCDatabase.Talents[TalentID].RankID[RequestedRank - 1];
+                        var ReSpellID = WorldServiceLocator.WSDBCDatabase.Talents[TalentID].RankID[RequestedRank - 1];
                         client.Character.UnLearnSpell(ReSpellID);
                         client.Character.RemoveAuraBySpell(ReSpellID);
                     }
@@ -11256,7 +11256,7 @@ public class WS_Spells
             }
             catch (Exception e)
             {
-                WorldServiceLocator._WorldServer.Log.WriteLine(LogType.FAILED, "Error learning talent: {0}{1}", Environment.NewLine, e.ToString());
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, "Error learning talent: {0}{1}", Environment.NewLine, e.ToString());
             }
         }
     }
@@ -11269,9 +11269,9 @@ public class WS_Spells
     /// <param name="LootingType"></param>
     public void SendLoot(WS_PlayerData.CharacterObject Player, ulong GUID, LootType LootingType)
     {
-        if (WorldServiceLocator._CommonGlobalFunctions.GuidIsGameObject(GUID))
+        if (WorldServiceLocator.CommonGlobalFunctions.GuidIsGameObject(GUID))
         {
-            switch (WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].ObjectInfo.Type)
+            switch (WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID].ObjectInfo.Type)
             {
                 case GameObjectType.GAMEOBJECT_TYPE_DOOR:
                 case GameObjectType.GAMEOBJECT_TYPE_BUTTON:
@@ -11289,6 +11289,6 @@ public class WS_Spells
                     break;
             }
         }
-        WorldServiceLocator._WorldServer.WORLD_GAMEOBJECTs[GUID].LootObject(ref Player, LootingType);
+        WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID].LootObject(ref Player, LootingType);
     }
 }
