@@ -13,7 +13,7 @@
     <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
     <ProjectReference Include="..\Mangos.Logging\Mangos.Logging.csproj" />
     <ProjectReference Include="..\Mangos.MySql\Mangos.MySql.csproj" />
-    <ProjectReference Include="..\Mangos.Tcp.Implementation\Mangos.Tcp.Implementation.csproj" />
+    <ProjectReference Include="..\Mangos.Tcp\Mangos.Tcp.csproj" />
   </ItemGroup>
 
 </Project>

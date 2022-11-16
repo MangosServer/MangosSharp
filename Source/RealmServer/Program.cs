@@ -20,7 +20,7 @@ using Autofac;
 using Mangos.Configuration;
 using Mangos.Logging;
 using Mangos.MySql;
-using Mangos.Tcp.Implementation;
+using Mangos.Tcp;
 using RealmServer;
 
 var builder = new ContainerBuilder();

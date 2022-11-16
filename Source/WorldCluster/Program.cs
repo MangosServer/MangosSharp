@@ -21,7 +21,7 @@ using Mangos.Cluster;
 using Mangos.Configuration;
 using Mangos.Logging;
 using Mangos.MySql;
-using Mangos.Tcp.Implementation;
+using Mangos.Tcp;
 using WorldCluster;
 
 var builder = new ContainerBuilder();
