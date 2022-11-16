@@ -110,5 +110,13 @@ dotnet_naming_rule.type_rule.symbols=type_symbols
 dotnet_naming_rule.type_rule.style=pascal_case_style
 dotnet_naming_rule.type_rule.severity=error
 
+# interface naming rule
+dotnet_naming_symbols.interface_symbols.applicable_kinds=interface
+dotnet_naming_symbols.interface_symbols.applicable_accessibilities=*
+dotnet_naming_symbols.interface_symbols.required_modifiers=
+dotnet_naming_rule.interface_rule.symbols=interface_symbols
+dotnet_naming_rule.interface_rule.style=interface_style
+dotnet_naming_rule.interface_rule.severity=error
+
 [*Program*.cs]
 dotnet_diagnostic.CA1852.severity = none
