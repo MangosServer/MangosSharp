@@ -43,4 +43,4 @@ logger.Trace("                                                ");
 logger.Trace("Website / Forum / Support: https://getmangos.eu/");
 
 logger.Information("Starting realm tcp server");
-await tcpServer.StartAsync(configuration.RealmServerEndpoint);
+await tcpServer.RunAsync(configuration.RealmServerEndpoint);

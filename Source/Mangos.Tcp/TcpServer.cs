@@ -18,7 +18,6 @@
 
 using Autofac;
 using Mangos.Logging;
-using System.Buffers;
 using System.Net;
 using System.Net.Sockets;
 
@@ -29,15 +28,13 @@ public sealed class TcpServer
     private readonly IMangosLogger logger;
     private readonly ILifetimeScope lifetimeScope;
 
-    private readonly ArrayPool<byte> arrayPool = ArrayPool<byte>.Create();
-
     public TcpServer(IMangosLogger logger, ILifetimeScope lifetimeScope)
     {
         this.logger = logger;
         this.lifetimeScope = lifetimeScope;
     }
 
-    public async Task StartAsync(string endpoint, CancellationToken cancellationToken = default)
+    public async Task RunAsync(string endpoint, CancellationToken cancellationToken = default)
     {
         var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.Bind(IPEndPoint.Parse(endpoint));
@@ -63,13 +60,12 @@ public sealed class TcpServer
         try
         {
             using var scope = lifetimeScope.BeginLifetimeScope();
-            var tcpHandler = scope.Resolve<ITcpClientHandler>();
-            var reader = new TcpReader(arrayPool, socket, cancellationToken);
-            var writer = new TcpWriter(arrayPool, socket);
-            await tcpHandler.ExectueAsync(reader, writer, endpoint.Address, cancellationToken, socket);
+            var tcpConnection = scope.Resolve<ITcpConnection>();
+            await tcpConnection.ExecuteAsync(socket, cancellationToken);
         }
         catch (SocketException exception) when (exception.SocketErrorCode == SocketError.ConnectionAborted)
         {
+            logger.Information("Connection aborted");
         }
         catch (Exception exception)
         {

@@ -16,16 +16,16 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Tcp;
+using RealmServer.Network;
 
 namespace RealmServer.Requests;
 
-public sealed class RsLogonProofRequest : IRequestMessage<RsLogonProofRequest>
+internal sealed class RsLogonProofRequest : IRequestMessage<RsLogonProofRequest>
 {
     public required byte[] A { get; init; }
     public required byte[] M1 { get; init; }
 
-    public static async ValueTask<RsLogonProofRequest> ReadAsync(ITcpReader reader)
+    public static async ValueTask<RsLogonProofRequest> ReadAsync(SocketReader reader)
     {
         var a = await reader.ReadByteArrayAsync(32);
         var m1 = await reader.ReadByteArrayAsync(20);

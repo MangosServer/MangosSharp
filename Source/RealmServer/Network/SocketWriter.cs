@@ -19,16 +19,15 @@
 using System.Buffers;
 using System.Net.Sockets;
 
-namespace Mangos.Tcp;
+namespace RealmServer.Network;
 
-internal sealed class TcpWriter : ITcpWriter
+internal sealed class SocketWriter
 {
     private readonly Socket socket;
-    private readonly ArrayPool<byte> arrayPool;
+    private readonly ArrayPool<byte> arrayPool = ArrayPool<byte>.Shared;
 
-    public TcpWriter(ArrayPool<byte> arrayPool, Socket socket)
+    public SocketWriter(Socket socket)
     {
-        this.arrayPool = arrayPool;
         this.socket = socket;
     }
 

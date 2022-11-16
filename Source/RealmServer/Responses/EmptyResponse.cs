@@ -16,13 +16,13 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Tcp;
+using RealmServer.Network;
 
 namespace RealmServer.Responses;
 
-public sealed class EmptyResponse : IResponseMessage
+internal sealed class EmptyResponse : IResponseMessage
 {
-    public ValueTask WriteAsync(ITcpWriter writer)
+    public ValueTask WriteAsync(SocketWriter writer)
     {
         return ValueTask.CompletedTask;
     }

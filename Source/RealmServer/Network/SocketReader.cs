@@ -21,19 +21,19 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Mangos.Tcp;
+namespace RealmServer.Network;
 
-internal sealed class TcpReader : ITcpReader
+internal sealed class SocketReader
 {
     private readonly Socket socket;
     private readonly CancellationToken cancellationToken;
-    private readonly ArrayPool<byte> arrayPool;
 
-    public TcpReader(ArrayPool<byte> arrayPool, Socket socket, CancellationToken cancellationToken)
+    private readonly ArrayPool<byte> arrayPool = ArrayPool<byte>.Shared;
+
+    public SocketReader(Socket socket, CancellationToken cancellationToken)
     {
         this.socket = socket;
         this.cancellationToken = cancellationToken;
-        this.arrayPool = arrayPool;
     }
 
     public async ValueTask ReadVoidAsync(int length)
@@ -101,9 +101,10 @@ internal sealed class TcpReader : ITcpReader
     private async ValueTask ReadAsync(byte[] buffer, int length)
     {
         var number = await socket.ReceiveAsync(buffer.AsMemory(0, length), cancellationToken);
-        if (number != buffer.Length)
+        if (number != length)
         {
             Debugger.Launch();
+            throw new NotImplementedException();
         }
     }
 }

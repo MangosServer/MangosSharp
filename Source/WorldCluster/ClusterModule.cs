@@ -26,6 +26,6 @@ internal sealed class ClusterModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterType<ClusterRouterTcpHandler>().As<ITcpClientHandler>().InstancePerLifetimeScope();
+        builder.RegisterType<ClusterTcpConnection>().As<ITcpConnection>().InstancePerLifetimeScope();
     }
 }

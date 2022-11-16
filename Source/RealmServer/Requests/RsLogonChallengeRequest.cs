@@ -16,8 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Tcp;
 using RealmServer.Domain;
+using RealmServer.Network;
 
 namespace RealmServer.Requests;
 
@@ -26,7 +26,7 @@ internal sealed class RsLogonChallengeRequest : IRequestMessage<RsLogonChallenge
     public required string AccountName { get; init; }
     public required WowClientBuildVersions ClientBuild { get; init; }
 
-    public static async ValueTask<RsLogonChallengeRequest> ReadAsync(ITcpReader reader)
+    public static async ValueTask<RsLogonChallengeRequest> ReadAsync(SocketReader reader)
     {
         await reader.ReadVoidAsync(10);
         var clientBuild = await reader.ReadInt16Async();

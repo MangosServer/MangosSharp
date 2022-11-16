@@ -49,4 +49,4 @@ logger.Information("Starting legacy cluster server");
 await legacyWorldCluster.StartAsync();
 
 logger.Information("Starting cluster tcp server");
-await tcpServer.StartAsync(configuration.ClusterServerEndpoint);
+await tcpServer.RunAsync(configuration.ClusterServerEndpoint);

@@ -16,12 +16,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Tcp;
 using RealmServer.Domain;
+using RealmServer.Network;
 
 namespace RealmServer.Responses;
 
-public sealed class AuthLogonChallengeResponse : IResponseMessage
+internal sealed class AuthLogonChallengeResponse : IResponseMessage
 {
     public required byte[] PublicB { get; init; }
     public required byte[] G { get; init; }
@@ -29,7 +29,7 @@ public sealed class AuthLogonChallengeResponse : IResponseMessage
     public required byte[] Salt { get; init; }
     public required byte[] CrcSalt { get; init; }
 
-    public async ValueTask WriteAsync(ITcpWriter writer)
+    public async ValueTask WriteAsync(SocketWriter writer)
     {
         await writer.WriteByteAsync((byte)TcpPacketOpCodes.CMD_AUTH_LOGON_CHALLENGE);
         await writer.WriteByteAsync((byte)AccountStates.LOGIN_OK);

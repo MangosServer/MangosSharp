@@ -16,8 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Tcp;
 using RealmServer.Domain;
+using RealmServer.Network;
 using System.Text;
 
 namespace RealmServer.Responses;
@@ -40,7 +40,7 @@ internal sealed class AuthRealmlistResponse : IResponseMessage
 
     public required List<Realm> Realms { get; init; }
 
-    public async ValueTask WriteAsync(ITcpWriter writer)
+    public async ValueTask WriteAsync(SocketWriter writer)
     {
         var responseBodyLength = Realms.Sum(x =>
             5

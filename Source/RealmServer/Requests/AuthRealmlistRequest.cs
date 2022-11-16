@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Tcp;
+using RealmServer.Network;
 
 namespace RealmServer.Requests;
 
@@ -24,7 +24,7 @@ internal sealed class AuthRealmlistRequest : IRequestMessage<AuthRealmlistReques
 {
     public required byte[] Unk { get; init; }
 
-    public static async ValueTask<AuthRealmlistRequest> ReadAsync(ITcpReader reader)
+    public static async ValueTask<AuthRealmlistRequest> ReadAsync(SocketReader reader)
     {
         return new AuthRealmlistRequest
         {

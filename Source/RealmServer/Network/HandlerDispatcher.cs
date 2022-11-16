@@ -16,7 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Tcp;
 using RealmServer.Domain;
 using RealmServer.Handlers;
 using RealmServer.Requests;
@@ -36,7 +35,7 @@ internal sealed class HandlerDispatcher<THandler, TRequest> : IHandlerDispatcher
 
     public TcpPacketOpCodes Opcode => handler.TcpPacketOpCode;
 
-    public async Task ExectueAsync(ITcpReader reader, ITcpWriter writer)
+    public async Task ExectueAsync(SocketReader reader, SocketWriter writer)
     {
         var request = await TRequest.ReadAsync(reader);
         var response = await handler.ExectueAsync(request);

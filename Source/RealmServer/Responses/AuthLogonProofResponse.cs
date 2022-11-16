@@ -16,8 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Tcp;
 using RealmServer.Domain;
+using RealmServer.Network;
 
 namespace RealmServer.Responses;
 
@@ -26,7 +26,7 @@ internal sealed class AuthLogonProofResponse : IResponseMessage
     public required AccountStates AccountState { get; init; }
     public byte[]? M2 { get; init; }
 
-    public async ValueTask WriteAsync(ITcpWriter writer)
+    public async ValueTask WriteAsync(SocketWriter writer)
     {
         await writer.WriteByteAsync((byte)TcpPacketOpCodes.CMD_AUTH_LOGON_PROOF);
         await writer.WriteByteAsync((byte)AccountState);

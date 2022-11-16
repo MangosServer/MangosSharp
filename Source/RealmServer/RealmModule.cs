@@ -30,7 +30,7 @@ internal sealed class RealmModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterType<RealmRouterTcpClientHandler>().As<ITcpClientHandler>().InstancePerLifetimeScope();
+        builder.RegisterType<RealmTcpConnection>().As<ITcpConnection>().InstancePerLifetimeScope();
 
         builder.RegisterType<ClientState>().InstancePerLifetimeScope();
 

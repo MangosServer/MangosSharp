@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Tcp;
+using RealmServer.Network;
 
 namespace RealmServer.Requests;
 
 internal interface IRequestMessage<T> where T : IRequestMessage<T>
 {
-    static abstract ValueTask<T> ReadAsync(ITcpReader reader);
+    static abstract ValueTask<T> ReadAsync(SocketReader reader);
 }
