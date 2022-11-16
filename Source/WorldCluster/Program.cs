@@ -19,10 +19,8 @@
 using Autofac;
 using Mangos.Cluster;
 using Mangos.Configuration;
-using Mangos.Configuration.Implementation;
 using Mangos.Logging;
-using Mangos.Logging.Implementation;
-using Mangos.MySql.Implementation;
+using Mangos.MySql;
 using Mangos.Tcp.Implementation;
 using WorldCluster;
 

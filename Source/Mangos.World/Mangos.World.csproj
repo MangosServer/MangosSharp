@@ -18,7 +18,6 @@
     <ProjectReference Include="..\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
     <ProjectReference Include="..\Mangos.Configurations.Xml\Mangos.Configurations.Xml.csproj" />
     <ProjectReference Include="..\Mangos.Configurations\Mangos.Configurations.csproj" />
-    <ProjectReference Include="..\Mangos.Logging.Implementation\Mangos.Logging.Implementation.csproj" />
     <ProjectReference Include="..\Mangos.SignalR\Mangos.SignalR.csproj" />
   </ItemGroup>
 

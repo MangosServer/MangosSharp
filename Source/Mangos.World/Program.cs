@@ -21,7 +21,7 @@ using Mangos.Common.Globals;
 using Mangos.Configurations;
 using Mangos.Configurations.Xml;
 using Mangos.DataStores;
-using Mangos.Logging.Implementation;
+using Mangos.Logging;
 using Mangos.World.AI;
 using Mangos.World.Auction;
 using Mangos.World.Battlegrounds;
