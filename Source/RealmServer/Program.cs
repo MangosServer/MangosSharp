@@ -23,6 +23,8 @@ using Mangos.MySql;
 using Mangos.Tcp;
 using RealmServer;
 
+Console.Title = "Realm server";
+
 var builder = new ContainerBuilder();
 builder.RegisterModule<ConfigurationModule>();
 builder.RegisterModule<LoggingModule>();
@@ -43,4 +45,4 @@ logger.Trace("                                                ");
 logger.Trace("Website / Forum / Support: https://getmangos.eu/");
 
 logger.Information("Starting realm tcp server");
-await tcpServer.RunAsync(configuration.RealmServerEndpoint);
+await tcpServer.RunAsync(configuration.Realm.RealmServerEndpoint);

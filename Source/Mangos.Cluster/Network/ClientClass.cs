@@ -336,7 +336,7 @@ public class ClientClass : ClientInfo
 
     public void EnQueue(object state)
     {
-        while (_clusterServiceLocator.WorldCluster.CharacteRs.Count > mangosConfiguration.ServerPlayerLimit)
+        while (_clusterServiceLocator.WorldCluster.CharacteRs.Count > mangosConfiguration.Cluster.ServerPlayerLimit)
         {
             if (!Socket.Connected)
             {

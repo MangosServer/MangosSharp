@@ -24,6 +24,8 @@ using Mangos.MySql;
 using Mangos.Tcp;
 using WorldCluster;
 
+Console.Title = "Cluster server";
+
 var builder = new ContainerBuilder();
 builder.RegisterModule<LegacyClusterModule>();
 builder.RegisterModule<ConfigurationModule>();
@@ -49,4 +51,4 @@ logger.Information("Starting legacy cluster server");
 await legacyWorldCluster.StartAsync();
 
 logger.Information("Starting cluster tcp server");
-await tcpServer.RunAsync(configuration.ClusterServerEndpoint);
+await tcpServer.RunAsync(configuration.Cluster.ClusterServerEndpoint);

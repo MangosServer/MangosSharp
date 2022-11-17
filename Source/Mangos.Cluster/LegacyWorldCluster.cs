@@ -63,7 +63,7 @@ public class LegacyWorldCluster
     public void LoadConfig()
     {
         // DONE: Setting SQL Connections
-        var accountDbSettings = Strings.Split(mangosConfiguration.AccountDatabase, ";");
+        var accountDbSettings = Strings.Split(mangosConfiguration.Cluster.AccountDatabase, ";");
         if (accountDbSettings.Length != 6)
         {
             Console.WriteLine("Invalid connect string for the account database!");
@@ -78,7 +78,7 @@ public class LegacyWorldCluster
             GetAccountDatabase().SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), accountDbSettings[5]);
         }
 
-        var characterDbSettings = Strings.Split(mangosConfiguration.CharacterDatabase, ";");
+        var characterDbSettings = Strings.Split(mangosConfiguration.Cluster.CharacterDatabase, ";");
         if (characterDbSettings.Length != 6)
         {
             Console.WriteLine("Invalid connect string for the character database!");
@@ -93,7 +93,7 @@ public class LegacyWorldCluster
             GetCharacterDatabase().SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), characterDbSettings[5]);
         }
 
-        var worldDbSettings = Strings.Split(mangosConfiguration.WorldDatabase, ";");
+        var worldDbSettings = Strings.Split(mangosConfiguration.Cluster.WorldDatabase, ";");
         if (worldDbSettings.Length != 6)
         {
             Console.WriteLine("Invalid connect string for the world database!");
@@ -271,12 +271,12 @@ public class LegacyWorldCluster
         _clusterServiceLocator.WorldServerClass.Start();
 
         ProxyServer<WorldServerClass> server = new(
-            IPAddress.Parse(mangosConfiguration.ClusterListenAddress),
-            mangosConfiguration.ClusterListenPort,
+            IPAddress.Parse(mangosConfiguration.Cluster.ClusterListenAddress),
+            mangosConfiguration.Cluster.ClusterListenPort,
             _clusterServiceLocator.WcNetwork.WorldServer);
         Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}:{1}",
-            mangosConfiguration.ClusterListenAddress,
-            mangosConfiguration.ClusterListenPort);
+            mangosConfiguration.Cluster.ClusterListenAddress,
+            mangosConfiguration.Cluster.ClusterListenPort);
         Log.WriteLine(LogType.INFORMATION, "Load Time: {0}", Strings.Format(DateAndTime.DateDiff(DateInterval.Second, DateAndTime.Now, DateAndTime.Now), "0 seconds"));
         Log.WriteLine(LogType.INFORMATION, "Used memory: {0}", Strings.Format(GC.GetTotalMemory(false), "### ### ##0 bytes"));
     }

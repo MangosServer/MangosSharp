@@ -158,7 +158,7 @@ public class WcHandlersAuth
         // Next
 
         // DONE: If server full then queue, If GM/Admin let in
-        if (_clusterServiceLocator.WorldCluster.ClienTs.Count > mangosConfiguration.ServerPlayerLimit && client.Access <= AccessLevel.Player)
+        if (_clusterServiceLocator.WorldCluster.ClienTs.Count > mangosConfiguration.Cluster.ServerPlayerLimit && client.Access <= AccessLevel.Player)
         {
             ThreadPool.QueueUserWorkItem(client.EnQueue);
         }
