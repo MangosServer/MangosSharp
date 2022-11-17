@@ -15,5 +15,4 @@
     <ProjectReference Include="..\Mangos.Logging\Mangos.Logging.csproj" />
   </ItemGroup>
 
-
 </Project>
