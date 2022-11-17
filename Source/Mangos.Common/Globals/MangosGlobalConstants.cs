@@ -35,12 +35,15 @@ public class MangosGlobalConstants
     public readonly int RevisionDbCharactersVersion = 1;
     public readonly int RevisionDbCharactersStructure;
     public readonly int RevisionDbCharactersContent;
+
     public readonly int RevisionDbMangosVersion = 21;
-    public readonly int RevisionDbMangosStructure = 1;
-    public readonly int RevisionDbMangosContent = 0;
+    public readonly int RevisionDbMangosStructure = 7;
+    public readonly int RevisionDbMangosContent = 77;
+
     public readonly int RevisionDbRealmVersion = 21;
     public readonly int RevisionDbRealmStructure = 2;
     public readonly int RevisionDbRealmContent = 1;
+
     public readonly int GROUP_SUBGROUPSIZE = 5;  // (MAX_RAID_SIZE / MAX_GROUP_SIZE)
     public readonly int GROUP_SIZE = 5;          // Normal Group Size/More then 5, it's a raid group
     public readonly int GROUP_RAIDSIZE = 40;     // Max Raid Size
