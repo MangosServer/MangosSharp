@@ -6111,8 +6111,8 @@ public class WS_PlayerData
                     1f,
                     1f
             };
-            ManaRegenerationModifier = WorldServiceLocator.ConfigurationProvider.GetConfiguration().ManaRegenerationRate;
-            LifeRegenerationModifier = WorldServiceLocator.ConfigurationProvider.GetConfiguration().HealthRegenerationRate;
+            ManaRegenerationModifier = WorldServiceLocator.MangosConfiguration.World.ManaRegenerationRate;
+            LifeRegenerationModifier = WorldServiceLocator.MangosConfiguration.World.HealthRegenerationRate;
             ManaRegenBonus = 0;
             ManaRegenPercent = 1f;
             ManaRegen = 0;
@@ -6287,8 +6287,8 @@ public class WS_PlayerData
                     1f,
                     1f
             };
-            ManaRegenerationModifier = WorldServiceLocator.ConfigurationProvider.GetConfiguration().ManaRegenerationRate;
-            LifeRegenerationModifier = WorldServiceLocator.ConfigurationProvider.GetConfiguration().HealthRegenerationRate;
+            ManaRegenerationModifier = WorldServiceLocator.MangosConfiguration.World.ManaRegenerationRate;
+            LifeRegenerationModifier = WorldServiceLocator.MangosConfiguration.World.HealthRegenerationRate;
             ManaRegenBonus = 0;
             ManaRegenPercent = 1f;
             ManaRegen = 0;

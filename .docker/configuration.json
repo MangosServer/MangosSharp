@@ -11,5 +11,41 @@
     "AccountDatabase": "root;rootpass;mysql;3306;mangosVBaccounts;MySQL",
     "CharacterDatabase": "root;rootpass;mysql;3306;mangosVBcharacters;MySQL",
     "WorldDatabase": "root;rootpass;mysql;3306;mangosVBworld;MySQL"
+  },
+  "World": {
+    "ClusterConnectHost": "cluster",
+    "ClusterConnectPort": 50001,
+    "LocalConnectHost": "world",
+    "LocalConnectPort": 50002,
+    "AccountDatabase": "root;rootpass;mysql;3306;mangosVBaccounts;MySQL",
+    "CharacterDatabase": "root;rootpass;mysql;3306;mangosVBcharacters;MySQL",
+    "WorldDatabase": "root;rootpass;mysql;3306;mangosVBworld;MySQL",
+    "Maps": [ 1, 0 ],
+    "ScriptsCompiler": [
+      "System.dll",
+      "System.Data.dll",
+      "Microsoft.VisualBasic.dll",
+      "Common.dll",
+      "Scripts.dll"
+    ],
+    "VMapsEnabled": false,
+    "MapResolution": 256,
+    "CommandCharacter": ".",
+    "GlobalAuction": false,
+    "LineOfSightEnabled": false,
+    "HeightCalcEnabled": false,
+
+    "ManaRegenerationRate": 1.0,
+    "HealthRegenerationRate": 1.0,
+    "XPRate": 1.0,
+
+    "LogType": "COLORCONSOLE",
+    "LogConfig": "CONSOLE",
+    "CreateBattlegrounds": true,
+    "CreatePartyInstances": true,
+    "CreateRaidInstances": true,
+    "CreateOther": true,
+    "SaveTimer": 120000,
+    "WeatherTimer": 600000
   }
 }

@@ -18,8 +18,7 @@
 
 using Autofac;
 using Mangos.Common.Globals;
-using Mangos.Configurations;
-using Mangos.Configurations.Xml;
+using Mangos.Configuration;
 using Mangos.DataStores;
 using Mangos.Logging;
 using Mangos.World.AI;
@@ -71,10 +70,7 @@ public sealed class Program
 
     public static void RegisterConfiguration(ContainerBuilder builder)
     {
-        builder.RegisterType<XmlConfigurationProvider<WorldServerConfiguration>>()
-            .As<IConfigurationProvider<WorldServerConfiguration>>()
-            .AsSelf()
-            .SingleInstance();
+        builder.RegisterModule<ConfigurationModule>();
     }
 
     public static void RegisterServices(ContainerBuilder builder)

@@ -24,6 +24,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -70,12 +71,7 @@ public class ScriptedObject : IDisposable
             IEnumerator enumerator = default;
             try
             {
-                enumerator = WorldServiceLocator.ConfigurationProvider.GetConfiguration().CompilerInclude.GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    var include = Conversions.ToString(enumerator.Current);
-                    cParameters.ReferencedAssemblies.Add(include);
-                }
+                cParameters.ReferencedAssemblies.AddRange(WorldServiceLocator.MangosConfiguration.World.ScriptsCompiler.ToArray());
             }
             finally
             {
@@ -140,23 +136,8 @@ public class ScriptedObject : IDisposable
             {
                 cParameters.OutputAssembly = AssemblyFile;
             }
-            IEnumerator enumerator = default;
-            try
-            {
-                enumerator = WorldServiceLocator.ConfigurationProvider.GetConfiguration().CompilerInclude.GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    var Include = Conversions.ToString(enumerator.Current);
-                    cParameters.ReferencedAssemblies.Add(Include);
-                }
-            }
-            finally
-            {
-                if (enumerator is IDisposable)
-                {
-                    (enumerator as IDisposable).Dispose();
-                }
-            }
+
+            cParameters.ReferencedAssemblies.AddRange(WorldServiceLocator.MangosConfiguration.World.ScriptsCompiler.ToArray());
             cParameters.ReferencedAssemblies.Add(AppDomain.CurrentDomain.FriendlyName);
             cParameters.GenerateExecutable = false;
             cParameters.GenerateInMemory = InMemory;

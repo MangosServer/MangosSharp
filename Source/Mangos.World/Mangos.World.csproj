@@ -5,8 +5,6 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>WorldServer</AssemblyName>
     <ApplicationIcon>MangosCS.ico</ApplicationIcon>
-    <OutputPath>..\..\Bin\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,8 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
-    <ProjectReference Include="..\Mangos.Configurations.Xml\Mangos.Configurations.Xml.csproj" />
-    <ProjectReference Include="..\Mangos.Configurations\Mangos.Configurations.csproj" />
+    <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
     <ProjectReference Include="..\Mangos.SignalR\Mangos.SignalR.csproj" />
   </ItemGroup>
 

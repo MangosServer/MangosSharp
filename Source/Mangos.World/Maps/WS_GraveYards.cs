@@ -105,7 +105,7 @@ public class WS_GraveYards : IDisposable
                 for (var i = 0; i <= tmpDBC.Rows - 1; i++)
                 {
                     var locationMapID = tmpDBC.ReadInt(i, 1);
-                    if (WorldServiceLocator.ConfigurationProvider.GetConfiguration().Maps.Contains(locationMapID.ToString()))
+                    if (WorldServiceLocator.MangosConfiguration.World.Maps.Contains(locationMapID))
                     {
                         var locationIndex = tmpDBC.ReadInt(i, 0);
                         var locationPosX = tmpDBC.ReadFloat(i, 2);

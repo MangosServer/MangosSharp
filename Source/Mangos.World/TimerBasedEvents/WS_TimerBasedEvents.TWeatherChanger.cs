@@ -17,9 +17,7 @@
 //
 
 using Mangos.Common.Enums.Global;
-using Mangos.World.Weather;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace Mangos.World.Server;
@@ -40,7 +38,7 @@ public partial class WS_TimerBasedEvents
         {
             WeatherTimer = null;
             WeatherWorking = false;
-            UPDATE_TIMER = WorldServiceLocator.ConfigurationProvider.GetConfiguration().WeatherTimer;
+            UPDATE_TIMER = WorldServiceLocator.MangosConfiguration.World.WeatherTimer;
             WeatherTimer = new Timer(Update, null, 10000, UPDATE_TIMER);
         }
 

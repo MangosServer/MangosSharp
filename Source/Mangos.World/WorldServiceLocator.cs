@@ -18,7 +18,7 @@
 
 using Autofac;
 using Mangos.Common.Globals;
-using Mangos.Configurations;
+using Mangos.Configuration;
 using Mangos.DataStores;
 using Mangos.World.AI;
 using Mangos.World.Auction;
@@ -53,11 +53,11 @@ public sealed class WorldServiceLocator
 
     public static DataStoreProvider DataStoreProvider => Container.Resolve<DataStoreProvider>();
 
-    public static IConfigurationProvider<WorldServerConfiguration> ConfigurationProvider
+    public static MangosConfiguration MangosConfiguration
     {
         get;
         set;
-    } = Container.Resolve<IConfigurationProvider<WorldServerConfiguration>>();
+    } = Container.Resolve<MangosConfiguration>();
 
     public static MangosGlobalConstants GlobalConstants
     {

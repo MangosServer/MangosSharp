@@ -862,7 +862,7 @@ public class WS_Creatures
                 {
                     XP *= 2;
                 }
-                XP = (int)Math.Round(XP * WorldServiceLocator.ConfigurationProvider.GetConfiguration().XPRate);
+                XP = (int)Math.Round(XP * WorldServiceLocator.MangosConfiguration.World.XPRate);
                 if (!Character.IsInGroup)
                 {
                     var RestedXP2 = 0;

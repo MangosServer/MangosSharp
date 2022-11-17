@@ -44,7 +44,7 @@ public class WS_Auction
 
     public AuctionHouses GetAuctionSide(ulong GUID)
     {
-        if (WorldServiceLocator.ConfigurationProvider.GetConfiguration().GlobalAuction)
+        if (WorldServiceLocator.MangosConfiguration.World.GlobalAuction)
         {
             return AuctionHouses.AUCTION_UNDEFINED;
         }

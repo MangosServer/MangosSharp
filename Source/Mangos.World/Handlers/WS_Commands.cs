@@ -24,7 +24,6 @@ using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.World.Globals;
-using Mangos.World.Maps;
 using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
@@ -1353,7 +1352,7 @@ public class WS_Commands
     {
         if (Operators.CompareString(Message.ToUpper(), "on", TextCompare: false) == 0)
         {
-            WorldServiceLocator.ConfigurationProvider.GetConfiguration().LineOfSightEnabled = true;
+            WorldServiceLocator.MangosConfiguration.World.LineOfSightEnabled = true;
             objCharacter.CommandResponse("Line of Sight Calculation is now Enabled.");
         }
         else
@@ -1362,7 +1361,7 @@ public class WS_Commands
             {
                 return false;
             }
-            WorldServiceLocator.ConfigurationProvider.GetConfiguration().LineOfSightEnabled = false;
+            WorldServiceLocator.MangosConfiguration.World.LineOfSightEnabled = false;
             objCharacter.CommandResponse("Line of Sight Calculation is now Disabled.");
         }
         return true;

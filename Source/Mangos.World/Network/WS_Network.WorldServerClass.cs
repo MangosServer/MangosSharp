@@ -68,7 +68,7 @@ public partial class WS_Network
             LastCPUTime = 0.0;
             UsageCPU = 0f;
             Cluster = null;
-            var configuration = WorldServiceLocator.ConfigurationProvider.GetConfiguration();
+            var configuration = WorldServiceLocator.MangosConfiguration.World;
             m_RemoteURI = $"http://{configuration.ClusterConnectHost}:{configuration.ClusterConnectPort}";
             LocalURI = $"http://{configuration.LocalConnectHost}:{configuration.LocalConnectPort}";
             Cluster = null;
@@ -111,7 +111,7 @@ public partial class WS_Network
                     Cluster = ProxyClient.Create<ICluster>(m_RemoteURI);
                     if (Cluster != null)
                     {
-                        var configuration = WorldServiceLocator.ConfigurationProvider.GetConfiguration();
+                        var configuration = WorldServiceLocator.MangosConfiguration.World;
                         if (Cluster.Connect(LocalURI, configuration.Maps.Select(x => Conversions.ToUInteger(x)).ToList()))
                         {
                             break;
@@ -134,7 +134,7 @@ public partial class WS_Network
         {
             try
             {
-                Cluster.Disconnect(LocalURI, WorldServiceLocator.ConfigurationProvider.GetConfiguration().Maps.Select(x => Conversions.ToUInteger(x)).ToList());
+                Cluster.Disconnect(LocalURI, WorldServiceLocator.MangosConfiguration.World.Maps.Select(x => Conversions.ToUInteger(x)).ToList());
             }
             catch (Exception ex)
             {
@@ -379,7 +379,7 @@ public partial class WS_Network
 
         public bool InstanceCanCreate(int Type)
         {
-            var configuration = WorldServiceLocator.ConfigurationProvider.GetConfiguration();
+            var configuration = WorldServiceLocator.MangosConfiguration.World;
             return Type switch
             {
                 3 => configuration.CreateBattlegrounds,

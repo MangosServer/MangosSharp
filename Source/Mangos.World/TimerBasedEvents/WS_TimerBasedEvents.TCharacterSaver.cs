@@ -17,10 +17,8 @@
 //
 
 using Mangos.Common.Enums.Global;
-using Mangos.World.Player;
 using Microsoft.VisualBasic.CompilerServices;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace Mangos.World.Server;
@@ -41,7 +39,7 @@ public partial class WS_TimerBasedEvents
         {
             CharacterSaverTimer = null;
             CharacterSaverWorking = false;
-            UPDATE_TIMER = WorldServiceLocator.ConfigurationProvider.GetConfiguration().SaveTimer;
+            UPDATE_TIMER = WorldServiceLocator.MangosConfiguration.World.SaveTimer;
             CharacterSaverTimer = new Timer(Update, null, 10000, UPDATE_TIMER);
         }
 

@@ -20,7 +20,7 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Common.Legacy.Logging;
-using Mangos.Configurations.Xml;
+using Mangos.Configuration;
 using Mangos.SignalR;
 using Mangos.World.Globals;
 using Mangos.World.Handlers;
@@ -35,7 +35,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -142,14 +141,13 @@ public class WorldServer
     public WS_Network.WorldServerClass ClsWorldServer;
 
     public const int SERVERSEED = -569166080;
-    private readonly XmlConfigurationProvider<WorldServerConfiguration> xmlConfigurationProvider;
     public SQL AccountDatabase;
 
     public SQL CharacterDatabase;
 
     public SQL WorldDatabase;
 
-    public WorldServer(XmlConfigurationProvider<WorldServerConfiguration> xmlConfigurationProvider)
+    public WorldServer(MangosConfiguration mangosConfiguration)
     {
         CLIENTs = new Dictionary<uint, WS_Network.ClientClass>();
         CHARACTERs = new Dictionary<ulong, WS_PlayerData.CharacterObject>();
@@ -185,7 +183,6 @@ public class WorldServer
         AccountDatabase = new SQL();
         CharacterDatabase = new SQL();
         WorldDatabase = new SQL();
-        this.xmlConfigurationProvider = xmlConfigurationProvider;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -193,26 +190,9 @@ public class WorldServer
     {
         try
         {
-            var FileName = "configs/WorldServer.ini";
             var args = Environment.GetCommandLineArgs();
             var array = args;
-            foreach (var arg in from string arg in array
-                                where arg.IndexOf("config") != -1
-                                select arg)
-            {
-                FileName = Strings.Trim(arg[(arg.IndexOf("=") + 1)..]);
-            }
-
-            if (!File.Exists(FileName))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[{0}] Cannot Continue. {1} does not exist.", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), FileName);
-                Console.WriteLine("Please copy the ini files into the same directory as the Server exe files.");
-                Console.WriteLine("Press any key to exit server: ");
-                Console.ReadKey();
-            }
-            Console.Write("[{0}] Loading Configuration from {1}...", Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss"), FileName);
-            var configuration = WorldServiceLocator.ConfigurationProvider.GetConfiguration();
+            var configuration = WorldServiceLocator.MangosConfiguration.World;
             Console.WriteLine(".[done]");
             if (!configuration.VMapsEnabled)
             {
@@ -271,7 +251,7 @@ public class WorldServer
                 WorldServiceLocator.WSMaps.RESOLUTION_ZMAP = 255;
             }
             Log = BaseWriter.CreateLog(configuration.LogType, configuration.LogConfig);
-            Log.LogLevel = configuration.LogLevel;
+            Log.LogLevel = LogType.INFORMATION;
         }
         catch (Exception ex)
         {
@@ -340,8 +320,6 @@ public class WorldServer
     [MTAThread]
     public async Task StartAsync()
     {
-        xmlConfigurationProvider.LoadFromFile("configs/WorldServer.ini");
-
         Console.BackgroundColor = ConsoleColor.Black;
         Console.Title = $"{((AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), inherit: false)[0]).Title} v{Assembly.GetExecutingAssembly().GetName().Version}";
         Console.ForegroundColor = ConsoleColor.Yellow;
@@ -428,7 +406,7 @@ public class WorldServer
         await AllGraveYards.InitializeGraveyardsAsync();
         WorldServiceLocator.WSTransports.LoadTransports();
         ClsWorldServer = new WS_Network.WorldServerClass(WorldServiceLocator.DataStoreProvider);
-        var configuration = WorldServiceLocator.ConfigurationProvider.GetConfiguration();
+        var configuration = WorldServiceLocator.MangosConfiguration.World;
         server = new ProxyServer<WS_Network.WorldServerClass>(Dns.GetHostAddresses(configuration.LocalConnectHost)[0], configuration.LocalConnectPort, ClsWorldServer);
         ClsWorldServer.ClusterConnect();
         Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}", ClsWorldServer.LocalURI);

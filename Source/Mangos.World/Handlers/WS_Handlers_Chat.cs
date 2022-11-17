@@ -64,7 +64,7 @@ public class WS_Handlers_Chat
             case ChatMsg.CHAT_MSG_EMOTE:
                 {
                     var MessageString = packet.GetString();
-                    if (MessageString.StartsWith(WorldServiceLocator.ConfigurationProvider.GetConfiguration().CommandCharacter) && client.Character.Access > AccessLevel.Player)
+                    if (MessageString.StartsWith(WorldServiceLocator.MangosConfiguration.World.CommandCharacter) && client.Character.Access > AccessLevel.Player)
                     {
                         MessageString = MessageString.Remove(0, 1);
                         var toCommand = WorldServiceLocator.Functions.BuildChatMessage(2147483647uL, MessageString, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL);

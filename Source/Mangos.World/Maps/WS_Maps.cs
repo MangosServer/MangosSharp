@@ -70,8 +70,7 @@ public partial class WS_Maps
 
     public async Task InitializeMapsAsync()
     {
-        IEnumerator e = WorldServiceLocator.ConfigurationProvider.GetConfiguration().Maps.GetEnumerator();
-        e.Reset();
+        var e = WorldServiceLocator.MangosConfiguration.World.Maps.GetEnumerator();
         if (e.MoveNext())
         {
             MapList = Conversions.ToString(e.Current);
@@ -80,7 +79,7 @@ public partial class WS_Maps
                 MapList = Conversions.ToString(Operators.AddObject(MapList, Operators.ConcatenateObject(", ", e.Current)));
             }
         }
-        foreach (var map2 in WorldServiceLocator.ConfigurationProvider.GetConfiguration().Maps)
+        foreach (var map2 in WorldServiceLocator.MangosConfiguration.World.Maps)
         {
             var id = Conversions.ToUInteger(map2);
             TMap map = new(checked((int)id), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));

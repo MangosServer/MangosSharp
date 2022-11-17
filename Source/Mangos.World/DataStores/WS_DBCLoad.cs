@@ -24,7 +24,6 @@ using Mangos.World.Loots;
 using Mangos.World.Maps;
 using Mangos.World.Spells;
 using Mangos.World.Weather;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -388,7 +387,7 @@ public class WS_DBCLoad
                     var taxiMountTypeHorde = tmpDBC.ReadInt(i, 14);
                     var taxiMountTypeAlliance = tmpDBC.ReadInt(i, 15);
 
-                    if (WorldServiceLocator.ConfigurationProvider.GetConfiguration().Maps.Contains(taxiMapID.ToString()))
+                    if (WorldServiceLocator.MangosConfiguration.World.Maps.Contains(taxiMapID))
                     {
                         WorldServiceLocator.WSDBCDatabase.TaxiNodes.Add(taxiNode, new WS_DBCDatabase.TTaxiNode(taxiPosX, taxiPosY, taxiPosZ, taxiMapID, taxiMountTypeHorde, taxiMountTypeAlliance));
                     }
@@ -446,7 +445,7 @@ public class WS_DBCLoad
                     var taxiPosZ = tmpDBC.ReadFloat(i, 6);
                     var taxiAction = tmpDBC.ReadInt(i, 7);
                     var taxiWait = tmpDBC.ReadInt(i, 8);
-                    if (WorldServiceLocator.ConfigurationProvider.GetConfiguration().Maps.Contains(taxiMapID.ToString()))
+                    if (WorldServiceLocator.MangosConfiguration.World.Maps.Contains(taxiMapID))
                     {
                         if (!WorldServiceLocator.WSDBCDatabase.TaxiPathNodes.ContainsKey(taxiPath))
                         {
