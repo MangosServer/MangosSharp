@@ -54,7 +54,7 @@ public class LegacyWorldCluster
     // Public CHARACTER_NAMEs As New Hashtable
 
     // System Things...
-    public BaseWriter Log = new();
+    public BaseWriter Log = new ColoredConsoleWriter();
 
     public Random Rnd = new();
 
