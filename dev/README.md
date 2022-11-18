@@ -1,17 +1,18 @@
+This folder contain docker images for development purpose
 
-You can use MangosSharp in docker
-
-# How to prepare environment
+# How to prepare dev database
 1. Install docker for your OS (Windows 10, Linux, Mac)
 2. Install docker-compose tool (in docker desktop is installed by default)
 3. Extract dbc and place it in 'dbc' folder
-4. Run in this folder: docker-compose up -d mysql
-5. Configure database and apply all db migrations
+4. Build docker images from command line: `docker-compose build`
+5. Start database: `docker-compose up -d mysql`
+6. Clone and rimport database from https://github.com/mangosvb/DatabaseZero
+7. Apply migrations from `./sql` folder
 
 # How to start server
-1) docker-compose up -d mysql
+1) `docker-compose up -d realm`
 2) Wait 5 seconds
-3) docker-compose up -d
+3) `docker-compose up -d game`
 
 # How to stop server
-1) docker-compose down
+    docker-compose down
