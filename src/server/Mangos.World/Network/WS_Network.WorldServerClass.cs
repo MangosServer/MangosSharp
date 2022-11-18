@@ -20,12 +20,10 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
 using Mangos.Common.Legacy;
 using Mangos.DataStores;
-using Mangos.SignalR;
 using Mangos.World.Globals;
 using Mangos.World.Maps;
 using Mangos.World.Player;
 using Mangos.World.Social;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
@@ -38,10 +36,10 @@ namespace Mangos.World.Network;
 
 public partial class WS_Network
 {
-    public class WorldServerClass : Hub, IWorld, IDisposable
+    public class WorldServerClass : IWorld, IDisposable
     {
         private readonly DataStoreProvider dataStoreProvider;
-
+        private readonly ICluster cluster;
         public bool _flagStopListen;
 
         public string LocalURI;
@@ -62,7 +60,7 @@ public partial class WS_Network
 
         private bool _disposedValue;
 
-        public WorldServerClass(DataStoreProvider dataStoreProvider)
+        public WorldServerClass(DataStoreProvider dataStoreProvider, ICluster cluster)
         {
             _flagStopListen = false;
             LastCPUTime = 0.0;
@@ -76,6 +74,7 @@ public partial class WS_Network
             m_Connection = new Timer(CheckConnection, null, 10000, 10000);
             m_TimerCPU = new Timer(CheckCPU, null, 1000, 1000);
             this.dataStoreProvider = dataStoreProvider;
+            this.cluster = cluster;
         }
 
         protected new virtual void Dispose(bool disposing)
@@ -108,11 +107,11 @@ public partial class WS_Network
             {
                 try
                 {
-                    Cluster = ProxyClient.Create<ICluster>(m_RemoteURI);
+                    Cluster = cluster;
                     if (Cluster != null)
                     {
                         var configuration = WorldServiceLocator.MangosConfiguration.World;
-                        if (Cluster.Connect(LocalURI, configuration.Maps.Select(x => Conversions.ToUInteger(x)).ToList()))
+                        if (Cluster.Connect(LocalURI, configuration.Maps.Select(x => Conversions.ToUInteger(x)).ToList(), this))
                         {
                             break;
                         }

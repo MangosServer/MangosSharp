@@ -13,7 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
     <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
-    <ProjectReference Include="..\Mangos.SignalR\Mangos.SignalR.csproj" />
   </ItemGroup>
 
 </Project>

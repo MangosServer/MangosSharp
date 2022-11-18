@@ -24,7 +24,7 @@ namespace Mangos.Common.Legacy;
 public interface ICluster
 {
     [Description("Signal realm server for new world server.")]
-    bool Connect(string uri, List<uint> maps);
+    bool Connect(string uri, List<uint> maps, IWorld world);
 
     [Description("Signal realm server for disconected world server.")]
     void Disconnect(string uri, List<uint> maps);
@@ -68,6 +68,4 @@ public interface ICluster
 
     [Description("Send update for the requested group.")]
     void GroupRequestUpdate(uint id);
-
-    void Dispose();
 }

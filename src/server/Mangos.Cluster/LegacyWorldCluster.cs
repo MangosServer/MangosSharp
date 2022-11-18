@@ -24,11 +24,9 @@ using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Common.Legacy.Logging;
 using Mangos.Configuration;
-using Mangos.SignalR;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -270,13 +268,6 @@ public class LegacyWorldCluster
 
         _clusterServiceLocator.WorldServerClass.Start();
 
-        ProxyServer<WorldServerClass> server = new(
-            IPAddress.Parse(mangosConfiguration.Cluster.ClusterListenAddress),
-            mangosConfiguration.Cluster.ClusterListenPort,
-            _clusterServiceLocator.WcNetwork.WorldServer);
-        Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}:{1}",
-            mangosConfiguration.Cluster.ClusterListenAddress,
-            mangosConfiguration.Cluster.ClusterListenPort);
         Log.WriteLine(LogType.INFORMATION, "Load Time: {0}", Strings.Format(DateAndTime.DateDiff(DateInterval.Second, DateAndTime.Now, DateAndTime.Now), "0 seconds"));
         Log.WriteLine(LogType.INFORMATION, "Used memory: {0}", Strings.Format(GC.GetTotalMemory(false), "### ### ##0 bytes"));
     }

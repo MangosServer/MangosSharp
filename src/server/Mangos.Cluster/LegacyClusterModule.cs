@@ -42,7 +42,7 @@ public sealed class LegacyClusterModule : Module
         builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
         builder.RegisterType<NativeMethods>().As<NativeMethods>().SingleInstance();
         builder.RegisterType<LegacyWorldCluster>().As<LegacyWorldCluster>().SingleInstance();
-        builder.RegisterType<WorldServerClass>().As<WorldServerClass>().SingleInstance();
+        builder.RegisterType<WorldServerClass>().As<WorldServerClass>().As<ICluster>().SingleInstance();
         builder.RegisterType<WsDbcDatabase>().As<WsDbcDatabase>().SingleInstance();
         builder.RegisterType<WsDbcLoad>().As<WsDbcLoad>().SingleInstance();
         builder.RegisterType<Globals.Functions>().As<Globals.Functions>().SingleInstance();

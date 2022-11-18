@@ -8,7 +8,7 @@ services:
       - 3724:3724
     build:
       context: ..
-      dockerfile: ./.docker/RealmServer.Dockerfile
+      dockerfile: ./dev/RealmServer.Dockerfile
     networks:
       - mangosSharp
 
@@ -21,7 +21,7 @@ services:
       - 8085:8085
     build:
       context: ..
-      dockerfile: ./.docker/GameServer.Dockerfile
+      dockerfile: ./dev/GameServer.Dockerfile
     networks:
       - mangosSharp
 

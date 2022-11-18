@@ -20,7 +20,6 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Common.Legacy.Logging;
-using Mangos.SignalR;
 using Mangos.World.Globals;
 using Mangos.World.Handlers;
 using Mangos.World.Maps;
@@ -34,7 +33,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -46,8 +44,6 @@ namespace Mangos.World;
 public class WorldServer
 {
     public delegate void HandlePacket(ref Packets.PacketClass Packet, ref WS_Network.ClientClass client);
-
-    private ProxyServer<WS_Network.WorldServerClass> server;
 
     public Dictionary<uint, WS_Network.ClientClass> CLIENTs;
 
@@ -145,8 +141,9 @@ public class WorldServer
     public SQL CharacterDatabase;
 
     public SQL WorldDatabase;
+    private readonly ICluster cluster;
 
-    public WorldServer()
+    public WorldServer(ICluster cluster)
     {
         CLIENTs = new Dictionary<uint, WS_Network.ClientClass>();
         CHARACTERs = new Dictionary<ulong, WS_PlayerData.CharacterObject>();
@@ -182,6 +179,7 @@ public class WorldServer
         AccountDatabase = new SQL();
         CharacterDatabase = new SQL();
         WorldDatabase = new SQL();
+        this.cluster = cluster;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -404,11 +402,9 @@ public class WorldServer
         ALLQUESTS.LoadAllQuests();
         await AllGraveYards.InitializeGraveyardsAsync();
         WorldServiceLocator.WSTransports.LoadTransports();
-        ClsWorldServer = new WS_Network.WorldServerClass(WorldServiceLocator.DataStoreProvider);
+        ClsWorldServer = new WS_Network.WorldServerClass(WorldServiceLocator.DataStoreProvider, cluster);
         var configuration = WorldServiceLocator.MangosConfiguration.World;
-        server = new ProxyServer<WS_Network.WorldServerClass>(Dns.GetHostAddresses(configuration.LocalConnectHost)[0], configuration.LocalConnectPort, ClsWorldServer);
         ClsWorldServer.ClusterConnect();
-        Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}", ClsWorldServer.LocalURI);
         GC.Collect();
         if (Process.GetCurrentProcess().PriorityClass == ProcessPriorityClass.High)
         {

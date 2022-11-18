@@ -21,8 +21,6 @@ using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
-using Mangos.SignalR;
-using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,7 +28,7 @@ using System.Threading;
 
 namespace Mangos.Cluster.Network;
 
-public class WorldServerClass : Hub, ICluster
+public class WorldServerClass : ICluster
 {
     private readonly ClusterServiceLocator _clusterServiceLocator;
 
@@ -51,7 +49,7 @@ public class WorldServerClass : Hub, ICluster
     public Dictionary<uint, IWorld> Worlds = new();
     public Dictionary<uint, WorldInfo> WorldsInfo = new();
 
-    public bool Connect(string uri, List<uint> maps)
+    public bool Connect(string uri, List<uint> maps, IWorld world)
     {
         try
         {
@@ -63,7 +61,7 @@ public class WorldServerClass : Hub, ICluster
                 foreach (var map in maps)
                 {
                     // NOTE: Password protected remoting
-                    Worlds[map] = ProxyClient.Create<IWorld>(uri);
+                    Worlds[map] = world;
                     WorldsInfo[map] = worldServerInfo;
                 }
             }
