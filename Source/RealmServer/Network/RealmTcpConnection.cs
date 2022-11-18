@@ -43,7 +43,7 @@ internal sealed class RealmTcpConnection : ITcpConnection
         clientState.IPAddress = endpoint.Address;
 
         var socketReader = new SocketReader(socket, cancellationToken);
-        var socketWriter = new SocketWriter(socket);
+        var socketWriter = new SocketWriter(socket, cancellationToken);
         while (!cancellationToken.IsCancellationRequested)
         {
             await ExecuteMessageAsync(socketReader, socketWriter);

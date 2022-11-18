@@ -24,11 +24,13 @@ namespace RealmServer.Network;
 internal sealed class SocketWriter
 {
     private readonly Socket socket;
+    private readonly CancellationToken cancellationToken;
     private readonly ArrayPool<byte> arrayPool = ArrayPool<byte>.Shared;
 
-    public SocketWriter(Socket socket)
+    public SocketWriter(Socket socket, CancellationToken cancellationToken)
     {
         this.socket = socket;
+        this.cancellationToken = cancellationToken;
     }
 
     public async ValueTask WriteByteArrayAsync(byte[] value)
@@ -80,6 +82,6 @@ internal sealed class SocketWriter
 
     private async ValueTask WriteAsync(byte[] buffer, int length)
     {
-        await socket.SendAsync(buffer.AsMemory(0, length));
+        await socket.SendAsync(buffer.AsMemory(0, length), cancellationToken);
     }
 }
