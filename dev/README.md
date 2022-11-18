@@ -6,7 +6,7 @@ This folder contain docker images for development purpose
 3. Extract dbc and place it in 'dbc' folder
 4. Build docker images from command line: `docker-compose build`
 5. Start database: `docker-compose up -d mysql`
-6. Clone and rimport database from https://github.com/mangosvb/DatabaseZero
+6. Clone and import database from https://github.com/mangosvb/DatabaseZero
 7. Apply migrations from `./sql` folder
 
 # How to start server
