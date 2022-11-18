@@ -22,13 +22,13 @@ using Mangos.Tcp;
 using System.Diagnostics;
 using System.Net.Sockets;
 
-namespace WorldCluster.Network;
+namespace GameServer.Network;
 
-internal sealed class ClusterTcpConnection : ITcpConnection
+internal sealed class GameTcpConnection : ITcpConnection
 {
     private readonly ClientClass legacyClientClass;
 
-    public ClusterTcpConnection(ClientClass legacyClientClass)
+    public GameTcpConnection(ClientClass legacyClientClass)
     {
         this.legacyClientClass = legacyClientClass;
     }
@@ -54,7 +54,7 @@ internal sealed class ClusterTcpConnection : ITcpConnection
             DecodePacketHeader(header);
         }
 
-        var length = header[1] + (header[0] * 256) + 2;
+        var length = header[1] + header[0] * 256 + 2;
         var body = new byte[length - 6];
         await ReadAsync(socket, body, cancellationToken);
 
@@ -70,7 +70,7 @@ internal sealed class ClusterTcpConnection : ITcpConnection
         for (var i = 0; i < 6; i++)
         {
             var tmp = data[i];
-            data[i] = (byte)(hash[key[1]] ^ ((256 + data[i] - key[0]) % 256));
+            data[i] = (byte)(hash[key[1]] ^ (256 + data[i] - key[0]) % 256);
             key[0] = tmp;
             key[1] = (byte)((key[1] + 1) % 40);
         }

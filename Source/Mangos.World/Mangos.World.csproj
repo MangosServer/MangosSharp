@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <OutputType>Exe</OutputType>
     <AssemblyName>WorldServer</AssemblyName>
-    <ApplicationIcon>MangosCS.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

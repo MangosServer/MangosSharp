@@ -13,9 +13,9 @@
     "WorldDatabase": "root;rootpass;mysql;3306;mangosVBworld;MySQL"
   },
   "World": {
-    "ClusterConnectHost": "cluster",
+    "ClusterConnectHost": "127.0.0.1",
     "ClusterConnectPort": 50001,
-    "LocalConnectHost": "world",
+    "LocalConnectHost": "127.0.0.1",
     "LocalConnectPort": 50002,
     "AccountDatabase": "root;rootpass;mysql;3306;mangosVBaccounts;MySQL",
     "CharacterDatabase": "root;rootpass;mysql;3306;mangosVBcharacters;MySQL",

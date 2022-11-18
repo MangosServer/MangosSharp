@@ -20,7 +20,6 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Common.Legacy.Logging;
-using Mangos.Configuration;
 using Mangos.SignalR;
 using Mangos.World.Globals;
 using Mangos.World.Handlers;
@@ -147,7 +146,7 @@ public class WorldServer
 
     public SQL WorldDatabase;
 
-    public WorldServer(MangosConfiguration mangosConfiguration)
+    public WorldServer()
     {
         CLIENTs = new Dictionary<uint, WS_Network.ClientClass>();
         CHARACTERs = new Dictionary<ulong, WS_PlayerData.CharacterObject>();
@@ -421,16 +420,6 @@ public class WorldServer
         }
         Log.WriteLine(LogType.INFORMATION, " Load Time:   {0}", Strings.Format(DateAndTime.DateDiff(DateInterval.Second, dateTimeStarted, DateAndTime.Now), "0 seconds"));
         Log.WriteLine(LogType.INFORMATION, " Used Memory: {0}", Strings.Format(GC.GetTotalMemory(forceFullCollection: false), "### ### ##0 bytes"));
-        try
-        {
-            WaitConsoleCommand();
-        }
-        catch (Exception ex2)
-        {
-            var ex = ex2;
-            WorldServiceLocator.WSTimerBasedEvents.Regenerator.Dispose();
-            AreaTriggers.Dispose();
-        }
     }
 
     public void WaitConsoleCommand()
