@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Mangos.Cluster\Mangos.Cluster.csproj" />
     <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Domain\Mangos.Domain.csproj" />
     <ProjectReference Include="..\Mangos.Logging\Mangos.Logging.csproj" />
     <ProjectReference Include="..\Mangos.MySql\Mangos.MySql.csproj" />
     <ProjectReference Include="..\Mangos.World\Mangos.World.csproj" />

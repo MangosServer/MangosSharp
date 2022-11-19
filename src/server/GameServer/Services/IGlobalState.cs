@@ -16,18 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Autofac;
-using GameServer.Network;
-using GameServer.Services;
-using Mangos.Tcp;
+using Mangos.Domain;
 
-namespace GameServer;
+namespace GameServer.Services;
 
-internal sealed class GameModule : Module
+internal interface IGlobalState
 {
-    protected override void Load(ContainerBuilder builder)
-    {
-        builder.RegisterType<GameTcpConnection>().As<ITcpConnection>().InstancePerLifetimeScope();
-        builder.RegisterType<GlobalState>().As<IGlobalState>().InstancePerLifetimeScope();
-    }
+    void Transaction(Action<World> update);
 }

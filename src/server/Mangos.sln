@@ -43,6 +43,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mangos.Tcp", "Mangos.Tcp\Ma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameServer", "GameServer\GameServer.csproj", "{B20A385B-09C2-4621-8710-7281B1E6BDB9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{40EC8469-64C2-4FF0-A941-86336445F8D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangos.Domain", "Mangos.Domain\Mangos.Domain.csproj", "{D6B4DEFD-6430-4ACD-A218-FA6B59E842A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +105,10 @@ Global
 		{B20A385B-09C2-4621-8710-7281B1E6BDB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B20A385B-09C2-4621-8710-7281B1E6BDB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B20A385B-09C2-4621-8710-7281B1E6BDB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6B4DEFD-6430-4ACD-A218-FA6B59E842A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6B4DEFD-6430-4ACD-A218-FA6B59E842A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6B4DEFD-6430-4ACD-A218-FA6B59E842A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6B4DEFD-6430-4ACD-A218-FA6B59E842A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +129,7 @@ Global
 		{57442413-177E-4A2C-84CB-7EDA6BF6E049} = {95BF5347-DA27-4933-83E4-279B60D20835}
 		{2D13723F-2661-4413-AA90-D393980F8B14} = {95BF5347-DA27-4933-83E4-279B60D20835}
 		{B20A385B-09C2-4621-8710-7281B1E6BDB9} = {BD151E63-D321-4AC1-A2CD-80283D4FC70C}
+		{D6B4DEFD-6430-4ACD-A218-FA6B59E842A5} = {40EC8469-64C2-4FF0-A941-86336445F8D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADB1D01A-F2D8-411D-8C5E-9B125F8FE64E}
