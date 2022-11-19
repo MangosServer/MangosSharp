@@ -100,6 +100,11 @@ internal sealed class SocketReader
 
     private async ValueTask ReadAsync(byte[] buffer, int length)
     {
+        if (length == 0)
+        {
+            return;
+        }
+
         var number = await socket.ReceiveAsync(buffer.AsMemory(0, length), cancellationToken);
         if (number != length)
         {

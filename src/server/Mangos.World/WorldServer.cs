@@ -318,7 +318,6 @@ public class WorldServer
     public async Task StartAsync()
     {
         Console.BackgroundColor = ConsoleColor.Black;
-        Console.Title = $"{((AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), inherit: false)[0]).Title} v{Assembly.GetExecutingAssembly().GetName().Version}";
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("{0}", ((AssemblyProductAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), inherit: false)[0]).Product);
         Console.WriteLine(((AssemblyCopyrightAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), inherit: false)[0]).Copyright);

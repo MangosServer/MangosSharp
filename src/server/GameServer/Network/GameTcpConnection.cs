@@ -19,6 +19,8 @@
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Tcp;
+using System.Buffers;
+using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Net.Sockets;
 
@@ -27,6 +29,8 @@ namespace GameServer.Network;
 internal sealed class GameTcpConnection : ITcpConnection
 {
     private readonly ClientClass legacyClientClass;
+
+    private readonly MemoryPool<byte> memoryPool = MemoryPool<byte>.Shared;
 
     public GameTcpConnection(ClientClass legacyClientClass)
     {
@@ -40,30 +44,41 @@ internal sealed class GameTcpConnection : ITcpConnection
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            await ExectueLegacyMessageAsync(socket, cancellationToken);
+            await WaitForNextPacket(socket, cancellationToken);
+            await HandlePacketAsync(socket, cancellationToken);
         }
     }
 
-    private async Task ExectueLegacyMessageAsync(Socket socket, CancellationToken cancellationToken)
+    private async Task HandlePacketAsync(Socket socket, CancellationToken cancellationToken)
     {
-        var header = new byte[6];
+        const int MAX_PACKET_LENGTH = 10000;
+        using var memoryOwner = memoryPool.Rent(MAX_PACKET_LENGTH);
+        var header = memoryOwner.Memory.Slice(0, 6);
+
         await ReadAsync(socket, header, cancellationToken);
+        DecodePacketHeader(header.Span);
+        var length = BinaryPrimitives.ReadInt16BigEndian(header.Span) - 4;
+        var opcode = (MessageOpcode)BinaryPrimitives.ReadUInt16LittleEndian(header.Span.Slice(2));
 
-        if (legacyClientClass.Client.PacketEncryption.IsEncryptionEnabled)
-        {
-            DecodePacketHeader(header);
-        }
-
-        var length = header[1] + header[0] * 256 + 2;
-        var body = new byte[length - 6];
+        var body = memoryOwner.Memory.Slice(6, length);
         await ReadAsync(socket, body, cancellationToken);
 
-        var packet = new PacketClass(header.Concat(body).ToArray());
-        legacyClientClass.OnPacket(packet);
+        ExectueLegacyMessage(memoryOwner.Memory.Slice(0, header.Length + body.Length));
+    }
+
+    private void ExectueLegacyMessage(ReadOnlyMemory<byte> packet)
+    {
+        var legacyPacket = new PacketClass(packet.ToArray());
+        legacyClientClass.OnPacket(legacyPacket);
     }
 
     private void DecodePacketHeader(Span<byte> data)
     {
+        if (!legacyClientClass.Client.PacketEncryption.IsEncryptionEnabled)
+        {
+            return;
+        }
+
         var key = legacyClientClass.Client.PacketEncryption.Key;
         var hash = legacyClientClass.Client.PacketEncryption.Hash;
 
@@ -76,8 +91,18 @@ internal sealed class GameTcpConnection : ITcpConnection
         }
     }
 
-    private async ValueTask ReadAsync(Socket socket, byte[] buffer, CancellationToken cancellationToken)
+    private async ValueTask WaitForNextPacket(Socket socket, CancellationToken cancellationToken)
     {
+        await socket.ReceiveAsync(Array.Empty<byte>(), cancellationToken);
+    }
+
+    private async ValueTask ReadAsync(Socket socket, Memory<byte> buffer, CancellationToken cancellationToken)
+    {
+        if (buffer.Length == 0)
+        {
+            return;
+        }
+
         var recieved = await socket.ReceiveAsync(buffer, cancellationToken);
         if (recieved != buffer.Length)
         {
