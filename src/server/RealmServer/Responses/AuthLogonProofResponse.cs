@@ -28,7 +28,7 @@ internal sealed class AuthLogonProofResponse : IResponseMessage
 
     public async ValueTask WriteAsync(SocketWriter writer)
     {
-        await writer.WriteByteAsync((byte)TcpPacketOpCodes.CMD_AUTH_LOGON_PROOF);
+        await writer.WriteByteAsync((byte)MessageOpcode.CMD_AUTH_LOGON_PROOF);
         await writer.WriteByteAsync((byte)AccountState);
 
         if (M2 != null)

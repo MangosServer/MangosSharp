@@ -17,7 +17,7 @@
 //
 
 using Mangos.MySql.GetRealmList;
-using RealmServer.Domain;
+using RealmServer.Network;
 using RealmServer.Requests;
 using RealmServer.Responses;
 
@@ -32,7 +32,7 @@ internal sealed class AuthRealmlistHandler : IHandler<AuthRealmlistRequest>
         this.getRealmListQuery = getRealmListQuery;
     }
 
-    public TcpPacketOpCodes TcpPacketOpCode => TcpPacketOpCodes.CMD_AUTH_REALMLIST;
+    public MessageOpcode TcpPacketOpCode => MessageOpcode.CMD_AUTH_REALMLIST;
 
     public async Task<IResponseMessage> ExectueAsync(AuthRealmlistRequest request)
     {

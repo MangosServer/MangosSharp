@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using RealmServer.Domain;
+using RealmServer.Network;
 using RealmServer.Requests;
 using RealmServer.Responses;
 
@@ -24,7 +24,7 @@ namespace RealmServer.Handlers;
 
 internal interface IHandler<TRequest> where TRequest : IRequestMessage<TRequest>
 {
-    TcpPacketOpCodes TcpPacketOpCode { get; }
+    MessageOpcode TcpPacketOpCode { get; }
 
     Task<IResponseMessage> ExectueAsync(TRequest request);
 }

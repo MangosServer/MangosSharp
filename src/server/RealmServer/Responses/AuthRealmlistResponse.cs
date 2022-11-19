@@ -16,7 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using RealmServer.Domain;
 using RealmServer.Network;
 using System.Text;
 
@@ -48,7 +47,7 @@ internal sealed class AuthRealmlistResponse : IResponseMessage
             + x.Address.Length + 1 + x.Port.Length + 1
             + 7) + 7;
 
-        await writer.WriteByteAsync((byte)TcpPacketOpCodes.CMD_AUTH_REALMLIST);
+        await writer.WriteByteAsync((byte)MessageOpcode.CMD_AUTH_REALMLIST);
         await writer.WriteByteAsync((byte)(responseBodyLength % 256));
         await writer.WriteByteAsync((byte)(responseBodyLength / 256));
         await writer.WriteByteArrayAsync(Unk);

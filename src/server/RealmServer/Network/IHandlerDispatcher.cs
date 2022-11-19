@@ -16,13 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using RealmServer.Domain;
-
 namespace RealmServer.Network;
 
 internal interface IHandlerDispatcher
 {
-    TcpPacketOpCodes Opcode { get; }
+    MessageOpcode Opcode { get; }
 
     Task ExectueAsync(SocketReader reader, SocketWriter writer);
 }

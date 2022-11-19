@@ -16,7 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using RealmServer.Domain;
 using RealmServer.Handlers;
 using RealmServer.Requests;
 
@@ -33,7 +32,7 @@ internal sealed class HandlerDispatcher<THandler, TRequest> : IHandlerDispatcher
         this.handler = handler;
     }
 
-    public TcpPacketOpCodes Opcode => handler.TcpPacketOpCode;
+    public MessageOpcode Opcode => handler.TcpPacketOpCode;
 
     public async Task ExectueAsync(SocketReader reader, SocketWriter writer)
     {

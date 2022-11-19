@@ -16,9 +16,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace RealmServer.Domain;
+namespace RealmServer.Network;
 
-public enum TcpPacketOpCodes : byte
+public enum MessageOpcode : byte
 {
     CMD_AUTH_LOGON_CHALLENGE = 0x0,
     CMD_AUTH_LOGON_PROOF = 0x1,

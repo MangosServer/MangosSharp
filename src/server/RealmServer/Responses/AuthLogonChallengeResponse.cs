@@ -31,7 +31,7 @@ internal sealed class AuthLogonChallengeResponse : IResponseMessage
 
     public async ValueTask WriteAsync(SocketWriter writer)
     {
-        await writer.WriteByteAsync((byte)TcpPacketOpCodes.CMD_AUTH_LOGON_CHALLENGE);
+        await writer.WriteByteAsync((byte)MessageOpcode.CMD_AUTH_LOGON_CHALLENGE);
         await writer.WriteByteAsync((byte)AccountStates.LOGIN_OK);
         await writer.WriteZeroBytesAsync(1);
         await writer.WriteByteArrayAsync(PublicB);

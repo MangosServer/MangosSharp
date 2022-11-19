@@ -20,6 +20,7 @@ using Mangos.Logging;
 using Mangos.MySql.UpdateAccount;
 using Microsoft.VisualBasic;
 using RealmServer.Domain;
+using RealmServer.Network;
 using RealmServer.Requests;
 using RealmServer.Responses;
 
@@ -38,7 +39,7 @@ internal sealed class RsLogonProofHandler : IHandler<RsLogonProofRequest>
         this.clientState = clientState;
     }
 
-    public TcpPacketOpCodes TcpPacketOpCode => TcpPacketOpCodes.CMD_AUTH_LOGON_PROOF;
+    public MessageOpcode TcpPacketOpCode => MessageOpcode.CMD_AUTH_LOGON_PROOF;
 
     public async Task<IResponseMessage> ExectueAsync(RsLogonProofRequest request)
     {

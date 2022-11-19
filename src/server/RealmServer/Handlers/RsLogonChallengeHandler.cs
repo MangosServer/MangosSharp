@@ -21,6 +21,7 @@ using Mangos.MySql.GetAccountInfo;
 using Mangos.MySql.IsBannedAccount;
 using RealmServer.Domain;
 using RealmServer.Handlers;
+using RealmServer.Network;
 using RealmServer.Requests;
 using RealmServer.Responses;
 using System.Globalization;
@@ -47,7 +48,7 @@ internal sealed class RsLogonChallengeHandler : IHandler<RsLogonChallengeRequest
         this.clientState = clientState;
     }
 
-    public TcpPacketOpCodes TcpPacketOpCode => TcpPacketOpCodes.CMD_AUTH_LOGON_CHALLENGE;
+    public MessageOpcode TcpPacketOpCode => MessageOpcode.CMD_AUTH_LOGON_CHALLENGE;
 
     public async Task<IResponseMessage> ExectueAsync(RsLogonChallengeRequest request)
     {

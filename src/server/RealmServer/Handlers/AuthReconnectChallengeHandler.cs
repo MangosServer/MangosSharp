@@ -17,7 +17,7 @@
 //
 
 using Mangos.Realm.Network.Handlers;
-using RealmServer.Domain;
+using RealmServer.Network;
 using RealmServer.Requests;
 using RealmServer.Responses;
 
@@ -32,7 +32,7 @@ internal sealed class AuthReconnectChallengeHandler : IHandler<RsLogonChallengeR
         this.rsLogonChallengeHandler = rsLogonChallengeHandler;
     }
 
-    public TcpPacketOpCodes TcpPacketOpCode => TcpPacketOpCodes.CMD_AUTH_RECONNECT_CHALLENGE;
+    public MessageOpcode TcpPacketOpCode => MessageOpcode.CMD_AUTH_RECONNECT_CHALLENGE;
 
     public async Task<IResponseMessage> ExectueAsync(RsLogonChallengeRequest request)
     {
