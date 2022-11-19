@@ -48,7 +48,7 @@ internal sealed class RsLogonChallengeHandler : IHandler<RsLogonChallengeRequest
         this.clientState = clientState;
     }
 
-    public MessageOpcode TcpPacketOpCode => MessageOpcode.CMD_AUTH_LOGON_CHALLENGE;
+    public MessageOpcode MessageOpcode => MessageOpcode.CMD_AUTH_LOGON_CHALLENGE;
 
     public async Task<IResponseMessage> ExectueAsync(RsLogonChallengeRequest request)
     {

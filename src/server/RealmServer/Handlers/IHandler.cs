@@ -24,7 +24,7 @@ namespace RealmServer.Handlers;
 
 internal interface IHandler<TRequest> where TRequest : IRequestMessage<TRequest>
 {
-    MessageOpcode TcpPacketOpCode { get; }
+    MessageOpcode MessageOpcode { get; }
 
     Task<IResponseMessage> ExectueAsync(TRequest request);
 }

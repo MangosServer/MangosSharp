@@ -39,7 +39,7 @@ internal sealed class RsLogonProofHandler : IHandler<RsLogonProofRequest>
         this.clientState = clientState;
     }
 
-    public MessageOpcode TcpPacketOpCode => MessageOpcode.CMD_AUTH_LOGON_PROOF;
+    public MessageOpcode MessageOpcode => MessageOpcode.CMD_AUTH_LOGON_PROOF;
 
     public async Task<IResponseMessage> ExectueAsync(RsLogonProofRequest request)
     {

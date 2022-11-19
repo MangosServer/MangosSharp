@@ -32,7 +32,7 @@ internal sealed class AuthReconnectChallengeHandler : IHandler<RsLogonChallengeR
         this.rsLogonChallengeHandler = rsLogonChallengeHandler;
     }
 
-    public MessageOpcode TcpPacketOpCode => MessageOpcode.CMD_AUTH_RECONNECT_CHALLENGE;
+    public MessageOpcode MessageOpcode => MessageOpcode.CMD_AUTH_RECONNECT_CHALLENGE;
 
     public async Task<IResponseMessage> ExectueAsync(RsLogonChallengeRequest request)
     {

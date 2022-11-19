@@ -32,7 +32,7 @@ internal sealed class HandlerDispatcher<THandler, TRequest> : IHandlerDispatcher
         this.handler = handler;
     }
 
-    public MessageOpcode Opcode => handler.TcpPacketOpCode;
+    public MessageOpcode Opcode => handler.MessageOpcode;
 
     public async Task ExectueAsync(SocketReader reader, SocketWriter writer)
     {

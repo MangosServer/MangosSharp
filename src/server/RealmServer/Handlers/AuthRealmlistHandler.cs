@@ -32,7 +32,7 @@ internal sealed class AuthRealmlistHandler : IHandler<AuthRealmlistRequest>
         this.getRealmListQuery = getRealmListQuery;
     }
 
-    public MessageOpcode TcpPacketOpCode => MessageOpcode.CMD_AUTH_REALMLIST;
+    public MessageOpcode MessageOpcode => MessageOpcode.CMD_AUTH_REALMLIST;
 
     public async Task<IResponseMessage> ExectueAsync(AuthRealmlistRequest request)
     {
