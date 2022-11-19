@@ -16,19 +16,30 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using GameServer.Handlers;
+using GameServer.Requests;
+using GameServer.Responses;
+
 namespace GameServer.Network;
 
-internal sealed class PacketWriter
+internal sealed class HandlerDispatcher<TRequest> : IHandlerDispatcher
+    where TRequest : IRequestMessage<TRequest>
 {
-    private readonly Memory<byte> buffer;
+    private readonly IHandler<TRequest> handler;
 
-    public PacketWriter(Memory<byte> buffer)
+    public HandlerDispatcher(IHandler<TRequest> handler)
     {
-        this.buffer = buffer;
+        this.handler = handler;
     }
 
-    public Memory<byte> ToMemory()
+    public MessageOpcode Opcode => handler.MessageOpcode;
+
+    public async IAsyncEnumerable<IResponseMessage> ExectueAsync(PacketReader reader)
     {
-        return buffer;
+        var request = await TRequest.ReadAsync(reader);
+        await foreach (var response in handler.ExectueAsync(request))
+        {
+            yield return response;
+        }
     }
 }

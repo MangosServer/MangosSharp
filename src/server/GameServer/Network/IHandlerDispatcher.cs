@@ -16,19 +16,13 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using GameServer.Responses;
+
 namespace GameServer.Network;
 
-internal sealed class PacketWriter
+internal interface IHandlerDispatcher
 {
-    private readonly Memory<byte> buffer;
+    MessageOpcode Opcode { get; }
 
-    public PacketWriter(Memory<byte> buffer)
-    {
-        this.buffer = buffer;
-    }
-
-    public Memory<byte> ToMemory()
-    {
-        return buffer;
-    }
+    IAsyncEnumerable<IResponseMessage> ExectueAsync(PacketReader reader);
 }

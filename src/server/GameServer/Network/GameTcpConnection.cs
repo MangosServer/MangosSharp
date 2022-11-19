@@ -28,13 +28,18 @@ namespace GameServer.Network;
 
 internal sealed class GameTcpConnection : ITcpConnection
 {
+    private const int MAX_PACKET_LENGTH = 10000;
+
     private readonly ClientClass legacyClientClass;
+    private readonly IHandlerDispatcher[] dispatchers;
 
     private readonly MemoryPool<byte> memoryPool = MemoryPool<byte>.Shared;
 
-    public GameTcpConnection(ClientClass legacyClientClass)
+    public GameTcpConnection(ClientClass legacyClientClass, IEnumerable<IHandlerDispatcher> dispatchers)
     {
         this.legacyClientClass = legacyClientClass;
+
+        this.dispatchers = dispatchers.ToArray();
     }
 
     public async Task ExecuteAsync(Socket socket, CancellationToken cancellationToken)
@@ -51,7 +56,6 @@ internal sealed class GameTcpConnection : ITcpConnection
 
     private async Task HandlePacketAsync(Socket socket, CancellationToken cancellationToken)
     {
-        const int MAX_PACKET_LENGTH = 10000;
         using var memoryOwner = memoryPool.Rent(MAX_PACKET_LENGTH);
         var header = memoryOwner.Memory.Slice(0, 6);
 
@@ -63,7 +67,26 @@ internal sealed class GameTcpConnection : ITcpConnection
         var body = memoryOwner.Memory.Slice(6, length);
         await ReadAsync(socket, body, cancellationToken);
 
-        ExectueLegacyMessage(memoryOwner.Memory.Slice(0, header.Length + body.Length));
+        var dispatcher = dispatchers.FirstOrDefault(x => x.Opcode == opcode);
+        if (dispatcher != null)
+        {
+            await ExecuteHandlerAsync(body, dispatcher, socket, cancellationToken);
+        }
+        else
+        {
+            ExectueLegacyMessage(memoryOwner.Memory.Slice(0, header.Length + body.Length));
+        }
+    }
+
+    private async Task ExecuteHandlerAsync(Memory<byte> body, IHandlerDispatcher dispatcher, Socket socket, CancellationToken cancellationToken)
+    {
+        using var responseMemory = memoryPool.Rent(MAX_PACKET_LENGTH);
+        await foreach (var response in dispatcher.ExectueAsync(new PacketReader(body)))
+        {
+            var packetWriter = new PacketWriter(responseMemory.Memory);
+            await response.WriteAsync(packetWriter);
+            await socket.ReceiveAsync(packetWriter.ToMemory(), cancellationToken);
+        }
     }
 
     private void ExectueLegacyMessage(ReadOnlyMemory<byte> packet)
