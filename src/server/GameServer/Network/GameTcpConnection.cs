@@ -106,7 +106,7 @@ internal sealed class GameTcpConnection : ITcpConnection
         }
     }
 
-    public void Encode(Span<byte> data)
+    public void EncodePacketHeader(Span<byte> data)
     {
         if (!legacyClientClass.Client.PacketEncryption.IsEncryptionEnabled)
         {
@@ -149,7 +149,7 @@ internal sealed class GameTcpConnection : ITcpConnection
         var packetWriter = new PacketWriter(buffer);
         var opcode = response.Write(packetWriter);
         var packet = packetWriter.Finish(opcode);
-        Encode(packet.Span);
+        EncodePacketHeader(packet.Span);
         await SendAsync(socket, packet, cancellationToken);
     }
 
@@ -167,7 +167,7 @@ internal sealed class GameTcpConnection : ITcpConnection
         }
     }
 
-    private async ValueTask SendAsync(Socket socket, Memory<byte> buffer, CancellationToken cancellationToken)
+    private async ValueTask SendAsync(Socket socket, ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
     {
         var length = await socket.SendAsync(buffer, cancellationToken);
         if (length != buffer.Length)
