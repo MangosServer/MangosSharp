@@ -22,7 +22,6 @@ using Mangos.Cluster.Network;
 using Mangos.Tcp;
 using System.Buffers;
 using System.Buffers.Binary;
-using System.Diagnostics;
 using System.Net.Sockets;
 
 namespace GameServer.Network;
@@ -164,8 +163,7 @@ internal sealed class GameTcpConnection : ITcpConnection
         var length = await socket.ReceiveAsync(buffer, cancellationToken);
         if (length != buffer.Length)
         {
-            Debugger.Launch();
-            throw new NotImplementedException();
+            throw new NotImplementedException("Invalid number of bytes was readed from socket");
         }
     }
 
@@ -174,8 +172,7 @@ internal sealed class GameTcpConnection : ITcpConnection
         var length = await socket.SendAsync(buffer, cancellationToken);
         if (length != buffer.Length)
         {
-            Debugger.Launch();
-            throw new NotImplementedException();
+            throw new NotImplementedException("Invalid number of bytes was sended to socket");
         }
     }
 }
