@@ -38,7 +38,7 @@ internal sealed class PacketWriter
         return buffer.Slice(0, offset);
     }
 
-    public void Int32(uint value)
+    public void UInt32(uint value)
     {
         BinaryPrimitives.WriteUInt32LittleEndian(buffer.Slice(offset).Span, value);
         offset += sizeof(int);
