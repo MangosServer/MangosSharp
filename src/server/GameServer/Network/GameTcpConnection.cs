@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using GameServer.Responses;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Tcp;
@@ -57,41 +58,32 @@ internal sealed class GameTcpConnection : ITcpConnection
     private async Task HandlePacketAsync(Socket socket, CancellationToken cancellationToken)
     {
         using var memoryOwner = memoryPool.Rent(MAX_PACKET_LENGTH);
-        var header = memoryOwner.Memory.Slice(0, 6);
+        var header = await ReadPacketHeaderAsync(socket, memoryOwner.Memory, cancellationToken);
+        var body = await ReadPacketBodyAsync(socket, memoryOwner.Memory, cancellationToken);
 
-        await ReadAsync(socket, header, cancellationToken);
-        DecodePacketHeader(header.Span);
-        var length = BinaryPrimitives.ReadUInt16BigEndian(header.Span) - 4;
         var opcode = (MessageOpcode)BinaryPrimitives.ReadUInt32LittleEndian(header.Span.Slice(2));
-
-        var body = memoryOwner.Memory.Slice(6, length);
-        await ReadAsync(socket, body, cancellationToken);
 
         var dispatcher = dispatchers.FirstOrDefault(x => x.Opcode == opcode);
         if (dispatcher != null)
         {
-            await ExecuteHandlerAsync(body, dispatcher, socket, cancellationToken);
+            await ExecuteHandlerAsync(dispatcher, body, socket, cancellationToken);
         }
         else
         {
-            ExectueLegacyMessage(memoryOwner.Memory.Slice(0, header.Length + body.Length));
+            ExecuteLegacyHandler(memoryOwner.Memory.Slice(0, header.Length + body.Length));
         }
     }
 
-    private async Task ExecuteHandlerAsync(Memory<byte> body, IHandlerDispatcher dispatcher, Socket socket, CancellationToken cancellationToken)
+    private async Task ExecuteHandlerAsync(IHandlerDispatcher dispatcher, Memory<byte> body, Socket socket, CancellationToken cancellationToken)
     {
-        using var responseMemory = memoryPool.Rent(MAX_PACKET_LENGTH);
+        using var memoryOwner = memoryPool.Rent(MAX_PACKET_LENGTH);
         await foreach (var response in dispatcher.ExectueAsync(new PacketReader(body)))
         {
-            var packetWriter = new PacketWriter(responseMemory.Memory);
-            var opcode = response.Write(packetWriter);
-            var buffer = packetWriter.Finish(opcode);
-            Encode(buffer.Span);
-            await socket.SendAsync(buffer, cancellationToken);
+            await SendAsync(socket, memoryOwner.Memory, response, cancellationToken);
         }
     }
 
-    private void ExectueLegacyMessage(ReadOnlyMemory<byte> packet)
+    private void ExecuteLegacyHandler(ReadOnlyMemory<byte> packet)
     {
         var legacyPacket = new PacketClass(packet.ToArray());
         legacyClientClass.OnPacket(legacyPacket);
@@ -106,7 +98,6 @@ internal sealed class GameTcpConnection : ITcpConnection
 
         var key = legacyClientClass.Client.PacketEncryption.Key;
         var hash = legacyClientClass.Client.PacketEncryption.Hash;
-
         for (var i = 0; i < 6; i++)
         {
             var tmp = data[i];
@@ -125,7 +116,6 @@ internal sealed class GameTcpConnection : ITcpConnection
 
         var key = legacyClientClass.Client.PacketEncryption.Key;
         var hash = legacyClientClass.Client.PacketEncryption.Hash;
-
         for (var i = 0; i < 4; i++)
         {
             data[i] = (byte)(((hash[key[3]] ^ data[i]) + key[2]) % 256);
@@ -139,6 +129,31 @@ internal sealed class GameTcpConnection : ITcpConnection
         await socket.ReceiveAsync(Array.Empty<byte>(), cancellationToken);
     }
 
+    private async ValueTask<Memory<byte>> ReadPacketHeaderAsync(Socket socket, Memory<byte> buffer, CancellationToken cancellationToken)
+    {
+        var header = buffer.Slice(0, 6);
+        await ReadAsync(socket, header, cancellationToken);
+        DecodePacketHeader(header.Span);
+        return header;
+    }
+
+    private async ValueTask<Memory<byte>> ReadPacketBodyAsync(Socket socket, Memory<byte> buffer, CancellationToken cancellationToken)
+    {
+        var length = BinaryPrimitives.ReadUInt16BigEndian(buffer.Span) - 4;
+        var body = buffer.Slice(6, length);
+        await ReadAsync(socket, body, cancellationToken);
+        return body;
+    }
+
+    private async ValueTask SendAsync(Socket socket, Memory<byte> buffer, IResponseMessage response, CancellationToken cancellationToken)
+    {
+        var packetWriter = new PacketWriter(buffer);
+        var opcode = response.Write(packetWriter);
+        var packet = packetWriter.Finish(opcode);
+        Encode(packet.Span);
+        await SendAsync(socket, packet, cancellationToken);
+    }
+
     private async ValueTask ReadAsync(Socket socket, Memory<byte> buffer, CancellationToken cancellationToken)
     {
         if (buffer.Length == 0)
@@ -146,8 +161,18 @@ internal sealed class GameTcpConnection : ITcpConnection
             return;
         }
 
-        var recieved = await socket.ReceiveAsync(buffer, cancellationToken);
-        if (recieved != buffer.Length)
+        var length = await socket.ReceiveAsync(buffer, cancellationToken);
+        if (length != buffer.Length)
+        {
+            Debugger.Launch();
+            throw new NotImplementedException();
+        }
+    }
+
+    private async ValueTask SendAsync(Socket socket, Memory<byte> buffer, CancellationToken cancellationToken)
+    {
+        var length = await socket.SendAsync(buffer, cancellationToken);
+        if (length != buffer.Length)
         {
             Debugger.Launch();
             throw new NotImplementedException();
