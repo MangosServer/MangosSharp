@@ -18,9 +18,15 @@
 
 using GameServer.Network;
 
-namespace GameServer.Requests;
+namespace GameServer.Responses;
 
-internal interface IRequestMessage<T> where T : IRequestMessage<T>
+internal sealed class SMSG_PONG : IResponseMessage
 {
-    static abstract T Read(PacketReader reader);
+    public uint Payload { get; init; }
+
+    public MessageOpcode Write(PacketWriter writer)
+    {
+        writer.Int32(Payload);
+        return MessageOpcode.SMSG_PONG;
+    }
 }

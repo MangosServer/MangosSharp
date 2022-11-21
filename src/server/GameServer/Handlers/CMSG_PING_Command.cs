@@ -17,10 +17,22 @@
 //
 
 using GameServer.Network;
+using GameServer.Requests;
+using GameServer.Responses;
 
-namespace GameServer.Requests;
+namespace GameServer.Handlers;
 
-internal interface IRequestMessage<T> where T : IRequestMessage<T>
+internal sealed class CMSG_PING_Command : IHandler<CMSG_PING>
 {
-    static abstract T Read(PacketReader reader);
+    public MessageOpcode MessageOpcode => MessageOpcode.CMSG_PING;
+
+    public IAsyncEnumerable<IResponseMessage> ExectueAsync(CMSG_PING request)
+    {
+        var response = new SMSG_PONG()
+        {
+            Payload = request.Payload
+        };
+
+        return new[] { response }.ToAsyncEnumerable();
+    }
 }

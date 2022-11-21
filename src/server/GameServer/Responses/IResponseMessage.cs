@@ -22,5 +22,5 @@ namespace GameServer.Responses;
 
 internal interface IResponseMessage
 {
-    ValueTask WriteAsync(PacketWriter writer);
+    MessageOpcode Write(PacketWriter writer);
 }

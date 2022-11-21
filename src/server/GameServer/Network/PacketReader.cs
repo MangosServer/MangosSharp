@@ -16,22 +16,23 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Buffers.Binary;
+
 namespace GameServer.Network;
 
 internal sealed class PacketReader
 {
-    private readonly Memory<byte> data;
-    private int offset;
+    private Memory<byte> data;
 
     public PacketReader(Memory<byte> data)
     {
         this.data = data;
     }
 
-    private Span<byte> Read(int length)
+    public uint UInt32()
     {
-        var span = data.Slice(offset, length).Span;
-        offset += length;
-        return span;
+        var value = BinaryPrimitives.ReadUInt32LittleEndian(data.Span);
+        data = data.Slice(sizeof(int));
+        return value;
     }
 }

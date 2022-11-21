@@ -61,8 +61,8 @@ internal sealed class GameTcpConnection : ITcpConnection
 
         await ReadAsync(socket, header, cancellationToken);
         DecodePacketHeader(header.Span);
-        var length = BinaryPrimitives.ReadInt16BigEndian(header.Span) - 4;
-        var opcode = (MessageOpcode)BinaryPrimitives.ReadUInt16LittleEndian(header.Span.Slice(2));
+        var length = BinaryPrimitives.ReadUInt16BigEndian(header.Span) - 4;
+        var opcode = (MessageOpcode)BinaryPrimitives.ReadUInt32LittleEndian(header.Span.Slice(2));
 
         var body = memoryOwner.Memory.Slice(6, length);
         await ReadAsync(socket, body, cancellationToken);
@@ -84,8 +84,10 @@ internal sealed class GameTcpConnection : ITcpConnection
         await foreach (var response in dispatcher.ExectueAsync(new PacketReader(body)))
         {
             var packetWriter = new PacketWriter(responseMemory.Memory);
-            await response.WriteAsync(packetWriter);
-            await socket.ReceiveAsync(packetWriter.ToMemory(), cancellationToken);
+            var opcode = response.Write(packetWriter);
+            var buffer = packetWriter.Finish(opcode);
+            Encode(buffer.Span);
+            await socket.SendAsync(buffer, cancellationToken);
         }
     }
 
@@ -111,6 +113,24 @@ internal sealed class GameTcpConnection : ITcpConnection
             data[i] = (byte)(hash[key[1]] ^ (256 + data[i] - key[0]) % 256);
             key[0] = tmp;
             key[1] = (byte)((key[1] + 1) % 40);
+        }
+    }
+
+    public void Encode(Span<byte> data)
+    {
+        if (!legacyClientClass.Client.PacketEncryption.IsEncryptionEnabled)
+        {
+            return;
+        }
+
+        var key = legacyClientClass.Client.PacketEncryption.Key;
+        var hash = legacyClientClass.Client.PacketEncryption.Hash;
+
+        for (var i = 0; i < 4; i++)
+        {
+            data[i] = (byte)(((hash[key[3]] ^ data[i]) + key[2]) % 256);
+            key[2] = data[i];
+            key[3] = (byte)((key[3] + 1) % 40);
         }
     }
 

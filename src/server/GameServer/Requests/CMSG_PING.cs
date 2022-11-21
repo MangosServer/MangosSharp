@@ -20,7 +20,15 @@ using GameServer.Network;
 
 namespace GameServer.Requests;
 
-internal interface IRequestMessage<T> where T : IRequestMessage<T>
+internal sealed class CMSG_PING : IRequestMessage<CMSG_PING>
 {
-    static abstract T Read(PacketReader reader);
+    public required uint Payload { get; init; }
+
+    public static CMSG_PING Read(PacketReader reader)
+    {
+        return new CMSG_PING()
+        {
+            Payload = reader.UInt32()
+        };
+    }
 }

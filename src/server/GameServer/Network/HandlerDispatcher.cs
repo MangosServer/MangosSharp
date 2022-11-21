@@ -34,12 +34,8 @@ internal sealed class HandlerDispatcher<TRequest> : IHandlerDispatcher
 
     public MessageOpcode Opcode => handler.MessageOpcode;
 
-    public async IAsyncEnumerable<IResponseMessage> ExectueAsync(PacketReader reader)
+    public IAsyncEnumerable<IResponseMessage> ExectueAsync(PacketReader reader)
     {
-        var request = await TRequest.ReadAsync(reader);
-        await foreach (var response in handler.ExectueAsync(request))
-        {
-            yield return response;
-        }
+        return handler.ExectueAsync(TRequest.Read(reader));
     }
 }

@@ -16,19 +16,31 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Buffers.Binary;
+
 namespace GameServer.Network;
 
 internal sealed class PacketWriter
 {
     private readonly Memory<byte> buffer;
+    private int offset = 4;
 
     public PacketWriter(Memory<byte> buffer)
     {
         this.buffer = buffer;
     }
 
-    public Memory<byte> ToMemory()
+    public Memory<byte> Finish(MessageOpcode opcode)
     {
-        return buffer;
+        var span = buffer.Span;
+        BinaryPrimitives.WriteUInt16BigEndian(span, (ushort)(offset - 2));
+        BinaryPrimitives.WriteUInt16LittleEndian(span.Slice(2), (ushort)opcode);
+        return buffer.Slice(0, offset);
+    }
+
+    public void Int32(uint value)
+    {
+        BinaryPrimitives.WriteUInt32LittleEndian(buffer.Slice(offset).Span, value);
+        offset += sizeof(int);
     }
 }

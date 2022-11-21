@@ -17,7 +17,9 @@
 //
 
 using Autofac;
+using GameServer.Handlers;
 using GameServer.Network;
+using GameServer.Requests;
 using GameServer.Services;
 using Mangos.Tcp;
 
@@ -29,5 +31,13 @@ internal sealed class GameModule : Module
     {
         builder.RegisterType<GameTcpConnection>().As<ITcpConnection>().InstancePerLifetimeScope();
         builder.RegisterType<GlobalState>().As<IGlobalState>().InstancePerLifetimeScope();
+
+        RegisterHandlers(builder);
+    }
+
+    private void RegisterHandlers(ContainerBuilder builder)
+    {
+        builder.RegisterType<CMSG_PING_Command>().As<IHandler<CMSG_PING>>().InstancePerLifetimeScope();
+        builder.RegisterType<HandlerDispatcher<CMSG_PING>>().As<IHandlerDispatcher>().InstancePerLifetimeScope();
     }
 }
