@@ -10,7 +10,7 @@ jobs:
       Solution_Path: ./src/server/Mangos.sln
 
     steps:
-      - name: Install .NET Core
+      - name: Install .NET sdk
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
