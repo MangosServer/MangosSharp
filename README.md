@@ -2,7 +2,7 @@
 [<img src='https://www.getmangos.eu/!assets_mangos/logo2.png' border=0>][3]
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>Build Status:</b>
-Windows: [<img src='https://github.com/MangosServer/MangosSharp/actions/workflows/build.yml/badge.svg' border=0 valign="middle"/>][11]
+Linux: [<img src='https://github.com/MangosServer/MangosSharp/actions/workflows/build.yml/badge.svg' border=0 valign="middle"/>][11]
  <br><b>Repository Status:</b> 
 [<img src='https://api.codacy.com/project/badge/Grade/f77c3dbb9e124188b0cf4ec6da878721' border=0 valign="middle"/>][12]
 [<img src='https://www.codefactor.io/repository/github/mangosserver/mangossharp/badge' border=0 valign="middle"/>][13]
