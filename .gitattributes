@@ -1,2 +1,4 @@
 *.cs text=crlf
+*.csproj text=crlf
+*.props text=crlf
 *.sln text=crlf
