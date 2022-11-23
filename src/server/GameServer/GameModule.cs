@@ -37,7 +37,7 @@ internal sealed class GameModule : Module
 
     private void RegisterHandlers(ContainerBuilder builder)
     {
-        builder.RegisterType<CMSG_PING_Command>().As<IHandler<CMSG_PING>>().InstancePerLifetimeScope();
-        builder.RegisterType<HandlerDispatcher<CMSG_PING>>().As<IHandlerDispatcher>().InstancePerLifetimeScope();
+        builder.RegisterType<CMSG_PING_Handler>().InstancePerLifetimeScope();
+        builder.RegisterType<HandlerDispatcher<CMSG_PING, CMSG_PING_Handler>>().As<IHandlerDispatcher>().InstancePerLifetimeScope();
     }
 }

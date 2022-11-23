@@ -22,17 +22,18 @@ using GameServer.Responses;
 
 namespace GameServer.Network;
 
-internal sealed class HandlerDispatcher<TRequest> : IHandlerDispatcher
+internal sealed class HandlerDispatcher<TRequest, THandler> : IHandlerDispatcher
     where TRequest : IRequestMessage<TRequest>
+    where THandler : IHandler<TRequest>
 {
-    private readonly IHandler<TRequest> handler;
+    private readonly THandler handler;
 
-    public HandlerDispatcher(IHandler<TRequest> handler)
+    public HandlerDispatcher(THandler handler)
     {
         this.handler = handler;
     }
 
-    public MessageOpcode Opcode => handler.MessageOpcode;
+    public MessageOpcode Opcode => TRequest.MessageOpcode;
 
     public IAsyncEnumerable<IResponseMessage> ExectueAsync(PacketReader reader)
     {

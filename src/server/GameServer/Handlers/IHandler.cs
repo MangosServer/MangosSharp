@@ -16,7 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using GameServer.Network;
 using GameServer.Requests;
 using GameServer.Responses;
 
@@ -24,7 +23,5 @@ namespace GameServer.Handlers;
 
 internal interface IHandler<TRequest> where TRequest : IRequestMessage<TRequest>
 {
-    MessageOpcode MessageOpcode { get; }
-
     IAsyncEnumerable<IResponseMessage> ExectueAsync(TRequest request);
 }

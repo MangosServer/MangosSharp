@@ -147,8 +147,8 @@ internal sealed class GameTcpConnection : ITcpConnection
     private async ValueTask SendAsync(Socket socket, Memory<byte> buffer, IResponseMessage response, CancellationToken cancellationToken)
     {
         var packetWriter = new PacketWriter(buffer);
-        var opcode = response.Write(packetWriter);
-        var packet = packetWriter.Finish(opcode);
+        response.Write(packetWriter);
+        var packet = packetWriter.Finish(response.Opcode);
         EncodePacketHeader(packet.Span);
         await SendAsync(socket, packet, cancellationToken);
     }
