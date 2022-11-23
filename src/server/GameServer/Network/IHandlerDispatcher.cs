@@ -16,13 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using GameServer.Responses;
-
 namespace GameServer.Network;
 
 internal interface IHandlerDispatcher
 {
     MessageOpcode Opcode { get; }
 
-    IAsyncEnumerable<IResponseMessage> ExectueAsync(PacketReader reader);
+    Task<HandlerResult> ExectueAsync(PacketReader reader);
 }

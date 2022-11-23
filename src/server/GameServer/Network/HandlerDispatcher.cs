@@ -18,7 +18,6 @@
 
 using GameServer.Handlers;
 using GameServer.Requests;
-using GameServer.Responses;
 
 namespace GameServer.Network;
 
@@ -35,7 +34,7 @@ internal sealed class HandlerDispatcher<TRequest, THandler> : IHandlerDispatcher
 
     public MessageOpcode Opcode => TRequest.MessageOpcode;
 
-    public IAsyncEnumerable<IResponseMessage> ExectueAsync(PacketReader reader)
+    public Task<HandlerResult> ExectueAsync(PacketReader reader)
     {
         return handler.ExectueAsync(TRequest.Read(reader));
     }

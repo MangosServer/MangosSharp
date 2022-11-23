@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using GameServer.Network;
 using GameServer.Requests;
 using GameServer.Responses;
 
@@ -23,13 +24,13 @@ namespace GameServer.Handlers;
 
 internal sealed class CMSG_PING_Handler : IHandler<CMSG_PING>
 {
-    public IAsyncEnumerable<IResponseMessage> ExectueAsync(CMSG_PING request)
+    public Task<HandlerResult> ExectueAsync(CMSG_PING request)
     {
-        var response = new SMSG_PONG()
+        var response = new SMSG_PONG
         {
             Payload = request.Payload
         };
 
-        return new[] { response }.ToAsyncEnumerable();
+        return HandlerResult.FromTask(response);
     }
 }
