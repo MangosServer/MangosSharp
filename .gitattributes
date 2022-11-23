@@ -1,4 +1,4 @@
-*.cs text=crlf
-*.csproj text=crlf
-*.props text=crlf
-*.sln text=crlf
+*.cs text=auto
+*.csproj text=auto
+*.props text=auto
+*.sln text=auto
