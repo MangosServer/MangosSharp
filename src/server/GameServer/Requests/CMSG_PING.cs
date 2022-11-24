@@ -24,7 +24,7 @@ internal sealed class CMSG_PING : IRequestMessage<CMSG_PING>
 {
     public required uint Payload { get; init; }
 
-    public static MessageOpcode MessageOpcode => MessageOpcode.CMSG_PING;
+    public static Opcodes Opcode => Opcodes.CMSG_PING;
 
     public static CMSG_PING Read(PacketReader reader)
     {

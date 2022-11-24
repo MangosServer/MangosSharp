@@ -30,7 +30,7 @@ internal sealed class PacketWriter
         this.buffer = buffer;
     }
 
-    public Memory<byte> Finish(MessageOpcode opcode)
+    public Memory<byte> Finish(Opcodes opcode)
     {
         var span = buffer.Span;
         BinaryPrimitives.WriteUInt16BigEndian(span, (ushort)(offset - 2));

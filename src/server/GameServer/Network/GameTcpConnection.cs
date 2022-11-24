@@ -60,7 +60,7 @@ internal sealed class GameTcpConnection : ITcpConnection
         var header = await ReadPacketHeaderAsync(socket, memoryOwner.Memory, cancellationToken);
         var body = await ReadPacketBodyAsync(socket, memoryOwner.Memory, cancellationToken);
 
-        var opcode = (MessageOpcode)BinaryPrimitives.ReadUInt32LittleEndian(header.Span.Slice(2));
+        var opcode = (Opcodes)BinaryPrimitives.ReadUInt32LittleEndian(header.Span.Slice(2));
 
         var dispatcher = dispatchers.FirstOrDefault(x => x.Opcode == opcode);
         if (dispatcher != null)

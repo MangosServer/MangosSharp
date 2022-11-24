@@ -24,7 +24,7 @@ internal sealed class SMSG_PONG : IResponseMessage
 {
     public uint Payload { get; init; }
 
-    public MessageOpcode Opcode => MessageOpcode.SMSG_PONG;
+    public Opcodes Opcode => Opcodes.SMSG_PONG;
 
     public void Write(PacketWriter writer)
     {

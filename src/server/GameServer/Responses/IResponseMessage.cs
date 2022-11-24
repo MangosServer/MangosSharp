@@ -22,7 +22,7 @@ namespace GameServer.Responses;
 
 internal interface IResponseMessage
 {
-    MessageOpcode Opcode { get; }
+    Opcodes Opcode { get; }
 
     void Write(PacketWriter writer);
 }

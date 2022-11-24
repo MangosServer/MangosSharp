@@ -22,7 +22,7 @@ namespace GameServer.Requests;
 
 internal interface IRequestMessage<T> where T : IRequestMessage<T>
 {
-    static abstract MessageOpcode MessageOpcode { get; }
+    static abstract Opcodes Opcode { get; }
 
     static abstract T Read(PacketReader reader);
 }

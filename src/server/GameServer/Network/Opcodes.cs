@@ -18,7 +18,7 @@
 
 namespace GameServer.Network;
 
-public enum MessageOpcode : ushort
+public enum Opcodes : ushort
 {
     MSG_NULL_ACTION = 0x0,
     CMSG_BOOTME = 0x1,
