@@ -30,7 +30,7 @@ internal sealed class GameModule : Module
     protected override void Load(ContainerBuilder builder)
     {
         builder.RegisterType<GameTcpConnection>().As<ITcpConnection>().InstancePerLifetimeScope();
-        builder.RegisterType<GlobalState>().As<IGlobalState>().InstancePerLifetimeScope();
+        builder.RegisterType<GameState>().As<IGameState>().InstancePerLifetimeScope();
 
         RegisterHandlers(builder);
     }

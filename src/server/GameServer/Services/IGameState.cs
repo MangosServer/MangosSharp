@@ -20,7 +20,7 @@ using Mangos.Domain;
 
 namespace GameServer.Services;
 
-internal interface IGlobalState
+internal interface IGameState
 {
-    void Transaction(Action<World> update);
+    void Transaction(Action<Game> update);
 }

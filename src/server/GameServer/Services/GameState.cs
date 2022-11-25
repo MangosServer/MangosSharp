@@ -16,9 +16,19 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Domain;
+using Mangos.Domain;
 
-public sealed class World
+namespace GameServer.Services;
+
+internal sealed class GameState : IGameState
 {
-    public List<Character> Characters { get; } = new();
+    private readonly Game world = new();
+
+    public void Transaction(Action<Game> transaction)
+    {
+        lock (world)
+        {
+            transaction(world);
+        }
+    }
 }
