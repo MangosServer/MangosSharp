@@ -25,16 +25,17 @@ internal sealed class PacketWriter
     private readonly Memory<byte> buffer;
     private int offset = 4;
 
-    public PacketWriter(Memory<byte> buffer)
+    public PacketWriter(Memory<byte> buffer, Opcodes opcode)
     {
         this.buffer = buffer;
+        var span = buffer.Slice(2).Span;
+        BinaryPrimitives.WriteUInt16LittleEndian(span, (ushort)opcode);
     }
 
-    public Memory<byte> Finish(Opcodes opcode)
+    public Memory<byte> ToPacket()
     {
         var span = buffer.Span;
         BinaryPrimitives.WriteUInt16BigEndian(span, (ushort)(offset - 2));
-        BinaryPrimitives.WriteUInt16LittleEndian(span.Slice(2), (ushort)opcode);
         return buffer.Slice(0, offset);
     }
 
