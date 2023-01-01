@@ -79,20 +79,19 @@ public class WS_Handlers_Warden
         {
             index = 0;
             data = new byte[20];
-            SHA1Managed sha1 = new();
-            source1 = sha1.ComputeHash(seed, 0, 20);
-            source2 = sha1.ComputeHash(seed, 20, 20);
+            source1 = SHA1.HashData(seed.AsSpan(0, 20));
+            source2 = SHA1.HashData(seed.AsSpan(20, 20));
+
             Update();
         }
 
         public void Update()
         {
             var buffer1 = new byte[60];
-            SHA1Managed sha1 = new();
             Buffer.BlockCopy(source1, 0, buffer1, 0, 20);
             Buffer.BlockCopy(data, 0, buffer1, 20, 20);
             Buffer.BlockCopy(source2, 0, buffer1, 40, 20);
-            data = sha1.ComputeHash(buffer1);
+            data = SHA1.HashData(buffer1);
         }
 
         private byte GetByte()
@@ -482,8 +481,7 @@ public class WS_Handlers_Warden
 
     public bool ControlChecksum(uint checkSum, byte[] data)
     {
-        SHA1Managed sha1 = new();
-        var hash = sha1.ComputeHash(data);
+        var hash = SHA1.HashData(data);
         var ints = new uint[5];
         var i = 0;
         checked

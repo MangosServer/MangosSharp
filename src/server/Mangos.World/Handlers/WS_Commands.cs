@@ -1933,7 +1933,7 @@ public class WS_Commands
         else
         {
             var passwordStr = Encoding.ASCII.GetBytes(aName.ToUpper() + ":" + aPassword.ToUpper());
-            var passwordHash = new SHA1Managed().ComputeHash(passwordStr);
+            var passwordHash = SHA1.HashData(passwordStr);
             var hashStr = BitConverter.ToString(passwordHash).Replace("-", "");
             WorldServiceLocator.WorldServer.AccountDatabase.Insert(string.Format("INSERT INTO account (username, sha_pass_hash, email, joindate, last_ip) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')", aName, hashStr, aEmail, Strings.Format(DateAndTime.Now, "yyyy-MM-dd"), "0.0.0.0"));
             objCharacter.CommandResponse($"Account [{aName}] has been created.");
@@ -1971,7 +1971,7 @@ public class WS_Commands
             else
             {
                 var passwordStr = Encoding.ASCII.GetBytes(aName.ToUpper() + ":" + aPassword.ToUpper());
-                var passwordHash = new SHA1Managed().ComputeHash(passwordStr);
+                var passwordHash = SHA1.HashData(passwordStr);
                 var hashStr = BitConverter.ToString(passwordHash).Replace("-", "");
                 WorldServiceLocator.WorldServer.AccountDatabase.Update(string.Format("UPDATE account SET password='{0}' WHERE id={1}", hashStr, RuntimeHelpers.GetObjectValue(result.Rows[0]["id"])));
                 objCharacter.CommandResponse($"Account [{aName}] now has a new password [{aPassword}].");

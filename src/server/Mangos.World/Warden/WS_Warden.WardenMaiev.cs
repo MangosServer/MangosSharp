@@ -642,8 +642,7 @@ public partial class WS_Warden
                 var newData = new byte[DataLen + bKey.Length - 1 + 1];
                 Array.Copy(Data, 0, newData, 0, DataLen);
                 Array.Copy(bKey, 0, newData, DataLen, bKey.Length);
-                SHA1Managed sha1 = new();
-                var digest = sha1.ComputeHash(newData);
+                var digest = SHA1.HashData(newData);
                 Array.Copy(digest, 0, properResult, 0, digest.Length);
                 Console.WriteLine("Result:       " + BitConverter.ToString(result));
                 Console.WriteLine("ProperResult: " + BitConverter.ToString(properResult));

@@ -77,7 +77,7 @@ public partial class WS_Network
             this.cluster = cluster;
         }
 
-        protected new virtual void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
             {
@@ -89,7 +89,7 @@ public partial class WS_Network
             _disposedValue = true;
         }
 
-        public new void Dispose()
+        public void Dispose()
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
