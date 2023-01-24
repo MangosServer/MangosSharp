@@ -448,7 +448,7 @@ namespace Mangos.Extractor
                         if ((LastFieldType ?? "") != (sField ?? ""))
                         {
                             if (!string.IsNullOrEmpty(LastFieldType))
-                            {;
+                            {
                                 if (LastFieldType.ToLower() == "object")
                                 {
                                     w.WriteLine("    {0,-48} = {1,-20}", LastFieldType.ToUpper() + "_END", "0x" + Conversion.Hex(Info[j - 1].Offset + Info[j - 1].Size));
@@ -641,7 +641,7 @@ namespace Mangos.Extractor
             while (Last.Length == 0 || Last.Substring(0, 9) == "CHAT_MSG_" || Last.Substring(0, 9) == "RAID_BOSS")
             {
                 Last = ReadString(f);
-                if (Last.Length > 10 && Last.Substring(0, 9) == "CHAT_MSG_" || Last.Substring(0, 9) == "RAID_BOSS")
+                if ((Last.Length > 10 && Last.Substring(0, 9) == "CHAT_MSG_") || (Last.Substring(0, 9) == "RAID_BOSS"))
 				{
                     Names.Push(Last);
 				}
