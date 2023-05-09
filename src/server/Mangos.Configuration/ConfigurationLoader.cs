@@ -22,7 +22,8 @@ namespace Mangos.Configuration;
 
 internal sealed class ConfigurationLoader
 {
-    private const string ConfigurationFileName = "configuration.json";
+    // The full path from the root of the disk needed to be specified (for me it's E).
+    private const string ConfigurationFileName = "E:\\mangosVanilla\\MangosSharp\\src\\server\\Mangos.Configuration\\configuration.json";
 
     public MangosConfiguration GetMangosConfiguration()
     {

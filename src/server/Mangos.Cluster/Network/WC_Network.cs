@@ -33,7 +33,8 @@ public class WcNetwork
 
     public WorldServerClass WorldServer => _clusterServiceLocator.WorldServerClass;
 
-    private readonly int _lastPing;
+    // It is necessary to initialize the variable.
+    private readonly int _lastPing = 0;
 
     public int MsTime()
     {
