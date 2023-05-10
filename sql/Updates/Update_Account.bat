@@ -4,17 +4,29 @@ rem Quick install section
 rem This will automatically use the variables below to install the Account database without prompting then optimize them and exit
 rem To use: Set your environment variables below and change 'set quick=off' to 'set quick=on' 
 set quick=off
-if %quick% == off goto standard
-echo (( Mangos Account Database Quick Installer ))
-rem -- Change the values below to match your server --
-set svr=localhost
-set user=root
-set pass=rootpass
-set port=3306
-set wdb=mangosVBaccounts
-rem -- Don't change past this point --
-set yesno=y
-goto install
+
+
+rem Verify if mysql is installed on the computer' 
+where mysql.exe >nul 2>nul
+if %errorlevel% equ 0 (
+    if %quick% == off (
+        goto standard
+    ) else (
+        echo (( Mangos Account Database Quick Installer ))
+        rem -- Change the values below to match your server --
+        set svr=localhost
+        set user=root
+        set pass=rootpass
+        set port=3306
+        set wdb=mangosVBaccounts
+        rem -- Don't change past this point --
+        set yesno=y
+        goto install
+    )
+)
+
+else ( goto mysqlerror )
+
 
 :standard
 rem Standard install section
@@ -48,19 +60,37 @@ if %port%. == . set port=3306
 set /p wdb=What is your Account database name?       [mangosVBaccounts]      : 
 if %wdb%. == . set wdb=mangosVBaccounts
 
+
 :install
 set dbpath=Accounts
 set mysql=tools
 
+
 :checkpaths
-if not exist %dbpath% then goto patherror
-if not exist %mysql%\mysql.exe then goto patherror
-goto world
+if not exist %dbpath% goto patherror
+if not exist %mysql%\mysql.exe goto patherror
+
+:checkdatabase
+rem Verify if mangosVBaccounts database exist' 
+mysqlshow --user=%user% --password=%pass% %wdb% >nul 2>nul
+if %errorlevel% equ 1 (
+    %mysql%\mysql --user=%user% --password=%pass% -e "CREATE DATABASE %wdb%;"
+    echo database created with success.
+    goto world
+) else (
+    echo The database %wdb% exists.
+    goto world
+)
+
+:mysqlerror
+echo MySQL is not installed on this computer. Please install it and relaunch the script.
+goto :eof
 
 :patherror
 echo Cannot find required files.
 pause
 goto :eof
+
 
 :world
 if %quick% == off echo.
