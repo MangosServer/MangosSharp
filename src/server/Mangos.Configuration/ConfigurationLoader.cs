@@ -27,11 +27,7 @@ internal sealed class ConfigurationLoader
     public MangosConfiguration GetMangosConfiguration()
     {
         var configuration = ReadConfigurationAsync();
-        var mangosConfiguration = JsonSerializer.Deserialize<MangosConfiguration>(configuration);
-        if (mangosConfiguration == null)
-        {
-            throw new Exception($"Unable to deserialzie {ConfigurationFileName}");
-        }
+        var mangosConfiguration = JsonSerializer.Deserialize<MangosConfiguration>(configuration) ?? throw new Exception($"Unable to deserialzie {ConfigurationFileName}");
         return mangosConfiguration;
     }
 
