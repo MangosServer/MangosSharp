@@ -53,11 +53,7 @@ internal sealed class AccountConnection
     private string GetSqlScriptFromResources(object target)
     {
         var type = target.GetType();
-        using var stream = type.Assembly.GetManifestResourceStream($"{type.FullName}.sql");
-        if (stream == null)
-        {
-            throw new FileNotFoundException($"Unable to get sql script for {type.FullName}");
-        }
+        using var stream = type.Assembly.GetManifestResourceStream($"{type.FullName}.sql") ?? throw new FileNotFoundException($"Unable to get sql script for {type.FullName}");
         using var streamReader = new StreamReader(stream);
         return streamReader.ReadToEnd();
     }
