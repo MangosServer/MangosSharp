@@ -36,11 +36,7 @@ internal sealed class AuthRealmlistHandler : IHandler<AuthRealmlistRequest>
 
     public async Task<IResponseMessage> ExectueAsync(AuthRealmlistRequest request)
     {
-        var realmListModels = await getRealmListQuery.ExectueAsync();
-        if (realmListModels == null)
-        {
-            throw new Exception("Unable to get realmlist from database");
-        }
+        var realmListModels = await getRealmListQuery.ExectueAsync() ?? throw new Exception("Unable to get realmlist from database");
 
         return new AuthRealmlistResponse
         {
