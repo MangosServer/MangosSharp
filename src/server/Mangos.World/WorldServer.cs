@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2013-2023 getMaNGOS <https://getmangos.eu>
+// Copyright (C) 2013-2025 getMaNGOS <https://www.getmangos.eu>
 //
 // This program is free software. You can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -328,7 +328,7 @@ public class WorldServer
         Console.WriteLine(" | |\\/| / _` | .` | (_ | (_) \\__ \\   \\ V / | _ \\   Vanilla Wow");
         Console.WriteLine(" |_|  |_\\__,_|_|\\_|\\___|\\___/|___/    \\_/  |___/              ");
         Console.WriteLine("                                                              ");
-        Console.WriteLine(" Website / Forum / Support: https://getmangos.eu/          ");
+        Console.WriteLine(" Website / Forum / Support: https://www.getmangos.eu/          ");
         Console.WriteLine("");
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.ForegroundColor = ConsoleColor.White;
