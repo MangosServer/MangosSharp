@@ -529,7 +529,7 @@ public class WS_Handlers_Misc
             try
             {
                 response.AddUInt64(GUID);
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterReadLock();
                 response.AddInt8((byte)WorldServiceLocator.WorldServer.CHARACTERs[GUID].HonorRank);
                 response.AddInt32(checked(WorldServiceLocator.WorldServer.CHARACTERs[GUID].HonorKillsToday + WorldServiceLocator.WorldServer.CHARACTERs[GUID].DishonorKillsToday) << 16);
                 response.AddInt32(WorldServiceLocator.WorldServer.CHARACTERs[GUID].HonorKillsYesterday);
@@ -542,7 +542,7 @@ public class WS_Handlers_Misc
                 response.AddInt32(WorldServiceLocator.WorldServer.CHARACTERs[GUID].HonorPointsThisWeek);
                 response.AddInt32(WorldServiceLocator.WorldServer.CHARACTERs[GUID].StandingLastWeek);
                 response.AddInt8((byte)WorldServiceLocator.WorldServer.CHARACTERs[GUID].HonorHighestRank);
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitReadLock();
                 client.Send(ref response);
             }
             finally

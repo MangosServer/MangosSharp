@@ -54,7 +54,7 @@ public partial class WS_TimerBasedEvents
             AIManagerWorking = true;
             try
             {
-                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.EnterReadLock();
                 foreach (var wORLD_TRANSPORT in WorldServiceLocator.WorldServer.WORLD_TRANSPORTs)
                 {
                     wORLD_TRANSPORT.Value.Update();
@@ -69,13 +69,13 @@ public partial class WS_TimerBasedEvents
             }
             finally
             {
-                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ExitReadLock();
             }
             checked
             {
                 try
                 {
-                    WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.EnterReadLock();
                     try
                     {
                         long num = WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys.Count - 1;
@@ -96,7 +96,7 @@ public partial class WS_TimerBasedEvents
                     }
                     finally
                     {
-                        WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
+                        WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ExitReadLock();
                     }
                 }
                 catch (ApplicationException ex7)

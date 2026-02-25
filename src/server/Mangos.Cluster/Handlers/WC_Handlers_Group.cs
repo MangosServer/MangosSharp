@@ -508,7 +508,7 @@ public class WcHandlersGroup
         var name = _clusterServiceLocator.Functions.CapitalizeName(packet.GetString());
         _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_INVITE [{2}]", client.IP, client.Port, name);
         var guid = 0UL;
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.EnterReadLock();
         foreach (var character in _clusterServiceLocator.WorldCluster.CharacteRs)
         {
             if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(character.Value.Name) == _clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(name))
@@ -518,7 +518,7 @@ public class WcHandlersGroup
             }
         }
 
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.ExitReadLock();
         var errCode = PartyCommandResult.INVITE_OK;
         // TODO: InBattlegrounds: INVITE_RESTRICTED
         if (guid == 0m)
@@ -642,7 +642,7 @@ public class WcHandlersGroup
         var name = packet.GetString();
         _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_UNINVITE [{2}]", client.IP, client.Port, name);
         var guid = 0UL;
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.EnterReadLock();
         foreach (var character in _clusterServiceLocator.WorldCluster.CharacteRs)
         {
             if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(character.Value.Name) == _clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(name))
@@ -652,7 +652,7 @@ public class WcHandlersGroup
             }
         }
 
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.ExitReadLock();
 
         // TODO: InBattlegrounds: INVITE_RESTRICTED
         if (guid == 0m)

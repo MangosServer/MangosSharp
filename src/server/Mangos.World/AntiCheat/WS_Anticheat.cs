@@ -29,19 +29,20 @@ namespace Mangos.World.AntiCheat;
 public sealed class WS_Anticheat
 {
     private static readonly List<SpeedHackViolation> SpeedHacks = new();
+    private static readonly object _speedHacksLock = new();
 
     public static void MovementEvent(ref WS_Network.ClientClass client, float RunSpeed, float posX, float positionX, float posY, float positionY, float posZ, float positionZ, int sTime, int cTime)
     {
         var character = client.Character;
         SpeedHackViolation sData;
-        if (!SpeedHacks.Exists(obj => obj.Character.Equals(character.Name, System.StringComparison.Ordinal)))
-        {
-            sData = new SpeedHackViolation(client.Character.Name, cTime, sTime);
-            SpeedHacks.Add(sData);
-        }
-        else
+        lock (_speedHacksLock)
         {
             sData = SpeedHacks.Find(match: obj => obj.Character.Equals(character.Name, System.StringComparison.Ordinal));
+            if (sData == null)
+            {
+                sData = new SpeedHackViolation(client.Character.Name, cTime, sTime);
+                SpeedHacks.Add(sData);
+            }
         }
         sData.TriggerViolation(posX, positionX, posY, positionY, posZ, positionZ, sTime, cTime, RunSpeed);
         checked
@@ -54,7 +55,10 @@ public sealed class WS_Anticheat
                 {
                     WorldServiceLocator.WorldServer.Log.WriteLine(LogType.USER, "[AntiCheat] Player {0} exceeded violation value. Taking action.", client.Character.Name);
                     client.Character.Logout();
-                    SpeedHacks.Remove(sData);
+                    lock (_speedHacksLock)
+                    {
+                        SpeedHacks.Remove(sData);
+                    }
                 }
                 return;
             }

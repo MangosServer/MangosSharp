@@ -504,7 +504,7 @@ public class WS_Mail
                 sendOK.AddInt32(0);
                 client.Send(ref sendOK);
                 sendOK.Dispose();
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterReadLock();
                 if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(ReceiverGUID))
                 {
                     Packets.PacketClass response = new(Opcodes.SMSG_RECEIVED_MAIL);
@@ -512,7 +512,7 @@ public class WS_Mail
                     WorldServiceLocator.WorldServer.CHARACTERs[ReceiverGUID].client.Send(ref response);
                     response.Dispose();
                 }
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitReadLock();
             }
             catch (Exception ex)
             {

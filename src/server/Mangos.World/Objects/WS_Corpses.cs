@@ -355,20 +355,17 @@ public class WS_Corpses
             {
                 if (WorldServiceLocator.WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Contains(GUID))
                 {
-                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.EnterWriteLock();
                     WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ExitWriteLock();
                     WorldServiceLocator.WorldServer.CHARACTERs[plGUID].corpseObjectsNear.Remove(GUID);
                 }
             }
         }
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
     private ulong GetNewGUID()
     {
-        ref var corpseGUIDCounter = ref WorldServiceLocator.WorldServer.CorpseGUIDCounter;
-        corpseGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(corpseGUIDCounter), 1m));
-        return WorldServiceLocator.WorldServer.CorpseGUIDCounter;
+        return WorldServiceLocator.WorldServer.GenerateNextGuid(ref WorldServiceLocator.WorldServer.CorpseGUIDCounter);
     }
 }

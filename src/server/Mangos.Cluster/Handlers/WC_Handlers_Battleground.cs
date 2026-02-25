@@ -86,7 +86,7 @@ public class WcHandlersBattleground
     }
 
     public Dictionary<int, Battlefield> BattlefielDs = new();
-    public ReaderWriterLock BattlefielDsLock = new();
+    public ReaderWriterLockSlim BattlefielDsLock = new();
     private int _battlefielDsCounter;
 
     public class Battlefield : IDisposable
@@ -119,9 +119,9 @@ public class WcHandlersBattleground
             _map = rMap;
             _maxPlayersPerTeam = _clusterServiceLocator.WsDbcDatabase.Battlegrounds[(byte)rMapType].MaxPlayersPerTeam;
             _minPlayersPerTeam = _clusterServiceLocator.WsDbcDatabase.Battlegrounds[(byte)rMapType].MinPlayersPerTeam;
-            _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.AcquireWriterLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+            _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.EnterWriteLock();
             _clusterServiceLocator.WcHandlersBattleground.BattlefielDs.Add(Id, this);
-            _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.ReleaseWriterLock();
+            _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.ExitWriteLock();
             _bfTimer = new Timer(Update, null, 20000, 20000);
         }
 
@@ -134,9 +134,9 @@ public class WcHandlersBattleground
             {
                 // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
                 // TODO: set large fields to null.
-                _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.AcquireWriterLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.EnterWriteLock();
                 _clusterServiceLocator.WcHandlersBattleground.BattlefielDs.Remove(Id);
-                _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.ReleaseWriterLock();
+                _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.ExitWriteLock();
                 _bfTimer.Dispose();
             }
 
@@ -351,7 +351,7 @@ public class WcHandlersBattleground
     public Battlefield GetBattlefield(BattlefieldMapType mapType, byte level)
     {
         Battlefield battlefield = null;
-        BattlefielDsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+        BattlefielDsLock.EnterReadLock();
         foreach (var b in BattlefielDs)
         {
             if (b.Value.MapType == mapType && b.Value.LevelMax >= level && b.Value.LevelMin <= level)
@@ -360,7 +360,7 @@ public class WcHandlersBattleground
             }
         }
 
-        BattlefielDsLock.ReleaseReaderLock();
+        BattlefielDsLock.ExitReadLock();
 
         // DONE: Create new if not found any
         if (battlefield is null)
@@ -459,6 +459,7 @@ public class WcHandlersBattleground
         {
             p.AddUInt32(0U);
             p.AddUInt32(0U); // flagCarrierCount
+            client.Send(p);
         }
         finally
         {

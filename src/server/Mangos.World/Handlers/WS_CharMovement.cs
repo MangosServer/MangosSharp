@@ -711,9 +711,9 @@ public class WS_CharMovement
         {
             if (WorldServiceLocator.WorldServer.CHARACTERs[GUID].playersNear.Contains(Character.GUID))
             {
-                WorldServiceLocator.WorldServer.CHARACTERs[GUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.CHARACTERs[GUID].guidsForRemoving_Lock.EnterWriteLock();
                 WorldServiceLocator.WorldServer.CHARACTERs[GUID].guidsForRemoving.Add(Character.GUID);
-                WorldServiceLocator.WorldServer.CHARACTERs[GUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                WorldServiceLocator.WorldServer.CHARACTERs[GUID].guidsForRemoving_Lock.ExitWriteLock();
                 WorldServiceLocator.WorldServer.CHARACTERs[GUID].playersNear.Remove(Character.GUID);
             }
             WorldServiceLocator.WorldServer.CHARACTERs[GUID].SeenBy.Remove(Character.GUID);
@@ -790,9 +790,9 @@ public class WS_CharMovement
             cHARACTERs[key] = (WS_PlayerData.CharacterObject)objCharacter;
             if (!flag)
             {
-                Character.guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                Character.guidsForRemoving_Lock.EnterWriteLock();
                 Character.guidsForRemoving.Add(GUID);
-                Character.guidsForRemoving_Lock.ReleaseWriterLock();
+                Character.guidsForRemoving_Lock.ExitWriteLock();
                 WorldServiceLocator.WorldServer.CHARACTERs[GUID].SeenBy.Remove(Character.GUID);
                 Character.playersNear.Remove(GUID);
             }
@@ -802,9 +802,9 @@ public class WS_CharMovement
             Character = (WS_PlayerData.CharacterObject)objCharacter;
             if (!flag && Character.SeenBy.Contains(GUID))
             {
-                WorldServiceLocator.WorldServer.CHARACTERs[GUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.CHARACTERs[GUID].guidsForRemoving_Lock.EnterWriteLock();
                 WorldServiceLocator.WorldServer.CHARACTERs[GUID].guidsForRemoving.Add(Character.GUID);
-                WorldServiceLocator.WorldServer.CHARACTERs[GUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                WorldServiceLocator.WorldServer.CHARACTERs[GUID].guidsForRemoving_Lock.ExitWriteLock();
                 Character.SeenBy.Remove(GUID);
                 WorldServiceLocator.WorldServer.CHARACTERs[GUID].playersNear.Remove(Character.GUID);
             }
@@ -830,9 +830,9 @@ public class WS_CharMovement
             }
             if (num != 0)
             {
-                Character.guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                Character.guidsForRemoving_Lock.EnterWriteLock();
                 Character.guidsForRemoving.Add(GUID2);
-                Character.guidsForRemoving_Lock.ReleaseWriterLock();
+                Character.guidsForRemoving_Lock.ExitWriteLock();
                 WorldServiceLocator.WorldServer.WORLD_CREATUREs[GUID2].SeenBy.Remove(Character.GUID);
                 Character.creaturesNear.Remove(GUID2);
             }
@@ -851,9 +851,9 @@ public class WS_CharMovement
                 wORLD_TRANSPORTs[key] = (WS_Transports.TransportObject)objCharacter;
                 if (!flag)
                 {
-                    Character.guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    Character.guidsForRemoving_Lock.EnterWriteLock();
                     Character.guidsForRemoving.Add(GUID3);
-                    Character.guidsForRemoving_Lock.ReleaseWriterLock();
+                    Character.guidsForRemoving_Lock.ExitWriteLock();
                     WorldServiceLocator.WorldServer.WORLD_TRANSPORTs[GUID3].SeenBy.Remove(Character.GUID);
                     Character.gameObjectsNear.Remove(GUID3);
                 }
@@ -868,9 +868,9 @@ public class WS_CharMovement
                 wORLD_GAMEOBJECTs[key] = (WS_GameObjects.GameObject)objCharacter;
                 if (!flag)
                 {
-                    Character.guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    Character.guidsForRemoving_Lock.EnterWriteLock();
                     Character.guidsForRemoving.Add(GUID3);
-                    Character.guidsForRemoving_Lock.ReleaseWriterLock();
+                    Character.guidsForRemoving_Lock.ExitWriteLock();
                     WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs[GUID3].SeenBy.Remove(Character.GUID);
                     Character.gameObjectsNear.Remove(GUID3);
                 }
@@ -888,9 +888,9 @@ public class WS_CharMovement
             wORLD_DYNAMICOBJECTs[key] = (WS_DynamicObjects.DynamicObject)objCharacter;
             if (!flag)
             {
-                Character.guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                Character.guidsForRemoving_Lock.EnterWriteLock();
                 Character.guidsForRemoving.Add(GUID4);
-                Character.guidsForRemoving_Lock.ReleaseWriterLock();
+                Character.guidsForRemoving_Lock.ExitWriteLock();
                 WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs[GUID4].SeenBy.Remove(Character.GUID);
                 Character.dynamicObjectsNear.Remove(GUID4);
             }
@@ -907,9 +907,9 @@ public class WS_CharMovement
             wORLD_CORPSEOBJECTs[key] = (WS_Corpses.CorpseObject)objCharacter;
             if (!flag)
             {
-                Character.guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                Character.guidsForRemoving_Lock.EnterWriteLock();
                 Character.guidsForRemoving.Add(GUID5);
-                Character.guidsForRemoving_Lock.ReleaseWriterLock();
+                Character.guidsForRemoving_Lock.ExitWriteLock();
                 WorldServiceLocator.WorldServer.WORLD_CORPSEOBJECTs[GUID5].SeenBy.Remove(Character.GUID);
                 Character.corpseObjectsNear.Remove(GUID5);
             }

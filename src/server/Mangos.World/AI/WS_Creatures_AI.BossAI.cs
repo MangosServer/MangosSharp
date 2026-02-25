@@ -20,6 +20,7 @@ using Mangos.World.Objects;
 using Mangos.World.Player;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mangos.World.AI;
 
@@ -60,10 +61,7 @@ public partial class WS_Creatures_AI
         public override void DoThink()
         {
             base.DoThink();
-            new Thread(OnThink)
-            {
-                Name = "Boss Thinking"
-            }.Start();
+            Task.Run(OnThink);
         }
 
         public virtual void OnThink()

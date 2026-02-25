@@ -703,9 +703,7 @@ public class WS_NPCs
                 {
                     WorldServiceLocator.WorldServer.WORLD_ITEMs[itemGuid].StackCount -= count;
                     var tmpItem = WorldServiceLocator.WSItems.LoadItemByGUID(itemGuid);
-                    ref var itemGuidCounter = ref WorldServiceLocator.WorldServer.itemGuidCounter;
-                    itemGuidCounter = Convert.ToUInt64(decimal.Add(new decimal(itemGuidCounter), 1m));
-                    tmpItem.GUID = WorldServiceLocator.WorldServer.itemGuidCounter;
+                    tmpItem.GUID = WorldServiceLocator.WorldServer.GenerateNextGuid(ref WorldServiceLocator.WorldServer.itemGuidCounter);
                     tmpItem.StackCount = count;
                     client.Character.ItemADD_BuyBack(ref tmpItem);
                     ref var copper = ref client.Character.Copper;

@@ -77,7 +77,7 @@ public partial class WS_TimerBasedEvents
             {
                 try
                 {
-                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterReadLock();
                     foreach (var Character in WorldServiceLocator.WorldServer.CHARACTERs)
                     {
                         if (Character.Value.DEAD || Character.Value.underWaterTimer != null || Character.Value.LogoutTimer != null || Character.Value.client == null)
@@ -229,9 +229,9 @@ public partial class WS_TimerBasedEvents
                         }
                         value = null;
                     }
-                    if (WorldServiceLocator.WorldServer.CHARACTERs_Lock.IsReaderLockHeld)
+                    if (WorldServiceLocator.WorldServer.CHARACTERs_Lock.IsReadLockHeld)
                     {
-                        WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                        WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitReadLock();
                     }
                 }
                 catch (Exception ex2)

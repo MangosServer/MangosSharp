@@ -189,7 +189,7 @@ public partial class WS_Weather
             SMSG_WEATHER.AddInt32(GetSound());
             try
             {
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterReadLock();
                 try
                 {
                     foreach (var Character in WorldServiceLocator.WorldServer.CHARACTERs)
@@ -209,7 +209,7 @@ public partial class WS_Weather
                 }
                 finally
                 {
-                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitReadLock();
                 }
             }
             catch (ApplicationException ex5)

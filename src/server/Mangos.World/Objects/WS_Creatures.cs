@@ -1254,10 +1254,10 @@ public class WS_Creatures
             Initialize();
             try
             {
-                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.EnterWriteLock();
                 WorldServiceLocator.WorldServer.WORLD_CREATUREs.Add(GUID, this);
                 WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys.Add(GUID);
-                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseWriterLock();
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ExitWriteLock();
             }
             catch (Exception ex2)
             {
@@ -1309,10 +1309,10 @@ public class WS_Creatures
             Initialize();
             try
             {
-                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.EnterWriteLock();
                 WorldServiceLocator.WorldServer.WORLD_CREATUREs.Add(GUID, this);
                 WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys.Add(GUID);
-                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseWriterLock();
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ExitWriteLock();
             }
             catch (Exception ex2)
             {
@@ -1364,10 +1364,10 @@ public class WS_Creatures
             Initialize();
             try
             {
-                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.EnterWriteLock();
                 WorldServiceLocator.WorldServer.WORLD_CREATUREs.Add(GUID, this);
                 WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys.Add(GUID);
-                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseWriterLock();
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ExitWriteLock();
             }
             catch (Exception ex2)
             {
@@ -1432,10 +1432,10 @@ public class WS_Creatures
             }
             try
             {
-                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.EnterWriteLock();
                 WorldServiceLocator.WorldServer.WORLD_CREATUREs.Add(GUID, this);
                 WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys.Add(GUID);
-                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseWriterLock();
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ExitWriteLock();
             }
             catch (Exception ex2)
             {
@@ -1454,10 +1454,10 @@ public class WS_Creatures
                 RemoveFromWorld();
                 try
                 {
-                    WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.EnterWriteLock();
                     WorldServiceLocator.WorldServer.WORLD_CREATUREs.Remove(GUID);
                     WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys.Remove(GUID);
-                    WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseWriterLock();
+                    WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ExitWriteLock();
                     ExpireTimer?.Dispose();
                 }
                 catch (Exception ex2)
@@ -1636,9 +1636,9 @@ public class WS_Creatures
                 {
                     if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(plGUID) && plGUID != 0)
                     {
-                        WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                        WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.EnterWriteLock();
                         WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                        WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                        WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ExitWriteLock();
                         WorldServiceLocator.WorldServer.CHARACTERs[plGUID].creaturesNear.Remove(GUID);
                     }
                 }
@@ -2066,11 +2066,8 @@ public class WS_Creatures
         }
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
     private ulong GetNewGUID()
     {
-        ref var creatureGUIDCounter = ref WorldServiceLocator.WorldServer.CreatureGUIDCounter;
-        creatureGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(creatureGUIDCounter), 1m));
-        return WorldServiceLocator.WorldServer.CreatureGUIDCounter;
+        return WorldServiceLocator.WorldServer.GenerateNextGuid(ref WorldServiceLocator.WorldServer.CreatureGUIDCounter);
     }
 }

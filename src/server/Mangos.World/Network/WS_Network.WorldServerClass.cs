@@ -200,9 +200,9 @@ public partial class WS_Network
             {
                 var client = WorldServiceLocator.WorldServer.CLIENTs[id];
                 WS_PlayerData.CharacterObject Character = new(ref client, guid);
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterWriteLock();
                 WorldServiceLocator.WorldServer.CHARACTERs[guid] = Character;
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseWriterLock();
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitWriteLock();
                 WorldServiceLocator.Functions.SendCorpseReclaimDelay(ref client, ref Character);
                 WorldServiceLocator.WSPlayerHelper.InitializeTalentSpells(Character);
                 Character.Login();

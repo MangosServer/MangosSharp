@@ -53,7 +53,7 @@ public partial class WS_TimerBasedEvents
             CharacterSaverWorking = true;
             try
             {
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterReadLock();
                 foreach (var cHARACTER in WorldServiceLocator.WorldServer.CHARACTERs)
                 {
                     cHARACTER.Value.SaveCharacter();
@@ -68,7 +68,7 @@ public partial class WS_TimerBasedEvents
             }
             finally
             {
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitReadLock();
             }
             WorldServiceLocator.WSHandlersInstance.InstanceMapUpdate();
             CharacterSaverWorking = false;

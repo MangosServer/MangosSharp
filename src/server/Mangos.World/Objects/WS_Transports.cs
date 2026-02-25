@@ -160,9 +160,9 @@ public class WS_Transports
                 State = GameObjectLootState.DOOR_CLOSED;
                 TransportState = TransportStates.TRANSPORT_DOCKED;
                 TimeToNextEvent = 60000;
-                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.AcquireWriterLock(-1);
+                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.EnterWriteLock();
                 WorldServiceLocator.WorldServer.WORLD_TRANSPORTs.Add(GUID, this);
-                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ReleaseWriterLock();
+                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ExitWriteLock();
                 Update();
             }
         }
@@ -664,9 +664,9 @@ public class WS_Transports
             {
                 if (WorldServiceLocator.WorldServer.CHARACTERs[plGUID].gameObjectsNear.Contains(GUID))
                 {
-                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.EnterWriteLock();
                     WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ExitWriteLock();
                     WorldServiceLocator.WorldServer.CHARACTERs[plGUID].gameObjectsNear.Remove(GUID);
                     SeenBy.Remove(plGUID);
                 }
@@ -771,9 +771,7 @@ public class WS_Transports
 
     private ulong GetNewGUID()
     {
-        ref var transportGUIDCounter = ref WorldServiceLocator.WorldServer.TransportGUIDCounter;
-        transportGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(transportGUIDCounter), 1m));
-        return WorldServiceLocator.WorldServer.TransportGUIDCounter;
+        return WorldServiceLocator.WorldServer.GenerateNextGuid(ref WorldServiceLocator.WorldServer.TransportGUIDCounter);
     }
 
     public void LoadTransports()

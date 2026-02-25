@@ -290,9 +290,9 @@ public class WS_GameObjects
                 }
                 if (this is WS_Transports.TransportObject)
                 {
-                    WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.AcquireWriterLock(-1);
+                    WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.EnterWriteLock();
                     WorldServiceLocator.WorldServer.WORLD_TRANSPORTs.Remove(GUID);
-                    WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ReleaseWriterLock();
+                    WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ExitWriteLock();
                     RespawnTimer.Dispose();
                 }
                 else
@@ -579,9 +579,9 @@ public class WS_GameObjects
             {
                 if (WorldServiceLocator.WorldServer.CHARACTERs[plGUID].gameObjectsNear.Contains(GUID))
                 {
-                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.EnterWriteLock();
                     WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ExitWriteLock();
                     WorldServiceLocator.WorldServer.CHARACTERs[plGUID].gameObjectsNear.Remove(GUID);
                 }
             }
@@ -869,12 +869,9 @@ public class WS_GameObjects
         }
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
     private ulong GetNewGUID()
     {
-        ref var gameObjectsGUIDCounter = ref WorldServiceLocator.WorldServer.GameObjectsGUIDCounter;
-        gameObjectsGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(gameObjectsGUIDCounter), 1m));
-        return WorldServiceLocator.WorldServer.GameObjectsGUIDCounter;
+        return WorldServiceLocator.WorldServer.GenerateNextGuid(ref WorldServiceLocator.WorldServer.GameObjectsGUIDCounter);
     }
 
     public GameObject GetClosestGameobject(ref WS_Base.BaseUnit unit, int GameObjectEntry = 0)

@@ -573,7 +573,7 @@ public class Functions
 
     public void Broadcast(string message)
     {
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.EnterReadLock();
         foreach (var character in _clusterServiceLocator.WorldCluster.CharacteRs)
         {
             if (character.Value.Client is not null)
@@ -582,7 +582,7 @@ public class Functions
             }
         }
 
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.ExitReadLock();
     }
 
     public void SendAccountMd5(ClientClass client, WcHandlerCharacter.CharacterObject character)

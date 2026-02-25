@@ -305,8 +305,17 @@ public partial class Packets
             }
         }
 
+        private void EnsureReadable(int bytes)
+        {
+            if (Offset + bytes > Data.Length)
+            {
+                throw new InvalidOperationException($"Attempted to read {bytes} bytes at offset {Offset}, but packet only has {Data.Length} bytes (OpCode: {OpCode}).");
+            }
+        }
+
         public byte GetInt8()
         {
+            EnsureReadable(1);
             checked
             {
                 Offset++;
@@ -316,6 +325,7 @@ public partial class Packets
 
         public short GetInt16()
         {
+            EnsureReadable(2);
             var num1 = BitConverter.ToInt16(Data, Offset);
             checked
             {
@@ -326,6 +336,7 @@ public partial class Packets
 
         public int GetInt32()
         {
+            EnsureReadable(4);
             var num1 = BitConverter.ToInt32(Data, Offset);
             checked
             {
@@ -336,6 +347,7 @@ public partial class Packets
 
         public long GetInt64()
         {
+            EnsureReadable(8);
             var num1 = BitConverter.ToInt64(Data, Offset);
             checked
             {
@@ -346,6 +358,7 @@ public partial class Packets
 
         public float GetFloat()
         {
+            EnsureReadable(4);
             var single1 = BitConverter.ToSingle(Data, Offset);
             checked
             {
@@ -360,7 +373,7 @@ public partial class Packets
             var i = 0;
             checked
             {
-                while (Data[start + i] != 0)
+                while (start + i < Data.Length && Data[start + i] != 0)
                 {
                     i++;
                     Offset++;
@@ -372,7 +385,9 @@ public partial class Packets
 
         public string GetString2()
         {
+            EnsureReadable(1);
             int thisLength = Data[Offset];
+            EnsureReadable(1 + thisLength);
             checked
             {
                 var start = Offset + 1;
@@ -383,6 +398,7 @@ public partial class Packets
 
         public ushort GetUInt16()
         {
+            EnsureReadable(2);
             var num1 = BitConverter.ToUInt16(Data, Offset);
             checked
             {
@@ -393,6 +409,7 @@ public partial class Packets
 
         public uint GetUInt32()
         {
+            EnsureReadable(4);
             var num1 = BitConverter.ToUInt32(Data, Offset);
             checked
             {
@@ -403,6 +420,7 @@ public partial class Packets
 
         public ulong GetUInt64()
         {
+            EnsureReadable(8);
             var num1 = BitConverter.ToUInt64(Data, Offset);
             checked
             {
@@ -413,50 +431,20 @@ public partial class Packets
 
         public ulong GetPackGuid()
         {
+            EnsureReadable(1);
             var flags = Data[Offset];
             var guid = new byte[8];
             checked
             {
                 Offset++;
-                if ((flags & 1) == 1)
+                for (int i = 0; i < 8; i++)
                 {
-                    guid[0] = Data[Offset];
-                    Offset++;
-                }
-                if ((flags & 2) == 2)
-                {
-                    guid[1] = Data[Offset];
-                    Offset++;
-                }
-                if ((flags & 4) == 4)
-                {
-                    guid[2] = Data[Offset];
-                    Offset++;
-                }
-                if ((flags & 8) == 8)
-                {
-                    guid[3] = Data[Offset];
-                    Offset++;
-                }
-                if ((flags & 0x10) == 16)
-                {
-                    guid[4] = Data[Offset];
-                    Offset++;
-                }
-                if ((flags & 0x20) == 32)
-                {
-                    guid[5] = Data[Offset];
-                    Offset++;
-                }
-                if ((flags & 0x40) == 64)
-                {
-                    guid[6] = Data[Offset];
-                    Offset++;
-                }
-                if ((flags & 0x80) == 128)
-                {
-                    guid[7] = Data[Offset];
-                    Offset++;
+                    if ((flags & (1 << i)) != 0)
+                    {
+                        EnsureReadable(1);
+                        guid[i] = Data[Offset];
+                        Offset++;
+                    }
                 }
                 return BitConverter.ToUInt64(guid, 0);
             }

@@ -60,9 +60,9 @@ public class WcHandlerCharacter
             Access = Client.Access;
             var argobjCharacter = this;
             _clusterServiceLocator.WcHandlersSocial.LoadIgnoreList(argobjCharacter);
-            _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireWriterLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+            _clusterServiceLocator.WorldCluster.CharacteRsLock.EnterWriteLock();
             _clusterServiceLocator.WorldCluster.CharacteRs.Add(Guid, this);
-            _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseWriterLock();
+            _clusterServiceLocator.WorldCluster.CharacteRsLock.ExitWriteLock();
         }
 
         public ulong Guid;
@@ -228,9 +228,9 @@ public class WcHandlerCharacter
                     }
                 }
 
-                _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireWriterLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                _clusterServiceLocator.WorldCluster.CharacteRsLock.EnterWriteLock();
                 _clusterServiceLocator.WorldCluster.CharacteRs.Remove(Guid);
-                _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseWriterLock();
+                _clusterServiceLocator.WorldCluster.CharacteRsLock.ExitWriteLock();
             }
 
             _disposedValue = true;
@@ -405,7 +405,7 @@ public class WcHandlerCharacter
     public ulong GetCharacterGuidByName(string name)
     {
         var guid = 0UL;
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.EnterReadLock();
         foreach (var objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
         {
             if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(objCharacter.Value.Name) == _clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(name))
@@ -415,7 +415,7 @@ public class WcHandlerCharacter
             }
         }
 
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.ExitReadLock();
         if (guid == 0m)
         {
             DataTable q = new();
