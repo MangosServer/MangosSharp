@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2013-2023 getMaNGOS <https://getmangos.eu>
+// Copyright (C) 2013-2025 getMaNGOS <https://www.getmangos.eu>
 //
 // This program is free software. You can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ logger.Trace(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
 logger.Trace(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
 logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
 logger.Trace("                                                ");
-logger.Trace("Website / Forum / Support: https://getmangos.eu/");
+logger.Trace("Website / Forum / Support: https://www.getmangos.eu/");
 
 logger.Information("Starting realm tcp server");
 await tcpServer.RunAsync(configuration.Realm.RealmServerEndpoint);
