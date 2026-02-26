@@ -17,7 +17,6 @@
 //
 
 using Mangos.Common.Enums.Global;
-using Mangos.Common.Legacy;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections;

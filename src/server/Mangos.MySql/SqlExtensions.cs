@@ -19,9 +19,9 @@
 using System;
 using System.Data;
 
-namespace Mangos.Common.Legacy;
+namespace Mangos.MySql;
 
-public static class SqlExtenions
+public static class SqlExtensions
 {
     public static T As<T>(this DataRow row, int column)
     {

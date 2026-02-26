@@ -17,11 +17,10 @@
 //
 
 using Mangos.Common.Enums.Global;
-using Microsoft.VisualBasic;
 using System;
 using System.Threading;
 
-namespace Mangos.Common.Legacy.Logging;
+namespace Mangos.Logging;
 
 public class ConsoleWriter : BaseWriter
 {
@@ -42,7 +41,7 @@ public class ConsoleWriter : BaseWriter
             return;
         }
 
-        Console.WriteLine(L[(int)type] + ":" + "[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
+        Console.WriteLine(L[(int)type] + ":" + "[" + DateTime.Now.TimeOfDay.ToString(@"hh\:mm\:ss") + "] " + formatStr, arg);
     }
 
     public override string ReadLine()

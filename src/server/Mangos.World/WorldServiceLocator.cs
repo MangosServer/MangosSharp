@@ -38,8 +38,8 @@ using Mangos.World.Spells;
 using Mangos.World.Warden;
 using Mangos.World.Weather;
 using Mangos.Zip;
-using Functions = Mangos.Common.Legacy.Globals.Functions;
-using NativeMethods = Mangos.Common.Legacy.NativeMethods;
+using Functions = Mangos.Common.Globals.Functions;
+using NativeMethods = Mangos.Common.NativeMethods;
 
 namespace Mangos.World;
 
@@ -55,7 +55,7 @@ public sealed class WorldServiceLocator
 
     public static Functions CommonGlobalFunctions => Container.Resolve<Functions>();
 
-    public static Common.Legacy.Functions CommonFunctions => Container.Resolve<Common.Legacy.Functions>();
+    public static Common.StringFunctions CommonFunctions => Container.Resolve<Common.StringFunctions>();
 
     public static ZipService GlobalZip => Container.Resolve<ZipService>();
 

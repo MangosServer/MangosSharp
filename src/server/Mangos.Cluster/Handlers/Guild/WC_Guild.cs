@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Guild;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
+using Mangos.MySql;
 using Microsoft.VisualBasic;
 using System.Collections.Generic;
 using System.Data;

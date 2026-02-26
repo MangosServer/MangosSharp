@@ -20,10 +20,7 @@ using Mangos.Common.Enums.Global;
 using System;
 using System.Runtime.CompilerServices;
 
-// Using this logging type, all logs are displayed in console.
-// Writting commands is done trought console.
-
-namespace Mangos.Common.Legacy.Logging;
+namespace Mangos.Logging;
 
 public class ColoredConsoleWriter : BaseWriter
 {

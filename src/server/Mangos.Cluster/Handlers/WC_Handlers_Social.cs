@@ -22,7 +22,7 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Social;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
+using Mangos.MySql;
 using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
