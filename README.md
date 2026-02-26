@@ -24,20 +24,20 @@ and a world server which serves game content just like the original did back the
 
 It aims to be 100% compatible with the 3 final versions of Vanilla [World of Warcraft][2], 
 namely [patch 1.12.1][4], [patch 1.12.2][5] & [patch 1.12.3][6].
-<br>**IT DOES NOT SUPPORT 1.13.x** and beyond which is the newly released Classic Experience (NuClassic).
+<br>**IT DOES NOT SUPPORT 1.13.x** and beyond, which is the newly released Classic Experience (NuClassic).
 
 
 Requirements
 ------------
     Supported platforms: Windows 10+, Linux, MacOS, Docker
-    .NET 7 SDK
+    .NET 9 SDK
     MySQL 8.0
-    Visual Studio 2022 or any other editor with .NET 7 support
+    Visual Studio 2022 or any other editor with .NET 9 support
 
 
 Dependencies
 ------------
-The server stands on the shoulders of several well-known Open Source libraries plus
+The server stands on the shoulders of several well-known Open Source libraries, plus
 a few awesome, but less known libraries to prevent us from inventing the wheel again.
 
 * **[MySQL][40]** / **[MariaDB][41]**: These databases are used to store content and user data.
@@ -46,7 +46,7 @@ a few awesome, but less known libraries to prevent us from inventing the wheel a
 <br>We have a small, but extremely friendly and helpful community managed by MadMax and Antz.
 
 
-Our discord/forum motto is: 
+Our Discord/forum motto is: 
 ```js
 'Be nice or Be somewhere else'
 ```
@@ -62,7 +62,7 @@ We welcome anyone who is interested in enjoying older versions of wow or contrib
 **Discord Server**
 ----
 
-We also have a Discord server where many of us hang out and discuss Mangos related stuff.
+We also have a Discord server where many of us hang out and discuss Mangos-related stuff.
 
 * [**Discord Server**][9]
 
@@ -84,7 +84,7 @@ Found an issue or something which doesn't seem right, please log it in the relev
 **Installation Guides**
 ----
 
-Installation instructions for various operation systems can be found here.
+Installation instructions for various operating systems can be found here.
 
 * [**Installation Guides**][17] 
 
