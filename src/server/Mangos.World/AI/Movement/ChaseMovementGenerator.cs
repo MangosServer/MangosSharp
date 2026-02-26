@@ -46,7 +46,7 @@ public sealed class ChaseMovementGenerator : IMovementGenerator
         var dy = _target.positionY - creature.positionY;
         var distance = (float)Math.Sqrt(dx * dx + dy * dy);
 
-        if (distance <= creature.CombatReach_Base + 1f)
+        if (distance <= WS_Base.BaseUnit.CombatReach_Base + 1f)
         {
             return false; // In range, stay here
         }

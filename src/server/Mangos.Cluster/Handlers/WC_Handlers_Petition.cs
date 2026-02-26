@@ -21,6 +21,7 @@ using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Guild;
 using Mangos.Common.Globals;
+using Mangos.MySql;
 using System.Data;
 
 namespace Mangos.Cluster.Handlers;
@@ -324,7 +325,7 @@ public class WcHandlersPetition
                 var target = _clusterServiceLocator.WorldCluster.CharacteRs[targetGuid];
                 if (target.IsInGuild)
                 {
-                    _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_ALREADY_IN_GUILD_S, target.Name);
+                    _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_ALREADY_IN_GUILD, target.Name);
                     return;
                 }
 

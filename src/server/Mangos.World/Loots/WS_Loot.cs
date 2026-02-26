@@ -437,19 +437,18 @@ public partial class WS_Loot
             return;
         }
 
-        var lootItem = loot.Items[slotId];
-        if (lootItem == null || lootItem.Taken)
+        LootItem lootItem = loot.Items[slotId];
+        if (lootItem == null)
         {
             return;
         }
 
         // Try to add the item to the target player's inventory
-        if (WorldServiceLocator.WSItems.ItemTEMPLATES.ContainsKey(lootItem.ItemID) || new WS_Items.ItemInfo(lootItem.ItemID) != null)
+        using (var itemInfo = new WS_Items.ItemInfo(lootItem.ItemID))
         {
-            var itemTemplate = WorldServiceLocator.WSItems.ItemTEMPLATES[lootItem.ItemID];
-            if (targetPlayer.ItemADD(lootItem.ItemID, 0, 0, lootItem.ItemCount))
+            if (itemInfo != null && itemInfo.Id == lootItem.ItemID)
             {
-                lootItem.Taken = true;
+                targetPlayer.ItemADD(lootItem.ItemID, 0, 0, lootItem.ItemCount);
 
                 // Send loot removed to all looters
                 Packets.PacketClass lootRemoved = new(Opcodes.SMSG_LOOT_REMOVED);

@@ -28,7 +28,7 @@ namespace RealmServer.Verification;
 internal sealed class RealmVerifier
 {
     private readonly IMangosLogger _logger;
-    private Timer _verificationTimer;
+    private Timer? _verificationTimer;
     private readonly object _lock = new();
     private bool _isRunning;
     private readonly List<VerificationResult> _recentResults = new();
@@ -95,7 +95,7 @@ internal sealed class RealmVerifier
         }
     }
 
-    private void RunVerification(object state)
+    private void RunVerification(object? state)
     {
         try
         {

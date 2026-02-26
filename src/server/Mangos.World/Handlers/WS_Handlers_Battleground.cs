@@ -93,11 +93,12 @@ public class WS_Handlers_Battleground
             {
                 return;
             }
-            if (!WorldServiceLocator.WSDBCDatabase.Battlegrounds.ContainsKey(bgTypeId))
+            // Fix: Cast bgTypeId to byte to match the Dictionary<byte, TBattleground> key type
+            if (!WorldServiceLocator.WSDBCDatabase.Battlegrounds.ContainsKey((byte)bgTypeId))
             {
                 return;
             }
-            if (WorldServiceLocator.WSDBCDatabase.Battlegrounds[bgTypeId].MinLevel > (uint)client.Character.Level || WorldServiceLocator.WSDBCDatabase.Battlegrounds[bgTypeId].MaxLevel < (uint)client.Character.Level)
+            if (WorldServiceLocator.WSDBCDatabase.Battlegrounds[(byte)bgTypeId].MinLevel > (uint)client.Character.Level || WorldServiceLocator.WSDBCDatabase.Battlegrounds[(byte)bgTypeId].MaxLevel < (uint)client.Character.Level)
             {
                 WorldServiceLocator.Functions.SendMessageNotification(ref client, "You don't meet Battleground level requirements");
                 return;
