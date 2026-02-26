@@ -389,15 +389,15 @@ public class WorldServer
         }
         WorldDatabase.Update("SET NAMES 'utf8';");
         var areDbVersionsOk = true;
-        if (!WorldServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(AccountDatabase, ServerDb.Realm))
+        if (!new Mangos.MySql.DbVersionChecker(null, WorldServiceLocator.GlobalConstants).CheckRequiredDbVersion(AccountDatabase, ServerDb.Realm))
         {
             areDbVersionsOk = false;
         }
-        if (!WorldServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(CharacterDatabase, ServerDb.Character))
+        if (!new Mangos.MySql.DbVersionChecker(null, WorldServiceLocator.GlobalConstants).CheckRequiredDbVersion(CharacterDatabase, ServerDb.Character))
         {
             areDbVersionsOk = false;
         }
-        if (!WorldServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(WorldDatabase, ServerDb.World))
+        if (!new Mangos.MySql.DbVersionChecker(null, WorldServiceLocator.GlobalConstants).CheckRequiredDbVersion(WorldDatabase, ServerDb.World))
         {
             areDbVersionsOk = false;
         }

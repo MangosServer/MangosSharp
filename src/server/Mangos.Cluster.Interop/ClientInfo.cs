@@ -23,9 +23,9 @@ namespace Mangos.Cluster.Interop;
 public class ClientInfo
 {
     public uint Index { get; set; }
-    public string IP { get; set; }
-    public uint Port { get; set; }
-    public string Account { get; set; }
+    public string IP { get; set; } = string.Empty;
+    public required uint Port { get; set; } = 0;
+    public required string Account { get; set; } = string.Empty;
     public AccessLevel Access { get; set; } = AccessLevel.Player;
     public ExpansionLevel Expansion { get; set; } = ExpansionLevel.NORMAL;
 }

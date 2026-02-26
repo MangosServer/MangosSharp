@@ -17,6 +17,8 @@
 //
 
 using Mangos.Common.Enums.Global;
+using Mangos.MySql;
+
 using Microsoft.VisualBasic;
 using System;
 using System.Collections;

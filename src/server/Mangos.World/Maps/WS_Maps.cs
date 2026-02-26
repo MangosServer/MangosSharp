@@ -20,6 +20,7 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
 using Mangos.Common.Globals;
 using Mangos.DataStores;
+using Mangos.MySql;
 using Mangos.World.Globals;
 using Mangos.World.Network;
 using Mangos.World.Objects;

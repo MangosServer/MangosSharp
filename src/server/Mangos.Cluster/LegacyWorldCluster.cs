@@ -233,7 +233,7 @@ public class LegacyWorldCluster
         GetWorldDatabase().Update("SET NAMES 'utf8';");
         await _clusterServiceLocator.WsDbcLoad.InitializeInternalDatabaseAsync();
         _clusterServiceLocator.WcHandlers.IntializePacketHandlers();
-        if (_clusterServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(GetAccountDatabase(), ServerDb.Realm) == false)         // Check the Database version, exit if its wrong
+        if (new Mangos.MySql.DbVersionChecker(null, _clusterServiceLocator.GlobalConstants).CheckRequiredDbVersion(GetAccountDatabase(), ServerDb.Realm) == false)         // Check the Database version, exit if its wrong
         {
             if (true)
             {
@@ -244,7 +244,7 @@ public class LegacyWorldCluster
             }
         }
 
-        if (_clusterServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(GetCharacterDatabase(), ServerDb.Character) == false)         // Check the Database version, exit if its wrong
+        if (new Mangos.MySql.DbVersionChecker(null, _clusterServiceLocator.GlobalConstants).CheckRequiredDbVersion(GetCharacterDatabase(), ServerDb.Character) == false)         // Check the Database version, exit if its wrong
         {
             if (true)
             {
@@ -255,7 +255,7 @@ public class LegacyWorldCluster
             }
         }
 
-        if (_clusterServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(GetWorldDatabase(), ServerDb.World) == false)         // Check the Database version, exit if its wrong
+        if (new Mangos.MySql.DbVersionChecker(null, _clusterServiceLocator.GlobalConstants).CheckRequiredDbVersion(GetWorldDatabase(), ServerDb.World) == false)         // Check the Database version, exit if its wrong
         {
             if (true)
             {

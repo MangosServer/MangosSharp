@@ -19,6 +19,7 @@
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
+using Mangos.MySql;
 using Mangos.World.Objects;
 using Microsoft.VisualBasic.CompilerServices;
 using System;

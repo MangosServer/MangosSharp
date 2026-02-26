@@ -26,7 +26,7 @@ namespace Mangos.MySql;
 
 public class SQL : IDisposable
 {
-    private MySqlConnection MySQLConn;
+    private MySqlConnection MySQLConn = null!;
 
     public enum EMessages
     {
@@ -34,7 +34,7 @@ public class SQL : IDisposable
         ID_Message = 1
     }
 
-    public event SQLMessageEventHandler SQLMessage;
+    public event SQLMessageEventHandler SQLMessage = null!;
 
     public delegate void SQLMessageEventHandler(EMessages MessageID, string OutBuf);
 
@@ -250,7 +250,7 @@ public class SQL : IDisposable
     }
 
     private string mQuery = "";
-    private DataTable mResult;
+    private DataTable mResult = null!;
 
     [Description("SQLQuery. EG.: (SELECT * FROM db_accounts WHERE account = 'name';')")]
     public bool QuerySQL(string SQLQuery)
@@ -270,7 +270,26 @@ public class SQL : IDisposable
     [Description("SQLGet. Used after the query to get a section value")]
     public string GetSQL(string TableSection)
     {
-        return mResult.Rows[0][TableSection].ToString();
+        // Validate that the result table and the requested column exist and contain a usable value.
+        if (mResult is null || mResult.Rows.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        if (!mResult.Columns.Contains(TableSection))
+        {
+            return string.Empty;
+        }
+
+        var value = mResult.Rows[0][TableSection];
+
+        if (value == null || value == DBNull.Value)
+        {
+            return string.Empty;
+        }
+
+        // Convert.ToString handles many types; coalesce to empty string to guarantee non-null return.
+        return Convert.ToString(value) ?? string.Empty;
     }
 
     public DataTable GetDataTableSQL()
@@ -434,23 +453,43 @@ public class SQL : IDisposable
     public DataSet TableSelect(string tablename, string returnfields, string dbField1, string dbField1Value)
     {
         MySqlCommand cmd = new("", MySQLConn);
-        cmd.Connection.Open();
-        cmd.CommandText = "select " + returnfields + " FROM `" + tablename + "` WHERE `" + dbField1 + "` = '@dbField1value';";
-        cmd.Parameters.AddWithValue("@dbfield1value", dbField1Value);
+        DataSet myDataset = new();
         try
         {
+            // Ensure connection is opened before executing the adapter fill.
+            if (cmd.Connection.State != ConnectionState.Open)
+            {
+                cmd.Connection.Open();
+            }
+
+            // Use parameter placeholder without extra quotes so parameterization is effective.
+            cmd.CommandText = "SELECT " + returnfields + " FROM `" + tablename + "` WHERE `" + dbField1 + "` = @dbField1value;";
+            cmd.Parameters.AddWithValue("@dbField1value", dbField1Value);
+
             MySqlDataAdapter adapter = new();
-            DataSet myDataset = new();
             adapter.SelectCommand = cmd;
             adapter.Fill(myDataset);
-            cmd.ExecuteScalar();
-            cmd.Connection.Close();
+
             return myDataset;
         }
         catch (Exception)
         {
-            cmd.Connection.Close();
-            return null;
+            // Return an empty DataSet instead of null to avoid possible null reference returns.
+            return new DataSet();
+        }
+        finally
+        {
+            try
+            {
+                if (cmd.Connection?.State == ConnectionState.Open)
+                {
+                    cmd.Connection.Close();
+                }
+            }
+            catch
+            {
+                // Suppress any exceptions thrown while closing the connection to not mask original errors.
+            }
         }
     }
 

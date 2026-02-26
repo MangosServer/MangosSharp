@@ -165,7 +165,12 @@ public partial class WS_Network
             {
                 throw new ApplicationException("Client doesn't exist!");
             }
-            ClientClass objCharacter = new(client);
+            ClientClass objCharacter = new(client)
+            {
+                IP = client.IP,
+                Port = client.Port,
+                Account = client.Account
+            };
             if (WorldServiceLocator.WorldServer.CLIENTs.ContainsKey(id))
             {
                 WorldServiceLocator.WorldServer.CLIENTs.Remove(id);

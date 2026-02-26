@@ -24,7 +24,9 @@ namespace Mangos.Logging;
 
 public class FileWriter : BaseWriter
 {
-    protected StreamWriter Output;
+    // Marked with null-forgiving initializer to satisfy the compiler.
+    // The constructor calls CreateNewFile which assigns a real StreamWriter instance.
+    protected StreamWriter Output = null!;
     protected DateTime LastDate = DateTime.Parse("2007-01-01");
     protected string Filename = "";
 

@@ -58,7 +58,7 @@ public class BaseWriter : IDisposable
 
     public virtual string ReadLine()
     {
-        return Console.ReadLine();
+        return Console.ReadLine() ?? string.Empty;
     }
 
     public void PrintDiagnosticTest()

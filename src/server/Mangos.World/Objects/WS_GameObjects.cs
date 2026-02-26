@@ -20,6 +20,7 @@ using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Spell;
 using Mangos.Common.Globals;
+using Mangos.MySql;
 using Mangos.World.Globals;
 using Mangos.World.Loots;
 using Mangos.World.Maps;

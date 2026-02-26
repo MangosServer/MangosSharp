@@ -23,6 +23,7 @@ using Mangos.Common.Enums.Player;
 using Mangos.Common.Enums.Quest;
 using Mangos.Common.Enums.Spell;
 using Mangos.Common.Globals;
+using Mangos.MySql;
 using Mangos.World.DataStores;
 using Mangos.World.Globals;
 using Mangos.World.Network;

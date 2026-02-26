@@ -18,6 +18,7 @@
 
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
+using Mangos.MySql;
 using Mangos.World.AI;
 using Mangos.World.Globals;
 using Mangos.World.Network;
