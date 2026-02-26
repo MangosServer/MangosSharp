@@ -37,6 +37,8 @@ public partial class WS_Network
         private Thread ProcessQueueThread;
         private readonly ManualResetEvent ProcessQueueSempahore = new(false);
         private volatile bool IsActive = true;
+        private volatile bool _disposed;
+        private readonly object _sendLock = new();
 
         public ClientClass(ClientInfo ci, bool isDebug = false)
         {
@@ -170,7 +172,7 @@ public partial class WS_Network
 
         public void Send(ref Packets.PacketClass packet)
         {
-            lock (this)
+            lock (_sendLock)
             {
                 try
                 {
@@ -202,7 +204,7 @@ public partial class WS_Network
 
         public void SendMultiplyPackets(ref Packets.PacketClass packet)
         {
-            lock (this)
+            lock (_sendLock)
             {
                 try
                 {
@@ -275,11 +277,21 @@ public partial class WS_Network
 
         public void Dispose()
         {
+            if (_disposed)
+            {
+                return;
+            }
+            _disposed = true;
+
             WorldServiceLocator.WorldServer.Log.WriteLine(LogType.NETWORK, $"Connection from [{IP}:{Port}] disposed.");
 
             IsActive = false;
-            ProcessQueueSempahore.Set(); //Allow thread to exit.
-            ProcessQueueSempahore?.Dispose();
+
+            try
+            {
+                ProcessQueueSempahore.Set(); //Allow thread to exit.
+            }
+            catch (ObjectDisposedException) { }
 
             try
             {
@@ -291,6 +303,12 @@ public partial class WS_Network
                 WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "{0} Thread ID: {1}", ex, Thread.CurrentThread.ManagedThreadId);
             }
             ProcessQueueThread = null;
+
+            try
+            {
+                ProcessQueueSempahore?.Dispose();
+            }
+            catch (Exception) { }
 
             Packets?.Clear();
 

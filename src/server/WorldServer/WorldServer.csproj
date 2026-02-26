@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Mangos.WorldServer</AssemblyName>
+    <RootNamespace>WorldServer</RootNamespace>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ApplicationIcon>MangosCS.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mangos.Cluster.Interop\Mangos.Cluster.Interop.csproj" />
+    <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Domain\Mangos.Domain.csproj" />
+    <ProjectReference Include="..\Mangos.Logging\Mangos.Logging.csproj" />
+    <ProjectReference Include="..\Mangos.MySql\Mangos.MySql.csproj" />
+    <ProjectReference Include="..\Mangos.World\Mangos.World.csproj" />
+  </ItemGroup>
+
+</Project>

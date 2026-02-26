@@ -187,9 +187,9 @@ public class WS_DynamicObjects
             {
                 if (WorldServiceLocator.WorldServer.CHARACTERs[plGUID].dynamicObjectsNear.Contains(GUID))
                 {
-                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.EnterWriteLock();
                     WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving.Add(GUID);
-                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ReleaseWriterLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs[plGUID].guidsForRemoving_Lock.ExitWriteLock();
                     WorldServiceLocator.WorldServer.CHARACTERs[plGUID].dynamicObjectsNear.Remove(GUID);
                 }
             }
@@ -283,8 +283,6 @@ public class WS_DynamicObjects
 
     private ulong GetNewGUID()
     {
-        ref var dynamicObjectsGUIDCounter = ref WorldServiceLocator.WorldServer.DynamicObjectsGUIDCounter;
-        dynamicObjectsGUIDCounter = Convert.ToUInt64(decimal.Add(new decimal(dynamicObjectsGUIDCounter), 1m));
-        return WorldServiceLocator.WorldServer.DynamicObjectsGUIDCounter;
+        return WorldServiceLocator.WorldServer.GenerateNextGuid(ref WorldServiceLocator.WorldServer.DynamicObjectsGUIDCounter);
     }
 }

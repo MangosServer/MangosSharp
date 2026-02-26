@@ -763,7 +763,7 @@ public class WS_DBCDatabase
                 WorldServiceLocator.WorldServer.CharacterDatabase.Query("SELECT MAX(item_guid) FROM characters_inventory;", ref MySQLQuery);
                 WorldServiceLocator.WorldServer.itemGuidCounter = MySQLQuery.Rows[0][0] != DBNull.Value
                     ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator.GlobalConstants.GUID_ITEM))
-                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator.GlobalConstants.GUID_ITEM)));
+                    : WorldServiceLocator.GlobalConstants.GUID_ITEM;
             }
             catch (Exception ex)
             {
@@ -775,7 +775,7 @@ public class WS_DBCDatabase
                 WorldServiceLocator.WorldServer.WorldDatabase.Query("SELECT MAX(guid) FROM creature;", ref MySQLQuery);
                 WorldServiceLocator.WorldServer.CreatureGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
                     ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator.GlobalConstants.GUID_UNIT))
-                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator.GlobalConstants.GUID_UNIT)));
+                    : WorldServiceLocator.GlobalConstants.GUID_UNIT;
             }
             catch (Exception ex)
             {
@@ -787,7 +787,7 @@ public class WS_DBCDatabase
                 WorldServiceLocator.WorldServer.WorldDatabase.Query("SELECT MAX(guid) FROM gameobject;", ref MySQLQuery);
                 WorldServiceLocator.WorldServer.GameObjectsGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
                     ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator.GlobalConstants.GUID_GAMEOBJECT))
-                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator.GlobalConstants.GUID_GAMEOBJECT)));
+                    : WorldServiceLocator.GlobalConstants.GUID_GAMEOBJECT;
             }
             catch (Exception ex)
             {
@@ -799,7 +799,7 @@ public class WS_DBCDatabase
                 WorldServiceLocator.WorldServer.CharacterDatabase.Query("SELECT MAX(guid) FROM corpse", ref MySQLQuery);
                 WorldServiceLocator.WorldServer.CorpseGUIDCounter = MySQLQuery.Rows[0][0] != DBNull.Value
                     ? Conversions.ToULong(Operators.AddObject(MySQLQuery.Rows[0][0], WorldServiceLocator.GlobalConstants.GUID_CORPSE))
-                    : Convert.ToUInt64(decimal.Add(0m, new decimal(WorldServiceLocator.GlobalConstants.GUID_CORPSE)));
+                    : WorldServiceLocator.GlobalConstants.GUID_CORPSE;
             }
             catch (Exception ex)
             {

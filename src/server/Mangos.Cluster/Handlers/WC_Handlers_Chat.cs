@@ -98,7 +98,7 @@ public class WcHandlersChat
 
                     // DONE: Send whisper MSG to receiver
                     var guid = 0UL;
-                    _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    _clusterServiceLocator.WorldCluster.CharacteRsLock.EnterReadLock();
                     foreach (var character in _clusterServiceLocator.WorldCluster.CharacteRs)
                     {
                         if (_clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(character.Value.Name) == _clusterServiceLocator.CommonFunctions.UppercaseFirstLetter(toUser))
@@ -108,7 +108,7 @@ public class WcHandlersChat
                         }
                     }
 
-                    _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
+                    _clusterServiceLocator.WorldCluster.CharacteRsLock.ExitReadLock();
                     if (guid > 0m && _clusterServiceLocator.WorldCluster.CharacteRs.ContainsKey(guid))
                     {
                         // DONE: Check if ignoring

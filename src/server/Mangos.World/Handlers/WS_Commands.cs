@@ -1523,12 +1523,12 @@ public class WS_Commands
         }
         else
         {
-            WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+            WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterReadLock();
             foreach (var Character in WorldServiceLocator.WorldServer.CHARACTERs)
             {
                 if (Operators.CompareString(WorldServiceLocator.CommonFunctions.UppercaseFirstLetter(Character.Value.Name), Name, TextCompare: false) == 0)
                 {
-                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitReadLock();
                     Character.Value.Logout();
                     Character.Value.Dispose();
                     objCharacter.CommandResponse($"Character [{Character.Value.Name}] kicked from server.");
@@ -1536,7 +1536,7 @@ public class WS_Commands
                     return true;
                 }
             }
-            WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+            WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitReadLock();
             objCharacter.CommandResponse($"Character [{Name:X}] not found.");
         }
         return true;

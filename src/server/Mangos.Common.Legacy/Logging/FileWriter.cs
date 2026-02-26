@@ -34,6 +34,7 @@ public class FileWriter : BaseWriter
 
     protected void CreateNewFile()
     {
+        Output?.Dispose();
         LastDate = DateAndTime.Now.Date;
         Output = new StreamWriter(string.Format("{0}-{1}.log", Filename, Strings.Format(LastDate, "yyyy-MM-dd")), true) { AutoFlush = true };
         WriteLine(LogType.INFORMATION, "Log started successfully.");
@@ -52,9 +53,10 @@ public class FileWriter : BaseWriter
     {
         if (!_disposedValue)
         {
-            // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-            // TODO: set large fields to null.
-            Output.Close();
+            if (disposing)
+            {
+                Output?.Dispose();
+            }
         }
 
         _disposedValue = true;

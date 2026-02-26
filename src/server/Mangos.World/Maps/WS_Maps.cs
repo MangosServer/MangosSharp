@@ -395,7 +395,7 @@ public partial class WS_Maps
             var InstanceGuidAdd = 0uL;
             if (TileInstance > 0L)
             {
-                InstanceGuidAdd = Convert.ToUInt64(decimal.Add(new decimal(1000000L), decimal.Multiply(new decimal(TileInstance - 1L), new decimal(100000L))));
+                InstanceGuidAdd = (ulong)(1000000L + (TileInstance - 1L) * 100000L);
             }
             DataTable MysqlQuery = new();
             WorldServiceLocator.WorldServer.WorldDatabase.Query($"SELECT * FROM creature LEFT OUTER JOIN game_event_creature ON creature.guid = game_event_creature.guid WHERE map={TileMap} AND position_X BETWEEN '{MinX}' AND '{MaxX}' AND position_Y BETWEEN '{MinY}' AND '{MaxY}';", ref MysqlQuery);
@@ -406,13 +406,13 @@ public partial class WS_Maps
                 while (enumerator.MoveNext())
                 {
                     DataRow row = (DataRow)enumerator.Current;
-                    if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey(Convert.ToUInt64(decimal.Add(decimal.Add(new decimal(row.As<long>("guid")), new decimal(InstanceGuidAdd)), new decimal(WorldServiceLocator.GlobalConstants.GUID_UNIT)))))
+                    if (WorldServiceLocator.WorldServer.WORLD_CREATUREs.ContainsKey((ulong)row.As<long>("guid") + InstanceGuidAdd + WorldServiceLocator.GlobalConstants.GUID_UNIT))
                     {
                         continue;
                     }
                     try
                     {
-                        WS_Creatures.CreatureObject tmpCr = new(Convert.ToUInt64(decimal.Add(new decimal(row.As<long>("guid")), new decimal(InstanceGuidAdd))), row);
+                        WS_Creatures.CreatureObject tmpCr = new((ulong)row.As<long>("guid") + InstanceGuidAdd, row);
                         if (tmpCr.GameEvent == 0)
                         {
                             tmpCr.instance = TileInstance;
@@ -505,7 +505,7 @@ public partial class WS_Maps
             }
             try
             {
-                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.AcquireReaderLock(1000);
+                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.EnterReadLock();
                 foreach (var Transport in WorldServiceLocator.WorldServer.WORLD_TRANSPORTs)
                 {
                     try
@@ -535,7 +535,7 @@ public partial class WS_Maps
             }
             finally
             {
-                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.WORLD_TRANSPORTs_Lock.ExitReadLock();
             }
         }
     }
@@ -562,7 +562,7 @@ public partial class WS_Maps
             }
             try
             {
-                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.EnterReadLock();
                 foreach (var Creature in WorldServiceLocator.WorldServer.WORLD_CREATUREs)
                 {
                     if (Creature.Value.MapID == TileMap && Creature.Value.SpawnX >= MinX && Creature.Value.SpawnX <= MaxX && Creature.Value.SpawnY >= MinY && Creature.Value.SpawnY <= MaxY)
@@ -580,7 +580,7 @@ public partial class WS_Maps
             }
             finally
             {
-                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
+                WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ExitReadLock();
             }
             foreach (var Gameobject in WorldServiceLocator.WorldServer.WORLD_GAMEOBJECTs)
             {

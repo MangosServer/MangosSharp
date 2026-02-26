@@ -60,7 +60,7 @@ public partial class WS_TimerBasedEvents
             {
                 try
                 {
-                    WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.EnterReadLock();
                     long num = WorldServiceLocator.WorldServer.WORLD_CREATUREsKeys.Count - 1;
                     for (var i = 0L; i <= num; i++)
                     {
@@ -85,14 +85,14 @@ public partial class WS_TimerBasedEvents
                 }
                 finally
                 {
-                    if (WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.IsReaderLockHeld)
+                    if (WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.IsReadLockHeld)
                     {
-                        WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ReleaseReaderLock();
+                        WorldServiceLocator.WorldServer.WORLD_CREATUREs_Lock.ExitReadLock();
                     }
                 }
                 try
                 {
-                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterReadLock();
                     foreach (var Character in WorldServiceLocator.WorldServer.CHARACTERs.Where(Character => Character.Value != null))
                     {
                         WS_Base.BaseUnit objCharacter = Character.Value;
@@ -108,12 +108,12 @@ public partial class WS_TimerBasedEvents
                 }
                 finally
                 {
-                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+                    WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitReadLock();
                 }
                 List<WS_DynamicObjects.DynamicObject> DynamicObjectsToDelete = new();
                 try
                 {
-                    WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                    WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs_Lock.EnterReadLock();
                     foreach (var Dynamic in WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs)
                     {
                         if (Dynamic.Value != null && Dynamic.Value.Update())
@@ -131,7 +131,7 @@ public partial class WS_TimerBasedEvents
                 }
                 finally
                 {
-                    WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs_Lock.ReleaseReaderLock();
+                    WorldServiceLocator.WorldServer.WORLD_DYNAMICOBJECTs_Lock.ExitReadLock();
                 }
                 foreach (var item in DynamicObjectsToDelete)
                 {

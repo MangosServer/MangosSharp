@@ -206,12 +206,9 @@ public sealed class ItemObject : IDisposable
 
     public bool IsSoulBound => (_flags & 1) == 1;
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
     private ulong GetNewGUID()
     {
-        ref var itemGuidCounter = ref WorldServiceLocator.WorldServer.itemGuidCounter;
-        itemGuidCounter = Convert.ToUInt64(decimal.Add(new decimal(itemGuidCounter), 1m));
-        return WorldServiceLocator.WorldServer.itemGuidCounter;
+        return WorldServiceLocator.WorldServer.GenerateNextGuid(ref WorldServiceLocator.WorldServer.itemGuidCounter);
     }
 
     public void FillAllUpdateFlags(ref Packets.UpdateClass update)

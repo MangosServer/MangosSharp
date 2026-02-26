@@ -268,7 +268,13 @@ public class Functions
 
     public string EscapeString(string s)
     {
-        return s.Replace("\"", "").Replace("'", "");
+        return s.Replace("\\", "\\\\")
+                .Replace("'", "\\'")
+                .Replace("\"", "\\\"")
+                .Replace("\0", "\\0")
+                .Replace("\n", "\\n")
+                .Replace("\r", "\\r")
+                .Replace("\x1a", "\\Z");
     }
 
     public string CapitalizeName(ref string Name)
@@ -467,7 +473,7 @@ public class Functions
 
     public void Broadcast(string Message)
     {
-        WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireReaderLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+        WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterReadLock();
         foreach (var Character in WorldServiceLocator.WorldServer.CHARACTERs)
         {
             if (Character.Value.client != null)
@@ -475,7 +481,7 @@ public class Functions
                 SendMessageSystem(Character.Value.client, "System Message: " + SetColor(Message, byte.MaxValue, 0, 0));
             }
         }
-        WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseReaderLock();
+        WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitReadLock();
     }
 
     public void SendAccountMD5(ref WS_Network.ClientClass client, ref WS_PlayerData.CharacterObject Character)

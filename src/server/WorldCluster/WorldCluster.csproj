@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ApplicationIcon>cluster.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mangos.Cluster\Mangos.Cluster.csproj" />
+    <ProjectReference Include="..\Mangos.Cluster.Interop\Mangos.Cluster.Interop.csproj" />
+    <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.Logging\Mangos.Logging.csproj" />
+    <ProjectReference Include="..\Mangos.MySql\Mangos.MySql.csproj" />
+    <ProjectReference Include="..\Mangos.Tcp\Mangos.Tcp.csproj" />
+  </ItemGroup>
+
+</Project>

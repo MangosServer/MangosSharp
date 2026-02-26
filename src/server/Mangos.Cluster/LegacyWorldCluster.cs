@@ -47,7 +47,7 @@ public class LegacyWorldCluster
     public long ClietniDs;
 
     public Dictionary<uint, ClientClass> ClienTs = new();
-    public ReaderWriterLock CharacteRsLock = new();
+    public ReaderWriterLockSlim CharacteRsLock = new();
     public Dictionary<ulong, WcHandlerCharacter.CharacterObject> CharacteRs = new();
     // Public CHARACTER_NAMEs As New Hashtable
 

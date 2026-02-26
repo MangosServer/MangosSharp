@@ -253,7 +253,7 @@ public class WorldServerClass : ICluster
     public void Broadcast(byte[] data)
     {
         byte[] b;
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.EnterReadLock();
         foreach (var objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
         {
             if (objCharacter.Value.IsInWorld && objCharacter.Value.Client is not null)
@@ -263,7 +263,7 @@ public class WorldServerClass : ICluster
             }
         }
 
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.ExitReadLock();
     }
 
     public void BroadcastGroup(long groupId, byte[] data)
@@ -405,7 +405,7 @@ public class WorldServerClass : ICluster
     public List<int> BattlefieldList(byte mapType)
     {
         List<int> battlefieldMap = new();
-        _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+        _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.EnterReadLock();
         foreach (var bg in _clusterServiceLocator.WcHandlersBattleground.BattlefielDs)
         {
             if ((byte)bg.Value.MapType == mapType)
@@ -414,7 +414,7 @@ public class WorldServerClass : ICluster
             }
         }
 
-        _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.ReleaseReaderLock();
+        _clusterServiceLocator.WcHandlersBattleground.BattlefielDsLock.ExitReadLock();
         return battlefieldMap;
     }
 

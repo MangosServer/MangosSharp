@@ -12,6 +12,7 @@ services:
     networks:
       - mangosSharp
 
+  # Monolithic mode (cluster + world in one process)
   game:
     image: mangos/gameserver
     container_name: gameserver
@@ -24,6 +25,40 @@ services:
       dockerfile: ./dev/GameServer.Dockerfile
     networks:
       - mangosSharp
+    profiles:
+      - monolithic
+
+  # Distributed mode: cluster accepts game clients, routes to world servers
+  cluster:
+    image: mangos/worldcluster
+    container_name: worldcluster
+    depends_on:
+      - mysql
+    ports:
+      - 8085:8085
+      - 50001:50001
+    build:
+      context: ..
+      dockerfile: ./dev/WorldCluster.Dockerfile
+    networks:
+      - mangosSharp
+    profiles:
+      - distributed
+
+  # Distributed mode: world server connects to cluster via IPC
+  world:
+    image: mangos/worldserver
+    container_name: worldserver
+    depends_on:
+      - mysql
+      - cluster
+    build:
+      context: ..
+      dockerfile: ./dev/WorldServer.Dockerfile
+    networks:
+      - mangosSharp
+    profiles:
+      - distributed
 
   mysql:
     image: mysql:8.0

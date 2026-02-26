@@ -17,7 +17,6 @@
 //
 
 using System.Buffers;
-using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
 
@@ -105,11 +104,15 @@ internal sealed class SocketReader
             return;
         }
 
-        var number = await socket.ReceiveAsync(buffer.AsMemory(0, length), cancellationToken);
-        if (number != length)
+        int totalRead = 0;
+        while (totalRead < length)
         {
-            Debugger.Launch();
-            throw new NotImplementedException();
+            var bytesRead = await socket.ReceiveAsync(buffer.AsMemory(totalRead, length - totalRead), cancellationToken);
+            if (bytesRead == 0)
+            {
+                throw new SocketException((int)SocketError.ConnectionReset);
+            }
+            totalRead += bytesRead;
         }
     }
 }

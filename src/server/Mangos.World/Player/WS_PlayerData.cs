@@ -263,7 +263,7 @@ public class WS_PlayerData
 
         public int resurrectMana;
 
-        public ReaderWriterLock guidsForRemoving_Lock;
+        public ReaderWriterLockSlim guidsForRemoving_Lock;
 
         public List<ulong> guidsForRemoving;
 
@@ -1117,10 +1117,10 @@ public class WS_PlayerData
 
         public void SendOutOfRangeUpdate()
         {
-            guidsForRemoving_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+            guidsForRemoving_Lock.EnterWriteLock();
             var GUIDs = guidsForRemoving.ToArray();
             guidsForRemoving.Clear();
-            guidsForRemoving_Lock.ReleaseWriterLock();
+            guidsForRemoving_Lock.ExitWriteLock();
             if (GUIDs.Length <= 0)
             {
                 return;
@@ -5956,9 +5956,9 @@ public class WS_PlayerData
                         Group = null;
                     }
                 }
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.AcquireWriterLock(WorldServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterWriteLock();
                 WorldServiceLocator.WorldServer.CHARACTERs.Remove(GUID);
-                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ReleaseWriterLock();
+                WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitWriteLock();
                 if (FullyLoggedIn)
                 {
                     var wS_CharMovement = WorldServiceLocator.WSCharMovement;
@@ -6175,7 +6175,7 @@ public class WS_PlayerData
             resurrectPositionZ = 0f;
             resurrectHealth = 0;
             resurrectMana = 0;
-            guidsForRemoving_Lock = new ReaderWriterLock();
+            guidsForRemoving_Lock = new ReaderWriterLockSlim();
             guidsForRemoving = new List<ulong>();
             creaturesNear = new List<ulong>();
             playersNear = new List<ulong>();
@@ -6351,7 +6351,7 @@ public class WS_PlayerData
             resurrectPositionZ = 0f;
             resurrectHealth = 0;
             resurrectMana = 0;
-            guidsForRemoving_Lock = new ReaderWriterLock();
+            guidsForRemoving_Lock = new ReaderWriterLockSlim();
             guidsForRemoving = new List<ulong>();
             creaturesNear = new List<ulong>();
             playersNear = new List<ulong>();

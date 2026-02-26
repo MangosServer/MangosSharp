@@ -186,7 +186,7 @@ public class WcHandlersSocial
 
         // TODO: Don't show GMs?
         List<ulong> results = new();
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.AcquireReaderLock(_clusterServiceLocator.GlobalConstants.DEFAULT_LOCK_TIMEOUT);
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.EnterReadLock();
         foreach (var objCharacter in _clusterServiceLocator.WorldCluster.CharacteRs)
         {
             if (!objCharacter.Value.IsInWorld)
@@ -289,7 +289,7 @@ public class WcHandlersSocial
             response.AddInt32((int)_clusterServiceLocator.WorldCluster.CharacteRs[guid].Zone);            // Zone ID
         }
 
-        _clusterServiceLocator.WorldCluster.CharacteRsLock.ReleaseReaderLock();
+        _clusterServiceLocator.WorldCluster.CharacteRsLock.ExitReadLock();
         client.Send(response);
         response.Dispose();
     }

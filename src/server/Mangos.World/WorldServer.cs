@@ -71,7 +71,7 @@ public class WorldServer
 
     //public Dictionary<ulong, WS_Handlers_Warden> WARDENs;
 
-    public System.Threading.ReaderWriterLock CHARACTERs_Lock;
+    public System.Threading.ReaderWriterLockSlim CHARACTERs_Lock;
 
     public WS_Quests ALLQUESTS;
 
@@ -85,7 +85,7 @@ public class WorldServer
 
     public Dictionary<int, List<int>> GameobjectQuestFinishers;
 
-    public System.Threading.ReaderWriterLock WORLD_CREATUREs_Lock;
+    public System.Threading.ReaderWriterLockSlim WORLD_CREATUREs_Lock;
 
     public Dictionary<ulong, WS_Creatures.CreatureObject> WORLD_CREATUREs;
 
@@ -95,11 +95,11 @@ public class WorldServer
 
     public Dictionary<ulong, WS_Corpses.CorpseObject> WORLD_CORPSEOBJECTs;
 
-    public System.Threading.ReaderWriterLock WORLD_DYNAMICOBJECTs_Lock;
+    public System.Threading.ReaderWriterLockSlim WORLD_DYNAMICOBJECTs_Lock;
 
     public Dictionary<ulong, WS_DynamicObjects.DynamicObject> WORLD_DYNAMICOBJECTs;
 
-    public System.Threading.ReaderWriterLock WORLD_TRANSPORTs_Lock;
+    public System.Threading.ReaderWriterLockSlim WORLD_TRANSPORTs_Lock;
 
     public Dictionary<ulong, WS_Transports.TransportObject> WORLD_TRANSPORTs;
 
@@ -122,6 +122,17 @@ public class WorldServer
     public ulong DynamicObjectsGUIDCounter;
 
     public ulong TransportGUIDCounter;
+
+    private readonly object _guidLock = new();
+
+    public ulong GenerateNextGuid(ref ulong counter)
+    {
+        lock (_guidLock)
+        {
+            counter++;
+            return counter;
+        }
+    }
 
     public BaseWriter Log;
 
@@ -147,21 +158,21 @@ public class WorldServer
     {
         CLIENTs = new Dictionary<uint, WS_Network.ClientClass>();
         CHARACTERs = new Dictionary<ulong, WS_PlayerData.CharacterObject>();
-        CHARACTERs_Lock = new System.Threading.ReaderWriterLock();
+        CHARACTERs_Lock = new System.Threading.ReaderWriterLockSlim();
         ALLQUESTS = new WS_Quests();
         AllGraveYards = new WS_GraveYards(WorldServiceLocator.DataStoreProvider);
         CreatureQuestStarters = new Dictionary<int, List<int>>();
         CreatureQuestFinishers = new Dictionary<int, List<int>>();
         GameobjectQuestStarters = new Dictionary<int, List<int>>();
         GameobjectQuestFinishers = new Dictionary<int, List<int>>();
-        WORLD_CREATUREs_Lock = new System.Threading.ReaderWriterLock();
+        WORLD_CREATUREs_Lock = new System.Threading.ReaderWriterLockSlim();
         WORLD_CREATUREs = new Dictionary<ulong, WS_Creatures.CreatureObject>();
         WORLD_CREATUREsKeys = new ArrayList();
         WORLD_GAMEOBJECTs = new Dictionary<ulong, WS_GameObjects.GameObject>();
         WORLD_CORPSEOBJECTs = new Dictionary<ulong, WS_Corpses.CorpseObject>();
-        WORLD_DYNAMICOBJECTs_Lock = new System.Threading.ReaderWriterLock();
+        WORLD_DYNAMICOBJECTs_Lock = new System.Threading.ReaderWriterLockSlim();
         WORLD_DYNAMICOBJECTs = new Dictionary<ulong, WS_DynamicObjects.DynamicObject>();
-        WORLD_TRANSPORTs_Lock = new System.Threading.ReaderWriterLock();
+        WORLD_TRANSPORTs_Lock = new System.Threading.ReaderWriterLockSlim();
         WORLD_TRANSPORTs = new Dictionary<ulong, WS_Transports.TransportObject>();
         WORLD_ITEMs = new Dictionary<ulong, ItemObject>();
         ITEMDatabase = new Dictionary<int, WS_Items.ItemInfo>();
@@ -476,24 +487,28 @@ public class WorldServer
         }
     }
 
-    private async void GenericExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+    private void GenericExceptionHandler(object sender, UnhandledExceptionEventArgs e)
     {
         try
         {
             Exception EX = (Exception)e.ExceptionObject;
             Log.WriteLine(LogType.CRITICAL, EX + Environment.NewLine);
-            Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'WorldServer-Error-yyyy-mmm-d-h-mm.log' file has been created. Check your log folder for more information.");
-            var filename = @"""""""""WorldServer-Error-"" + ""{(DateTime.Now, "" + ""yyyy-MMM-d-H-mm"" + "")}.log""""""""";
-            filename = @"{filename}";
-            await new StreamWriter(new FileStream(filename, FileMode.Append)).WriteAsync(EX.Message + EX.StackTrace);
-            //await new StreamWriter(new FileStream(filename, FileMode.Append)).DisposeAsync();
-            //new StreamWriter(new FileStream(filename, FileMode.Append)).Close();
-
+            Log.WriteLine(LogType.FAILED, "Unexpected error has occurred. A 'WorldServer-Error' log file has been created. Check your log folder for more information.");
+            var filename = $"WorldServer-Error-{DateTime.Now:yyyy-MMM-d-H-mm}.log";
+            using (var fs = new FileStream(filename, FileMode.Append, FileAccess.Write))
+            using (var sw = new StreamWriter(fs))
+            {
+                sw.Write(EX.Message + Environment.NewLine + EX.StackTrace);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(LogType.CRITICAL, "Failed to write error log: " + ex.Message);
         }
         finally
         {
-            Thread.Sleep(5000); //Wait 5 Seconds to Ensure logs are created and the Operator has a chance to view the Exception in Console.
-            Environment.FailFast("An Unhandled Exception has occured and the Server has Crashed!"); //Named event log and Ensure the Server closes out at all times.
+            Thread.Sleep(5000);
+            Environment.FailFast("An Unhandled Exception has occurred and the Server has Crashed!");
         }
     }
 }
