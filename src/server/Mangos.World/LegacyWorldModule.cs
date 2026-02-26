@@ -21,6 +21,7 @@ using Mangos.Common.Globals;
 using Mangos.DataStores;
 using Mangos.World.AI;
 using Mangos.World.Auction;
+using Mangos.World.Events;
 using Mangos.World.Battlegrounds;
 using Mangos.World.DataStores;
 using Mangos.World.Globals;
@@ -97,5 +98,6 @@ public sealed class LegacyWorldModule : Module
         builder.RegisterType<WS_Weather>().As<WS_Weather>().SingleInstance();
         builder.RegisterType<DataStoreProvider>().As<DataStoreProvider>().SingleInstance();
         builder.RegisterType<GameLogicVerifier>().As<GameLogicVerifier>().SingleInstance();
+        builder.RegisterType<GameEventBus>().As<IGameEventBus>().SingleInstance();
     }
 }

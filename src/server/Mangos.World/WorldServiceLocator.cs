@@ -22,6 +22,7 @@ using Mangos.Configuration;
 using Mangos.DataStores;
 using Mangos.World.AI;
 using Mangos.World.Auction;
+using Mangos.World.Events;
 using Mangos.World.Battlegrounds;
 using Mangos.World.DataStores;
 using Mangos.World.Globals;
@@ -151,4 +152,6 @@ public sealed class WorldServiceLocator
     public static WS_Weather WSWeather => Container.Resolve<WS_Weather>();
 
     public static GameLogicVerifier GameLogicVerifier => Container.Resolve<GameLogicVerifier>();
+
+    public static IGameEventBus GameEvents => Container.Resolve<IGameEventBus>();
 }

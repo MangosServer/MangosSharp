@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
     <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.World.Events\Mangos.World.Events.csproj" />
   </ItemGroup>
 
 </Project>
