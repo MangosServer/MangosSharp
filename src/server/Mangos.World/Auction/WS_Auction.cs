@@ -309,7 +309,7 @@ public class WS_Auction
             ref var copper = ref client.Character.Copper;
             copper = (uint)(copper - GetAuctionDeposit(cGUID, WorldServiceLocator.WorldServer.WORLD_ITEMs[iGUID].ItemInfo.SellPrice, WorldServiceLocator.WorldServer.WORLD_ITEMs[iGUID].StackCount, Time));
             client.Character.ItemREMOVE(iGUID, Destroy: false, Update: true);
-            WorldServiceLocator.WorldServer.CharacterDatabase.Update($@"INSERT INTO auctionhouse (auction_bid, auction_buyout, auction_timeleft, auction_bidder, auction_owner, auction_itemId, auction_itemGuid, auction_itemCount) VALUES 
+            WorldServiceLocator.WorldServer.CharacterDatabase.Update($@"INSERT INTO auctionhouse (auction_bid, auction_buyout, auction_timeleft, auction_bidder, auction_owner, auction_itemId, auction_itemGuid, auction_itemCount) VALUES
             ({Bid},{Buyout},{Time},{0},{client.Character.GUID},{WorldServiceLocator.WorldServer.WORLD_ITEMs[iGUID].ItemEntry},{iGUID - WorldServiceLocator.GlobalConstants.GUID_ITEM},{WorldServiceLocator.WorldServer.WORLD_ITEMs[iGUID].StackCount});");
             DataTable MySQLQuery = new();
             WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT auction_id FROM auctionhouse WHERE auction_itemGuid = {Conversions.ToString(iGUID - WorldServiceLocator.GlobalConstants.GUID_ITEM)};", ref MySQLQuery);
@@ -383,7 +383,7 @@ public class WS_Auction
                     buffer = BitConverter.GetBytes(Conversions.ToLong(MySQLQuery.Rows[0]["auction_owner"]));
                     Array.Reverse(buffer);
                     bodyText = Conversions.ToString(Operators.ConcatenateObject(BitConverter.ToString(buffer).Replace("-", "") + ":" + Conversions.ToString(Bid) + ":", MySQLQuery.Rows[0]["auction_buyout"]));
-                    WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format(@"INSERT INTO characters_mail (mail_sender, mail_receiver, mail_type, mail_stationary, mail_subject, mail_body, mail_money, mail_COD, mail_time, mail_read, item_guid) VALUES 
+                    WorldServiceLocator.WorldServer.CharacterDatabase.Update(string.Format(@"INSERT INTO characters_mail (mail_sender, mail_receiver, mail_type, mail_stationary, mail_subject, mail_body, mail_money, mail_COD, mail_time, mail_read, item_guid) VALUES
                 ({0},{1},{2},{3},'{4}','{5}',{6},{7},{8},{9},{10});", AuctionID, client.Character.GUID, 2, 62, Operators.ConcatenateObject(MySQLQuery.Rows[0]["auction_itemId"], ":0:1"), bodyText, 0, 0, MailTime, 0, MySQLQuery.Rows[0]["auction_itemGuid"]));
                     DataTable MailQuery = new();
                     WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT mail_id FROM characters_mail WHERE mail_receiver = {Conversions.ToString(client.Character.GUID)};", ref MailQuery);

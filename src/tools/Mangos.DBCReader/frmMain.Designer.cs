@@ -33,7 +33,7 @@ namespace Mangos.DBCReader
         private IContainer components;
 
         // NOTE: The following procedure is required by the Windows Form Designer
-        // It can be modified using the Windows Form Designer.  
+        // It can be modified using the Windows Form Designer.
         // Do not modify it using the code editor.
         [DebuggerStepThrough()]
         private void InitializeComponent()
@@ -53,9 +53,9 @@ namespace Mangos.DBCReader
             _cmdSearch.Click += new EventHandler(cmdSearch_Click);
             ((ISupportInitialize)BindingSource1).BeginInit();
             SuspendLayout();
-            // 
+            //
             // txtFile
-            // 
+            //
             txtFile.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtFile.Enabled = false;
             txtFile.Location = new Point(2, 8);
@@ -63,9 +63,9 @@ namespace Mangos.DBCReader
             txtFile.Name = "txtFile";
             txtFile.Size = new Size(781, 23);
             txtFile.TabIndex = 1;
-            // 
+            //
             // cmdBrowse
-            // 
+            //
             _cmdBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             _cmdBrowse.Location = new Point(791, 7);
             _cmdBrowse.Margin = new Padding(4, 3, 4, 3);
@@ -74,9 +74,9 @@ namespace Mangos.DBCReader
             _cmdBrowse.TabIndex = 2;
             _cmdBrowse.Text = "Browse";
             _cmdBrowse.UseVisualStyleBackColor = true;
-            // 
+            //
             // DBCData
-            // 
+            //
             _DBCData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
             _DBCData.BorderStyle = BorderStyle.FixedSingle;
@@ -91,9 +91,9 @@ namespace Mangos.DBCReader
             _DBCData.TabIndex = 3;
             _DBCData.UseCompatibleStateImageBehavior = false;
             _DBCData.View = View.Details;
-            // 
+            //
             // ProgressBar
-            // 
+            //
             ProgressBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ProgressBar.Location = new Point(2, 509);
             ProgressBar.Margin = new Padding(4, 3, 4, 3);
@@ -101,9 +101,9 @@ namespace Mangos.DBCReader
             ProgressBar.Size = new Size(891, 23);
             ProgressBar.Step = 2;
             ProgressBar.TabIndex = 4;
-            // 
+            //
             // cmbColumn
-            // 
+            //
             cmbColumn.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbColumn.FormattingEnabled = true;
             cmbColumn.Location = new Point(2, 37);
@@ -111,18 +111,18 @@ namespace Mangos.DBCReader
             cmbColumn.Name = "cmbColumn";
             cmbColumn.Size = new Size(177, 23);
             cmbColumn.TabIndex = 5;
-            // 
+            //
             // txtQuery
-            // 
+            //
             _txtQuery.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             _txtQuery.Location = new Point(187, 38);
             _txtQuery.Margin = new Padding(4, 3, 4, 3);
             _txtQuery.Name = "_txtQuery";
             _txtQuery.Size = new Size(597, 23);
             _txtQuery.TabIndex = 6;
-            // 
+            //
             // cmdSearch
-            // 
+            //
             _cmdSearch.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             _cmdSearch.Location = new Point(791, 38);
             _cmdSearch.Margin = new Padding(4, 3, 4, 3);
@@ -131,9 +131,9 @@ namespace Mangos.DBCReader
             _cmdSearch.TabIndex = 7;
             _cmdSearch.Text = "Search";
             _cmdSearch.UseVisualStyleBackColor = true;
-            // 
+            //
             // frmMain
-            // 
+            //
             AutoScaleDimensions = new SizeF(7.0f, 15.0f);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(898, 533);

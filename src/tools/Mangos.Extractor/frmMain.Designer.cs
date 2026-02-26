@@ -12,7 +12,7 @@ namespace Mangos.Extractor
     public partial class frmMain : Form
     {
         // NOTE: The following procedure is required by the Windows Form Designer
-        // It can be modified using the Windows Form Designer.  
+        // It can be modified using the Windows Form Designer.
         // Do not modify it using the code editor.
         [DebuggerStepThrough()]
         private void InitializeComponent()
@@ -22,9 +22,9 @@ namespace Mangos.Extractor
             this._btnExtractSpellFailedReasons = new System.Windows.Forms.Button();
             this._btnExtractChatTypes = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
+            //
             // _btnExtractUpdateFields
-            // 
+            //
             this._btnExtractUpdateFields.Location = new System.Drawing.Point(14, 85);
             this._btnExtractUpdateFields.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._btnExtractUpdateFields.Name = "_btnExtractUpdateFields";
@@ -33,9 +33,9 @@ namespace Mangos.Extractor
             this._btnExtractUpdateFields.Text = "Extract UPDATE FIELDs";
             this._btnExtractUpdateFields.UseVisualStyleBackColor = true;
             this._btnExtractUpdateFields.Click += new System.EventHandler(this.btnExtractUpdateFields_Click);
-            // 
+            //
             // _btnExtractOpcodes
-            // 
+            //
             this._btnExtractOpcodes.Location = new System.Drawing.Point(14, 14);
             this._btnExtractOpcodes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._btnExtractOpcodes.Name = "_btnExtractOpcodes";
@@ -44,9 +44,9 @@ namespace Mangos.Extractor
             this._btnExtractOpcodes.Text = "Extract OPCODEs";
             this._btnExtractOpcodes.UseVisualStyleBackColor = true;
             this._btnExtractOpcodes.Click += new System.EventHandler(this.btnExtractOpcodes_Click);
-            // 
+            //
             // _btnExtractSpellFailedReasons
-            // 
+            //
             this._btnExtractSpellFailedReasons.Location = new System.Drawing.Point(14, 157);
             this._btnExtractSpellFailedReasons.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._btnExtractSpellFailedReasons.Name = "_btnExtractSpellFailedReasons";
@@ -55,9 +55,9 @@ namespace Mangos.Extractor
             this._btnExtractSpellFailedReasons.Text = "Extract SpellFailedReasons";
             this._btnExtractSpellFailedReasons.UseVisualStyleBackColor = true;
             this._btnExtractSpellFailedReasons.Click += new System.EventHandler(this.btnExtractSpellFailedReasons_Click);
-            // 
+            //
             // _btnExtractChatTypes
-            // 
+            //
             this._btnExtractChatTypes.Location = new System.Drawing.Point(14, 228);
             this._btnExtractChatTypes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._btnExtractChatTypes.Name = "_btnExtractChatTypes";
@@ -66,9 +66,9 @@ namespace Mangos.Extractor
             this._btnExtractChatTypes.Text = "Extract ChatTypes";
             this._btnExtractChatTypes.UseVisualStyleBackColor = true;
             this._btnExtractChatTypes.Click += new System.EventHandler(this.btnExtractChatTypes_Click);
-            // 
+            //
             // frmMain
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(219, 303);
