@@ -17,7 +17,6 @@
 //
 
 using Mangos.Common.Enums.Misc;
-using Mangos.Common.Legacy;
 
 namespace Mangos.Cluster.Interop.Protocol;
 

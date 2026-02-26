@@ -18,7 +18,7 @@
 
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
-using Mangos.Common.Legacy;
+using Mangos.Cluster.Interop;
 using Mangos.DataStores;
 using Mangos.World.Globals;
 using Mangos.World.Maps;
@@ -165,7 +165,12 @@ public partial class WS_Network
             {
                 throw new ApplicationException("Client doesn't exist!");
             }
-            ClientClass objCharacter = new(client);
+            ClientClass objCharacter = new(client)
+            {
+                IP = client.IP,
+                Port = client.Port,
+                Account = client.Account
+            };
             if (WorldServiceLocator.WorldServer.CLIENTs.ContainsKey(id))
             {
                 WorldServiceLocator.WorldServer.CLIENTs.Remove(id);

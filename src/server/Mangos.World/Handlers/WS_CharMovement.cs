@@ -21,7 +21,7 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Enums.Spell;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
+using Mangos.Common;
 using Mangos.World.AI;
 using Mangos.World.AntiCheat;
 using Mangos.World.Globals;
@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
+using Mangos.MySql;
 
 namespace Mangos.World.Handlers;
 

@@ -23,9 +23,10 @@ using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
 using Mangos.Cluster.Verification;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
+using Mangos.Cluster.Interop;
+using Mangos.Common;
 using Mangos.Zip;
-using Functions = Mangos.Common.Legacy.Globals.Functions;
+using Functions = Mangos.Common.Globals.Functions;
 
 namespace Mangos.Cluster;
 
@@ -33,7 +34,7 @@ public class ClusterServiceLocator
 {
     public MangosGlobalConstants GlobalConstants { get; set; }
     public Functions CommonGlobalFunctions { get; set; }
-    public Common.Legacy.Functions CommonFunctions { get; set; }
+    public Common.StringFunctions CommonFunctions { get; set; }
     public ZipService GlobalZip { get; set; }
     public NativeMethods NativeMethods { get; set; }
     public LegacyWorldCluster WorldCluster { get; set; }

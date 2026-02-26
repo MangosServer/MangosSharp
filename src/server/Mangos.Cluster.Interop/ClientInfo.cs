@@ -16,10 +16,16 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Legacy;
+using Mangos.Common.Enums.Misc;
 
-public class ServerInfo
+namespace Mangos.Cluster.Interop;
+
+public class ClientInfo
 {
-    public float CpuUsage { get; set; }
-    public ulong MemoryUsage { get; set; }
+    public uint Index { get; set; }
+    public string IP { get; set; } = string.Empty;
+    public required uint Port { get; set; } = 0;
+    public required string Account { get; set; } = string.Empty;
+    public AccessLevel Access { get; set; } = AccessLevel.Player;
+    public ExpansionLevel Expansion { get; set; } = ExpansionLevel.NORMAL;
 }

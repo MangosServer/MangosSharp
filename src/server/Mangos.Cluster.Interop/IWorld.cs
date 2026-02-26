@@ -19,7 +19,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace Mangos.Common.Legacy;
+namespace Mangos.Cluster.Interop;
 
 public interface IWorld
 {

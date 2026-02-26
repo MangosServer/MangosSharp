@@ -18,7 +18,7 @@
 
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Spell;
-using Mangos.Common.Legacy;
+using Mangos.MySql;
 using Mangos.DataStores;
 using Mangos.World.Loots;
 using Mangos.World.Maps;

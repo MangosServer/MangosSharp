@@ -18,7 +18,7 @@
 
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
-using Mangos.Common.Legacy;
+using Mangos.MySql;
 using Mangos.DataStores;
 using System;
 using System.Collections.Generic;

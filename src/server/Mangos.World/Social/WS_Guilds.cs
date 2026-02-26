@@ -19,7 +19,7 @@
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Guild;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
+using Mangos.MySql;
 using Mangos.World.Globals;
 using Mangos.World.Network;
 using Mangos.World.Objects;

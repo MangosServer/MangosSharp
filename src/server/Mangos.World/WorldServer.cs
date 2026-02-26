@@ -18,8 +18,9 @@
 
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
-using Mangos.Common.Legacy.Logging;
+using Mangos.Cluster.Interop;
+using Mangos.Logging;
+using Mangos.MySql;
 using Mangos.World.Globals;
 using Mangos.World.Handlers;
 using Mangos.World.Maps;
@@ -397,15 +398,15 @@ public class WorldServer
         }
         WorldDatabase.Update("SET NAMES 'utf8';");
         var areDbVersionsOk = true;
-        if (!WorldServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(AccountDatabase, ServerDb.Realm))
+        if (!new Mangos.MySql.DbVersionChecker(null, WorldServiceLocator.GlobalConstants).CheckRequiredDbVersion(AccountDatabase, ServerDb.Realm))
         {
             areDbVersionsOk = false;
         }
-        if (!WorldServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(CharacterDatabase, ServerDb.Character))
+        if (!new Mangos.MySql.DbVersionChecker(null, WorldServiceLocator.GlobalConstants).CheckRequiredDbVersion(CharacterDatabase, ServerDb.Character))
         {
             areDbVersionsOk = false;
         }
-        if (!WorldServiceLocator.CommonGlobalFunctions.CheckRequiredDbVersion(WorldDatabase, ServerDb.World))
+        if (!new Mangos.MySql.DbVersionChecker(null, WorldServiceLocator.GlobalConstants).CheckRequiredDbVersion(WorldDatabase, ServerDb.World))
         {
             areDbVersionsOk = false;
         }

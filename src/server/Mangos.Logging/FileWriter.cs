@@ -17,26 +17,24 @@
 //
 
 using Mangos.Common.Enums.Global;
-using Microsoft.VisualBasic;
 using System;
 using System.IO;
 
-// Using this logging type, all logs are saved in files numbered by date.
-// Writting commands is done trought console.
-
-namespace Mangos.Common.Legacy.Logging;
+namespace Mangos.Logging;
 
 public class FileWriter : BaseWriter
 {
-    protected StreamWriter Output;
+    // Marked with null-forgiving initializer to satisfy the compiler.
+    // The constructor calls CreateNewFile which assigns a real StreamWriter instance.
+    protected StreamWriter Output = null!;
     protected DateTime LastDate = DateTime.Parse("2007-01-01");
     protected string Filename = "";
 
     protected void CreateNewFile()
     {
         Output?.Dispose();
-        LastDate = DateAndTime.Now.Date;
-        Output = new StreamWriter(string.Format("{0}-{1}.log", Filename, Strings.Format(LastDate, "yyyy-MM-dd")), true) { AutoFlush = true };
+        LastDate = DateTime.Now.Date;
+        Output = new StreamWriter(string.Format("{0}-{1}.log", Filename, LastDate.ToString("yyyy-MM-dd")), true) { AutoFlush = true };
         WriteLine(LogType.INFORMATION, "Log started successfully.");
     }
 
@@ -69,7 +67,7 @@ public class FileWriter : BaseWriter
             return;
         }
 
-        if (LastDate != DateAndTime.Now.Date)
+        if (LastDate != DateTime.Now.Date)
         {
             CreateNewFile();
         }
@@ -84,11 +82,11 @@ public class FileWriter : BaseWriter
             return;
         }
 
-        if (LastDate != DateAndTime.Now.Date)
+        if (LastDate != DateTime.Now.Date)
         {
             CreateNewFile();
         }
 
-        Output.WriteLine(L[(int)type] + ":[" + Strings.Format(DateAndTime.TimeOfDay, "hh:mm:ss") + "] " + formatStr, arg);
+        Output.WriteLine(L[(int)type] + ":[" + DateTime.Now.TimeOfDay.ToString(@"hh\:mm\:ss") + "] " + formatStr, arg);
     }
 }

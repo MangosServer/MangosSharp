@@ -19,7 +19,7 @@
 using Mangos.Common.Enums.Global;
 using System;
 
-namespace Mangos.Common.Legacy.Logging;
+namespace Mangos.Logging;
 
 public class BaseWriter : IDisposable
 {
@@ -48,41 +48,19 @@ public class BaseWriter : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    /// Writes the text to the console, typically does not privide a carridge return. (Overridable)
-    /// </summary>
-    /// <param name="type">The type.</param>
-    /// <param name="format">The format.</param>
-    /// <param name="arg">The arg.</param>
-    /// <returns></returns>
     public virtual void Write(LogType type, string format, params object[] arg)
     {
     }
 
-    /// <summary>
-    /// Writes the line to the console. (Overridable)
-    /// </summary>
-    /// <param name="type">The type.</param>
-    /// <param name="format">The format.</param>
-    /// <param name="arg">The arg.</param>
-    /// <returns></returns>
     public virtual void WriteLine(LogType type, string format, params object[] arg)
     {
     }
 
-    /// <summary>
-    /// Reads the line from the console. (Overridable)
-    /// </summary>
-    /// <returns></returns>
     public virtual string ReadLine()
     {
-        return Console.ReadLine();
+        return Console.ReadLine() ?? string.Empty;
     }
 
-    /// <summary>
-    /// Prints the diagnostic test for all the different settings - do not remove.
-    /// </summary>
-    /// <returns></returns>
     public void PrintDiagnosticTest()
     {
         WriteLine(LogType.NETWORK, "{0}:************************* TEST *************************", (object)1);
@@ -96,13 +74,6 @@ public class BaseWriter : IDisposable
         WriteLine(LogType.DATABASE, "{0}:************************* TEST *************************", (object)1);
     }
 
-    /// <summary>
-    /// Creates the log instance.
-    /// </summary>
-    /// <param name="logType">Type of the log.</param>
-    /// <param name="logConfig">The log config.</param>
-    /// <param name="log">The log.</param>
-    /// <returns></returns>
     public static BaseWriter CreateLog(string logType, string logConfig)
     {
         switch (logType.ToUpper() ?? "")

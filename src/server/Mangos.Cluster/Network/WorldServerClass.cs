@@ -20,7 +20,7 @@ using Mangos.Cluster.Globals;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
+using Mangos.Cluster.Interop;
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -39,8 +39,8 @@ using Mangos.World.Verification;
 using Mangos.World.Warden;
 using Mangos.World.Weather;
 using Mangos.Zip;
-using Functions = Mangos.Common.Legacy.Globals.Functions;
-using NativeMethods = Mangos.Common.Legacy.NativeMethods;
+using Functions = Mangos.Common.Globals.Functions;
+using NativeMethods = Mangos.Common.NativeMethods;
 
 namespace Mangos.World;
 public sealed class LegacyWorldModule : Module
@@ -49,7 +49,7 @@ public sealed class LegacyWorldModule : Module
     {
         builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
         builder.RegisterType<Functions>().As<Functions>().SingleInstance();
-        builder.RegisterType<Common.Legacy.Functions>().As<Common.Legacy.Functions>().SingleInstance();
+        builder.RegisterType<Common.StringFunctions>().As<Common.StringFunctions>().SingleInstance();
         builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
         builder.RegisterType<NativeMethods>().As<NativeMethods>().SingleInstance();
         builder.RegisterType<WorldServer>().As<WorldServer>().SingleInstance();

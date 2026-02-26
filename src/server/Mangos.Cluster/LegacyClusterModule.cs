@@ -24,7 +24,8 @@ using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
 using Mangos.Cluster.Verification;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
+using Mangos.Cluster.Interop;
+using Mangos.Common;
 using Mangos.DataStores;
 using Mangos.Zip;
 
@@ -38,8 +39,8 @@ public sealed class LegacyClusterModule : Module
         builder.RegisterType<ClientClass>().AsSelf().InstancePerLifetimeScope();
 
         builder.RegisterType<MangosGlobalConstants>().As<MangosGlobalConstants>().SingleInstance();
-        builder.RegisterType<Common.Legacy.Globals.Functions>().As<Common.Legacy.Globals.Functions>().SingleInstance();
-        builder.RegisterType<Common.Legacy.Functions>().As<Common.Legacy.Functions>().SingleInstance();
+        builder.RegisterType<Common.Globals.Functions>().As<Common.Globals.Functions>().SingleInstance();
+        builder.RegisterType<Common.StringFunctions>().As<Common.StringFunctions>().SingleInstance();
         builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
         builder.RegisterType<NativeMethods>().As<NativeMethods>().SingleInstance();
         builder.RegisterType<LegacyWorldCluster>().As<LegacyWorldCluster>().SingleInstance();

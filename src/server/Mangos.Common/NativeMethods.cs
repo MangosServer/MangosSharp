@@ -18,7 +18,7 @@
 
 using System;
 
-namespace Mangos.Common.Legacy;
+namespace Mangos.Common;
 
 public class NativeMethods
 {

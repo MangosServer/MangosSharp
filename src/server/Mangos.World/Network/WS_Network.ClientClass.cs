@@ -18,7 +18,7 @@
 
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
+using Mangos.Cluster.Interop;
 using Mangos.World.Globals;
 using Mangos.World.Player;
 using System;

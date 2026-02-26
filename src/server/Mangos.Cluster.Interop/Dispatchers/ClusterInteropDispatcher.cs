@@ -18,7 +18,6 @@
 
 using Mangos.Cluster.Interop.Protocol;
 using Mangos.Cluster.Interop.Proxies;
-using Mangos.Common.Legacy;
 
 namespace Mangos.Cluster.Interop.Dispatchers;
 

@@ -99,7 +99,10 @@ var wsWorldServerClass = worldServer.ClsWorldServer;
 var worldDispatcher = new WorldInteropDispatcher(wsWorldServerClass);
 
 interopConnection.OnMethodCallAsync = (methodId, data) => worldDispatcher.DispatchAsync(methodId, data);
-interopConnection.OnDisconnected = () => logger.Error("Cluster IPC connection lost! Attempting reconnection...");
+interopConnection.OnDisconnected = () =>
+{
+    logger.Error("Cluster IPC connection lost! Attempting reconnection...");
+};
 
 interopConnection.StartReceiving();
 

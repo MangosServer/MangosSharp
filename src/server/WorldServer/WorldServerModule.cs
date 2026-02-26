@@ -17,7 +17,7 @@
 //
 
 using Autofac;
-using Mangos.Common.Legacy;
+using Mangos.Cluster.Interop;
 
 namespace WorldServer;
 

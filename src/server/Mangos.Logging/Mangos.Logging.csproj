@@ -11,4 +11,8 @@
     <PackageReference Include="Autofac" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Mangos.Common\Mangos.Common.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -10,9 +10,14 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Mangos.Common.Legacy\Mangos.Common.Legacy.csproj" />
+    <ProjectReference Include="..\Mangos.Cluster.Interop\Mangos.Cluster.Interop.csproj" />
+    <ProjectReference Include="..\Mangos.Common\Mangos.Common.csproj" />
     <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />
+    <ProjectReference Include="..\Mangos.DataStores\Mangos.DataStores.csproj" />
+    <ProjectReference Include="..\Mangos.Logging\Mangos.Logging.csproj" />
+    <ProjectReference Include="..\Mangos.MySql\Mangos.MySql.csproj" />
     <ProjectReference Include="..\Mangos.Tcp\Mangos.Tcp.csproj" />
+    <ProjectReference Include="..\Mangos.Zip\Mangos.Zip.csproj" />
   </ItemGroup>
   
 </Project>
