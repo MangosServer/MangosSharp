@@ -267,6 +267,7 @@ public class LegacyWorldCluster
         }
 
         _clusterServiceLocator.WorldServerClass.Start();
+        _clusterServiceLocator.ClusterVerifier.Start();
 
         Log.WriteLine(LogType.INFORMATION, "Load Time: {0}", Strings.Format(DateAndTime.DateDiff(DateInterval.Second, DateAndTime.Now, DateAndTime.Now), "0 seconds"));
         Log.WriteLine(LogType.INFORMATION, "Used memory: {0}", Strings.Format(GC.GetTotalMemory(false), "### ### ##0 bytes"));

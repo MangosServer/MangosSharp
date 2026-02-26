@@ -21,6 +21,7 @@ using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
+using Mangos.Cluster.Verification;
 using Mangos.Common.Globals;
 using Mangos.Common.Legacy;
 using Mangos.Zip;
@@ -55,4 +56,5 @@ public class ClusterServiceLocator
     public WcHandlersTickets WcHandlersTickets { get; set; }
     public WsHandlerChannels WsHandlerChannels { get; set; }
     public WcHandlerCharacter WcHandlerCharacter { get; set; }
+    public ClusterVerifier ClusterVerifier { get; set; }
 }

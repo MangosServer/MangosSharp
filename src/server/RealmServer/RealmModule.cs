@@ -23,6 +23,7 @@ using RealmServer.Domain;
 using RealmServer.Handlers;
 using RealmServer.Network;
 using RealmServer.Requests;
+using RealmServer.Verification;
 
 namespace RealmServer;
 
@@ -33,6 +34,8 @@ internal sealed class RealmModule : Module
         builder.RegisterType<RealmTcpConnection>().As<ITcpConnection>().InstancePerLifetimeScope();
 
         builder.RegisterType<ClientState>().InstancePerLifetimeScope();
+
+        builder.RegisterType<RealmVerifier>().AsSelf().SingleInstance();
 
         RegisterHandlers(builder);
         RegisterDispatchers(builder);

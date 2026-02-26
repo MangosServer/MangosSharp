@@ -233,7 +233,7 @@ public class WS_Handlers
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.MSG_RANDOM_ROLL] = WorldServiceLocator.WSHandlersMisc.On_MSG_RANDOM_ROLL;
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_CANCEL_GROWTH_AURA] = WorldServiceLocator.WSHandlersMisc.On_CMSG_CANCEL_GROWTH_AURA;
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_REQUEST_RAID_INFO] = WorldServiceLocator.WSHandlersMisc.On_CMSG_REQUEST_RAID_INFO;
-        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_RESET_INSTANCES] = WorldServiceLocator.WSHandlersMisc.On_CMSG_RESET_INSTANCES;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_RESET_INSTANCES] = WorldServiceLocator.WSHandlersInstance.On_CMSG_RESET_INSTANCES;
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.MSG_RAID_ICON_TARGET] = WorldServiceLocator.WSHandlersMisc.On_MSG_RAID_ICON_TARGET;
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.MSG_RAID_READY_CHECK] = WorldServiceLocator.WSHandlersMisc.On_MSG_RAID_READY_CHECK;
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_OPENING_CINEMATIC] = WorldServiceLocator.WSHandlersMisc.On_CMSG_OPENING_CINEMATIC;
