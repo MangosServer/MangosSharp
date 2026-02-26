@@ -10,13 +10,13 @@ jobs:
       Solution_Path: ./src/server/Mangos.sln
 
     steps:
-      - name: Install .NET sdk
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
-
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Install .NET sdk
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
 
       - name: Restore
         run: dotnet restore $Solution_Path

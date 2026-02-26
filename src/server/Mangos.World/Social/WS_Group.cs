@@ -46,6 +46,10 @@ public class WS_Group
 
         public WS_PlayerData.CharacterObject LocalLootMaster;
 
+        public ulong LootMaster;
+
+        private readonly ulong[] _targetIcons = new ulong[8];
+
         private bool _disposedValue;
 
         public Group(long groupID)
@@ -54,6 +58,7 @@ public class WS_Group
             DungeonDifficulty = GroupDungeonDifficulty.DIFFICULTY_NORMAL;
             LootMethod = GroupLootMethod.LOOT_GROUP;
             LootThreshold = GroupLootThreshold.Uncommon;
+            LootMaster = 0uL;
             ID = groupID;
             WorldServiceLocator.WSGroup.Groups.Add(ID, this);
         }
@@ -112,6 +117,41 @@ public class WS_Group
         public int GetMembersCount()
         {
             return LocalMembers.Count;
+        }
+
+        public void BroadcastToAll(ref Packets.PacketClass p)
+        {
+            p.UpdateLength();
+            WorldServiceLocator.WorldServer.ClsWorldServer.Cluster.BroadcastGroup(ID, p.Data);
+        }
+
+        public void BroadcastToOther(ref Packets.PacketClass p, WS_PlayerData.CharacterObject exclude)
+        {
+            p.UpdateLength();
+            foreach (var guid in LocalMembers)
+            {
+                if (guid != exclude.GUID && WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(guid))
+                {
+                    var member = WorldServiceLocator.WorldServer.CHARACTERs[guid];
+                    if (member.client != null)
+                    {
+                        member.client.Send(ref p);
+                    }
+                }
+            }
+        }
+
+        public ulong GetTargetIcon(int index)
+        {
+            return index >= 0 && index < 8 ? _targetIcons[index] : 0uL;
+        }
+
+        public void SetTargetIcon(int index, ulong guid)
+        {
+            if (index >= 0 && index < 8)
+            {
+                _targetIcons[index] = guid;
+            }
         }
     }
 

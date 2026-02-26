@@ -17,37 +17,93 @@
 //
 
 using Dapper;
+using Mangos.Logging;
 using MySql.Data.MySqlClient;
 using System.Collections.Concurrent;
+using System.Data;
 
 namespace Mangos.MySql.Connections;
 
-internal sealed class AccountConnection
+internal sealed class AccountConnection : IDisposable
 {
     private readonly MySqlConnection mySqlConnection;
+    private readonly IMangosLogger logger;
+    private readonly SemaphoreSlim connectionLock = new(1, 1);
     private readonly ConcurrentDictionary<object, string> scripts = new();
 
-    public AccountConnection(MySqlConnection mySqlConnection)
+    public AccountConnection(MySqlConnection mySqlConnection, IMangosLogger logger)
     {
         this.mySqlConnection = mySqlConnection;
+        this.logger = logger;
     }
 
     public async Task<IEnumerable<T>?> QueryAsync<T>(object target)
     {
         var script = scripts.GetOrAdd(target, GetSqlScriptFromResources);
-        return await mySqlConnection.QueryAsync<T>(script);
+        await connectionLock.WaitAsync();
+        try
+        {
+            await EnsureConnectionOpenAsync();
+            return await mySqlConnection.QueryAsync<T>(script);
+        }
+        catch (MySqlException ex)
+        {
+            logger.Error(ex, $"Database query failed for {target.GetType().Name}");
+            throw;
+        }
+        finally
+        {
+            connectionLock.Release();
+        }
     }
 
     public async Task<T?> QueryFirstOrDefaultAsync<T>(object target, object arguments)
     {
         var script = scripts.GetOrAdd(target, GetSqlScriptFromResources);
-        return await mySqlConnection.QueryFirstOrDefaultAsync<T>(script, arguments);
+        await connectionLock.WaitAsync();
+        try
+        {
+            await EnsureConnectionOpenAsync();
+            return await mySqlConnection.QueryFirstOrDefaultAsync<T>(script, arguments);
+        }
+        catch (MySqlException ex)
+        {
+            logger.Error(ex, $"Database query failed for {target.GetType().Name}");
+            throw;
+        }
+        finally
+        {
+            connectionLock.Release();
+        }
     }
 
     public async Task ExecuteAsync(object target, object arguments)
     {
         var script = scripts.GetOrAdd(target, GetSqlScriptFromResources);
-        await mySqlConnection.QueryAsync(script, arguments);
+        await connectionLock.WaitAsync();
+        try
+        {
+            await EnsureConnectionOpenAsync();
+            await mySqlConnection.ExecuteAsync(script, arguments);
+        }
+        catch (MySqlException ex)
+        {
+            logger.Error(ex, $"Database execute failed for {target.GetType().Name}");
+            throw;
+        }
+        finally
+        {
+            connectionLock.Release();
+        }
+    }
+
+    private async Task EnsureConnectionOpenAsync()
+    {
+        if (mySqlConnection.State == ConnectionState.Broken || mySqlConnection.State == ConnectionState.Closed)
+        {
+            logger.Warning("Database connection was closed, reconnecting...");
+            await mySqlConnection.OpenAsync();
+        }
     }
 
     private string GetSqlScriptFromResources(object target)
@@ -60,5 +116,11 @@ internal sealed class AccountConnection
         }
         using var streamReader = new StreamReader(stream);
         return streamReader.ReadToEnd();
+    }
+
+    public void Dispose()
+    {
+        connectionLock.Dispose();
+        mySqlConnection.Dispose();
     }
 }

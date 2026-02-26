@@ -41,6 +41,8 @@ public class CreatureInfo : IDisposable
 
     public string SubName;
 
+    public string IconName;
+
     public float Size;
 
     public int ModelA1;
@@ -78,6 +80,16 @@ public class CreatureInfo : IDisposable
     public int AttackPower;
 
     public int RangedAttackPower;
+
+    public float DamageMultiplier;
+
+    public float HealthMultiplier;
+
+    public float ManaMultiplier;
+
+    public float ArmorMultiplier;
+
+    public float ExperienceMultiplier;
 
     public int[] Resistances;
 
@@ -129,13 +141,31 @@ public class CreatureInfo : IDisposable
 
     public uint MechanicImmune;
 
+    public uint SchoolImmuneMask;
+
+    public uint ExtraFlags;
+
+    public int MovementType;
+
+    public int InhabitType;
+
+    public float BoundingRadius;
+
+    public float CombatReach;
+
+    public int GossipMenuId;
+
     public float UnkFloat1;
 
     public float UnkFloat2;
 
     public string AIScriptSource;
 
+    public string ScriptName;
+
     public TBaseTalk TalkScript;
+
+    public bool Found => found_;
 
     public int Life => WorldServiceLocator.WorldServer.Rnd.Next(MinLife, MaxLife);
 
@@ -223,6 +253,14 @@ public class CreatureInfo : IDisposable
             SubName = "";
             ProjectData.ClearProjectError();
         }
+        try
+        {
+            IconName = MySQLQuery.Rows[0].As<string>("IconName");
+        }
+        catch
+        {
+            IconName = "";
+        }
         Size = MySQLQuery.Rows[0].As<float>("scale");
         MinLife = MySQLQuery.Rows[0].As<int>("MinLevelHealth");
         MaxLife = MySQLQuery.Rows[0].As<int>("MaxLevelHealth");
@@ -237,6 +275,13 @@ public class CreatureInfo : IDisposable
         RangedDamage.Minimum = MySQLQuery.Rows[0].As<float>("MinRangedDmg");
         AttackPower = MySQLQuery.Rows[0].As<int>("MeleeAttackPower");
         RangedAttackPower = MySQLQuery.Rows[0].As<int>("RangedAttackPower");
+
+        try { DamageMultiplier = MySQLQuery.Rows[0].As<float>("DamageMultiplier"); } catch { DamageMultiplier = 1.0f; }
+        try { HealthMultiplier = MySQLQuery.Rows[0].As<float>("HealthMultiplier"); } catch { HealthMultiplier = 1.0f; }
+        try { ManaMultiplier = MySQLQuery.Rows[0].As<float>("ManaMultiplier"); } catch { ManaMultiplier = 1.0f; }
+        try { ArmorMultiplier = MySQLQuery.Rows[0].As<float>("ArmorMultiplier"); } catch { ArmorMultiplier = 1.0f; }
+        try { ExperienceMultiplier = MySQLQuery.Rows[0].As<float>("ExperienceMultiplier"); } catch { ExperienceMultiplier = 1.0f; }
+
         WalkSpeed = MySQLQuery.Rows[0].As<float>("SpeedWalk");
         RunSpeed = MySQLQuery.Rows[0].As<float>("SpeedRun");
         BaseAttackTime = MySQLQuery.Rows[0].As<short>("MeleeBaseAttackTime");
@@ -254,6 +299,14 @@ public class CreatureInfo : IDisposable
         Classe = MySQLQuery.Rows[0].As<byte>("TrainerClass");
         Race = MySQLQuery.Rows[0].As<byte>("TrainerRace");
         Leader = MySQLQuery.Rows[0].As<byte>("RacialLeader");
+
+        try { ExtraFlags = MySQLQuery.Rows[0].As<uint>("ExtraFlags"); } catch { ExtraFlags = 0; }
+        try { MovementType = MySQLQuery.Rows[0].As<int>("MovementType"); } catch { MovementType = 0; }
+        try { InhabitType = MySQLQuery.Rows[0].As<int>("InhabitType"); } catch { InhabitType = 3; }
+        try { BoundingRadius = MySQLQuery.Rows[0].As<float>("BoundingRadius"); } catch { BoundingRadius = 0.306f; }
+        try { CombatReach = MySQLQuery.Rows[0].As<float>("CombatReach"); } catch { CombatReach = 1.5f; }
+        try { GossipMenuId = MySQLQuery.Rows[0].As<int>("GossipMenuId"); } catch { GossipMenuId = 0; }
+        try { ScriptName = MySQLQuery.Rows[0].As<string>("ScriptName"); } catch { ScriptName = ""; }
 
         Spells[0] = !Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell1"])) ? MySQLQuery.Rows[0].As<int>("spell1") : 0;
         Spells[1] = !Information.IsDBNull(RuntimeHelpers.GetObjectValue(MySQLQuery.Rows[0]["spell2"])) ? MySQLQuery.Rows[0].As<int>("spell2") : 0;
@@ -274,6 +327,7 @@ public class CreatureInfo : IDisposable
         Resistances[6] = MySQLQuery.Rows[0].As<int>("ResistanceArcane");
         EquipmentID = MySQLQuery.Rows[0].As<int>("EquipmentTemplateId");
         MechanicImmune = MySQLQuery.Rows[0].As<uint>("SchoolImmuneMask");
+        SchoolImmuneMask = MechanicImmune;
         if (File.Exists("scripts\\gossip\\" + WorldServiceLocator.Functions.FixName(Name) + ".vb"))
         {
             ScriptedObject tmpScript = new("scripts\\gossip\\" + WorldServiceLocator.Functions.FixName(Name) + ".vb", "", InMemory: true);
@@ -304,6 +358,7 @@ public class CreatureInfo : IDisposable
         Id = 0;
         Name = "MISSING_CREATURE_INFO";
         SubName = "";
+        IconName = "";
         Size = 1f;
         ModelA1 = 262;
         ModelA2 = 0;
@@ -323,6 +378,11 @@ public class CreatureInfo : IDisposable
         RangedDamage = new WS_Items.TDamage();
         AttackPower = 0;
         RangedAttackPower = 0;
+        DamageMultiplier = 1.0f;
+        HealthMultiplier = 1.0f;
+        ManaMultiplier = 1.0f;
+        ArmorMultiplier = 1.0f;
+        ExperienceMultiplier = 1.0f;
         Resistances = new int[7];
         WalkSpeed = WorldServiceLocator.GlobalConstants.UNIT_NORMAL_WALK_SPEED;
         RunSpeed = WorldServiceLocator.GlobalConstants.UNIT_NORMAL_RUN_SPEED;
@@ -343,9 +403,17 @@ public class CreatureInfo : IDisposable
         MaxGold = 0u;
         EquipmentID = 0;
         MechanicImmune = 0u;
+        SchoolImmuneMask = 0u;
+        ExtraFlags = 0u;
+        MovementType = 0;
+        InhabitType = 3;
+        BoundingRadius = 0.306f;
+        CombatReach = 1.5f;
+        GossipMenuId = 0;
         UnkFloat1 = 1f;
         UnkFloat2 = 1f;
         AIScriptSource = "";
+        ScriptName = "";
         TalkScript = null;
         Damage.Minimum = 0.8f * BaseAttackTime / 1000f * (LevelMin * 10f);
         Damage.Maximum = 1.2f * BaseAttackTime / 1000f * (LevelMax * 10f);

@@ -17,12 +17,15 @@
 //
 
 using Mangos.Common.Enums.Global;
+using Mangos.Common.Enums.Group;
+using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
 using Mangos.Common;
 using Mangos.MySql;
 using Mangos.World.AI;
 using Mangos.World.Globals;
+using Mangos.World.Loots;
 using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
@@ -635,4 +638,523 @@ public class WS_Handlers_Misc
         {
         }
     }
+
+    public void On_CMSG_COMPLETE_CINEMATIC(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_COMPLETE_CINEMATIC", client.IP, client.Port);
+    }
+
+    public void On_CMSG_NEXT_CINEMATIC_CAMERA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NEXT_CINEMATIC_CAMERA", client.IP, client.Port);
+    }
+
+    public void On_CMSG_OPENING_CINEMATIC(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_OPENING_CINEMATIC", client.IP, client.Port);
+        if (client.Character == null) return;
+
+        byte cinematicId = client.Character.Race switch
+        {
+            Races.RACE_HUMAN => 81,
+            Races.RACE_ORC => 21,
+            Races.RACE_DWARF => 41,
+            Races.RACE_NIGHT_ELF => 61,
+            Races.RACE_UNDEAD => 2,
+            Races.RACE_TAUREN => 141,
+            Races.RACE_GNOME => 101,
+            Races.RACE_TROLL => 121,
+            _ => 0,
+        };
+
+        if (cinematicId > 0)
+        {
+            Packets.PacketClass response = new(Opcodes.SMSG_TRIGGER_CINEMATIC);
+            try
+            {
+                response.AddInt32(cinematicId);
+                client.Send(ref response);
+            }
+            finally
+            {
+                response.Dispose();
+            }
+        }
+    }
+
+    public void On_CMSG_FAR_SIGHT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        packet.GetInt16();
+        var enable = packet.GetInt8();
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_FAR_SIGHT [enable={2}]", client.IP, client.Port, enable);
+    }
+
+    public void On_CMSG_SELF_RES(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SELF_RES [GUID={2:X}]", client.IP, client.Port, client.Character.GUID);
+        try
+        {
+            if (client.Character == null || !client.Character.DEAD)
+            {
+                return;
+            }
+            CharacterResurrect(ref client.Character);
+            client.Character.Life.Current = checked((int)Math.Round(client.Character.Life.Maximum * 0.20));
+            client.Character.Mana.Current = checked((int)Math.Round(client.Character.Mana.Maximum * 0.20));
+            client.Character.SetUpdateFlag(22, client.Character.Life.Current);
+            client.Character.SetUpdateFlag(23, client.Character.Mana.Current);
+            client.Character.SendCharacterUpdate();
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at self res.{0}", Environment.NewLine + e);
+        }
+    }
+
+    public void On_CMSG_UNLEARN_SKILL(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        try
+        {
+            if (checked(packet.Data.Length - 1) < 9)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var skillId = packet.GetInt32();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_UNLEARN_SKILL [skill={2}]", client.IP, client.Port, skillId);
+            if (client.Character == null)
+            {
+                return;
+            }
+            if (!client.Character.Skills.ContainsKey(skillId))
+            {
+                return;
+            }
+            client.Character.Skills.Remove(skillId);
+            if (client.Character.SkillsPositions.ContainsKey(skillId))
+            {
+                var pos = client.Character.SkillsPositions[skillId];
+                client.Character.SkillsPositions.Remove(skillId);
+                checked
+                {
+                    client.Character.SetUpdateFlag(718 + (pos * 3), 0);
+                    client.Character.SetUpdateFlag(718 + (pos * 3) + 1, 0);
+                    client.Character.SetUpdateFlag(718 + (pos * 3) + 2, 0);
+                }
+            }
+            client.Character.SendCharacterUpdate();
+            client.Character.SaveCharacter();
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at unlearn skill.{0}", Environment.NewLine + e);
+        }
+    }
+
+    public void On_MSG_RANDOM_ROLL(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        try
+        {
+            if (checked(packet.Data.Length - 1) < 13)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var minimum = packet.GetInt32();
+            var maximum = packet.GetInt32();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_RANDOM_ROLL [{2}-{3}]", client.IP, client.Port, minimum, maximum);
+            if (client.Character == null)
+            {
+                return;
+            }
+            if (minimum < 0)
+            {
+                minimum = 0;
+            }
+            if (maximum < 1)
+            {
+                maximum = 1;
+            }
+            if (minimum > maximum)
+            {
+                minimum = 0;
+            }
+            var rollResult = WorldServiceLocator.WorldServer.Rnd.Next(minimum, checked(maximum + 1));
+            Packets.PacketClass response = new(Opcodes.MSG_RANDOM_ROLL);
+            try
+            {
+                response.AddInt32(minimum);
+                response.AddInt32(maximum);
+                response.AddInt32(rollResult);
+                response.AddUInt64(client.Character.GUID);
+                if (client.Character.IsInGroup)
+                {
+                    client.Character.Group.Broadcast(response);
+                }
+                else
+                {
+                    client.Send(ref response);
+                }
+            }
+            finally
+            {
+                response.Dispose();
+            }
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at random roll.{0}", Environment.NewLine + e);
+        }
+    }
+
+    public void On_CMSG_CANCEL_GROWTH_AURA(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CANCEL_GROWTH_AURA", client.IP, client.Port);
+
+        if (client.Character == null) return;
+
+        checked
+        {
+            for (var i = 0; i <= WorldServiceLocator.GlobalConstants.MAX_AURA_EFFECTs - 1; i++)
+            {
+                if (client.Character.ActiveSpells[i] != null &&
+                    WorldServiceLocator.WSSpells.SPELLs.ContainsKey(client.Character.ActiveSpells[i].SpellID))
+                {
+                    var spellInfo = WorldServiceLocator.WSSpells.SPELLs[client.Character.ActiveSpells[i].SpellID];
+                    for (var j = 0; j < 3; j++)
+                    {
+                        if (spellInfo.SpellEffects[j] != null &&
+                            spellInfo.SpellEffects[j].ApplyAuraIndex == 61)
+                        {
+                            client.Character.RemoveAura(i, ref client.Character.ActiveSpells[i].SpellCaster);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void On_CMSG_REQUEST_RAID_INFO(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_REQUEST_RAID_INFO", client.IP, client.Port);
+
+        Packets.PacketClass response = new(Opcodes.SMSG_RAID_INSTANCE_INFO);
+        try
+        {
+            response.AddInt32(0);
+            client.Send(ref response);
+        }
+        finally
+        {
+            response.Dispose();
+        }
+    }
+
+    public void On_CMSG_RESET_INSTANCES(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_RESET_INSTANCES", client.IP, client.Port);
+    }
+
+    public void On_MSG_RAID_ICON_TARGET(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        try
+        {
+            if (checked(packet.Data.Length - 1) < 6)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var iconSlot = packet.GetInt8();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_RAID_ICON_TARGET [slot={2}]", client.IP, client.Port, iconSlot);
+            if (!client.Character.IsInGroup)
+            {
+                return;
+            }
+            if (iconSlot == 0xFF)
+            {
+                Packets.PacketClass response = new(Opcodes.MSG_RAID_ICON_TARGET);
+                try
+                {
+                    response.AddInt8(1);
+                    for (var i = 0; i < 8; i++)
+                    {
+                        response.AddUInt64(client.Character.Group.GetTargetIcon(i));
+                    }
+                    client.Send(ref response);
+                }
+                finally
+                {
+                    response.Dispose();
+                }
+            }
+            else if (iconSlot < 8 && checked(packet.Data.Length - 1) >= 14)
+            {
+                var targetGuid = packet.GetUInt64();
+                client.Character.Group.SetTargetIcon(iconSlot, targetGuid);
+                Packets.PacketClass response = new(Opcodes.MSG_RAID_ICON_TARGET);
+                try
+                {
+                    response.AddInt8(0);
+                    response.AddInt8(iconSlot);
+                    response.AddUInt64(targetGuid);
+                    client.Character.Group.Broadcast(response);
+                }
+                finally
+                {
+                    response.Dispose();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at raid icon target.{0}", Environment.NewLine + e);
+        }
+    }
+
+    public void On_MSG_RAID_READY_CHECK(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        try
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] MSG_RAID_READY_CHECK", client.IP, client.Port);
+            if (!client.Character.IsInGroup)
+            {
+                return;
+            }
+            if (client.Character.IsGroupLeader)
+            {
+                Packets.PacketClass readyCheck = new(Opcodes.MSG_RAID_READY_CHECK);
+                try
+                {
+                    readyCheck.AddUInt64(client.Character.GUID);
+                    client.Character.Group.Broadcast(readyCheck);
+                }
+                finally
+                {
+                    readyCheck.Dispose();
+                }
+            }
+            else
+            {
+                if (checked(packet.Data.Length - 1) < 6)
+                {
+                    return;
+                }
+                packet.GetInt16();
+                var isReady = packet.GetInt8();
+                Packets.PacketClass response = new(Opcodes.MSG_RAID_READY_CHECK);
+                try
+                {
+                    response.AddUInt64(client.Character.GUID);
+                    response.AddInt8(isReady);
+                    client.Character.Group.Broadcast(response);
+                }
+                finally
+                {
+                    response.Dispose();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at raid ready check.{0}", Environment.NewLine + e);
+        }
+    }
+
+    public void On_CMSG_PLAYED_TIME(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_PLAYED_TIME", client.IP, client.Port);
+        Packets.PacketClass response = new(Opcodes.SMSG_PLAYED_TIME);
+        try
+        {
+            response.AddInt32(0);
+            response.AddInt32(0);
+            client.Send(ref response);
+        }
+        finally
+        {
+            response.Dispose();
+        }
+    }
+
+    public void On_CMSG_INSPECT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        if (checked(packet.Data.Length - 1) < 13)
+        {
+            return;
+        }
+        packet.GetInt16();
+        var guid = packet.GetUInt64();
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_INSPECT [GUID={2:X}]", client.IP, client.Port, guid);
+
+        if (!WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(guid)) return;
+
+        Packets.PacketClass response = new(Opcodes.SMSG_INSPECT);
+        try
+        {
+            response.AddUInt64(guid);
+            client.Send(ref response);
+        }
+        finally
+        {
+            response.Dispose();
+        }
+    }
+
+    public void On_CMSG_SUMMON_RESPONSE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        try
+        {
+            if (checked(packet.Data.Length - 1) < 14)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var summonerGuid = packet.GetUInt64();
+            var accept = packet.GetInt8();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SUMMON_RESPONSE [summoner={2:X} accept={3}]", client.IP, client.Port, summonerGuid, accept);
+            if (accept == 0)
+            {
+                return;
+            }
+            if (!WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(summonerGuid))
+            {
+                return;
+            }
+            var summoner = WorldServiceLocator.WorldServer.CHARACTERs[summonerGuid];
+            client.Character.Teleport(summoner.positionX, summoner.positionY, summoner.positionZ, summoner.orientation, checked((int)summoner.MapID));
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at summon response.{0}", Environment.NewLine + e);
+        }
+    }
+
+    public void On_CMSG_LOOT_MASTER_GIVE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        try
+        {
+            if (checked(packet.Data.Length - 1) < 22)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var lootGuid = packet.GetUInt64();
+            var slotId = packet.GetInt8();
+            var playerGuid = packet.GetUInt64();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LOOT_MASTER_GIVE [loot={2:X} slot={3} player={4:X}]", client.IP, client.Port, lootGuid, slotId, playerGuid);
+            if (!client.Character.IsInGroup)
+            {
+                return;
+            }
+            if (client.Character.Group.LootMethod != GroupLootMethod.LOOT_MASTER)
+            {
+                return;
+            }
+            if (client.Character.Group.LocalLootMaster != client.Character)
+            {
+                return;
+            }
+            if (!WorldServiceLocator.WSLoot.LootTable.ContainsKey(lootGuid))
+            {
+                return;
+            }
+            if (!WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(playerGuid))
+            {
+                return;
+            }
+            var lootObject = WorldServiceLocator.WSLoot.LootTable[lootGuid];
+            if (slotId >= lootObject.Items.Count || lootObject.Items[slotId] == null)
+            {
+                return;
+            }
+            var targetCharacter = WorldServiceLocator.WorldServer.CHARACTERs[playerGuid];
+            ItemObject tmpItem = new(lootObject.Items[slotId].ItemID, targetCharacter.GUID)
+            {
+                StackCount = lootObject.Items[slotId].ItemCount
+            };
+            if (targetCharacter.ItemADD(ref tmpItem))
+            {
+                if (tmpItem.ItemInfo.Bonding == 1)
+                {
+                    WS_Network.ClientClass client2 = null;
+                    tmpItem.SoulbindItem(client2);
+                }
+                targetCharacter.LogLootItem(tmpItem, lootObject.Items[slotId].ItemCount, Recieved: false, Created: false);
+                Packets.PacketClass removed = new(Opcodes.SMSG_LOOT_REMOVED);
+                try
+                {
+                    removed.AddInt8(slotId);
+                    client.Send(ref removed);
+                }
+                finally
+                {
+                    removed.Dispose();
+                }
+                lootObject.Items[slotId].Dispose();
+                lootObject.Items[slotId] = null;
+            }
+            else
+            {
+                tmpItem.Delete();
+                Packets.PacketClass response = new(Opcodes.SMSG_INVENTORY_CHANGE_FAILURE);
+                try
+                {
+                    response.AddInt8(50);
+                    response.AddUInt64(0uL);
+                    response.AddUInt64(0uL);
+                    response.AddInt8(0);
+                    client.Send(ref response);
+                }
+                finally
+                {
+                    response.Dispose();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at loot master give.{0}", Environment.NewLine + e);
+        }
+    }
+
+    public void On_CMSG_SET_EXPLORATION(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        if (checked(packet.Data.Length - 1) < 10)
+        {
+            return;
+        }
+        packet.GetInt16();
+        var areaFlag = packet.GetInt32();
+        var explored = packet.GetInt8();
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_EXPLORATION [flag={2} explored={3}]", client.IP, client.Port, areaFlag, explored);
+    }
+
+    public void On_CMSG_CHAT_IGNORED(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        if (checked(packet.Data.Length - 1) < 13)
+        {
+            return;
+        }
+        packet.GetInt16();
+        var guid = packet.GetUInt64();
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CHAT_IGNORED [GUID={2:X}]", client.IP, client.Port, guid);
+
+        if (WorldServiceLocator.WorldServer.CHARACTERs.ContainsKey(guid) &&
+            WorldServiceLocator.WorldServer.CHARACTERs[guid].client != null)
+        {
+            Packets.PacketClass response = new(Opcodes.SMSG_CHAT_PLAYER_NOT_FOUND);
+            try
+            {
+                response.AddString(client.Character.Name);
+                var targetClient = WorldServiceLocator.WorldServer.CHARACTERs[guid].client;
+                targetClient.Send(ref response);
+            }
+            finally
+            {
+                response.Dispose();
+            }
+        }
+    }
+
 }

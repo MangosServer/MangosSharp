@@ -28,9 +28,9 @@ using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Quests;
+using Mangos.World.Verification;
 using Microsoft.VisualBasic;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -90,9 +90,13 @@ public class WorldServer
 
     public Dictionary<ulong, WS_Creatures.CreatureObject> WORLD_CREATUREs;
 
-    public ArrayList WORLD_CREATUREsKeys;
+    public List<ulong> WORLD_CREATUREsKeys;
+
+    public System.Threading.ReaderWriterLockSlim WORLD_GAMEOBJECTs_Lock;
 
     public Dictionary<ulong, WS_GameObjects.GameObject> WORLD_GAMEOBJECTs;
+
+    public System.Threading.ReaderWriterLockSlim WORLD_CORPSEOBJECTs_Lock;
 
     public Dictionary<ulong, WS_Corpses.CorpseObject> WORLD_CORPSEOBJECTs;
 
@@ -103,6 +107,8 @@ public class WorldServer
     public System.Threading.ReaderWriterLockSlim WORLD_TRANSPORTs_Lock;
 
     public Dictionary<ulong, WS_Transports.TransportObject> WORLD_TRANSPORTs;
+
+    public System.Threading.ReaderWriterLockSlim WORLD_ITEMs_Lock;
 
     public Dictionary<ulong, ItemObject> WORLD_ITEMs;
 
@@ -139,7 +145,7 @@ public class WorldServer
 
     public Dictionary<Opcodes, HandlePacket> PacketHandlers;
 
-    public Random Rnd;
+    public Random Rnd = Random.Shared;
 
     public ScriptedObject AreaTriggers;
 
@@ -168,13 +174,16 @@ public class WorldServer
         GameobjectQuestFinishers = new Dictionary<int, List<int>>();
         WORLD_CREATUREs_Lock = new System.Threading.ReaderWriterLockSlim();
         WORLD_CREATUREs = new Dictionary<ulong, WS_Creatures.CreatureObject>();
-        WORLD_CREATUREsKeys = new ArrayList();
+        WORLD_CREATUREsKeys = new List<ulong>();
+        WORLD_GAMEOBJECTs_Lock = new System.Threading.ReaderWriterLockSlim();
         WORLD_GAMEOBJECTs = new Dictionary<ulong, WS_GameObjects.GameObject>();
+        WORLD_CORPSEOBJECTs_Lock = new System.Threading.ReaderWriterLockSlim();
         WORLD_CORPSEOBJECTs = new Dictionary<ulong, WS_Corpses.CorpseObject>();
         WORLD_DYNAMICOBJECTs_Lock = new System.Threading.ReaderWriterLockSlim();
         WORLD_DYNAMICOBJECTs = new Dictionary<ulong, WS_DynamicObjects.DynamicObject>();
         WORLD_TRANSPORTs_Lock = new System.Threading.ReaderWriterLockSlim();
         WORLD_TRANSPORTs = new Dictionary<ulong, WS_Transports.TransportObject>();
+        WORLD_ITEMs_Lock = new System.Threading.ReaderWriterLockSlim();
         WORLD_ITEMs = new Dictionary<ulong, ItemObject>();
         ITEMDatabase = new Dictionary<int, WS_Items.ItemInfo>();
         CREATURESDatabase = new Dictionary<int, CreatureInfo>();
@@ -187,7 +196,7 @@ public class WorldServer
         TransportGUIDCounter = WorldServiceLocator.GlobalConstants.GUID_MO_TRANSPORT;
         Log = new BaseWriter();
         PacketHandlers = new Dictionary<Opcodes, HandlePacket>();
-        Rnd = new Random();
+        Rnd = Random.Shared;
         AccountDatabase = new SQL();
         CharacterDatabase = new SQL();
         WorldDatabase = new SQL();
@@ -427,6 +436,7 @@ public class WorldServer
         }
         Log.WriteLine(LogType.INFORMATION, " Load Time:   {0}", Strings.Format(DateAndTime.DateDiff(DateInterval.Second, dateTimeStarted, DateAndTime.Now), "0 seconds"));
         Log.WriteLine(LogType.INFORMATION, " Used Memory: {0}", Strings.Format(GC.GetTotalMemory(forceFullCollection: false), "### ### ##0 bytes"));
+        WorldServiceLocator.GameLogicVerifier.Start();
     }
 
     public void WaitConsoleCommand()

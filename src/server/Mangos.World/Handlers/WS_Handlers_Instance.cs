@@ -18,6 +18,9 @@
 
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
+using Mangos.Common.Globals;
+using Mangos.Common.Legacy;
+using Mangos.World.Globals;
 using Mangos.Common;
 using Mangos.MySql;
 using Mangos.World.Maps;
@@ -275,12 +278,71 @@ public class WS_Handlers_Instance
     {
     }
 
+    public void On_CMSG_RESET_INSTANCES(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_RESET_INSTANCES", client.IP, client.Port);
+
+        if (client.Character == null) return;
+
+        // Only group leaders can reset instances, or solo players
+        if (client.Character.IsInGroup && client.Character.Group.Leader != client.Character.GUID)
+        {
+            return;
+        }
+
+        // Get all instances for this character
+        DataTable q = new();
+        if (client.Character.IsInGroup)
+        {
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query(
+                $"SELECT map, instance FROM characters_instances_group WHERE group_id = {client.Character.Group.ID};", ref q);
+        }
+        else
+        {
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query(
+                $"SELECT map, instance FROM characters_instances WHERE char_guid = {client.Character.GUID};", ref q);
+        }
+
+        foreach (DataRow row in q.Rows)
+        {
+            var map = row.As<uint>("map");
+            var instance = row.As<uint>("instance");
+
+            if (WorldServiceLocator.WSMaps.Maps.ContainsKey(map))
+            {
+                InstanceMapExpire(map, instance);
+                SendResetInstanceSuccess(ref client, map);
+            }
+        }
+    }
+
     public void SendResetInstanceSuccess(ref WS_Network.ClientClass client, uint Map)
     {
+        Packets.PacketClass response = new(Opcodes.SMSG_INSTANCE_RESET);
+        try
+        {
+            response.AddUInt32(Map);
+            client.Send(ref response);
+        }
+        finally
+        {
+            response.Dispose();
+        }
     }
 
     public void SendResetInstanceFailed(ref WS_Network.ClientClass client, uint Map, ResetFailedReason Reason)
     {
+        Packets.PacketClass response = new(Opcodes.SMSG_INSTANCE_RESET_FAILED);
+        try
+        {
+            response.AddInt32((int)Reason);
+            response.AddUInt32(Map);
+            client.Send(ref response);
+        }
+        finally
+        {
+            response.Dispose();
+        }
     }
 
     public void SendResetInstanceFailedNotify(ref WS_Network.ClientClass client, uint Map)

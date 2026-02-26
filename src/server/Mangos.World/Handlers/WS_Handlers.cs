@@ -208,6 +208,42 @@ public class WS_Handlers
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_PET_SPELL_AUTOCAST] = WorldServiceLocator.WSPets.On_CMSG_PET_SPELL_AUTOCAST;
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_PET_STOP_ATTACK] = WorldServiceLocator.WSPets.On_CMSG_PET_STOP_ATTACK;
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_PET_UNLEARN] = WorldServiceLocator.WSPets.On_CMSG_PET_UNLEARN;
+
+        // Stable pet handlers
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.MSG_LIST_STABLED_PETS] = WorldServiceLocator.WSPets.On_MSG_LIST_STABLED_PETS;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_STABLE_PET] = WorldServiceLocator.WSPets.On_CMSG_STABLE_PET;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_UNSTABLE_PET] = WorldServiceLocator.WSPets.On_CMSG_UNSTABLE_PET;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_BUY_STABLE_SLOT] = WorldServiceLocator.WSPets.On_CMSG_BUY_STABLE_SLOT;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_STABLE_REVIVE_PET] = WorldServiceLocator.WSPets.On_CMSG_STABLE_REVIVE_PET;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_STABLE_SWAP_PET] = WorldServiceLocator.WSPets.On_CMSG_STABLE_SWAP_PET;
+
+        // Battleground handlers
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_BATTLEMASTER_JOIN] = WorldServiceLocator.WSHandlersBattleground.On_CMSG_BATTLEMASTER_JOIN;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_BATTLEFIELD_PORT] = WorldServiceLocator.WSHandlersBattleground.On_CMSG_BATTLEFIELD_PORT;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_LEAVE_BATTLEFIELD] = WorldServiceLocator.WSHandlersBattleground.On_CMSG_LEAVE_BATTLEFIELD;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_AREA_SPIRIT_HEALER_QUERY] = WorldServiceLocator.WSHandlersBattleground.On_CMSG_AREA_SPIRIT_HEALER_QUERY;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_AREA_SPIRIT_HEALER_QUEUE] = WorldServiceLocator.WSHandlersBattleground.On_CMSG_AREA_SPIRIT_HEALER_QUEUE;
+
+        // Misc handlers - cinematics, far sight, self res, skills
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_COMPLETE_CINEMATIC] = WorldServiceLocator.WSHandlersMisc.On_CMSG_COMPLETE_CINEMATIC;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_NEXT_CINEMATIC_CAMERA] = WorldServiceLocator.WSHandlersMisc.On_CMSG_NEXT_CINEMATIC_CAMERA;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_FAR_SIGHT] = WorldServiceLocator.WSHandlersMisc.On_CMSG_FAR_SIGHT;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_SELF_RES] = WorldServiceLocator.WSHandlersMisc.On_CMSG_SELF_RES;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_UNLEARN_SKILL] = WorldServiceLocator.WSHandlersMisc.On_CMSG_UNLEARN_SKILL;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.MSG_RANDOM_ROLL] = WorldServiceLocator.WSHandlersMisc.On_MSG_RANDOM_ROLL;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_CANCEL_GROWTH_AURA] = WorldServiceLocator.WSHandlersMisc.On_CMSG_CANCEL_GROWTH_AURA;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_REQUEST_RAID_INFO] = WorldServiceLocator.WSHandlersMisc.On_CMSG_REQUEST_RAID_INFO;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_RESET_INSTANCES] = WorldServiceLocator.WSHandlersInstance.On_CMSG_RESET_INSTANCES;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.MSG_RAID_ICON_TARGET] = WorldServiceLocator.WSHandlersMisc.On_MSG_RAID_ICON_TARGET;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.MSG_RAID_READY_CHECK] = WorldServiceLocator.WSHandlersMisc.On_MSG_RAID_READY_CHECK;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_OPENING_CINEMATIC] = WorldServiceLocator.WSHandlersMisc.On_CMSG_OPENING_CINEMATIC;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_PLAYED_TIME] = WorldServiceLocator.WSHandlersMisc.On_CMSG_PLAYED_TIME;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_INSPECT] = WorldServiceLocator.WSHandlersMisc.On_CMSG_INSPECT;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_SUMMON_RESPONSE] = WorldServiceLocator.WSHandlersMisc.On_CMSG_SUMMON_RESPONSE;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_LOOT_MASTER_GIVE] = WorldServiceLocator.WSHandlersMisc.On_CMSG_LOOT_MASTER_GIVE;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_SET_EXPLORATION] = WorldServiceLocator.WSHandlersMisc.On_CMSG_SET_EXPLORATION;
+        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_CHAT_IGNORED] = WorldServiceLocator.WSHandlersMisc.On_CMSG_CHAT_IGNORED;
+
     }
 
     public void OnUnhandledPacket(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)

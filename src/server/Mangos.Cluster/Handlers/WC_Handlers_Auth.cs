@@ -139,23 +139,36 @@ public class WcHandlersAuth
             return;
         }
 
-        // TODO: Make sure the correct client connected
-        // Dim temp() As Byte = System.Text.Encoding.ASCII.GetBytes(clientAccount)
-        // temp = Concat(temp, BitConverter.GetBytes(0))
-        // temp = Concat(temp, BitConverter.GetBytes(clientSeed))
-        // temp = Concat(temp, BitConverter.GetBytes(client.Index))
-        // temp = Concat(temp, client.SS_Hash)
-        // Dim ShaDigest() As Byte = New System.Security.Cryptography.SHA1Managed().ComputeHash(temp)
-        // _WorldCluster.Log.WriteLine(LogType.DEBUG, "Client Hash: {0}", BitConverter.ToString(clientHash).Replace("-", ""))
-        // _WorldCluster.Log.WriteLine(LogType.DEBUG, "Server Hash: {0}", BitConverter.ToString(ShaDigest).Replace("-", ""))
-        // For i As Integer = 0 To 19
-        // If clientHash(i) <> ShaDigest(i) Then
-        // Dim responseFail As New PacketClass(OPCODES.SMSG_AUTH_RESPONSE)
-        // responseFail.AddInt8(AuthResponseCodes.AUTH_FAILED)
-        // client.Send(responseFail)
-        // Exit Sub
-        // End If
-        // Next
+        var accountBytes = System.Text.Encoding.ASCII.GetBytes(clientAccount);
+        using var ms = new MemoryStream();
+        ms.Write(accountBytes, 0, accountBytes.Length);
+        ms.Write(BitConverter.GetBytes(0), 0, 4);
+        ms.Write(BitConverter.GetBytes(clientSeed), 0, 4);
+        ms.Write(BitConverter.GetBytes(client.Index), 0, 4);
+        ms.Write(client.Client.PacketEncryption.Hash, 0, client.Client.PacketEncryption.Hash.Length);
+        var shaDigest = System.Security.Cryptography.SHA1.HashData(ms.ToArray());
+
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "Client Hash: {0}", BitConverter.ToString(clientHash).Replace("-", ""));
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "Server Hash: {0}", BitConverter.ToString(shaDigest).Replace("-", ""));
+
+        var hashMismatch = false;
+        for (var i = 0; i <= 19; i++)
+        {
+            if (clientHash[i] != shaDigest[i])
+            {
+                hashMismatch = true;
+                break;
+            }
+        }
+
+        if (hashMismatch)
+        {
+            _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] AUTH_FAILED: Client hash mismatch for account {2}", client.IP, client.Port, clientAccount);
+            PacketClass responseFail = new(Opcodes.SMSG_AUTH_RESPONSE);
+            responseFail.AddInt8((byte)AuthResult.WOW_FAIL_UNKNOWN_ACCOUNT);
+            client.Send(responseFail);
+            return;
+        }
 
         // DONE: If server full then queue, If GM/Admin let in
         if (_clusterServiceLocator.WorldCluster.ClienTs.Count > mangosConfiguration.Cluster.ServerPlayerLimit && client.Access <= AccessLevel.Player)

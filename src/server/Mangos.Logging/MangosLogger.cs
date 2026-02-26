@@ -20,62 +20,81 @@ namespace Mangos.Logging;
 
 internal sealed class MangosLogger : IMangosLogger
 {
-    public void Error(string message)
-    {
-        Log(message, ConsoleColor.Red);
-    }
+    private readonly object _lock = new();
+    private StreamWriter? _fileWriter;
 
-    public void Error(Exception exception, string message)
-    {
-        Log(exception, message, ConsoleColor.Red);
-    }
+    public LogLevel MinimumLevel { get; set; } = LogLevel.Trace;
 
-    public void Information(string message)
+    public string? LogFilePath
     {
-        Log(message, ConsoleColor.White);
-    }
-
-    public void Information(Exception exception, string message)
-    {
-        Log(exception, message, ConsoleColor.White);
-    }
-
-    public void Trace(string message)
-    {
-        Log(message, ConsoleColor.Gray);
-    }
-
-    public void Trace(Exception exception, string message)
-    {
-        Log(exception, message, ConsoleColor.Gray);
-    }
-
-    public void Warning(string message)
-    {
-        Log(message, ConsoleColor.Yellow);
-    }
-
-    public void Warning(Exception exception, string message)
-    {
-        Log(message, ConsoleColor.Yellow);
-    }
-
-    private void Log(string message, ConsoleColor color)
-    {
-        lock (this)
+        set
         {
-            Console.ForegroundColor = color;
-            Console.WriteLine($"{DateTime.UtcNow.TimeOfDay}: {message}");
+            lock (_lock)
+            {
+                _fileWriter?.Dispose();
+                _fileWriter = value != null
+                    ? new StreamWriter(new FileStream(value, FileMode.Append, FileAccess.Write, FileShare.Read)) { AutoFlush = true }
+                    : null;
+            }
         }
     }
 
-    private void Log(Exception exception, string message, ConsoleColor color)
+    public void Trace(string message) => Log(LogLevel.Trace, message);
+    public void Trace(Exception exception, string message) => Log(LogLevel.Trace, exception, message);
+    public void Debug(string message) => Log(LogLevel.Debug, message);
+    public void Debug(Exception exception, string message) => Log(LogLevel.Debug, exception, message);
+    public void Information(string message) => Log(LogLevel.Information, message);
+    public void Information(Exception exception, string message) => Log(LogLevel.Information, exception, message);
+    public void Warning(string message) => Log(LogLevel.Warning, message);
+    public void Warning(Exception exception, string message) => Log(LogLevel.Warning, exception, message);
+    public void Error(string message) => Log(LogLevel.Error, message);
+    public void Error(Exception exception, string message) => Log(LogLevel.Error, exception, message);
+    public void Critical(string message) => Log(LogLevel.Critical, message);
+    public void Critical(Exception exception, string message) => Log(LogLevel.Critical, exception, message);
+
+    public void Log(LogLevel level, string message)
     {
-        lock (this)
+        if (level < MinimumLevel) return;
+
+        var formatted = FormatMessage(level, message);
+        lock (_lock)
         {
-            Console.ForegroundColor = color;
-            Console.WriteLine($"{DateTime.UtcNow.TimeOfDay}: {message}");
+            Console.ForegroundColor = GetColor(level);
+            Console.WriteLine(formatted);
+            Console.ResetColor();
+            _fileWriter?.WriteLine(formatted);
+        }
+    }
+
+    public void Log(LogLevel level, Exception exception, string message)
+    {
+        if (level < MinimumLevel) return;
+
+        var formatted = FormatMessage(level, message);
+        lock (_lock)
+        {
+            Console.ForegroundColor = GetColor(level);
+            Console.WriteLine(formatted);
             Console.WriteLine(exception);
+            Console.ResetColor();
+            _fileWriter?.WriteLine(formatted);
+            _fileWriter?.WriteLine(exception.ToString());
         }
     }
+
+    private static string FormatMessage(LogLevel level, string message)
+    {
+        return $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} [{level,-11}] {message}";
+    }
+
+    private static ConsoleColor GetColor(LogLevel level) => level switch
+    {
+        LogLevel.Trace => ConsoleColor.Gray,
+        LogLevel.Debug => ConsoleColor.DarkGray,
+        LogLevel.Information => ConsoleColor.White,
+        LogLevel.Warning => ConsoleColor.Yellow,
+        LogLevel.Error => ConsoleColor.Red,
+        LogLevel.Critical => ConsoleColor.DarkRed,
+        _ => ConsoleColor.White
+    };
 }

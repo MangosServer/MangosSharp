@@ -198,20 +198,40 @@ public class WcHandlersGuild
             return;
         }
 
-        // TODO: Check if someone in the guild is the rank we're removing?
-        // TODO: Can we really remove all ranks?
+        var lowestRank = -1;
         for (var i = 9; i >= 0; i -= 1)
         {
             if (!string.IsNullOrEmpty(client.Character.Guild.Ranks[i]))
             {
-                _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(string.Format("UPDATE guilds SET guild_rank{1} = '{2}', guild_rank{1}_Rights = '{3}' WHERE guild_id = {0};", client.Character.Guild.Id, i, "", 0));
-                _clusterServiceLocator.WcGuild.SendGuildQuery(client, client.Character.Guild.Id);
-                _clusterServiceLocator.WcGuild.SendGuildRoster(client.Character);
-                return;
+                lowestRank = i;
+                break;
             }
         }
 
-        _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
+        if (lowestRank <= 1)
+        {
+            _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
+            return;
+        }
+
+        DataTable membersAtRank = new();
+        _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(
+            string.Format("SELECT char_guid FROM characters WHERE char_guildId = {0} AND char_guildRank = {1};",
+                client.Character.Guild.Id, lowestRank),
+            ref membersAtRank);
+        if (membersAtRank.Rows.Count > 0)
+        {
+            _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
+            return;
+        }
+
+        _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(
+            string.Format("UPDATE guilds SET guild_rank{1} = '{2}', guild_rank{1}_Rights = '{3}' WHERE guild_id = {0};",
+                client.Character.Guild.Id, lowestRank, "", 0));
+        client.Character.Guild.Ranks[lowestRank] = "";
+        client.Character.Guild.RankRights[lowestRank] = 0;
+        _clusterServiceLocator.WcGuild.SendGuildQuery(client, client.Character.Guild.Id);
+        _clusterServiceLocator.WcGuild.SendGuildRoster(client.Character);
     }
 
     public void On_CMSG_GUILD_LEADER(PacketClass packet, ClientClass client)
@@ -308,11 +328,25 @@ public class WcHandlersGuild
         {
             _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_PERMISSIONS);
             return;
+        }
 
-            // TODO: Check if you have enough money
-            // ElseIf client.Character.Copper < 100000 Then
-            // SendInventoryChangeFailure(Client.Character, InventoryChangeFailure.EQUIP_ERR_NOT_ENOUGH_MONEY, 0, 0)
-            // Exit Sub
+        const int tabardCost = 100000;
+        DataTable copperResult = new();
+        _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(
+            string.Format("SELECT char_copper FROM characters WHERE char_guid = {0};", client.Character.Guid),
+            ref copperResult);
+        if (copperResult.Rows.Count > 0)
+        {
+            var currentCopper = copperResult.Rows[0].As<int>("char_copper");
+            if (currentCopper < tabardCost)
+            {
+                _clusterServiceLocator.WcGuild.SendGuildResult(client, GuildCommand.GUILD_CREATE_S, GuildError.GUILD_INTERNAL);
+                return;
+            }
+
+            _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(
+                string.Format("UPDATE characters SET char_copper = char_copper - {0} WHERE char_guid = {1};",
+                    tabardCost, client.Character.Guid));
         }
 
         client.Character.Guild.EmblemStyle = (byte)tEmblemStyle;
@@ -328,11 +362,6 @@ public class WcHandlersGuild
         var argnotTo = 0UL;
         _clusterServiceLocator.WcGuild.BroadcastToGuild(packetEvent, client.Character.Guild, notTo: argnotTo);
         packetEvent.Dispose();
-
-        // TODO: This tabard design costs 10g!
-        // Client.Character.Copper -= 100000
-        // Client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_COINAGE, client.Character.Copper)
-        // Client.Character.SendCharacterUpdate(False)
     }
 
     public void On_CMSG_GUILD_DISBAND(PacketClass packet, ClientClass client)

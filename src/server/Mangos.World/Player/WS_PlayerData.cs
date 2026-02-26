@@ -43,6 +43,15 @@ using System.Threading;
 
 namespace Mangos.World.Player;
 
+public class SummonPositionData
+{
+    public float X;
+    public float Y;
+    public float Z;
+    public float O;
+    public uint MapId;
+}
+
 public class WS_PlayerData
 {
     public class CharacterObject : WS_Base.BaseUnit, IDisposable
@@ -180,6 +189,16 @@ public class WS_PlayerData
         public short DishonorKillsToday;
 
         public uint Copper;
+
+        public int SelfResurrectSpell;
+
+        public int TimePlayed;
+
+        public int TimePlayedLevel;
+
+        public byte StableSlots;
+
+        public SummonPositionData SummonPosition;
 
         public string Name;
 

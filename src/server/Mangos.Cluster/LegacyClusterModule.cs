@@ -22,6 +22,7 @@ using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Network;
+using Mangos.Cluster.Verification;
 using Mangos.Common.Globals;
 using Mangos.Cluster.Interop;
 using Mangos.Common;
@@ -62,6 +63,8 @@ public sealed class LegacyClusterModule : Module
         builder.RegisterType<WcHandlersTickets>().As<WcHandlersTickets>().SingleInstance();
         builder.RegisterType<WsHandlerChannels>().As<WsHandlerChannels>().SingleInstance();
         builder.RegisterType<WcHandlerCharacter>().As<WcHandlerCharacter>().SingleInstance();
+        builder.RegisterType<WcHandlersPetition>().As<WcHandlersPetition>().SingleInstance();
+        builder.RegisterType<ClusterVerifier>().As<ClusterVerifier>().SingleInstance();
 
         builder.RegisterType<ClusterServiceLocator>().As<ClusterServiceLocator>()
             .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)

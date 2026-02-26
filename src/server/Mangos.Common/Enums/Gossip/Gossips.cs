@@ -18,19 +18,18 @@
 
 namespace Mangos.Common.Enums.Gossip;
 
-// TODO: Need to fix this for all to have values
 public enum Gossips
 {
     Thunderbluff = 0,
-    Darnassus,
-    DunMorogh,
-    Durotar,
-    ElwynnForest,
-    Ironforge,
-    Mulgore,
-    Orgrimmar,
-    Stormwind,
-    Teldrassil,
-    Tirisfall,
-    Undercity
+    Darnassus = 1,
+    DunMorogh = 2,
+    Durotar = 3,
+    ElwynnForest = 4,
+    Ironforge = 5,
+    Mulgore = 6,
+    Orgrimmar = 7,
+    Stormwind = 8,
+    Teldrassil = 9,
+    Tirisfall = 10,
+    Undercity = 11
 }

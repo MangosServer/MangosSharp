@@ -18,6 +18,46 @@
 
 namespace Mangos.Domain;
 
+public enum GameState
+{
+    Starting,
+    Loading,
+    Running,
+    ShuttingDown,
+    Stopped
+}
+
 public sealed class Game
 {
+    private GameState _state = GameState.Stopped;
+    private DateTime _startedAt;
+
+    public GameState State => _state;
+    public DateTime StartedAt => _startedAt;
+    public TimeSpan Uptime => _state == GameState.Running ? DateTime.UtcNow - _startedAt : TimeSpan.Zero;
+
+    public void TransitionTo(GameState newState)
+    {
+        var valid = (_state, newState) switch
+        {
+            (GameState.Stopped, GameState.Starting) => true,
+            (GameState.Starting, GameState.Loading) => true,
+            (GameState.Loading, GameState.Running) => true,
+            (GameState.Running, GameState.ShuttingDown) => true,
+            (GameState.ShuttingDown, GameState.Stopped) => true,
+            _ => false
+        };
+
+        if (!valid)
+        {
+            throw new InvalidOperationException($"Cannot transition from {_state} to {newState}");
+        }
+
+        if (newState == GameState.Running)
+        {
+            _startedAt = DateTime.UtcNow;
+        }
+
+        _state = newState;
+    }
 }

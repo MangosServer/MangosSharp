@@ -22,6 +22,8 @@ using Mangos.Logging;
 using Mangos.MySql;
 using Mangos.Tcp;
 using RealmServer;
+using RealmServer.Network;
+using RealmServer.Verification;
 
 Console.Title = "Realm server";
 
@@ -43,6 +45,14 @@ logger.Trace(@"| |\/| / _` | .` | (_ | (_) \__ \   Vanilla Wow");
 logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
 logger.Trace("                                                ");
 logger.Trace("Website / Forum / Support: https://www.getmangos.eu/");
+
+var realmVerifier = container.Resolve<RealmVerifier>();
+using (var scope = container.BeginLifetimeScope())
+{
+    var dispatchers = scope.Resolve<IEnumerable<IHandlerDispatcher>>();
+    realmVerifier.Initialize(dispatchers);
+}
+realmVerifier.Start();
 
 logger.Information("Starting realm tcp server");
 await tcpServer.RunAsync(configuration.Realm.RealmServerEndpoint);

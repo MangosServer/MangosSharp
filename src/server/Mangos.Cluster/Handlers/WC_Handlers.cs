@@ -151,12 +151,19 @@ public class WcHandlers
         _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_CHANNEL_ANNOUNCEMENTS] = _clusterServiceLocator.WcHandlersChat.On_CMSG_CHANNEL_ANNOUNCEMENTS;
         _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_CHANNEL_MODERATE] = _clusterServiceLocator.WcHandlersChat.On_CMSG_CHANNEL_MODERATE;
 
+        // Petition handlers
+        _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_PETITION_SHOWLIST] = _clusterServiceLocator.WcHandlersPetition.On_CMSG_PETITION_SHOWLIST;
+        _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_PETITION_BUY] = _clusterServiceLocator.WcHandlersPetition.On_CMSG_PETITION_BUY;
+        _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_PETITION_SHOW_SIGNATURES] = _clusterServiceLocator.WcHandlersPetition.On_CMSG_PETITION_SHOW_SIGNATURES;
+        _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_PETITION_SIGN] = _clusterServiceLocator.WcHandlersPetition.On_CMSG_PETITION_SIGN;
+        _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.MSG_PETITION_DECLINE] = _clusterServiceLocator.WcHandlersPetition.On_MSG_PETITION_DECLINE;
+        _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_OFFER_PETITION] = _clusterServiceLocator.WcHandlersPetition.On_CMSG_OFFER_PETITION;
+        _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_PETITION_QUERY] = _clusterServiceLocator.WcHandlersPetition.On_CMSG_PETITION_QUERY;
+        _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.MSG_PETITION_RENAME] = _clusterServiceLocator.WcHandlersPetition.On_MSG_PETITION_RENAME;
+
         // Opcodes redirected from the WorldServer
         _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_CREATURE_QUERY] = OnClusterPacket;
         _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_GAMEOBJECT_QUERY] = OnClusterPacket;
-
-        // NOTE: TODO Opcodes
-        // none
     }
 
     public void OnUnhandledPacket(PacketClass packet, ClientClass client)

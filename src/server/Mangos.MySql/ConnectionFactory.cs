@@ -17,6 +17,7 @@
 //
 
 using Mangos.Configuration;
+using Mangos.Logging;
 using Mangos.MySql.Connections;
 using MySql.Data.MySqlClient;
 
@@ -25,16 +26,30 @@ namespace Mangos.MySql;
 internal sealed class ConnectionFactory
 {
     private readonly MangosConfiguration mangosConfiguration;
+    private readonly IMangosLogger logger;
 
-    public ConnectionFactory(MangosConfiguration mangosConfiguration)
+    public ConnectionFactory(MangosConfiguration mangosConfiguration, IMangosLogger logger)
     {
         this.mangosConfiguration = mangosConfiguration;
+        this.logger = logger;
     }
 
     public AccountConnection ConnectToAccountDataBase()
     {
-        var mySqlConnection = new MySqlConnection(mangosConfiguration.AccountDataBaseConnectionString);
-        mySqlConnection.Open();
-        return new AccountConnection(mySqlConnection);
+        var connectionString = mangosConfiguration.AccountDataBaseConnectionString;
+        logger.Debug($"Opening account database connection");
+
+        try
+        {
+            var mySqlConnection = new MySqlConnection(connectionString);
+            mySqlConnection.Open();
+            logger.Information("Account database connection established");
+            return new AccountConnection(mySqlConnection, logger);
+        }
+        catch (MySqlException ex)
+        {
+            logger.Error(ex, "Failed to connect to account database");
+            throw;
+        }
     }
 }
