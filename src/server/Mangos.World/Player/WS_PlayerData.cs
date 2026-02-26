@@ -25,7 +25,6 @@ using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Enums.Spell;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
 using Mangos.World.Globals;
 using Mangos.World.Handlers;
 using Mangos.World.Network;

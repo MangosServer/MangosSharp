@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Mangos.Common.Legacy;
+namespace Mangos.Cluster.Interop;
 
 public interface ICluster
 {

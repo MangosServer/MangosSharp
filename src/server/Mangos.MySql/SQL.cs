@@ -22,7 +22,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Threading;
 
-namespace Mangos.Common.Legacy;
+namespace Mangos.MySql;
 
 public class SQL : IDisposable
 {
@@ -37,14 +37,6 @@ public class SQL : IDisposable
     public event SQLMessageEventHandler SQLMessage;
 
     public delegate void SQLMessageEventHandler(EMessages MessageID, string OutBuf);
-
-    // <Description("Class info version/last date updated.")> _
-    // Public ReadOnly Property Class_Version_Info() As String
-    // Get
-    // Return "Version: " + VInfo + ", Updated at: " + rvDate
-    // End Get
-    // End Property
-    // #End Region
 
     private string v_SQLHost = "localhost";
     private string v_SQLPort = "3306";

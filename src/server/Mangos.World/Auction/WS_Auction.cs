@@ -19,7 +19,8 @@
 using Mangos.Common.Enums.AuctionHouse;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
+using Mangos.Common;
+using Mangos.MySql;
 using Mangos.World.Globals;
 using Mangos.World.Network;
 using Mangos.World.Objects;

@@ -21,7 +21,7 @@ using Mangos.Cluster.Handlers;
 using Mangos.Common.Enums.Authentication;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
+using Mangos.Cluster.Interop;
 using Mangos.Configuration;
 using System;
 using System.Collections;

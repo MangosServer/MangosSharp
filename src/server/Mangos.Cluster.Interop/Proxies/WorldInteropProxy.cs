@@ -17,7 +17,6 @@
 //
 
 using Mangos.Cluster.Interop.Protocol;
-using Mangos.Common.Legacy;
 
 namespace Mangos.Cluster.Interop.Proxies;
 

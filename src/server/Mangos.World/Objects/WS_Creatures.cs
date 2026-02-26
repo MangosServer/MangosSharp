@@ -23,7 +23,6 @@ using Mangos.Common.Enums.Group;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
-using Mangos.Common.Legacy;
 using Mangos.World.AI;
 using Mangos.World.Globals;
 using Mangos.World.Loots;

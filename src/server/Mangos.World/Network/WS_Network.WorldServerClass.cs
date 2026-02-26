@@ -18,7 +18,7 @@
 
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
-using Mangos.Common.Legacy;
+using Mangos.Cluster.Interop;
 using Mangos.DataStores;
 using Mangos.World.Globals;
 using Mangos.World.Maps;

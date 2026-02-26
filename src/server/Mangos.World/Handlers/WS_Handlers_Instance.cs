@@ -18,7 +18,8 @@
 
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Map;
-using Mangos.Common.Legacy;
+using Mangos.Common;
+using Mangos.MySql;
 using Mangos.World.Maps;
 using Mangos.World.Network;
 using Mangos.World.Player;

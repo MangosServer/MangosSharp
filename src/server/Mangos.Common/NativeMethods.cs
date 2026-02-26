@@ -16,10 +16,14 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Legacy;
+using System;
 
-public class ServerInfo
+namespace Mangos.Common;
+
+public class NativeMethods
 {
-    public float CpuUsage { get; set; }
-    public ulong MemoryUsage { get; set; }
+    public int timeGetTime(string dummy)
+    {
+        return Environment.TickCount;
+    }
 }
