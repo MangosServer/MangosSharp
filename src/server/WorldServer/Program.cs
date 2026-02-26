@@ -82,8 +82,10 @@ builder.RegisterModule<ConfigurationModule>();
 builder.RegisterModule<LoggingModule>();
 builder.RegisterModule<MySqlModule>();
 builder.RegisterModule<LegacyWorldModule>();
-builder.RegisterModule(new WorldServerModule(clusterProxy));
-
+if (clusterProxy != null)
+{
+    builder.RegisterModule(new WorldServerModule(clusterProxy));
+}
 var container = builder.Build();
 WorldServiceLocator.Container = container;
 var worldServer = container.Resolve<Mangos.World.WorldServer>();
@@ -97,10 +99,7 @@ var wsWorldServerClass = worldServer.ClsWorldServer;
 var worldDispatcher = new WorldInteropDispatcher(wsWorldServerClass);
 
 interopConnection.OnMethodCallAsync = (methodId, data) => worldDispatcher.DispatchAsync(methodId, data);
-interopConnection.OnDisconnected = () =>
-{
-    logger.Error("Cluster IPC connection lost! Attempting reconnection...");
-};
+interopConnection.OnDisconnected = () => logger.Error("Cluster IPC connection lost! Attempting reconnection...");
 
 interopConnection.StartReceiving();
 
