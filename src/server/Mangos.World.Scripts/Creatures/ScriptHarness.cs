@@ -16,11 +16,41 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Reflection;
+using Mangos.World.AI;
+
 namespace Mangos.World.Scripts.Creatures;
 
-internal static class ScriptHarness
+public static class ScriptHarness
 {
+    private static readonly Dictionary<string, Type> RegisteredScripts = new(StringComparer.OrdinalIgnoreCase);
+
     public static void Main()
     {
+        DiscoverScripts();
     }
+
+    public static void DiscoverScripts()
+    {
+        RegisteredScripts.Clear();
+
+        var baseType = typeof(WS_Creatures_AI.BossAI);
+        var scriptTypes = Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => t.IsClass && !t.IsAbstract && baseType.IsAssignableFrom(t));
+
+        foreach (var type in scriptTypes)
+        {
+            RegisteredScripts[type.Name] = type;
+        }
+    }
+
+    public static IReadOnlyDictionary<string, Type> GetRegisteredScripts() => RegisteredScripts;
+
+    public static Type? GetScript(string name)
+    {
+        return RegisteredScripts.GetValueOrDefault(name);
+    }
+
+    public static int ScriptCount => RegisteredScripts.Count;
 }

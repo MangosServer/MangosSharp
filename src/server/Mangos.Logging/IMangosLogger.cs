@@ -18,10 +18,25 @@
 
 namespace Mangos.Logging;
 
+public enum LogLevel
+{
+    Trace = 0,
+    Debug = 1,
+    Information = 2,
+    Warning = 3,
+    Error = 4,
+    Critical = 5
+}
+
 public interface IMangosLogger
 {
+    LogLevel MinimumLevel { get; set; }
+
     void Trace(string message);
     void Trace(Exception exception, string message);
+
+    void Debug(string message);
+    void Debug(Exception exception, string message);
 
     void Information(string message);
     void Information(Exception exception, string message);
@@ -31,4 +46,10 @@ public interface IMangosLogger
 
     void Error(string message);
     void Error(Exception exception, string message);
+
+    void Critical(string message);
+    void Critical(Exception exception, string message);
+
+    void Log(LogLevel level, string message);
+    void Log(LogLevel level, Exception exception, string message);
 }

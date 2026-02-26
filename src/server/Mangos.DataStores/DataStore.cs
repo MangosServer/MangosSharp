@@ -26,10 +26,12 @@ namespace Mangos.DataStores;
 
 public class DataStore
 {
-    private byte[] data;
+    private const int HeaderSize = 20;
+
+    private byte[] data = Array.Empty<byte>();
 
     [Description("Header information: File type.")]
-    public string Type { get; private set; }
+    public string Type { get; private set; } = string.Empty;
 
     [Description("Header information: Rows contained in the file.")]
     public int Rows { get; private set; }
@@ -37,21 +39,40 @@ public class DataStore
     [Description("Header information: Columns for each row.")]
     public int Columns { get; private set; }
 
-    [Description("Header information: Bytes ocupied by each row.")]
+    [Description("Header information: Bytes occupied by each row.")]
     public int RowLength { get; private set; }
 
     [Description("Header information: Strings data block length.")]
     public int StringBlockLength { get; private set; }
 
+    public bool IsLoaded => data.Length > 0;
+
     public async Task LoadFromFileAsync(string path)
     {
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException($"DBC file not found: {path}", path);
+        }
+
         data = await File.ReadAllBytesAsync(path);
+
+        if (data.Length < HeaderSize)
+        {
+            throw new InvalidDataException($"DBC file too small ({data.Length} bytes): {path}");
+        }
 
         Type = Encoding.ASCII.GetString(data, 0, 4);
         Rows = BitConverter.ToInt32(new ReadOnlySpan<byte>(data, 4, 4));
         Columns = BitConverter.ToInt32(new ReadOnlySpan<byte>(data, 8, 4));
         RowLength = BitConverter.ToInt32(new ReadOnlySpan<byte>(data, 12, 4));
         StringBlockLength = BitConverter.ToInt32(new ReadOnlySpan<byte>(data, 16, 4));
+
+        var expectedMinSize = HeaderSize + (Rows * RowLength) + StringBlockLength;
+        if (data.Length < expectedMinSize)
+        {
+            throw new InvalidDataException(
+                $"DBC file {path} is truncated: expected at least {expectedMinSize} bytes, got {data.Length}");
+        }
     }
 
     public int ReadInt(int row, int column)
@@ -66,20 +87,38 @@ public class DataStore
 
     public string ReadString(int row, int column)
     {
-        var offset = GetRowOffset(row) + ReadInt(row, column);
-        var length = Array.IndexOf<byte>(data, 0, offset) - offset;
-        return BitConverter.ToString(data, offset, length);
+        var stringBlockStart = HeaderSize + (Rows * RowLength);
+        var stringOffset = ReadInt(row, column);
+        var offset = stringBlockStart + stringOffset;
+
+        if (offset < 0 || offset >= data.Length)
+        {
+            return string.Empty;
+        }
+
+        var nullIndex = Array.IndexOf<byte>(data, 0, offset);
+        var length = (nullIndex >= 0 ? nullIndex : data.Length) - offset;
+
+        return length <= 0 ? string.Empty : Encoding.UTF8.GetString(data, offset, length);
     }
 
     private int GetOffset(int row, int column)
     {
-        return column >= Columns
-            ? throw new ApplicationException("DBC: Column index outside file definition.")
-            : GetRowOffset(row) + (column * 4);
+        if (column < 0 || column >= Columns)
+        {
+            throw new ArgumentOutOfRangeException(nameof(column),
+                $"DBC: Column index {column} outside file definition (0-{Columns - 1}).");
+        }
+        return GetRowOffset(row) + (column * 4);
     }
 
     private int GetRowOffset(int row)
     {
-        return row >= Rows ? throw new ApplicationException("DBC: Row index outside file definition.") : 20 + (row * RowLength);
+        if (row < 0 || row >= Rows)
+        {
+            throw new ArgumentOutOfRangeException(nameof(row),
+                $"DBC: Row index {row} outside file definition (0-{Rows - 1}).");
+        }
+        return HeaderSize + (row * RowLength);
     }
 }

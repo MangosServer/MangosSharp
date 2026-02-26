@@ -54,7 +54,7 @@ public class LegacyWorldCluster
     // System Things...
     public BaseWriter Log = new ColoredConsoleWriter();
 
-    public Random Rnd = new();
+    public Random Rnd = Random.Shared;
 
     public delegate void HandlePacket(PacketClass packet, ClientClass client);
 

@@ -27,6 +27,7 @@ public sealed class TcpServer
 {
     private readonly IMangosLogger logger;
     private readonly ILifetimeScope lifetimeScope;
+    private int _activeConnections;
 
     public TcpServer(IMangosLogger logger, ILifetimeScope lifetimeScope)
     {
@@ -37,14 +38,27 @@ public sealed class TcpServer
     public async Task RunAsync(string endpoint, CancellationToken cancellationToken = default)
     {
         var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
         socket.Bind(IPEndPoint.Parse(endpoint));
         socket.Listen(10);
 
-        logger.Information($"Tcp server was started on {endpoint}");
+        logger.Information($"TCP server started on {endpoint}");
 
-        while (!cancellationToken.IsCancellationRequested)
+        try
         {
-            HandleClientConnection(await socket.AcceptAsync(cancellationToken), cancellationToken);
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                HandleClientConnection(await socket.AcceptAsync(cancellationToken), cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            logger.Information("TCP server shutting down");
+        }
+        finally
+        {
+            socket.Dispose();
+            logger.Information("TCP server stopped");
         }
     }
 
@@ -53,29 +67,40 @@ public sealed class TcpServer
         if (socket.RemoteEndPoint is not IPEndPoint endpoint)
         {
             logger.Error("Unable to get remote endpoint");
+            socket.Dispose();
             return;
         }
 
-        logger.Information($"Tcp client was conntected {endpoint}");
+        var connectionCount = Interlocked.Increment(ref _activeConnections);
+        logger.Information($"TCP client connected: {endpoint} (active connections: {connectionCount})");
         try
         {
             using var scope = lifetimeScope.BeginLifetimeScope();
             var tcpConnection = scope.Resolve<ITcpConnection>();
             await tcpConnection.ExecuteAsync(socket, cancellationToken);
         }
-        catch (SocketException exception) when (exception.SocketErrorCode == SocketError.ConnectionAborted)
+        catch (SocketException exception) when (exception.SocketErrorCode == SocketError.ConnectionAborted ||
+                                                  exception.SocketErrorCode == SocketError.ConnectionReset)
         {
-            logger.Information("Connection aborted");
+            logger.Information($"Connection closed by client: {endpoint}");
+        }
+        catch (IOException)
+        {
+            logger.Information($"Connection lost: {endpoint}");
+        }
+        catch (OperationCanceledException)
+        {
+            logger.Debug($"Connection cancelled: {endpoint}");
         }
         catch (Exception exception)
         {
-            logger.Error(exception, "Unhandled exception");
+            logger.Error(exception, $"Unhandled exception from client {endpoint}");
         }
         finally
         {
             socket.Dispose();
+            connectionCount = Interlocked.Decrement(ref _activeConnections);
+            logger.Information($"TCP client disconnected: {endpoint} (active connections: {connectionCount})");
         }
-
-        logger.Information($"Tcp client was disconected");
     }
 }
