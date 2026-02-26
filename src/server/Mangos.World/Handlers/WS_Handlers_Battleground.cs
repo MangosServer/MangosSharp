@@ -20,6 +20,7 @@ using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.World.Globals;
 using Mangos.World.Network;
+using System;
 using System.Collections.Generic;
 
 namespace Mangos.World.Handlers;
@@ -72,5 +73,153 @@ public class WS_Handlers_Battleground
     public void On_MSG_BATTLEGROUND_PLAYER_POSITIONS(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
         packet.GetUInt32();
+    }
+
+    public void On_CMSG_BATTLEMASTER_JOIN(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        try
+        {
+            if (checked(packet.Data.Length - 1) < 25)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var battlemasterGuid = packet.GetUInt64();
+            var bgTypeId = packet.GetInt32();
+            var instanceId = packet.GetInt32();
+            var joinAsGroup = packet.GetInt8();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEMASTER_JOIN [GUID={2:X} BG={3} Instance={4} Group={5}]", client.IP, client.Port, battlemasterGuid, bgTypeId, instanceId, joinAsGroup);
+            if (client.Character == null || client.Character.DEAD)
+            {
+                return;
+            }
+            if (!WorldServiceLocator.WSDBCDatabase.Battlegrounds.ContainsKey(bgTypeId))
+            {
+                return;
+            }
+            if (WorldServiceLocator.WSDBCDatabase.Battlegrounds[bgTypeId].MinLevel > (uint)client.Character.Level || WorldServiceLocator.WSDBCDatabase.Battlegrounds[bgTypeId].MaxLevel < (uint)client.Character.Level)
+            {
+                WorldServiceLocator.Functions.SendMessageNotification(ref client, "You don't meet Battleground level requirements");
+                return;
+            }
+            Packets.PacketClass statusPacket = new(Opcodes.SMSG_BATTLEFIELD_STATUS);
+            try
+            {
+                statusPacket.AddInt32(0);
+                statusPacket.AddInt32(bgTypeId);
+                statusPacket.AddInt32(0);
+                statusPacket.AddInt32(0);
+                statusPacket.AddInt32(1);
+                client.Send(ref statusPacket);
+            }
+            finally
+            {
+                statusPacket.Dispose();
+            }
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at battlemaster join.{0}", Environment.NewLine + e);
+        }
+    }
+
+    public void On_CMSG_BATTLEFIELD_PORT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        try
+        {
+            if (checked(packet.Data.Length - 1) < 9)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var bgType = packet.GetInt32();
+            var action = packet.GetInt8();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BATTLEFIELD_PORT [BG={2} Action={3}]", client.IP, client.Port, bgType, action);
+            if (client.Character == null)
+            {
+                return;
+            }
+            if (action == 0)
+            {
+                Packets.PacketClass statusPacket = new(Opcodes.SMSG_BATTLEFIELD_STATUS);
+                try
+                {
+                    statusPacket.AddInt32(0);
+                    statusPacket.AddInt32(0);
+                    statusPacket.AddInt32(0);
+                    statusPacket.AddInt32(0);
+                    statusPacket.AddInt32(0);
+                    client.Send(ref statusPacket);
+                }
+                finally
+                {
+                    statusPacket.Dispose();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at battlefield port.{0}", Environment.NewLine + e);
+        }
+    }
+
+    public void On_CMSG_LEAVE_BATTLEFIELD(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_LEAVE_BATTLEFIELD", client.IP, client.Port);
+        if (client.Character == null)
+        {
+            return;
+        }
+        if (WorldServiceLocator.WSMaps.Maps.ContainsKey(client.Character.MapID) && WorldServiceLocator.WSMaps.Maps[client.Character.MapID].IsBattleGround)
+        {
+            client.Character.Teleport(client.Character.bindpoint_positionX, client.Character.bindpoint_positionY, client.Character.bindpoint_positionZ, 0f, client.Character.bindpoint_map_id);
+        }
+    }
+
+    public void On_CMSG_AREA_SPIRIT_HEALER_QUERY(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        try
+        {
+            if (checked(packet.Data.Length - 1) < 13)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var spiritGuid = packet.GetUInt64();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AREA_SPIRIT_HEALER_QUERY [{2:X}]", client.IP, client.Port, spiritGuid);
+            Packets.PacketClass response = new(Opcodes.SMSG_AREA_SPIRIT_HEALER_TIME);
+            try
+            {
+                response.AddUInt64(spiritGuid);
+                response.AddInt32(30000);
+                client.Send(ref response);
+            }
+            finally
+            {
+                response.Dispose();
+            }
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at area spirit healer query.{0}", Environment.NewLine + e);
+        }
+    }
+
+    public void On_CMSG_AREA_SPIRIT_HEALER_QUEUE(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
+    {
+        try
+        {
+            if (checked(packet.Data.Length - 1) < 13)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var spiritGuid = packet.GetUInt64();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AREA_SPIRIT_HEALER_QUEUE [{2:X}]", client.IP, client.Port, spiritGuid);
+        }
+        catch (Exception e)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at area spirit healer queue.{0}", Environment.NewLine + e);
+        }
     }
 }

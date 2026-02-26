@@ -16,20 +16,25 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-namespace Mangos.Common.Enums.Gossip;
+using System;
+using System.Collections.Generic;
 
-public enum Gossips
+namespace Mangos.World.Verification;
+
+public class VerificationResult
 {
-    Thunderbluff = 0,
-    Darnassus = 1,
-    DunMorogh = 2,
-    Durotar = 3,
-    ElwynnForest = 4,
-    Ironforge = 5,
-    Mulgore = 6,
-    Orgrimmar = 7,
-    Stormwind = 8,
-    Teldrassil = 9,
-    Tirisfall = 10,
-    Undercity = 11
+    public string CheckName { get; set; }
+    public VerificationStatus Status { get; set; }
+    public string Message { get; set; }
+    public int IssuesFound { get; set; }
+    public List<string> Details { get; set; } = new();
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+}
+
+public enum VerificationStatus
+{
+    Passed,
+    Warning,
+    Failed,
+    Error
 }

@@ -27,6 +27,7 @@ using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Quests;
+using Mangos.World.Verification;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections;
@@ -426,6 +427,7 @@ public class WorldServer
         }
         Log.WriteLine(LogType.INFORMATION, " Load Time:   {0}", Strings.Format(DateAndTime.DateDiff(DateInterval.Second, dateTimeStarted, DateAndTime.Now), "0 seconds"));
         Log.WriteLine(LogType.INFORMATION, " Used Memory: {0}", Strings.Format(GC.GetTotalMemory(forceFullCollection: false), "### ### ##0 bytes"));
+        WorldServiceLocator.GameLogicVerifier.Start();
     }
 
     public void WaitConsoleCommand()

@@ -35,6 +35,7 @@ using Mangos.World.Player;
 using Mangos.World.Server;
 using Mangos.World.Social;
 using Mangos.World.Spells;
+using Mangos.World.Verification;
 using Mangos.World.Warden;
 using Mangos.World.Weather;
 using Mangos.Zip;
@@ -148,4 +149,6 @@ public sealed class WorldServiceLocator
     public static WS_Warden WSWarden => Container.Resolve<WS_Warden>();
 
     public static WS_Weather WSWeather => Container.Resolve<WS_Weather>();
+
+    public static GameLogicVerifier GameLogicVerifier => Container.Resolve<GameLogicVerifier>();
 }

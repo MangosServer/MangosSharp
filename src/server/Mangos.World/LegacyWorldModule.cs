@@ -34,6 +34,7 @@ using Mangos.World.Player;
 using Mangos.World.Server;
 using Mangos.World.Social;
 using Mangos.World.Spells;
+using Mangos.World.Verification;
 using Mangos.World.Warden;
 using Mangos.World.Weather;
 using Mangos.Zip;
@@ -95,5 +96,6 @@ public sealed class LegacyWorldModule : Module
         builder.RegisterType<WS_Warden>().As<WS_Warden>().SingleInstance();
         builder.RegisterType<WS_Weather>().As<WS_Weather>().SingleInstance();
         builder.RegisterType<DataStoreProvider>().As<DataStoreProvider>().SingleInstance();
+        builder.RegisterType<GameLogicVerifier>().As<GameLogicVerifier>().SingleInstance();
     }
 }

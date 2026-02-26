@@ -3100,6 +3100,7 @@ public class WS_Spells
             SPELL_EFFECTs[50] = SPELL_EFFECT_SUMMON_OBJECT;
             SPELL_EFFECTs[53] = SPELL_EFFECT_ENCHANT_ITEM;
             SPELL_EFFECTs[54] = SPELL_EFFECT_ENCHANT_ITEM_TEMPORARY;
+            SPELL_EFFECTs[56] = SPELL_EFFECT_SUMMON_PET;
             SPELL_EFFECTs[58] = SPELL_EFFECT_WEAPON_DAMAGE;
             SPELL_EFFECTs[59] = SPELL_EFFECT_OPEN_LOCK;
             SPELL_EFFECTs[60] = SPELL_EFFECT_PROFICIENCY;
@@ -3117,8 +3118,10 @@ public class WS_Spells
             SPELL_EFFECTs[92] = SPELL_EFFECT_ENCHANT_HELD_ITEM;
             SPELL_EFFECTs[95] = SPELL_EFFECT_SKINNING;
             SPELL_EFFECTs[96] = SPELL_EFFECT_CHARGE;
+            SPELL_EFFECTs[97] = SPELL_EFFECT_SUMMON_CRITTER;
             SPELL_EFFECTs[98] = SPELL_EFFECT_KNOCK_BACK;
             SPELL_EFFECTs[99] = SPELL_EFFECT_DISENCHANT;
+            SPELL_EFFECTs[112] = SPELL_EFFECT_SUMMON_DEMON;
             SPELL_EFFECTs[113] = SPELL_EFFECT_RESURRECT_NEW;
             SPELL_EFFECTs[120] = SPELL_EFFECT_TELEPORT_GRAVEYARD;
             SPELL_EFFECTs[121] = SPELL_EFFECT_ADDICTIONAL_DMG;
@@ -4105,6 +4108,18 @@ public class WS_Spells
                 WS_Base.BaseUnit caster = (WS_Base.BaseUnit)Caster;
                 Unit.RemoveAurasByDispellType(SpellInfo.MiscValue, SpellInfo.GetValue(Level: caster.Level, ComboPoints: 0));
             }
+            else
+            {
+                if (Caster is WS_PlayerData.CharacterObject casterCharacter)
+                {
+                    Packets.PacketClass dispelFailed = new(Opcodes.SMSG_DISPEL_FAILED);
+                    dispelFailed.AddUInt64(Caster.GUID);
+                    dispelFailed.AddUInt64(Unit.GUID);
+                    dispelFailed.AddInt32(SpellID);
+                    casterCharacter.client.Send(ref dispelFailed);
+                    dispelFailed.Dispose();
+                }
+            }
         }
         return SpellFailedReason.SPELL_NO_ERROR;
     }
@@ -5062,10 +5077,51 @@ public class WS_Spells
     /// <param name="SpellID"></param>
     /// <param name="Infected"></param>
     /// <param name="Item"></param>
-    /// <returns>SPELL_FAILED_CANT_DO_THAT_YET (NOT IMPLEMENTED)</returns>
+    /// <returns>SPELL_NO_ERROR</returns>
     public SpellFailedReason SPELL_EFFECT_SUMMON(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
     {
-        return SpellFailedReason.SPELL_FAILED_CANT_DO_THAT_YET;
+        if (Caster is not WS_Base.BaseUnit)
+        {
+            return SpellFailedReason.SPELL_FAILED_CASTER_DEAD;
+        }
+        float SelectedX;
+        float SelectedY;
+        float SelectedZ;
+        var targetMask = (uint)Target.targetMask;
+        if ((targetMask & 0x40u) != 0)
+        {
+            SelectedX = Target.dstX;
+            SelectedY = Target.dstY;
+            SelectedZ = Target.dstZ;
+        }
+        else
+        {
+            SelectedX = Caster.positionX;
+            SelectedY = Caster.positionY;
+            SelectedZ = Caster.positionZ;
+        }
+        WS_Base.BaseUnit caster = (WS_Base.BaseUnit)Caster;
+        var mapID = (int)Caster.MapID;
+        var duration = SPELLs[SpellID].GetDuration;
+        WS_Creatures.CreatureObject creatureObject = new(SpellInfo.MiscValue, SelectedX, SelectedY, SelectedZ, Caster.orientation, checked(mapID), duration)
+        {
+            Level = caster.Level,
+            SummonedBy = Caster.GUID,
+            CreatedBy = Caster.GUID,
+            CreatedBySpell = SpellID
+        };
+        var tmpCreature = creatureObject;
+        if (Caster is WS_PlayerData.CharacterObject @object)
+        {
+            tmpCreature.Faction = @object.Faction;
+        }
+        else if (Caster is WS_Creatures.CreatureObject creatureCaster)
+        {
+            tmpCreature.Faction = creatureCaster.Faction;
+        }
+        tmpCreature.AddToWorld();
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Creature [{0}] summoned by [{1:X}].", tmpCreature.GUID, Caster.GUID);
+        return SpellFailedReason.SPELL_NO_ERROR;
     }
 
     /// <summary>
@@ -5077,42 +5133,39 @@ public class WS_Spells
     /// <param name="SpellID"></param>
     /// <param name="Infected"></param>
     /// <param name="Item"></param>
-    /// <returns>SPELL_EFFECT_SUMMON_WILD</returns>
+    /// <returns>SPELL_NO_ERROR</returns>
     public SpellFailedReason SPELL_EFFECT_SUMMON_WILD(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
     {
-        if (SPELLs[SpellID].GetDuration == 0)
+        float SelectedX;
+        float SelectedY;
+        float SelectedZ;
+        var targetMask = (uint)Target.targetMask;
+        if ((targetMask & 0x40u) != 0)
         {
-            float SelectedX;
-            float SelectedY;
-            float SelectedZ;
-            var targetMask = (uint)Target.targetMask;
-            if ((targetMask & 0x40u) != 0)
-            {
-                SelectedX = Target.dstX;
-                SelectedY = Target.dstY;
-                SelectedZ = Target.dstZ;
-            }
-            else
-            {
-                SelectedX = Caster.positionX;
-                SelectedY = Caster.positionY;
-                SelectedZ = Caster.positionZ;
-            }
-
-            WS_Base.BaseUnit caster = (WS_Base.BaseUnit)Caster;
-            var mapID = (int)Caster.MapID;
-            WS_Creatures.CreatureObject creatureObject = new(SpellInfo.MiscValue, SelectedX, SelectedY, SelectedZ, Caster.orientation, checked(mapID), SPELLs[SpellID].GetDuration)
-            {
-                Level = caster.Level,
-                CreatedBy = Caster.GUID,
-                CreatedBySpell = SpellID
-            };
-            var tmpCreature = creatureObject;
-            tmpCreature.AddToWorld();
-            return SpellFailedReason.SPELL_NO_ERROR;
+            SelectedX = Target.dstX;
+            SelectedY = Target.dstY;
+            SelectedZ = Target.dstZ;
         }
-        SpellFailedReason SPELL_EFFECT_SUMMON_WILD = default;
-        return SPELL_EFFECT_SUMMON_WILD;
+        else
+        {
+            SelectedX = Caster.positionX;
+            SelectedY = Caster.positionY;
+            SelectedZ = Caster.positionZ;
+        }
+
+        WS_Base.BaseUnit caster = (WS_Base.BaseUnit)Caster;
+        var mapID = (int)Caster.MapID;
+        var duration = SPELLs[SpellID].GetDuration;
+        WS_Creatures.CreatureObject creatureObject = new(SpellInfo.MiscValue, SelectedX, SelectedY, SelectedZ, Caster.orientation, checked(mapID), duration)
+        {
+            Level = caster.Level,
+            CreatedBy = Caster.GUID,
+            CreatedBySpell = SpellID
+        };
+        var tmpCreature = creatureObject;
+        tmpCreature.AddToWorld();
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Wild creature [{0}] summoned by [{1:X}] with duration [{2}].", tmpCreature.GUID, Caster.GUID, duration);
+        return SpellFailedReason.SPELL_NO_ERROR;
     }
 
     /// <summary>
@@ -5205,6 +5258,171 @@ public class WS_Spells
                     return SpellFailedReason.SPELL_NO_ERROR;
             }
         }
+    }
+
+    /// <summary>
+    /// SPELL_EFFECT_SUMMON_PET
+    /// </summary>
+    /// <param name="Target"></param>
+    /// <param name="Caster"></param>
+    /// <param name="SpellInfo"></param>
+    /// <param name="SpellID"></param>
+    /// <param name="Infected"></param>
+    /// <param name="Item"></param>
+    /// <returns>SPELL_NO_ERROR</returns>
+    public SpellFailedReason SPELL_EFFECT_SUMMON_PET(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+    {
+        if (Caster is not WS_PlayerData.CharacterObject objCharacter)
+        {
+            return SpellFailedReason.SPELL_FAILED_BAD_TARGETS;
+        }
+        if (objCharacter.Pet != null)
+        {
+            objCharacter.Pet.Spawn();
+            return SpellFailedReason.SPELL_NO_ERROR;
+        }
+        if (SpellInfo.MiscValue > 0)
+        {
+            float SelectedX = (float)(Caster.positionX + (Math.Cos(Caster.orientation) * 2.0));
+            float SelectedY = (float)(Caster.positionY + (Math.Sin(Caster.orientation) * 2.0));
+            float SelectedZ = WorldServiceLocator.WSMaps.GetZCoord(SelectedX, SelectedY, Caster.positionZ, Caster.MapID);
+            var mapID = (int)Caster.MapID;
+            var duration = SPELLs[SpellID].GetDuration;
+            if (!WorldServiceLocator.WorldServer.CREATURESDatabase.ContainsKey(SpellInfo.MiscValue))
+            {
+                CreatureInfo tmpInfo = new(SpellInfo.MiscValue);
+                WorldServiceLocator.WorldServer.CREATURESDatabase.Add(SpellInfo.MiscValue, tmpInfo);
+            }
+            WS_Pets.PetObject petObject = new(WorldServiceLocator.WorldServer.GenerateNextGuid(ref WorldServiceLocator.WorldServer.CreatureGUIDCounter), SpellInfo.MiscValue)
+            {
+                Owner = objCharacter,
+                SummonedBy = Caster.GUID,
+                CreatedBy = Caster.GUID,
+                CreatedBySpell = SpellID,
+                Level = ((WS_Base.BaseUnit)Caster).Level,
+                Faction = objCharacter.Faction,
+                positionX = SelectedX,
+                positionY = SelectedY,
+                positionZ = SelectedZ,
+                orientation = Caster.orientation,
+                MapID = Caster.MapID
+            };
+            petObject.PetName = WorldServiceLocator.WorldServer.CREATURESDatabase[SpellInfo.MiscValue].Name;
+            objCharacter.Pet = petObject;
+            petObject.Spawn();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Pet [{0}] summoned by [{1:X}].", petObject.GUID, Caster.GUID);
+            return SpellFailedReason.SPELL_NO_ERROR;
+        }
+        var wS_Pets = WorldServiceLocator.WSPets;
+        wS_Pets.LoadPet(ref objCharacter);
+        if (objCharacter.Pet != null)
+        {
+            objCharacter.Pet.positionX = (float)(Caster.positionX + (Math.Cos(Caster.orientation) * 2.0));
+            objCharacter.Pet.positionY = (float)(Caster.positionY + (Math.Sin(Caster.orientation) * 2.0));
+            objCharacter.Pet.positionZ = WorldServiceLocator.WSMaps.GetZCoord(objCharacter.Pet.positionX, objCharacter.Pet.positionY, Caster.positionZ, Caster.MapID);
+            objCharacter.Pet.MapID = Caster.MapID;
+            objCharacter.Pet.Spawn();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Pet [{0}] loaded and summoned for [{1:X}].", objCharacter.Pet.GUID, Caster.GUID);
+        }
+        Caster = objCharacter;
+        return SpellFailedReason.SPELL_NO_ERROR;
+    }
+
+    /// <summary>
+    /// SPELL_EFFECT_SUMMON_DEMON
+    /// </summary>
+    /// <param name="Target"></param>
+    /// <param name="Caster"></param>
+    /// <param name="SpellInfo"></param>
+    /// <param name="SpellID"></param>
+    /// <param name="Infected"></param>
+    /// <param name="Item"></param>
+    /// <returns>SPELL_NO_ERROR</returns>
+    public SpellFailedReason SPELL_EFFECT_SUMMON_DEMON(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+    {
+        if (Caster is not WS_Base.BaseUnit)
+        {
+            return SpellFailedReason.SPELL_FAILED_CASTER_DEAD;
+        }
+        float SelectedX = Caster.positionX;
+        float SelectedY = Caster.positionY;
+        float SelectedZ = Caster.positionZ;
+        WS_Base.BaseUnit caster = (WS_Base.BaseUnit)Caster;
+        var mapID = (int)Caster.MapID;
+        var duration = SPELLs[SpellID].GetDuration;
+        if (!WorldServiceLocator.WorldServer.CREATURESDatabase.ContainsKey(SpellInfo.MiscValue))
+        {
+            CreatureInfo tmpInfo = new(SpellInfo.MiscValue);
+            WorldServiceLocator.WorldServer.CREATURESDatabase.Add(SpellInfo.MiscValue, tmpInfo);
+        }
+        WS_Creatures.CreatureObject creatureObject = new(SpellInfo.MiscValue, SelectedX, SelectedY, SelectedZ, Caster.orientation, checked(mapID), duration)
+        {
+            Level = caster.Level,
+            SummonedBy = Caster.GUID,
+            CreatedBy = Caster.GUID,
+            CreatedBySpell = SpellID
+        };
+        var tmpCreature = creatureObject;
+        if (Caster is WS_PlayerData.CharacterObject characterCaster)
+        {
+            tmpCreature.Faction = characterCaster.Faction;
+        }
+        else if (Caster is WS_Creatures.CreatureObject creatureCaster)
+        {
+            tmpCreature.Faction = creatureCaster.Faction;
+        }
+        tmpCreature.AddToWorld();
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Demon [{0}] summoned by [{1:X}].", tmpCreature.GUID, Caster.GUID);
+        return SpellFailedReason.SPELL_NO_ERROR;
+    }
+
+    /// <summary>
+    /// SPELL_EFFECT_SUMMON_CRITTER
+    /// </summary>
+    /// <param name="Target"></param>
+    /// <param name="Caster"></param>
+    /// <param name="SpellInfo"></param>
+    /// <param name="SpellID"></param>
+    /// <param name="Infected"></param>
+    /// <param name="Item"></param>
+    /// <returns>SPELL_NO_ERROR</returns>
+    public SpellFailedReason SPELL_EFFECT_SUMMON_CRITTER(ref SpellTargets Target, ref WS_Base.BaseObject Caster, ref SpellEffect SpellInfo, int SpellID, ref List<WS_Base.BaseObject> Infected, ref ItemObject Item)
+    {
+        if (Caster is not WS_PlayerData.CharacterObject objCharacter)
+        {
+            return SpellFailedReason.SPELL_FAILED_BAD_TARGETS;
+        }
+        if (objCharacter.NonCombatPet != null)
+        {
+            var isSameCritter = objCharacter.NonCombatPet.ID == SpellInfo.MiscValue;
+            objCharacter.NonCombatPet.Destroy();
+            objCharacter.NonCombatPet = null;
+            if (isSameCritter)
+            {
+                return SpellFailedReason.SPELL_NO_ERROR;
+            }
+        }
+        float SelectedX = (float)(Caster.positionX + (Math.Cos(Caster.orientation) * 2.0));
+        float SelectedY = (float)(Caster.positionY + (Math.Sin(Caster.orientation) * 2.0));
+        float SelectedZ = WorldServiceLocator.WSMaps.GetZCoord(SelectedX, SelectedY, Caster.positionZ, Caster.MapID);
+        var mapID = (int)Caster.MapID;
+        if (!WorldServiceLocator.WorldServer.CREATURESDatabase.ContainsKey(SpellInfo.MiscValue))
+        {
+            CreatureInfo tmpInfo = new(SpellInfo.MiscValue);
+            WorldServiceLocator.WorldServer.CREATURESDatabase.Add(SpellInfo.MiscValue, tmpInfo);
+        }
+        WS_Creatures.CreatureObject creatureObject = new(SpellInfo.MiscValue, SelectedX, SelectedY, SelectedZ, Caster.orientation, checked(mapID))
+        {
+            Level = 1,
+            SummonedBy = Caster.GUID,
+            CreatedBy = Caster.GUID,
+            CreatedBySpell = SpellID
+        };
+        var tmpCreature = creatureObject;
+        objCharacter.NonCombatPet = tmpCreature;
+        tmpCreature.AddToWorld();
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[DEBUG] Critter [{0}] summoned by [{1:X}].", tmpCreature.GUID, Caster.GUID);
+        return SpellFailedReason.SPELL_NO_ERROR;
     }
 
     /// <summary>
@@ -5461,10 +5679,6 @@ public class WS_Spells
             packet.AddSingle(SpellInfo.MiscValue / -10f);
             Unit.SendToNearPlayers(ref packet);
             packet.Dispose();
-            if (Unit is not WS_Creatures.CreatureObject)
-            {
-                return SpellFailedReason.SPELL_FAILED_CANT_DO_THAT_YET; // PlayerVsPlayer?
-            }
         }
         return SpellFailedReason.SPELL_NO_ERROR;
     }

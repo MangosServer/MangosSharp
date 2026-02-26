@@ -421,4 +421,48 @@ public partial class WS_Loot
             }
         }
     }
+
+    public void MasterLootGive(ref WS_PlayerData.CharacterObject masterLooter, ulong lootGuid, byte slotId, ref WS_PlayerData.CharacterObject targetPlayer)
+    {
+        if (!LootTable.ContainsKey(lootGuid))
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "MasterLootGive: Loot table not found for GUID {0:X}", lootGuid);
+            return;
+        }
+
+        var loot = LootTable[lootGuid];
+        if (slotId >= loot.Items.Count)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "MasterLootGive: Invalid slot {0} for loot {1:X}", slotId, lootGuid);
+            return;
+        }
+
+        var lootItem = loot.Items[slotId];
+        if (lootItem == null || lootItem.Taken)
+        {
+            return;
+        }
+
+        // Try to add the item to the target player's inventory
+        if (WorldServiceLocator.WSItems.ItemTEMPLATES.ContainsKey(lootItem.ItemID) || new WS_Items.ItemInfo(lootItem.ItemID) != null)
+        {
+            var itemTemplate = WorldServiceLocator.WSItems.ItemTEMPLATES[lootItem.ItemID];
+            if (targetPlayer.ItemADD(lootItem.ItemID, 0, 0, lootItem.ItemCount))
+            {
+                lootItem.Taken = true;
+
+                // Send loot removed to all looters
+                Packets.PacketClass lootRemoved = new(Opcodes.SMSG_LOOT_REMOVED);
+                try
+                {
+                    lootRemoved.AddInt8(slotId);
+                    masterLooter.client.Send(ref lootRemoved);
+                }
+                finally
+                {
+                    lootRemoved.Dispose();
+                }
+            }
+        }
+    }
 }
