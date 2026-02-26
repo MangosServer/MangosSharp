@@ -244,15 +244,6 @@ public class WS_Handlers
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_SET_EXPLORATION] = WorldServiceLocator.WSHandlersMisc.On_CMSG_SET_EXPLORATION;
         WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_CHAT_IGNORED] = WorldServiceLocator.WSHandlersMisc.On_CMSG_CHAT_IGNORED;
 
-        // Instance handlers
-        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_RESET_INSTANCES] = WorldServiceLocator.WSHandlersInstance.On_CMSG_RESET_INSTANCES;
-
-        // LFG handlers
-        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.MSG_LOOKING_FOR_GROUP] = WorldServiceLocator.WSHandlersMisc.On_MSG_LOOKING_FOR_GROUP;
-        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_SET_LOOKING_FOR_GROUP] = WorldServiceLocator.WSHandlersMisc.On_CMSG_SET_LOOKING_FOR_GROUP;
-
-        // Group handler
-        WorldServiceLocator.WorldServer.PacketHandlers[Opcodes.CMSG_GROUP_ASSISTANT] = WorldServiceLocator.WSHandlersMisc.On_CMSG_GROUP_ASSISTANT_LEADER;
     }
 
     public void OnUnhandledPacket(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)

@@ -245,35 +245,39 @@ public class WS_Pets
 
     public void On_CMSG_STABLE_PET(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        if (checked(packet.Data.Length - 1) < 13)
+        try
         {
-            return;
+            if (checked(packet.Data.Length - 1) < 13)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var npcGuid = packet.GetUInt64();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_STABLE_PET [NPC={2:X}]", client.IP, client.Port, npcGuid);
+            if (client.Character == null || client.Character.Pet == null)
+            {
+                SendStableResult(ref client, 6);
+                return;
+            }
+            var maxSlots = GetStableSlotCount(client.Character);
+            DataTable stableQuery = new();
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT COUNT(*) as cnt FROM character_pet WHERE owner = '{client.Character.GUID}' AND slot > 0 AND slot <= {maxSlots};", ref stableQuery);
+            var usedSlots = stableQuery.Rows.Count > 0 ? stableQuery.Rows[0].As<int>("cnt") : 0;
+            if (usedSlots >= maxSlots)
+            {
+                SendStableResult(ref client, 6);
+                return;
+            }
+            var nextSlot = checked(usedSlots + 1);
+            WorldServiceLocator.WorldServer.CharacterDatabase.Update($"UPDATE character_pet SET slot = {nextSlot} WHERE owner = '{client.Character.GUID}' AND slot = 0;");
+            client.Character.Pet.Hide();
+            client.Character.Pet = null;
+            SendStableResult(ref client, 8);
         }
-        packet.GetInt16();
-        var npcGuid = packet.GetUInt64();
-        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_STABLE_PET [NPC={2:X}]", client.IP, client.Port, npcGuid);
-
-        if (client.Character == null || client.Character.Pet == null) return;
-
-        var maxSlots = GetStableSlotCount(client.Character);
-        DataTable stableQuery = new();
-        WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT COUNT(*) as cnt FROM character_pet WHERE owner = '{client.Character.GUID}' AND slot > 0 AND slot <= {maxSlots};", ref stableQuery);
-
-        var usedSlots = stableQuery.Rows.Count > 0 ? stableQuery.Rows[0].As<int>("cnt") : 0;
-
-        if (usedSlots >= maxSlots)
+        catch (System.Exception e)
         {
-            SendStableResult(ref client, 6); // STABLE_ERR_STABLE
-            return;
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at stable pet.{0}", System.Environment.NewLine + e);
         }
-
-        var nextSlot = usedSlots + 1;
-        WorldServiceLocator.WorldServer.CharacterDatabase.Update($"UPDATE character_pet SET slot = {nextSlot} WHERE owner = '{client.Character.GUID}' AND slot = 0;");
-
-        client.Character.Pet.RemoveFromWorld();
-        client.Character.Pet = null;
-
-        SendStableResult(ref client, 8); // STABLE_SUCCESS_STABLE
     }
 
     public void On_CMSG_UNSTABLE_PET(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
@@ -309,40 +313,45 @@ public class WS_Pets
 
     public void On_CMSG_BUY_STABLE_SLOT(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        if (checked(packet.Data.Length - 1) < 13)
+        try
         {
-            return;
+            if (checked(packet.Data.Length - 1) < 13)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var npcGuid = packet.GetUInt64();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BUY_STABLE_SLOT [NPC={2:X}]", client.IP, client.Port, npcGuid);
+            if (client.Character == null)
+            {
+                return;
+            }
+            var currentSlots = GetStableSlotCount(client.Character);
+            if (currentSlots >= 2)
+            {
+                SendStableResult(ref client, 6);
+                return;
+            }
+            uint cost = currentSlots == 0 ? 50000u : 150000u;
+            if (client.Character.Copper < cost)
+            {
+                SendStableResult(ref client, 6);
+                return;
+            }
+            checked
+            {
+                client.Character.Copper -= cost;
+                client.Character.SetUpdateFlag(1176, client.Character.Copper);
+                client.Character.StableSlots = (byte)(currentSlots + 1);
+                client.Character.SetUpdateFlag(1260, (int)client.Character.StableSlots);
+                client.Character.SendCharacterUpdate(toNear: false);
+            }
+            SendStableResult(ref client, 10);
         }
-        packet.GetInt16();
-        var npcGuid = packet.GetUInt64();
-        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BUY_STABLE_SLOT [NPC={2:X}]", client.IP, client.Port, npcGuid);
-
-        if (client.Character == null) return;
-
-        var currentSlots = GetStableSlotCount(client.Character);
-        if (currentSlots >= 2)
+        catch (System.Exception e)
         {
-            SendStableResult(ref client, 6); // Already have max stable slots
-            return;
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at buy stable slot.{0}", System.Environment.NewLine + e);
         }
-
-        uint cost = currentSlots == 0 ? 50000u : 150000u; // 5g for slot 1, 15g for slot 2
-
-        if (client.Character.Copper < cost)
-        {
-            SendStableResult(ref client, 6);
-            return;
-        }
-
-        client.Character.Copper -= cost;
-        client.Character.SetUpdateFlag(1176, client.Character.Copper);
-        client.Character.SendCharacterUpdate(toNear: false);
-
-        client.Character.StableSlots = checked((byte)(currentSlots + 1));
-        client.Character.SetUpdateFlag(1260, (int)client.Character.StableSlots);
-        client.Character.SendCharacterUpdate(toNear: false);
-
-        SendStableResult(ref client, 10); // STABLE_SUCCESS_BUY_SLOT
     }
 
     public void On_CMSG_STABLE_REVIVE_PET(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
@@ -363,51 +372,46 @@ public class WS_Pets
 
     public void On_CMSG_STABLE_SWAP_PET(ref Packets.PacketClass packet, ref WS_Network.ClientClass client)
     {
-        if (checked(packet.Data.Length - 1) < 17)
+        try
         {
-            return;
+            if (checked(packet.Data.Length - 1) < 17)
+            {
+                return;
+            }
+            packet.GetInt16();
+            var npcGuid = packet.GetUInt64();
+            var petNumber = packet.GetInt32();
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_STABLE_SWAP_PET [NPC={2:X} Pet={3}]", client.IP, client.Port, npcGuid, petNumber);
+            if (client.Character == null)
+            {
+                return;
+            }
+            DataTable slotQuery = new();
+            WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT slot FROM character_pet WHERE owner = '{client.Character.GUID}' AND id = {petNumber};", ref slotQuery);
+            if (slotQuery.Rows.Count == 0)
+            {
+                SendStableResult(ref client, 6);
+                return;
+            }
+            var targetSlot = slotQuery.Rows[0].As<int>("slot");
+            if (client.Character.Pet != null)
+            {
+                WorldServiceLocator.WorldServer.CharacterDatabase.Update($"UPDATE character_pet SET slot = {targetSlot} WHERE owner = '{client.Character.GUID}' AND slot = 0;");
+                client.Character.Pet.Hide();
+                client.Character.Pet = null;
+            }
+            WorldServiceLocator.WorldServer.CharacterDatabase.Update($"UPDATE character_pet SET slot = 0 WHERE owner = '{client.Character.GUID}' AND id = {petNumber};");
+            LoadPet(ref client.Character);
+            if (client.Character.Pet != null)
+            {
+                client.Character.Pet.Spawn();
+            }
+            SendStableResult(ref client, 9);
         }
-        packet.GetInt16();
-        var npcGuid = packet.GetUInt64();
-        var petNumber = packet.GetInt32();
-        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_STABLE_SWAP_PET [NPC={2:X} Pet={3}]", client.IP, client.Port, npcGuid, petNumber);
-
-        if (client.Character == null) return;
-
-        // Get the slot of the requested pet
-        DataTable slotQuery = new();
-        WorldServiceLocator.WorldServer.CharacterDatabase.Query($"SELECT slot FROM character_pet WHERE owner = '{client.Character.GUID}' AND id = {petNumber};", ref slotQuery);
-
-        if (slotQuery.Rows.Count == 0)
+        catch (System.Exception e)
         {
-            SendStableResult(ref client, 6);
-            return;
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.CRITICAL, "Error at stable swap pet.{0}", System.Environment.NewLine + e);
         }
-
-        var targetSlot = slotQuery.Rows[0].As<int>("slot");
-
-        // Move current pet to the target slot
-        if (client.Character.Pet != null)
-        {
-            WorldServiceLocator.WorldServer.CharacterDatabase.Update($"UPDATE character_pet SET slot = {targetSlot} WHERE owner = '{client.Character.GUID}' AND slot = 0;");
-            client.Character.Pet.RemoveFromWorld();
-            client.Character.Pet = null;
-        }
-
-        // Move the requested pet to slot 0 (active)
-        WorldServiceLocator.WorldServer.CharacterDatabase.Update($"UPDATE character_pet SET slot = 0 WHERE owner = '{client.Character.GUID}' AND id = {petNumber};");
-
-        LoadPet(ref client.Character);
-        if (client.Character.Pet != null)
-        {
-            client.Character.Pet.positionX = client.Character.positionX;
-            client.Character.Pet.positionY = client.Character.positionY;
-            client.Character.Pet.positionZ = client.Character.positionZ;
-            client.Character.Pet.MapID = client.Character.MapID;
-            client.Character.Pet.AddToWorld();
-        }
-
-        SendStableResult(ref client, 9); // Success
     }
 
     private byte GetStableSlotCount(WS_PlayerData.CharacterObject character)
