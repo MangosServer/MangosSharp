@@ -22,6 +22,7 @@ using Mangos.Cluster.Network;
 using Mangos.Tcp;
 using System.Buffers;
 using System.Buffers.Binary;
+using System.IO;
 using System.Net.Sockets;
 
 namespace GameServer.Network;
@@ -161,19 +162,31 @@ internal sealed class GameTcpConnection : ITcpConnection
             return;
         }
 
-        var length = await socket.ReceiveAsync(buffer, cancellationToken);
-        if (length != buffer.Length)
+        var totalRead = 0;
+        while (totalRead < buffer.Length)
         {
-            throw new NotImplementedException("Invalid number of bytes was readed from socket");
+            var bytesRead = await socket.ReceiveAsync(buffer.Slice(totalRead), cancellationToken);
+            if (bytesRead == 0)
+            {
+                throw new IOException("Connection closed by remote host during read");
+            }
+
+            totalRead += bytesRead;
         }
     }
 
     private async ValueTask SendAsync(Socket socket, ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
     {
-        var length = await socket.SendAsync(buffer, cancellationToken);
-        if (length != buffer.Length)
+        var totalSent = 0;
+        while (totalSent < buffer.Length)
         {
-            throw new NotImplementedException("Invalid number of bytes was sended to socket");
+            var bytesSent = await socket.SendAsync(buffer.Slice(totalSent), cancellationToken);
+            if (bytesSent == 0)
+            {
+                throw new IOException("Connection closed by remote host during send");
+            }
+
+            totalSent += bytesSent;
         }
     }
 }

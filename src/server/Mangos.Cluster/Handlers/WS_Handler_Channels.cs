@@ -26,6 +26,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 
 namespace Mangos.Cluster.Handlers;
@@ -815,12 +816,58 @@ public class WsHandlerChannels
 
         public void Save()
         {
-            // TODO: Saving into database
+            _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(
+                string.Format("DELETE FROM channels WHERE channel_name = '{0}';", ChannelName.Replace("'", "''")));
+
+            if (Joined.Count == 0)
+            {
+                return;
+            }
+
+            _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(
+                string.Format(
+                    "INSERT INTO channels (channel_name, channel_password, channel_announce, channel_moderate, channel_owner) VALUES ('{0}', '{1}', {2}, {3}, {4});",
+                    ChannelName.Replace("'", "''"),
+                    Password.Replace("'", "''"),
+                    Announce ? 1 : 0,
+                    Moderate ? 1 : 0,
+                    Owner));
+
+            foreach (var guid in Banned)
+            {
+                _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Update(
+                    string.Format(
+                        "INSERT INTO channel_bans (channel_name, player_guid) VALUES ('{0}', {1});",
+                        ChannelName.Replace("'", "''"), guid));
+            }
         }
 
         public void Load()
         {
-            // TODO: Loading from database
+            DataTable channelResult = new();
+            _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(
+                string.Format("SELECT * FROM channels WHERE channel_name = '{0}' LIMIT 1;", ChannelName.Replace("'", "''")),
+                ref channelResult);
+
+            if (channelResult.Rows.Count == 0)
+            {
+                return;
+            }
+
+            Password = channelResult.Rows[0].As<string>("channel_password");
+            Announce = channelResult.Rows[0].As<int>("channel_announce") != 0;
+            Moderate = channelResult.Rows[0].As<int>("channel_moderate") != 0;
+            Owner = channelResult.Rows[0].As<ulong>("channel_owner");
+
+            DataTable banResult = new();
+            _clusterServiceLocator.WorldCluster.GetCharacterDatabase().Query(
+                string.Format("SELECT player_guid FROM channel_bans WHERE channel_name = '{0}';", ChannelName.Replace("'", "''")),
+                ref banResult);
+
+            for (var i = 0; i < banResult.Rows.Count; i++)
+            {
+                Banned.Add(banResult.Rows[i].As<ulong>("player_guid"));
+            }
         }
 
         protected PacketClass BuildChannelNotify(CHANNEL_NOTIFY_FLAGS notify, ulong guid1, ulong guid2, string name)

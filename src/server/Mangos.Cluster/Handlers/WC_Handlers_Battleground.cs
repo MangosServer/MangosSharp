@@ -175,7 +175,13 @@ public class WcHandlersBattleground
                 SendBattlegroundStatus(objCharacter, 0);
             }
 
-            // TODO: Checking minimum players
+            if (_membersTeam1.Count < _minPlayersPerTeam || _membersTeam2.Count < _minPlayersPerTeam)
+            {
+                _clusterServiceLocator.WorldCluster.Log.WriteLine(
+                    LogType.DEBUG,
+                    "Battlefield [{0}] ({1}) waiting for minimum players - Team1: {2}/{3}, Team2: {4}/{5}",
+                    Id, MapType, _membersTeam1.Count, _minPlayersPerTeam, _membersTeam2.Count, _minPlayersPerTeam);
+            }
         }
 
         /// <summary>
