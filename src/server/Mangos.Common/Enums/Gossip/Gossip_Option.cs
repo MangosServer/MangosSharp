@@ -27,7 +27,7 @@ public enum Gossip_Option
     GOSSIP_OPTION_TAXIVENDOR = 4,                           // UNIT_NPC_FLAG_FLIGHTMASTER      = 8
     GOSSIP_OPTION_TRAINER = 5,                              // UNIT_NPC_FLAG_TRAINER           = 16
     GOSSIP_OPTION_SPIRITHEALER = 6,                         // UNIT_NPC_FLAG_SPIRITHEALER      = 32
-    GOSSIP_OPTION_GUARD = 7,                                // UNIT_NPC_FLAG_GUARD		        = 64
+    GOSSIP_OPTION_GUARD = 7,                                // UNIT_NPC_FLAG_GUARD                = 64
     GOSSIP_OPTION_INNKEEPER = 8,                            // UNIT_NPC_FLAG_INNKEEPER         = 128
     GOSSIP_OPTION_BANKER = 9,                               // UNIT_NPC_FLAG_BANKER            = 256
     GOSSIP_OPTION_ARENACHARTER = 10,                        // UNIT_NPC_FLAG_ARENACHARTER      = 262144
