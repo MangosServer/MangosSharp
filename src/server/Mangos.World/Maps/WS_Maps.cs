@@ -139,6 +139,18 @@ public partial class WS_Maps
                 y = ValidateMapCoord(y);
                 var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
                 var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
+
+                if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
+                {
+                    return 0f;
+                }
+
+                // Delegate to MangosZero GridMap when available (proper triangle interpolation)
+                if (Maps[Map].Tiles[MapTileX, MapTileY].MangosZeroGridMap != null)
+                {
+                    return Maps[Map].Tiles[MapTileX, MapTileY].MangosZeroGridMap.GetHeight(x, y);
+                }
+
                 var MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
                 var MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
                 float xNormalized;
@@ -147,10 +159,6 @@ public partial class WS_Maps
                 {
                     xNormalized = (RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX)) - MapTile_LocalX;
                     yNormalized = (RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY)) - MapTile_LocalY;
-                    if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
-                    {
-                        return 0f;
-                    }
                 }
                 try
                 {
@@ -182,11 +190,20 @@ public partial class WS_Maps
         {
             var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
             var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
+            if (Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
+            {
+                return 0f;
+            }
+
+            // Delegate to MangosZero GridMap when available
+            if (Maps[(uint)Map].Tiles[MapTileX, MapTileY].MangosZeroGridMap != null)
+            {
+                return Maps[(uint)Map].Tiles[MapTileX, MapTileY].MangosZeroGridMap.GetLiquidLevel(x, y);
+            }
+
             var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_WATER * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
             var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_WATER * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
-            return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
-                ? 0f
-                : Maps[(uint)Map].Tiles[MapTileX, MapTileY].WaterLevel[MapTile_LocalX, MapTile_LocalY];
+            return Maps[(uint)Map].Tiles[MapTileX, MapTileY].WaterLevel[MapTile_LocalX, MapTile_LocalY];
         }
     }
 
@@ -198,11 +215,20 @@ public partial class WS_Maps
         {
             var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
             var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
+            if (Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
+            {
+                return 0;
+            }
+
+            // Delegate to MangosZero GridMap when available
+            if (Maps[(uint)Map].Tiles[MapTileX, MapTileY].MangosZeroGridMap != null)
+            {
+                return Maps[(uint)Map].Tiles[MapTileX, MapTileY].MangosZeroGridMap.GetTerrainType(x, y);
+            }
+
             var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
             var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
-            return (byte)(Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
-                ? 0
-                : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaTerrain[MapTile_LocalX, MapTile_LocalY]);
+            return Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaTerrain[MapTile_LocalX, MapTile_LocalY];
         }
     }
 
@@ -214,11 +240,20 @@ public partial class WS_Maps
         {
             var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
             var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
+            if (Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
+            {
+                return 0;
+            }
+
+            // Delegate to MangosZero GridMap when available
+            if (Maps[(uint)Map].Tiles[MapTileX, MapTileY].MangosZeroGridMap != null)
+            {
+                return Maps[(uint)Map].Tiles[MapTileX, MapTileY].MangosZeroGridMap.GetArea(x, y);
+            }
+
             var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
             var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
-            return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
-                ? 0
-                : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaFlag[MapTile_LocalX, MapTile_LocalY];
+            return Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaFlag[MapTile_LocalX, MapTile_LocalY];
         }
     }
 
@@ -238,6 +273,29 @@ public partial class WS_Maps
                 z = ValidateMapCoord(z);
                 var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
                 var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
+
+                if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
+                {
+                    var VMapHeight2 = GetVMapHeight(Map, x, y, z + 5f);
+                    return VMapHeight2 != WorldServiceLocator.GlobalConstants.VMAP_INVALID_HEIGHT_VALUE ? VMapHeight2 : 0f;
+                }
+
+                // Delegate to MangosZero GridMap when available (proper triangle interpolation)
+                if (Maps[Map].Tiles[MapTileX, MapTileY].MangosZeroGridMap != null)
+                {
+                    var mapHeight = Maps[Map].Tiles[MapTileX, MapTileY].MangosZeroGridMap.GetHeight(x, y);
+                    // Try VMAP if map height deviates significantly from current Z
+                    if (Math.Abs(mapHeight - z) >= 2f)
+                    {
+                        var VMapHeight = GetVMapHeight(Map, x, y, z + 5f);
+                        if (VMapHeight != WorldServiceLocator.GlobalConstants.VMAP_INVALID_HEIGHT_VALUE)
+                        {
+                            return VMapHeight;
+                        }
+                    }
+                    return mapHeight;
+                }
+
                 var MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
                 var MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
                 float xNormalized;
@@ -246,11 +304,6 @@ public partial class WS_Maps
                 {
                     xNormalized = (RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX)) - MapTile_LocalX;
                     yNormalized = (RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY)) - MapTile_LocalY;
-                    if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
-                    {
-                        var VMapHeight2 = GetVMapHeight(Map, x, y, z + 5f);
-                        return VMapHeight2 != WorldServiceLocator.GlobalConstants.VMAP_INVALID_HEIGHT_VALUE ? VMapHeight2 : 0f;
-                    }
                     if (Math.Abs(Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY] - z) >= 2f)
                     {
                         var VMapHeight = GetVMapHeight(Map, x, y, z + 5f);

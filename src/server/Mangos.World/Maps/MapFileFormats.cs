@@ -41,7 +41,8 @@ public static class MapFileFormats
 
     // FourCC magic values (little-endian uint32 representation)
     public const uint MAP_MAGIC = 0x5350414D;         // "MAPS"
-    public const uint MAP_VERSION_MAGIC = 0x302E3976;  // "v9.0"
+    public const uint MAP_VERSION_MAGIC_V9 = 0x302E3976;  // "v9.0" (older builds)
+    public const uint MAP_VERSION_MAGIC = 0x352E317A;  // "z1.5" (MangosZero current)
     public const uint MAP_AREA_MAGIC = 0x41455241;     // "AREA"
     public const uint MAP_HEIGHT_MAGIC = 0x5447484D;   // "MHGT"
     public const uint MAP_LIQUID_MAGIC = 0x51494C4D;   // "MLIQ"
@@ -117,7 +118,8 @@ public static class MapFileFormats
             writer.Write(HolesSize);
         }
 
-        public bool IsValid => MapMagic == MAP_MAGIC && VersionMagic == MAP_VERSION_MAGIC;
+        public bool IsValid => MapMagic == MAP_MAGIC &&
+            (VersionMagic == MAP_VERSION_MAGIC || VersionMagic == MAP_VERSION_MAGIC_V9);
     }
 
     /// <summary>
