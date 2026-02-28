@@ -268,15 +268,6 @@ public static class MapFileFormats
     }
 
     /// <summary>
-    /// Builds the legacy MangosSharp-format filename for a map tile.
-    /// MangosSharp legacy uses: {mapId:D3}{tileX:D2}{tileY:D2}.map
-    /// </summary>
-    public static string GetLegacyMapFileName(uint mapId, byte tileX, byte tileY)
-    {
-        return $"{mapId:000}{tileX:00}{tileY:00}.map";
-    }
-
-    /// <summary>
     /// Gets the VMAP tree file path for a map.
     /// </summary>
     public static string GetVMapTreeFileName(uint mapId)

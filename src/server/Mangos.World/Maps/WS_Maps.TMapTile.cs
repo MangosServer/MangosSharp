@@ -17,11 +17,9 @@
 //
 
 using Mangos.Common.Enums.Global;
-using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Mangos.World.Maps;
 
@@ -29,14 +27,6 @@ public partial class WS_Maps
 {
     public class TMapTile : IDisposable
     {
-        public ushort[,] AreaFlag;
-
-        public byte[,] AreaTerrain;
-
-        public float[,] WaterLevel;
-
-        public float[,] ZCoord;
-
         public List<ulong> PlayersHere;
 
         public List<ulong> CreaturesHere;
@@ -48,10 +38,10 @@ public partial class WS_Maps
         public List<ulong> DynamicObjectsHere;
 
         /// <summary>
-        /// When non-null, this tile was loaded from MangosZero-format data
-        /// and all height/area/liquid/terrain queries should delegate to this GridMap instance.
+        /// The GridMap instance for this tile. All height/area/liquid/terrain
+        /// queries are served through this instance (MangosZero format).
         /// </summary>
-        public GridMap MangosZeroGridMap;
+        public GridMap GridMapData;
 
         private readonly byte CellX;
 
@@ -63,120 +53,55 @@ public partial class WS_Maps
 
         public TMapTile(byte tileX, byte tileY, uint tileMap)
         {
-            checked
-            {
-                AreaFlag = new ushort[WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS + 1, WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS + 1];
-                AreaTerrain = new byte[WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN + 1, WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN + 1];
-                WaterLevel = new float[WorldServiceLocator.GlobalConstants.RESOLUTION_WATER + 1, WorldServiceLocator.GlobalConstants.RESOLUTION_WATER + 1];
-                PlayersHere = new List<ulong>();
-                CreaturesHere = new List<ulong>();
-                GameObjectsHere = new List<ulong>();
-                CorpseObjectsHere = new List<ulong>();
-                DynamicObjectsHere = new List<ulong>();
-                if (!WorldServiceLocator.WSMaps.Maps.ContainsKey(tileMap))
-                {
-                    return;
-                }
-                ZCoord = new float[WorldServiceLocator.WSMaps.RESOLUTION_ZMAP + 1, WorldServiceLocator.WSMaps.RESOLUTION_ZMAP + 1];
-                CellX = tileX;
-                CellY = tileY;
-                CellMap = tileMap;
-                var fileName = string.Format("{0}{1}{2}.map", Strings.Format(tileMap, "000"), Strings.Format(tileX, "00"), Strings.Format(tileY, "00"));
-                var filePath = Path.Combine("maps", fileName);
-                if (!File.Exists(filePath))
-                {
-                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Map file [{0}] not found", fileName);
-                    return;
-                }
+            PlayersHere = new List<ulong>();
+            CreaturesHere = new List<ulong>();
+            GameObjectsHere = new List<ulong>();
+            CorpseObjectsHere = new List<ulong>();
+            DynamicObjectsHere = new List<ulong>();
 
-                // Detect file format: check if this is a MangosZero-format file (starts with "MAPS" magic)
-                if (MapFileFormats.IsMangosZeroFormat(filePath))
-                {
-                    LoadMangosZeroFormat(filePath, fileName);
-                }
-                else
-                {
-                    LoadLegacyFormat(filePath, fileName);
-                }
+            if (!WorldServiceLocator.WSMaps.Maps.ContainsKey(tileMap))
+            {
+                return;
             }
+
+            CellX = tileX;
+            CellY = tileY;
+            CellMap = tileMap;
+
+            // MangosZero format: {mapId:D4}{tileY:D2}{tileX:D2}.map (note Y,X order, 4-digit map ID)
+            var fileName = MapFileFormats.GetMapFileName(tileMap, tileX, tileY);
+            var filePath = Path.Combine("maps", fileName);
+
+            if (!File.Exists(filePath))
+            {
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Map file [{0}] not found", fileName);
+                return;
+            }
+
+            LoadMapFile(filePath, fileName);
         }
 
-        /// <summary>
-        /// Loads a MangosZero-format .map file using the GridMap class.
-        /// All height/area/liquid queries will delegate to the GridMap instance.
-        /// </summary>
-        private void LoadMangosZeroFormat(string filePath, string fileName)
+        private void LoadMapFile(string filePath, string fileName)
         {
-            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading MangosZero map file [{0}]", fileName);
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading map file [{0}]", fileName);
 
             var gridMap = new GridMap();
             if (!gridMap.LoadData(filePath))
             {
-                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Failed to load MangosZero map file [{0}]", fileName);
+                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "Failed to load map file [{0}]", fileName);
                 gridMap.Dispose();
                 return;
             }
 
-            MangosZeroGridMap = gridMap;
-        }
-
-        /// <summary>
-        /// Loads a legacy MangosSharp-format .map file (8-byte version header + flat arrays).
-        /// </summary>
-        private void LoadLegacyFormat(string filePath, string fileName)
-        {
-            checked
-            {
-                FileStream f = new(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 82704, FileOptions.SequentialScan);
-                BinaryReader b = new(f);
-                var fileVersion = Encoding.ASCII.GetString(b.ReadBytes(8), 0, 8);
-                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Loading map file [{0}] version [{1}]", fileName, fileVersion);
-                var rESOLUTION_FLAGS = WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS;
-                for (var x = 0; x <= rESOLUTION_FLAGS; x++)
-                {
-                    var rESOLUTION_FLAGS2 = WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS;
-                    for (var y = 0; y <= rESOLUTION_FLAGS2; y++)
-                    {
-                        AreaFlag[x, y] = b.ReadUInt16();
-                    }
-                }
-                var rESOLUTION_TERRAIN = WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN;
-                for (var x = 0; x <= rESOLUTION_TERRAIN; x++)
-                {
-                    var rESOLUTION_TERRAIN2 = WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN;
-                    for (var y = 0; y <= rESOLUTION_TERRAIN2; y++)
-                    {
-                        AreaTerrain[x, y] = b.ReadByte();
-                    }
-                }
-                var rESOLUTION_WATER = WorldServiceLocator.GlobalConstants.RESOLUTION_WATER;
-                for (var x = 0; x <= rESOLUTION_WATER; x++)
-                {
-                    var rESOLUTION_WATER2 = WorldServiceLocator.GlobalConstants.RESOLUTION_WATER;
-                    for (var y = 0; y <= rESOLUTION_WATER2; y++)
-                    {
-                        WaterLevel[x, y] = b.ReadSingle();
-                    }
-                }
-                var rESOLUTION_ZMAP = WorldServiceLocator.WSMaps.RESOLUTION_ZMAP;
-                for (var x = 0; x <= rESOLUTION_ZMAP; x++)
-                {
-                    var rESOLUTION_ZMAP2 = WorldServiceLocator.WSMaps.RESOLUTION_ZMAP;
-                    for (var y = 0; y <= rESOLUTION_ZMAP2; y++)
-                    {
-                        ZCoord[x, y] = b.ReadSingle();
-                    }
-                }
-                b.Close();
-            }
+            GridMapData = gridMap;
         }
 
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
             {
-                MangosZeroGridMap?.Dispose();
-                MangosZeroGridMap = null;
+                GridMapData?.Dispose();
+                GridMapData = null;
                 WorldServiceLocator.WSMaps.UnloadSpawns(CellX, CellY, CellMap);
             }
             _disposedValue = true;
@@ -190,7 +115,6 @@ public partial class WS_Maps
 
         void IDisposable.Dispose()
         {
-            //ILSpy generated this explicit interface implementation from .override directive in Dispose
             Dispose();
         }
     }
