@@ -53,6 +53,7 @@ public class WcHandlersAuth
 
     public void SendLoginOk(ClientClass client)
     {
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SendLoginOk entered - Account={2}", client.IP, client.Port, client.Account);
         _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTH_SESSION [{2}]", client.IP, client.Port, client.Account);
         Thread.Sleep(500);
         PacketClass response = new(Opcodes.SMSG_AUTH_RESPONSE);
@@ -61,11 +62,12 @@ public class WcHandlersAuth
         response.AddInt8(2); // BillingPlanFlags
         response.AddUInt32(0U); // BillingTimeRested
         client.Send(response);
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.NETWORK, "[{0}:{1}] SendLoginOk: SMSG_AUTH_RESPONSE sent with LOGIN_OK for account {2}", client.IP, client.Port, client.Account);
     }
 
     public void On_CMSG_AUTH_SESSION(PacketClass packet, ClientClass client)
     {
-        // _WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}] [{1}:{2}] CMSG_AUTH_SESSION", Format(TimeOfDay, "hh:mm:ss"), client.IP, client.Port)
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] On_CMSG_AUTH_SESSION entered - PacketLen={2}", client.IP, client.Port, packet.Length);
 
         packet.GetInt16();
         var clientVersion = packet.GetInt32();
@@ -79,17 +81,20 @@ public class WcHandlersAuth
         }
 
         var clientAddOnsSize = packet.GetInt32();
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] On_CMSG_AUTH_SESSION: clientVersion={2}, clientAccount={3}, clientSessionId={4}, clientAddOnsSize={5}", client.IP, client.Port, clientVersion, clientAccount, clientSessionId, clientAddOnsSize);
 
         // DONE: Set client.Account
         var tmp = clientAccount;
 
         // DONE: Kick if existing
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] On_CMSG_AUTH_SESSION: Checking for existing sessions for account {2}", client.IP, client.Port, tmp);
         foreach (var tmpClientEntry in _clusterServiceLocator.WorldCluster.ClienTs)
         {
             if (tmpClientEntry.Value is not null)
             {
                 if (tmpClientEntry.Value.Account == tmp)
                 {
+                    _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] On_CMSG_AUTH_SESSION: Kicking existing session for account {2}", client.IP, client.Port, tmp);
                     if (tmpClientEntry.Value.Character is not null)
                     {
                         tmpClientEntry.Value.Character.Dispose();

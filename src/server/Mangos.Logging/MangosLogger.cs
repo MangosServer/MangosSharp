@@ -30,6 +30,10 @@ internal sealed class MangosLogger : IMangosLogger
 
     public LogLevel MinimumLevel { get; set; } = LogLevel.Trace;
 
+    public long TotalLogCount => Interlocked.Read(ref _totalLogCount);
+    public long ErrorCount => Interlocked.Read(ref _errorCount);
+    public long WarningCount => Interlocked.Read(ref _warningCount);
+
     public string? LogFilePath
     {
         set
@@ -135,6 +139,14 @@ internal sealed class MangosLogger : IMangosLogger
         [CallerLineNumber] int lineNumber = 0)
     {
         return new TimedOperation(this, operationName, memberName, filePath, lineNumber);
+    }
+
+    public IDisposable BeginScope(string scopeName,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0)
+    {
+        return new LogScope(this, scopeName, memberName, filePath, lineNumber);
     }
 
     private static string FormatMessage(LogLevel level, string message, string memberName, string filePath, int lineNumber)

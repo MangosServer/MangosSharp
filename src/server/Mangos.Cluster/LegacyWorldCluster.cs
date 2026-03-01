@@ -60,10 +60,13 @@ public class LegacyWorldCluster
 
     public void LoadConfig()
     {
+        Log.WriteLine(LogType.DEBUG, "[LoadConfig] Entry - Loading database configuration from settings.");
+
         // DONE: Setting SQL Connections
         var accountDbSettings = Strings.Split(mangosConfiguration.Cluster.AccountDatabase, ";");
         if (accountDbSettings.Length != 6)
         {
+            Log.WriteLine(LogType.FAILED, "[LoadConfig] Invalid connect string for the account database! Expected 6 parts, got {0}.", accountDbSettings.Length);
             Console.WriteLine("Invalid connect string for the account database!");
         }
         else
@@ -74,11 +77,13 @@ public class LegacyWorldCluster
             GetAccountDatabase().SQLUser = accountDbSettings[0];
             GetAccountDatabase().SQLPass = accountDbSettings[1];
             GetAccountDatabase().SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), accountDbSettings[5]);
+            Log.WriteLine(LogType.DEBUG, "[LoadConfig] Account database parsed - Host={0}, Port={1}, DBName={2}, User={3}, Type={4}.", accountDbSettings[2], accountDbSettings[3], accountDbSettings[4], accountDbSettings[0], accountDbSettings[5]);
         }
 
         var characterDbSettings = Strings.Split(mangosConfiguration.Cluster.CharacterDatabase, ";");
         if (characterDbSettings.Length != 6)
         {
+            Log.WriteLine(LogType.FAILED, "[LoadConfig] Invalid connect string for the character database! Expected 6 parts, got {0}.", characterDbSettings.Length);
             Console.WriteLine("Invalid connect string for the character database!");
         }
         else
@@ -89,11 +94,13 @@ public class LegacyWorldCluster
             GetCharacterDatabase().SQLUser = characterDbSettings[0];
             GetCharacterDatabase().SQLPass = characterDbSettings[1];
             GetCharacterDatabase().SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), characterDbSettings[5]);
+            Log.WriteLine(LogType.DEBUG, "[LoadConfig] Character database parsed - Host={0}, Port={1}, DBName={2}, User={3}, Type={4}.", characterDbSettings[2], characterDbSettings[3], characterDbSettings[4], characterDbSettings[0], characterDbSettings[5]);
         }
 
         var worldDbSettings = Strings.Split(mangosConfiguration.Cluster.WorldDatabase, ";");
         if (worldDbSettings.Length != 6)
         {
+            Log.WriteLine(LogType.FAILED, "[LoadConfig] Invalid connect string for the world database! Expected 6 parts, got {0}.", worldDbSettings.Length);
             Console.WriteLine("Invalid connect string for the world database!");
         }
         else
@@ -104,13 +111,17 @@ public class LegacyWorldCluster
             GetWorldDatabase().SQLUser = worldDbSettings[0];
             GetWorldDatabase().SQLPass = worldDbSettings[1];
             GetWorldDatabase().SQLTypeServer = (SQL.DB_Type)Enum.Parse(typeof(SQL.DB_Type), worldDbSettings[5]);
+            Log.WriteLine(LogType.DEBUG, "[LoadConfig] World database parsed - Host={0}, Port={1}, DBName={2}, User={3}, Type={4}.", worldDbSettings[2], worldDbSettings[3], worldDbSettings[4], worldDbSettings[0], worldDbSettings[5]);
         }
+
+        Log.WriteLine(LogType.INFORMATION, "[LoadConfig] Database configuration loading completed.");
     }
 
     private readonly Dictionary<Opcodes, HandlePacket> _packetHandlers = new();
 
     public Dictionary<Opcodes, HandlePacket> GetPacketHandlers()
     {
+        Log.WriteLine(LogType.DEBUG, "[GetPacketHandlers] Entry - Returning packet handlers dictionary with {0} registered handlers.", _packetHandlers.Count);
         return _packetHandlers;
     }
 
@@ -137,17 +148,26 @@ public class LegacyWorldCluster
 
     public void AccountSqlEventHandler(SQL.EMessages messageId, string outBuf)
     {
+        Log.WriteLine(LogType.DEBUG, "[AccountSqlEventHandler] Entry - messageId={0}, outBuf={1}", messageId, outBuf);
         switch (messageId)
         {
             case var @case when @case == SQL.EMessages.ID_Error:
                 {
+                    Log.WriteLine(LogType.DEBUG, "[AccountSqlEventHandler] Branch taken: ID_Error");
                     Log.WriteLine(LogType.FAILED, "[ACCOUNT] " + outBuf);
                     break;
                 }
 
             case var case1 when case1 == SQL.EMessages.ID_Message:
                 {
+                    Log.WriteLine(LogType.DEBUG, "[AccountSqlEventHandler] Branch taken: ID_Message");
                     Log.WriteLine(LogType.SUCCESS, "[ACCOUNT] " + outBuf);
+                    break;
+                }
+
+            default:
+                {
+                    Log.WriteLine(LogType.DEBUG, "[AccountSqlEventHandler] Branch taken: unhandled messageId={0}", messageId);
                     break;
                 }
         }
@@ -155,17 +175,26 @@ public class LegacyWorldCluster
 
     public void CharacterSqlEventHandler(SQL.EMessages messageId, string outBuf)
     {
+        Log.WriteLine(LogType.DEBUG, "[CharacterSqlEventHandler] Entry - messageId={0}, outBuf={1}", messageId, outBuf);
         switch (messageId)
         {
             case var @case when @case == SQL.EMessages.ID_Error:
                 {
+                    Log.WriteLine(LogType.DEBUG, "[CharacterSqlEventHandler] Branch taken: ID_Error");
                     Log.WriteLine(LogType.FAILED, "[CHARACTER] " + outBuf);
                     break;
                 }
 
             case var case1 when case1 == SQL.EMessages.ID_Message:
                 {
+                    Log.WriteLine(LogType.DEBUG, "[CharacterSqlEventHandler] Branch taken: ID_Message");
                     Log.WriteLine(LogType.SUCCESS, "[CHARACTER] " + outBuf);
+                    break;
+                }
+
+            default:
+                {
+                    Log.WriteLine(LogType.DEBUG, "[CharacterSqlEventHandler] Branch taken: unhandled messageId={0}", messageId);
                     break;
                 }
         }
@@ -173,17 +202,26 @@ public class LegacyWorldCluster
 
     public void WorldSqlEventHandler(SQL.EMessages messageId, string outBuf)
     {
+        Log.WriteLine(LogType.DEBUG, "[WorldSqlEventHandler] Entry - messageId={0}, outBuf={1}", messageId, outBuf);
         switch (messageId)
         {
             case var @case when @case == SQL.EMessages.ID_Error:
                 {
+                    Log.WriteLine(LogType.DEBUG, "[WorldSqlEventHandler] Branch taken: ID_Error");
                     Log.WriteLine(LogType.FAILED, "[WORLD] " + outBuf);
                     break;
                 }
 
             case var case1 when case1 == SQL.EMessages.ID_Message:
                 {
+                    Log.WriteLine(LogType.DEBUG, "[WorldSqlEventHandler] Branch taken: ID_Message");
                     Log.WriteLine(LogType.SUCCESS, "[WORLD] " + outBuf);
+                    break;
+                }
+
+            default:
+                {
+                    Log.WriteLine(LogType.DEBUG, "[WorldSqlEventHandler] Branch taken: unhandled messageId={0}", messageId);
                     break;
                 }
         }

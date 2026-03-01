@@ -35,6 +35,10 @@ public interface IMangosLogger
 {
     LogLevel MinimumLevel { get; set; }
 
+    long TotalLogCount { get; }
+    long ErrorCount { get; }
+    long WarningCount { get; }
+
     void Trace(string message,
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string filePath = "",
@@ -109,6 +113,11 @@ public interface IMangosLogger
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string filePath = "",
         [CallerLineNumber] int lineNumber = 0);
+
+    IDisposable BeginScope(string scopeName,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
 }
 
 public sealed class TimedOperation : IDisposable
@@ -136,5 +145,33 @@ public sealed class TimedOperation : IDisposable
     {
         _stopwatch.Stop();
         _logger.Trace($"[PERF] Completed: {_operationName} in {_stopwatch.ElapsedMilliseconds}ms", _memberName, _filePath, _lineNumber);
+    }
+}
+
+public sealed class LogScope : IDisposable
+{
+    private readonly IMangosLogger _logger;
+    private readonly string _scopeName;
+    private readonly string _memberName;
+    private readonly string _filePath;
+    private readonly int _lineNumber;
+    private readonly Stopwatch _stopwatch;
+
+    public LogScope(IMangosLogger logger, string scopeName,
+        string memberName, string filePath, int lineNumber)
+    {
+        _logger = logger;
+        _scopeName = scopeName;
+        _memberName = memberName;
+        _filePath = filePath;
+        _lineNumber = lineNumber;
+        _stopwatch = Stopwatch.StartNew();
+        _logger.Trace($"[SCOPE:ENTER] {_scopeName}", _memberName, _filePath, _lineNumber);
+    }
+
+    public void Dispose()
+    {
+        _stopwatch.Stop();
+        _logger.Trace($"[SCOPE:EXIT] {_scopeName} ({_stopwatch.ElapsedMilliseconds}ms)", _memberName, _filePath, _lineNumber);
     }
 }

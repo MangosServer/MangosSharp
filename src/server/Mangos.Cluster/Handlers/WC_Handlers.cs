@@ -35,6 +35,7 @@ public class WcHandlers
 
     public void IntializePacketHandlers()
     {
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[WcHandlers] IntializePacketHandlers: Registering all cluster packet handlers...");
         // NOTE: These opcodes are not used in any way
         // _WorldCluster.PacketHandlers[OPCODES.CMSG_MOVE_TIME_SKIPPED] = AddressOf On_CMSG_MOVE_TIME_SKIPPED
         _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_NEXT_CINEMATIC_CAMERA] = _clusterServiceLocator.WcHandlersMisc.On_CMSG_NEXT_CINEMATIC_CAMERA;
@@ -164,15 +165,18 @@ public class WcHandlers
         // Opcodes redirected from the WorldServer
         _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_CREATURE_QUERY] = OnClusterPacket;
         _clusterServiceLocator.WorldCluster.GetPacketHandlers()[Opcodes.CMSG_GAMEOBJECT_QUERY] = OnClusterPacket;
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.SUCCESS, "[WcHandlers] IntializePacketHandlers: All cluster packet handlers registered successfully.");
     }
 
     public void OnUnhandledPacket(PacketClass packet, ClientClass client)
     {
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] OnUnhandledPacket entered - OpCode={2}, DataLen={3}", client.IP, client.Port, packet.OpCode, packet.Length);
         _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] {2} [Unhandled Packet]", client.IP, client.Port, packet.OpCode);
     }
 
     public void OnClusterPacket(PacketClass packet, ClientClass client)
     {
+        _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] OnClusterPacket entered - OpCode={2}, DataLen={3}", client.IP, client.Port, packet.OpCode, packet.Length);
         _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.WARNING, "[{0}:{1}] {2} [Redirected Packet]", client.IP, client.Port, packet.OpCode);
         if (client.Character is null || client.Character.IsInWorld == false)
         {
@@ -181,6 +185,7 @@ public class WcHandlers
         }
         else
         {
+            _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.NETWORK, "[{0}:{1}] OnClusterPacket: Forwarding packet {2} to world server for character 0x{3:X}", client.IP, client.Port, packet.OpCode, client.Character.Guid);
             client.Character.GetWorld.ClientPacket(client.Index, packet.Data);
         }
     }
