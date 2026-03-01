@@ -40,17 +40,27 @@ public partial class WS_Maps
 
     public Dictionary<int, TArea> AreaTable;
 
-    public int RESOLUTION_ZMAP;
-
     public Dictionary<uint, TMap> Maps;
 
     public string MapList;
+
+    /// <summary>
+    /// VMap manager for line-of-sight, indoor detection, and model height queries.
+    /// </summary>
+    public VMapManager VMapManager;
+
+    /// <summary>
+    /// MMap manager for server-side pathfinding using Detour navmeshes.
+    /// </summary>
+    public MMapManager MMapManager;
+
+    private const float SIZE_OF_GRIDS = 533.33333f;
+    private const float INVALID_HEIGHT = -200000.0f;
 
     public WS_Maps(DataStoreProvider dataStoreProvider)
     {
         this.dataStoreProvider = dataStoreProvider;
         AreaTable = new Dictionary<int, TArea>();
-        RESOLUTION_ZMAP = 0;
         Maps = new Dictionary<uint, TMap>();
     }
 
@@ -85,17 +95,38 @@ public partial class WS_Maps
             TMap map = new(checked((int)id), await dataStoreProvider.GetDataStoreAsync("Map.dbc"));
         }
         WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "Initalizing: {0} Maps initialized.", Maps.Count);
+
+        // Initialize VMap system
+        VMapManager = new VMapManager();
+        VMapManager.Initialize("vmaps");
+        if (WorldServiceLocator.MangosConfiguration.World.VMapsEnabled)
+        {
+            foreach (var map in Maps)
+            {
+                VMapManager.LoadMap(map.Key);
+            }
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "VMap: Loaded VMap data for {0} maps.", Maps.Count);
+        }
+        else
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "VMap: VMaps disabled in configuration.");
+        }
+
+        // Initialize MMap system
+        MMapManager = new MMapManager();
+        MMapManager.Initialize("mmaps");
+        WorldServiceLocator.WorldServer.Log.WriteLine(LogType.INFORMATION, "MMap: Pathfinding system initialized.");
     }
 
     public float ValidateMapCoord(float coord)
     {
-        if (coord > 32f * WorldServiceLocator.GlobalConstants.SIZE)
+        if (coord > 32f * SIZE_OF_GRIDS)
         {
-            coord = 32f * WorldServiceLocator.GlobalConstants.SIZE;
+            coord = 32f * SIZE_OF_GRIDS;
         }
-        else if (coord < -32f * WorldServiceLocator.GlobalConstants.SIZE)
+        else if (coord < -32f * SIZE_OF_GRIDS)
         {
-            coord = -32f * WorldServiceLocator.GlobalConstants.SIZE;
+            coord = -32f * SIZE_OF_GRIDS;
         }
         return coord;
     }
@@ -104,122 +135,209 @@ public partial class WS_Maps
     {
         checked
         {
-            MapTileX = (byte)(32f - (ValidateMapCoord(x) / WorldServiceLocator.GlobalConstants.SIZE));
-            MapTileY = (byte)(32f - (ValidateMapCoord(y) / WorldServiceLocator.GlobalConstants.SIZE));
+            MapTileX = (byte)(32f - (ValidateMapCoord(x) / SIZE_OF_GRIDS));
+            MapTileY = (byte)(32f - (ValidateMapCoord(y) / SIZE_OF_GRIDS));
         }
     }
 
     public byte GetMapTileX(float x)
     {
-        return checked((byte)(32f - (ValidateMapCoord(x) / WorldServiceLocator.GlobalConstants.SIZE)));
+        return checked((byte)(32f - (ValidateMapCoord(x) / SIZE_OF_GRIDS)));
     }
 
     public byte GetMapTileY(float y)
     {
-        return checked((byte)(32f - (ValidateMapCoord(y) / WorldServiceLocator.GlobalConstants.SIZE)));
+        return checked((byte)(32f - (ValidateMapCoord(y) / SIZE_OF_GRIDS)));
     }
 
-    public byte GetSubMapTileX(float x)
+    /// <summary>
+    /// Gets the fractional position within a map tile (0.0 to 1.0).
+    /// Used to determine which adjacent tiles need to be loaded for visibility.
+    /// </summary>
+    public float GetSubTileFraction(float coord)
     {
-        return checked((byte)(RESOLUTION_ZMAP * (32f - (ValidateMapCoord(x) / WorldServiceLocator.GlobalConstants.SIZE) - Conversion.Fix(32f - (ValidateMapCoord(x) / WorldServiceLocator.GlobalConstants.SIZE)))));
+        coord = ValidateMapCoord(coord);
+        float tilePos = 32f - (coord / SIZE_OF_GRIDS);
+        return tilePos - (float)Math.Floor(tilePos);
     }
 
-    public byte GetSubMapTileY(float y)
-    {
-        return checked((byte)(RESOLUTION_ZMAP * (32f - (ValidateMapCoord(y) / WorldServiceLocator.GlobalConstants.SIZE) - Conversion.Fix(32f - (ValidateMapCoord(y) / WorldServiceLocator.GlobalConstants.SIZE)))));
-    }
-
+    /// <summary>
+    /// Gets the ground height at the given world coordinates using the GridMap system.
+    /// Uses MangosZero's triangle interpolation for accurate height values.
+    /// </summary>
     public float GetZCoord(float x, float y, uint Map)
     {
-        checked
+        try
         {
-            try
+            x = ValidateMapCoord(x);
+            y = ValidateMapCoord(y);
+            var MapTileX = checked((byte)(32f - (x / SIZE_OF_GRIDS)));
+            var MapTileY = checked((byte)(32f - (y / SIZE_OF_GRIDS)));
+
+            if (!Maps.ContainsKey(Map) || Maps[Map].Tiles[MapTileX, MapTileY] == null)
             {
-                x = ValidateMapCoord(x);
-                y = ValidateMapCoord(y);
-                var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
-                var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
-                var MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
-                var MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
-                float xNormalized;
-                float yNormalized;
-                unchecked
-                {
-                    xNormalized = (RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX)) - MapTile_LocalX;
-                    yNormalized = (RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY)) - MapTile_LocalY;
-                    if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
-                    {
-                        return 0f;
-                    }
-                }
-                try
-                {
-                    var topHeight = WorldServiceLocator.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), MapTile_LocalY), xNormalized);
-                    var bottomHeight = WorldServiceLocator.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, (byte)(MapTile_LocalY + 1)), GetHeight(Map, MapTileX, MapTileY, (byte)(MapTile_LocalX + 1), (byte)(MapTile_LocalY + 1)), xNormalized);
-                    return WorldServiceLocator.Functions.MathLerp(topHeight, bottomHeight, yNormalized);
-                }
-                catch (Exception ex)
-                {
-                    var GetZCoord = Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY];
-                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "GetHeight threw an Exception : GetZCoord {0}, {1}", GetZCoord, ex);
-                    return GetZCoord;
-                }
+                return 0f;
             }
-            catch (Exception ex2)
+
+            var tile = Maps[Map].Tiles[MapTileX, MapTileY];
+            if (tile.GridMapData != null)
             {
-                var GetZCoord = 0f;
-                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "GetZCoord threw an Exception : Coord X {0} Coord Y {1} Coord Z {2}, {3}", x, y, GetZCoord, ex2);
-                return GetZCoord;
+                return tile.GridMapData.GetHeight(x, y);
             }
+
+            return 0f;
+        }
+        catch (Exception ex)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "GetZCoord exception: X={0} Y={1} Map={2}: {3}", x, y, Map, ex.Message);
+            return 0f;
         }
     }
 
+    /// <summary>
+    /// Gets the ground height at the given world coordinates, using VMap as a fallback
+    /// when the grid map height deviates significantly from the expected Z position.
+    /// </summary>
+    public float GetZCoord(float x, float y, float z, uint Map)
+    {
+        try
+        {
+            x = ValidateMapCoord(x);
+            y = ValidateMapCoord(y);
+            var MapTileX = checked((byte)(32f - (x / SIZE_OF_GRIDS)));
+            var MapTileY = checked((byte)(32f - (y / SIZE_OF_GRIDS)));
+
+            if (!Maps.ContainsKey(Map) || Maps[Map].Tiles[MapTileX, MapTileY] == null)
+            {
+                // No grid tile - try VMap
+                var vmapHeight = GetVMapHeight(Map, x, y, z + 5f);
+                return vmapHeight != INVALID_HEIGHT ? vmapHeight : 0f;
+            }
+
+            var tile = Maps[Map].Tiles[MapTileX, MapTileY];
+            if (tile.GridMapData != null)
+            {
+                var mapHeight = tile.GridMapData.GetHeight(x, y);
+
+                // If map height deviates significantly from current Z, try VMap
+                if (Math.Abs(mapHeight - z) >= 2f)
+                {
+                    var vmapHeight = GetVMapHeight(Map, x, y, z + 5f);
+                    if (vmapHeight != INVALID_HEIGHT)
+                    {
+                        return vmapHeight;
+                    }
+                }
+                return mapHeight;
+            }
+
+            // Fallback to VMap only
+            var fallbackHeight = GetVMapHeight(Map, x, y, z + 5f);
+            return fallbackHeight != INVALID_HEIGHT ? fallbackHeight : z;
+        }
+        catch (Exception ex)
+        {
+            WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "GetZCoord exception: X={0} Y={1} Z={2} Map={3}: {4}", x, y, z, Map, ex.Message);
+            return z;
+        }
+    }
+
+    /// <summary>
+    /// Gets the water/liquid surface level at the given world coordinates.
+    /// </summary>
     public float GetWaterLevel(float x, float y, int Map)
     {
         x = ValidateMapCoord(x);
         y = ValidateMapCoord(y);
-        checked
+        var MapTileX = checked((byte)(32f - (x / SIZE_OF_GRIDS)));
+        var MapTileY = checked((byte)(32f - (y / SIZE_OF_GRIDS)));
+
+        if (!Maps.ContainsKey((uint)Map) || Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
         {
-            var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
-            var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
-            var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_WATER * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
-            var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_WATER * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
-            return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
-                ? 0f
-                : Maps[(uint)Map].Tiles[MapTileX, MapTileY].WaterLevel[MapTile_LocalX, MapTile_LocalY];
+            return 0f;
         }
+
+        var tile = Maps[(uint)Map].Tiles[MapTileX, MapTileY];
+        if (tile.GridMapData != null)
+        {
+            return tile.GridMapData.GetLiquidLevel(x, y);
+        }
+
+        return 0f;
     }
 
+    /// <summary>
+    /// Gets the terrain type (liquid flags) at the given world coordinates.
+    /// </summary>
     public byte GetTerrainType(float x, float y, int Map)
     {
         x = ValidateMapCoord(x);
         y = ValidateMapCoord(y);
-        checked
+        var MapTileX = checked((byte)(32f - (x / SIZE_OF_GRIDS)));
+        var MapTileY = checked((byte)(32f - (y / SIZE_OF_GRIDS)));
+
+        if (!Maps.ContainsKey((uint)Map) || Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
         {
-            var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
-            var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
-            var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
-            var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_TERRAIN * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
-            return (byte)(Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
-                ? 0
-                : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaTerrain[MapTile_LocalX, MapTile_LocalY]);
+            return 0;
         }
+
+        var tile = Maps[(uint)Map].Tiles[MapTileX, MapTileY];
+        if (tile.GridMapData != null)
+        {
+            return tile.GridMapData.GetTerrainType(x, y);
+        }
+
+        return 0;
     }
 
+    /// <summary>
+    /// Gets the area flag at the given world coordinates.
+    /// </summary>
     public int GetAreaFlag(float x, float y, int Map)
     {
         x = ValidateMapCoord(x);
         y = ValidateMapCoord(y);
-        checked
+        var MapTileX = checked((byte)(32f - (x / SIZE_OF_GRIDS)));
+        var MapTileY = checked((byte)(32f - (y / SIZE_OF_GRIDS)));
+
+        if (!Maps.ContainsKey((uint)Map) || Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
         {
-            var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
-            var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
-            var MapTile_LocalX = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
-            var MapTile_LocalY = (byte)Math.Round(WorldServiceLocator.GlobalConstants.RESOLUTION_FLAGS * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
-            return Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null
-                ? 0
-                : Maps[(uint)Map].Tiles[MapTileX, MapTileY].AreaFlag[MapTile_LocalX, MapTile_LocalY];
+            return 0;
         }
+
+        var tile = Maps[(uint)Map].Tiles[MapTileX, MapTileY];
+        if (tile.GridMapData != null)
+        {
+            return tile.GridMapData.GetArea(x, y);
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Gets the liquid status at the given world coordinates.
+    /// Returns detailed liquid information including type, level, and depth.
+    /// </summary>
+    public uint GetLiquidStatus(float x, float y, float z, int Map, byte reqLiquidType, out GridMap.LiquidData data)
+    {
+        data = default;
+        x = ValidateMapCoord(x);
+        y = ValidateMapCoord(y);
+        var MapTileX = checked((byte)(32f - (x / SIZE_OF_GRIDS)));
+        var MapTileY = checked((byte)(32f - (y / SIZE_OF_GRIDS)));
+
+        if (!Maps.ContainsKey((uint)Map) || Maps[(uint)Map].Tiles[MapTileX, MapTileY] == null)
+        {
+            return GridMap.LIQUID_MAP_NO_WATER;
+        }
+
+        var tile = Maps[(uint)Map].Tiles[MapTileX, MapTileY];
+        if (tile.GridMapData != null)
+        {
+            return tile.GridMapData.GetLiquidStatus(x, y, z, reqLiquidType, out data);
+        }
+
+        return GridMap.LIQUID_MAP_NO_WATER;
     }
 
     public bool IsOutsideOfMap(ref WS_Base.BaseObject objCharacter)
@@ -227,94 +345,17 @@ public partial class WS_Maps
         return false;
     }
 
-    public float GetZCoord(float x, float y, float z, uint Map)
-    {
-        checked
-        {
-            try
-            {
-                x = ValidateMapCoord(x);
-                y = ValidateMapCoord(y);
-                z = ValidateMapCoord(z);
-                var MapTileX = (byte)(32f - (x / WorldServiceLocator.GlobalConstants.SIZE));
-                var MapTileY = (byte)(32f - (y / WorldServiceLocator.GlobalConstants.SIZE));
-                var MapTile_LocalX = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX));
-                var MapTile_LocalY = (byte)Math.Round(RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY));
-                float xNormalized;
-                float yNormalized;
-                unchecked
-                {
-                    xNormalized = (RESOLUTION_ZMAP * (32f - (x / WorldServiceLocator.GlobalConstants.SIZE) - MapTileX)) - MapTile_LocalX;
-                    yNormalized = (RESOLUTION_ZMAP * (32f - (y / WorldServiceLocator.GlobalConstants.SIZE) - MapTileY)) - MapTile_LocalY;
-                    if (Maps[Map].Tiles[MapTileX, MapTileY] == null)
-                    {
-                        var VMapHeight2 = GetVMapHeight(Map, x, y, z + 5f);
-                        return VMapHeight2 != WorldServiceLocator.GlobalConstants.VMAP_INVALID_HEIGHT_VALUE ? VMapHeight2 : 0f;
-                    }
-                    if (Math.Abs(Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY] - z) >= 2f)
-                    {
-                        var VMapHeight = GetVMapHeight(Map, x, y, z + 5f);
-                        if (VMapHeight != WorldServiceLocator.GlobalConstants.VMAP_INVALID_HEIGHT_VALUE)
-                        {
-                            return VMapHeight;
-                        }
-                    }
-                }
-                try
-                {
-                    var topHeight = WorldServiceLocator.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
-                    var bottomHeight = WorldServiceLocator.Functions.MathLerp(GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), GetHeight(Map, MapTileX, MapTileY, MapTile_LocalX, MapTile_LocalY), xNormalized);
-                    return WorldServiceLocator.Functions.MathLerp(topHeight, bottomHeight, yNormalized);
-                }
-                catch (Exception ex)
-                {
-                    var GetZCoord = Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTile_LocalX, MapTile_LocalY];
-                    WorldServiceLocator.WorldServer.Log.WriteLine(LogType.WARNING, "GetZCoord threw an Exception : Coord X {0} Coord Y {1} Coord Z {2}, {3}", x, y, GetZCoord, ex);
-                    return GetZCoord;
-                }
-            }
-            catch (Exception ex2)
-            {
-                WorldServiceLocator.WorldServer.Log.WriteLine(LogType.FAILED, ex2.ToString());
-                var GetZCoord = z;
-                return GetZCoord;
-            }
-        }
-    }
-
-    private float GetHeight(uint Map, byte MapTileX, byte MapTileY, byte MapTileLocalX, byte MapTileLocalY)
-    {
-        checked
-        {
-            if (MapTileLocalX > RESOLUTION_ZMAP)
-            {
-                MapTileX = (byte)(MapTileX + 1);
-                MapTileLocalX = (byte)(MapTileLocalX - (RESOLUTION_ZMAP + 1));
-            }
-            else if (MapTileLocalX < 0)
-            {
-                MapTileX = (byte)(MapTileX - 1);
-                MapTileLocalX = (byte)((short)unchecked(-MapTileLocalX) - 1);
-            }
-            if (MapTileLocalY > RESOLUTION_ZMAP)
-            {
-                MapTileY = (byte)(MapTileY + 1);
-                MapTileLocalY = (byte)(MapTileLocalY - (RESOLUTION_ZMAP + 1));
-            }
-            else if (MapTileLocalY < 0)
-            {
-                MapTileY = (byte)(MapTileY - 1);
-                MapTileLocalY = (byte)((short)unchecked(-MapTileLocalY) - 1);
-            }
-            return Maps[Map].Tiles[MapTileX, MapTileY].ZCoord[MapTileLocalX, MapTileLocalY];
-        }
-    }
-
+    /// <summary>
+    /// Checks line-of-sight between two objects using VMap ray-casting.
+    /// </summary>
     public bool IsInLineOfSight(ref WS_Base.BaseObject obj, ref WS_Base.BaseObject obj2)
     {
         return IsInLineOfSight(obj.MapID, obj.positionX, obj.positionY, obj.positionZ + 2f, obj2.positionX, obj2.positionY, obj2.positionZ + 2f);
     }
 
+    /// <summary>
+    /// Checks line-of-sight between an object and a point using VMap ray-casting.
+    /// </summary>
     public bool IsInLineOfSight(ref WS_Base.BaseObject obj, float x2, float y2, float z2)
     {
         x2 = ValidateMapCoord(x2);
@@ -323,44 +364,80 @@ public partial class WS_Maps
         return IsInLineOfSight(obj.MapID, obj.positionX, obj.positionY, obj.positionZ + 2f, x2, y2, z2);
     }
 
+    /// <summary>
+    /// Checks line-of-sight between two points using VMap ray-casting.
+    /// Returns true if there is a clear line of sight (no obstruction).
+    /// </summary>
     public bool IsInLineOfSight(uint MapID, float x1, float y1, float z1, float x2, float y2, float z2)
     {
+        if (!WorldServiceLocator.MangosConfiguration.World.LineOfSightEnabled)
+        {
+            return true;
+        }
+
         x1 = ValidateMapCoord(x1);
         y1 = ValidateMapCoord(y1);
         z1 = ValidateMapCoord(z1);
         x2 = ValidateMapCoord(x2);
         y2 = ValidateMapCoord(y2);
         z2 = ValidateMapCoord(z2);
+
+        if (VMapManager != null)
+        {
+            return VMapManager.IsInLineOfSight(MapID, x1, y1, z1, x2, y2, z2);
+        }
+
         return true;
     }
 
+    /// <summary>
+    /// Gets the VMap model height at the given world coordinates.
+    /// This accounts for indoor areas and multi-floor buildings.
+    /// </summary>
     public float GetVMapHeight(uint MapID, float x, float y, float z)
     {
+        if (!WorldServiceLocator.MangosConfiguration.World.HeightCalcEnabled)
+        {
+            return INVALID_HEIGHT;
+        }
+
         x = ValidateMapCoord(x);
         y = ValidateMapCoord(y);
         z = ValidateMapCoord(z);
-        return WorldServiceLocator.GlobalConstants.VMAP_INVALID_HEIGHT_VALUE;
+
+        if (VMapManager != null)
+        {
+            return VMapManager.GetHeight(MapID, x, y, z);
+        }
+
+        return INVALID_HEIGHT;
     }
 
+    /// <summary>
+    /// Finds the hit position along a ray between two objects.
+    /// Returns true if there is a collision, with the hit position in rx/ry/rz.
+    /// </summary>
     public bool GetObjectHitPos(ref WS_Base.BaseObject obj, ref WS_Base.BaseObject obj2, ref float rx, ref float ry, ref float rz, float pModifyDist)
     {
-        rx = ValidateMapCoord(rx);
-        ry = ValidateMapCoord(ry);
-        rz = ValidateMapCoord(rz);
         return GetObjectHitPos(obj.MapID, obj.positionX, obj.positionY, obj.positionZ + 2f, obj2.positionX, obj2.positionY, obj2.positionZ + 2f, ref rx, ref ry, ref rz, pModifyDist);
     }
 
+    /// <summary>
+    /// Finds the hit position along a ray from an object to a point.
+    /// Returns true if there is a collision, with the hit position in rx/ry/rz.
+    /// </summary>
     public bool GetObjectHitPos(ref WS_Base.BaseObject obj, float x2, float y2, float z2, ref float rx, ref float ry, ref float rz, float pModifyDist)
     {
-        rx = ValidateMapCoord(rx);
-        ry = ValidateMapCoord(ry);
-        rz = ValidateMapCoord(rz);
         x2 = ValidateMapCoord(x2);
         y2 = ValidateMapCoord(y2);
         z2 = ValidateMapCoord(z2);
         return GetObjectHitPos(obj.MapID, obj.positionX, obj.positionY, obj.positionZ + 2f, x2, y2, z2, ref rx, ref ry, ref rz, pModifyDist);
     }
 
+    /// <summary>
+    /// Finds the hit position along a ray between two points using VMap data.
+    /// Returns true if there is a collision, with the hit position in rx/ry/rz.
+    /// </summary>
     public bool GetObjectHitPos(uint MapID, float x1, float y1, float z1, float x2, float y2, float z2, ref float rx, ref float ry, ref float rz, float pModifyDist)
     {
         x1 = ValidateMapCoord(x1);
@@ -369,6 +446,16 @@ public partial class WS_Maps
         x2 = ValidateMapCoord(x2);
         y2 = ValidateMapCoord(y2);
         z2 = ValidateMapCoord(z2);
+
+        if (VMapManager != null && WorldServiceLocator.MangosConfiguration.World.VMapsEnabled)
+        {
+            return VMapManager.GetObjectHitPos(MapID, x1, y1, z1, x2, y2, z2, ref rx, ref ry, ref rz, pModifyDist);
+        }
+
+        // No collision - ray passes through completely
+        rx = x2;
+        ry = y2;
+        rz = z2;
         return false;
     }
 
@@ -376,10 +463,10 @@ public partial class WS_Maps
     {
         checked
         {
-            var MinX = (32 - TileX) * WorldServiceLocator.GlobalConstants.SIZE;
-            var MaxX = (32 - (TileX + 1)) * WorldServiceLocator.GlobalConstants.SIZE;
-            var MinY = (32 - TileY) * WorldServiceLocator.GlobalConstants.SIZE;
-            var MaxY = (32 - (TileY + 1)) * WorldServiceLocator.GlobalConstants.SIZE;
+            var MinX = (32 - TileX) * SIZE_OF_GRIDS;
+            var MaxX = (32 - (TileX + 1)) * SIZE_OF_GRIDS;
+            var MinY = (32 - TileY) * SIZE_OF_GRIDS;
+            var MaxY = (32 - (TileY + 1)) * SIZE_OF_GRIDS;
             if (MinX > MaxX)
             {
                 var tmpSng2 = MinX;
@@ -544,10 +631,10 @@ public partial class WS_Maps
     {
         checked
         {
-            var MinX = (32 - TileX) * WorldServiceLocator.GlobalConstants.SIZE;
-            var MaxX = (32 - (TileX + 1)) * WorldServiceLocator.GlobalConstants.SIZE;
-            var MinY = (32 - TileY) * WorldServiceLocator.GlobalConstants.SIZE;
-            var MaxY = (32 - (TileY + 1)) * WorldServiceLocator.GlobalConstants.SIZE;
+            var MinX = (32 - TileX) * SIZE_OF_GRIDS;
+            var MaxX = (32 - (TileX + 1)) * SIZE_OF_GRIDS;
+            var MinY = (32 - TileY) * SIZE_OF_GRIDS;
+            var MaxY = (32 - (TileY + 1)) * SIZE_OF_GRIDS;
             if (MinX > MaxX)
             {
                 var tmpSng2 = MinX;

@@ -259,15 +259,7 @@ public class WorldServer
             {
                 Console.WriteLine("Invalid connect string for the world database!");
             }
-            WorldServiceLocator.WSMaps.RESOLUTION_ZMAP = checked(configuration.MapResolution - 1);
-            if (WorldServiceLocator.WSMaps.RESOLUTION_ZMAP < 63)
-            {
-                WorldServiceLocator.WSMaps.RESOLUTION_ZMAP = 63;
-            }
-            if (WorldServiceLocator.WSMaps.RESOLUTION_ZMAP > 255)
-            {
-                WorldServiceLocator.WSMaps.RESOLUTION_ZMAP = 255;
-            }
+            // MangosZero GridMap always uses 128 resolution - no legacy resolution config needed
             Log = BaseWriter.CreateLog(configuration.LogType, configuration.LogConfig);
             Log.LogLevel = LogType.INFORMATION;
         }
