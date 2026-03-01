@@ -37,8 +37,11 @@ public class DbVersionChecker
 
     public bool CheckRequiredDbVersion(SQL thisDatabase, ServerDb thisServerDb)
     {
+        logger.Information($"[DB] Checking database version for {thisServerDb} database '{thisDatabase.SQLDBName}'");
+        logger.Debug($"[DB] Querying db_version table in '{thisDatabase.SQLDBName}'");
         DataTable mySqlQuery = new();
         thisDatabase.Query("SELECT `version`,`structure`,`content` FROM db_version ORDER BY VERSION DESC, structure DESC, content DESC LIMIT 0,1", ref mySqlQuery);
+        logger.Debug($"[DB] db_version query returned {mySqlQuery.Rows.Count} row(s)");
 
         var coreDbVersion = 0;
         var coreDbStructure = 0;
@@ -50,6 +53,7 @@ public class DbVersionChecker
                     coreDbVersion = mangosGlobalConstants.RevisionDbRealmVersion;
                     coreDbStructure = mangosGlobalConstants.RevisionDbRealmStructure;
                     coreDbContent = mangosGlobalConstants.RevisionDbRealmContent;
+                    logger.Debug($"[DB] Expected Realm DB version: Rev{coreDbVersion}.{coreDbStructure}.{coreDbContent}");
                     break;
                 }
 
@@ -58,6 +62,7 @@ public class DbVersionChecker
                     coreDbVersion = mangosGlobalConstants.RevisionDbCharactersVersion;
                     coreDbStructure = mangosGlobalConstants.RevisionDbCharactersStructure;
                     coreDbContent = mangosGlobalConstants.RevisionDbCharactersContent;
+                    logger.Debug($"[DB] Expected Character DB version: Rev{coreDbVersion}.{coreDbStructure}.{coreDbContent}");
                     break;
                 }
 
@@ -66,12 +71,13 @@ public class DbVersionChecker
                     coreDbVersion = mangosGlobalConstants.RevisionDbMangosVersion;
                     coreDbStructure = mangosGlobalConstants.RevisionDbMangosStructure;
                     coreDbContent = mangosGlobalConstants.RevisionDbMangosContent;
+                    logger.Debug($"[DB] Expected World DB version: Rev{coreDbVersion}.{coreDbStructure}.{coreDbContent}");
                     break;
                 }
 
             case 0:
                 {
-                    logger.Warning(string.Format("Default switch fallback has occured with an error, data output: ThisServerDb {0}, CoreDbVersion {1}, CoreDbContent {2}, CoreDbVersion {3}", thisServerDb, coreDbVersion, coreDbContent, coreDbVersion));
+                    logger.Warning(string.Format("[DB] Default switch fallback has occured with an error, data output: ThisServerDb {0}, CoreDbVersion {1}, CoreDbContent {2}, CoreDbVersion {3}", thisServerDb, coreDbVersion, coreDbContent, coreDbVersion));
                     break;
                 }
         }

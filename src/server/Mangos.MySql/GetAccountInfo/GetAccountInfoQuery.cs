@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Logging;
 using Mangos.MySql.Connections;
 
 namespace Mangos.MySql.GetAccountInfo;
@@ -23,14 +24,27 @@ namespace Mangos.MySql.GetAccountInfo;
 internal sealed class GetAccountInfoQuery : IGetAccountInfoQuery
 {
     private readonly AccountConnection accountConnection;
+    private readonly IMangosLogger logger;
 
-    public GetAccountInfoQuery(AccountConnection accountConnection)
+    public GetAccountInfoQuery(AccountConnection accountConnection, IMangosLogger logger)
     {
         this.accountConnection = accountConnection;
+        this.logger = logger;
+        logger.Trace("[DB] GetAccountInfoQuery instance created");
     }
 
     public async Task<AccountInfoModel?> ExectueAsync(string accountName)
     {
-        return await accountConnection.QueryFirstOrDefaultAsync<AccountInfoModel>(this, new { UserName = accountName });
+        logger.Debug($"[DB] Querying account info for '{accountName}'");
+        var result = await accountConnection.QueryFirstOrDefaultAsync<AccountInfoModel>(this, new { UserName = accountName });
+        if (result != null)
+        {
+            logger.Debug($"[DB] Account info found for '{accountName}': id={result.id}");
+        }
+        else
+        {
+            logger.Debug($"[DB] No account info found for '{accountName}'");
+        }
+        return result;
     }
 }

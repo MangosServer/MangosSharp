@@ -19,17 +19,28 @@
 using GameServer.Network;
 using GameServer.Requests;
 using GameServer.Responses;
+using Mangos.Logging;
 
 namespace GameServer.Handlers;
 
 internal sealed class CMSG_PING_Handler : IHandler<CMSG_PING>
 {
+    private readonly IMangosLogger logger;
+
+    public CMSG_PING_Handler(IMangosLogger logger)
+    {
+        this.logger = logger;
+        logger.Trace("[CMSG_PING_Handler] Handler instance created");
+    }
+
     public Task<HandlerResult> ExectueAsync(CMSG_PING request)
     {
+        logger.Trace($"[CMSG_PING_Handler] Received PING with payload: {request.Payload}");
         var response = new SMSG_PONG
         {
             Payload = request.Payload
         };
+        logger.Trace($"[CMSG_PING_Handler] Sending PONG response with payload: {response.Payload}");
 
         return HandlerResult.FromTask(response);
     }

@@ -18,6 +18,7 @@
 
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
+using Mangos.Logging;
 using Mangos.Tcp;
 using System.Net.Sockets;
 
@@ -26,21 +27,31 @@ namespace WorldCluster.Network;
 internal sealed class ClusterTcpConnection : ITcpConnection
 {
     private readonly ClientClass legacyClientClass;
+    private readonly IMangosLogger logger;
+    private long _packetsProcessed;
 
-    public ClusterTcpConnection(ClientClass legacyClientClass)
+    public ClusterTcpConnection(ClientClass legacyClientClass, IMangosLogger logger)
     {
         this.legacyClientClass = legacyClientClass;
+        this.logger = logger;
+        logger.Debug("[ClusterTcp] ClusterTcpConnection instance created");
     }
 
     public async Task ExecuteAsync(Socket socket, CancellationToken cancellationToken)
     {
+        var remoteEndpoint = socket.RemoteEndPoint;
+        logger.Debug($"[ClusterTcp] Initializing connection for client {remoteEndpoint}");
         legacyClientClass.Socket = socket;
+        logger.Trace($"[ClusterTcp] Calling OnConnectAsync for client {remoteEndpoint}");
         await legacyClientClass.OnConnectAsync();
+        logger.Debug($"[ClusterTcp] Client {remoteEndpoint} connected, encryption enabled: {legacyClientClass.Client.PacketEncryption.IsEncryptionEnabled}");
 
+        logger.Information($"[ClusterTcp] Entering packet processing loop for client {remoteEndpoint}");
         while (!cancellationToken.IsCancellationRequested)
         {
             await ExecuteLegacyMessageAsync(socket, cancellationToken);
         }
+        logger.Debug($"[ClusterTcp] Packet processing loop ended for client {remoteEndpoint} (packets processed: {_packetsProcessed})");
     }
 
     private async Task ExecuteLegacyMessageAsync(Socket socket, CancellationToken cancellationToken)
@@ -50,12 +61,16 @@ internal sealed class ClusterTcpConnection : ITcpConnection
 
         if (legacyClientClass.Client.PacketEncryption.IsEncryptionEnabled)
         {
+            logger.Trace("[ClusterTcp] Decoding encrypted packet header");
             DecodePacketHeader(header);
         }
 
         var length = header[1] + (header[0] * 256) + 2;
         var body = new byte[length - 6];
         await ReadAsync(socket, body, cancellationToken);
+
+        Interlocked.Increment(ref _packetsProcessed);
+        logger.Trace($"[ClusterTcp] Received packet: length={length} bytes, body={body.Length} bytes, total packets: {_packetsProcessed}");
 
         var packet = new PacketClass(header.Concat(body).ToArray());
         legacyClientClass.OnPacket(packet);

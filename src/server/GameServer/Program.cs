@@ -51,11 +51,29 @@ logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
 logger.Trace("                                                ");
 logger.Trace("Website / Forum / Support: https://www.getmangos.eu/");
 
+logger.Information("Game server initialization complete");
+logger.Debug($"Configuration loaded - Cluster endpoint: {configuration.Cluster.ClusterServerEndpoint}");
+logger.Debug($"DI container built successfully");
+logger.Debug($"Runtime: {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}");
+logger.Debug($"OS: {System.Runtime.InteropServices.RuntimeInformation.OSDescription}");
+logger.Debug($"Process ID: {Environment.ProcessId}");
+
 logger.Information("Starting legacy cluster server");
-await legacyWorldCluster.StartAsync();
+logger.Debug("Initializing legacy cluster server components");
+using (logger.BeginTimedOperation("Legacy cluster server startup"))
+{
+    await legacyWorldCluster.StartAsync();
+}
+logger.Information("Legacy cluster server started successfully");
 
 logger.Information("Starting legacy world server");
-await worldServer.StartAsync();
+logger.Debug("Initializing legacy world server components");
+using (logger.BeginTimedOperation("Legacy world server startup"))
+{
+    await worldServer.StartAsync();
+}
+logger.Information("Legacy world server started successfully");
 
-logger.Information("Starting game tcp server");
+logger.Information($"Starting game TCP server on {configuration.Cluster.ClusterServerEndpoint}");
+logger.Debug("TCP server will now begin accepting client connections");
 await tcpServer.RunAsync(configuration.Cluster.ClusterServerEndpoint);

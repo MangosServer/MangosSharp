@@ -18,6 +18,7 @@
 
 using GameServer.Handlers;
 using GameServer.Requests;
+using Mangos.Logging;
 
 namespace GameServer.Network;
 
@@ -26,16 +27,22 @@ internal sealed class HandlerDispatcher<TRequest, THandler> : IHandlerDispatcher
     where THandler : IHandler<TRequest>
 {
     private readonly THandler handler;
+    private readonly IMangosLogger logger;
 
-    public HandlerDispatcher(THandler handler)
+    public HandlerDispatcher(THandler handler, IMangosLogger logger)
     {
         this.handler = handler;
+        this.logger = logger;
+        logger.Trace($"[HandlerDispatcher] Registered dispatcher for opcode {TRequest.Opcode} -> {typeof(THandler).Name}");
     }
 
     public Opcodes Opcode => TRequest.Opcode;
 
     public Task<HandlerResult> ExectueAsync(PacketReader reader)
     {
-        return handler.ExectueAsync(TRequest.Read(reader));
+        logger.Trace($"[HandlerDispatcher] Deserializing {typeof(TRequest).Name} from packet (remaining bytes: {reader.Remaining})");
+        var request = TRequest.Read(reader);
+        logger.Trace($"[HandlerDispatcher] Executing {typeof(THandler).Name} for opcode {TRequest.Opcode}");
+        return handler.ExectueAsync(request);
     }
 }

@@ -31,10 +31,12 @@ public sealed class WorldInteropDispatcher
     public WorldInteropDispatcher(IWorld world)
     {
         _world = world;
+        Console.WriteLine("[WorldDispatcher] WorldInteropDispatcher created");
     }
 
     public async Task<byte[]?> DispatchAsync(InteropMethodId methodId, byte[] data)
     {
+        Console.WriteLine($"[WorldDispatcher] Dispatching method: {methodId}, data size: {data.Length} bytes");
         using var ms = new MemoryStream(data);
         using var br = new BinaryReader(ms);
 
@@ -44,6 +46,7 @@ public sealed class WorldInteropDispatcher
             {
                 var id = br.ReadUInt32();
                 var clientInfo = InteropSerializer.ReadClientInfo(br);
+                Console.WriteLine($"[WorldDispatcher] ClientConnect: id={id}, account={clientInfo.Account}");
                 _world.ClientConnect(id, clientInfo);
                 return null;
             }
@@ -51,6 +54,7 @@ public sealed class WorldInteropDispatcher
             case InteropMethodId.WorldClientDisconnect:
             {
                 var id = br.ReadUInt32();
+                Console.WriteLine($"[WorldDispatcher] ClientDisconnect: id={id}");
                 _world.ClientDisconnect(id);
                 return null;
             }
@@ -59,6 +63,7 @@ public sealed class WorldInteropDispatcher
             {
                 var id = br.ReadUInt32();
                 var guid = br.ReadUInt64();
+                Console.WriteLine($"[WorldDispatcher] ClientLogin: id={id}, guid={guid}");
                 _world.ClientLogin(id, guid);
                 return null;
             }
@@ -66,6 +71,7 @@ public sealed class WorldInteropDispatcher
             case InteropMethodId.WorldClientLogout:
             {
                 var id = br.ReadUInt32();
+                Console.WriteLine($"[WorldDispatcher] ClientLogout: id={id}");
                 _world.ClientLogout(id);
                 return null;
             }
@@ -74,6 +80,7 @@ public sealed class WorldInteropDispatcher
             {
                 var id = br.ReadUInt32();
                 var packetData = InteropSerializer.ReadByteArray(br);
+                Console.WriteLine($"[WorldDispatcher] ClientPacket: id={id}, packet size={packetData.Length} bytes");
                 _world.ClientPacket(id, packetData);
                 return null;
             }
@@ -102,6 +109,7 @@ public sealed class WorldInteropDispatcher
             {
                 var timestamp = br.ReadInt32();
                 var latency = br.ReadInt32();
+                Console.WriteLine($"[WorldDispatcher] Ping: timestamp={timestamp}, latency={latency}ms");
                 var result = _world.Ping(timestamp, latency);
                 using var rms = new MemoryStream();
                 using var bw = new BinaryWriter(rms);
@@ -111,20 +119,25 @@ public sealed class WorldInteropDispatcher
 
             case InteropMethodId.WorldGetServerInfo:
             {
+                Console.WriteLine("[WorldDispatcher] GetServerInfo requested");
                 var info = _world.GetServerInfo();
+                Console.WriteLine($"[WorldDispatcher] ServerInfo: {info}");
                 return InteropSerializer.WriteServerInfo(info);
             }
 
             case InteropMethodId.WorldInstanceCreateAsync:
             {
                 var mapId = br.ReadUInt32();
+                Console.WriteLine($"[WorldDispatcher] InstanceCreateAsync: mapId={mapId}");
                 await _world.InstanceCreateAsync(mapId);
+                Console.WriteLine($"[WorldDispatcher] Instance created: mapId={mapId}");
                 return Array.Empty<byte>();
             }
 
             case InteropMethodId.WorldInstanceDestroy:
             {
                 var mapId = br.ReadUInt32();
+                Console.WriteLine($"[WorldDispatcher] InstanceDestroy: mapId={mapId}");
                 _world.InstanceDestroy(mapId);
                 return null;
             }

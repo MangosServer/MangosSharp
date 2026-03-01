@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Logging;
 using Mangos.Realm.Network.Handlers;
 using RealmServer.Network;
 using RealmServer.Requests;
@@ -26,16 +27,23 @@ namespace RealmServer.Handlers;
 internal sealed class AuthReconnectChallengeHandler : IHandler<RsLogonChallengeRequest>
 {
     private readonly RsLogonChallengeHandler rsLogonChallengeHandler;
+    private readonly IMangosLogger logger;
 
-    public AuthReconnectChallengeHandler(RsLogonChallengeHandler rsLogonChallengeHandler)
+    public AuthReconnectChallengeHandler(RsLogonChallengeHandler rsLogonChallengeHandler, IMangosLogger logger)
     {
         this.rsLogonChallengeHandler = rsLogonChallengeHandler;
+        this.logger = logger;
+        logger.Trace("[AuthReconnectChallengeHandler] Handler instance created");
     }
 
     public MessageOpcode MessageOpcode => MessageOpcode.CMD_AUTH_RECONNECT_CHALLENGE;
 
     public async Task<IResponseMessage> ExectueAsync(RsLogonChallengeRequest request)
     {
-        return await rsLogonChallengeHandler.ExectueAsync(request);
+        logger.Information($"[Auth] Reconnect challenge received for account '{request.AccountName}', delegating to logon challenge handler");
+        logger.Trace($"[Auth] Reconnect request - client build: {request.ClientBuild}");
+        var response = await rsLogonChallengeHandler.ExectueAsync(request);
+        logger.Debug($"[Auth] Reconnect challenge completed for account '{request.AccountName}', response type: {response.GetType().Name}");
+        return response;
     }
 }

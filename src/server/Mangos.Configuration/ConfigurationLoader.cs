@@ -28,35 +28,56 @@ internal sealed class ConfigurationLoader
 
     public MangosConfiguration GetMangosConfiguration()
     {
-        var configPath = Environment.GetEnvironmentVariable($"{EnvironmentVariablePrefix}CONFIG_PATH")
-                         ?? ConfigurationFileName;
+        var configPathOverride = Environment.GetEnvironmentVariable($"{EnvironmentVariablePrefix}CONFIG_PATH");
+        var configPath = configPathOverride ?? ConfigurationFileName;
+
+        Console.WriteLine($"[Config] Loading configuration from: {configPath}{(configPathOverride != null ? " (overridden by MANGOS_CONFIG_PATH)" : " (default)")}");
+        Console.WriteLine($"[Config] Working directory: {Environment.CurrentDirectory}");
 
         var json = ReadConfiguration(configPath);
+        Console.WriteLine($"[Config] Configuration file read successfully ({json.Length} chars)");
+
         var jsonNode = JsonNode.Parse(json);
         if (jsonNode == null)
         {
+            Console.WriteLine($"[Config] ERROR: Failed to parse {configPath} as JSON");
             throw new InvalidOperationException($"Unable to parse {configPath} as JSON");
         }
+        Console.WriteLine("[Config] JSON parsed successfully");
 
+        Console.WriteLine("[Config] Checking for environment variable overrides");
         ApplyEnvironmentOverrides(jsonNode);
 
+        Console.WriteLine("[Config] Deserializing configuration");
         var mangosConfiguration = jsonNode.Deserialize<MangosConfiguration>();
         if (mangosConfiguration == null)
         {
+            Console.WriteLine($"[Config] ERROR: Failed to deserialize {configPath}");
             throw new InvalidOperationException($"Unable to deserialize {configPath}");
         }
+        Console.WriteLine("[Config] Configuration deserialized successfully");
 
+        Console.WriteLine("[Config] Validating configuration");
         Validate(mangosConfiguration);
+        Console.WriteLine("[Config] Configuration validation passed");
+
+        Console.WriteLine($"[Config] Realm endpoint: {mangosConfiguration.Realm.RealmServerEndpoint}");
+        Console.WriteLine($"[Config] Cluster endpoint: {mangosConfiguration.Cluster.ClusterServerEndpoint}");
+        Console.WriteLine($"[Config] Cluster listen: {mangosConfiguration.Cluster.ClusterListenAddress}:{mangosConfiguration.Cluster.ClusterListenPort}");
+        Console.WriteLine($"[Config] World cluster host: {mangosConfiguration.World.ClusterConnectHost}:{mangosConfiguration.World.ClusterConnectPort}");
 
         return mangosConfiguration;
     }
 
     private static string ReadConfiguration(string path)
     {
+        Console.WriteLine($"[Config] Checking file existence: {path}");
         if (!File.Exists(path))
         {
+            Console.WriteLine($"[Config] ERROR: Configuration file not found: {Path.GetFullPath(path)}");
             throw new FileNotFoundException($"Unable to locate configuration file: {path}", path);
         }
+        Console.WriteLine($"[Config] Reading file: {Path.GetFullPath(path)}");
         return File.ReadAllText(path);
     }
 
@@ -74,6 +95,7 @@ internal sealed class ConfigurationLoader
         var value = Environment.GetEnvironmentVariable(envVar);
         if (value != null)
         {
+            Console.WriteLine($"[Config] Environment override applied: {envVar} -> {key}");
             root[key] = value;
         }
     }
@@ -83,6 +105,7 @@ internal sealed class ConfigurationLoader
         var value = Environment.GetEnvironmentVariable(envVar);
         if (value != null && root[section] is JsonNode sectionNode)
         {
+            Console.WriteLine($"[Config] Environment override applied: {envVar} -> {section}.{key}");
             sectionNode[key] = value;
         }
     }

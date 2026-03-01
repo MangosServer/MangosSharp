@@ -16,12 +16,17 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Runtime.CompilerServices;
+
 namespace Mangos.Logging;
 
 internal sealed class MangosLogger : IMangosLogger
 {
     private readonly object _lock = new();
     private StreamWriter? _fileWriter;
+    private long _totalLogCount;
+    private long _errorCount;
+    private long _warningCount;
 
     public LogLevel MinimumLevel { get; set; } = LogLevel.Trace;
 
@@ -39,24 +44,45 @@ internal sealed class MangosLogger : IMangosLogger
         }
     }
 
-    public void Trace(string message) => Log(LogLevel.Trace, message);
-    public void Trace(Exception exception, string message) => Log(LogLevel.Trace, exception, message);
-    public void Debug(string message) => Log(LogLevel.Debug, message);
-    public void Debug(Exception exception, string message) => Log(LogLevel.Debug, exception, message);
-    public void Information(string message) => Log(LogLevel.Information, message);
-    public void Information(Exception exception, string message) => Log(LogLevel.Information, exception, message);
-    public void Warning(string message) => Log(LogLevel.Warning, message);
-    public void Warning(Exception exception, string message) => Log(LogLevel.Warning, exception, message);
-    public void Error(string message) => Log(LogLevel.Error, message);
-    public void Error(Exception exception, string message) => Log(LogLevel.Error, exception, message);
-    public void Critical(string message) => Log(LogLevel.Critical, message);
-    public void Critical(Exception exception, string message) => Log(LogLevel.Critical, exception, message);
+    public void Trace(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Trace, message, memberName, filePath, lineNumber);
+    public void Trace(Exception exception, string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Trace, exception, message, memberName, filePath, lineNumber);
+    public void Debug(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Debug, message, memberName, filePath, lineNumber);
+    public void Debug(Exception exception, string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Debug, exception, message, memberName, filePath, lineNumber);
+    public void Information(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Information, message, memberName, filePath, lineNumber);
+    public void Information(Exception exception, string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Information, exception, message, memberName, filePath, lineNumber);
+    public void Warning(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Warning, message, memberName, filePath, lineNumber);
+    public void Warning(Exception exception, string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Warning, exception, message, memberName, filePath, lineNumber);
+    public void Error(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Error, message, memberName, filePath, lineNumber);
+    public void Error(Exception exception, string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Error, exception, message, memberName, filePath, lineNumber);
+    public void Critical(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Critical, message, memberName, filePath, lineNumber);
+    public void Critical(Exception exception, string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        => Log(LogLevel.Critical, exception, message, memberName, filePath, lineNumber);
 
-    public void Log(LogLevel level, string message)
+    public void Log(LogLevel level, string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0)
     {
         if (level < MinimumLevel) return;
 
-        var formatted = FormatMessage(level, message);
+        Interlocked.Increment(ref _totalLogCount);
+        if (level == LogLevel.Error || level == LogLevel.Critical)
+            Interlocked.Increment(ref _errorCount);
+        if (level == LogLevel.Warning)
+            Interlocked.Increment(ref _warningCount);
+
+        var formatted = FormatMessage(level, message, memberName, filePath, lineNumber);
         lock (_lock)
         {
             Console.ForegroundColor = GetColor(level);
@@ -66,25 +92,56 @@ internal sealed class MangosLogger : IMangosLogger
         }
     }
 
-    public void Log(LogLevel level, Exception exception, string message)
+    public void Log(LogLevel level, Exception exception, string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0)
     {
         if (level < MinimumLevel) return;
 
-        var formatted = FormatMessage(level, message);
+        Interlocked.Increment(ref _totalLogCount);
+        if (level == LogLevel.Error || level == LogLevel.Critical)
+            Interlocked.Increment(ref _errorCount);
+        if (level == LogLevel.Warning)
+            Interlocked.Increment(ref _warningCount);
+
+        var formatted = FormatMessage(level, message, memberName, filePath, lineNumber);
         lock (_lock)
         {
             Console.ForegroundColor = GetColor(level);
             Console.WriteLine(formatted);
-            Console.WriteLine(exception);
+            Console.WriteLine($"  Exception Type: {exception.GetType().FullName}");
+            Console.WriteLine($"  Exception Message: {exception.Message}");
+            if (exception.InnerException != null)
+            {
+                Console.WriteLine($"  Inner Exception: {exception.InnerException.GetType().FullName}: {exception.InnerException.Message}");
+            }
+            Console.WriteLine(exception.StackTrace);
             Console.ResetColor();
             _fileWriter?.WriteLine(formatted);
-            _fileWriter?.WriteLine(exception.ToString());
+            _fileWriter?.WriteLine($"  Exception Type: {exception.GetType().FullName}");
+            _fileWriter?.WriteLine($"  Exception Message: {exception.Message}");
+            if (exception.InnerException != null)
+            {
+                _fileWriter?.WriteLine($"  Inner Exception: {exception.InnerException.GetType().FullName}: {exception.InnerException.Message}");
+            }
+            _fileWriter?.WriteLine(exception.StackTrace);
         }
     }
 
-    private static string FormatMessage(LogLevel level, string message)
+    public IDisposable BeginTimedOperation(string operationName,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0)
     {
-        return $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} [{level,-11}] {message}";
+        return new TimedOperation(this, operationName, memberName, filePath, lineNumber);
+    }
+
+    private static string FormatMessage(LogLevel level, string message, string memberName, string filePath, int lineNumber)
+    {
+        var fileName = Path.GetFileName(filePath);
+        var threadId = Environment.CurrentManagedThreadId;
+        return $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} [{level,-11}] [Thread:{threadId:D3}] [{fileName}:{memberName}:{lineNumber}] {message}";
     }
 
     private static ConsoleColor GetColor(LogLevel level) => level switch

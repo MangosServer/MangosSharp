@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Logging;
 using Mangos.MySql.GetRealmList;
 using RealmServer.Network;
 using RealmServer.Requests;
@@ -26,26 +27,39 @@ namespace RealmServer.Handlers;
 internal sealed class AuthRealmlistHandler : IHandler<AuthRealmlistRequest>
 {
     private readonly IGetRealmListQuery getRealmListQuery;
+    private readonly IMangosLogger logger;
 
-    public AuthRealmlistHandler(IGetRealmListQuery getRealmListQuery)
+    public AuthRealmlistHandler(IGetRealmListQuery getRealmListQuery, IMangosLogger logger)
     {
         this.getRealmListQuery = getRealmListQuery;
+        this.logger = logger;
+        logger.Trace("[AuthRealmlistHandler] Handler instance created");
     }
 
     public MessageOpcode MessageOpcode => MessageOpcode.CMD_AUTH_REALMLIST;
 
     public async Task<IResponseMessage> ExectueAsync(AuthRealmlistRequest request)
     {
+        logger.Debug("[Auth] Realm list request received");
+        logger.Trace("[Auth] Querying database for realm list");
         var realmListModels = await getRealmListQuery.ExectueAsync();
         if (realmListModels == null)
         {
+            logger.Error("[Auth] Failed to retrieve realm list from database - query returned null");
             throw new Exception("Unable to get realmlist from database");
+        }
+
+        var realmList = realmListModels.Select(Map).ToList();
+        logger.Information($"[Auth] Returning {realmList.Count} realm(s) to client");
+        foreach (var realm in realmList)
+        {
+            logger.Trace($"[Auth] Realm: '{realm.Name}' at {realm.Address}:{realm.Port}, population={realm.Population}, flags={realm.Realmflags}");
         }
 
         return new AuthRealmlistResponse
         {
             Unk = request.Unk,
-            Realms = realmListModels.Select(Map).ToList()
+            Realms = realmList
         };
     }
 

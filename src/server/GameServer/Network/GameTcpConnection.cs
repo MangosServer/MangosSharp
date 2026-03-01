@@ -19,6 +19,7 @@
 using GameServer.Responses;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
+using Mangos.Logging;
 using Mangos.Tcp;
 using System.Buffers;
 using System.Buffers.Binary;
@@ -33,26 +34,39 @@ internal sealed class GameTcpConnection : ITcpConnection
 
     private readonly ClientClass legacyClientClass;
     private readonly IHandlerDispatcher[] dispatchers;
+    private readonly IMangosLogger logger;
+    private long _packetsReceived;
+    private long _packetsSent;
+    private long _bytesReceived;
+    private long _bytesSent;
 
     private readonly MemoryPool<byte> memoryPool = MemoryPool<byte>.Shared;
 
-    public GameTcpConnection(ClientClass legacyClientClass, IEnumerable<IHandlerDispatcher> dispatchers)
+    public GameTcpConnection(ClientClass legacyClientClass, IEnumerable<IHandlerDispatcher> dispatchers, IMangosLogger logger)
     {
         this.legacyClientClass = legacyClientClass;
+        this.logger = logger;
 
         this.dispatchers = dispatchers.ToArray();
+        logger.Debug($"GameTcpConnection created with {this.dispatchers.Length} handler dispatchers");
     }
 
     public async Task ExecuteAsync(Socket socket, CancellationToken cancellationToken)
     {
+        var remoteEndpoint = socket.RemoteEndPoint;
+        logger.Debug($"[GameTcp] Initializing connection for client {remoteEndpoint}");
         legacyClientClass.Socket = socket;
+        logger.Trace($"[GameTcp] Calling OnConnectAsync for client {remoteEndpoint}");
         await legacyClientClass.OnConnectAsync();
+        logger.Debug($"[GameTcp] Client {remoteEndpoint} connected, encryption enabled: {legacyClientClass.Client.PacketEncryption.IsEncryptionEnabled}");
 
+        logger.Information($"[GameTcp] Entering packet processing loop for client {remoteEndpoint}");
         while (!cancellationToken.IsCancellationRequested)
         {
             await WaitForNextPacket(socket, cancellationToken);
             await HandlePacketAsync(socket, cancellationToken);
         }
+        logger.Debug($"[GameTcp] Packet processing loop ended for client {remoteEndpoint} (packets received: {_packetsReceived}, sent: {_packetsSent})");
     }
 
     private async Task HandlePacketAsync(Socket socket, CancellationToken cancellationToken)
@@ -61,31 +75,44 @@ internal sealed class GameTcpConnection : ITcpConnection
         var header = await ReadPacketHeaderAsync(socket, memoryOwner.Memory, cancellationToken);
         var body = await ReadPacketBodyAsync(socket, memoryOwner.Memory, cancellationToken);
 
+        Interlocked.Increment(ref _packetsReceived);
+        Interlocked.Add(ref _bytesReceived, header.Length + body.Length);
+
         var opcode = (Opcodes)BinaryPrimitives.ReadUInt32LittleEndian(header.Span.Slice(2));
+        logger.Trace($"[GameTcp] Received packet: opcode={opcode} (0x{(uint)opcode:X4}), body size={body.Length} bytes, total packets: {_packetsReceived}");
 
         var dispatcher = dispatchers.FirstOrDefault(x => x.Opcode == opcode);
         if (dispatcher != null)
         {
+            logger.Trace($"[GameTcp] Dispatching opcode {opcode} to handler {dispatcher.GetType().Name}");
             await ExecuteHandlerAsync(dispatcher, body, socket, cancellationToken);
         }
         else
         {
+            logger.Trace($"[GameTcp] No handler for opcode {opcode}, routing to legacy handler");
             ExecuteLegacyHandler(memoryOwner.Memory.Slice(0, header.Length + body.Length));
         }
     }
 
     private async Task ExecuteHandlerAsync(IHandlerDispatcher dispatcher, Memory<byte> body, Socket socket, CancellationToken cancellationToken)
     {
+        logger.Trace($"[GameTcp] Executing handler for opcode {dispatcher.Opcode}, body size: {body.Length} bytes");
         using var result = await dispatcher.ExectueAsync(new PacketReader(body));
         using var memoryOwner = memoryPool.Rent(MAX_PACKET_LENGTH);
+        var responseCount = 0;
         foreach (var response in result.GetResponseMessages())
         {
+            responseCount++;
+            logger.Trace($"[GameTcp] Sending response #{responseCount}: opcode={response.Opcode} (0x{(ushort)response.Opcode:X4})");
             await SendAsync(socket, memoryOwner.Memory, response, cancellationToken);
+            Interlocked.Increment(ref _packetsSent);
         }
+        logger.Trace($"[GameTcp] Handler complete, sent {responseCount} response(s)");
     }
 
     private void ExecuteLegacyHandler(ReadOnlyMemory<byte> packet)
     {
+        logger.Trace($"[GameTcp] Forwarding {packet.Length} byte packet to legacy handler");
         var legacyPacket = new PacketClass(packet.ToArray());
         legacyClientClass.OnPacket(legacyPacket);
     }

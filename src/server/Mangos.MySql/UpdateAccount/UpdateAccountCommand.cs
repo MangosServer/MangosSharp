@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Logging;
 using Mangos.MySql.Connections;
 
 namespace Mangos.MySql.UpdateAccount;
@@ -23,14 +24,19 @@ namespace Mangos.MySql.UpdateAccount;
 internal sealed class UpdateAccountCommand : IUpdateAccountCommand
 {
     private readonly AccountConnection accountConnection;
+    private readonly IMangosLogger logger;
 
-    public UpdateAccountCommand(AccountConnection accountConnection)
+    public UpdateAccountCommand(AccountConnection accountConnection, IMangosLogger logger)
     {
         this.accountConnection = accountConnection;
+        this.logger = logger;
+        logger.Trace("[DB] UpdateAccountCommand instance created");
     }
 
     public async Task ExecuteAsync(string sessionkey, string last_ip, string last_login, string username)
     {
+        logger.Debug($"[DB] Updating account record for '{username}': ip={last_ip}, login_date={last_login}");
+        logger.Trace($"[DB] Session key length: {sessionkey.Length} chars");
         await accountConnection.ExecuteAsync(this, new
         {
             Sessionkey = sessionkey,
@@ -38,5 +44,6 @@ internal sealed class UpdateAccountCommand : IUpdateAccountCommand
             Last_login = last_login,
             Username = username
         });
+        logger.Debug($"[DB] Account record updated successfully for '{username}'");
     }
 }

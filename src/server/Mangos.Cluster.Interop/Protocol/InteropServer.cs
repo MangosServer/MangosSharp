@@ -32,43 +32,56 @@ public sealed class InteropServer : IDisposable
 
     public Action<InteropConnection>? OnWorldServerConnected { get; set; }
 
+    private int _connectionsAccepted;
+
     public InteropServer()
     {
         _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        Console.WriteLine("[IPC Server] InteropServer created");
     }
 
     public async Task RunAsync(string address, int port, CancellationToken ct = default)
     {
         _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         var endpoint = new IPEndPoint(IPAddress.Parse(address), port);
+        Console.WriteLine($"[IPC Server] Binding to {endpoint}");
         _listener.Bind(endpoint);
         _listener.Listen(8);
+        Console.WriteLine($"[IPC Server] Listening on {endpoint} with backlog 8");
+        Console.WriteLine("[IPC Server] Waiting for world server connections...");
 
         while (!_cts.Token.IsCancellationRequested)
         {
             try
             {
+                Console.WriteLine("[IPC Server] Waiting for next IPC connection");
                 var socket = await _listener.AcceptAsync(_cts.Token);
                 socket.NoDelay = true;
+                _connectionsAccepted++;
+                Console.WriteLine($"[IPC Server] World server connected from {socket.RemoteEndPoint} (total connections: {_connectionsAccepted})");
                 var connection = new InteropConnection(socket);
                 OnWorldServerConnected?.Invoke(connection);
             }
             catch (OperationCanceledException)
             {
+                Console.WriteLine("[IPC Server] Accept loop cancelled (shutdown)");
                 break;
             }
-            catch (SocketException)
+            catch (SocketException ex)
             {
-                // Listener closed
+                Console.WriteLine($"[IPC Server] Socket error in accept loop: {ex.SocketErrorCode}: {ex.Message}");
                 break;
             }
         }
+        Console.WriteLine($"[IPC Server] Server stopped. Total connections accepted: {_connectionsAccepted}");
     }
 
     public void Dispose()
     {
+        Console.WriteLine("[IPC Server] Disposing InteropServer");
         _cts?.Cancel();
         _listener.Dispose();
         _cts?.Dispose();
+        Console.WriteLine("[IPC Server] InteropServer disposed");
     }
 }

@@ -37,13 +37,17 @@ public class DataStoreProvider
     {
         if (dataStores.ContainsKey(dbcFileName))
         {
+            Console.WriteLine($"[DBC] Cache hit for '{dbcFileName}' ({dataStores.Count} total cached)");
             return dataStores[dbcFileName];
         }
 
+        Console.WriteLine($"[DBC] Cache miss for '{dbcFileName}', loading from disk");
         var path = Path.Combine(dbcDirectory, dbcFileName);
+        Console.WriteLine($"[DBC] Full path: {Path.GetFullPath(path)}");
         DataStore dataStore = new();
         await dataStore.LoadFromFileAsync(path);
         dataStores[dbcFileName] = dataStore;
+        Console.WriteLine($"[DBC] '{dbcFileName}' cached ({dataStores.Count} total cached DBC files)");
         return dataStore;
     }
 }

@@ -25,20 +25,26 @@ public class ZipService
 {
     public byte[] Compress(byte[] data, int offset, int length)
     {
+        Console.WriteLine($"[Zip] Compressing {length} bytes (offset={offset})");
         using MemoryStream outputStream = new();
         using DeflaterOutputStream compressordStream = new(outputStream);
         compressordStream.Write(data, offset, length);
         compressordStream.Flush();
-        return outputStream.ToArray();
+        var result = outputStream.ToArray();
+        Console.WriteLine($"[Zip] Compressed {length} -> {result.Length} bytes ({(result.Length * 100.0 / length):F1}% ratio)");
+        return result;
     }
 
     public byte[] DeCompress(byte[] data)
     {
+        Console.WriteLine($"[Zip] Decompressing {data.Length} bytes");
         using MemoryStream outputStream = new();
         using MemoryStream compressedStream = new(data);
         using InflaterInputStream inputStream = new(compressedStream);
         inputStream.CopyTo(outputStream);
         outputStream.Position = 0;
-        return outputStream.ToArray();
+        var result = outputStream.ToArray();
+        Console.WriteLine($"[Zip] Decompressed {data.Length} -> {result.Length} bytes");
+        return result;
     }
 }

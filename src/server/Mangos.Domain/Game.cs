@@ -38,6 +38,9 @@ public sealed class Game
 
     public void TransitionTo(GameState newState)
     {
+        var previousState = _state;
+        Console.WriteLine($"[Game] State transition requested: {previousState} -> {newState}");
+
         var valid = (_state, newState) switch
         {
             (GameState.Stopped, GameState.Starting) => true,
@@ -50,14 +53,22 @@ public sealed class Game
 
         if (!valid)
         {
+            Console.WriteLine($"[Game] ERROR: Invalid state transition from {_state} to {newState}");
             throw new InvalidOperationException($"Cannot transition from {_state} to {newState}");
         }
 
         if (newState == GameState.Running)
         {
             _startedAt = DateTime.UtcNow;
+            Console.WriteLine($"[Game] Server start time recorded: {_startedAt:yyyy-MM-dd HH:mm:ss.fff} UTC");
         }
 
         _state = newState;
+        Console.WriteLine($"[Game] State transitioned: {previousState} -> {newState}");
+
+        if (newState == GameState.ShuttingDown)
+        {
+            Console.WriteLine($"[Game] Server shutting down after {Uptime.TotalSeconds:F1}s uptime");
+        }
     }
 }

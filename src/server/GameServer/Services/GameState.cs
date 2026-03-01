@@ -17,18 +17,28 @@
 //
 
 using Mangos.Domain;
+using Mangos.Logging;
 
 namespace GameServer.Services;
 
 internal sealed class GameState : IGameState
 {
     private readonly Game world = new();
+    private readonly IMangosLogger logger;
+
+    public GameState(IMangosLogger logger)
+    {
+        this.logger = logger;
+        logger.Debug("[GameState] GameState service initialized");
+    }
 
     public void Transaction(Action<Game> transaction)
     {
+        logger.Trace($"[GameState] Entering game state transaction (current state: {world.State})");
         lock (world)
         {
             transaction(world);
         }
+        logger.Trace($"[GameState] Game state transaction completed (new state: {world.State})");
     }
 }

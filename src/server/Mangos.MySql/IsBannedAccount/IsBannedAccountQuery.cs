@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Logging;
 using Mangos.MySql.Connections;
 
 namespace Mangos.MySql.IsBannedAccount;
@@ -23,15 +24,21 @@ namespace Mangos.MySql.IsBannedAccount;
 internal sealed class IsBannedAccountQuery : IIsBannedAccountQuery
 {
     private readonly AccountConnection accountConnection;
+    private readonly IMangosLogger logger;
 
-    public IsBannedAccountQuery(AccountConnection accountConnection)
+    public IsBannedAccountQuery(AccountConnection accountConnection, IMangosLogger logger)
     {
         this.accountConnection = accountConnection;
+        this.logger = logger;
+        logger.Trace("[DB] IsBannedAccountQuery instance created");
     }
 
     public async Task<bool> ExecuteAsync(string id)
     {
+        logger.Debug($"[DB] Checking ban status for account id={id}");
         var count = await accountConnection.QueryFirstOrDefaultAsync<int>(this, new { Id = id });
-        return count > 0;
+        var isBanned = count > 0;
+        logger.Debug($"[DB] Account id={id} ban check result: {(isBanned ? "BANNED" : "not banned")} (count={count})");
+        return isBanned;
     }
 }

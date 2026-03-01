@@ -52,19 +52,28 @@ public sealed class InteropConnection : IDisposable
 
     public bool IsConnected => _socket.Connected;
 
+    private long _framesReceived;
+    private long _framesSent;
+    private long _bytesReceived;
+    private long _bytesSent;
+
     public InteropConnection(Socket socket)
     {
         _socket = socket;
+        Console.WriteLine($"[IPC] InteropConnection created, remote: {socket.RemoteEndPoint}, local: {socket.LocalEndPoint}");
     }
 
     public void StartReceiving()
     {
+        Console.WriteLine("[IPC] Starting receive loop");
         _cts = new CancellationTokenSource();
         _receiveLoop = Task.Run(() => ReceiveLoopAsync(_cts.Token));
+        Console.WriteLine("[IPC] Receive loop task started");
     }
 
     private async Task ReceiveLoopAsync(CancellationToken ct)
     {
+        Console.WriteLine("[IPC] Receive loop entered");
         try
         {
             while (!ct.IsCancellationRequested && _socket.Connected)
@@ -75,6 +84,7 @@ public sealed class InteropConnection : IDisposable
                 var payloadLength = BinaryPrimitives.ReadInt32LittleEndian(headerBuf.AsSpan(0, 4));
                 if (payloadLength < 0 || payloadLength > MaxFrameSize)
                 {
+                    Console.WriteLine($"[IPC] ERROR: Invalid frame size: {payloadLength} (max: {MaxFrameSize})");
                     throw new InvalidDataException($"Invalid frame size: {payloadLength}");
                 }
 
@@ -89,27 +99,32 @@ public sealed class InteropConnection : IDisposable
                     await ReadExactAsync(data, ct);
                 }
 
+                Interlocked.Increment(ref _framesReceived);
+                Interlocked.Add(ref _bytesReceived, FrameHeaderSize + dataLength);
+
                 if (methodId == InteropMethodId.Response)
                 {
                     HandleResponse(requestId, data);
                 }
                 else
                 {
+                    Console.WriteLine($"[IPC] Incoming call: method={methodId}, requestId={requestId}, dataLength={dataLength}, total frames received: {_framesReceived}");
                     _ = Task.Run(() => HandleIncomingCall(methodId, requestId, data), ct);
                 }
             }
         }
         catch (OperationCanceledException)
         {
-            // Normal shutdown
+            Console.WriteLine("[IPC] Receive loop cancelled (normal shutdown)");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Connection lost
+            Console.WriteLine($"[IPC] Receive loop error: {ex.GetType().Name}: {ex.Message}");
         }
         finally
         {
-            // Cancel all pending requests
+            Console.WriteLine($"[IPC] Receive loop ended. Stats: {_framesReceived} frames received ({_bytesReceived} bytes), {_framesSent} frames sent ({_bytesSent} bytes)");
+            Console.WriteLine($"[IPC] Cancelling {_pendingRequests.Count} pending request(s)");
             foreach (var kvp in _pendingRequests)
             {
                 kvp.Value.TrySetException(new IOException("Connection lost"));
@@ -123,7 +138,12 @@ public sealed class InteropConnection : IDisposable
     {
         if (_pendingRequests.TryRemove(requestId, out var tcs))
         {
+            Console.WriteLine($"[IPC] Response received for requestId={requestId}, data size={data.Length} bytes, pending: {_pendingRequests.Count}");
             tcs.TrySetResult(data);
+        }
+        else
+        {
+            Console.WriteLine($"[IPC] WARNING: Received response for unknown requestId={requestId}");
         }
     }
 
@@ -141,15 +161,22 @@ public sealed class InteropConnection : IDisposable
             {
                 result = OnMethodCall(methodId, data);
             }
+            else
+            {
+                Console.WriteLine($"[IPC] WARNING: No handler registered for method {methodId}");
+            }
 
             // Send response if this was a request (non-zero request ID)
             if (requestId != 0)
             {
+                var responseSize = result?.Length ?? 0;
+                Console.WriteLine($"[IPC] Sending response for requestId={requestId}, method={methodId}, response size={responseSize} bytes");
                 await SendFrameAsync(InteropMethodId.Response, requestId, result ?? Array.Empty<byte>());
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine($"[IPC] ERROR handling method {methodId} requestId={requestId}: {ex.GetType().Name}: {ex.Message}");
             // Send empty response on error to unblock the caller
             if (requestId != 0)
             {
@@ -157,9 +184,9 @@ public sealed class InteropConnection : IDisposable
                 {
                     await SendFrameAsync(InteropMethodId.Response, requestId, Array.Empty<byte>());
                 }
-                catch
+                catch (Exception sendEx)
                 {
-                    // Connection may be dead
+                    Console.WriteLine($"[IPC] ERROR: Failed to send error response: {sendEx.GetType().Name}: {sendEx.Message}");
                 }
             }
         }
@@ -170,6 +197,7 @@ public sealed class InteropConnection : IDisposable
     /// </summary>
     public async Task SendOneWayAsync(InteropMethodId methodId, byte[] data)
     {
+        Console.WriteLine($"[IPC] SendOneWay: method={methodId}, data size={data.Length} bytes");
         await SendFrameAsync(methodId, 0, data);
     }
 
@@ -182,15 +210,21 @@ public sealed class InteropConnection : IDisposable
         var tcs = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
         _pendingRequests[requestId] = tcs;
 
+        Console.WriteLine($"[IPC] SendRequest: method={methodId}, requestId={requestId}, data size={data.Length} bytes, timeout={timeoutMs}ms, pending: {_pendingRequests.Count}");
         try
         {
             await SendFrameAsync(methodId, requestId, data);
 
             using var cts = new CancellationTokenSource(timeoutMs);
             await using var registration = cts.Token.Register(() =>
-                tcs.TrySetException(new TimeoutException($"RPC call {methodId} timed out after {timeoutMs}ms")));
+            {
+                Console.WriteLine($"[IPC] TIMEOUT: RPC call {methodId} requestId={requestId} timed out after {timeoutMs}ms");
+                tcs.TrySetException(new TimeoutException($"RPC call {methodId} timed out after {timeoutMs}ms"));
+            });
 
-            return await tcs.Task;
+            var result = await tcs.Task;
+            Console.WriteLine($"[IPC] Response received for requestId={requestId}, method={methodId}, response size={result.Length} bytes");
+            return result;
         }
         catch
         {
@@ -222,6 +256,8 @@ public sealed class InteropConnection : IDisposable
             {
                 sent += await _socket.SendAsync(frame.AsMemory(sent), SocketFlags.None);
             }
+            Interlocked.Increment(ref _framesSent);
+            Interlocked.Add(ref _bytesSent, frame.Length);
         }
         finally
         {
@@ -237,6 +273,7 @@ public sealed class InteropConnection : IDisposable
             var read = await _socket.ReceiveAsync(buffer.AsMemory(offset), SocketFlags.None, ct);
             if (read == 0)
             {
+                Console.WriteLine("[IPC] Connection closed by remote during read");
                 throw new IOException("Connection closed by remote");
             }
             offset += read;
@@ -245,10 +282,12 @@ public sealed class InteropConnection : IDisposable
 
     public void Dispose()
     {
+        Console.WriteLine($"[IPC] Disposing InteropConnection. Stats: {_framesReceived} received, {_framesSent} sent");
         _cts?.Cancel();
         try { _socket.Shutdown(SocketShutdown.Both); } catch { }
         _socket.Dispose();
         _cts?.Dispose();
         _writeLock.Dispose();
+        Console.WriteLine("[IPC] InteropConnection disposed");
     }
 }

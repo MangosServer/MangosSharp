@@ -51,8 +51,21 @@ logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
 logger.Trace("                                                ");
 logger.Trace("Website / Forum / Support: https://www.getmangos.eu/");
 
+logger.Information("World Cluster initialization starting");
+logger.Debug($"Configuration loaded - Cluster endpoint: {configuration.Cluster.ClusterServerEndpoint}");
+logger.Debug($"Cluster listen address: {configuration.Cluster.ClusterListenAddress}:{configuration.Cluster.ClusterListenPort}");
+logger.Debug($"Server player limit: {configuration.Cluster.ServerPlayerLimit}");
+logger.Debug($"Runtime: {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}");
+logger.Debug($"OS: {System.Runtime.InteropServices.RuntimeInformation.OSDescription}");
+logger.Debug($"Process ID: {Environment.ProcessId}");
+
 logger.Information("Starting legacy cluster server");
-await legacyWorldCluster.StartAsync();
+logger.Debug("Initializing legacy cluster server components");
+using (logger.BeginTimedOperation("Legacy cluster server startup"))
+{
+    await legacyWorldCluster.StartAsync();
+}
+logger.Information("Legacy cluster server started successfully");
 
 // Start IPC server for world server connections
 logger.Information($"Starting cluster IPC server on {configuration.Cluster.ClusterListenAddress}:{configuration.Cluster.ClusterListenPort}");
@@ -61,33 +74,44 @@ var interopServer = new InteropServer();
 interopServer.OnWorldServerConnected = connection =>
 {
     logger.Information("World server connected via IPC");
+    logger.Debug($"IPC connection established, IsConnected: {connection.IsConnected}");
 
     var dispatcher = new ClusterInteropDispatcher(worldServerClass, connection);
+    logger.Debug("ClusterInteropDispatcher created for new world server connection");
 
-    connection.OnMethodCall = (methodId, data) => dispatcher.Dispatch(methodId, data);
+    connection.OnMethodCall = (methodId, data) =>
+    {
+        logger.Trace($"[IPC] Received method call from world server: {methodId}, data size: {data.Length} bytes");
+        return dispatcher.Dispatch(methodId, data);
+    };
 
     connection.OnDisconnected = () =>
     {
         logger.Warning("World server IPC connection lost");
+        logger.Warning("Cluster will not be able to forward packets to world server until reconnected");
     };
 
     connection.StartReceiving();
+    logger.Debug("IPC receive loop started for world server connection");
 };
 
 // Run IPC server in background
+logger.Debug("Starting IPC server in background task");
 _ = Task.Run(async () =>
 {
     try
     {
+        logger.Debug($"IPC server binding to {configuration.Cluster.ClusterListenAddress}:{configuration.Cluster.ClusterListenPort}");
         await interopServer.RunAsync(
             configuration.Cluster.ClusterListenAddress,
             configuration.Cluster.ClusterListenPort);
     }
     catch (Exception ex)
     {
-        logger.Error($"IPC server error: {ex.Message}");
+        logger.Error(ex, $"IPC server fatal error");
     }
 });
 
-logger.Information("Starting cluster TCP server for game clients");
+logger.Information($"Starting cluster TCP server for game clients on {configuration.Cluster.ClusterServerEndpoint}");
+logger.Debug("TCP server will now begin accepting game client connections");
 await tcpServer.RunAsync(configuration.Cluster.ClusterServerEndpoint);

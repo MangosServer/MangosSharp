@@ -46,18 +46,31 @@ logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/    \_/  |___/              ");
 logger.Trace("                                                              ");
 logger.Trace(" Website / Forum / Support: https://www.getmangos.eu/          ");
 
+logger.Information("World server initialization - Phase 1 complete");
+logger.Debug($"Configuration loaded - Cluster host: {configuration.World.ClusterConnectHost}:{configuration.World.ClusterConnectPort}");
+logger.Debug($"World databases: Account={configuration.World.AccountDatabase}, Character={configuration.World.CharacterDatabase}, World={configuration.World.WorldDatabase}");
+logger.Debug($"Maps configured: {configuration.World.Maps.Length} maps, VMaps enabled: {configuration.World.VMapsEnabled}");
+logger.Debug($"XP Rate: {configuration.World.XPRate}, Map resolution: {configuration.World.MapResolution}");
+logger.Debug($"Runtime: {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}");
+logger.Debug($"OS: {System.Runtime.InteropServices.RuntimeInformation.OSDescription}");
+logger.Debug($"Process ID: {Environment.ProcessId}");
+
 // Phase 2: Connect to cluster via IPC
 logger.Information($"Connecting to cluster at {configuration.World.ClusterConnectHost}:{configuration.World.ClusterConnectPort}");
 
 InteropConnection? interopConnection = null;
 ClusterInteropProxy? clusterProxy = null;
+var connectionAttempt = 0;
 
 while (interopConnection == null)
 {
+    connectionAttempt++;
+    logger.Debug($"Cluster IPC connection attempt #{connectionAttempt}");
     try
     {
         var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.NoDelay = true;
+        logger.Trace($"Attempting TCP connection to {configuration.World.ClusterConnectHost}:{configuration.World.ClusterConnectPort}");
         await socket.ConnectAsync(new IPEndPoint(
             IPAddress.Parse(configuration.World.ClusterConnectHost),
             configuration.World.ClusterConnectPort));
@@ -65,11 +78,11 @@ while (interopConnection == null)
         interopConnection = new InteropConnection(socket);
         clusterProxy = new ClusterInteropProxy(interopConnection);
 
-        logger.Information("Connected to cluster via IPC");
+        logger.Information($"Connected to cluster via IPC after {connectionAttempt} attempt(s)");
     }
     catch (Exception ex)
     {
-        logger.Warning($"Unable to connect to cluster: {ex.Message}. Retrying in 3 seconds...");
+        logger.Warning($"Unable to connect to cluster (attempt #{connectionAttempt}): {ex.GetType().Name}: {ex.Message}. Retrying in 3 seconds...");
         interopConnection = null;
         clusterProxy = null;
         await Task.Delay(3000);
@@ -77,6 +90,7 @@ while (interopConnection == null)
 }
 
 // Phase 3: Build full DI container with the IPC-backed ICluster proxy
+logger.Information("Phase 3: Building full DI container with IPC-backed ICluster proxy");
 var builder = new ContainerBuilder();
 builder.RegisterModule<ConfigurationModule>();
 builder.RegisterModule<LoggingModule>();
@@ -84,29 +98,43 @@ builder.RegisterModule<MySqlModule>();
 builder.RegisterModule<LegacyWorldModule>();
 if (clusterProxy != null)
 {
+    logger.Debug("Registering WorldServerModule with cluster proxy");
     builder.RegisterModule(new WorldServerModule(clusterProxy));
 }
 var container = builder.Build();
 WorldServiceLocator.Container = container;
 var worldServer = container.Resolve<Mangos.World.WorldServer>();
+logger.Debug("Full DI container built successfully");
 
 // Phase 4: Start the world server (loads DB, DBC, quests, etc.)
-logger.Information("Starting legacy world server");
-await worldServer.StartAsync();
+logger.Information("Phase 4: Starting legacy world server (DB, DBC, quests loading)");
+using (logger.BeginTimedOperation("Legacy world server startup"))
+{
+    await worldServer.StartAsync();
+}
+logger.Information("Legacy world server started successfully");
 
 // Phase 5: Wire up the IPC dispatcher so the cluster can call IWorld methods on us
+logger.Information("Phase 5: Wiring up IPC dispatcher for cluster-to-world calls");
 var wsWorldServerClass = worldServer.ClsWorldServer;
 var worldDispatcher = new WorldInteropDispatcher(wsWorldServerClass);
 
-interopConnection.OnMethodCallAsync = (methodId, data) => worldDispatcher.DispatchAsync(methodId, data);
+interopConnection.OnMethodCallAsync = (methodId, data) =>
+{
+    logger.Trace($"[IPC] Received method call from cluster: {methodId}, data size: {data.Length} bytes");
+    return worldDispatcher.DispatchAsync(methodId, data);
+};
 interopConnection.OnDisconnected = () =>
 {
     logger.Error("Cluster IPC connection lost! Attempting reconnection...");
+    logger.Critical("World server may be unable to process cluster requests until reconnected");
 };
 
 interopConnection.StartReceiving();
+logger.Debug("IPC receive loop started, listening for cluster method calls");
 
 logger.Information("World server is ready and connected to cluster");
+logger.Information("All initialization phases complete - world server is fully operational");
 
 // Keep the process alive
 worldServer.WaitConsoleCommand();

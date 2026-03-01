@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Logging;
 using Mangos.MySql.Connections;
 
 namespace Mangos.MySql.GetRealmList;
@@ -23,14 +24,21 @@ namespace Mangos.MySql.GetRealmList;
 internal sealed class GetRealmListQuery : IGetRealmListQuery
 {
     private readonly AccountConnection accountConnection;
+    private readonly IMangosLogger logger;
 
-    public GetRealmListQuery(AccountConnection accountConnection)
+    public GetRealmListQuery(AccountConnection accountConnection, IMangosLogger logger)
     {
         this.accountConnection = accountConnection;
+        this.logger = logger;
+        logger.Trace("[DB] GetRealmListQuery instance created");
     }
 
     public async Task<IEnumerable<RealmListModel>?> ExectueAsync()
     {
-        return await accountConnection.QueryAsync<RealmListModel>(this);
+        logger.Debug("[DB] Querying realm list from database");
+        var result = await accountConnection.QueryAsync<RealmListModel>(this);
+        var count = result?.Count() ?? 0;
+        logger.Debug($"[DB] Realm list query returned {count} realm(s)");
+        return result;
     }
 }

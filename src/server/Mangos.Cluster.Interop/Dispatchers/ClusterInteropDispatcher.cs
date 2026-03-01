@@ -39,6 +39,7 @@ public sealed class ClusterInteropDispatcher
         _cluster = cluster;
         _connection = connection;
         _worldProxy = new WorldInteropProxy(connection);
+        Console.WriteLine("[ClusterDispatcher] ClusterInteropDispatcher created");
     }
 
     /// <summary>
@@ -48,6 +49,7 @@ public sealed class ClusterInteropDispatcher
 
     public byte[]? Dispatch(InteropMethodId methodId, byte[] data)
     {
+        Console.WriteLine($"[ClusterDispatcher] Dispatching method: {methodId}, data size: {data.Length} bytes");
         using var ms = new MemoryStream(data);
         using var br = new BinaryReader(ms);
 
@@ -57,8 +59,9 @@ public sealed class ClusterInteropDispatcher
             {
                 var uri = br.ReadString();
                 var maps = InteropSerializer.ReadUInt32List(br);
-                // Pass the WorldInteropProxy as the IWorld parameter
+                Console.WriteLine($"[ClusterDispatcher] ClusterConnect: uri={uri}, maps count={maps.Count}");
                 var result = _cluster.Connect(uri, maps, _worldProxy);
+                Console.WriteLine($"[ClusterDispatcher] ClusterConnect result: {result}");
                 return new[] { result ? (byte)1 : (byte)0 };
             }
 
@@ -66,6 +69,7 @@ public sealed class ClusterInteropDispatcher
             {
                 var uri = br.ReadString();
                 var maps = InteropSerializer.ReadUInt32List(br);
+                Console.WriteLine($"[ClusterDispatcher] ClusterDisconnect: uri={uri}, maps count={maps.Count}");
                 _cluster.Disconnect(uri, maps);
                 return null;
             }
@@ -74,6 +78,7 @@ public sealed class ClusterInteropDispatcher
             {
                 var id = br.ReadUInt32();
                 var packetData = InteropSerializer.ReadByteArray(br);
+                Console.WriteLine($"[ClusterDispatcher] ClientSend: clientId={id}, packet size={packetData.Length} bytes");
                 _cluster.ClientSend(id, packetData);
                 return null;
             }
@@ -81,6 +86,7 @@ public sealed class ClusterInteropDispatcher
             case InteropMethodId.ClusterClientDrop:
             {
                 var id = br.ReadUInt32();
+                Console.WriteLine($"[ClusterDispatcher] ClientDrop: clientId={id}");
                 _cluster.ClientDrop(id);
                 return null;
             }

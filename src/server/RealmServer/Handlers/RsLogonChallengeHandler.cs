@@ -52,30 +52,46 @@ internal sealed class RsLogonChallengeHandler : IHandler<RsLogonChallengeRequest
 
     public async Task<IResponseMessage> ExectueAsync(RsLogonChallengeRequest request)
     {
+        logger.Information($"[Auth] Logon challenge received for account '{request.AccountName}', client build: {request.ClientBuild}");
+
         if (request.ClientBuild != WowClientBuildVersions.WOW_1_12_1)
         {
-            logger.Warning($"Someone try to login with unsupported client version {request.ClientBuild}");
+            logger.Warning($"[Auth] Login rejected - unsupported client version {request.ClientBuild} for account '{request.AccountName}' (expected {WowClientBuildVersions.WOW_1_12_1})");
             return new AuthLogonProofResponse { AccountState = AccountStates.LOGIN_BADVERSION };
         }
+        logger.Debug($"[Auth] Client build version {request.ClientBuild} validated for account '{request.AccountName}'");
 
+        logger.Trace($"[Auth] Querying database for account info: '{request.AccountName}'");
         var accountInfo = await getAccountInfoQuery.ExectueAsync(request.AccountName);
         if (accountInfo == null)
         {
+            logger.Warning($"[Auth] Login rejected - unknown account '{request.AccountName}'");
             return new AuthLogonProofResponse { AccountState = AccountStates.LOGIN_UNKNOWN_ACCOUNT };
         }
+        logger.Debug($"[Auth] Account found: id={accountInfo.id}, account='{request.AccountName}'");
+
+        logger.Trace($"[Auth] Checking ban status for account id={accountInfo.id}");
         if (await isBannedAccountQuery.ExecuteAsync(accountInfo.id))
         {
+            logger.Warning($"[Auth] Login rejected - account '{request.AccountName}' (id={accountInfo.id}) is banned");
             return new AuthLogonProofResponse { AccountState = AccountStates.LOGIN_BANNED };
         }
+        logger.Trace($"[Auth] Account '{request.AccountName}' is not banned");
+
         if (accountInfo.sha_pass_hash.Length != 40)
         {
+            logger.Error($"[Auth] Login rejected - invalid password hash length ({accountInfo.sha_pass_hash.Length}) for account '{request.AccountName}' (expected 40)");
             return new AuthLogonProofResponse { AccountState = AccountStates.LOGIN_BAD_PASS };
         }
 
+        logger.Trace($"[Auth] Parsing password hash for account '{request.AccountName}'");
         var hash = GetPasswordHashFromString(accountInfo.sha_pass_hash);
         clientState.AccountName = request.AccountName;
+        logger.Trace($"[Auth] Calculating SRP6 challenge (CalculateX) for account '{request.AccountName}'");
         clientState.AuthEngine.CalculateX(Encoding.UTF8.GetBytes(request.AccountName), hash);
 
+        logger.Information($"[Auth] Logon challenge successful for account '{request.AccountName}', sending challenge response");
+        logger.Trace($"[Auth] SRP6 parameters: PublicB length={clientState.AuthEngine.PublicB.Length}, Salt length={clientState.AuthEngine.Salt.Length}");
         return new AuthLogonChallengeResponse
         {
             PublicB = clientState.AuthEngine.PublicB,

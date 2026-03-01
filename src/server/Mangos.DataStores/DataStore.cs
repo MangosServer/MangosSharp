@@ -49,15 +49,19 @@ public class DataStore
 
     public async Task LoadFromFileAsync(string path)
     {
+        Console.WriteLine($"[DBC] Loading DBC file: {path}");
         if (!File.Exists(path))
         {
+            Console.WriteLine($"[DBC] ERROR: DBC file not found: {Path.GetFullPath(path)}");
             throw new FileNotFoundException($"DBC file not found: {path}", path);
         }
 
         data = await File.ReadAllBytesAsync(path);
+        Console.WriteLine($"[DBC] Read {data.Length} bytes from {path}");
 
         if (data.Length < HeaderSize)
         {
+            Console.WriteLine($"[DBC] ERROR: DBC file too small ({data.Length} bytes, minimum {HeaderSize}): {path}");
             throw new InvalidDataException($"DBC file too small ({data.Length} bytes): {path}");
         }
 
@@ -67,12 +71,16 @@ public class DataStore
         RowLength = BitConverter.ToInt32(new ReadOnlySpan<byte>(data, 12, 4));
         StringBlockLength = BitConverter.ToInt32(new ReadOnlySpan<byte>(data, 16, 4));
 
+        Console.WriteLine($"[DBC] Header parsed: Type={Type}, Rows={Rows}, Columns={Columns}, RowLength={RowLength}, StringBlockLength={StringBlockLength}");
+
         var expectedMinSize = HeaderSize + (Rows * RowLength) + StringBlockLength;
         if (data.Length < expectedMinSize)
         {
+            Console.WriteLine($"[DBC] ERROR: DBC file truncated: expected {expectedMinSize} bytes, got {data.Length}: {path}");
             throw new InvalidDataException(
                 $"DBC file {path} is truncated: expected at least {expectedMinSize} bytes, got {data.Length}");
         }
+        Console.WriteLine($"[DBC] File loaded successfully: {Path.GetFileName(path)} ({Rows} rows, {Columns} columns)");
     }
 
     public int ReadInt(int row, int column)

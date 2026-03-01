@@ -37,18 +37,25 @@ internal sealed class ConnectionFactory
     public AccountConnection ConnectToAccountDataBase()
     {
         var connectionString = mangosConfiguration.AccountDataBaseConnectionString;
-        logger.Debug($"Opening account database connection");
+        logger.Information("[DB] Opening account database connection");
+        logger.Debug($"[DB] Connection string configured (length={connectionString.Length} chars)");
 
         try
         {
+            logger.Trace("[DB] Creating MySqlConnection instance");
             var mySqlConnection = new MySqlConnection(connectionString);
-            mySqlConnection.Open();
-            logger.Information("Account database connection established");
+            logger.Trace("[DB] Calling MySqlConnection.Open()");
+            using (logger.BeginTimedOperation("Account database connection"))
+            {
+                mySqlConnection.Open();
+            }
+            logger.Information($"[DB] Account database connection established - Server version: {mySqlConnection.ServerVersion}, Database: {mySqlConnection.Database}");
+            logger.Debug($"[DB] Connection state: {mySqlConnection.State}, Server thread: {mySqlConnection.ServerThread}");
             return new AccountConnection(mySqlConnection, logger);
         }
         catch (MySqlException ex)
         {
-            logger.Error(ex, "Failed to connect to account database");
+            logger.Error(ex, $"[DB] Failed to connect to account database - MySQL error code: {ex.Number}, SQL state: {ex.SqlState}");
             throw;
         }
     }

@@ -43,25 +43,35 @@ internal sealed class RsLogonProofHandler : IHandler<RsLogonProofRequest>
 
     public async Task<IResponseMessage> ExectueAsync(RsLogonProofRequest request)
     {
+        logger.Information($"[Auth] Logon proof received for account '{clientState.AccountName}' from {clientState.IPAddress}");
+        logger.Trace($"[Auth] Calculating SRP6 U value from client's public key A (length={request.A.Length})");
         clientState.AuthEngine.CalculateU(request.A);
+        logger.Trace($"[Auth] Calculating expected M1 proof value");
         clientState.AuthEngine.CalculateM1();
 
         if (!clientState.AuthEngine.M1.SequenceEqual(request.M1))
         {
-            logger.Information($"Wrong password for user {clientState.AccountName}");
+            logger.Warning($"[Auth] Wrong password for user '{clientState.AccountName}' from {clientState.IPAddress} - M1 mismatch");
+            logger.Trace($"[Auth] Expected M1 length={clientState.AuthEngine.M1.Length}, received M1 length={request.M1.Length}");
             return new AuthLogonProofResponse { AccountState = AccountStates.LOGIN_BAD_PASS };
         }
+        logger.Debug($"[Auth] Password proof verified successfully for account '{clientState.AccountName}'");
 
+        logger.Trace($"[Auth] Calculating M2 server proof for account '{clientState.AccountName}'");
         clientState.AuthEngine.CalculateM2(request.M1);
 
         var sshash = string.Concat(clientState.AuthEngine.SsHash.Select(x => x.ToString("X2")));
+        logger.Trace($"[Auth] Session key hash computed for account '{clientState.AccountName}' (length={sshash.Length})");
 
-        await updateAccountCommand.ExecuteAsync(
-            sshash,
-            clientState.IPAddress?.ToString() ?? throw new Exception($"Unable to get ip address"),
-            DateAndTime.Now.ToString("yyyy-MM-dd"),
-            clientState.AccountName ?? throw new Exception($"Unable to get account name"));
+        var ipAddress = clientState.IPAddress?.ToString() ?? throw new Exception($"Unable to get ip address");
+        var loginDate = DateAndTime.Now.ToString("yyyy-MM-dd");
+        var accountName = clientState.AccountName ?? throw new Exception($"Unable to get account name");
 
+        logger.Debug($"[Auth] Updating account record: account='{accountName}', ip={ipAddress}, login_date={loginDate}");
+        await updateAccountCommand.ExecuteAsync(sshash, ipAddress, loginDate, accountName);
+        logger.Debug($"[Auth] Account record updated successfully for '{accountName}'");
+
+        logger.Information($"[Auth] Login successful for account '{accountName}' from {ipAddress}");
         return new AuthLogonProofResponse
         {
             AccountState = AccountStates.LOGIN_OK,

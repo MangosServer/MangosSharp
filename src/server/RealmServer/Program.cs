@@ -46,13 +46,25 @@ logger.Trace(@"|_|  |_\__,_|_|\_|\___|\___/|___/              ");
 logger.Trace("                                                ");
 logger.Trace("Website / Forum / Support: https://www.getmangos.eu/");
 
+logger.Information("Realm server initialization starting");
+logger.Debug($"Configuration loaded - Realm endpoint: {configuration.Realm.RealmServerEndpoint}");
+logger.Debug($"DI container built successfully");
+logger.Debug($"Runtime: {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}");
+logger.Debug($"OS: {System.Runtime.InteropServices.RuntimeInformation.OSDescription}");
+logger.Debug($"Process ID: {Environment.ProcessId}");
+
+logger.Information("Initializing realm verifier");
 var realmVerifier = container.Resolve<RealmVerifier>();
 using (var scope = container.BeginLifetimeScope())
 {
     var dispatchers = scope.Resolve<IEnumerable<IHandlerDispatcher>>();
+    logger.Debug($"Resolved {dispatchers.Count()} handler dispatchers for realm verification");
     realmVerifier.Initialize(dispatchers);
 }
+logger.Debug("Starting realm verifier periodic checks");
 realmVerifier.Start();
+logger.Information("Realm verifier started successfully");
 
-logger.Information("Starting realm tcp server");
+logger.Information($"Starting realm TCP server on {configuration.Realm.RealmServerEndpoint}");
+logger.Debug("TCP server will now begin accepting authentication connections");
 await tcpServer.RunAsync(configuration.Realm.RealmServerEndpoint);

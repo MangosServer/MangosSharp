@@ -39,88 +39,118 @@ internal sealed class AccountConnection : IDisposable
 
     public async Task<IEnumerable<T>?> QueryAsync<T>(object target)
     {
+        var queryName = target.GetType().Name;
+        logger.Trace($"[DB] QueryAsync<{typeof(T).Name}> starting for {queryName}");
         var script = scripts.GetOrAdd(target, GetSqlScriptFromResources);
+        logger.Trace($"[DB] Acquired SQL script for {queryName}, waiting for connection lock");
         await connectionLock.WaitAsync();
         try
         {
             await EnsureConnectionOpenAsync();
-            return await mySqlConnection.QueryAsync<T>(script);
+            logger.Trace($"[DB] Executing query for {queryName}");
+            var result = await mySqlConnection.QueryAsync<T>(script);
+            var resultList = result?.ToList();
+            logger.Debug($"[DB] Query {queryName} returned {resultList?.Count ?? 0} row(s)");
+            return resultList;
         }
         catch (MySqlException ex)
         {
-            logger.Error(ex, $"Database query failed for {target.GetType().Name}");
+            logger.Error(ex, $"[DB] Database query failed for {queryName} - MySQL error: {ex.Number}, SQL state: {ex.SqlState}");
             throw;
         }
         finally
         {
             connectionLock.Release();
+            logger.Trace($"[DB] Connection lock released for {queryName}");
         }
     }
 
     public async Task<T?> QueryFirstOrDefaultAsync<T>(object target, object arguments)
     {
+        var queryName = target.GetType().Name;
+        logger.Trace($"[DB] QueryFirstOrDefaultAsync<{typeof(T).Name}> starting for {queryName}");
         var script = scripts.GetOrAdd(target, GetSqlScriptFromResources);
+        logger.Trace($"[DB] Acquired SQL script for {queryName}, waiting for connection lock");
         await connectionLock.WaitAsync();
         try
         {
             await EnsureConnectionOpenAsync();
-            return await mySqlConnection.QueryFirstOrDefaultAsync<T>(script, arguments);
+            logger.Trace($"[DB] Executing single-row query for {queryName}");
+            var result = await mySqlConnection.QueryFirstOrDefaultAsync<T>(script, arguments);
+            logger.Debug($"[DB] Query {queryName} returned {(result != null ? "a result" : "null")}");
+            return result;
         }
         catch (MySqlException ex)
         {
-            logger.Error(ex, $"Database query failed for {target.GetType().Name}");
+            logger.Error(ex, $"[DB] Database query failed for {queryName} - MySQL error: {ex.Number}, SQL state: {ex.SqlState}");
             throw;
         }
         finally
         {
             connectionLock.Release();
+            logger.Trace($"[DB] Connection lock released for {queryName}");
         }
     }
 
     public async Task ExecuteAsync(object target, object arguments)
     {
+        var commandName = target.GetType().Name;
+        logger.Trace($"[DB] ExecuteAsync starting for {commandName}");
         var script = scripts.GetOrAdd(target, GetSqlScriptFromResources);
+        logger.Trace($"[DB] Acquired SQL script for {commandName}, waiting for connection lock");
         await connectionLock.WaitAsync();
         try
         {
             await EnsureConnectionOpenAsync();
+            logger.Trace($"[DB] Executing command for {commandName}");
             await mySqlConnection.ExecuteAsync(script, arguments);
+            logger.Debug($"[DB] Command {commandName} executed successfully");
         }
         catch (MySqlException ex)
         {
-            logger.Error(ex, $"Database execute failed for {target.GetType().Name}");
+            logger.Error(ex, $"[DB] Database execute failed for {commandName} - MySQL error: {ex.Number}, SQL state: {ex.SqlState}");
             throw;
         }
         finally
         {
             connectionLock.Release();
+            logger.Trace($"[DB] Connection lock released for {commandName}");
         }
     }
 
     private async Task EnsureConnectionOpenAsync()
     {
+        logger.Trace($"[DB] Connection state check: {mySqlConnection.State}");
         if (mySqlConnection.State == ConnectionState.Broken || mySqlConnection.State == ConnectionState.Closed)
         {
-            logger.Warning("Database connection was closed, reconnecting...");
+            logger.Warning($"[DB] Database connection was {mySqlConnection.State}, reconnecting...");
             await mySqlConnection.OpenAsync();
+            logger.Information($"[DB] Database reconnection successful, new state: {mySqlConnection.State}");
         }
     }
 
     private string GetSqlScriptFromResources(object target)
     {
         var type = target.GetType();
-        using var stream = type.Assembly.GetManifestResourceStream($"{type.FullName}.sql");
+        var resourceName = $"{type.FullName}.sql";
+        logger.Trace($"[DB] Loading SQL script from embedded resource: {resourceName}");
+        using var stream = type.Assembly.GetManifestResourceStream(resourceName);
         if (stream == null)
         {
+            logger.Error($"[DB] SQL script resource not found: {resourceName}");
             throw new FileNotFoundException($"Unable to get sql script for {type.FullName}");
         }
         using var streamReader = new StreamReader(stream);
-        return streamReader.ReadToEnd();
+        var script = streamReader.ReadToEnd();
+        logger.Debug($"[DB] Loaded SQL script for {type.Name} ({script.Length} chars)");
+        return script;
     }
 
     public void Dispose()
     {
+        logger.Debug("[DB] Disposing AccountConnection");
         connectionLock.Dispose();
         mySqlConnection.Dispose();
+        logger.Trace("[DB] AccountConnection disposed");
     }
 }

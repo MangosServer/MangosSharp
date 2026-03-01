@@ -16,6 +16,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
 namespace Mangos.Logging;
 
 public enum LogLevel
@@ -32,24 +35,106 @@ public interface IMangosLogger
 {
     LogLevel MinimumLevel { get; set; }
 
-    void Trace(string message);
-    void Trace(Exception exception, string message);
+    void Trace(string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
 
-    void Debug(string message);
-    void Debug(Exception exception, string message);
+    void Trace(Exception exception, string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
 
-    void Information(string message);
-    void Information(Exception exception, string message);
+    void Debug(string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
 
-    void Warning(string message);
-    void Warning(Exception exception, string message);
+    void Debug(Exception exception, string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
 
-    void Error(string message);
-    void Error(Exception exception, string message);
+    void Information(string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
 
-    void Critical(string message);
-    void Critical(Exception exception, string message);
+    void Information(Exception exception, string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
 
-    void Log(LogLevel level, string message);
-    void Log(LogLevel level, Exception exception, string message);
+    void Warning(string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
+
+    void Warning(Exception exception, string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
+
+    void Error(string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
+
+    void Error(Exception exception, string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
+
+    void Critical(string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
+
+    void Critical(Exception exception, string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
+
+    void Log(LogLevel level, string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
+
+    void Log(LogLevel level, Exception exception, string message,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
+
+    IDisposable BeginTimedOperation(string operationName,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int lineNumber = 0);
+}
+
+public sealed class TimedOperation : IDisposable
+{
+    private readonly IMangosLogger _logger;
+    private readonly string _operationName;
+    private readonly string _memberName;
+    private readonly string _filePath;
+    private readonly int _lineNumber;
+    private readonly Stopwatch _stopwatch;
+
+    public TimedOperation(IMangosLogger logger, string operationName,
+        string memberName, string filePath, int lineNumber)
+    {
+        _logger = logger;
+        _operationName = operationName;
+        _memberName = memberName;
+        _filePath = filePath;
+        _lineNumber = lineNumber;
+        _stopwatch = Stopwatch.StartNew();
+        _logger.Trace($"[PERF] Starting: {_operationName}", _memberName, _filePath, _lineNumber);
+    }
+
+    public void Dispose()
+    {
+        _stopwatch.Stop();
+        _logger.Trace($"[PERF] Completed: {_operationName} in {_stopwatch.ElapsedMilliseconds}ms", _memberName, _filePath, _lineNumber);
+    }
 }
