@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="9.0.0" />
+    <PackageReference Include="Autofac" Version="9.1.0" />
     <PackageReference Include="Dapper" Version="2.1.72" />
     <PackageReference Include="MySql.Data" Version="9.6.0" />
   </ItemGroup>

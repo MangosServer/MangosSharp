@@ -6,7 +6,7 @@
   
   <ItemGroup>
     <PackageReference Include="System.Linq.Async" Version="7.0.0" />
-    <PackageReference Include="Autofac" Version="9.0.0" />
+    <PackageReference Include="Autofac" Version="9.1.0" />
   </ItemGroup>
   
   <ItemGroup>
