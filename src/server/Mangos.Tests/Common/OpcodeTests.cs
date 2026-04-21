@@ -53,8 +53,8 @@ public class OpcodeTests
     {
         Assert.Equal((Opcodes)0x81, Opcodes.CMSG_GUILD_CREATE);
         Assert.Equal((Opcodes)0x82, Opcodes.CMSG_GUILD_INVITE);
-        Assert.Equal((Opcodes)0x89, Opcodes.CMSG_GUILD_QUERY);
-        Assert.Equal((Opcodes)0x54, Opcodes.CMSG_GUILD_DISBAND);
+        Assert.Equal((Opcodes)0x54, Opcodes.CMSG_GUILD_QUERY);
+        Assert.Equal((Opcodes)0x8F, Opcodes.CMSG_GUILD_DISBAND);
     }
 
     [Fact]
