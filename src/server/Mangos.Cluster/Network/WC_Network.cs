@@ -26,18 +26,22 @@ public class WcNetwork
 {
     private readonly ClusterServiceLocator _clusterServiceLocator;
 
+    // FIX: initialize baseline ping time so CS0649 warning is resolved
+    private readonly int _lastPing;
+
     public WcNetwork(ClusterServiceLocator clusterServiceLocator)
     {
         _clusterServiceLocator = clusterServiceLocator;
+
+        // Capture initial time reference once
+        _lastPing = _clusterServiceLocator.NativeMethods.timeGetTime("");
     }
 
     public WorldServerClass WorldServer => _clusterServiceLocator.WorldServerClass;
 
-    private readonly int _lastPing;
-
     public int MsTime()
     {
-        // DONE: Calculate the clusters timeGetTime("")
+        // Returns elapsed time since network object was created
         return _clusterServiceLocator.NativeMethods.timeGetTime("") - _lastPing;
     }
 
@@ -45,7 +49,8 @@ public class WcNetwork
 
     public uint Ip2Int(string ip)
     {
-        if (ip.Split(".").Length != 4)
+        var parts = ip.Split('.');
+        if (parts.Length != 4)
         {
             return 0U;
         }
@@ -53,10 +58,11 @@ public class WcNetwork
         try
         {
             var ipBytes = new byte[4];
-            ipBytes[0] = Conversions.ToByte(ip.Split(".")[3]);
-            ipBytes[1] = Conversions.ToByte(ip.Split(".")[2]);
-            ipBytes[2] = Conversions.ToByte(ip.Split(".")[1]);
-            ipBytes[3] = Conversions.ToByte(ip.Split(".")[0]);
+            ipBytes[0] = Conversions.ToByte(parts[3]);
+            ipBytes[1] = Conversions.ToByte(parts[2]);
+            ipBytes[2] = Conversions.ToByte(parts[1]);
+            ipBytes[3] = Conversions.ToByte(parts[0]);
+
             return BitConverter.ToUInt32(ipBytes, 0);
         }
         catch
