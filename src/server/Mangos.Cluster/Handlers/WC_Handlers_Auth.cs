@@ -225,7 +225,9 @@ public class WcHandlersAuth
                 {
                     int read = fs.Read(fb, offset, remaining);
                     if (read == 0)
+                    {
                         break;
+                    }
 
                     offset += read;
                     remaining -= read;
