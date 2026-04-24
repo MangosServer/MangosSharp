@@ -917,11 +917,11 @@ public class WS_CharMovement
         }
         short CellXAdd = -1;
         short CellYAdd = -1;
-        if (WorldServiceLocator.WSMaps.GetSubMapTileX(Character.positionX) > 32)
+        if (WorldServiceLocator.WSMaps.GetSubTileFraction(Character.positionX) > 0.5f)
         {
             CellXAdd = 1;
         }
-        if (WorldServiceLocator.WSMaps.GetSubMapTileX(Character.positionY) > 32)
+        if (WorldServiceLocator.WSMaps.GetSubTileFraction(Character.positionY) > 0.5f)
         {
             CellYAdd = 1;
         }
