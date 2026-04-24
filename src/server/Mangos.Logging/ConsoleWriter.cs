@@ -18,15 +18,14 @@
 
 using Mangos.Common.Enums.Global;
 using System;
-using System.Threading;
 
 namespace Mangos.Logging;
 
 public class ConsoleWriter : BaseWriter
 {
-    public override void Write(LogType type, string formatStr, params object[] arg)
+    public override void Write(LogType type, string formatStr, params object?[] arg)
     {
-        if (LogLevel > type)
+        if (!IsEnabled(type))
         {
             return;
         }
@@ -34,19 +33,14 @@ public class ConsoleWriter : BaseWriter
         Console.Write(formatStr, arg);
     }
 
-    public override void WriteLine(LogType type, string formatStr, params object[] arg)
+    public override void WriteLine(LogType type, string formatStr, params object?[] arg)
     {
-        if (LogLevel > type)
+        if (!IsEnabled(type))
         {
             return;
         }
 
-        Console.WriteLine(L[(int)type] + ":" + "[" + DateTime.Now.TimeOfDay.ToString(@"hh\:mm\:ss") + "] " + formatStr, arg);
-    }
-
-    public override string ReadLine()
-    {
-        Thread.Sleep(TimeSpan.FromMinutes(1d));
-        return "info";
+        var message = string.Format(formatStr, arg);
+        Console.WriteLine($"{Labels[(int)type]}:[{DateTime.Now:HH:mm:ss}] {message}");
     }
 }

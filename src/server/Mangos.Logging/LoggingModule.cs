@@ -22,8 +22,5 @@ namespace Mangos.Logging;
 
 public sealed class LoggingModule : Module
 {
-    protected override void Load(ContainerBuilder builder)
-    {
-        builder.RegisterType<MangosLogger>().As<IMangosLogger>().SingleInstance();
-    }
+    protected override void Load(ContainerBuilder builder) => builder.RegisterType<MangosLogger>().As<IMangosLogger>().SingleInstance();
 }

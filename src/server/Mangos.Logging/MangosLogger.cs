@@ -16,9 +16,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
+using System.IO;
+
 namespace Mangos.Logging;
 
-internal sealed class MangosLogger : IMangosLogger
+internal sealed class MangosLogger : IMangosLogger, IDisposable
 {
     private readonly object _lock = new();
     private StreamWriter? _fileWriter;
@@ -27,17 +30,10 @@ internal sealed class MangosLogger : IMangosLogger
 
     public string? LogFilePath
     {
-        set
-        {
-            lock (_lock)
-            {
-                _fileWriter?.Dispose();
-                _fileWriter = value != null
-                    ? new StreamWriter(new FileStream(value, FileMode.Append, FileAccess.Write, FileShare.Read)) { AutoFlush = true }
-                    : null;
-            }
-        }
+        set => SetLogFilePath(value);
     }
+
+    public void Dispose() => _fileWriter?.Dispose();
 
     public void Trace(string message) => Log(LogLevel.Trace, message);
     public void Trace(Exception exception, string message) => Log(LogLevel.Trace, exception, message);
@@ -54,38 +50,57 @@ internal sealed class MangosLogger : IMangosLogger
 
     public void Log(LogLevel level, string message)
     {
-        if (level < MinimumLevel) return;
+        if (level < MinimumLevel)
+        {
+            return;
+        }
 
         var formatted = FormatMessage(level, message);
+
         lock (_lock)
         {
             Console.ForegroundColor = GetColor(level);
-            Console.WriteLine(formatted);
-            Console.ResetColor();
-            _fileWriter?.WriteLine(formatted);
+            try
+            {
+                Console.WriteLine(formatted);
+                _fileWriter?.WriteLine(formatted);
+            }
+            finally
+            {
+                Console.ResetColor();
+            }
         }
     }
 
     public void Log(LogLevel level, Exception exception, string message)
     {
-        if (level < MinimumLevel) return;
+        if (level < MinimumLevel)
+        {
+            return;
+        }
 
         var formatted = FormatMessage(level, message);
+        var exceptionText = exception.ToString();
+
         lock (_lock)
         {
             Console.ForegroundColor = GetColor(level);
-            Console.WriteLine(formatted);
-            Console.WriteLine(exception);
-            Console.ResetColor();
-            _fileWriter?.WriteLine(formatted);
-            _fileWriter?.WriteLine(exception.ToString());
+            try
+            {
+                Console.WriteLine(formatted);
+                Console.WriteLine(exceptionText);
+                _fileWriter?.WriteLine(formatted);
+                _fileWriter?.WriteLine(exceptionText);
+            }
+            finally
+            {
+                Console.ResetColor();
+            }
         }
     }
 
-    private static string FormatMessage(LogLevel level, string message)
-    {
-        return $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} [{level,-11}] {message}";
-    }
+    private static string FormatMessage(LogLevel level, string message) =>
+        $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} [{level,-11}] {message}";
 
     private static ConsoleColor GetColor(LogLevel level) => level switch
     {
@@ -97,4 +112,15 @@ internal sealed class MangosLogger : IMangosLogger
         LogLevel.Critical => ConsoleColor.DarkRed,
         _ => ConsoleColor.White
     };
+
+    private void SetLogFilePath(string? path)
+    {
+        lock (_lock)
+        {
+            _fileWriter?.Dispose();
+            _fileWriter = path is not null
+                ? new StreamWriter(path, append: true) { AutoFlush = true }
+                : null;
+        }
+    }
 }

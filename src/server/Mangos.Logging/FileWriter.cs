@@ -24,69 +24,84 @@ namespace Mangos.Logging;
 
 public class FileWriter : BaseWriter
 {
-    // Marked with null-forgiving initializer to satisfy the compiler.
-    // The constructor calls CreateNewFile which assigns a real StreamWriter instance.
-    protected StreamWriter Output = null!;
-    protected DateTime LastDate = DateTime.Parse("2007-01-01");
-    protected string Filename = "";
+    private StreamWriter _output = null!;
+    private DateOnly _lastDate = DateOnly.Parse("2007-01-01");
+    private readonly string _filename;
 
-    protected void CreateNewFile()
+    public FileWriter(string filename)
     {
-        Output?.Dispose();
-        LastDate = DateTime.Now.Date;
-        Output = new StreamWriter(string.Format("{0}-{1}.log", Filename, LastDate.ToString("yyyy-MM-dd")), true) { AutoFlush = true };
-        WriteLine(LogType.INFORMATION, "Log started successfully.");
-    }
-
-    public FileWriter(string createfilename)
-    {
-        Filename = createfilename;
+        _filename = filename ?? throw new ArgumentNullException(nameof(filename));
         CreateNewFile();
     }
 
-    private bool _disposedValue; // To detect redundant calls
+    private static DateOnly Today => DateOnly.FromDateTime(DateTime.Now);
 
-    // IDisposable
+    protected void CreateNewFile()
+    {
+        ThrowIfDisposed();
+        _output?.Dispose();
+        _lastDate = Today;
+        _output = new StreamWriter($"{_filename}-{_lastDate:yyyy-MM-dd}.log", true) { AutoFlush = true };
+        WriteLine(LogType.INFORMATION, "Log started successfully.");
+    }
+
     protected override void Dispose(bool disposing)
     {
-        if (!_disposedValue)
+        if (_disposedValue)
         {
-            if (disposing)
-            {
-                Output?.Dispose();
-            }
+            return;
+        }
+
+        if (disposing)
+        {
+            _output?.Dispose();
+            _output = null!;
         }
 
         _disposedValue = true;
+        base.Dispose(disposing);
     }
 
-    public override void Write(LogType type, string formatStr, params object[] arg)
+    public override void Write(LogType type, string formatStr, params object?[] arg)
     {
-        if (LogLevel > type)
+        ThrowIfDisposed();
+
+        if (!IsEnabled(type))
         {
             return;
         }
 
-        if (LastDate != DateTime.Now.Date)
+        if (_lastDate != Today)
         {
             CreateNewFile();
         }
 
-        Output.Write(formatStr, arg);
+        _output.Write(formatStr, arg);
     }
 
-    public override void WriteLine(LogType type, string formatStr, params object[] arg)
+    public override void WriteLine(LogType type, string formatStr, params object?[] arg)
     {
-        if (LogLevel > type)
+        ThrowIfDisposed();
+
+        if (!IsEnabled(type))
         {
             return;
         }
 
-        if (LastDate != DateTime.Now.Date)
+        if (_lastDate != Today)
         {
             CreateNewFile();
         }
 
-        Output.WriteLine(L[(int)type] + ":[" + DateTime.Now.TimeOfDay.ToString(@"hh\:mm\:ss") + "] " + formatStr, arg);
+        var message = string.Format(formatStr, arg);
+        _output.WriteLine($"{Labels[(int)type]}:[{DateTime.Now:HH:mm:ss}] {message}");
+    }
+
+    private void ThrowIfDisposed()
+    {
+        if (_disposedValue)
+        {
+            throw new ObjectDisposedException(nameof(FileWriter));
+        }
     }
 }
