@@ -25,7 +25,17 @@ public enum LogLevel
     Information = 2,
     Warning = 3,
     Error = 4,
-    Critical = 5
+    Critical = 5,
+    Network = 6,
+    User = 7,
+    Success = 8,
+    Failed = 9,
+    Database = 10,
+    Alert = 11,
+    Emerg = 12,
+    Func = 13,
+    Notice = 14,
+    Thread = 15
 }
 
 public interface IMangosLogger
@@ -49,6 +59,36 @@ public interface IMangosLogger
 
     void Critical(string message);
     void Critical(Exception exception, string message);
+
+    void Network(string message);
+    void Network(Exception exception, string message);
+
+    void User(string message);
+    void User(Exception exception, string message);
+
+    void Success(string message);
+    void Success(Exception exception, string message);
+
+    void Failed(string message);
+    void Failed(Exception exception, string message);
+
+    void Database(string message);
+    void Database(Exception exception, string message);
+
+    void Alert(string message);
+    void Alert(Exception exception, string message);
+
+    void Emerg(string message);
+    void Emerg(Exception exception, string message);
+
+    void Func(string message);
+    void Func(Exception exception, string message);
+
+    void Notice(string message);
+    void Notice(Exception exception, string message);
+
+    void Thread(string message);
+    void Thread(Exception exception, string message);
 
     void Log(LogLevel level, string message);
     void Log(LogLevel level, Exception exception, string message);

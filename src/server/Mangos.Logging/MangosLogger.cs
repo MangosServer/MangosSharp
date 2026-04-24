@@ -48,6 +48,36 @@ internal sealed class MangosLogger : IMangosLogger, IDisposable
     public void Critical(string message) => Log(LogLevel.Critical, message);
     public void Critical(Exception exception, string message) => Log(LogLevel.Critical, exception, message);
 
+    public void Network(string message) => Log(LogLevel.Network, message);
+    public void Network(Exception exception, string message) => Log(LogLevel.Network, exception, message);
+
+    public void User(string message) => Log(LogLevel.User, message);
+    public void User(Exception exception, string message) => Log(LogLevel.User, exception, message);
+
+    public void Success(string message) => Log(LogLevel.Success, message);
+    public void Success(Exception exception, string message) => Log(LogLevel.Success, exception, message);
+
+    public void Failed(string message) => Log(LogLevel.Failed, message);
+    public void Failed(Exception exception, string message) => Log(LogLevel.Failed, exception, message);
+
+    public void Database(string message) => Log(LogLevel.Database, message);
+    public void Database(Exception exception, string message) => Log(LogLevel.Database, exception, message);
+
+    public void Alert(string message) => Log(LogLevel.Alert, message);
+    public void Alert(Exception exception, string message) => Log(LogLevel.Alert, exception, message);
+
+    public void Emerg(string message) => Log(LogLevel.Emerg, message);
+    public void Emerg(Exception exception, string message) => Log(LogLevel.Emerg, exception, message);
+
+    public void Func(string message) => Log(LogLevel.Func, message);
+    public void Func(Exception exception, string message) => Log(LogLevel.Func, exception, message);
+
+    public void Notice(string message) => Log(LogLevel.Notice, message);
+    public void Notice(Exception exception, string message) => Log(LogLevel.Notice, exception, message);
+
+    public void Thread(string message) => Log(LogLevel.Thread, message);
+    public void Thread(Exception exception, string message) => Log(LogLevel.Thread, exception, message);
+
     public void Log(LogLevel level, string message)
     {
         if (level < MinimumLevel)
@@ -110,6 +140,16 @@ internal sealed class MangosLogger : IMangosLogger, IDisposable
         LogLevel.Warning => ConsoleColor.Yellow,
         LogLevel.Error => ConsoleColor.Red,
         LogLevel.Critical => ConsoleColor.DarkRed,
+        LogLevel.Network => ConsoleColor.DarkGray,
+        LogLevel.User => ConsoleColor.White,
+        LogLevel.Success => ConsoleColor.White,
+        LogLevel.Failed => ConsoleColor.Red,
+        LogLevel.Database => ConsoleColor.White,
+        LogLevel.Alert => ConsoleColor.Red,
+        LogLevel.Emerg => ConsoleColor.DarkRed,
+        LogLevel.Func => ConsoleColor.Gray,
+        LogLevel.Notice => ConsoleColor.White,
+        LogLevel.Thread => ConsoleColor.Gray,
         _ => ConsoleColor.White
     };
 
