@@ -22,10 +22,15 @@ using System.IO;
 
 namespace Mangos.Logging;
 
+// Writes log messages to files with automatic daily log rotation
+// Creates a new log file each day with the format: {filename}-YYYY-MM-DD.log
 public class FileWriter : BaseWriter
 {
+    // Current log file stream writer
     private StreamWriter _output = null!;
+    // Tracks the date when the current log file was created
     private DateOnly _lastDate = DateOnly.Parse("2007-01-01");
+    // Base filename (without date extension)
     private readonly string _filename;
 
     public FileWriter(string filename)
@@ -34,8 +39,11 @@ public class FileWriter : BaseWriter
         CreateNewFile();
     }
 
+    // Lazy-evaluated property that gets today's date
     private static DateOnly Today => DateOnly.FromDateTime(DateTime.Now);
 
+    // Creates a new log file, disposing the old one if it exists
+    // Called when the date changes to implement daily rotation
     protected void CreateNewFile()
     {
         ThrowIfDisposed();
@@ -97,6 +105,8 @@ public class FileWriter : BaseWriter
         _output.WriteLine($"{Labels[(int)type]}:[{DateTime.Now:HH:mm:ss}] {message}");
     }
 
+    // Checks if the date has changed and creates a new file if needed
+    // Then checks if this writer is disposed before allowing writes
     private void ThrowIfDisposed()
     {
         if (_disposedValue)

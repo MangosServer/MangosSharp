@@ -20,7 +20,10 @@ using Autofac;
 
 namespace Mangos.Logging;
 
+// Autofac dependency injection module for the logging system
+// Registers MangosLogger as the singleton implementation of IMangosLogger
 public sealed class LoggingModule : Module
 {
+    // Registers the logger to be created once and reused throughout the application
     protected override void Load(ContainerBuilder builder) => builder.RegisterType<MangosLogger>().As<IMangosLogger>().SingleInstance();
 }

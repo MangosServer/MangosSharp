@@ -18,28 +18,37 @@
 
 namespace Mangos.Logging;
 
+// Defines logging severity levels from least to most severe
+// Used to filter which log messages are output based on the logger's MinimumLevel
 public enum LogLevel
 {
-    Trace = 0,
-    Debug = 1,
-    Information = 2,
-    Warning = 3,
-    Error = 4,
-    Critical = 5,
-    Network = 6,
-    User = 7,
-    Success = 8,
-    Failed = 9,
-    Database = 10,
-    Alert = 11,
-    Emerg = 12,
-    Func = 13,
-    Notice = 14,
-    Thread = 15
+    // Standard severity levels
+    Trace = 0,          // Detailed diagnostic information
+    Debug = 1,          // Debug-level messages
+    Information = 2,    // Informational messages
+    Warning = 3,        // Warning messages
+    Error = 4,          // Error messages
+    Critical = 5,       // Critical errors
+    
+    // Application-specific log types
+    Network = 6,        // Network-related messages
+    User = 7,           // User action messages
+    Success = 8,        // Operation success messages
+    Failed = 9,         // Operation failure messages
+    Database = 10,      // Database operation messages
+    Alert = 11,         // Alert conditions
+    Emerg = 12,         // Emergency conditions
+    Func = 13,          // Function call tracking
+    Notice = 14,        // Notices
+    Thread = 15         // Thread-related messages
 }
 
+// Main logging interface for the application
+// Provides methods for logging messages at different severity levels
+// Both with and without exception handling
 public interface IMangosLogger
 {
+    // Minimum log level that will be output (messages below this are filtered)
     LogLevel MinimumLevel { get; set; }
 
     void Trace(string message);

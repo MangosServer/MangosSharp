@@ -21,13 +21,20 @@ using System.IO;
 
 namespace Mangos.Logging;
 
+// Main logger implementation that handles all logging operations
+// Outputs to both console (with color) and optional file simultaneously
+// Thread-safe with lock protection for concurrent access
 internal sealed class MangosLogger : IMangosLogger, IDisposable
 {
+    // Lock to synchronize console and file output across threads
     private readonly object _lock = new();
+    // Optional file writer for logging to disk
     private StreamWriter? _fileWriter;
 
+    // Minimum severity level - messages below this are ignored
     public LogLevel MinimumLevel { get; set; } = LogLevel.Trace;
 
+    // Property setter to change the log file path and open/close file writers
     public string? LogFilePath
     {
         set => SetLogFilePath(value);
@@ -78,6 +85,7 @@ internal sealed class MangosLogger : IMangosLogger, IDisposable
     public void Thread(string message) => Log(LogLevel.Thread, message);
     public void Thread(Exception exception, string message) => Log(LogLevel.Thread, exception, message);
 
+    // Core logging method - filters by level, formats message, and outputs to console and file
     public void Log(LogLevel level, string message)
     {
         if (level < MinimumLevel)
@@ -102,6 +110,7 @@ internal sealed class MangosLogger : IMangosLogger, IDisposable
         }
     }
 
+    // Core logging method with exception - includes exception details in output
     public void Log(LogLevel level, Exception exception, string message)
     {
         if (level < MinimumLevel)
@@ -129,9 +138,11 @@ internal sealed class MangosLogger : IMangosLogger, IDisposable
         }
     }
 
+    // Formats the log message with timestamp and log level
     private static string FormatMessage(LogLevel level, string message) =>
         $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} [{level,-11}] {message}";
 
+    // Maps each log level to its corresponding console color for visual distinction
     private static ConsoleColor GetColor(LogLevel level) => level switch
     {
         LogLevel.Trace => ConsoleColor.Gray,
@@ -153,6 +164,7 @@ internal sealed class MangosLogger : IMangosLogger, IDisposable
         _ => ConsoleColor.White
     };
 
+    // Sets or changes the file writer - thread-safe, disposes old writer before creating new one
     private void SetLogFilePath(string? path)
     {
         lock (_lock)

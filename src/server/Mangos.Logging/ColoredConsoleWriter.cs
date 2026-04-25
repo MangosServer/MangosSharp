@@ -21,8 +21,11 @@ using System;
 
 namespace Mangos.Logging;
 
+// Writes log messages to console with color coding based on log type
+// Uses a lock to ensure thread-safe console output
 public class ColoredConsoleWriter : BaseWriter
 {
+    // Shared lock to synchronize console writes across threads
     private static readonly object s_consoleLock = new();
 
     public override void Write(LogType type, string formatStr, params object?[] arg)
@@ -46,6 +49,7 @@ public class ColoredConsoleWriter : BaseWriter
         PerformWrite(type, () => Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {message}"));
     }
 
+    // Maps each log type to its corresponding console color for visual distinction
     private static void PerformWrite(LogType type, Action writeAction)
     {
         lock (s_consoleLock)

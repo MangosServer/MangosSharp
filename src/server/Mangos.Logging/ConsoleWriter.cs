@@ -21,6 +21,8 @@ using System;
 
 namespace Mangos.Logging;
 
+// Writes log messages to console without color formatting
+// Simple text output for systems that don't support colored console output
 public class ConsoleWriter : BaseWriter
 {
     public override void Write(LogType type, string formatStr, params object?[] arg)

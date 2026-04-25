@@ -21,14 +21,20 @@ using System;
 
 namespace Mangos.Logging;
 
+// Base class for all log writers (console, file, etc.)
+// Provides common functionality and defines the interface for derived writers
 public class BaseWriter : IDisposable
 {
+    // Short labels for each log type used in formatted output
     protected static readonly string[] Labels = { "N", "D", "I", "U", "S", "W", "F", "C", "DB", "A", "E", "FN", "NT", "TH", "TR" };
 
+    // Minimum log level to output - logs below this level are filtered out
     public LogType LogLevel { get; set; } = LogType.NETWORK;
 
+    // Track if this instance has been disposed to prevent double disposal
     protected bool _disposedValue;
 
+    // Virtual dispose method for derived classes to override if they need custom cleanup
     protected virtual void Dispose(bool disposing)
     {
         if (_disposedValue)
@@ -45,32 +51,28 @@ public class BaseWriter : IDisposable
         GC.SuppressFinalize(this);
     }
 
+    // Check if a log type should be output based on current minimum log level
     protected bool IsEnabled(LogType type) => type >= LogLevel;
 
+    // Virtual method to be overridden by derived writers - outputs text without newline
     public virtual void Write(LogType type, string format, params object?[] arg)
     {
     }
 
+    // Virtual method to be overridden by derived writers - outputs text with newline
     public virtual void WriteLine(LogType type, string format, params object?[] arg)
     {
     }
 
+    // Read a line of input from console
     public virtual string ReadLine() => Console.ReadLine() ?? string.Empty;
 
-    public void PrintDiagnosticTest()
+    // Factory method to create the appropriate writer based on log type string
+    public static BaseWriter CreateLog(string logType, string logConfig) => logType?.Trim().ToUpperInvariant() switch
     {
-        foreach (var type in Enum.GetValues<LogType>())
-        {
-            WriteLine(type, "{0}:************************* TEST *************************", 1);
-        }
-    }
-
-    public static BaseWriter CreateLog(string logType, string logConfig) =>
-        logType?.Trim().ToUpperInvariant() switch
-        {
-            "COLORCONSOLE" => new ColoredConsoleWriter(),
-            "CONSOLE" => new ConsoleWriter(),
-            "FILE" => new FileWriter(logConfig),
-            _ => throw new ArgumentOutOfRangeException(nameof(logType))
-        };
+        "COLORCONSOLE" => new ColoredConsoleWriter(),
+        "CONSOLE" => new ConsoleWriter(),
+        "FILE" => new FileWriter(logConfig),
+        _ => throw new ArgumentOutOfRangeException(nameof(logType))
+    };
 }
