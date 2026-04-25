@@ -98,13 +98,18 @@ public class LoggingTests
             case LogType.TRACE:
                 GenerateTraceMessage(logger, random);
                 break;
+            default:
+                break;
         }
     }
 
     private static void GenerateNetworkMessage(IMangosLogger logger, Random random)
     {
         var opcodes = new[] { "0x123", "0x456", "0x789", "0xABC", "0xDEF" };
+        // Codacy warning suppressed: These are test-only IP addresses for generating example log messages
+        #pragma warning disable S1313 // "IP addresses should not be hardcoded"
         var ips = new[] { "192.168.1.1", "10.0.0.1", "172.16.0.1", "127.0.0.1" };
+        #pragma warning restore S1313
         var actions = new[] { "Received", "Sent", "Processing" };
 
         logger.Network($"{actions[random.Next(actions.Length)]} packet {opcodes[random.Next(opcodes.Length)]} from client {ips[random.Next(ips.Length)]}");
