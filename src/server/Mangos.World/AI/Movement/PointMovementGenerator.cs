@@ -41,7 +41,9 @@ public sealed class PointMovementGenerator : IMovementGenerator
         _pointId = pointId;
     }
 
-    public void Initialize(WS_Creatures.CreatureObject creature) { }
+    public void Initialize(WS_Creatures.CreatureObject creature)
+    {
+    }
 
     public bool Update(WS_Creatures.CreatureObject creature, int diffMs)
     {
@@ -70,8 +72,12 @@ public sealed class PointMovementGenerator : IMovementGenerator
         return false;
     }
 
-    public void Finalize(WS_Creatures.CreatureObject creature) { }
-    public void Reset(WS_Creatures.CreatureObject creature) { }
+    public void Finalize(WS_Creatures.CreatureObject creature)
+    {
+    }
+    public void Reset(WS_Creatures.CreatureObject creature)
+    {
+    }
 
     public int PointId => _pointId;
 }

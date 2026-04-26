@@ -23,9 +23,18 @@ namespace Mangos.World.Events.Events;
 /// </summary>
 public sealed class PlayerLoginEvent : IGameEvent
 {
-    public ulong PlayerGuid { get; init; }
-    public string PlayerName { get; init; }
-    public uint MapId { get; init; }
+    public ulong PlayerGuid
+    {
+        get; init;
+    }
+    public string PlayerName
+    {
+        get; init;
+    }
+    public uint MapId
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -33,8 +42,14 @@ public sealed class PlayerLoginEvent : IGameEvent
 /// </summary>
 public sealed class PlayerLogoutEvent : IGameEvent
 {
-    public ulong PlayerGuid { get; init; }
-    public string PlayerName { get; init; }
+    public ulong PlayerGuid
+    {
+        get; init;
+    }
+    public string PlayerName
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -42,9 +57,18 @@ public sealed class PlayerLogoutEvent : IGameEvent
 /// </summary>
 public sealed class PlayerLevelUpEvent : IGameEvent
 {
-    public ulong PlayerGuid { get; init; }
-    public int OldLevel { get; init; }
-    public int NewLevel { get; init; }
+    public ulong PlayerGuid
+    {
+        get; init;
+    }
+    public int OldLevel
+    {
+        get; init;
+    }
+    public int NewLevel
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -52,10 +76,28 @@ public sealed class PlayerLevelUpEvent : IGameEvent
 /// </summary>
 public sealed class PlayerDeathEvent : IGameEvent
 {
-    public ulong PlayerGuid { get; init; }
-    public ulong KillerGuid { get; init; }
-    public uint MapId { get; init; }
-    public float X { get; init; }
-    public float Y { get; init; }
-    public float Z { get; init; }
+    public ulong PlayerGuid
+    {
+        get; init;
+    }
+    public ulong KillerGuid
+    {
+        get; init;
+    }
+    public uint MapId
+    {
+        get; init;
+    }
+    public float X
+    {
+        get; init;
+    }
+    public float Y
+    {
+        get; init;
+    }
+    public float Z
+    {
+        get; init;
+    }
 }

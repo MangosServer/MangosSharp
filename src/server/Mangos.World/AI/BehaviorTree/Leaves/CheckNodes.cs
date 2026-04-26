@@ -27,7 +27,9 @@ public sealed class IsInCombatCheck : IBTNode
     {
         return context.AI?.InCombat == true ? BTStatus.Success : BTStatus.Failure;
     }
-    public void Reset() { }
+    public void Reset()
+    {
+    }
 }
 
 /// <summary>
@@ -39,7 +41,9 @@ public sealed class HasTargetCheck : IBTNode
     {
         return context.AI?.aiTarget != null ? BTStatus.Success : BTStatus.Failure;
     }
-    public void Reset() { }
+    public void Reset()
+    {
+    }
 }
 
 /// <summary>
@@ -59,7 +63,9 @@ public sealed class HealthBelowCheck : IBTNode
         var currentPct = checked((int)(context.Creature.Life.Current * 100L / context.Creature.Life.Maximum));
         return currentPct <= _percent ? BTStatus.Success : BTStatus.Failure;
     }
-    public void Reset() { }
+    public void Reset()
+    {
+    }
 }
 
 /// <summary>
@@ -75,5 +81,7 @@ public sealed class BlackboardCheck : IBTNode
     {
         return context.Get<bool>(_key) ? BTStatus.Success : BTStatus.Failure;
     }
-    public void Reset() { }
+    public void Reset()
+    {
+    }
 }

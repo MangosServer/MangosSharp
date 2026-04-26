@@ -22,7 +22,10 @@ namespace GameServer.Responses;
 
 internal sealed class SMSG_PONG : IResponseMessage
 {
-    public uint Payload { get; init; }
+    public uint Payload
+    {
+        get; init;
+    }
 
     public Opcodes Opcode => Opcodes.SMSG_PONG;
 

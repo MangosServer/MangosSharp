@@ -22,7 +22,10 @@ namespace RealmServer.Requests;
 
 internal sealed class AuthRealmlistRequest : IRequestMessage<AuthRealmlistRequest>
 {
-    public required byte[] Unk { get; init; }
+    public required byte[] Unk
+    {
+        get; init;
+    }
 
     public static async ValueTask<AuthRealmlistRequest> ReadAsync(SocketReader reader)
     {

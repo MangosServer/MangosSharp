@@ -20,7 +20,10 @@ namespace GameServer.Network;
 
 internal interface IHandlerDispatcher
 {
-    Opcodes Opcode { get; }
+    Opcodes Opcode
+    {
+        get;
+    }
 
     Task<HandlerResult> ExectueAsync(PacketReader reader);
 }

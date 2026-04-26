@@ -114,7 +114,10 @@ public readonly struct PooledObject<T> : IDisposable where T : class
 {
     private readonly ObjectPool<T> _pool;
 
-    public T Value { get; }
+    public T Value
+    {
+        get;
+    }
 
     public PooledObject(ObjectPool<T> pool, T value)
     {

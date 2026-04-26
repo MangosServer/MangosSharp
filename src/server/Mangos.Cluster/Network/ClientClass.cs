@@ -48,7 +48,10 @@ public class ClientClass : ClientInfo
         this.mangosConfiguration = mangosConfiguration;
     }
 
-    public Socket Socket { get; set; }
+    public Socket Socket
+    {
+        get; set;
+    }
     public WcHandlerCharacter.CharacterObject Character;
 
     public ClientInfo GetClientInfo()

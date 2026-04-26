@@ -23,12 +23,30 @@ namespace Mangos.World.Events.Events;
 /// </summary>
 public sealed class CreatureSpawnedEvent : IGameEvent
 {
-    public ulong CreatureGuid { get; init; }
-    public int CreatureEntry { get; init; }
-    public uint MapId { get; init; }
-    public float X { get; init; }
-    public float Y { get; init; }
-    public float Z { get; init; }
+    public ulong CreatureGuid
+    {
+        get; init;
+    }
+    public int CreatureEntry
+    {
+        get; init;
+    }
+    public uint MapId
+    {
+        get; init;
+    }
+    public float X
+    {
+        get; init;
+    }
+    public float Y
+    {
+        get; init;
+    }
+    public float Z
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -37,10 +55,22 @@ public sealed class CreatureSpawnedEvent : IGameEvent
 /// </summary>
 public sealed class CreatureDeathEvent : IGameEvent
 {
-    public ulong CreatureGuid { get; init; }
-    public int CreatureEntry { get; init; }
-    public ulong KillerGuid { get; init; }
-    public uint MapId { get; init; }
+    public ulong CreatureGuid
+    {
+        get; init;
+    }
+    public int CreatureEntry
+    {
+        get; init;
+    }
+    public ulong KillerGuid
+    {
+        get; init;
+    }
+    public uint MapId
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -49,9 +79,18 @@ public sealed class CreatureDeathEvent : IGameEvent
 /// </summary>
 public sealed class CreatureEnterCombatEvent : IGameEvent
 {
-    public ulong CreatureGuid { get; init; }
-    public int CreatureEntry { get; init; }
-    public ulong AttackerGuid { get; init; }
+    public ulong CreatureGuid
+    {
+        get; init;
+    }
+    public int CreatureEntry
+    {
+        get; init;
+    }
+    public ulong AttackerGuid
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -59,9 +98,18 @@ public sealed class CreatureEnterCombatEvent : IGameEvent
 /// </summary>
 public sealed class CreatureLeaveCombatEvent : IGameEvent
 {
-    public ulong CreatureGuid { get; init; }
-    public int CreatureEntry { get; init; }
-    public bool Evade { get; init; }
+    public ulong CreatureGuid
+    {
+        get; init;
+    }
+    public int CreatureEntry
+    {
+        get; init;
+    }
+    public bool Evade
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -70,9 +118,24 @@ public sealed class CreatureLeaveCombatEvent : IGameEvent
 /// </summary>
 public sealed class CreatureDamageTakenEvent : IGameEvent
 {
-    public ulong CreatureGuid { get; init; }
-    public int CreatureEntry { get; init; }
-    public ulong AttackerGuid { get; init; }
-    public int Damage { get; init; }
-    public int RemainingHealth { get; init; }
+    public ulong CreatureGuid
+    {
+        get; init;
+    }
+    public int CreatureEntry
+    {
+        get; init;
+    }
+    public ulong AttackerGuid
+    {
+        get; init;
+    }
+    public int Damage
+    {
+        get; init;
+    }
+    public int RemainingHealth
+    {
+        get; init;
+    }
 }

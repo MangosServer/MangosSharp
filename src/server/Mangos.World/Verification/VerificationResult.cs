@@ -23,10 +23,22 @@ namespace Mangos.World.Verification;
 
 public class VerificationResult
 {
-    public string CheckName { get; set; }
-    public VerificationStatus Status { get; set; }
-    public string Message { get; set; }
-    public int IssuesFound { get; set; }
+    public string CheckName
+    {
+        get; set;
+    }
+    public VerificationStatus Status
+    {
+        get; set;
+    }
+    public string Message
+    {
+        get; set;
+    }
+    public int IssuesFound
+    {
+        get; set;
+    }
     public List<string> Details { get; set; } = new();
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }

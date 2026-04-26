@@ -22,38 +22,116 @@ namespace Mangos.Configuration;
 
 public sealed class WorldConfiguration
 {
-    public required string ClusterConnectHost { get; init; }
-    public required int ClusterConnectPort { get; init; }
-    public required string LocalConnectHost { get; init; }
-    public required int LocalConnectPort { get; init; }
+    public required string ClusterConnectHost
+    {
+        get; init;
+    }
+    public required int ClusterConnectPort
+    {
+        get; init;
+    }
+    public required string LocalConnectHost
+    {
+        get; init;
+    }
+    public required int LocalConnectPort
+    {
+        get; init;
+    }
 
-    public required string AccountDatabase { get; init; }
-    public required string CharacterDatabase { get; init; }
-    public required string WorldDatabase { get; init; }
+    public required string AccountDatabase
+    {
+        get; init;
+    }
+    public required string CharacterDatabase
+    {
+        get; init;
+    }
+    public required string WorldDatabase
+    {
+        get; init;
+    }
 
-    public required ImmutableArray<int> Maps { get; init; }
-    public required ImmutableArray<string> ScriptsCompiler { get; init; }
-    public required bool VMapsEnabled { get; init; }
-    public required int MapResolution { get; init; }
+    public required ImmutableArray<int> Maps
+    {
+        get; init;
+    }
+    public required ImmutableArray<string> ScriptsCompiler
+    {
+        get; init;
+    }
+    public required bool VMapsEnabled
+    {
+        get; init;
+    }
+    public required int MapResolution
+    {
+        get; init;
+    }
 
-    public required string CommandCharacter { get; init; }
-    public required bool GlobalAuction { get; init; }
+    public required string CommandCharacter
+    {
+        get; init;
+    }
+    public required bool GlobalAuction
+    {
+        get; init;
+    }
 
-    public required bool LineOfSightEnabled { get; set; }
-    public required bool HeightCalcEnabled { get; set; }
+    public required bool LineOfSightEnabled
+    {
+        get; set;
+    }
+    public required bool HeightCalcEnabled
+    {
+        get; set;
+    }
 
-    public required float ManaRegenerationRate { get; init; }
-    public required float HealthRegenerationRate { get; init; }
-    public required float XPRate { get; init; }
+    public required float ManaRegenerationRate
+    {
+        get; init;
+    }
+    public required float HealthRegenerationRate
+    {
+        get; init;
+    }
+    public required float XPRate
+    {
+        get; init;
+    }
 
-    public required string LogType { get; init; }
-    public required string LogConfig { get; init; }
+    public required string LogType
+    {
+        get; init;
+    }
+    public required string LogConfig
+    {
+        get; init;
+    }
 
-    public required bool CreateBattlegrounds { get; init; }
-    public required bool CreatePartyInstances { get; init; }
-    public required bool CreateRaidInstances { get; init; }
-    public required bool CreateOther { get; init; }
+    public required bool CreateBattlegrounds
+    {
+        get; init;
+    }
+    public required bool CreatePartyInstances
+    {
+        get; init;
+    }
+    public required bool CreateRaidInstances
+    {
+        get; init;
+    }
+    public required bool CreateOther
+    {
+        get; init;
+    }
 
-    public required int SaveTimer { get; init; }
-    public required int WeatherTimer { get; init; }
+    public required int SaveTimer
+    {
+        get; init;
+    }
+    public required int WeatherTimer
+    {
+        get; init;
+    }
 }

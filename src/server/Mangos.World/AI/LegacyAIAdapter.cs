@@ -36,7 +36,9 @@ public sealed class LegacyAIAdapter : ICreatureAI
 
     public void UpdateAI(int diffMs) => _legacyAI.DoThink();
     public void JustEngagedWith(WS_Base.BaseUnit attacker) => _legacyAI.OnEnterCombat();
-    public void DamageTaken(WS_Base.BaseUnit attacker, ref int damage) { }
+    public void DamageTaken(WS_Base.BaseUnit attacker, ref int damage)
+    {
+    }
     public void KilledUnit(WS_Base.BaseUnit victim)
     {
         var victimRef = victim;
@@ -44,12 +46,20 @@ public sealed class LegacyAIAdapter : ICreatureAI
     }
 
     public void JustDied(WS_Base.BaseUnit killer) => _legacyAI.OnDeath();
-    public void JustRespawned() { }
+    public void JustRespawned()
+    {
+    }
     public void EnterEvadeMode() => _legacyAI.OnLeaveCombat(true);
-    public void SpellHit(WS_Base.BaseUnit caster, int spellId) { }
-    public void MovementInform(MovementGeneratorType type, int pointId) { }
+    public void SpellHit(WS_Base.BaseUnit caster, int spellId)
+    {
+    }
+    public void MovementInform(MovementGeneratorType type, int pointId)
+    {
+    }
     public void OnHealthChange(int oldPercent, int newPercent) => _legacyAI.OnHealthChange(newPercent);
-    public void SummonedCreatureDies(WS_Creatures.CreatureObject summon, WS_Base.BaseUnit killer) { }
+    public void SummonedCreatureDies(WS_Creatures.CreatureObject summon, WS_Base.BaseUnit killer)
+    {
+    }
     public void OnLeaveCombat(bool reset) => _legacyAI.OnLeaveCombat(reset);
     public void OnGenerateHate(WS_Base.BaseUnit attacker, int hateValue)
     {

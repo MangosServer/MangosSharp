@@ -29,7 +29,9 @@ public sealed class ReturnHomeMovementGenerator : IMovementGenerator
 {
     public MovementGeneratorType Type => MovementGeneratorType.ReturnHome;
 
-    public void Initialize(WS_Creatures.CreatureObject creature) { }
+    public void Initialize(WS_Creatures.CreatureObject creature)
+    {
+    }
 
     public bool Update(WS_Creatures.CreatureObject creature, int diffMs)
     {
@@ -52,6 +54,10 @@ public sealed class ReturnHomeMovementGenerator : IMovementGenerator
         return false;
     }
 
-    public void Finalize(WS_Creatures.CreatureObject creature) { }
-    public void Reset(WS_Creatures.CreatureObject creature) { }
+    public void Finalize(WS_Creatures.CreatureObject creature)
+    {
+    }
+    public void Reset(WS_Creatures.CreatureObject creature)
+    {
+    }
 }

@@ -27,7 +27,10 @@ namespace Mangos.World.AI.Movement;
 /// </summary>
 public interface IMovementGenerator
 {
-    MovementGeneratorType Type { get; }
+    MovementGeneratorType Type
+    {
+        get;
+    }
 
     /// <summary>
     /// Called when this generator becomes the active movement type.

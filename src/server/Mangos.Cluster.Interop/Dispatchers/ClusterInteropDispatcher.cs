@@ -54,132 +54,132 @@ public sealed class ClusterInteropDispatcher
         switch (methodId)
         {
             case InteropMethodId.ClusterConnect:
-            {
-                var uri = br.ReadString();
-                var maps = InteropSerializer.ReadUInt32List(br);
-                // Pass the WorldInteropProxy as the IWorld parameter
-                var result = _cluster.Connect(uri, maps, _worldProxy);
-                return new[] { result ? (byte)1 : (byte)0 };
-            }
+                {
+                    var uri = br.ReadString();
+                    var maps = InteropSerializer.ReadUInt32List(br);
+                    // Pass the WorldInteropProxy as the IWorld parameter
+                    var result = _cluster.Connect(uri, maps, _worldProxy);
+                    return new[] { result ? (byte)1 : (byte)0 };
+                }
 
             case InteropMethodId.ClusterDisconnect:
-            {
-                var uri = br.ReadString();
-                var maps = InteropSerializer.ReadUInt32List(br);
-                _cluster.Disconnect(uri, maps);
-                return null;
-            }
+                {
+                    var uri = br.ReadString();
+                    var maps = InteropSerializer.ReadUInt32List(br);
+                    _cluster.Disconnect(uri, maps);
+                    return null;
+                }
 
             case InteropMethodId.ClusterClientSend:
-            {
-                var id = br.ReadUInt32();
-                var packetData = InteropSerializer.ReadByteArray(br);
-                _cluster.ClientSend(id, packetData);
-                return null;
-            }
+                {
+                    var id = br.ReadUInt32();
+                    var packetData = InteropSerializer.ReadByteArray(br);
+                    _cluster.ClientSend(id, packetData);
+                    return null;
+                }
 
             case InteropMethodId.ClusterClientDrop:
-            {
-                var id = br.ReadUInt32();
-                _cluster.ClientDrop(id);
-                return null;
-            }
+                {
+                    var id = br.ReadUInt32();
+                    _cluster.ClientDrop(id);
+                    return null;
+                }
 
             case InteropMethodId.ClusterClientTransfer:
-            {
-                var id = br.ReadUInt32();
-                var posX = br.ReadSingle();
-                var posY = br.ReadSingle();
-                var posZ = br.ReadSingle();
-                var ori = br.ReadSingle();
-                var map = br.ReadUInt32();
-                _cluster.ClientTransfer(id, posX, posY, posZ, ori, map);
-                return null;
-            }
+                {
+                    var id = br.ReadUInt32();
+                    var posX = br.ReadSingle();
+                    var posY = br.ReadSingle();
+                    var posZ = br.ReadSingle();
+                    var ori = br.ReadSingle();
+                    var map = br.ReadUInt32();
+                    _cluster.ClientTransfer(id, posX, posY, posZ, ori, map);
+                    return null;
+                }
 
             case InteropMethodId.ClusterClientUpdate:
-            {
-                var id = br.ReadUInt32();
-                var zone = br.ReadUInt32();
-                var level = br.ReadByte();
-                _cluster.ClientUpdate(id, zone, level);
-                return null;
-            }
+                {
+                    var id = br.ReadUInt32();
+                    var zone = br.ReadUInt32();
+                    var level = br.ReadByte();
+                    _cluster.ClientUpdate(id, zone, level);
+                    return null;
+                }
 
             case InteropMethodId.ClusterClientSetChatFlag:
-            {
-                var id = br.ReadUInt32();
-                var flag = br.ReadByte();
-                _cluster.ClientSetChatFlag(id, flag);
-                return null;
-            }
+                {
+                    var id = br.ReadUInt32();
+                    var flag = br.ReadByte();
+                    _cluster.ClientSetChatFlag(id, flag);
+                    return null;
+                }
 
             case InteropMethodId.ClusterClientGetCryptKey:
-            {
-                var id = br.ReadUInt32();
-                var key = _cluster.ClientGetCryptKey(id);
-                return InteropSerializer.WriteByteArray(key);
-            }
+                {
+                    var id = br.ReadUInt32();
+                    var key = _cluster.ClientGetCryptKey(id);
+                    return InteropSerializer.WriteByteArray(key);
+                }
 
             case InteropMethodId.ClusterBattlefieldList:
-            {
-                var type = br.ReadByte();
-                var list = _cluster.BattlefieldList(type);
-                return InteropSerializer.WriteInt32List(list);
-            }
+                {
+                    var type = br.ReadByte();
+                    var list = _cluster.BattlefieldList(type);
+                    return InteropSerializer.WriteInt32List(list);
+                }
 
             case InteropMethodId.ClusterBattlefieldFinish:
-            {
-                var battlefieldId = br.ReadInt32();
-                _cluster.BattlefieldFinish(battlefieldId);
-                return null;
-            }
+                {
+                    var battlefieldId = br.ReadInt32();
+                    _cluster.BattlefieldFinish(battlefieldId);
+                    return null;
+                }
 
             case InteropMethodId.ClusterBroadcast:
-            {
-                var packetData = InteropSerializer.ReadByteArray(br);
-                _cluster.Broadcast(packetData);
-                return null;
-            }
+                {
+                    var packetData = InteropSerializer.ReadByteArray(br);
+                    _cluster.Broadcast(packetData);
+                    return null;
+                }
 
             case InteropMethodId.ClusterBroadcastGroup:
-            {
-                var groupId = br.ReadInt64();
-                var packetData = InteropSerializer.ReadByteArray(br);
-                _cluster.BroadcastGroup(groupId, packetData);
-                return null;
-            }
+                {
+                    var groupId = br.ReadInt64();
+                    var packetData = InteropSerializer.ReadByteArray(br);
+                    _cluster.BroadcastGroup(groupId, packetData);
+                    return null;
+                }
 
             case InteropMethodId.ClusterBroadcastRaid:
-            {
-                var groupId = br.ReadInt64();
-                var packetData = InteropSerializer.ReadByteArray(br);
-                _cluster.BroadcastRaid(groupId, packetData);
-                return null;
-            }
+                {
+                    var groupId = br.ReadInt64();
+                    var packetData = InteropSerializer.ReadByteArray(br);
+                    _cluster.BroadcastRaid(groupId, packetData);
+                    return null;
+                }
 
             case InteropMethodId.ClusterBroadcastGuild:
-            {
-                var guildId = br.ReadInt64();
-                var packetData = InteropSerializer.ReadByteArray(br);
-                _cluster.BroadcastGuild(guildId, packetData);
-                return null;
-            }
+                {
+                    var guildId = br.ReadInt64();
+                    var packetData = InteropSerializer.ReadByteArray(br);
+                    _cluster.BroadcastGuild(guildId, packetData);
+                    return null;
+                }
 
             case InteropMethodId.ClusterBroadcastGuildOfficers:
-            {
-                var guildId = br.ReadInt64();
-                var packetData = InteropSerializer.ReadByteArray(br);
-                _cluster.BroadcastGuildOfficers(guildId, packetData);
-                return null;
-            }
+                {
+                    var guildId = br.ReadInt64();
+                    var packetData = InteropSerializer.ReadByteArray(br);
+                    _cluster.BroadcastGuildOfficers(guildId, packetData);
+                    return null;
+                }
 
             case InteropMethodId.ClusterGroupRequestUpdate:
-            {
-                var id = br.ReadUInt32();
-                _cluster.GroupRequestUpdate(id);
-                return null;
-            }
+                {
+                    var id = br.ReadUInt32();
+                    _cluster.GroupRequestUpdate(id);
+                    return null;
+                }
 
             default:
                 return null;

@@ -23,12 +23,30 @@ namespace Mangos.World.Events.Events;
 /// </summary>
 public sealed class DamageDealtEvent : IGameEvent
 {
-    public ulong AttackerGuid { get; init; }
-    public ulong VictimGuid { get; init; }
-    public int Damage { get; init; }
-    public int DamageType { get; init; }
-    public int SpellId { get; init; }
-    public bool IsCritical { get; init; }
+    public ulong AttackerGuid
+    {
+        get; init;
+    }
+    public ulong VictimGuid
+    {
+        get; init;
+    }
+    public int Damage
+    {
+        get; init;
+    }
+    public int DamageType
+    {
+        get; init;
+    }
+    public int SpellId
+    {
+        get; init;
+    }
+    public bool IsCritical
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -36,11 +54,26 @@ public sealed class DamageDealtEvent : IGameEvent
 /// </summary>
 public sealed class HealingDoneEvent : IGameEvent
 {
-    public ulong HealerGuid { get; init; }
-    public ulong TargetGuid { get; init; }
-    public int Amount { get; init; }
-    public int SpellId { get; init; }
-    public bool IsCritical { get; init; }
+    public ulong HealerGuid
+    {
+        get; init;
+    }
+    public ulong TargetGuid
+    {
+        get; init;
+    }
+    public int Amount
+    {
+        get; init;
+    }
+    public int SpellId
+    {
+        get; init;
+    }
+    public bool IsCritical
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -48,8 +81,20 @@ public sealed class HealingDoneEvent : IGameEvent
 /// </summary>
 public sealed class ThreatGeneratedEvent : IGameEvent
 {
-    public ulong CreatureGuid { get; init; }
-    public ulong SourceGuid { get; init; }
-    public int ThreatAmount { get; init; }
-    public int SpellId { get; init; }
+    public ulong CreatureGuid
+    {
+        get; init;
+    }
+    public ulong SourceGuid
+    {
+        get; init;
+    }
+    public int ThreatAmount
+    {
+        get; init;
+    }
+    public int SpellId
+    {
+        get; init;
+    }
 }

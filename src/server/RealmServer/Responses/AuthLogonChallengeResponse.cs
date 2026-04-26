@@ -23,11 +23,26 @@ namespace RealmServer.Responses;
 
 internal sealed class AuthLogonChallengeResponse : IResponseMessage
 {
-    public required byte[] PublicB { get; init; }
-    public required byte[] G { get; init; }
-    public required byte[] N { get; init; }
-    public required byte[] Salt { get; init; }
-    public required byte[] CrcSalt { get; init; }
+    public required byte[] PublicB
+    {
+        get; init;
+    }
+    public required byte[] G
+    {
+        get; init;
+    }
+    public required byte[] N
+    {
+        get; init;
+    }
+    public required byte[] Salt
+    {
+        get; init;
+    }
+    public required byte[] CrcSalt
+    {
+        get; init;
+    }
 
     public async ValueTask WriteAsync(SocketWriter writer)
     {

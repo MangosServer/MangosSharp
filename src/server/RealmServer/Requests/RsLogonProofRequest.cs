@@ -22,8 +22,14 @@ namespace RealmServer.Requests;
 
 internal sealed class RsLogonProofRequest : IRequestMessage<RsLogonProofRequest>
 {
-    public required byte[] A { get; init; }
-    public required byte[] M1 { get; init; }
+    public required byte[] A
+    {
+        get; init;
+    }
+    public required byte[] M1
+    {
+        get; init;
+    }
 
     public static async ValueTask<RsLogonProofRequest> ReadAsync(SocketReader reader)
     {

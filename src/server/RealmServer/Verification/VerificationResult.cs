@@ -24,9 +24,15 @@ namespace RealmServer.Verification;
 public class VerificationResult
 {
     public string CheckName { get; set; } = string.Empty;
-    public VerificationStatus Status { get; set; }
+    public VerificationStatus Status
+    {
+        get; set;
+    }
     public string Message { get; set; } = string.Empty;
-    public int IssuesFound { get; set; }
+    public int IssuesFound
+    {
+        get; set;
+    }
     public List<string> Details { get; set; } = new();
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }

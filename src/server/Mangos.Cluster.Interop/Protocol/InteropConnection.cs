@@ -46,9 +46,18 @@ public sealed class InteropConnection : IDisposable
     private CancellationTokenSource? _cts;
     private Task? _receiveLoop;
 
-    public Func<InteropMethodId, byte[], byte[]?>? OnMethodCall { get; set; }
-    public Func<InteropMethodId, byte[], Task<byte[]?>>? OnMethodCallAsync { get; set; }
-    public Action? OnDisconnected { get; set; }
+    public Func<InteropMethodId, byte[], byte[]?>? OnMethodCall
+    {
+        get; set;
+    }
+    public Func<InteropMethodId, byte[], Task<byte[]?>>? OnMethodCallAsync
+    {
+        get; set;
+    }
+    public Action? OnDisconnected
+    {
+        get; set;
+    }
 
     public bool IsConnected => _socket.Connected;
 

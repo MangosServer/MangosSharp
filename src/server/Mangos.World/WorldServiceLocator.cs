@@ -47,7 +47,10 @@ namespace Mangos.World;
 
 public sealed class WorldServiceLocator
 {
-    public static IContainer Container { get; set; }
+    public static IContainer Container
+    {
+        get; set;
+    }
 
     public static DataStoreProvider DataStoreProvider => Container.Resolve<DataStoreProvider>();
 

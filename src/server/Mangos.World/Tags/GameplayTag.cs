@@ -29,7 +29,10 @@ namespace Mangos.World.Tags;
 /// </summary>
 public readonly record struct GameplayTag : IEquatable<GameplayTag>
 {
-    public string Name { get; init; }
+    public string Name
+    {
+        get; init;
+    }
 
     public GameplayTag(string name)
     {

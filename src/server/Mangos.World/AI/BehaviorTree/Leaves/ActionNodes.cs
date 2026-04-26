@@ -48,7 +48,9 @@ public sealed class SelectHighestThreatTarget : IBTNode
         }
         return BTStatus.Failure;
     }
-    public void Reset() { }
+    public void Reset()
+    {
+    }
 }
 
 /// <summary>
@@ -68,7 +70,9 @@ public sealed class CastSpellAction : IBTNode
         context.Creature.CastSpell(_spellId, context.AI.aiTarget);
         return BTStatus.Success;
     }
-    public void Reset() { }
+    public void Reset()
+    {
+    }
 }
 
 /// <summary>
@@ -81,7 +85,9 @@ public sealed class ExecuteAction : IBTNode
     public ExecuteAction(Func<BTContext, BTStatus> action) => _action = action;
 
     public BTStatus Tick(BTContext context, int diffMs) => _action(context);
-    public void Reset() { }
+    public void Reset()
+    {
+    }
 }
 
 /// <summary>

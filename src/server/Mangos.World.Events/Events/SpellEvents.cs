@@ -23,10 +23,22 @@ namespace Mangos.World.Events.Events;
 /// </summary>
 public sealed class SpellCastStartEvent : IGameEvent
 {
-    public ulong CasterGuid { get; init; }
-    public int SpellId { get; init; }
-    public ulong TargetGuid { get; init; }
-    public int CastTime { get; init; }
+    public ulong CasterGuid
+    {
+        get; init;
+    }
+    public int SpellId
+    {
+        get; init;
+    }
+    public ulong TargetGuid
+    {
+        get; init;
+    }
+    public int CastTime
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -34,9 +46,18 @@ public sealed class SpellCastStartEvent : IGameEvent
 /// </summary>
 public sealed class SpellCastCompleteEvent : IGameEvent
 {
-    public ulong CasterGuid { get; init; }
-    public int SpellId { get; init; }
-    public ulong TargetGuid { get; init; }
+    public ulong CasterGuid
+    {
+        get; init;
+    }
+    public int SpellId
+    {
+        get; init;
+    }
+    public ulong TargetGuid
+    {
+        get; init;
+    }
 }
 
 /// <summary>
@@ -45,9 +66,24 @@ public sealed class SpellCastCompleteEvent : IGameEvent
 /// </summary>
 public sealed class SpellHitEvent : IGameEvent
 {
-    public ulong CasterGuid { get; init; }
-    public ulong TargetGuid { get; init; }
-    public int SpellId { get; init; }
-    public int Damage { get; init; }
-    public int Healing { get; init; }
+    public ulong CasterGuid
+    {
+        get; init;
+    }
+    public ulong TargetGuid
+    {
+        get; init;
+    }
+    public int SpellId
+    {
+        get; init;
+    }
+    public int Damage
+    {
+        get; init;
+    }
+    public int Healing
+    {
+        get; init;
+    }
 }

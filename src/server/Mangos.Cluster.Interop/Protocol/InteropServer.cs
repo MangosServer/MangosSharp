@@ -30,7 +30,10 @@ public sealed class InteropServer : IDisposable
     private readonly Socket _listener;
     private CancellationTokenSource? _cts;
 
-    public Action<InteropConnection>? OnWorldServerConnected { get; set; }
+    public Action<InteropConnection>? OnWorldServerConnected
+    {
+        get; set;
+    }
 
     public InteropServer()
     {

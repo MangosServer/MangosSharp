@@ -27,8 +27,14 @@ namespace Mangos.World.AI.Sequencing;
 /// </summary>
 public interface IActionSequence
 {
-    bool IsComplete { get; }
-    bool IsCancelled { get; }
+    bool IsComplete
+    {
+        get;
+    }
+    bool IsCancelled
+    {
+        get;
+    }
     void Update(int diffMs);
     void Cancel();
     void Reset();

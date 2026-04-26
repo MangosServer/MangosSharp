@@ -36,7 +36,9 @@ public sealed class ChaseMovementGenerator : IMovementGenerator
         _target = target;
     }
 
-    public void Initialize(WS_Creatures.CreatureObject creature) { }
+    public void Initialize(WS_Creatures.CreatureObject creature)
+    {
+    }
 
     public bool Update(WS_Creatures.CreatureObject creature, int diffMs)
     {
@@ -58,7 +60,11 @@ public sealed class ChaseMovementGenerator : IMovementGenerator
         return false; // Chase never self-completes; removed by AI state transitions
     }
 
-    public void Finalize(WS_Creatures.CreatureObject creature) { }
+    public void Finalize(WS_Creatures.CreatureObject creature)
+    {
+    }
 
-    public void Reset(WS_Creatures.CreatureObject creature) { }
+    public void Reset(WS_Creatures.CreatureObject creature)
+    {
+    }
 }

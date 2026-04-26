@@ -34,16 +34,28 @@ public class DataStore
     public string Type { get; private set; } = string.Empty;
 
     [Description("Header information: Rows contained in the file.")]
-    public int Rows { get; private set; }
+    public int Rows
+    {
+        get; private set;
+    }
 
     [Description("Header information: Columns for each row.")]
-    public int Columns { get; private set; }
+    public int Columns
+    {
+        get; private set;
+    }
 
     [Description("Header information: Bytes occupied by each row.")]
-    public int RowLength { get; private set; }
+    public int RowLength
+    {
+        get; private set;
+    }
 
     [Description("Header information: Strings data block length.")]
-    public int StringBlockLength { get; private set; }
+    public int StringBlockLength
+    {
+        get; private set;
+    }
 
     public bool IsLoaded => data.Length > 0;
 

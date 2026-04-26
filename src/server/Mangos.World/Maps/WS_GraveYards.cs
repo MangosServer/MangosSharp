@@ -61,7 +61,10 @@ public class WS_GraveYards : IDisposable
             set => _locationPosZ = value;
         }
 
-        public int Map { get; set; }
+        public int Map
+        {
+            get; set;
+        }
 
         public TGraveyard(float locationPosX, float locationPosY, float locationPosZ, int locationMapID)
         {

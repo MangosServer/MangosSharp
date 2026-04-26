@@ -22,7 +22,10 @@ namespace Mangos.Cluster.Interop;
 
 public class ClientInfo
 {
-    public uint Index { get; set; }
+    public uint Index
+    {
+        get; set;
+    }
     public string IP { get; set; } = string.Empty;
     public required uint Port { get; set; } = 0;
     public required string Account { get; set; } = string.Empty;

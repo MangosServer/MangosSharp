@@ -33,9 +33,18 @@ public sealed class CooldownManager
 {
     private readonly struct CooldownEntry
     {
-        public int RemainingMs { get; init; }
-        public int DurationMs { get; init; }
-        public string Category { get; init; }
+        public int RemainingMs
+        {
+            get; init;
+        }
+        public int DurationMs
+        {
+            get; init;
+        }
+        public string Category
+        {
+            get; init;
+        }
     }
 
     private readonly Dictionary<int, CooldownEntry> _cooldowns = new();

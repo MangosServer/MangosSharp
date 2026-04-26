@@ -20,6 +20,12 @@ namespace Mangos.Cluster.Interop;
 
 public class ServerInfo
 {
-    public float CpuUsage { get; set; }
-    public ulong MemoryUsage { get; set; }
+    public float CpuUsage
+    {
+        get; set;
+    }
+    public ulong MemoryUsage
+    {
+        get; set;
+    }
 }

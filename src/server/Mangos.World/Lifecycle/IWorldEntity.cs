@@ -27,7 +27,10 @@ namespace Mangos.World.Lifecycle;
 /// </summary>
 public interface IWorldEntity
 {
-    EntityLifecycleState LifecycleState { get; }
+    EntityLifecycleState LifecycleState
+    {
+        get;
+    }
 
     /// <summary>
     /// Called when the entity is spawned into the world. Equivalent to UE4's BeginPlay.

@@ -23,8 +23,14 @@ namespace RealmServer.Responses;
 
 internal sealed class AuthLogonProofResponse : IResponseMessage
 {
-    public required AccountStates AccountState { get; init; }
-    public byte[]? M2 { get; init; }
+    public required AccountStates AccountState
+    {
+        get; init;
+    }
+    public byte[]? M2
+    {
+        get; init;
+    }
 
     public async ValueTask WriteAsync(SocketWriter writer)
     {

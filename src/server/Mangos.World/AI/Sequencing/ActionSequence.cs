@@ -31,7 +31,10 @@ public sealed class ActionSequence : IActionSequence
     private int _currentStep;
 
     public bool IsComplete => _currentStep >= _steps.Count;
-    public bool IsCancelled { get; private set; }
+    public bool IsCancelled
+    {
+        get; private set;
+    }
 
     internal ActionSequence(List<ISequenceStep> steps)
     {
@@ -86,8 +89,13 @@ internal sealed class ImmediateActionStep : ISequenceStep
 {
     private readonly Action _action;
     public ImmediateActionStep(Action action) => _action = action;
-    public bool Execute(int diffMs) { _action(); return true; }
-    public void Reset() { }
+    public bool Execute(int diffMs)
+    {
+        _action(); return true;
+    }
+    public void Reset()
+    {
+    }
 }
 
 internal sealed class WaitStep : ISequenceStep
@@ -114,5 +122,7 @@ internal sealed class WaitUntilStep : ISequenceStep
     private readonly Func<bool> _condition;
     public WaitUntilStep(Func<bool> condition) => _condition = condition;
     public bool Execute(int diffMs) => _condition();
-    public void Reset() { }
+    public void Reset()
+    {
+    }
 }

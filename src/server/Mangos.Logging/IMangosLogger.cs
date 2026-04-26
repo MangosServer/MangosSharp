@@ -30,7 +30,10 @@ public enum LogLevel
 
 public interface IMangosLogger
 {
-    LogLevel MinimumLevel { get; set; }
+    LogLevel MinimumLevel
+    {
+        get; set;
+    }
 
     void Trace(string message);
     void Trace(Exception exception, string message);

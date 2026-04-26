@@ -71,7 +71,9 @@ public sealed class RandomMovementGenerator : IMovementGenerator
         return false; // Never completes on its own
     }
 
-    public void Finalize(WS_Creatures.CreatureObject creature) { }
+    public void Finalize(WS_Creatures.CreatureObject creature)
+    {
+    }
 
     public void Reset(WS_Creatures.CreatureObject creature)
     {

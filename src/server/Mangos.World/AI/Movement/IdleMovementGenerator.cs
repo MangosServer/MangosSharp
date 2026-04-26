@@ -27,8 +27,14 @@ public sealed class IdleMovementGenerator : IMovementGenerator
 {
     public MovementGeneratorType Type => MovementGeneratorType.Idle;
 
-    public void Initialize(WS_Creatures.CreatureObject creature) { }
+    public void Initialize(WS_Creatures.CreatureObject creature)
+    {
+    }
     public bool Update(WS_Creatures.CreatureObject creature, int diffMs) => false; // Never completes
-    public void Finalize(WS_Creatures.CreatureObject creature) { }
-    public void Reset(WS_Creatures.CreatureObject creature) { }
+    public void Finalize(WS_Creatures.CreatureObject creature)
+    {
+    }
+    public void Reset(WS_Creatures.CreatureObject creature)
+    {
+    }
 }

@@ -24,6 +24,12 @@ internal sealed class ClientState
 {
     public AuthEngine AuthEngine { get; } = new AuthEngine();
 
-    public string? AccountName { get; set; }
-    public IPAddress? IPAddress { get; set; }
+    public string? AccountName
+    {
+        get; set;
+    }
+    public IPAddress? IPAddress
+    {
+        get; set;
+    }
 }

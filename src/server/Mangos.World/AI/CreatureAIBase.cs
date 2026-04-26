@@ -32,8 +32,14 @@ namespace Mangos.World.AI;
 /// </summary>
 public abstract class CreatureAIBase : ICreatureAI
 {
-    protected WS_Creatures.CreatureObject Me { get; }
-    protected CooldownManager Cooldowns { get; }
+    protected WS_Creatures.CreatureObject Me
+    {
+        get;
+    }
+    protected CooldownManager Cooldowns
+    {
+        get;
+    }
 
     protected CreatureAIBase(WS_Creatures.CreatureObject creature)
     {
@@ -46,18 +52,42 @@ public abstract class CreatureAIBase : ICreatureAI
         Cooldowns.Update(diffMs);
     }
 
-    public virtual void JustEngagedWith(WS_Base.BaseUnit attacker) { }
-    public virtual void DamageTaken(WS_Base.BaseUnit attacker, ref int damage) { }
-    public virtual void KilledUnit(WS_Base.BaseUnit victim) { }
-    public virtual void JustDied(WS_Base.BaseUnit killer) { }
-    public virtual void JustRespawned() { }
-    public virtual void EnterEvadeMode() { }
-    public virtual void SpellHit(WS_Base.BaseUnit caster, int spellId) { }
-    public virtual void MovementInform(MovementGeneratorType type, int pointId) { }
-    public virtual void OnHealthChange(int oldPercent, int newPercent) { }
-    public virtual void SummonedCreatureDies(WS_Creatures.CreatureObject summon, WS_Base.BaseUnit killer) { }
-    public virtual void OnLeaveCombat(bool reset) { }
-    public virtual void OnGenerateHate(WS_Base.BaseUnit attacker, int hateValue) { }
+    public virtual void JustEngagedWith(WS_Base.BaseUnit attacker)
+    {
+    }
+    public virtual void DamageTaken(WS_Base.BaseUnit attacker, ref int damage)
+    {
+    }
+    public virtual void KilledUnit(WS_Base.BaseUnit victim)
+    {
+    }
+    public virtual void JustDied(WS_Base.BaseUnit killer)
+    {
+    }
+    public virtual void JustRespawned()
+    {
+    }
+    public virtual void EnterEvadeMode()
+    {
+    }
+    public virtual void SpellHit(WS_Base.BaseUnit caster, int spellId)
+    {
+    }
+    public virtual void MovementInform(MovementGeneratorType type, int pointId)
+    {
+    }
+    public virtual void OnHealthChange(int oldPercent, int newPercent)
+    {
+    }
+    public virtual void SummonedCreatureDies(WS_Creatures.CreatureObject summon, WS_Base.BaseUnit killer)
+    {
+    }
+    public virtual void OnLeaveCombat(bool reset)
+    {
+    }
+    public virtual void OnGenerateHate(WS_Base.BaseUnit attacker, int hateValue)
+    {
+    }
 
     /// <summary>
     /// Casts a spell on the given target.

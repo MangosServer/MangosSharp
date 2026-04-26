@@ -28,9 +28,18 @@ namespace Mangos.World.AI.BehaviorTree;
 /// </summary>
 public sealed class BTContext
 {
-    public WS_Creatures.CreatureObject Creature { get; }
-    public WS_Creatures_AI.TBaseAI AI { get; }
-    public CooldownManager Cooldowns { get; }
+    public WS_Creatures.CreatureObject Creature
+    {
+        get;
+    }
+    public WS_Creatures_AI.TBaseAI AI
+    {
+        get;
+    }
+    public CooldownManager Cooldowns
+    {
+        get;
+    }
 
     private readonly Dictionary<string, object> _blackboard = new();
 

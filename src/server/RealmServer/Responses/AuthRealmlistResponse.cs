@@ -25,19 +25,49 @@ internal sealed class AuthRealmlistResponse : IResponseMessage
 {
     public sealed class Realm
     {
-        public required string Address { get; init; }
-        public required string Name { get; init; }
-        public required string Port { get; init; }
-        public required byte Timezone { get; init; }
-        public required byte Icon { get; init; }
-        public required byte Realmflags { get; init; }
-        public required float Population { get; init; }
-        public required int CharacterCount { get; init; }
+        public required string Address
+        {
+            get; init;
+        }
+        public required string Name
+        {
+            get; init;
+        }
+        public required string Port
+        {
+            get; init;
+        }
+        public required byte Timezone
+        {
+            get; init;
+        }
+        public required byte Icon
+        {
+            get; init;
+        }
+        public required byte Realmflags
+        {
+            get; init;
+        }
+        public required float Population
+        {
+            get; init;
+        }
+        public required int CharacterCount
+        {
+            get; init;
+        }
     }
 
-    public required byte[] Unk { get; init; }
+    public required byte[] Unk
+    {
+        get; init;
+    }
 
-    public required List<Realm> Realms { get; init; }
+    public required List<Realm> Realms
+    {
+        get; init;
+    }
 
     public async ValueTask WriteAsync(SocketWriter writer)
     {

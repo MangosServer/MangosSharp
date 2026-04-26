@@ -38,7 +38,9 @@ public sealed class FleeMovementGenerator : IMovementGenerator
         _fleeDurationMs = durationMs;
     }
 
-    public void Initialize(WS_Creatures.CreatureObject creature) { }
+    public void Initialize(WS_Creatures.CreatureObject creature)
+    {
+    }
 
     public bool Update(WS_Creatures.CreatureObject creature, int diffMs)
     {
@@ -56,6 +58,8 @@ public sealed class FleeMovementGenerator : IMovementGenerator
         return false;
     }
 
-    public void Finalize(WS_Creatures.CreatureObject creature) { }
+    public void Finalize(WS_Creatures.CreatureObject creature)
+    {
+    }
     public void Reset(WS_Creatures.CreatureObject creature) => _elapsed = 0;
 }

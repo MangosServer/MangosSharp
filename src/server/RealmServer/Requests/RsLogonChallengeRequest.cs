@@ -23,8 +23,14 @@ namespace RealmServer.Requests;
 
 internal sealed class RsLogonChallengeRequest : IRequestMessage<RsLogonChallengeRequest>
 {
-    public required string AccountName { get; init; }
-    public required WowClientBuildVersions ClientBuild { get; init; }
+    public required string AccountName
+    {
+        get; init;
+    }
+    public required WowClientBuildVersions ClientBuild
+    {
+        get; init;
+    }
 
     public static async ValueTask<RsLogonChallengeRequest> ReadAsync(SocketReader reader)
     {
