@@ -22,71 +22,96 @@ using Mangos.Common.Enums.Global;
 
 namespace Mangos.Logging;
 
+// Writes log messages to files with automatic daily log rotation
+// Creates a new log file each day with the format: {filename}-YYYY-MM-DD.log
 public class FileWriter : BaseWriter
 {
-    // Marked with null-forgiving initializer to satisfy the compiler.
-    // The constructor calls CreateNewFile which assigns a real StreamWriter instance.
-    protected StreamWriter Output = null!;
-    protected DateTime LastDate = DateTime.Parse("2007-01-01");
-    protected string Filename = "";
+    // Current log file stream writer
+    private StreamWriter _output = null!;
+    // Tracks the date when the current log file was created
+    private DateOnly _lastDate = DateOnly.Parse("2007-01-01");
+    // Base filename (without date extension)
+    private readonly string _filename;
 
-    protected void CreateNewFile()
+    public FileWriter(string filename)
     {
-        Output?.Dispose();
-        LastDate = DateTime.Now.Date;
-        Output = new StreamWriter(string.Format("{0}-{1}.log", Filename, LastDate.ToString("yyyy-MM-dd")), true) { AutoFlush = true };
-        WriteLine(LogType.INFORMATION, "Log started successfully.");
-    }
-
-    public FileWriter(string createfilename)
-    {
-        Filename = createfilename;
+        _filename = filename ?? throw new ArgumentNullException(nameof(filename));
         CreateNewFile();
     }
 
-    private bool _disposedValue; // To detect redundant calls
+    // Lazy-evaluated property that gets today's date
+    private static DateOnly Today => DateOnly.FromDateTime(DateTime.Now);
 
-    // IDisposable
+    // Creates a new log file, disposing the old one if it exists
+    // Called when the date changes to implement daily rotation
+    protected void CreateNewFile()
+    {
+        ThrowIfDisposed();
+        _output?.Dispose();
+        _lastDate = Today;
+        _output = new StreamWriter($"{_filename}-{_lastDate:yyyy-MM-dd}.log", true) { AutoFlush = true };
+        WriteLine(LogType.INFORMATION, "Log started successfully.");
+    }
+
     protected override void Dispose(bool disposing)
     {
-        if (!_disposedValue)
+        if (_disposedValue)
         {
-            if (disposing)
-            {
-                Output?.Dispose();
-            }
+            return;
+        }
+
+        if (disposing)
+        {
+            _output?.Dispose();
+            _output = null!;
         }
 
         _disposedValue = true;
+        base.Dispose(disposing);
     }
 
-    public override void Write(LogType type, string formatStr, params object[] arg)
+    public override void Write(LogType type, string formatStr, params object?[] arg)
     {
-        if (LogLevel > type)
+        ThrowIfDisposed();
+
+        if (!IsEnabled(type))
         {
             return;
         }
 
-        if (LastDate != DateTime.Now.Date)
+        if (_lastDate != Today)
         {
             CreateNewFile();
         }
 
-        Output.Write(formatStr, arg);
+        _output.Write(formatStr, arg);
     }
 
-    public override void WriteLine(LogType type, string formatStr, params object[] arg)
+    public override void WriteLine(LogType type, string formatStr, params object?[] arg)
     {
-        if (LogLevel > type)
+        ThrowIfDisposed();
+
+        if (!IsEnabled(type))
         {
             return;
         }
 
-        if (LastDate != DateTime.Now.Date)
+        if (_lastDate != Today)
         {
             CreateNewFile();
         }
 
-        Output.WriteLine(L[(int)type] + ":[" + DateTime.Now.TimeOfDay.ToString(@"hh\:mm\:ss") + "] " + formatStr, arg);
+        var message = string.Format(formatStr, arg);
+        _output.WriteLine($"{Labels[(int)type]}:[{DateTime.Now:HH:mm:ss}] {message}");
+    }
+
+    // Checks if the date has changed and creates a new file if needed
+    // Then checks if this writer is disposed before allowing writes
+    private void ThrowIfDisposed()
+    {
+        if (_disposedValue)
+        {
+            throw new ObjectDisposedException(nameof(FileWriter));
+        }
     }
 }

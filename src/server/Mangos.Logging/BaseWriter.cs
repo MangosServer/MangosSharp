@@ -21,82 +21,58 @@ using Mangos.Common.Enums.Global;
 
 namespace Mangos.Logging;
 
+// Base class for all log writers (console, file, etc.)
+// Provides common functionality and defines the interface for derived writers
 public class BaseWriter : IDisposable
 {
-    public string[] L = { "N", "D", "I", "U", "S", "W", "F", "C", "DB" };
-    public LogType LogLevel = LogType.NETWORK;
+    // Short labels for each log type used in formatted output
+    protected static readonly string[] Labels = { "N", "D", "I", "U", "S", "W", "F", "C", "DB", "A", "E", "FN", "NT", "TH", "TR" };
 
-    private bool _disposedValue; // To detect redundant calls
+    // Minimum log level to output - logs below this level are filtered out
+    public LogType LogLevel { get; set; } = LogType.NETWORK;
 
-    // IDisposable
+    // Track if this instance has been disposed to prevent double disposal
+    protected bool _disposedValue;
+
+    // Virtual dispose method for derived classes to override if they need custom cleanup
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposedValue)
+        if (_disposedValue)
         {
-            // TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
-            // TODO: set large fields to null.
+            return;
         }
 
         _disposedValue = true;
     }
 
-    // This code added by Visual Basic to correctly implement the disposable pattern.
     public void Dispose()
     {
-        // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
         Dispose(true);
         GC.SuppressFinalize(this);
     }
 
-    public virtual void Write(LogType type, string format, params object[] arg)
+    // Check if a log type should be output based on current minimum log level
+    protected bool IsEnabled(LogType type) => type >= LogLevel;
+
+    // Virtual method to be overridden by derived writers - outputs text without newline
+    public virtual void Write(LogType type, string format, params object?[] arg)
     {
     }
 
-    public virtual void WriteLine(LogType type, string format, params object[] arg)
+    // Virtual method to be overridden by derived writers - outputs text with newline
+    public virtual void WriteLine(LogType type, string format, params object?[] arg)
     {
     }
 
-    public virtual string ReadLine()
+    // Read a line of input from console
+    public virtual string ReadLine() => Console.ReadLine() ?? string.Empty;
+
+    // Factory method to create the appropriate writer based on log type string
+    public static BaseWriter CreateLog(string logType, string logConfig) => logType?.Trim().ToUpperInvariant() switch
     {
-        return Console.ReadLine() ?? string.Empty;
-    }
-
-    public void PrintDiagnosticTest()
-    {
-        WriteLine(LogType.NETWORK, "{0}:************************* TEST *************************", (object)1);
-        WriteLine(LogType.DEBUG, "{0}:************************* TEST *************************", (object)1);
-        WriteLine(LogType.INFORMATION, "{0}:************************* TEST *************************", (object)1);
-        WriteLine(LogType.USER, "{0}:************************* TEST *************************", (object)1);
-        WriteLine(LogType.SUCCESS, "{0}:************************* TEST *************************", (object)1);
-        WriteLine(LogType.WARNING, "{0}:************************* TEST *************************", (object)1);
-        WriteLine(LogType.FAILED, "{0}:************************* TEST *************************", (object)1);
-        WriteLine(LogType.CRITICAL, "{0}:************************* TEST *************************", (object)1);
-        WriteLine(LogType.DATABASE, "{0}:************************* TEST *************************", (object)1);
-    }
-
-    public static BaseWriter CreateLog(string logType, string logConfig)
-    {
-        switch (logType.ToUpper() ?? "")
-        {
-            case "COLORCONSOLE":
-                {
-                    return new ColoredConsoleWriter();
-                }
-
-            case "CONSOLE":
-                {
-                    return new ConsoleWriter();
-                }
-
-            case "FILE":
-                {
-                    return new FileWriter(logConfig);
-                }
-
-            default:
-                {
-                    throw new ArgumentOutOfRangeException(nameof(logType));
-                }
-        }
-    }
+        "COLORCONSOLE" => new ColoredConsoleWriter(),
+        "CONSOLE" => new ConsoleWriter(),
+        "FILE" => new FileWriter(logConfig),
+        _ => throw new ArgumentOutOfRangeException(nameof(logType))
+    };
 }

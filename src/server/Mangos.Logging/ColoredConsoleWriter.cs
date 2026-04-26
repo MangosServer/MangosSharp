@@ -22,159 +22,67 @@ using Mangos.Common.Enums.Global;
 
 namespace Mangos.Logging;
 
+// Writes log messages to console with color coding based on log type
+// Uses a lock to ensure thread-safe console output
 public class ColoredConsoleWriter : BaseWriter
 {
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    public override void Write(LogType type, string formatStr, params object[] arg)
+    // Shared lock to synchronize console writes across threads
+    private static readonly object s_consoleLock = new();
+
+    public override void Write(LogType type, string formatStr, params object?[] arg)
     {
-        if (LogLevel > type)
+        if (!IsEnabled(type))
         {
             return;
         }
 
-        switch (type)
-        {
-            case LogType.NETWORK:
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    break;
-                }
-
-            case LogType.DEBUG:
-                {
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    break;
-                }
-
-            case LogType.INFORMATION:
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    break;
-                }
-
-            case LogType.USER:
-                {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    break;
-                }
-
-            case LogType.SUCCESS:
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    break;
-                }
-
-            case LogType.WARNING:
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    break;
-                }
-
-            case LogType.FAILED:
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    break;
-                }
-
-            case LogType.CRITICAL:
-                {
-                    Console.ForegroundColor = ConsoleColor.Red; // Red
-                    break;
-                }
-
-            case LogType.DATABASE:
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                    break;
-                }
-        }
-
-        if (arg is null)
-        {
-            Console.Write(formatStr);
-        }
-        else
-        {
-            Console.Write(formatStr, arg);
-        }
-
-        Console.ForegroundColor = ConsoleColor.Gray;
+        PerformWrite(type, () => Console.Write(formatStr, arg));
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    public override void WriteLine(LogType type, string formatStr, params object[] arg)
+    public override void WriteLine(LogType type, string formatStr, params object?[] arg)
     {
-        if (LogLevel > type)
+        if (!IsEnabled(type))
         {
             return;
         }
 
-        switch (type)
+        var message = string.Format(formatStr, arg);
+        PerformWrite(type, () => Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {message}"));
+    }
+
+    // Maps each log type to its corresponding console color for visual distinction
+    private static void PerformWrite(LogType type, Action writeAction)
+    {
+        lock (s_consoleLock)
         {
-            case LogType.NETWORK:
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    break;
-                }
+            Console.ForegroundColor = type switch
+            {
+                LogType.NETWORK => ConsoleColor.DarkGray,
+                LogType.DEBUG => ConsoleColor.Gray,
+                LogType.INFORMATION => ConsoleColor.White,
+                LogType.USER => ConsoleColor.Blue,
+                LogType.SUCCESS => ConsoleColor.DarkGreen,
+                LogType.WARNING => ConsoleColor.Yellow,
+                LogType.FAILED => ConsoleColor.Cyan,
+                LogType.CRITICAL => ConsoleColor.Red,
+                LogType.DATABASE => ConsoleColor.DarkMagenta,
+                LogType.ALERT => ConsoleColor.Red,
+                LogType.EMERG => ConsoleColor.DarkRed,
+                LogType.FUNC => ConsoleColor.Gray,
+                LogType.NOTICE => ConsoleColor.White,
+                LogType.THREAD => ConsoleColor.Cyan,
+                LogType.TRACE => ConsoleColor.DarkGray,
+                _ => ConsoleColor.Gray,
+            };
 
-            case LogType.DEBUG:
-                {
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    break;
-                }
-
-            case LogType.INFORMATION:
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    break;
-                }
-
-            case LogType.USER:
-                {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    break;
-                }
-
-            case LogType.SUCCESS:
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    break;
-                }
-
-            case LogType.WARNING:
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    break;
-                }
-
-            case LogType.FAILED:
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    break;
-                }
-
-            case LogType.CRITICAL:
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    break;
-                }
-
-            case LogType.DATABASE:
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                    break;
-                }
+            try
+            {
+                writeAction();
+            }
+            finally
+            {
+                Console.ResetColor();
+            }
         }
-
-        if (arg is null)
-        {
-            Console.WriteLine($"[{DateTime.Now:hh:mm:ss}] {formatStr}");
-        }
-        else
-        {
-            Console.WriteLine($"[{DateTime.Now:hh:mm:ss}] {string.Format(formatStr, arg)}");
-        }
-
-        Console.ForegroundColor = ConsoleColor.Gray;
     }
 }

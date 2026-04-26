@@ -28,5 +28,11 @@ public enum LogType
     WARNING,                 // Warning
     FAILED,                  // Processing Error
     CRITICAL,                // Application Error
-    DATABASE                // Database Error
+    DATABASE,                // Database Error
+    ALERT,                   // Immediate action required
+    EMERG,                   // System is unusable
+    FUNC,                    // Function-level (fine-grained tracing)
+    NOTICE,                  // Normal but significant condition
+    THREAD,                  // Thread-level (thread execution tracing)
+    TRACE                    // Trace-level (fine-grained debugging)
 }
