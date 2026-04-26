@@ -16,13 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Cluster.Globals;
-using Mangos.Cluster.Handlers;
-using Mangos.Common.Enums.Authentication;
-using Mangos.Common.Enums.Global;
-using Mangos.Common.Globals;
-using Mangos.Cluster.Interop;
-using Mangos.Configuration;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,6 +23,13 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Mangos.Cluster.Globals;
+using Mangos.Cluster.Handlers;
+using Mangos.Cluster.Interop;
+using Mangos.Common.Enums.Authentication;
+using Mangos.Common.Enums.Global;
+using Mangos.Common.Globals;
+using Mangos.Configuration;
 
 namespace Mangos.Cluster.Network;
 

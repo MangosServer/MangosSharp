@@ -16,6 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Net;
+using System.Net.Sockets;
 using Autofac;
 using Mangos.Cluster.Interop.Dispatchers;
 using Mangos.Cluster.Interop.Protocol;
@@ -25,8 +27,6 @@ using Mangos.Logging;
 using Mangos.MySql;
 using Mangos.World;
 using Mangos.World.Network;
-using System.Net;
-using System.Net.Sockets;
 using WorldServer;
 
 Console.Title = "World Server";

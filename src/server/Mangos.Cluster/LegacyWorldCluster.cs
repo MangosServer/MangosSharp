@@ -16,19 +16,19 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
+using Mangos.Configuration;
 using Mangos.Logging;
 using Mangos.MySql;
-using Mangos.Configuration;
 using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Mangos.Cluster;
 

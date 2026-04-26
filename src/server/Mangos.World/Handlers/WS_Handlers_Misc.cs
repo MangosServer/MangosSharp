@@ -16,12 +16,15 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
+using System.Collections.Generic;
+using System.Data;
+using Mangos.Common;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
 using Mangos.Common.Enums.Misc;
 using Mangos.Common.Enums.Player;
 using Mangos.Common.Globals;
-using Mangos.Common;
 using Mangos.MySql;
 using Mangos.World.AI;
 using Mangos.World.Globals;
@@ -31,9 +34,6 @@ using Mangos.World.Objects;
 using Mangos.World.Player;
 using Mangos.World.Quests;
 using Microsoft.VisualBasic.CompilerServices;
-using System;
-using System.Collections.Generic;
-using System.Data;
 
 namespace Mangos.World.Handlers;
 

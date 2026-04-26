@@ -16,10 +16,10 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.MySql;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using Mangos.MySql;
 
 namespace Mangos.Cluster.Handlers.Guild;
 

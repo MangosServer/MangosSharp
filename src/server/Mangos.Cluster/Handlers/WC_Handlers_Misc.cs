@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Collections.Generic;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
-using System.Collections.Generic;
 
 namespace Mangos.Cluster.Handlers;
 

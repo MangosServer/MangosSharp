@@ -16,12 +16,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Logging;
-using RealmServer.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Mangos.Logging;
+using RealmServer.Network;
 
 namespace RealmServer.Verification;
 

@@ -16,14 +16,13 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Collections.Generic;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
-using System.Collections.Generic;
-
-using GlobalFunctions = Mangos.Common.Globals.Functions;
 using ClusterFunctions = Mangos.Cluster.Globals.Functions;
+using GlobalFunctions = Mangos.Common.Globals.Functions;
 
 namespace Mangos.Cluster.Handlers;
 

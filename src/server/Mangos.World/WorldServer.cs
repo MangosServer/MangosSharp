@@ -16,9 +16,18 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading;
+//using Microsoft.VisualBasic.CompilerServices;
+using System.Threading.Tasks;
+using Mangos.Cluster.Interop;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
-using Mangos.Cluster.Interop;
 using Mangos.Logging;
 using Mangos.MySql;
 using Mangos.World.Globals;
@@ -30,15 +39,6 @@ using Mangos.World.Player;
 using Mangos.World.Quests;
 using Mangos.World.Verification;
 using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading;
-//using Microsoft.VisualBasic.CompilerServices;
-using System.Threading.Tasks;
 
 namespace Mangos.World;
 

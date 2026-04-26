@@ -16,6 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Globalization;
+using System.Text;
 using Mangos.Logging;
 using Mangos.MySql.GetAccountInfo;
 using Mangos.MySql.IsBannedAccount;
@@ -24,8 +26,6 @@ using RealmServer.Handlers;
 using RealmServer.Network;
 using RealmServer.Requests;
 using RealmServer.Responses;
-using System.Globalization;
-using System.Text;
 
 namespace Mangos.Realm.Network.Handlers;
 

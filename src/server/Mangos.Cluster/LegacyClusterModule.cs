@@ -21,11 +21,11 @@ using Mangos.Cluster.DataStores;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Handlers.Guild;
+using Mangos.Cluster.Interop;
 using Mangos.Cluster.Network;
 using Mangos.Cluster.Verification;
-using Mangos.Common.Globals;
-using Mangos.Cluster.Interop;
 using Mangos.Common;
+using Mangos.Common.Globals;
 using Mangos.DataStores;
 using Mangos.Zip;
 

@@ -16,6 +16,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Collections.Generic;
+using System.Data;
+using System.Runtime.InteropServices;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Chat;
@@ -24,9 +27,6 @@ using Mangos.Common.Enums.Misc;
 using Mangos.Common.Globals;
 using Mangos.MySql;
 using Microsoft.VisualBasic;
-using System.Collections.Generic;
-using System.Data;
-using System.Runtime.InteropServices;
 
 namespace Mangos.Cluster.Handlers.Guild;
 

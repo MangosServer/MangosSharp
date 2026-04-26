@@ -16,6 +16,10 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Mangos.Common.Enums.Faction;
 using Mangos.Common.Enums.GameObject;
 using Mangos.Common.Enums.Global;
@@ -36,10 +40,6 @@ using Mangos.World.Player;
 using Mangos.World.Quests;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Mangos.World.Spells;
 

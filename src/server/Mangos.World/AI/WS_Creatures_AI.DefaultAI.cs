@@ -16,6 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
+using System.Collections.Generic;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Misc;
@@ -23,8 +25,6 @@ using Mangos.World.Handlers;
 using Mangos.World.Network;
 using Mangos.World.Objects;
 using Mangos.World.Player;
-using System;
-using System.Collections.Generic;
 
 namespace Mangos.World.AI;
 

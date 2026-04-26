@@ -16,10 +16,10 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Net.Sockets;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Tcp;
-using System.Net.Sockets;
 
 namespace WorldCluster.Network;
 

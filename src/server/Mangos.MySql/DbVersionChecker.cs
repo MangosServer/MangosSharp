@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
+using System.Data;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Logging;
-using System;
-using System.Data;
 
 namespace Mangos.MySql;
 

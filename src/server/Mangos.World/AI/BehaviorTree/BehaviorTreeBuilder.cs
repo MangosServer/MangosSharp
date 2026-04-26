@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
+using System.Collections.Generic;
 using Mangos.World.AI.BehaviorTree.Composites;
 using Mangos.World.AI.BehaviorTree.Decorators;
 using Mangos.World.AI.BehaviorTree.Leaves;
-using System;
-using System.Collections.Generic;
 
 namespace Mangos.World.AI.BehaviorTree;
 

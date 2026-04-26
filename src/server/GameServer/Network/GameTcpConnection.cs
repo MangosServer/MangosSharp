@@ -16,14 +16,14 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using GameServer.Responses;
-using Mangos.Cluster.Globals;
-using Mangos.Cluster.Network;
-using Mangos.Tcp;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.IO;
 using System.Net.Sockets;
+using GameServer.Responses;
+using Mangos.Cluster.Globals;
+using Mangos.Cluster.Network;
+using Mangos.Tcp;
 
 namespace GameServer.Network;
 

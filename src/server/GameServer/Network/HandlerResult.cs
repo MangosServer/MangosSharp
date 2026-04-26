@@ -16,8 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using GameServer.Responses;
 using System.Buffers;
+using GameServer.Responses;
 
 namespace GameServer.Network;
 

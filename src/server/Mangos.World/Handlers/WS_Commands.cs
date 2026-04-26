@@ -16,20 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Mangos.Common.Enums.Chat;
-using Mangos.Common.Enums.GameObject;
-using Mangos.Common.Enums.Global;
-using Mangos.Common.Enums.Misc;
-using Mangos.Common.Enums.Player;
-using Mangos.Common.Globals;
-using Mangos.Common;
-using Mangos.World.Globals;
-using Mangos.World.Network;
-using Mangos.World.Objects;
-using Mangos.World.Player;
-using Mangos.World.Spells;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,7 +25,21 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using Mangos.Common;
+using Mangos.Common.Enums.Chat;
+using Mangos.Common.Enums.GameObject;
+using Mangos.Common.Enums.Global;
+using Mangos.Common.Enums.Misc;
+using Mangos.Common.Enums.Player;
+using Mangos.Common.Globals;
 using Mangos.MySql;
+using Mangos.World.Globals;
+using Mangos.World.Network;
+using Mangos.World.Objects;
+using Mangos.World.Player;
+using Mangos.World.Spells;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Handlers;
 

@@ -16,10 +16,10 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-using Autofac;
-using Mangos.Logging;
 using System.Net;
 using System.Net.Sockets;
+using Autofac;
+using Mangos.Logging;
 
 namespace Mangos.Tcp;
 

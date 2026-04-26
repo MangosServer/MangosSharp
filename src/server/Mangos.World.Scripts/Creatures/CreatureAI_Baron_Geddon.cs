@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Misc;
 using Mangos.World.AI;
 using Mangos.World.Objects;
-using System;
 
 // AI TODO: Implement a workaround (Or fix, fixes work too!) for Armageddon.
 namespace Mangos.World.Scripts.Creatures;
