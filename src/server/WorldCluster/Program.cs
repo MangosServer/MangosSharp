@@ -21,6 +21,7 @@ using Mangos.Cluster;
 using Mangos.Cluster.Admin.Auth;
 using Mangos.Cluster.Admin.Commands;
 using Mangos.Cluster.Admin.Protocol;
+using Mangos.Cluster.Federation;
 using Mangos.Cluster.Interop;
 using Mangos.Cluster.Interop.Dispatchers;
 using Mangos.Cluster.Interop.Protocol;
@@ -53,6 +54,7 @@ var legacyWorldCluster = container.Resolve<LegacyWorldCluster>();
 var worldServerClass = container.Resolve<WorldServerClass>();
 var supervisor = container.Resolve<WorldSupervisor>();
 var adminHandler = container.Resolve<IAdminCommandHandler>();
+var federationRouter = container.Resolve<FederationRouter>();
 
 logger.Trace(@" __  __      _  _  ___  ___  ___               ");
 logger.Trace(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
@@ -123,6 +125,7 @@ if (configuration.Federation is { Enabled: true } fedCfg)
         peerId => secrets.TryGetValue(peerId, out var s) ? s : null)
     {
         AdminHandler = adminHandler,
+        OnLinkAccepted = link => federationRouter.BindHandlers(link),
     };
     await federation.StartAsync(fedCfg.ListenAddress, fedCfg.ListenPort);
     logger.Information($"Federation listener up on {fedCfg.ListenAddress}:{fedCfg.ListenPort} (cluster id {fedCfg.LocalClusterId})");

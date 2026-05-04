@@ -89,4 +89,10 @@ public interface ICluster
 
     [Description("Control: run an admin command on the cluster (or route to a peer); returns serialized AdminCommandReply.")]
     byte[] RunAdminCommand(byte[] commandBytes);
+
+    [Description("Control: hand the cluster a cross-realm chat envelope so it can be routed to the destination peer.")]
+    void RouteFederatedChat(uint targetRealmId, byte[] chatEnvelope);
+
+    [Description("Control: hand the cluster a cross-realm group invite so it can be routed to the destination peer.")]
+    void RouteFederatedGroupInvite(uint targetRealmId, byte[] inviteEnvelope);
 }

@@ -127,4 +127,6 @@ public enum AdminVerb : ushort
     // .realm
     RealmList = 0x0020,
     RealmPeers = 0x0021,
+    RealmMarkerShow = 0x0022,
+    RealmMarkerHide = 0x0023,
 }

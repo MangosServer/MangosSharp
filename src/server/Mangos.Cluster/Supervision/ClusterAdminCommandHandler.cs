@@ -54,6 +54,8 @@ public sealed class ClusterAdminCommandHandler : IAdminCommandHandler
                 AdminVerb.ServerStart => await ServerStart(cmd),
                 AdminVerb.InstanceList => InstanceList(cmd),
                 AdminVerb.RealmList => RealmList(),
+                AdminVerb.RealmMarkerShow => RealmMarker(cmd, true),
+                AdminVerb.RealmMarkerHide => RealmMarker(cmd, false),
                 _ => Reply(AdminReplyStatus.InvalidArguments, $"unsupported verb: {cmd.Verb}"),
             };
         }
@@ -141,6 +143,18 @@ public sealed class ClusterAdminCommandHandler : IAdminCommandHandler
         var r = new AdminCommandReply { Status = AdminReplyStatus.Ok };
         r.Lines.Add($"Local realm id: {_localRealmIdProvider()}");
         return r;
+    }
+
+    private AdminCommandReply RealmMarker(AdminCommand cmd, bool show)
+    {
+        // Per-account preference toggle. The actual UPDATE on
+        // account.federation_show_markers requires the calling player's
+        // account name, which the AdminCommand doesn't carry today. PR #6
+        // sets up the schema (see Rel21_02_002) and the verb plumbing;
+        // wiring the in-game side that supplies the account is a follow-up.
+        var verb = show ? "shown" : "hidden";
+        return Reply(AdminReplyStatus.Ok,
+            $"realm markers will be {verb} for your account on next login (toggle persistence pending DB hookup)");
     }
 
     private static AdminCommandReply Reply(AdminReplyStatus status, string line)

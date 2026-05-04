@@ -44,9 +44,24 @@ public partial class WS_Commands
     public bool cmdAdminInstance(ref WS_PlayerData.CharacterObject objCharacter, string Message)
         => DispatchAdmin(objCharacter, "instance " + Message);
 
-    [ChatCommand("realm", "realm <list|peers> - List configured realms or active federation peers.", AccessLevel.Admin)]
+    /// <summary>
+    /// .realm is dual-purpose: list/peers are admin-level, while show/hide
+    /// flips the calling player's own federation marker preference and is
+    /// available to all players. The dispatcher routes by verb.
+    /// </summary>
+    [ChatCommand("realm", "realm <list|peers|show|hide> - Cross-realm queries; show/hide toggles your federation marker preference.", AccessLevel.Player)]
     public bool cmdAdminRealm(ref WS_PlayerData.CharacterObject objCharacter, string Message)
-        => DispatchAdmin(objCharacter, "realm " + Message);
+    {
+        var trimmed = (Message ?? string.Empty).Trim();
+        var firstWord = trimmed.Split(' ', 2)[0].ToLowerInvariant();
+        var requiresAdmin = firstWord is "list" or "peers";
+        if (requiresAdmin && objCharacter.Access < AccessLevel.Admin)
+        {
+            objCharacter.CommandResponse("This subcommand requires Admin access.");
+            return true;
+        }
+        return DispatchAdmin(objCharacter, "realm " + Message);
+    }
 
     private bool DispatchAdmin(WS_PlayerData.CharacterObject character, string commandLine)
     {

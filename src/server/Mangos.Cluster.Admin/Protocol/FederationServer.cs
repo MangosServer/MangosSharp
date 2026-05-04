@@ -56,6 +56,9 @@ public sealed class FederationServer : IDisposable
     /// <summary>Bound by the cluster: invoked for inbound admin commands on every accepted link.</summary>
     public IAdminCommandHandler? AdminHandler { get; set; }
 
+    /// <summary>Optional hook fired per accepted link, used to wire chat/group/presence handlers.</summary>
+    public Action<FederationLink>? OnLinkAccepted { get; set; }
+
     public Task StartAsync(string bindAddress, int port)
     {
         _cts = new CancellationTokenSource();
@@ -83,6 +86,7 @@ public sealed class FederationServer : IDisposable
             {
                 AdminHandler = AdminHandler,
             };
+            OnLinkAccepted?.Invoke(link);
             link.OnPeerHello = hello =>
             {
                 var secret = _peerSecretLookup(hello.ClusterId);

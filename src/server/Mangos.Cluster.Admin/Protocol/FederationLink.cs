@@ -57,6 +57,21 @@ public sealed class FederationLink : IDisposable
     /// </summary>
     public Func<PeerHello, (uint, string)?>? OnPeerHello { get; set; }
 
+    /// <summary>Inbound cross-realm chat message (PR #6).</summary>
+    public Action<ChatEnvelope>? OnChatRoute { get; set; }
+
+    /// <summary>Inbound group invite from a peer cluster (PR #6).</summary>
+    public Action<GroupInviteEnvelope>? OnGroupInvite { get; set; }
+
+    /// <summary>Inbound group invite response from a peer cluster (PR #6).</summary>
+    public Action<GroupInviteResponseEnvelope>? OnGroupInviteResponse { get; set; }
+
+    /// <summary>Inbound roster update for a federated group (PR #6).</summary>
+    public Action<GroupRosterUpdateEnvelope>? OnGroupRosterUpdate { get; set; }
+
+    /// <summary>Inbound presence query - is the named character online here? (PR #6).</summary>
+    public Func<PresenceQueryEnvelope, PresenceReplyEnvelope>? OnPresenceQuery { get; set; }
+
     /// <summary>Fired when the underlying connection drops.</summary>
     public event Action? Disconnected;
 
@@ -106,6 +121,32 @@ public sealed class FederationLink : IDisposable
         return AdminCommandReply.Deserialize(bytes);
     }
 
+    /// <summary>Forward a cross-realm chat envelope to this peer (fire-and-forget).</summary>
+    public Task SendChatAsync(ChatEnvelope env)
+        => _connection.SendOneWayAsync((InteropMethodId)AdminMethodId.ChatRoute, env.Serialize());
+
+    /// <summary>Forward a group invite to this peer.</summary>
+    public Task SendGroupInviteAsync(GroupInviteEnvelope env)
+        => _connection.SendOneWayAsync((InteropMethodId)AdminMethodId.GroupInvite, env.Serialize());
+
+    /// <summary>Forward an invite response to this peer.</summary>
+    public Task SendGroupInviteResponseAsync(GroupInviteResponseEnvelope env)
+        => _connection.SendOneWayAsync((InteropMethodId)AdminMethodId.GroupInviteResponse, env.Serialize());
+
+    /// <summary>Replicate a roster update to this peer.</summary>
+    public Task SendGroupRosterAsync(GroupRosterUpdateEnvelope env)
+        => _connection.SendOneWayAsync((InteropMethodId)AdminMethodId.GroupRosterUpdate, env.Serialize());
+
+    /// <summary>Ask the peer if it has the named character online.</summary>
+    public async Task<PresenceReplyEnvelope> QueryPresenceAsync(PresenceQueryEnvelope env, int timeoutMs = 5000)
+    {
+        var bytes = await _connection.SendRequestAsync(
+            (InteropMethodId)AdminMethodId.PresenceQuery,
+            env.Serialize(),
+            timeoutMs);
+        return PresenceReplyEnvelope.Deserialize(bytes);
+    }
+
     private async Task<byte[]?> HandleAsync(InteropMethodId methodId, byte[] data)
     {
         var amid = (AdminMethodId)methodId;
@@ -142,6 +183,35 @@ public sealed class FederationLink : IDisposable
 
             case AdminMethodId.PeerHeartbeat:
                 return Array.Empty<byte>();
+
+            case AdminMethodId.ChatRoute:
+                if (IsAuthenticated)
+                    OnChatRoute?.Invoke(ChatEnvelope.Deserialize(data));
+                return null;
+
+            case AdminMethodId.GroupInvite:
+                if (IsAuthenticated)
+                    OnGroupInvite?.Invoke(GroupInviteEnvelope.Deserialize(data));
+                return null;
+
+            case AdminMethodId.GroupInviteResponse:
+                if (IsAuthenticated)
+                    OnGroupInviteResponse?.Invoke(GroupInviteResponseEnvelope.Deserialize(data));
+                return null;
+
+            case AdminMethodId.GroupRosterUpdate:
+                if (IsAuthenticated)
+                    OnGroupRosterUpdate?.Invoke(GroupRosterUpdateEnvelope.Deserialize(data));
+                return null;
+
+            case AdminMethodId.PresenceQuery:
+                {
+                    if (!IsAuthenticated || OnPresenceQuery is null)
+                        return new PresenceReplyEnvelope { Name = "", Online = false }.Serialize();
+                    var q = PresenceQueryEnvelope.Deserialize(data);
+                    var reply = OnPresenceQuery(q);
+                    return reply.Serialize();
+                }
 
             default:
                 return null;

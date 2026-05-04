@@ -222,4 +222,24 @@ public sealed class ClusterInteropProxy : ICluster
         using var br = new BinaryReader(rms);
         return InteropSerializer.ReadByteArray(br);
     }
+
+    public void RouteFederatedChat(uint targetRealmId, byte[] chatEnvelope)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(targetRealmId);
+        bw.Write(chatEnvelope.Length);
+        bw.Write(chatEnvelope);
+        _connection.SendOneWayAsync(InteropMethodId.ControlRouteFederatedChat, ms.ToArray()).GetAwaiter().GetResult();
+    }
+
+    public void RouteFederatedGroupInvite(uint targetRealmId, byte[] inviteEnvelope)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(targetRealmId);
+        bw.Write(inviteEnvelope.Length);
+        bw.Write(inviteEnvelope);
+        _connection.SendOneWayAsync(InteropMethodId.ControlRouteFederatedGroupInvite, ms.ToArray()).GetAwaiter().GetResult();
+    }
 }

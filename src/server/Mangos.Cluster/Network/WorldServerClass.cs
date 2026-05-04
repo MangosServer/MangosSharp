@@ -20,7 +20,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Mangos.Cluster.Admin.Commands;
+using Mangos.Cluster.Admin.Protocol;
+using Mangos.Cluster.Federation;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Interop;
 using Mangos.Cluster.Supervision;
@@ -35,6 +38,7 @@ public class WorldServerClass : ICluster
     private readonly ClusterServiceLocator _clusterServiceLocator;
     private readonly WorldSupervisor? _supervisor;
     private readonly IAdminCommandHandler? _adminHandler;
+    private readonly FederationRouter? _federation;
 
     public bool MFlagStopListen;
     private Timer _mTimerPing;
@@ -42,11 +46,13 @@ public class WorldServerClass : ICluster
     public WorldServerClass(
         ClusterServiceLocator clusterServiceLocator,
         WorldSupervisor? supervisor = null,
-        IAdminCommandHandler? adminHandler = null)
+        IAdminCommandHandler? adminHandler = null,
+        FederationRouter? federation = null)
     {
         _clusterServiceLocator = clusterServiceLocator;
         _supervisor = supervisor;
         _adminHandler = adminHandler;
+        _federation = federation;
     }
 
     public void Start()
@@ -448,7 +454,23 @@ public class WorldServerClass : ICluster
         try
         {
             var cmd = AdminCommand.Deserialize(commandBytes);
-            // TODO PR #4 follow-up: TargetRealmId routing to a peer cluster.
+
+            // Cross-realm: dial the peer and forward the command.
+            if (cmd.TargetRealmId != 0 && _federation is not null)
+            {
+                var link = _federation.GetOrOpenAsync(cmd.TargetRealmId).GetAwaiter().GetResult();
+                if (link is null)
+                {
+                    return new AdminCommandReply
+                    {
+                        Status = AdminReplyStatus.Unreachable,
+                        Lines = { $"realm {cmd.TargetRealmId} unreachable" },
+                    }.Serialize();
+                }
+                var peerReply = link.SendAdminCommandAsync(cmd).GetAwaiter().GetResult();
+                return peerReply.Serialize();
+            }
+
             var reply = _adminHandler.ExecuteAsync(cmd).GetAwaiter().GetResult();
             return reply.Serialize();
         }
@@ -460,6 +482,42 @@ public class WorldServerClass : ICluster
                 Lines = { $"admin error: {ex.Message}" },
             }.Serialize();
         }
+    }
+
+    public void RouteFederatedChat(uint targetRealmId, byte[] chatEnvelope)
+    {
+        if (_federation is null) return;
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var link = await _federation.GetOrOpenAsync(targetRealmId);
+                if (link is null) return;
+                await link.SendChatAsync(ChatEnvelope.Deserialize(chatEnvelope));
+            }
+            catch
+            {
+                // Best-effort fire-and-forget; chat losses are tolerable.
+            }
+        });
+    }
+
+    public void RouteFederatedGroupInvite(uint targetRealmId, byte[] inviteEnvelope)
+    {
+        if (_federation is null) return;
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var link = await _federation.GetOrOpenAsync(targetRealmId);
+                if (link is null) return;
+                await link.SendGroupInviteAsync(GroupInviteEnvelope.Deserialize(inviteEnvelope));
+            }
+            catch
+            {
+                // Best-effort.
+            }
+        });
     }
 
     public void GroupRequestUpdate(uint id)

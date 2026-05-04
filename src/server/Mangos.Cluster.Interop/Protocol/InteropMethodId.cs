@@ -95,6 +95,11 @@ public enum InteropMethodId : ushort
     // World -> cluster (admin)
     ControlRunAdminCommand = 0x0240,
 
+    // World -> cluster (federation gateway). World hands the cluster a
+    // serialized cross-realm envelope; cluster routes via FederationRouter.
+    ControlRouteFederatedChat = 0x0241,
+    ControlRouteFederatedGroupInvite = 0x0242,
+
     // ----- Framing -----------------------------------------------------
     Response = 0xFFFF,
 }

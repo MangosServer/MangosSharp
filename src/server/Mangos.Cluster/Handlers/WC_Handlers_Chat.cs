@@ -16,6 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using Mangos.Cluster.Admin.Protocol;
+using Mangos.Cluster.Federation;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Chat;
@@ -28,10 +30,59 @@ namespace Mangos.Cluster.Handlers;
 public class WcHandlersChat
 {
     private readonly ClusterServiceLocator _clusterServiceLocator;
+    private readonly FederationRouter? _federation;
 
-    public WcHandlersChat(ClusterServiceLocator clusterServiceLocator)
+    public WcHandlersChat(ClusterServiceLocator clusterServiceLocator, FederationRouter? federation = null)
     {
         _clusterServiceLocator = clusterServiceLocator;
+        _federation = federation;
+    }
+
+    /// <summary>
+    /// Try to forward a "Name-RealmTag" whisper to a peer cluster. Returns
+    /// true if we identified a routable target (regardless of delivery
+    /// success), false if the target name doesn't carry a realm suffix.
+    /// </summary>
+    private bool TryRouteFederatedWhisper(ClientClass client, string toName, string message, LANGUAGES language)
+    {
+        if (_federation is null) return false;
+        // "Name-Realm" form: split on the last dash.
+        var dash = toName.LastIndexOf('-');
+        if (dash <= 0 || dash == toName.Length - 1) return false;
+        var bareName = toName.Substring(0, dash);
+        var realmTag = toName.Substring(dash + 1);
+        // We don't yet resolve realmTag -> realmId from the realmlist DB
+        // here; that's the PR #6 follow-up. For now require the operator
+        // to have configured a peer cluster id matching the tag. If the
+        // peer is unreachable, signal "not found" to the sender.
+        if (!uint.TryParse(realmTag, out var peerClusterId))
+            return false;
+
+        try
+        {
+            var env = new ChatEnvelope
+            {
+                SenderRealmId = 0,
+                SenderRealmTag = string.Empty,
+                SenderGuid = client.Character.Guid,
+                SenderName = client.Character.Name,
+                Channel = ChatChannel.Whisper,
+                RecipientName = bareName,
+                Language = (uint)language,
+                Body = message,
+            };
+            _ = _federation.GetOrOpenAsync(peerClusterId)
+                .ContinueWith(async t =>
+                {
+                    var link = t.Result;
+                    if (link is not null) await link.SendChatAsync(env);
+                });
+        }
+        catch
+        {
+            // Best effort.
+        }
+        return true;
     }
 
     public void On_CMSG_CHAT_IGNORED(PacketClass packet, ClientClass client)
@@ -138,6 +189,10 @@ public class WcHandlersChat
                                 client.Character.SendChatMessage(guid, _clusterServiceLocator.WorldCluster.CharacteRs[guid].AfkMessage, ChatMsg.CHAT_MSG_AFK, (int)msgLanguage, "");
                             }
                         }
+                    }
+                    else if (TryRouteFederatedWhisper(client, toUser, message, msgLanguage))
+                    {
+                        // Forwarded to peer cluster; nothing else to do locally.
                     }
                     else
                     {

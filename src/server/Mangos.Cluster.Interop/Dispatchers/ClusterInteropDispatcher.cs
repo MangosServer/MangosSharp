@@ -192,6 +192,22 @@ public sealed class ClusterInteropDispatcher
                     return InteropSerializer.WriteByteArray(reply);
                 }
 
+            case InteropMethodId.ControlRouteFederatedChat:
+                {
+                    var realm = br.ReadUInt32();
+                    var env = InteropSerializer.ReadByteArray(br);
+                    _cluster.RouteFederatedChat(realm, env);
+                    return null;
+                }
+
+            case InteropMethodId.ControlRouteFederatedGroupInvite:
+                {
+                    var realm = br.ReadUInt32();
+                    var env = InteropSerializer.ReadByteArray(br);
+                    _cluster.RouteFederatedGroupInvite(realm, env);
+                    return null;
+                }
+
             default:
                 return null;
         }

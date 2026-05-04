@@ -110,6 +110,9 @@ public static class AdminCommandParser
         ("instance", "kick") => AdminVerb.InstanceKick,
         ("realm", "list") => AdminVerb.RealmList,
         ("realm", "peers") => AdminVerb.RealmPeers,
+        ("realm", "marker") => AdminVerb.RealmMarkerShow, // disambiguated by Extras["_pos2"]
+        ("realm", "show") => AdminVerb.RealmMarkerShow,
+        ("realm", "hide") => AdminVerb.RealmMarkerHide,
         _ => AdminVerb.Unknown,
     };
 
