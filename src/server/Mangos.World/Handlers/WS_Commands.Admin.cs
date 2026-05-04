@@ -17,8 +17,10 @@
 //
 
 using System;
+using Autofac;
 using Mangos.Cluster.Admin.Commands;
 using Mangos.Common.Enums.Misc;
+using Mangos.MySql.UpdateFederationMarker;
 using Mangos.World.Player;
 
 namespace Mangos.World.Handlers;
@@ -54,13 +56,48 @@ public partial class WS_Commands
     {
         var trimmed = (Message ?? string.Empty).Trim();
         var firstWord = trimmed.Split(' ', 2)[0].ToLowerInvariant();
-        var requiresAdmin = firstWord is "list" or "peers";
-        if (requiresAdmin && objCharacter.Access < AccessLevel.Admin)
+
+        // show/hide are per-account preference flips handled locally so we
+        // can write the calling player's account row without round-tripping.
+        if (firstWord == "show" || firstWord == "hide")
+        {
+            return SetMarkerPreference(objCharacter, show: firstWord == "show");
+        }
+
+        if (objCharacter.Access < AccessLevel.Admin)
         {
             objCharacter.CommandResponse("This subcommand requires Admin access.");
             return true;
         }
         return DispatchAdmin(objCharacter, "realm " + Message);
+    }
+
+    private bool SetMarkerPreference(WS_PlayerData.CharacterObject character, bool show)
+    {
+        var account = character.client?.Account;
+        if (string.IsNullOrEmpty(account))
+        {
+            character.CommandResponse("could not resolve your account name");
+            return true;
+        }
+        try
+        {
+            var cmd = WorldServiceLocator.Container?.Resolve<IUpdateFederationMarkerCommand>();
+            if (cmd is null)
+            {
+                character.CommandResponse("federation marker command not available");
+                return true;
+            }
+            cmd.ExecuteAsync(account, show).GetAwaiter().GetResult();
+            character.CommandResponse(show
+                ? "Cross-realm markers will now be shown for your account."
+                : "Cross-realm markers will be hidden for your account (whispers always carry the tag).");
+        }
+        catch (Exception ex)
+        {
+            character.CommandResponse($"failed to persist preference: {ex.Message}");
+        }
+        return true;
     }
 
     private bool DispatchAdmin(WS_PlayerData.CharacterObject character, string commandLine)

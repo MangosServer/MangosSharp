@@ -18,14 +18,18 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using Mangos.Cluster.Admin.Auth;
 using Mangos.Cluster.Admin.Commands;
 using Mangos.Cluster.Admin.Protocol;
 using Mangos.Configuration;
 using Mangos.Logging;
+using Mangos.MySql.GetFederationPeers;
 
 namespace Mangos.Cluster.Federation;
 
@@ -46,16 +50,34 @@ public sealed class FederationRouter : IDisposable
     private readonly IMangosLogger _logger;
     private readonly Func<uint, string?> _resolveEndpoint;
     private readonly ConcurrentDictionary<uint, FederationLink> _outbound = new();
+    private readonly ConcurrentDictionary<uint, FederationPeerInfo> _peerInfo = new();
+    private readonly IGetFederationPeersQuery? _peersQuery;
+    private CancellationTokenSource? _refreshCts;
+    private Task? _refreshLoop;
 
     public FederationRouter(
         FederationConfiguration cfg,
         IMangosLogger logger,
-        Func<uint, string?> resolveEndpoint)
+        Func<uint, string?> resolveEndpoint,
+        IGetFederationPeersQuery? peersQuery = null)
     {
         _cfg = cfg;
         _logger = logger;
         _resolveEndpoint = resolveEndpoint;
+        _peersQuery = peersQuery;
     }
+
+    /// <summary>Information about a known peer cluster, populated from the realmlist DB.</summary>
+    public sealed class FederationPeerInfo
+    {
+        public required uint ClusterId { get; init; }
+        public required string Endpoint { get; init; }
+        public required string DisplayTag { get; init; }
+        public required string MarkerPosition { get; init; }
+    }
+
+    /// <summary>Snapshot of all peers discovered from the realmlist table.</summary>
+    public IReadOnlyDictionary<uint, FederationPeerInfo> PeerInfo => _peerInfo;
 
     /// <summary>Optional callbacks on inbound envelopes; bound by gameplay code.</summary>
     public Action<ChatEnvelope>? OnChat { get; set; }
@@ -63,6 +85,8 @@ public sealed class FederationRouter : IDisposable
     public Action<GroupInviteResponseEnvelope>? OnGroupInviteResponse { get; set; }
     public Action<GroupRosterUpdateEnvelope>? OnGroupRosterUpdate { get; set; }
     public Func<PresenceQueryEnvelope, PresenceReplyEnvelope>? OnPresenceQuery { get; set; }
+    public Action<ShardClaimEnvelope>? OnShardClaim { get; set; }
+    public Action<ShardReleaseEnvelope>? OnShardRelease { get; set; }
 
     /// <summary>Bind the outbound side's hooks onto a newly opened or accepted link.</summary>
     public void BindHandlers(FederationLink link)
@@ -72,18 +96,80 @@ public sealed class FederationRouter : IDisposable
         link.OnGroupInviteResponse = e => OnGroupInviteResponse?.Invoke(e);
         link.OnGroupRosterUpdate = e => OnGroupRosterUpdate?.Invoke(e);
         link.OnPresenceQuery = e => OnPresenceQuery?.Invoke(e) ?? new PresenceReplyEnvelope { Name = e.Name, Online = false };
+        link.OnShardClaim = e => OnShardClaim?.Invoke(e);
+        link.OnShardRelease = e => OnShardRelease?.Invoke(e);
+    }
+
+    /// <summary>
+    /// Start the periodic peer-table refresh from the realmlist DB.
+    /// Safe to call once at cluster startup; no-op if no DB query is bound.
+    /// </summary>
+    public Task StartAsync()
+    {
+        if (_peersQuery is null) return Task.CompletedTask;
+        _refreshCts = new CancellationTokenSource();
+        _refreshLoop = Task.Run(() => RefreshLoopAsync(_refreshCts.Token));
+        return Task.CompletedTask;
+    }
+
+    private async Task RefreshLoopAsync(CancellationToken ct)
+    {
+        // First load is eager so the first GetOrOpenAsync after startup
+        // sees populated peer info.
+        await RefreshPeersOnceAsync();
+        while (!ct.IsCancellationRequested)
+        {
+            try { await Task.Delay(TimeSpan.FromMinutes(1), ct); }
+            catch (OperationCanceledException) { return; }
+            await RefreshPeersOnceAsync();
+        }
+    }
+
+    private async Task RefreshPeersOnceAsync()
+    {
+        try
+        {
+            var rows = await _peersQuery!.ExecuteAsync();
+            if (rows is null) return;
+            var fresh = new Dictionary<uint, FederationPeerInfo>();
+            foreach (var r in rows)
+            {
+                if (r.clusterId == 0 || string.IsNullOrEmpty(r.clusterAdminEndpoint)) continue;
+                fresh[r.clusterId] = new FederationPeerInfo
+                {
+                    ClusterId = r.clusterId,
+                    Endpoint = r.clusterAdminEndpoint,
+                    DisplayTag = r.displayTag ?? string.Empty,
+                    MarkerPosition = r.markerPosition ?? "prefix",
+                };
+            }
+            // Replace wholesale.
+            foreach (var k in _peerInfo.Keys.Where(k => !fresh.ContainsKey(k)).ToList())
+                _peerInfo.TryRemove(k, out _);
+            foreach (var kv in fresh)
+                _peerInfo[kv.Key] = kv.Value;
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"Federation: realmlist peer refresh failed: {ex.Message}");
+        }
     }
 
     /// <summary>
     /// Get or open a federation link to the cluster that owns realm id N.
     /// Returns null if the peer is unreachable or no secret is configured.
+    /// Endpoint is resolved (in order) from: cached realmlist row, then the
+    /// caller-supplied <c>resolveEndpoint</c> lambda for tests/overrides.
     /// </summary>
     public async Task<FederationLink?> GetOrOpenAsync(uint realmId)
     {
         if (_outbound.TryGetValue(realmId, out var existing) && existing.IsAuthenticated)
             return existing;
 
-        var endpoint = _resolveEndpoint(realmId);
+        string? endpoint = null;
+        if (_peerInfo.TryGetValue(realmId, out var info))
+            endpoint = info.Endpoint;
+        endpoint ??= _resolveEndpoint(realmId);
         if (string.IsNullOrEmpty(endpoint))
             return null;
 
@@ -133,6 +219,9 @@ public sealed class FederationRouter : IDisposable
 
     public void Dispose()
     {
+        _refreshCts?.Cancel();
+        try { _refreshLoop?.Wait(TimeSpan.FromSeconds(2)); } catch { }
+        _refreshCts?.Dispose();
         foreach (var l in _outbound.Values)
             try { l.Dispose(); } catch { }
         _outbound.Clear();

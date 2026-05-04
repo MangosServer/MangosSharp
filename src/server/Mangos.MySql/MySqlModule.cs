@@ -18,9 +18,11 @@
 
 using Autofac;
 using Mangos.MySql.GetAccountInfo;
+using Mangos.MySql.GetFederationPeers;
 using Mangos.MySql.GetRealmList;
 using Mangos.MySql.IsBannedAccount;
 using Mangos.MySql.UpdateAccount;
+using Mangos.MySql.UpdateFederationMarker;
 
 namespace Mangos.MySql;
 
@@ -40,5 +42,7 @@ public sealed class MySqlModule : Module
         builder.RegisterType<IsBannedAccountQuery>().As<IIsBannedAccountQuery>().SingleInstance();
         builder.RegisterType<UpdateAccountCommand>().As<IUpdateAccountCommand>().SingleInstance();
         builder.RegisterType<GetRealmListQuery>().As<IGetRealmListQuery>().SingleInstance();
+        builder.RegisterType<GetFederationPeersQuery>().As<IGetFederationPeersQuery>().SingleInstance();
+        builder.RegisterType<UpdateFederationMarkerCommand>().As<IUpdateFederationMarkerCommand>().SingleInstance();
     }
 }

@@ -345,6 +345,7 @@ public partial class WS_Network
             var ws = WorldServiceLocator.WorldServer;
             var playerCount = ws.CLIENTs?.Count ?? 0;
             var instanceCount = WorldServiceLocator.WSMaps?.Maps?.Count ?? 0;
+            var battlegroundCount = ws.BATTLEGROUNDs?.Count ?? 0;
             var process = Process.GetCurrentProcess();
             var uptimeMs = (long)(DateTime.UtcNow - process.StartTime.ToUniversalTime()).TotalMilliseconds;
 
@@ -354,7 +355,7 @@ public partial class WS_Network
                 MemoryUsage = checked((ulong)Math.Round(process.WorkingSet64 / 1048576.0)),
                 PlayerCount = playerCount,
                 InstanceCount = instanceCount,
-                BattlegroundCount = 0, // populated when battleground tracking lands in PR #5
+                BattlegroundCount = battlegroundCount,
                 UptimeMs = uptimeMs
             };
             return serverInfo;

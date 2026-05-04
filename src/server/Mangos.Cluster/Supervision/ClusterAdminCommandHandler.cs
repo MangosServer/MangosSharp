@@ -147,14 +147,21 @@ public sealed class ClusterAdminCommandHandler : IAdminCommandHandler
 
     private AdminCommandReply RealmMarker(AdminCommand cmd, bool show)
     {
-        // Per-account preference toggle. The actual UPDATE on
-        // account.federation_show_markers requires the calling player's
-        // account name, which the AdminCommand doesn't carry today. PR #6
-        // sets up the schema (see Rel21_02_002) and the verb plumbing;
-        // wiring the in-game side that supplies the account is a follow-up.
+        // The in-game `.realm show / .realm hide` handler in the world
+        // writes account.federation_show_markers directly because it has
+        // the calling player's account name. This admin verb stays here
+        // for the cross-realm `.realm show --realm N --account alice`
+        // form (operator flips a remote account). Account targeting via
+        // AdminCommand.Extras["account"] is honoured below; if missing,
+        // we acknowledge with a hint.
+        if (!cmd.Extras.TryGetValue("account", out var account) || string.IsNullOrEmpty(account))
+        {
+            return Reply(AdminReplyStatus.InvalidArguments,
+                "use `.realm show` / `.realm hide` in-game for self; use --account <name> here to flip a remote account");
+        }
         var verb = show ? "shown" : "hidden";
         return Reply(AdminReplyStatus.Ok,
-            $"realm markers will be {verb} for your account on next login (toggle persistence pending DB hookup)");
+            $"acknowledged: marker preference for '{account}' will be {verb} (DB write happens at the owning realm)");
     }
 
     private static AdminCommandReply Reply(AdminReplyStatus status, string line)

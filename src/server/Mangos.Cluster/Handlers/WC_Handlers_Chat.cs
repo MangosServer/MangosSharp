@@ -42,21 +42,36 @@ public class WcHandlersChat
     /// Try to forward a "Name-RealmTag" whisper to a peer cluster. Returns
     /// true if we identified a routable target (regardless of delivery
     /// success), false if the target name doesn't carry a realm suffix.
+    ///
+    /// "RealmTag" can be either a numeric clusterId or the textual tag
+    /// stored in realmlist.displayTag (case-insensitive); the router's
+    /// peer cache provides the lookup.
     /// </summary>
     private bool TryRouteFederatedWhisper(ClientClass client, string toName, string message, LANGUAGES language)
     {
         if (_federation is null) return false;
-        // "Name-Realm" form: split on the last dash.
         var dash = toName.LastIndexOf('-');
         if (dash <= 0 || dash == toName.Length - 1) return false;
         var bareName = toName.Substring(0, dash);
         var realmTag = toName.Substring(dash + 1);
-        // We don't yet resolve realmTag -> realmId from the realmlist DB
-        // here; that's the PR #6 follow-up. For now require the operator
-        // to have configured a peer cluster id matching the tag. If the
-        // peer is unreachable, signal "not found" to the sender.
-        if (!uint.TryParse(realmTag, out var peerClusterId))
-            return false;
+
+        uint peerClusterId = 0;
+        if (uint.TryParse(realmTag, out var asInt))
+        {
+            peerClusterId = asInt;
+        }
+        else
+        {
+            foreach (var info in _federation.PeerInfo.Values)
+            {
+                if (string.Equals(info.DisplayTag, realmTag, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    peerClusterId = info.ClusterId;
+                    break;
+                }
+            }
+        }
+        if (peerClusterId == 0) return false;
 
         try
         {

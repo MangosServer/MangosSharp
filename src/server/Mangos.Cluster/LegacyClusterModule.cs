@@ -32,6 +32,7 @@ using Mangos.Common.Globals;
 using Mangos.Configuration;
 using Mangos.DataStores;
 using Mangos.Logging;
+using Mangos.MySql.GetFederationPeers;
 using Mangos.Zip;
 
 namespace Mangos.Cluster;
@@ -85,27 +86,30 @@ public sealed class LegacyClusterModule : Module
         builder.Register(ctx =>
         {
             var supervisor = ctx.Resolve<WorldSupervisor>();
-            // Local realm id is best-effort for now; PR #5 wires the actual
-            // realmlist row through. Returning 0 means "this cluster".
-            return new ClusterAdminCommandHandler(supervisor, () => 0);
+            var cfg = ctx.Resolve<MangosConfiguration>();
+            return new ClusterAdminCommandHandler(
+                supervisor,
+                () => cfg.Federation?.LocalClusterId ?? 0u);
         }).As<IAdminCommandHandler>().SingleInstance();
 
         // Federation router. Created even when federation is disabled so
-        // gameplay code can resolve it unconditionally; the router falls back
-        // to "no peers" when GetOrOpenAsync sees no endpoint.
+        // gameplay code can resolve it unconditionally. Endpoint resolution
+        // pulls from the realmlist DB (clusterAdminEndpoint column) on a
+        // 60-second refresh; the lambda is a fallback for tests and for
+        // pre-DB-load lookups.
         builder.Register(ctx =>
         {
             var cfg = ctx.Resolve<MangosConfiguration>();
             var logger = ctx.Resolve<IMangosLogger>();
-            // Endpoint resolution stub: PR #6 follow-up wires the realmlist
-            // DB lookup through MySql.AccountConnection. For now peers must
-            // be in static config under FederationConfiguration.Peers and
-            // we read clusterAdminEndpoint from there too via a side table
-            // (omitted) - so this returns null until enabled.
+            var peersQuery = ctx.ResolveOptional<IGetFederationPeersQuery>();
             return new FederationRouter(
                 cfg.Federation ?? new FederationConfiguration(),
                 logger,
-                _ => null);
+                _ => null,
+                peersQuery);
         }).As<FederationRouter>().SingleInstance();
+
+        builder.RegisterType<FederatedGroupInviter>().AsSelf().SingleInstance();
+        builder.RegisterType<ShardRegistry>().AsSelf().SingleInstance();
     }
 }

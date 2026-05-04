@@ -111,6 +111,19 @@ await legacyWorldCluster.StartAsync();
 // Start the supervisor before any world IPC connection arrives so hello/goodbye are tracked.
 await supervisor.StartAsync();
 
+// Begin the federation peer-table refresh from the realmlist DB so
+// outbound dials know clusterId -> endpoint without needing static config.
+await federationRouter.StartAsync();
+
+// Wire the inbound group invite handler so peer clusters' invites pop
+// SMSG_GROUP_INVITE on the local recipient.
+container.Resolve<FederatedGroupInviter>().WireUp();
+
+// Phase B shard registry: tracks (mapId, shardKey) -> owning cluster +
+// relay endpoint as peers send claim/release envelopes. The world's
+// enter-zone path will consult this in a follow-up.
+container.Resolve<ShardRegistry>().WireUp(federationRouter);
+
 // Federation listener (cluster <-> cluster). Off by default; enable in
 // Federation.* config to allow peer admin commands and (PR #6) cross-realm
 // chat / groups. We hold the FederationServer alive for the lifetime of

@@ -72,6 +72,12 @@ public sealed class FederationLink : IDisposable
     /// <summary>Inbound presence query - is the named character online here? (PR #6).</summary>
     public Func<PresenceQueryEnvelope, PresenceReplyEnvelope>? OnPresenceQuery { get; set; }
 
+    /// <summary>Inbound Phase B shard claim from a leader cluster (foreign member's home receives this).</summary>
+    public Action<ShardClaimEnvelope>? OnShardClaim { get; set; }
+
+    /// <summary>Inbound Phase B shard release.</summary>
+    public Action<ShardReleaseEnvelope>? OnShardRelease { get; set; }
+
     /// <summary>Fired when the underlying connection drops.</summary>
     public event Action? Disconnected;
 
@@ -147,6 +153,14 @@ public sealed class FederationLink : IDisposable
         return PresenceReplyEnvelope.Deserialize(bytes);
     }
 
+    /// <summary>Phase B: claim a shard for a federated group.</summary>
+    public Task SendShardClaimAsync(ShardClaimEnvelope env)
+        => _connection.SendOneWayAsync((InteropMethodId)AdminMethodId.ShardClaim, env.Serialize());
+
+    /// <summary>Phase B: release a previously-claimed shard.</summary>
+    public Task SendShardReleaseAsync(ShardReleaseEnvelope env)
+        => _connection.SendOneWayAsync((InteropMethodId)AdminMethodId.ShardRelease, env.Serialize());
+
     private async Task<byte[]?> HandleAsync(InteropMethodId methodId, byte[] data)
     {
         var amid = (AdminMethodId)methodId;
@@ -212,6 +226,16 @@ public sealed class FederationLink : IDisposable
                     var reply = OnPresenceQuery(q);
                     return reply.Serialize();
                 }
+
+            case AdminMethodId.ShardClaim:
+                if (IsAuthenticated)
+                    OnShardClaim?.Invoke(ShardClaimEnvelope.Deserialize(data));
+                return null;
+
+            case AdminMethodId.ShardRelease:
+                if (IsAuthenticated)
+                    OnShardRelease?.Invoke(ShardReleaseEnvelope.Deserialize(data));
+                return null;
 
             default:
                 return null;

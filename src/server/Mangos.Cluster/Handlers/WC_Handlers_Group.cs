@@ -20,6 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
+using Mangos.Cluster.Admin.Protocol;
+using Mangos.Cluster.Federation;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Network;
 using Mangos.Common.Enums.Chat;
@@ -35,10 +37,70 @@ namespace Mangos.Cluster.Handlers;
 public class WcHandlersGroup
 {
     private readonly ClusterServiceLocator _clusterServiceLocator;
+    private readonly FederationRouter? _federation;
 
-    public WcHandlersGroup(ClusterServiceLocator clusterServiceLocator)
+    public WcHandlersGroup(ClusterServiceLocator clusterServiceLocator, FederationRouter? federation = null)
     {
         _clusterServiceLocator = clusterServiceLocator;
+        _federation = federation;
+    }
+
+    /// <summary>
+    /// Try to forward a "Name-RealmTag" group invite to a peer cluster.
+    /// Returns true if we shipped (or attempted to ship) the envelope, false
+    /// if the invitee name carries no realm suffix.
+    /// </summary>
+    private bool TryRouteFederatedInvite(ClientClass client, string toName)
+    {
+        if (_federation is null) return false;
+        var dash = toName.LastIndexOf('-');
+        if (dash <= 0 || dash == toName.Length - 1) return false;
+        var bareName = toName.Substring(0, dash);
+        var realmTag = toName.Substring(dash + 1);
+
+        uint peerClusterId = 0;
+        if (uint.TryParse(realmTag, out var asInt))
+        {
+            peerClusterId = asInt;
+        }
+        else
+        {
+            foreach (var info in _federation.PeerInfo.Values)
+            {
+                if (string.Equals(info.DisplayTag, realmTag, StringComparison.OrdinalIgnoreCase))
+                {
+                    peerClusterId = info.ClusterId;
+                    break;
+                }
+            }
+        }
+        if (peerClusterId == 0) return false;
+
+        try
+        {
+            var groupId = client.Character.IsInGroup ? client.Character.Group.Id : 0;
+            var env = new GroupInviteEnvelope
+            {
+                GroupId = groupId,
+                LeaderRealmId = 0, // peer infers from the link's RemoteClusterId
+                LeaderGuid = client.Character.Guid,
+                LeaderName = client.Character.Name,
+                LeaderRealmTag = string.Empty,
+                TargetName = bareName,
+                GroupType = 0,
+            };
+            _ = _federation.GetOrOpenAsync(peerClusterId)
+                .ContinueWith(async t =>
+                {
+                    var link = t.Result;
+                    if (link is not null) await link.SendGroupInviteAsync(env);
+                });
+        }
+        catch
+        {
+            // Best-effort.
+        }
+        return true;
     }
 
     // Used as counter for unique Group.ID
@@ -523,6 +585,12 @@ public class WcHandlersGroup
         // TODO: InBattlegrounds: INVITE_RESTRICTED
         if (guid == 0m)
         {
+            // Local miss: try cross-realm before failing.
+            if (TryRouteFederatedInvite(client, name))
+            {
+                SendPartyResult(client, name, PartyCommand.PARTY_OP_INVITE, PartyCommandResult.INVITE_OK);
+                return;
+            }
             errCode = PartyCommandResult.INVITE_NOT_FOUND;
         }
         else if (_clusterServiceLocator.WorldCluster.CharacteRs[guid].IsInWorld == false)
