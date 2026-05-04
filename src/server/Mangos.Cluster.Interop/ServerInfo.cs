@@ -18,13 +18,45 @@
 
 namespace Mangos.Cluster.Interop;
 
+/// <summary>
+/// Heartbeat payload reported by a world to its supervisor. Cheap to
+/// produce, summarises the world's current load so the cluster can place
+/// new instances/clients on the least-loaded eligible world.
+/// </summary>
 public class ServerInfo
 {
+    /// <summary>0.0-1.0 CPU usage, sampled over the last heartbeat interval.</summary>
     public float CpuUsage
     {
         get; set;
     }
+
+    /// <summary>Resident memory in bytes.</summary>
     public ulong MemoryUsage
+    {
+        get; set;
+    }
+
+    /// <summary>Total online clients on this world.</summary>
+    public int PlayerCount
+    {
+        get; set;
+    }
+
+    /// <summary>Active instances (continents + dungeons + raids + battlegrounds).</summary>
+    public int InstanceCount
+    {
+        get; set;
+    }
+
+    /// <summary>Battlegrounds currently hosted.</summary>
+    public int BattlegroundCount
+    {
+        get; set;
+    }
+
+    /// <summary>Milliseconds since this world process started.</summary>
+    public long UptimeMs
     {
         get; set;
     }

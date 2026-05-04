@@ -342,10 +342,20 @@ public partial class WS_Network
 
         public ServerInfo GetServerInfo()
         {
+            var ws = WorldServiceLocator.WorldServer;
+            var playerCount = ws.CLIENTs?.Count ?? 0;
+            var instanceCount = WorldServiceLocator.WSMaps?.Maps?.Count ?? 0;
+            var process = Process.GetCurrentProcess();
+            var uptimeMs = (long)(DateTime.UtcNow - process.StartTime.ToUniversalTime()).TotalMilliseconds;
+
             ServerInfo serverInfo = new()
             {
                 CpuUsage = UsageCPU,
-                MemoryUsage = checked((ulong)Math.Round(Process.GetCurrentProcess().WorkingSet64 / 1048576.0))
+                MemoryUsage = checked((ulong)Math.Round(process.WorkingSet64 / 1048576.0)),
+                PlayerCount = playerCount,
+                InstanceCount = instanceCount,
+                BattlegroundCount = 0, // populated when battleground tracking lands in PR #5
+                UptimeMs = uptimeMs
             };
             return serverInfo;
         }

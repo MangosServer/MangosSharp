@@ -23,10 +23,13 @@ using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Interop;
 using Mangos.Cluster.Network;
+using Mangos.Cluster.Supervision;
 using Mangos.Cluster.Verification;
 using Mangos.Common;
 using Mangos.Common.Globals;
+using Mangos.Configuration;
 using Mangos.DataStores;
+using Mangos.Logging;
 using Mangos.Zip;
 
 namespace Mangos.Cluster;
@@ -69,5 +72,12 @@ public sealed class LegacyClusterModule : Module
         builder.RegisterType<ClusterServiceLocator>().As<ClusterServiceLocator>()
             .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
             .SingleInstance();
+
+        builder.Register(ctx =>
+        {
+            var cfg = ctx.Resolve<MangosConfiguration>();
+            var logger = ctx.Resolve<IMangosLogger>();
+            return new WorldSupervisor(cfg.Supervisor ?? new SupervisorConfiguration(), logger);
+        }).As<WorldSupervisor>().SingleInstance();
     }
 }

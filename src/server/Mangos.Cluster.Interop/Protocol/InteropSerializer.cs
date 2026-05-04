@@ -66,6 +66,10 @@ public static class InteropSerializer
         using var bw = new BinaryWriter(ms);
         bw.Write(info.CpuUsage);
         bw.Write(info.MemoryUsage);
+        bw.Write(info.PlayerCount);
+        bw.Write(info.InstanceCount);
+        bw.Write(info.BattlegroundCount);
+        bw.Write(info.UptimeMs);
         return ms.ToArray();
     }
 
@@ -74,7 +78,11 @@ public static class InteropSerializer
         return new ServerInfo
         {
             CpuUsage = br.ReadSingle(),
-            MemoryUsage = br.ReadUInt64()
+            MemoryUsage = br.ReadUInt64(),
+            PlayerCount = br.ReadInt32(),
+            InstanceCount = br.ReadInt32(),
+            BattlegroundCount = br.ReadInt32(),
+            UptimeMs = br.ReadInt64()
         };
     }
 

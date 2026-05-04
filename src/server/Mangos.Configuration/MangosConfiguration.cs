@@ -36,4 +36,10 @@ public sealed class MangosConfiguration
     {
         get; init;
     }
+
+    /// <summary>Optional. Cluster-side supervisor for spawning/restarting world servers.</summary>
+    public SupervisorConfiguration? Supervisor
+    {
+        get; init;
+    }
 }

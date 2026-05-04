@@ -18,9 +18,11 @@
 
 using Autofac;
 using Mangos.Cluster;
+using Mangos.Cluster.Interop;
 using Mangos.Cluster.Interop.Dispatchers;
 using Mangos.Cluster.Interop.Protocol;
 using Mangos.Cluster.Network;
+using Mangos.Cluster.Supervision;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Configuration;
@@ -46,6 +48,7 @@ var logger = container.Resolve<IMangosLogger>();
 var tcpServer = container.Resolve<TcpServer>();
 var legacyWorldCluster = container.Resolve<LegacyWorldCluster>();
 var worldServerClass = container.Resolve<WorldServerClass>();
+var supervisor = container.Resolve<WorldSupervisor>();
 
 logger.Trace(@" __  __      _  _  ___  ___  ___               ");
 logger.Trace(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
@@ -98,6 +101,22 @@ using (var scope = container.BeginLifetimeScope())
 
 logger.Information("Starting legacy cluster server");
 await legacyWorldCluster.StartAsync();
+
+// Start the supervisor before any world IPC connection arrives so hello/goodbye are tracked.
+await supervisor.StartAsync();
+
+// Hook process exit so we drain managed worlds gracefully on Ctrl-C / SIGTERM.
+AppDomain.CurrentDomain.ProcessExit += async (_, _) =>
+{
+    try { await supervisor.DisposeAsync(); }
+    catch (Exception ex) { logger.Error($"Supervisor dispose failed: {ex.Message}"); }
+};
+Console.CancelKeyPress += (_, args) =>
+{
+    args.Cancel = true; // we handle it; don't kill abruptly
+    logger.Information("Ctrl-C received; draining...");
+    Environment.Exit(ExitCodes.Clean);
+};
 
 // Start IPC server for world server connections
 logger.Information($"Starting cluster IPC server on {configuration.Cluster.ClusterListenAddress}:{configuration.Cluster.ClusterListenPort}");

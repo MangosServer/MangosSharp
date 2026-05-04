@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Interop;
+using Mangos.Cluster.Supervision;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
@@ -31,13 +32,15 @@ namespace Mangos.Cluster.Network;
 public class WorldServerClass : ICluster
 {
     private readonly ClusterServiceLocator _clusterServiceLocator;
+    private readonly WorldSupervisor? _supervisor;
 
     public bool MFlagStopListen;
     private Timer _mTimerPing;
 
-    public WorldServerClass(ClusterServiceLocator clusterServiceLocator)
+    public WorldServerClass(ClusterServiceLocator clusterServiceLocator, WorldSupervisor? supervisor = null)
     {
         _clusterServiceLocator = clusterServiceLocator;
+        _supervisor = supervisor;
     }
 
     public void Start()
@@ -65,6 +68,8 @@ public class WorldServerClass : ICluster
                     WorldsInfo[map] = worldServerInfo;
                 }
             }
+            // Inform supervisor: the world identified by 'uri' is now running.
+            _supervisor?.OnWorldHello(uri, world, maps);
         }
         catch (Exception ex)
         {
@@ -122,6 +127,7 @@ public class WorldServerClass : ICluster
                 }
             }
         }
+        _supervisor?.OnWorldGoodbye(uri);
     }
 
     public void Ping(object state)
