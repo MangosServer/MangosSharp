@@ -119,6 +119,10 @@ await federationRouter.StartAsync();
 // SMSG_GROUP_INVITE on the local recipient.
 container.Resolve<FederatedGroupInviter>().WireUp();
 
+// Wire the inbound chat deliverer so peer-cluster ChatEnvelopes turn
+// into local SMSG_MESSAGECHAT with marker rendering.
+container.Resolve<FederatedChatDeliverer>().WireUp();
+
 // Phase B shard registry: tracks (mapId, shardKey) -> owning cluster +
 // relay endpoint as peers send claim/release envelopes. The world's
 // enter-zone path will consult this in a follow-up.

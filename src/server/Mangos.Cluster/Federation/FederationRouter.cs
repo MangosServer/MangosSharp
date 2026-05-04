@@ -79,6 +79,9 @@ public sealed class FederationRouter : IDisposable
     /// <summary>Snapshot of all peers discovered from the realmlist table.</summary>
     public IReadOnlyDictionary<uint, FederationPeerInfo> PeerInfo => _peerInfo;
 
+    /// <summary>Active outbound links keyed by remote cluster id.</summary>
+    public IReadOnlyDictionary<uint, FederationLink> Peers => _outbound;
+
     /// <summary>Optional callbacks on inbound envelopes; bound by gameplay code.</summary>
     public Action<ChatEnvelope>? OnChat { get; set; }
     public Action<GroupInviteEnvelope>? OnGroupInvite { get; set; }
@@ -101,15 +104,48 @@ public sealed class FederationRouter : IDisposable
     }
 
     /// <summary>
-    /// Start the periodic peer-table refresh from the realmlist DB.
-    /// Safe to call once at cluster startup; no-op if no DB query is bound.
+    /// Start the periodic peer-table refresh from the realmlist DB plus the
+    /// auto-dial / heartbeat maintenance loop. Safe to call once at cluster
+    /// startup. The refresh side is a no-op when no DB query is bound.
     /// </summary>
     public Task StartAsync()
     {
-        if (_peersQuery is null) return Task.CompletedTask;
         _refreshCts = new CancellationTokenSource();
-        _refreshLoop = Task.Run(() => RefreshLoopAsync(_refreshCts.Token));
+        if (_peersQuery is not null)
+            _refreshLoop = Task.Run(() => RefreshLoopAsync(_refreshCts.Token));
+        _ = Task.Run(() => MaintainLinksAsync(_refreshCts.Token));
         return Task.CompletedTask;
+    }
+
+    private async Task MaintainLinksAsync(CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
+        {
+            // For each known peer, ensure we have an outbound link and
+            // heartbeat the live ones. Failures here drop the link so the
+            // next iteration redials.
+            foreach (var info in _peerInfo.Values)
+            {
+                if (ct.IsCancellationRequested) return;
+                if (info.ClusterId == _cfg.LocalClusterId) continue;
+                try
+                {
+                    var link = await GetOrOpenAsync(info.ClusterId);
+                    if (link is null) continue;
+                    await link.HeartbeatAsync().WaitAsync(TimeSpan.FromSeconds(10), ct);
+                }
+                catch
+                {
+                    if (_outbound.TryRemove(info.ClusterId, out var bad))
+                    {
+                        try { bad.Dispose(); } catch { }
+                        _logger.Warning($"Federation: heartbeat to peer {info.ClusterId} failed; link dropped");
+                    }
+                }
+            }
+            try { await Task.Delay(TimeSpan.FromSeconds(15), ct); }
+            catch (OperationCanceledException) { return; }
+        }
     }
 
     private async Task RefreshLoopAsync(CancellationToken ct)

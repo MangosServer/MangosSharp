@@ -16,11 +16,13 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Collections.Concurrent;
 using System.Linq;
 using Mangos.Cluster.Admin.Protocol;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Common.Enums.Global;
+using Mangos.Common.Globals;
 using Mangos.Logging;
 
 namespace Mangos.Cluster.Federation;
@@ -40,6 +42,11 @@ public sealed class FederatedGroupInviter
     private readonly FederationRouter _router;
     private readonly IMangosLogger _logger;
 
+    // Pending invites awaiting accept/decline from local players.
+    // Keyed by recipient character guid; value carries enough context to
+    // emit a GroupInviteResponseEnvelope back to the leader's cluster.
+    private readonly ConcurrentDictionary<ulong, PendingInvite> _pending = new();
+
     public FederatedGroupInviter(
         ClusterServiceLocator serviceLocator,
         FederationRouter router,
@@ -48,6 +55,13 @@ public sealed class FederatedGroupInviter
         _serviceLocator = serviceLocator;
         _router = router;
         _logger = logger;
+    }
+
+    private sealed class PendingInvite
+    {
+        public required long GroupId { get; init; }
+        public required uint LeaderRealmId { get; init; }
+        public required string TargetName { get; init; }
     }
 
     /// <summary>Bind onto the router so inbound peer invites pop the popup locally.</summary>
@@ -93,11 +107,13 @@ public sealed class FederatedGroupInviter
             target.Client.Send(invite);
             invite.Dispose();
             _logger.Information($"Federation: delivered group invite from {env.LeaderName}@{env.LeaderRealmId} to {env.TargetName}");
-            // Acknowledge delivery; the leader's cluster will see Accepted/
-            // Declined later when the invitee clicks - that flow is handled
-            // by the existing CMSG_GROUP_ACCEPT path with the federated bit
-            // bookkeeping coming in a follow-up.
-            ReplyAsync(env, GroupInviteResponse.Accepted, target.Guid, target.Name);
+            // Stash so On_CMSG_GROUP_ACCEPT/DECLINE can fire the response.
+            _pending[target.Guid] = new PendingInvite
+            {
+                GroupId = env.GroupId,
+                LeaderRealmId = env.LeaderRealmId,
+                TargetName = target.Name,
+            };
         }
         catch
         {
@@ -105,20 +121,40 @@ public sealed class FederatedGroupInviter
         }
     }
 
-    private async void ReplyAsync(
-        GroupInviteEnvelope env,
-        GroupInviteResponse decision,
-        ulong targetGuid,
-        string targetName)
+    /// <summary>
+    /// Called from the cluster's CMSG_GROUP_ACCEPT handler when the local
+    /// recipient clicks Accept. Returns true if the invite was federated
+    /// (and the response has been queued); false if it was a local invite
+    /// and should fall through to the standard path.
+    /// </summary>
+    public bool TryHandleAccept(ulong recipientGuid)
+    {
+        if (!_pending.TryRemove(recipientGuid, out var p)) return false;
+        ReplyAsync(p.GroupId, p.LeaderRealmId, GroupInviteResponse.Accepted, recipientGuid, p.TargetName);
+        return true;
+    }
+
+    /// <summary>Counterpart to TryHandleAccept for declines.</summary>
+    public bool TryHandleDecline(ulong recipientGuid)
+    {
+        if (!_pending.TryRemove(recipientGuid, out var p)) return false;
+        ReplyAsync(p.GroupId, p.LeaderRealmId, GroupInviteResponse.Declined, recipientGuid, p.TargetName);
+        return true;
+    }
+
+    private void ReplyAsync(GroupInviteEnvelope env, GroupInviteResponse decision, ulong targetGuid, string targetName)
+        => ReplyAsync(env.GroupId, env.LeaderRealmId, decision, targetGuid, targetName);
+
+    private async void ReplyAsync(long groupId, uint leaderRealmId, GroupInviteResponse decision, ulong targetGuid, string targetName)
     {
         try
         {
-            var link = await _router.GetOrOpenAsync(env.LeaderRealmId);
+            var link = await _router.GetOrOpenAsync(leaderRealmId);
             if (link is null) return;
             await link.SendGroupInviteResponseAsync(new GroupInviteResponseEnvelope
             {
-                GroupId = env.GroupId,
-                TargetRealmId = 0, // local cluster's realm id is implicit
+                GroupId = groupId,
+                TargetRealmId = 0,
                 TargetGuid = targetGuid,
                 TargetName = targetName,
                 Decision = decision,
@@ -126,7 +162,8 @@ public sealed class FederatedGroupInviter
         }
         catch
         {
-            // Best effort; the leader will time the invite out.
+            // Best effort.
         }
     }
+
 }

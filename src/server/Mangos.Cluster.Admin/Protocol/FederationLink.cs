@@ -153,6 +153,10 @@ public sealed class FederationLink : IDisposable
         return PresenceReplyEnvelope.Deserialize(bytes);
     }
 
+    /// <summary>Liveness check; peer responds with an empty body.</summary>
+    public Task<byte[]> HeartbeatAsync(int timeoutMs = 5000)
+        => _connection.SendRequestAsync((InteropMethodId)AdminMethodId.PeerHeartbeat, Array.Empty<byte>(), timeoutMs);
+
     /// <summary>Phase B: claim a shard for a federated group.</summary>
     public Task SendShardClaimAsync(ShardClaimEnvelope env)
         => _connection.SendOneWayAsync((InteropMethodId)AdminMethodId.ShardClaim, env.Serialize());

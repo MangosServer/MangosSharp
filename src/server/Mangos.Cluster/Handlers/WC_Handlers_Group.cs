@@ -38,11 +38,16 @@ public class WcHandlersGroup
 {
     private readonly ClusterServiceLocator _clusterServiceLocator;
     private readonly FederationRouter? _federation;
+    private readonly FederatedGroupInviter? _inviter;
 
-    public WcHandlersGroup(ClusterServiceLocator clusterServiceLocator, FederationRouter? federation = null)
+    public WcHandlersGroup(
+        ClusterServiceLocator clusterServiceLocator,
+        FederationRouter? federation = null,
+        FederatedGroupInviter? inviter = null)
     {
         _clusterServiceLocator = clusterServiceLocator;
         _federation = federation;
+        _inviter = inviter;
     }
 
     /// <summary>
@@ -654,6 +659,15 @@ public class WcHandlersGroup
     public void On_CMSG_GROUP_ACCEPT(PacketClass packet, ClientClass client)
     {
         _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_ACCEPT", client.IP, client.Port);
+
+        // Federated invite? Reply across the bus and stop; the local
+        // group object isn't valid because the leader lives elsewhere.
+        if (_inviter is not null && client.Character is not null
+            && _inviter.TryHandleAccept(client.Character.Guid))
+        {
+            return;
+        }
+
         if (client.Character.GroupInvitedFlag && !client.Character.Group.IsFull)
         {
             client.Character.Group.Join(client.Character);
@@ -670,6 +684,14 @@ public class WcHandlersGroup
     public void On_CMSG_GROUP_DECLINE(PacketClass packet, ClientClass client)
     {
         _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_GROUP_DECLINE", client.IP, client.Port);
+
+        // Federated invite? Reply across the bus and stop.
+        if (_inviter is not null && client.Character is not null
+            && _inviter.TryHandleDecline(client.Character.Guid))
+        {
+            return;
+        }
+
         if (client.Character.GroupInvitedFlag)
         {
             PacketClass response = new(Opcodes.SMSG_GROUP_DECLINE);

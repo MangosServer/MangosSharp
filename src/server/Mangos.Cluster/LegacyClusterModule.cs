@@ -87,9 +87,13 @@ public sealed class LegacyClusterModule : Module
         {
             var supervisor = ctx.Resolve<WorldSupervisor>();
             var cfg = ctx.Resolve<MangosConfiguration>();
+            var federation = ctx.ResolveOptional<FederationRouter>();
+            var shards = ctx.ResolveOptional<ShardRegistry>();
             return new ClusterAdminCommandHandler(
                 supervisor,
-                () => cfg.Federation?.LocalClusterId ?? 0u);
+                () => cfg.Federation?.LocalClusterId ?? 0u,
+                federation,
+                shards);
         }).As<IAdminCommandHandler>().SingleInstance();
 
         // Federation router. Created even when federation is disabled so
@@ -110,6 +114,7 @@ public sealed class LegacyClusterModule : Module
         }).As<FederationRouter>().SingleInstance();
 
         builder.RegisterType<FederatedGroupInviter>().AsSelf().SingleInstance();
+        builder.RegisterType<FederatedChatDeliverer>().AsSelf().SingleInstance();
         builder.RegisterType<ShardRegistry>().AsSelf().SingleInstance();
     }
 }
