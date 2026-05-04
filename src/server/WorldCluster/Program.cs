@@ -18,6 +18,9 @@
 
 using Autofac;
 using Mangos.Cluster;
+using Mangos.Cluster.Admin.Auth;
+using Mangos.Cluster.Admin.Commands;
+using Mangos.Cluster.Admin.Protocol;
 using Mangos.Cluster.Interop;
 using Mangos.Cluster.Interop.Dispatchers;
 using Mangos.Cluster.Interop.Protocol;
@@ -49,6 +52,7 @@ var tcpServer = container.Resolve<TcpServer>();
 var legacyWorldCluster = container.Resolve<LegacyWorldCluster>();
 var worldServerClass = container.Resolve<WorldServerClass>();
 var supervisor = container.Resolve<WorldSupervisor>();
+var adminHandler = container.Resolve<IAdminCommandHandler>();
 
 logger.Trace(@" __  __      _  _  ___  ___  ___               ");
 logger.Trace(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
@@ -105,6 +109,30 @@ await legacyWorldCluster.StartAsync();
 // Start the supervisor before any world IPC connection arrives so hello/goodbye are tracked.
 await supervisor.StartAsync();
 
+// Federation listener (cluster <-> cluster). Off by default; enable in
+// Federation.* config to allow peer admin commands and (PR #6) cross-realm
+// chat / groups. We hold the FederationServer alive for the lifetime of
+// the process via a top-level using; ProcessExit drains it.
+FederationServer? federation = null;
+if (configuration.Federation is { Enabled: true } fedCfg)
+{
+    var secrets = fedCfg.Peers.ToDictionary(p => p.ClusterId, p => PeerAuth.SecretFromString(p.Secret));
+    federation = new FederationServer(
+        fedCfg.LocalClusterId,
+        fedCfg.LocalDisplayTag,
+        peerId => secrets.TryGetValue(peerId, out var s) ? s : null)
+    {
+        AdminHandler = adminHandler,
+    };
+    await federation.StartAsync(fedCfg.ListenAddress, fedCfg.ListenPort);
+    logger.Information($"Federation listener up on {fedCfg.ListenAddress}:{fedCfg.ListenPort} (cluster id {fedCfg.LocalClusterId})");
+}
+else
+{
+    logger.Information("Federation disabled");
+}
+AppDomain.CurrentDomain.ProcessExit += (_, _) => federation?.Dispose();
+
 // Hook process exit so we drain managed worlds gracefully on Ctrl-C / SIGTERM.
 AppDomain.CurrentDomain.ProcessExit += async (_, _) =>
 {
@@ -152,6 +180,12 @@ _ = Task.Run(async () =>
         logger.Error($"IPC server error: {ex.Message}");
     }
 });
+
+// Console REPL for operator commands. Runs in the background so the
+// cluster's own logs aren't drowned out; same command syntax as in-game
+// GM chat and the external CLI.
+var repl = new ConsoleAdminRepl(adminHandler);
+_ = repl.RunAsync();
 
 logger.Information("Starting cluster TCP server for game clients");
 await tcpServer.RunAsync(configuration.Cluster.ClusterServerEndpoint);

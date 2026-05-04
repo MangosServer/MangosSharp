@@ -10,6 +10,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\Mangos.Cluster.Admin\Mangos.Cluster.Admin.csproj" />
     <ProjectReference Include="..\Mangos.Cluster.Interop\Mangos.Cluster.Interop.csproj" />
     <ProjectReference Include="..\Mangos.Common\Mangos.Common.csproj" />
     <ProjectReference Include="..\Mangos.Configuration\Mangos.Configuration.csproj" />

@@ -12,6 +12,15 @@
     "CharacterDatabase": "root;rootpass;mysql;3306;mangosVBcharacters;MySQL",
     "WorldDatabase": "root;rootpass;mysql;3306;mangosVBworld;MySQL"
   },
+  "Federation": {
+    "Enabled": false,
+    "LocalClusterId": 1,
+    "LocalDisplayTag": "MS",
+    "ListenAddress": "0.0.0.0",
+    "ListenPort": 50101,
+    "MarkerMode": "ClientPreference",
+    "Peers": []
+  },
   "Supervisor": {
     "Enabled": false,
     "HeartbeatIntervalMs": 5000,

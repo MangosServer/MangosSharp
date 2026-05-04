@@ -12,6 +12,24 @@
     "CharacterDatabase": "root;rootpass;mysql;3306;mangosVBcharacters;MySQL",
     "WorldDatabase": "root;rootpass;mysql;3306;mangosVBworld;MySQL"
   },
+  "Federation": {
+    "Enabled": false,
+    "LocalClusterId": 1,
+    "LocalDisplayTag": "MS",
+    "ListenAddress": "0.0.0.0",
+    "ListenPort": 50101,
+    "MarkerMode": "ClientPreference",
+    "Peers": []
+  },
+  "Supervisor": {
+    "Enabled": false,
+    "HeartbeatIntervalMs": 5000,
+    "StaleAfterMissed": 3,
+    "DeadAfterMissed": 5,
+    "RespawnBackoffStepMs": 2000,
+    "RespawnBackoffMaxMs": 60000,
+    "Worlds": []
+  },
   "World": {
     "ClusterConnectHost": "cluster",
     "ClusterConnectPort": 50001,

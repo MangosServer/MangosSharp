@@ -42,4 +42,10 @@ public sealed class MangosConfiguration
     {
         get; init;
     }
+
+    /// <summary>Optional. Cluster &lt;-&gt; cluster federation (admin, cross-realm chat/groups).</summary>
+    public FederationConfiguration? Federation
+    {
+        get; init;
+    }
 }

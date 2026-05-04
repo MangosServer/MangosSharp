@@ -17,6 +17,7 @@
 //
 
 using Autofac;
+using Mangos.Cluster.Admin.Commands;
 using Mangos.Cluster.DataStores;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
@@ -79,5 +80,13 @@ public sealed class LegacyClusterModule : Module
             var logger = ctx.Resolve<IMangosLogger>();
             return new WorldSupervisor(cfg.Supervisor ?? new SupervisorConfiguration(), logger);
         }).As<WorldSupervisor>().SingleInstance();
+
+        builder.Register(ctx =>
+        {
+            var supervisor = ctx.Resolve<WorldSupervisor>();
+            // Local realm id is best-effort for now; PR #5 wires the actual
+            // realmlist row through. Returning 0 means "this cluster".
+            return new ClusterAdminCommandHandler(supervisor, () => 0);
+        }).As<IAdminCommandHandler>().SingleInstance();
     }
 }
