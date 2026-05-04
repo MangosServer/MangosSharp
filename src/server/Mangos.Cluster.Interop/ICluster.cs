@@ -86,4 +86,7 @@ public interface ICluster
 
     [Description("Control: a battlefield has finished.")]
     void BattlefieldFinish(int battlefieldId);
+
+    [Description("Control: run an admin command on the cluster (or route to a peer); returns serialized AdminCommandReply.")]
+    byte[] RunAdminCommand(byte[] commandBytes);
 }

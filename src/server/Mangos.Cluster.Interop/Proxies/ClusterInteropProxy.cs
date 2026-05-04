@@ -212,4 +212,14 @@ public sealed class ClusterInteropProxy : ICluster
 
         _connection.SendOneWayAsync(InteropMethodId.ControlBattlefieldFinish, ms.ToArray()).GetAwaiter().GetResult();
     }
+
+    public byte[] RunAdminCommand(byte[] commandBytes)
+    {
+        var response = _connection.SendRequestAsync(
+            InteropMethodId.ControlRunAdminCommand,
+            InteropSerializer.WriteByteArray(commandBytes)).GetAwaiter().GetResult();
+        using var rms = new MemoryStream(response);
+        using var br = new BinaryReader(rms);
+        return InteropSerializer.ReadByteArray(br);
+    }
 }

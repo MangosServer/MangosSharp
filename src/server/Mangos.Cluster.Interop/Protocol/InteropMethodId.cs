@@ -92,6 +92,9 @@ public enum InteropMethodId : ushort
     ControlBattlefieldJoin = 0x023D,
     ControlBattlefieldLeave = 0x023E,
 
+    // World -> cluster (admin)
+    ControlRunAdminCommand = 0x0240,
+
     // ----- Framing -----------------------------------------------------
     Response = 0xFFFF,
 }

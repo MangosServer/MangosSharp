@@ -185,6 +185,13 @@ public sealed class ClusterInteropDispatcher
                     return null;
                 }
 
+            case InteropMethodId.ControlRunAdminCommand:
+                {
+                    var cmdBytes = InteropSerializer.ReadByteArray(br);
+                    var reply = _cluster.RunAdminCommand(cmdBytes);
+                    return InteropSerializer.WriteByteArray(reply);
+                }
+
             default:
                 return null;
         }

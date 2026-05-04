@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Mangos.Cluster.Admin.Commands;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Interop;
 using Mangos.Cluster.Supervision;
@@ -33,14 +34,19 @@ public class WorldServerClass : ICluster
 {
     private readonly ClusterServiceLocator _clusterServiceLocator;
     private readonly WorldSupervisor? _supervisor;
+    private readonly IAdminCommandHandler? _adminHandler;
 
     public bool MFlagStopListen;
     private Timer _mTimerPing;
 
-    public WorldServerClass(ClusterServiceLocator clusterServiceLocator, WorldSupervisor? supervisor = null)
+    public WorldServerClass(
+        ClusterServiceLocator clusterServiceLocator,
+        WorldSupervisor? supervisor = null,
+        IAdminCommandHandler? adminHandler = null)
     {
         _clusterServiceLocator = clusterServiceLocator;
         _supervisor = supervisor;
+        _adminHandler = adminHandler;
     }
 
     public void Start()
@@ -427,6 +433,33 @@ public class WorldServerClass : ICluster
     public void BattlefieldFinish(int battlefieldId)
     {
         _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "[B{0:0000}] Battlefield finished", battlefieldId);
+    }
+
+    public byte[] RunAdminCommand(byte[] commandBytes)
+    {
+        if (_adminHandler is null)
+        {
+            return new AdminCommandReply
+            {
+                Status = AdminReplyStatus.Failed,
+                Lines = { "admin handler not available on this cluster" },
+            }.Serialize();
+        }
+        try
+        {
+            var cmd = AdminCommand.Deserialize(commandBytes);
+            // TODO PR #4 follow-up: TargetRealmId routing to a peer cluster.
+            var reply = _adminHandler.ExecuteAsync(cmd).GetAwaiter().GetResult();
+            return reply.Serialize();
+        }
+        catch (Exception ex)
+        {
+            return new AdminCommandReply
+            {
+                Status = AdminReplyStatus.Failed,
+                Lines = { $"admin error: {ex.Message}" },
+            }.Serialize();
+        }
     }
 
     public void GroupRequestUpdate(uint id)
