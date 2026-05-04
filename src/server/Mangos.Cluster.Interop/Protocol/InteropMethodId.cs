@@ -19,52 +19,79 @@
 namespace Mangos.Cluster.Interop.Protocol;
 
 /// <summary>
-/// Method IDs for binary RPC calls between cluster and world servers.
-/// ICluster methods (called by World → Cluster) use range 0x0001-0x00FF.
-/// IWorld methods (called by Cluster → World) use range 0x0101-0x01FF.
+/// Wire-level method identifiers for the cluster <-> world interop link.
+///
+/// The protocol is organized into three buckets so the cluster can act
+/// as a packet proxy rather than a 30+ method RPC server:
+///
+/// 1. Client relay (0x0200-0x020F): per-client lifecycle and the WoW
+///    packet stream. This is the hot path - the vast majority of traffic.
+///    Cluster receives, decrypts, then forwards inbound packets to the
+///    world that owns that client. Outbound packets travel the same way
+///    in reverse.
+///
+/// 2. Cluster directives (0x0210-0x021F): fire-and-forget instructions
+///    from a world to the cluster ("send this to that client", "drop
+///    this client", "broadcast this to a group"). The world never
+///    learns about clients beyond the ids the cluster gave it.
+///
+/// 3. Control RPC (0x0220-0x023F): request/response control plane for
+///    things that cannot be fire-and-forget: registration, instance
+///    spawning, character creation, party stats. Bidirectional - both
+///    sides can originate calls.
+///
+/// 0xFFFF is reserved for the framing layer to mark response frames.
+///
+/// The 0x02xx range deliberately leaves room above (0x0300+) for the
+/// federation channel introduced in PR #4 (cluster <-> cluster).
 /// </summary>
 public enum InteropMethodId : ushort
 {
-    // ICluster methods (World → Cluster)
-    ClusterConnect = 0x0001,
-    ClusterDisconnect = 0x0002,
-    ClusterClientSend = 0x0003,
-    ClusterClientDrop = 0x0004,
-    ClusterClientTransfer = 0x0005,
-    ClusterClientUpdate = 0x0006,
-    ClusterClientSetChatFlag = 0x0007,
-    ClusterClientGetCryptKey = 0x0008,
-    ClusterBattlefieldList = 0x0009,
-    ClusterBattlefieldFinish = 0x000A,
-    ClusterBroadcast = 0x000B,
-    ClusterBroadcastGroup = 0x000C,
-    ClusterBroadcastRaid = 0x000D,
-    ClusterBroadcastGuild = 0x000E,
-    ClusterBroadcastGuildOfficers = 0x000F,
-    ClusterGroupRequestUpdate = 0x0010,
+    // ----- Client relay (cluster <-> world) ----------------------------
+    ClientAttach = 0x0200,
+    ClientDetach = 0x0201,
+    ClientLogin = 0x0202,
+    ClientLogout = 0x0203,
+    PacketIn = 0x0204,   // cluster -> world (decrypted client packet)
+    PacketOut = 0x0205,  // world -> cluster (packet to send to client)
 
-    // IWorld methods (Cluster → World)
-    WorldClientConnect = 0x0101,
-    WorldClientDisconnect = 0x0102,
-    WorldClientLogin = 0x0103,
-    WorldClientLogout = 0x0104,
-    WorldClientPacket = 0x0105,
-    WorldClientCreateCharacter = 0x0106,
-    WorldPing = 0x0107,
-    WorldGetServerInfo = 0x0108,
-    WorldInstanceCreateAsync = 0x0109,
-    WorldInstanceDestroy = 0x010A,
-    WorldInstanceCanCreate = 0x010B,
-    WorldClientSetGroup = 0x010C,
-    WorldGroupUpdate = 0x010D,
-    WorldGroupUpdateLoot = 0x010E,
-    WorldGroupMemberStats = 0x010F,
-    WorldGuildUpdate = 0x0110,
-    WorldBattlefieldCreate = 0x0111,
-    WorldBattlefieldDelete = 0x0112,
-    WorldBattlefieldJoin = 0x0113,
-    WorldBattlefieldLeave = 0x0114,
+    // ----- Cluster directives (world -> cluster) -----------------------
+    DirectiveDropClient = 0x0210,
+    DirectiveTransferClient = 0x0211,
+    DirectiveUpdateClient = 0x0212,
+    DirectiveSetClientChatFlag = 0x0213,
+    DirectiveBroadcast = 0x0214,
+    DirectiveBroadcastGroup = 0x0215,
+    DirectiveBroadcastRaid = 0x0216,
+    DirectiveBroadcastGuild = 0x0217,
+    DirectiveBroadcastGuildOfficers = 0x0218,
+    DirectiveGroupRequestUpdate = 0x0219,
 
-    // Protocol-level
+    // ----- Control RPC (bidirectional) ---------------------------------
+    // World -> cluster
+    ControlWorldHello = 0x0220,
+    ControlWorldGoodbye = 0x0221,
+    ControlGetCryptKey = 0x0222,
+    ControlBattlefieldList = 0x0223,
+    ControlBattlefieldFinish = 0x0224,
+
+    // Cluster -> world
+    ControlPing = 0x0230,
+    ControlGetServerInfo = 0x0231,
+    ControlInstanceCreate = 0x0232,
+    ControlInstanceDestroy = 0x0233,
+    ControlInstanceCanCreate = 0x0234,
+    ControlClientCreateCharacter = 0x0235,
+    ControlClientSetGroup = 0x0236,
+    ControlGroupUpdate = 0x0237,
+    ControlGroupUpdateLoot = 0x0238,
+    ControlGroupMemberStats = 0x0239,
+    ControlGuildUpdate = 0x023A,
+    ControlBattlefieldCreate = 0x023B,
+    ControlBattlefieldDelete = 0x023C,
+    ControlBattlefieldJoin = 0x023D,
+    ControlBattlefieldLeave = 0x023E,
+
+    // ----- Framing -----------------------------------------------------
     Response = 0xFFFF,
 }

@@ -21,51 +21,69 @@ using System.ComponentModel;
 
 namespace Mangos.Cluster.Interop;
 
+/// <summary>
+/// Surface a world server uses to talk to its cluster.
+///
+/// On the wire (see <see cref="Protocol.InteropMethodId"/>) the calls are
+/// grouped into three buckets. Methods are listed below in the same order:
+///
+///   1. Relay (PacketOut): hot-path packet flow back to a client.
+///   2. Directives: fire-and-forget actions the cluster performs on
+///      behalf of a world (drops, transfers, broadcasts, group fanout).
+///   3. Control RPC: registration and request/response queries.
+///
+/// Methods keep their historical names so existing call sites stay stable.
+/// </summary>
 public interface ICluster
 {
-    [Description("Signal realm server for new world server.")]
-    bool Connect(string uri, List<uint> maps, IWorld world);
-
-    [Description("Signal realm server for disconected world server.")]
-    void Disconnect(string uri, List<uint> maps);
-
-    [Description("Send data packet to client.")]
+    // ---- 1. Relay ----------------------------------------------------------
+    [Description("Relay: send a packet to a specific client.")]
     void ClientSend(uint id, byte[] data);
 
-    [Description("Notify client drop.")]
+    // ---- 2. Directives (fire-and-forget) ----------------------------------
+    [Description("Directive: drop the named client's connection.")]
     void ClientDrop(uint id);
 
-    [Description("Notify client transfer.")]
+    [Description("Directive: notify a client transfer.")]
     void ClientTransfer(uint id, float posX, float posY, float posZ, float ori, uint map);
 
-    [Description("Notify client update.")]
+    [Description("Directive: client zone/level update.")]
     void ClientUpdate(uint id, uint zone, byte level);
 
-    [Description("Set client chat flag.")]
+    [Description("Directive: set a client's chat flag.")]
     void ClientSetChatFlag(uint id, byte flag);
 
-    [Description("Get client crypt key.")]
-    byte[] ClientGetCryptKey(uint id);
-
-    List<int> BattlefieldList(byte type);
-
-    void BattlefieldFinish(int battlefieldId);
-
-    [Description("Send data packet to all clients online.")]
+    [Description("Directive: send a packet to all online clients.")]
     void Broadcast(byte[] data);
 
-    [Description("Send data packet to all clients in specified client's group.")]
+    [Description("Directive: send a packet to all clients in a group.")]
     void BroadcastGroup(long groupId, byte[] data);
 
-    [Description("Send data packet to all clients in specified client's raid.")]
+    [Description("Directive: send a packet to all clients in a raid.")]
     void BroadcastRaid(long groupId, byte[] data);
 
-    [Description("Send data packet to all clients in specified client's guild.")]
+    [Description("Directive: send a packet to all online members of a guild.")]
     void BroadcastGuild(long guildId, byte[] data);
 
-    [Description("Send data packet to all clients in specified client's guild officers.")]
+    [Description("Directive: send a packet to all online officers of a guild.")]
     void BroadcastGuildOfficers(long guildId, byte[] data);
 
-    [Description("Send update for the requested group.")]
+    [Description("Directive: ask the cluster to push a fresh group payload to a client.")]
     void GroupRequestUpdate(uint id);
+
+    // ---- 3. Control RPC (request/response) --------------------------------
+    [Description("Control: register this world's claim on the given maps.")]
+    bool Connect(string uri, List<uint> maps, IWorld world);
+
+    [Description("Control: deregister this world's claim on the given maps.")]
+    void Disconnect(string uri, List<uint> maps);
+
+    [Description("Control: read the current crypt key for a client.")]
+    byte[] ClientGetCryptKey(uint id);
+
+    [Description("Control: list active battlefield ids of the given type.")]
+    List<int> BattlefieldList(byte type);
+
+    [Description("Control: a battlefield has finished.")]
+    void BattlefieldFinish(int battlefieldId);
 }

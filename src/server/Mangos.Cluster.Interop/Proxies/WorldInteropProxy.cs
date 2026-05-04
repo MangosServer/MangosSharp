@@ -21,8 +21,13 @@ using Mangos.Cluster.Interop.Protocol;
 namespace Mangos.Cluster.Interop.Proxies;
 
 /// <summary>
-/// IWorld proxy that serializes method calls over TCP to a world server.
-/// Used by the cluster to communicate with remote world server processes.
+/// Cluster-side stub of IWorld: each method serializes its arguments into
+/// the appropriate envelope and ships it down the IPC connection to the
+/// world server process.
+///
+/// Layout matches <see cref="InteropMethodId"/>: relay (attach/detach/login/
+/// logout/PacketIn) and control RPC (ping, server info, instance lifecycle,
+/// character creation, group/guild/battlefield orchestration).
 /// </summary>
 public sealed class WorldInteropProxy : IWorld
 {
@@ -33,6 +38,7 @@ public sealed class WorldInteropProxy : IWorld
         _connection = connection;
     }
 
+    // ---- 1. Relay --------------------------------------------------------
     public void ClientConnect(uint id, ClientInfo client)
     {
         using var ms = new MemoryStream();
@@ -45,7 +51,7 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write((byte)client.Access);
         bw.Write((byte)client.Expansion);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldClientConnect, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ClientAttach, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void ClientDisconnect(uint id)
@@ -54,7 +60,7 @@ public sealed class WorldInteropProxy : IWorld
         using var bw = new BinaryWriter(ms);
         bw.Write(id);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldClientDisconnect, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ClientDetach, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void ClientLogin(uint id, ulong guid)
@@ -64,7 +70,7 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write(id);
         bw.Write(guid);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldClientLogin, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ClientLogin, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void ClientLogout(uint id)
@@ -73,7 +79,7 @@ public sealed class WorldInteropProxy : IWorld
         using var bw = new BinaryWriter(ms);
         bw.Write(id);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldClientLogout, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ClientLogout, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void ClientPacket(uint id, byte[] data)
@@ -84,7 +90,61 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write(data.Length);
         bw.Write(data);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldClientPacket, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.PacketIn, ms.ToArray()).GetAwaiter().GetResult();
+    }
+
+    // ---- 2. Control RPC --------------------------------------------------
+    public int Ping(int timestamp, int latency)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(timestamp);
+        bw.Write(latency);
+
+        var response = _connection.SendRequestAsync(InteropMethodId.ControlPing, ms.ToArray()).GetAwaiter().GetResult();
+        if (response.Length >= 4)
+        {
+            using var rms = new MemoryStream(response);
+            using var br = new BinaryReader(rms);
+            return br.ReadInt32();
+        }
+        return 0;
+    }
+
+    public ServerInfo GetServerInfo()
+    {
+        var response = _connection.SendRequestAsync(InteropMethodId.ControlGetServerInfo, Array.Empty<byte>()).GetAwaiter().GetResult();
+        using var ms = new MemoryStream(response);
+        using var br = new BinaryReader(ms);
+        return InteropSerializer.ReadServerInfo(br);
+    }
+
+    public async Task InstanceCreateAsync(uint Map)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(Map);
+
+        await _connection.SendRequestAsync(InteropMethodId.ControlInstanceCreate, ms.ToArray());
+    }
+
+    public void InstanceDestroy(uint Map)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(Map);
+
+        _connection.SendOneWayAsync(InteropMethodId.ControlInstanceDestroy, ms.ToArray()).GetAwaiter().GetResult();
+    }
+
+    public bool InstanceCanCreate(int Type)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(Type);
+
+        var response = _connection.SendRequestAsync(InteropMethodId.ControlInstanceCanCreate, ms.ToArray()).GetAwaiter().GetResult();
+        return response.Length >= 1 && response[0] != 0;
     }
 
     public int ClientCreateCharacter(string account, string name, byte race, byte classe, byte gender, byte skin, byte face, byte hairStyle, byte hairColor, byte facialHair, byte outfitId)
@@ -103,7 +163,7 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write(facialHair);
         bw.Write(outfitId);
 
-        var response = _connection.SendRequestAsync(InteropMethodId.WorldClientCreateCharacter, ms.ToArray()).GetAwaiter().GetResult();
+        var response = _connection.SendRequestAsync(InteropMethodId.ControlClientCreateCharacter, ms.ToArray()).GetAwaiter().GetResult();
         if (response.Length >= 4)
         {
             using var rms = new MemoryStream(response);
@@ -111,59 +171,6 @@ public sealed class WorldInteropProxy : IWorld
             return br.ReadInt32();
         }
         return 0;
-    }
-
-    public int Ping(int timestamp, int latency)
-    {
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(timestamp);
-        bw.Write(latency);
-
-        var response = _connection.SendRequestAsync(InteropMethodId.WorldPing, ms.ToArray()).GetAwaiter().GetResult();
-        if (response.Length >= 4)
-        {
-            using var rms = new MemoryStream(response);
-            using var br = new BinaryReader(rms);
-            return br.ReadInt32();
-        }
-        return 0;
-    }
-
-    public ServerInfo GetServerInfo()
-    {
-        var response = _connection.SendRequestAsync(InteropMethodId.WorldGetServerInfo, Array.Empty<byte>()).GetAwaiter().GetResult();
-        using var ms = new MemoryStream(response);
-        using var br = new BinaryReader(ms);
-        return InteropSerializer.ReadServerInfo(br);
-    }
-
-    public async Task InstanceCreateAsync(uint Map)
-    {
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(Map);
-
-        await _connection.SendRequestAsync(InteropMethodId.WorldInstanceCreateAsync, ms.ToArray());
-    }
-
-    public void InstanceDestroy(uint Map)
-    {
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(Map);
-
-        _connection.SendOneWayAsync(InteropMethodId.WorldInstanceDestroy, ms.ToArray()).GetAwaiter().GetResult();
-    }
-
-    public bool InstanceCanCreate(int Type)
-    {
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(Type);
-
-        var response = _connection.SendRequestAsync(InteropMethodId.WorldInstanceCanCreate, ms.ToArray()).GetAwaiter().GetResult();
-        return response.Length >= 1 && response[0] != 0;
     }
 
     public void ClientSetGroup(uint ID, long GroupID)
@@ -173,7 +180,7 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write(ID);
         bw.Write(GroupID);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldClientSetGroup, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ControlClientSetGroup, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void GroupUpdate(long GroupID, byte GroupType, ulong GroupLeader, ulong[] Members)
@@ -189,7 +196,7 @@ public sealed class WorldInteropProxy : IWorld
             bw.Write(m);
         }
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldGroupUpdate, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ControlGroupUpdate, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void GroupUpdateLoot(long GroupID, byte Difficulty, byte Method, byte Threshold, ulong Master)
@@ -202,7 +209,7 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write(Threshold);
         bw.Write(Master);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldGroupUpdateLoot, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ControlGroupUpdateLoot, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public byte[] GroupMemberStats(ulong GUID, int Flag)
@@ -212,7 +219,7 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write(GUID);
         bw.Write(Flag);
 
-        var response = _connection.SendRequestAsync(InteropMethodId.WorldGroupMemberStats, ms.ToArray()).GetAwaiter().GetResult();
+        var response = _connection.SendRequestAsync(InteropMethodId.ControlGroupMemberStats, ms.ToArray()).GetAwaiter().GetResult();
         using var rms = new MemoryStream(response);
         using var br = new BinaryReader(rms);
         return InteropSerializer.ReadByteArray(br);
@@ -226,7 +233,7 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write(GuildID);
         bw.Write(GuildRank);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldGuildUpdate, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ControlGuildUpdate, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void BattlefieldCreate(int BattlefieldID, byte BattlefieldMapType, uint Map)
@@ -237,7 +244,7 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write(BattlefieldMapType);
         bw.Write(Map);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldBattlefieldCreate, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ControlBattlefieldCreate, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void BattlefieldDelete(int BattlefieldID)
@@ -246,7 +253,7 @@ public sealed class WorldInteropProxy : IWorld
         using var bw = new BinaryWriter(ms);
         bw.Write(BattlefieldID);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldBattlefieldDelete, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ControlBattlefieldDelete, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void BattlefieldJoin(int BattlefieldID, ulong GUID)
@@ -256,7 +263,7 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write(BattlefieldID);
         bw.Write(GUID);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldBattlefieldJoin, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ControlBattlefieldJoin, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void BattlefieldLeave(int BattlefieldID, ulong GUID)
@@ -266,6 +273,6 @@ public sealed class WorldInteropProxy : IWorld
         bw.Write(BattlefieldID);
         bw.Write(GUID);
 
-        _connection.SendOneWayAsync(InteropMethodId.WorldBattlefieldLeave, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ControlBattlefieldLeave, ms.ToArray()).GetAwaiter().GetResult();
     }
 }

@@ -21,8 +21,12 @@ using Mangos.Cluster.Interop.Protocol;
 namespace Mangos.Cluster.Interop.Proxies;
 
 /// <summary>
-/// ICluster proxy that serializes method calls over TCP to the cluster server.
-/// Used by the world server to communicate with a remote cluster.
+/// World-side stub of ICluster: each method serializes its arguments into
+/// the appropriate envelope and ships it down the IPC connection.
+///
+/// Layout matches <see cref="InteropMethodId"/>: relay (PacketOut),
+/// directives (drop/transfer/update/chat-flag/broadcast/group), control RPC
+/// (world hello/goodbye, crypt-key, battlefield list/finish).
 /// </summary>
 public sealed class ClusterInteropProxy : ICluster
 {
@@ -33,41 +37,7 @@ public sealed class ClusterInteropProxy : ICluster
         _connection = connection;
     }
 
-    public bool Connect(string uri, List<uint> maps, IWorld world)
-    {
-        // The IWorld reference is implicit (this TCP connection IS the world server).
-        // We only send the URI and maps. The cluster creates a WorldInteropProxy on its end.
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(uri);
-        bw.Write(maps.Count);
-        foreach (var map in maps)
-        {
-            bw.Write(map);
-        }
-
-        var response = _connection.SendRequestAsync(InteropMethodId.ClusterConnect, ms.ToArray()).GetAwaiter().GetResult();
-        if (response.Length >= 1)
-        {
-            return response[0] != 0;
-        }
-        return false;
-    }
-
-    public void Disconnect(string uri, List<uint> maps)
-    {
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(uri);
-        bw.Write(maps.Count);
-        foreach (var map in maps)
-        {
-            bw.Write(map);
-        }
-
-        _connection.SendOneWayAsync(InteropMethodId.ClusterDisconnect, ms.ToArray()).GetAwaiter().GetResult();
-    }
-
+    // ---- 1. Relay --------------------------------------------------------
     public void ClientSend(uint id, byte[] data)
     {
         using var ms = new MemoryStream();
@@ -76,16 +46,17 @@ public sealed class ClusterInteropProxy : ICluster
         bw.Write(data.Length);
         bw.Write(data);
 
-        _connection.SendOneWayAsync(InteropMethodId.ClusterClientSend, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.PacketOut, ms.ToArray()).GetAwaiter().GetResult();
     }
 
+    // ---- 2. Directives ---------------------------------------------------
     public void ClientDrop(uint id)
     {
         using var ms = new MemoryStream();
         using var bw = new BinaryWriter(ms);
         bw.Write(id);
 
-        _connection.SendOneWayAsync(InteropMethodId.ClusterClientDrop, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.DirectiveDropClient, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void ClientTransfer(uint id, float posX, float posY, float posZ, float ori, uint map)
@@ -99,7 +70,7 @@ public sealed class ClusterInteropProxy : ICluster
         bw.Write(ori);
         bw.Write(map);
 
-        _connection.SendOneWayAsync(InteropMethodId.ClusterClientTransfer, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.DirectiveTransferClient, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void ClientUpdate(uint id, uint zone, byte level)
@@ -110,7 +81,7 @@ public sealed class ClusterInteropProxy : ICluster
         bw.Write(zone);
         bw.Write(level);
 
-        _connection.SendOneWayAsync(InteropMethodId.ClusterClientUpdate, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.DirectiveUpdateClient, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public void ClientSetChatFlag(uint id, byte flag)
@@ -120,7 +91,97 @@ public sealed class ClusterInteropProxy : ICluster
         bw.Write(id);
         bw.Write(flag);
 
-        _connection.SendOneWayAsync(InteropMethodId.ClusterClientSetChatFlag, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.DirectiveSetClientChatFlag, ms.ToArray()).GetAwaiter().GetResult();
+    }
+
+    public void Broadcast(byte[] data)
+    {
+        _connection.SendOneWayAsync(InteropMethodId.DirectiveBroadcast, InteropSerializer.WriteByteArray(data)).GetAwaiter().GetResult();
+    }
+
+    public void BroadcastGroup(long groupId, byte[] data)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(groupId);
+        bw.Write(data.Length);
+        bw.Write(data);
+
+        _connection.SendOneWayAsync(InteropMethodId.DirectiveBroadcastGroup, ms.ToArray()).GetAwaiter().GetResult();
+    }
+
+    public void BroadcastRaid(long groupId, byte[] data)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(groupId);
+        bw.Write(data.Length);
+        bw.Write(data);
+
+        _connection.SendOneWayAsync(InteropMethodId.DirectiveBroadcastRaid, ms.ToArray()).GetAwaiter().GetResult();
+    }
+
+    public void BroadcastGuild(long guildId, byte[] data)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(guildId);
+        bw.Write(data.Length);
+        bw.Write(data);
+
+        _connection.SendOneWayAsync(InteropMethodId.DirectiveBroadcastGuild, ms.ToArray()).GetAwaiter().GetResult();
+    }
+
+    public void BroadcastGuildOfficers(long guildId, byte[] data)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(guildId);
+        bw.Write(data.Length);
+        bw.Write(data);
+
+        _connection.SendOneWayAsync(InteropMethodId.DirectiveBroadcastGuildOfficers, ms.ToArray()).GetAwaiter().GetResult();
+    }
+
+    public void GroupRequestUpdate(uint id)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(id);
+
+        _connection.SendOneWayAsync(InteropMethodId.DirectiveGroupRequestUpdate, ms.ToArray()).GetAwaiter().GetResult();
+    }
+
+    // ---- 3. Control RPC --------------------------------------------------
+    public bool Connect(string uri, List<uint> maps, IWorld world)
+    {
+        // The IWorld parameter is implicit on the wire: the cluster builds
+        // its own IWorld stub from this connection in the dispatcher.
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(uri);
+        bw.Write(maps.Count);
+        foreach (var map in maps)
+        {
+            bw.Write(map);
+        }
+
+        var response = _connection.SendRequestAsync(InteropMethodId.ControlWorldHello, ms.ToArray()).GetAwaiter().GetResult();
+        return response.Length >= 1 && response[0] != 0;
+    }
+
+    public void Disconnect(string uri, List<uint> maps)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(uri);
+        bw.Write(maps.Count);
+        foreach (var map in maps)
+        {
+            bw.Write(map);
+        }
+
+        _connection.SendOneWayAsync(InteropMethodId.ControlWorldGoodbye, ms.ToArray()).GetAwaiter().GetResult();
     }
 
     public byte[] ClientGetCryptKey(uint id)
@@ -129,7 +190,7 @@ public sealed class ClusterInteropProxy : ICluster
         using var bw = new BinaryWriter(ms);
         bw.Write(id);
 
-        var response = _connection.SendRequestAsync(InteropMethodId.ClusterClientGetCryptKey, ms.ToArray()).GetAwaiter().GetResult();
+        var response = _connection.SendRequestAsync(InteropMethodId.ControlGetCryptKey, ms.ToArray()).GetAwaiter().GetResult();
         using var rms = new MemoryStream(response);
         using var br = new BinaryReader(rms);
         return InteropSerializer.ReadByteArray(br);
@@ -137,7 +198,7 @@ public sealed class ClusterInteropProxy : ICluster
 
     public List<int> BattlefieldList(byte type)
     {
-        var response = _connection.SendRequestAsync(InteropMethodId.ClusterBattlefieldList, new[] { type }).GetAwaiter().GetResult();
+        var response = _connection.SendRequestAsync(InteropMethodId.ControlBattlefieldList, new[] { type }).GetAwaiter().GetResult();
         using var ms = new MemoryStream(response);
         using var br = new BinaryReader(ms);
         return InteropSerializer.ReadInt32List(br);
@@ -149,64 +210,6 @@ public sealed class ClusterInteropProxy : ICluster
         using var bw = new BinaryWriter(ms);
         bw.Write(battlefieldId);
 
-        _connection.SendOneWayAsync(InteropMethodId.ClusterBattlefieldFinish, ms.ToArray()).GetAwaiter().GetResult();
-    }
-
-    public void Broadcast(byte[] data)
-    {
-        _connection.SendOneWayAsync(InteropMethodId.ClusterBroadcast, InteropSerializer.WriteByteArray(data)).GetAwaiter().GetResult();
-    }
-
-    public void BroadcastGroup(long groupId, byte[] data)
-    {
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(groupId);
-        bw.Write(data.Length);
-        bw.Write(data);
-
-        _connection.SendOneWayAsync(InteropMethodId.ClusterBroadcastGroup, ms.ToArray()).GetAwaiter().GetResult();
-    }
-
-    public void BroadcastRaid(long groupId, byte[] data)
-    {
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(groupId);
-        bw.Write(data.Length);
-        bw.Write(data);
-
-        _connection.SendOneWayAsync(InteropMethodId.ClusterBroadcastRaid, ms.ToArray()).GetAwaiter().GetResult();
-    }
-
-    public void BroadcastGuild(long guildId, byte[] data)
-    {
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(guildId);
-        bw.Write(data.Length);
-        bw.Write(data);
-
-        _connection.SendOneWayAsync(InteropMethodId.ClusterBroadcastGuild, ms.ToArray()).GetAwaiter().GetResult();
-    }
-
-    public void BroadcastGuildOfficers(long guildId, byte[] data)
-    {
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(guildId);
-        bw.Write(data.Length);
-        bw.Write(data);
-
-        _connection.SendOneWayAsync(InteropMethodId.ClusterBroadcastGuildOfficers, ms.ToArray()).GetAwaiter().GetResult();
-    }
-
-    public void GroupRequestUpdate(uint id)
-    {
-        using var ms = new MemoryStream();
-        using var bw = new BinaryWriter(ms);
-        bw.Write(id);
-
-        _connection.SendOneWayAsync(InteropMethodId.ClusterGroupRequestUpdate, ms.ToArray()).GetAwaiter().GetResult();
+        _connection.SendOneWayAsync(InteropMethodId.ControlBattlefieldFinish, ms.ToArray()).GetAwaiter().GetResult();
     }
 }

@@ -21,8 +21,14 @@ using Mangos.Cluster.Interop.Protocol;
 namespace Mangos.Cluster.Interop.Dispatchers;
 
 /// <summary>
-/// Dispatches incoming IWorld method calls from the cluster TCP connection
-/// to the real IWorld implementation on the world server side.
+/// World-side dispatcher: turns inbound envelopes from the cluster into
+/// IWorld method calls.
+///
+/// Envelope organization mirrors <see cref="InteropMethodId"/>:
+///   1. Relay: ClientAttach/Detach/Login/Logout/PacketIn (client lifecycle
+///      and decrypted packet stream).
+///   2. Control RPC: heartbeats, instance lifecycle, character creation,
+///      group/guild/battlefield orchestration.
 /// </summary>
 public sealed class WorldInteropDispatcher
 {
@@ -40,7 +46,8 @@ public sealed class WorldInteropDispatcher
 
         switch (methodId)
         {
-            case InteropMethodId.WorldClientConnect:
+            // ---- 1. Relay -----------------------------------------------
+            case InteropMethodId.ClientAttach:
                 {
                     var id = br.ReadUInt32();
                     var clientInfo = InteropSerializer.ReadClientInfo(br);
@@ -48,14 +55,14 @@ public sealed class WorldInteropDispatcher
                     return null;
                 }
 
-            case InteropMethodId.WorldClientDisconnect:
+            case InteropMethodId.ClientDetach:
                 {
                     var id = br.ReadUInt32();
                     _world.ClientDisconnect(id);
                     return null;
                 }
 
-            case InteropMethodId.WorldClientLogin:
+            case InteropMethodId.ClientLogin:
                 {
                     var id = br.ReadUInt32();
                     var guid = br.ReadUInt64();
@@ -63,22 +70,61 @@ public sealed class WorldInteropDispatcher
                     return null;
                 }
 
-            case InteropMethodId.WorldClientLogout:
+            case InteropMethodId.ClientLogout:
                 {
                     var id = br.ReadUInt32();
                     _world.ClientLogout(id);
                     return null;
                 }
 
-            case InteropMethodId.WorldClientPacket:
+            case InteropMethodId.PacketIn:
                 {
                     var id = br.ReadUInt32();
-                    var packetData = InteropSerializer.ReadByteArray(br);
-                    _world.ClientPacket(id, packetData);
+                    var packet = InteropSerializer.ReadByteArray(br);
+                    _world.ClientPacket(id, packet);
                     return null;
                 }
 
-            case InteropMethodId.WorldClientCreateCharacter:
+            // ---- 2. Control RPC -----------------------------------------
+            case InteropMethodId.ControlPing:
+                {
+                    var timestamp = br.ReadInt32();
+                    var latency = br.ReadInt32();
+                    var result = _world.Ping(timestamp, latency);
+                    using var rms = new MemoryStream();
+                    using var bw = new BinaryWriter(rms);
+                    bw.Write(result);
+                    return rms.ToArray();
+                }
+
+            case InteropMethodId.ControlGetServerInfo:
+                {
+                    var info = _world.GetServerInfo();
+                    return InteropSerializer.WriteServerInfo(info);
+                }
+
+            case InteropMethodId.ControlInstanceCreate:
+                {
+                    var mapId = br.ReadUInt32();
+                    await _world.InstanceCreateAsync(mapId);
+                    return Array.Empty<byte>();
+                }
+
+            case InteropMethodId.ControlInstanceDestroy:
+                {
+                    var mapId = br.ReadUInt32();
+                    _world.InstanceDestroy(mapId);
+                    return null;
+                }
+
+            case InteropMethodId.ControlInstanceCanCreate:
+                {
+                    var type = br.ReadInt32();
+                    var result = _world.InstanceCanCreate(type);
+                    return new[] { result ? (byte)1 : (byte)0 };
+                }
+
+            case InteropMethodId.ControlClientCreateCharacter:
                 {
                     var account = br.ReadString();
                     var name = br.ReadString();
@@ -98,45 +144,7 @@ public sealed class WorldInteropDispatcher
                     return rms.ToArray();
                 }
 
-            case InteropMethodId.WorldPing:
-                {
-                    var timestamp = br.ReadInt32();
-                    var latency = br.ReadInt32();
-                    var result = _world.Ping(timestamp, latency);
-                    using var rms = new MemoryStream();
-                    using var bw = new BinaryWriter(rms);
-                    bw.Write(result);
-                    return rms.ToArray();
-                }
-
-            case InteropMethodId.WorldGetServerInfo:
-                {
-                    var info = _world.GetServerInfo();
-                    return InteropSerializer.WriteServerInfo(info);
-                }
-
-            case InteropMethodId.WorldInstanceCreateAsync:
-                {
-                    var mapId = br.ReadUInt32();
-                    await _world.InstanceCreateAsync(mapId);
-                    return Array.Empty<byte>();
-                }
-
-            case InteropMethodId.WorldInstanceDestroy:
-                {
-                    var mapId = br.ReadUInt32();
-                    _world.InstanceDestroy(mapId);
-                    return null;
-                }
-
-            case InteropMethodId.WorldInstanceCanCreate:
-                {
-                    var type = br.ReadInt32();
-                    var result = _world.InstanceCanCreate(type);
-                    return new[] { result ? (byte)1 : (byte)0 };
-                }
-
-            case InteropMethodId.WorldClientSetGroup:
+            case InteropMethodId.ControlClientSetGroup:
                 {
                     var id = br.ReadUInt32();
                     var groupId = br.ReadInt64();
@@ -144,7 +152,7 @@ public sealed class WorldInteropDispatcher
                     return null;
                 }
 
-            case InteropMethodId.WorldGroupUpdate:
+            case InteropMethodId.ControlGroupUpdate:
                 {
                     var groupId = br.ReadInt64();
                     var groupType = br.ReadByte();
@@ -154,7 +162,7 @@ public sealed class WorldInteropDispatcher
                     return null;
                 }
 
-            case InteropMethodId.WorldGroupUpdateLoot:
+            case InteropMethodId.ControlGroupUpdateLoot:
                 {
                     var groupId = br.ReadInt64();
                     var difficulty = br.ReadByte();
@@ -165,7 +173,7 @@ public sealed class WorldInteropDispatcher
                     return null;
                 }
 
-            case InteropMethodId.WorldGroupMemberStats:
+            case InteropMethodId.ControlGroupMemberStats:
                 {
                     var guid = br.ReadUInt64();
                     var flag = br.ReadInt32();
@@ -173,7 +181,7 @@ public sealed class WorldInteropDispatcher
                     return InteropSerializer.WriteByteArray(stats);
                 }
 
-            case InteropMethodId.WorldGuildUpdate:
+            case InteropMethodId.ControlGuildUpdate:
                 {
                     var guid = br.ReadUInt64();
                     var guildId = br.ReadUInt32();
@@ -182,7 +190,7 @@ public sealed class WorldInteropDispatcher
                     return null;
                 }
 
-            case InteropMethodId.WorldBattlefieldCreate:
+            case InteropMethodId.ControlBattlefieldCreate:
                 {
                     var battlefieldId = br.ReadInt32();
                     var battlefieldMapType = br.ReadByte();
@@ -191,14 +199,14 @@ public sealed class WorldInteropDispatcher
                     return null;
                 }
 
-            case InteropMethodId.WorldBattlefieldDelete:
+            case InteropMethodId.ControlBattlefieldDelete:
                 {
                     var battlefieldId = br.ReadInt32();
                     _world.BattlefieldDelete(battlefieldId);
                     return null;
                 }
 
-            case InteropMethodId.WorldBattlefieldJoin:
+            case InteropMethodId.ControlBattlefieldJoin:
                 {
                     var battlefieldId = br.ReadInt32();
                     var guid = br.ReadUInt64();
@@ -206,7 +214,7 @@ public sealed class WorldInteropDispatcher
                     return null;
                 }
 
-            case InteropMethodId.WorldBattlefieldLeave:
+            case InteropMethodId.ControlBattlefieldLeave:
                 {
                     var battlefieldId = br.ReadInt32();
                     var guid = br.ReadUInt64();
