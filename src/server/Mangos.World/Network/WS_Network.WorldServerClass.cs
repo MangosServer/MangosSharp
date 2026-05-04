@@ -23,8 +23,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Mangos.Cluster.Interop;
+using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Enums.Group;
+using Mangos.Common.Enums.Misc;
 using Mangos.DataStores;
 using Mangos.World.Globals;
 using Mangos.World.Maps;
@@ -205,6 +207,46 @@ public partial class WS_Network
             {
                 var client = WorldServiceLocator.WorldServer.CLIENTs[id];
                 WS_PlayerData.CharacterObject Character = new(ref client, guid);
+
+                // Phase B shard check: ask the cluster whether a federated
+                // shard claims this (mapId, guid). If a foreign cluster
+                // owns it, this world should not host - tell the client
+                // and drop them so they reconnect to the host realm.
+                if (cluster is not null)
+                {
+                    try
+                    {
+                        var shard = cluster.QueryShard(Character.MapID, guid);
+                        if (shard.Kind == ShardLookupKind.Foreign)
+                        {
+                            WorldServiceLocator.WorldServer.Log.WriteLine(
+                                LogType.WARNING,
+                                "[{0:000000}] map {1} is sharded to cluster {2} ({3}); refusing local host",
+                                id, Character.MapID, shard.OwnerClusterId, shard.OwnerDisplayTag);
+                            // System message + drop. The client will reconnect
+                            // to the host realm via the standard realmlist flow.
+                            var msg = $"Your group's instance of map {Character.MapID} is hosted on realm "
+                                    + (string.IsNullOrEmpty(shard.OwnerDisplayTag) ? shard.OwnerClusterId.ToString() : shard.OwnerDisplayTag)
+                                    + ". Please reconnect to that realm to play with your group.";
+                            try
+                            {
+                                var packet = WorldServiceLocator.Functions.BuildChatMessage(
+                                    0uL, msg, ChatMsg.CHAT_MSG_SYSTEM, LANGUAGES.LANG_GLOBAL, 0, "");
+                                client.Send(ref packet);
+                                packet.Dispose();
+                            }
+                            catch { /* best-effort */ }
+                            cluster.ClientDrop(id);
+                            return;
+                        }
+                    }
+                    catch (Exception qsx)
+                    {
+                        WorldServiceLocator.WorldServer.Log.WriteLine(
+                            LogType.WARNING, "Shard query failed; hosting locally: {0}", qsx.Message);
+                    }
+                }
+
                 WorldServiceLocator.WorldServer.CHARACTERs_Lock.EnterWriteLock();
                 WorldServiceLocator.WorldServer.CHARACTERs[guid] = Character;
                 WorldServiceLocator.WorldServer.CHARACTERs_Lock.ExitWriteLock();

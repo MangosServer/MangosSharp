@@ -39,6 +39,8 @@ public class WorldServerClass : ICluster
     private readonly WorldSupervisor? _supervisor;
     private readonly IAdminCommandHandler? _adminHandler;
     private readonly FederationRouter? _federation;
+    private readonly ShardRegistry? _shards;
+    private readonly Func<uint>? _localClusterIdProvider;
 
     public bool MFlagStopListen;
     private Timer _mTimerPing;
@@ -47,12 +49,16 @@ public class WorldServerClass : ICluster
         ClusterServiceLocator clusterServiceLocator,
         WorldSupervisor? supervisor = null,
         IAdminCommandHandler? adminHandler = null,
-        FederationRouter? federation = null)
+        FederationRouter? federation = null,
+        ShardRegistry? shards = null,
+        Func<uint>? localClusterIdProvider = null)
     {
         _clusterServiceLocator = clusterServiceLocator;
         _supervisor = supervisor;
         _adminHandler = adminHandler;
         _federation = federation;
+        _shards = shards;
+        _localClusterIdProvider = localClusterIdProvider;
     }
 
     public void Start()
@@ -518,6 +524,51 @@ public class WorldServerClass : ICluster
                 // Best-effort.
             }
         });
+    }
+
+    public ShardLookupResult QueryShard(uint mapId, ulong characterGuid)
+    {
+        // Phase B: a (mapId, shardKey) tuple identifies a shard. The shard
+        // key for a group-shard is the groupId, so we resolve characterGuid
+        // -> group -> shardKey, then look up the shard registry.
+        if (_shards is null) return ShardLookupResult.NoShard;
+
+        long shardKey = 0;
+        var wc = _clusterServiceLocator.WorldCluster;
+        wc.CharacteRsLock.EnterReadLock();
+        try
+        {
+            if (wc.CharacteRs.TryGetValue(characterGuid, out var character)
+                && character.IsInGroup
+                && character.Group is not null)
+            {
+                shardKey = character.Group.Id;
+            }
+        }
+        finally
+        {
+            wc.CharacteRsLock.ExitReadLock();
+        }
+        if (shardKey == 0) return ShardLookupResult.NoShard;
+
+        var entry = _shards.GetShard(mapId, (ulong)shardKey);
+        if (entry is null) return ShardLookupResult.NoShard;
+
+        var localId = _localClusterIdProvider?.Invoke() ?? 0u;
+        if (entry.OwnerClusterId == localId) return ShardLookupResult.Local;
+
+        // Foreign: enrich with the owner's tag/endpoint from the federation
+        // peer cache so the world can show a meaningful message.
+        string tag = string.Empty;
+        if (_federation is not null && _federation.PeerInfo.TryGetValue(entry.OwnerClusterId, out var peer))
+            tag = peer.DisplayTag;
+        return new ShardLookupResult
+        {
+            Kind = ShardLookupKind.Foreign,
+            OwnerClusterId = entry.OwnerClusterId,
+            OwnerEndpoint = entry.RelayEndpoint,
+            OwnerDisplayTag = tag,
+        };
     }
 
     public void GroupRequestUpdate(uint id)

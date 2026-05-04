@@ -100,6 +100,11 @@ public enum InteropMethodId : ushort
     ControlRouteFederatedChat = 0x0241,
     ControlRouteFederatedGroupInvite = 0x0242,
 
+    // World -> cluster (Phase B shard lookup). World asks before loading
+    // an instance whether a federated shard claims this map for this
+    // character; the cluster consults its ShardRegistry.
+    ControlQueryShard = 0x0243,
+
     // ----- Framing -----------------------------------------------------
     Response = 0xFFFF,
 }

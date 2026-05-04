@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using Mangos.Cluster.Admin.Protocol;
@@ -23,6 +24,7 @@ using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
+using Mangos.Configuration;
 using Mangos.Logging;
 
 namespace Mangos.Cluster.Federation;
@@ -41,6 +43,7 @@ public sealed class FederatedGroupInviter
     private readonly ClusterServiceLocator _serviceLocator;
     private readonly FederationRouter _router;
     private readonly IMangosLogger _logger;
+    private readonly Func<uint> _localClusterIdProvider;
 
     // Pending invites awaiting accept/decline from local players.
     // Keyed by recipient character guid; value carries enough context to
@@ -50,11 +53,14 @@ public sealed class FederatedGroupInviter
     public FederatedGroupInviter(
         ClusterServiceLocator serviceLocator,
         FederationRouter router,
-        IMangosLogger logger)
+        IMangosLogger logger,
+        MangosConfiguration mangosConfiguration)
     {
         _serviceLocator = serviceLocator;
         _router = router;
         _logger = logger;
+        var localId = mangosConfiguration.Federation?.LocalClusterId ?? 0u;
+        _localClusterIdProvider = () => localId;
     }
 
     private sealed class PendingInvite
@@ -154,7 +160,7 @@ public sealed class FederatedGroupInviter
             await link.SendGroupInviteResponseAsync(new GroupInviteResponseEnvelope
             {
                 GroupId = groupId,
-                TargetRealmId = 0,
+                TargetRealmId = _localClusterIdProvider(),
                 TargetGuid = targetGuid,
                 TargetName = targetName,
                 Decision = decision,

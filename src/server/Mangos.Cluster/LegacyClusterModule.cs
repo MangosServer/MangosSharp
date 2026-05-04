@@ -50,7 +50,14 @@ public sealed class LegacyClusterModule : Module
         builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
         builder.RegisterType<NativeMethods>().As<NativeMethods>().SingleInstance();
         builder.RegisterType<LegacyWorldCluster>().As<LegacyWorldCluster>().SingleInstance();
-        builder.RegisterType<WorldServerClass>().As<WorldServerClass>().As<ICluster>().SingleInstance();
+        builder.Register(ctx => new WorldServerClass(
+            ctx.Resolve<ClusterServiceLocator>(),
+            ctx.ResolveOptional<WorldSupervisor>(),
+            ctx.ResolveOptional<IAdminCommandHandler>(),
+            ctx.ResolveOptional<FederationRouter>(),
+            ctx.ResolveOptional<ShardRegistry>(),
+            () => ctx.Resolve<MangosConfiguration>().Federation?.LocalClusterId ?? 0u))
+            .As<WorldServerClass>().As<ICluster>().SingleInstance();
         builder.RegisterType<WsDbcDatabase>().As<WsDbcDatabase>().SingleInstance();
         builder.RegisterType<WsDbcLoad>().As<WsDbcLoad>().SingleInstance();
         builder.RegisterType<Globals.Functions>().As<Globals.Functions>().SingleInstance();
@@ -115,6 +122,7 @@ public sealed class LegacyClusterModule : Module
 
         builder.RegisterType<FederatedGroupInviter>().AsSelf().SingleInstance();
         builder.RegisterType<FederatedChatDeliverer>().AsSelf().SingleInstance();
+        builder.RegisterType<FederatedShardClaimer>().AsSelf().SingleInstance();
         builder.RegisterType<ShardRegistry>().AsSelf().SingleInstance();
     }
 }

@@ -125,8 +125,14 @@ container.Resolve<FederatedChatDeliverer>().WireUp();
 
 // Phase B shard registry: tracks (mapId, shardKey) -> owning cluster +
 // relay endpoint as peers send claim/release envelopes. The world's
-// enter-zone path will consult this in a follow-up.
+// enter-zone hook (WS_Network.WorldServerClass.ClientLogin) consults
+// this through ICluster.QueryShard.
 container.Resolve<ShardRegistry>().WireUp(federationRouter);
+
+// Leader-cluster side of Phase B: when a peer's player accepts a
+// federated invite, emit a ShardClaim back so the peer's world refuses
+// to host that map for the same group.
+container.Resolve<FederatedShardClaimer>().WireUp();
 
 // Federation listener (cluster <-> cluster). Off by default; enable in
 // Federation.* config to allow peer admin commands and (PR #6) cross-realm

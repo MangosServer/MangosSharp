@@ -95,4 +95,7 @@ public interface ICluster
 
     [Description("Control: hand the cluster a cross-realm group invite so it can be routed to the destination peer.")]
     void RouteFederatedGroupInvite(uint targetRealmId, byte[] inviteEnvelope);
+
+    [Description("Control: Phase B shard lookup. Before loading a map, world asks whether a federated shard claims it for this character.")]
+    ShardLookupResult QueryShard(uint mapId, ulong characterGuid);
 }

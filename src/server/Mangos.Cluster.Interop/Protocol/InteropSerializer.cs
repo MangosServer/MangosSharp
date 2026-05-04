@@ -169,4 +169,26 @@ public static class InteropSerializer
         var length = br.ReadInt32();
         return br.ReadBytes(length);
     }
+
+    public static byte[] WriteShardLookupResult(ShardLookupResult result)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write((byte)result.Kind);
+        bw.Write(result.OwnerClusterId);
+        bw.Write(result.OwnerEndpoint ?? string.Empty);
+        bw.Write(result.OwnerDisplayTag ?? string.Empty);
+        return ms.ToArray();
+    }
+
+    public static ShardLookupResult ReadShardLookupResult(BinaryReader br)
+    {
+        return new ShardLookupResult
+        {
+            Kind = (ShardLookupKind)br.ReadByte(),
+            OwnerClusterId = br.ReadUInt32(),
+            OwnerEndpoint = br.ReadString(),
+            OwnerDisplayTag = br.ReadString(),
+        };
+    }
 }

@@ -242,4 +242,16 @@ public sealed class ClusterInteropProxy : ICluster
         bw.Write(inviteEnvelope);
         _connection.SendOneWayAsync(InteropMethodId.ControlRouteFederatedGroupInvite, ms.ToArray()).GetAwaiter().GetResult();
     }
+
+    public ShardLookupResult QueryShard(uint mapId, ulong characterGuid)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write(mapId);
+        bw.Write(characterGuid);
+        var response = _connection.SendRequestAsync(InteropMethodId.ControlQueryShard, ms.ToArray()).GetAwaiter().GetResult();
+        using var rms = new MemoryStream(response);
+        using var br = new BinaryReader(rms);
+        return InteropSerializer.ReadShardLookupResult(br);
+    }
 }

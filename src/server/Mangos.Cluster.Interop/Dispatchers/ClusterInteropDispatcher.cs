@@ -208,6 +208,14 @@ public sealed class ClusterInteropDispatcher
                     return null;
                 }
 
+            case InteropMethodId.ControlQueryShard:
+                {
+                    var mapId = br.ReadUInt32();
+                    var characterGuid = br.ReadUInt64();
+                    var result = _cluster.QueryShard(mapId, characterGuid);
+                    return InteropSerializer.WriteShardLookupResult(result);
+                }
+
             default:
                 return null;
         }
