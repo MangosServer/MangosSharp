@@ -43,7 +43,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mangos.World.Handlers;
 
-public class WS_Commands
+public partial class WS_Commands
 {
     public class ChatCommand
     {

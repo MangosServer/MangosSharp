@@ -18,9 +18,15 @@
 
 using Autofac;
 using Mangos.Cluster;
+using Mangos.Cluster.Admin.Auth;
+using Mangos.Cluster.Admin.Commands;
+using Mangos.Cluster.Admin.Protocol;
+using Mangos.Cluster.Federation;
+using Mangos.Cluster.Interop;
 using Mangos.Cluster.Interop.Dispatchers;
 using Mangos.Cluster.Interop.Protocol;
 using Mangos.Cluster.Network;
+using Mangos.Cluster.Supervision;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
 using Mangos.Configuration;
@@ -46,6 +52,9 @@ var logger = container.Resolve<IMangosLogger>();
 var tcpServer = container.Resolve<TcpServer>();
 var legacyWorldCluster = container.Resolve<LegacyWorldCluster>();
 var worldServerClass = container.Resolve<WorldServerClass>();
+var supervisor = container.Resolve<WorldSupervisor>();
+var adminHandler = container.Resolve<IAdminCommandHandler>();
+var federationRouter = container.Resolve<FederationRouter>();
 
 logger.Trace(@" __  __      _  _  ___  ___  ___               ");
 logger.Trace(@"|  \/  |__ _| \| |/ __|/ _ \/ __|   We Love    ");
@@ -60,7 +69,7 @@ using (var scope = container.BeginLifetimeScope())
     var accountConnection = scope.Resolve<AccountConnection>();
     var globalConstants = scope.Resolve<MangosGlobalConstants>();
     var dbVersionChecker = new DbVersionChecker(logger, globalConstants);
-    
+
     if (!dbVersionChecker.CheckRequiredDbVersion(accountConnection.MySqlConnection, "account", ServerDb.Realm))
     {
         logger.Error("Database version check failed. Exiting...");
@@ -99,6 +108,70 @@ using (var scope = container.BeginLifetimeScope())
 logger.Information("Starting legacy cluster server");
 await legacyWorldCluster.StartAsync();
 
+// Start the supervisor before any world IPC connection arrives so hello/goodbye are tracked.
+await supervisor.StartAsync();
+
+// Begin the federation peer-table refresh from the realmlist DB so
+// outbound dials know clusterId -> endpoint without needing static config.
+await federationRouter.StartAsync();
+
+// Wire the inbound group invite handler so peer clusters' invites pop
+// SMSG_GROUP_INVITE on the local recipient.
+container.Resolve<FederatedGroupInviter>().WireUp();
+
+// Wire the inbound chat deliverer so peer-cluster ChatEnvelopes turn
+// into local SMSG_MESSAGECHAT with marker rendering.
+container.Resolve<FederatedChatDeliverer>().WireUp();
+
+// Phase B shard registry: tracks (mapId, shardKey) -> owning cluster +
+// relay endpoint as peers send claim/release envelopes. The world's
+// enter-zone hook (WS_Network.WorldServerClass.ClientLogin) consults
+// this through ICluster.QueryShard.
+container.Resolve<ShardRegistry>().WireUp(federationRouter);
+
+// Leader-cluster side of Phase B: when a peer's player accepts a
+// federated invite, emit a ShardClaim back so the peer's world refuses
+// to host that map for the same group.
+container.Resolve<FederatedShardClaimer>().WireUp();
+
+// Federation listener (cluster <-> cluster). Off by default; enable in
+// Federation.* config to allow peer admin commands and (PR #6) cross-realm
+// chat / groups. We hold the FederationServer alive for the lifetime of
+// the process via a top-level using; ProcessExit drains it.
+FederationServer? federation = null;
+if (configuration.Federation is { Enabled: true } fedCfg)
+{
+    var secrets = fedCfg.Peers.ToDictionary(p => p.ClusterId, p => PeerAuth.SecretFromString(p.Secret));
+    federation = new FederationServer(
+        fedCfg.LocalClusterId,
+        fedCfg.LocalDisplayTag,
+        peerId => secrets.TryGetValue(peerId, out var s) ? s : null)
+    {
+        AdminHandler = adminHandler,
+        OnLinkAccepted = link => federationRouter.BindHandlers(link),
+    };
+    await federation.StartAsync(fedCfg.ListenAddress, fedCfg.ListenPort);
+    logger.Information($"Federation listener up on {fedCfg.ListenAddress}:{fedCfg.ListenPort} (cluster id {fedCfg.LocalClusterId})");
+}
+else
+{
+    logger.Information("Federation disabled");
+}
+AppDomain.CurrentDomain.ProcessExit += (_, _) => federation?.Dispose();
+
+// Hook process exit so we drain managed worlds gracefully on Ctrl-C / SIGTERM.
+AppDomain.CurrentDomain.ProcessExit += async (_, _) =>
+{
+    try { await supervisor.DisposeAsync(); }
+    catch (Exception ex) { logger.Error($"Supervisor dispose failed: {ex.Message}"); }
+};
+Console.CancelKeyPress += (_, args) =>
+{
+    args.Cancel = true; // we handle it; don't kill abruptly
+    logger.Information("Ctrl-C received; draining...");
+    Environment.Exit(ExitCodes.Clean);
+};
+
 // Start IPC server for world server connections
 logger.Information($"Starting cluster IPC server on {configuration.Cluster.ClusterListenAddress}:{configuration.Cluster.ClusterListenPort}");
 
@@ -133,6 +206,12 @@ _ = Task.Run(async () =>
         logger.Error($"IPC server error: {ex.Message}");
     }
 });
+
+// Console REPL for operator commands. Runs in the background so the
+// cluster's own logs aren't drowned out; same command syntax as in-game
+// GM chat and the external CLI.
+var repl = new ConsoleAdminRepl(adminHandler);
+_ = repl.RunAsync();
 
 logger.Information("Starting cluster TCP server for game clients");
 await tcpServer.RunAsync(configuration.Cluster.ClusterServerEndpoint);

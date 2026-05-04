@@ -12,6 +12,24 @@
     "CharacterDatabase": "root;rootpass;localhost;3306;mangosVBcharacters;MariaDB",
     "WorldDatabase": "root;rootpass;localhost;3306;mangosVBworld;MariaDB"
   },
+  "Federation": {
+    "Enabled": false,
+    "LocalClusterId": 1,
+    "LocalDisplayTag": "MS",
+    "ListenAddress": "127.0.0.1",
+    "ListenPort": 50101,
+    "MarkerMode": "ClientPreference",
+    "Peers": []
+  },
+  "Supervisor": {
+    "Enabled": false,
+    "HeartbeatIntervalMs": 5000,
+    "StaleAfterMissed": 3,
+    "DeadAfterMissed": 5,
+    "RespawnBackoffStepMs": 2000,
+    "RespawnBackoffMaxMs": 60000,
+    "Worlds": []
+  },
   "World": {
     "ClusterConnectHost": "127.0.0.1",
     "ClusterConnectPort": 50001,

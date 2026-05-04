@@ -12,7 +12,8 @@ This folder contain docker images for development purpose
 # How to start server
 1) `docker-compose up -d realm`
 2) Wait 5 seconds
-3) `docker-compose up -d game`
+3) `docker-compose up -d cluster`
+4) `docker-compose up -d world`
 
 # How to stop server
     docker-compose down

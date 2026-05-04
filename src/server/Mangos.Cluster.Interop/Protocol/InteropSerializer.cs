@@ -66,6 +66,10 @@ public static class InteropSerializer
         using var bw = new BinaryWriter(ms);
         bw.Write(info.CpuUsage);
         bw.Write(info.MemoryUsage);
+        bw.Write(info.PlayerCount);
+        bw.Write(info.InstanceCount);
+        bw.Write(info.BattlegroundCount);
+        bw.Write(info.UptimeMs);
         return ms.ToArray();
     }
 
@@ -74,7 +78,11 @@ public static class InteropSerializer
         return new ServerInfo
         {
             CpuUsage = br.ReadSingle(),
-            MemoryUsage = br.ReadUInt64()
+            MemoryUsage = br.ReadUInt64(),
+            PlayerCount = br.ReadInt32(),
+            InstanceCount = br.ReadInt32(),
+            BattlegroundCount = br.ReadInt32(),
+            UptimeMs = br.ReadInt64()
         };
     }
 
@@ -160,5 +168,27 @@ public static class InteropSerializer
     {
         var length = br.ReadInt32();
         return br.ReadBytes(length);
+    }
+
+    public static byte[] WriteShardLookupResult(ShardLookupResult result)
+    {
+        using var ms = new MemoryStream();
+        using var bw = new BinaryWriter(ms);
+        bw.Write((byte)result.Kind);
+        bw.Write(result.OwnerClusterId);
+        bw.Write(result.OwnerEndpoint ?? string.Empty);
+        bw.Write(result.OwnerDisplayTag ?? string.Empty);
+        return ms.ToArray();
+    }
+
+    public static ShardLookupResult ReadShardLookupResult(BinaryReader br)
+    {
+        return new ShardLookupResult
+        {
+            Kind = (ShardLookupKind)br.ReadByte(),
+            OwnerClusterId = br.ReadUInt32(),
+            OwnerEndpoint = br.ReadString(),
+            OwnerDisplayTag = br.ReadString(),
+        };
     }
 }

@@ -142,7 +142,7 @@ public class DbVersionChecker
     private bool ValidateVersion(string dbName, DbVersionInfo actual, DbVersionInfo expected)
     {
         // Perfect match
-        if (actual.Version == expected.Version &&  actual.Structure == expected.Structure && actual.Content == expected.Content)
+        if (actual.Version == expected.Version && actual.Structure == expected.Structure && actual.Content == expected.Content)
         {
             _logger.Database($"Database version matched for '{dbName}'");
             return true;

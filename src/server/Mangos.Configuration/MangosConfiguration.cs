@@ -20,9 +20,18 @@ namespace Mangos.Configuration;
 
 public sealed class MangosConfiguration
 {
-    public required string AccountDataBaseConnectionString { get; init; }
-    public string? CharacterDataBaseConnectionString { get; init; }
-    public string? WorldDataBaseConnectionStrings { get; init; }   
+    public required string AccountDataBaseConnectionString
+    {
+        get; init;
+    }
+    public string? CharacterDataBaseConnectionString
+    {
+        get; init;
+    }
+    public string? WorldDataBaseConnectionStrings
+    {
+        get; init;
+    }
 
     public required RealmConfiguration Realm
     {
@@ -33,6 +42,18 @@ public sealed class MangosConfiguration
         get; init;
     }
     public required WorldConfiguration World
+    {
+        get; init;
+    }
+
+    /// <summary>Optional. Cluster-side supervisor for spawning/restarting world servers.</summary>
+    public SupervisorConfiguration? Supervisor
+    {
+        get; init;
+    }
+
+    /// <summary>Optional. Cluster &lt;-&gt; cluster federation (admin, cross-realm chat/groups).</summary>
+    public FederationConfiguration? Federation
     {
         get; init;
     }

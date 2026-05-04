@@ -20,8 +20,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
+using Mangos.Cluster.Admin.Commands;
+using Mangos.Cluster.Admin.Protocol;
+using Mangos.Cluster.Federation;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Interop;
+using Mangos.Cluster.Supervision;
 using Mangos.Common.Enums.Chat;
 using Mangos.Common.Enums.Global;
 using Mangos.Common.Globals;
@@ -31,13 +36,29 @@ namespace Mangos.Cluster.Network;
 public class WorldServerClass : ICluster
 {
     private readonly ClusterServiceLocator _clusterServiceLocator;
+    private readonly WorldSupervisor? _supervisor;
+    private readonly IAdminCommandHandler? _adminHandler;
+    private readonly FederationRouter? _federation;
+    private readonly ShardRegistry? _shards;
+    private readonly Func<uint>? _localClusterIdProvider;
 
     public bool MFlagStopListen;
     private Timer _mTimerPing;
 
-    public WorldServerClass(ClusterServiceLocator clusterServiceLocator)
+    public WorldServerClass(
+        ClusterServiceLocator clusterServiceLocator,
+        WorldSupervisor? supervisor = null,
+        IAdminCommandHandler? adminHandler = null,
+        FederationRouter? federation = null,
+        ShardRegistry? shards = null,
+        Func<uint>? localClusterIdProvider = null)
     {
         _clusterServiceLocator = clusterServiceLocator;
+        _supervisor = supervisor;
+        _adminHandler = adminHandler;
+        _federation = federation;
+        _shards = shards;
+        _localClusterIdProvider = localClusterIdProvider;
     }
 
     public void Start()
@@ -65,6 +86,8 @@ public class WorldServerClass : ICluster
                     WorldsInfo[map] = worldServerInfo;
                 }
             }
+            // Inform supervisor: the world identified by 'uri' is now running.
+            _supervisor?.OnWorldHello(uri, world, maps);
         }
         catch (Exception ex)
         {
@@ -122,6 +145,7 @@ public class WorldServerClass : ICluster
                 }
             }
         }
+        _supervisor?.OnWorldGoodbye(uri);
     }
 
     public void Ping(object state)
@@ -421,6 +445,130 @@ public class WorldServerClass : ICluster
     public void BattlefieldFinish(int battlefieldId)
     {
         _clusterServiceLocator.WorldCluster.Log.WriteLine(LogType.INFORMATION, "[B{0:0000}] Battlefield finished", battlefieldId);
+    }
+
+    public byte[] RunAdminCommand(byte[] commandBytes)
+    {
+        if (_adminHandler is null)
+        {
+            return new AdminCommandReply
+            {
+                Status = AdminReplyStatus.Failed,
+                Lines = { "admin handler not available on this cluster" },
+            }.Serialize();
+        }
+        try
+        {
+            var cmd = AdminCommand.Deserialize(commandBytes);
+
+            // Cross-realm: dial the peer and forward the command.
+            if (cmd.TargetRealmId != 0 && _federation is not null)
+            {
+                var link = _federation.GetOrOpenAsync(cmd.TargetRealmId).GetAwaiter().GetResult();
+                if (link is null)
+                {
+                    return new AdminCommandReply
+                    {
+                        Status = AdminReplyStatus.Unreachable,
+                        Lines = { $"realm {cmd.TargetRealmId} unreachable" },
+                    }.Serialize();
+                }
+                var peerReply = link.SendAdminCommandAsync(cmd).GetAwaiter().GetResult();
+                return peerReply.Serialize();
+            }
+
+            var reply = _adminHandler.ExecuteAsync(cmd).GetAwaiter().GetResult();
+            return reply.Serialize();
+        }
+        catch (Exception ex)
+        {
+            return new AdminCommandReply
+            {
+                Status = AdminReplyStatus.Failed,
+                Lines = { $"admin error: {ex.Message}" },
+            }.Serialize();
+        }
+    }
+
+    public void RouteFederatedChat(uint targetRealmId, byte[] chatEnvelope)
+    {
+        if (_federation is null) return;
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var link = await _federation.GetOrOpenAsync(targetRealmId);
+                if (link is null) return;
+                await link.SendChatAsync(ChatEnvelope.Deserialize(chatEnvelope));
+            }
+            catch
+            {
+                // Best-effort fire-and-forget; chat losses are tolerable.
+            }
+        });
+    }
+
+    public void RouteFederatedGroupInvite(uint targetRealmId, byte[] inviteEnvelope)
+    {
+        if (_federation is null) return;
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var link = await _federation.GetOrOpenAsync(targetRealmId);
+                if (link is null) return;
+                await link.SendGroupInviteAsync(GroupInviteEnvelope.Deserialize(inviteEnvelope));
+            }
+            catch
+            {
+                // Best-effort.
+            }
+        });
+    }
+
+    public ShardLookupResult QueryShard(uint mapId, ulong characterGuid)
+    {
+        // Phase B: a (mapId, shardKey) tuple identifies a shard. The shard
+        // key for a group-shard is the groupId, so we resolve characterGuid
+        // -> group -> shardKey, then look up the shard registry.
+        if (_shards is null) return ShardLookupResult.NoShard;
+
+        long shardKey = 0;
+        var wc = _clusterServiceLocator.WorldCluster;
+        wc.CharacteRsLock.EnterReadLock();
+        try
+        {
+            if (wc.CharacteRs.TryGetValue(characterGuid, out var character)
+                && character.IsInGroup
+                && character.Group is not null)
+            {
+                shardKey = character.Group.Id;
+            }
+        }
+        finally
+        {
+            wc.CharacteRsLock.ExitReadLock();
+        }
+        if (shardKey == 0) return ShardLookupResult.NoShard;
+
+        var entry = _shards.GetShard(mapId, (ulong)shardKey);
+        if (entry is null) return ShardLookupResult.NoShard;
+
+        var localId = _localClusterIdProvider?.Invoke() ?? 0u;
+        if (entry.OwnerClusterId == localId) return ShardLookupResult.Local;
+
+        // Foreign: enrich with the owner's tag/endpoint from the federation
+        // peer cache so the world can show a meaningful message.
+        string tag = string.Empty;
+        if (_federation is not null && _federation.PeerInfo.TryGetValue(entry.OwnerClusterId, out var peer))
+            tag = peer.DisplayTag;
+        return new ShardLookupResult
+        {
+            Kind = ShardLookupKind.Foreign,
+            OwnerClusterId = entry.OwnerClusterId,
+            OwnerEndpoint = entry.RelayEndpoint,
+            OwnerDisplayTag = tag,
+        };
     }
 
     public void GroupRequestUpdate(uint id)

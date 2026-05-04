@@ -17,16 +17,22 @@
 //
 
 using Autofac;
+using Mangos.Cluster.Admin.Commands;
 using Mangos.Cluster.DataStores;
+using Mangos.Cluster.Federation;
 using Mangos.Cluster.Globals;
 using Mangos.Cluster.Handlers;
 using Mangos.Cluster.Handlers.Guild;
 using Mangos.Cluster.Interop;
 using Mangos.Cluster.Network;
+using Mangos.Cluster.Supervision;
 using Mangos.Cluster.Verification;
 using Mangos.Common;
 using Mangos.Common.Globals;
+using Mangos.Configuration;
 using Mangos.DataStores;
+using Mangos.Logging;
+using Mangos.MySql.GetFederationPeers;
 using Mangos.Zip;
 
 namespace Mangos.Cluster;
@@ -44,7 +50,14 @@ public sealed class LegacyClusterModule : Module
         builder.RegisterType<ZipService>().As<ZipService>().SingleInstance();
         builder.RegisterType<NativeMethods>().As<NativeMethods>().SingleInstance();
         builder.RegisterType<LegacyWorldCluster>().As<LegacyWorldCluster>().SingleInstance();
-        builder.RegisterType<WorldServerClass>().As<WorldServerClass>().As<ICluster>().SingleInstance();
+        builder.Register(ctx => new WorldServerClass(
+            ctx.Resolve<ClusterServiceLocator>(),
+            ctx.ResolveOptional<WorldSupervisor>(),
+            ctx.ResolveOptional<IAdminCommandHandler>(),
+            ctx.ResolveOptional<FederationRouter>(),
+            ctx.ResolveOptional<ShardRegistry>(),
+            () => ctx.Resolve<MangosConfiguration>().Federation?.LocalClusterId ?? 0u))
+            .As<WorldServerClass>().As<ICluster>().SingleInstance();
         builder.RegisterType<WsDbcDatabase>().As<WsDbcDatabase>().SingleInstance();
         builder.RegisterType<WsDbcLoad>().As<WsDbcLoad>().SingleInstance();
         builder.RegisterType<Globals.Functions>().As<Globals.Functions>().SingleInstance();
@@ -69,5 +82,47 @@ public sealed class LegacyClusterModule : Module
         builder.RegisterType<ClusterServiceLocator>().As<ClusterServiceLocator>()
             .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
             .SingleInstance();
+
+        builder.Register(ctx =>
+        {
+            var cfg = ctx.Resolve<MangosConfiguration>();
+            var logger = ctx.Resolve<IMangosLogger>();
+            return new WorldSupervisor(cfg.Supervisor ?? new SupervisorConfiguration(), logger);
+        }).As<WorldSupervisor>().SingleInstance();
+
+        builder.Register(ctx =>
+        {
+            var supervisor = ctx.Resolve<WorldSupervisor>();
+            var cfg = ctx.Resolve<MangosConfiguration>();
+            var federation = ctx.ResolveOptional<FederationRouter>();
+            var shards = ctx.ResolveOptional<ShardRegistry>();
+            return new ClusterAdminCommandHandler(
+                supervisor,
+                () => cfg.Federation?.LocalClusterId ?? 0u,
+                federation,
+                shards);
+        }).As<IAdminCommandHandler>().SingleInstance();
+
+        // Federation router. Created even when federation is disabled so
+        // gameplay code can resolve it unconditionally. Endpoint resolution
+        // pulls from the realmlist DB (clusterAdminEndpoint column) on a
+        // 60-second refresh; the lambda is a fallback for tests and for
+        // pre-DB-load lookups.
+        builder.Register(ctx =>
+        {
+            var cfg = ctx.Resolve<MangosConfiguration>();
+            var logger = ctx.Resolve<IMangosLogger>();
+            var peersQuery = ctx.ResolveOptional<IGetFederationPeersQuery>();
+            return new FederationRouter(
+                cfg.Federation ?? new FederationConfiguration(),
+                logger,
+                _ => null,
+                peersQuery);
+        }).As<FederationRouter>().SingleInstance();
+
+        builder.RegisterType<FederatedGroupInviter>().AsSelf().SingleInstance();
+        builder.RegisterType<FederatedChatDeliverer>().AsSelf().SingleInstance();
+        builder.RegisterType<FederatedShardClaimer>().AsSelf().SingleInstance();
+        builder.RegisterType<ShardRegistry>().AsSelf().SingleInstance();
     }
 }
