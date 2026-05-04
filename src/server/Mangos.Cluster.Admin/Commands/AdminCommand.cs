@@ -33,22 +33,40 @@ namespace Mangos.Cluster.Admin.Commands;
 public sealed class AdminCommand
 {
     /// <summary>Stable verb identifier; see <see cref="AdminVerb"/>.</summary>
-    public required AdminVerb Verb { get; init; }
+    public required AdminVerb Verb
+    {
+        get; init;
+    }
 
     /// <summary>0 = local cluster; otherwise route to the peer that owns this realm.</summary>
-    public uint TargetRealmId { get; init; }
+    public uint TargetRealmId
+    {
+        get; init;
+    }
 
     /// <summary>Optional: target a single world (e.g. .server shutdown --world W).</summary>
-    public string? WorldId { get; init; }
+    public string? WorldId
+    {
+        get; init;
+    }
 
     /// <summary>Optional: target a single instance (e.g. .instance restart --instance 1234).</summary>
-    public uint InstanceId { get; init; }
+    public uint InstanceId
+    {
+        get; init;
+    }
 
     /// <summary>Optional: target a map (e.g. .instance spawn --map 530).</summary>
-    public uint MapId { get; init; }
+    public uint MapId
+    {
+        get; init;
+    }
 
     /// <summary>Optional: graceful drain window before kill, in seconds.</summary>
-    public int GraceSeconds { get; init; }
+    public int GraceSeconds
+    {
+        get; init;
+    }
 
     /// <summary>Optional free-form arguments (key=value), preserved verbatim for the dispatcher.</summary>
     public Dictionary<string, string> Extras { get; init; } = new();

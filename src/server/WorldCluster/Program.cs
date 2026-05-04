@@ -69,7 +69,7 @@ using (var scope = container.BeginLifetimeScope())
     var accountConnection = scope.Resolve<AccountConnection>();
     var globalConstants = scope.Resolve<MangosGlobalConstants>();
     var dbVersionChecker = new DbVersionChecker(logger, globalConstants);
-    
+
     if (!dbVersionChecker.CheckRequiredDbVersion(accountConnection.MySqlConnection, "account", ServerDb.Realm))
     {
         logger.Error("Database version check failed. Exiting...");

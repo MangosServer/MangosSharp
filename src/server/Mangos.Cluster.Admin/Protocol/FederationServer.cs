@@ -54,10 +54,16 @@ public sealed class FederationServer : IDisposable
     public IReadOnlyDictionary<uint, FederationLink> Peers => _peers;
 
     /// <summary>Bound by the cluster: invoked for inbound admin commands on every accepted link.</summary>
-    public IAdminCommandHandler? AdminHandler { get; set; }
+    public IAdminCommandHandler? AdminHandler
+    {
+        get; set;
+    }
 
     /// <summary>Optional hook fired per accepted link, used to wire chat/group/presence handlers.</summary>
-    public Action<FederationLink>? OnLinkAccepted { get; set; }
+    public Action<FederationLink>? OnLinkAccepted
+    {
+        get; set;
+    }
 
     public Task StartAsync(string bindAddress, int port)
     {

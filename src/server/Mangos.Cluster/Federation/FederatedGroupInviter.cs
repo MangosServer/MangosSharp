@@ -65,9 +65,18 @@ public sealed class FederatedGroupInviter
 
     private sealed class PendingInvite
     {
-        public required long GroupId { get; init; }
-        public required uint LeaderRealmId { get; init; }
-        public required string TargetName { get; init; }
+        public required long GroupId
+        {
+            get; init;
+        }
+        public required uint LeaderRealmId
+        {
+            get; init;
+        }
+        public required string TargetName
+        {
+            get; init;
+        }
     }
 
     /// <summary>Bind onto the router so inbound peer invites pop the popup locally.</summary>

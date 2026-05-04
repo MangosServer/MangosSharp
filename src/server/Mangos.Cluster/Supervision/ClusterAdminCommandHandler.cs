@@ -316,5 +316,9 @@ public sealed class ClusterAdminCommandHandler : IAdminCommandHandler
     }
 
     private static AdminCommandReply Reply(AdminReplyStatus status, string line)
-        => new() { Status = status, Lines = { line } };
+        => new()
+        {
+            Status = status,
+            Lines = { line }
+        };
 }

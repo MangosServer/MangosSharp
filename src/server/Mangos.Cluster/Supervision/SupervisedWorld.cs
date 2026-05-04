@@ -30,7 +30,10 @@ namespace Mangos.Cluster.Supervision;
 /// </summary>
 public sealed class SupervisedWorld
 {
-    public required SupervisedWorldEntry Definition { get; init; }
+    public required SupervisedWorldEntry Definition
+    {
+        get; init;
+    }
 
     public WorldRunState State { get; set; } = WorldRunState.Idle;
 
@@ -38,28 +41,46 @@ public sealed class SupervisedWorld
     public DateTime LastHeartbeat { get; set; } = DateTime.MinValue;
 
     /// <summary>Heartbeats issued without reply since last contact.</summary>
-    public int MissedHeartbeats { get; set; }
+    public int MissedHeartbeats
+    {
+        get; set;
+    }
 
     /// <summary>Most recent load snapshot from the world's GetServerInfo reply.</summary>
-    public ServerInfo? LastStatus { get; set; }
+    public ServerInfo? LastStatus
+    {
+        get; set;
+    }
 
     /// <summary>OS process for the running world (Internal mode only).</summary>
-    public Process? Process { get; set; }
+    public Process? Process
+    {
+        get; set;
+    }
 
     /// <summary>Live IWorld proxy for this world, set by the cluster on hello and cleared on goodbye.</summary>
-    public IWorld? Proxy { get; set; }
+    public IWorld? Proxy
+    {
+        get; set;
+    }
 
     /// <summary>The maps this world claimed in its most recent hello.</summary>
     public IReadOnlyList<uint> ClaimedMaps { get; set; } = Array.Empty<uint>();
 
     /// <summary>True iff the operator (or a peer cluster) explicitly asked for a stop.</summary>
-    public bool ExplicitStop { get; set; }
+    public bool ExplicitStop
+    {
+        get; set;
+    }
 
     /// <summary>Wall-clock time of the previous spawn attempt; used for backoff.</summary>
     public DateTime LastSpawnAttempt { get; set; } = DateTime.MinValue;
 
     /// <summary>Number of consecutive crash respawns since the last clean run.</summary>
-    public int ConsecutiveCrashRestarts { get; set; }
+    public int ConsecutiveCrashRestarts
+    {
+        get; set;
+    }
 
     public bool IsAlive => State is WorldRunState.Starting or WorldRunState.Running or WorldRunState.Stale;
 }

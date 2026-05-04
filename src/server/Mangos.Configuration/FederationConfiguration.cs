@@ -52,8 +52,14 @@ public sealed class FederationConfiguration
 
 public sealed class FederationPeerSecret
 {
-    public required uint ClusterId { get; init; }
-    public required string Secret { get; init; }
+    public required uint ClusterId
+    {
+        get; init;
+    }
+    public required string Secret
+    {
+        get; init;
+    }
 }
 
 public enum FederationMarkerMode

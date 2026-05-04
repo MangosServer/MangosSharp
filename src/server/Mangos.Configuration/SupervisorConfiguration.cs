@@ -55,19 +55,28 @@ public sealed class SupervisorConfiguration
 public sealed class SupervisedWorldEntry
 {
     /// <summary>Stable identifier for this world (used in admin commands).</summary>
-    public required string WorldId { get; init; }
+    public required string WorldId
+    {
+        get; init;
+    }
 
     /// <summary>internal = cluster forks the process; external = something else owns the process (systemd, docker).</summary>
     public SupervisorMode Mode { get; init; } = SupervisorMode.Internal;
 
     /// <summary>Path to the WorldServer executable (Internal mode only).</summary>
-    public string? ExecutablePath { get; init; }
+    public string? ExecutablePath
+    {
+        get; init;
+    }
 
     /// <summary>Extra command-line arguments (Internal mode only).</summary>
     public ImmutableArray<string> Arguments { get; init; } = ImmutableArray<string>.Empty;
 
     /// <summary>Working directory override (Internal mode only).</summary>
-    public string? WorkingDirectory { get; init; }
+    public string? WorkingDirectory
+    {
+        get; init;
+    }
 
     /// <summary>Maps this world is allowed to claim. Empty = any.</summary>
     public ImmutableArray<uint> AllowedMaps { get; init; } = ImmutableArray<uint>.Empty;

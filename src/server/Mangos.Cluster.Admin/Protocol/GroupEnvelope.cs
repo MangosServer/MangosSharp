@@ -29,13 +29,34 @@ namespace Mangos.Cluster.Admin.Protocol;
 /// </summary>
 public sealed class GroupInviteEnvelope
 {
-    public required long GroupId { get; init; }
-    public required uint LeaderRealmId { get; init; }
-    public required ulong LeaderGuid { get; init; }
-    public required string LeaderName { get; init; }
-    public required string LeaderRealmTag { get; init; }
-    public required string TargetName { get; init; }
-    public byte GroupType { get; init; } // 0 party, 1 raid
+    public required long GroupId
+    {
+        get; init;
+    }
+    public required uint LeaderRealmId
+    {
+        get; init;
+    }
+    public required ulong LeaderGuid
+    {
+        get; init;
+    }
+    public required string LeaderName
+    {
+        get; init;
+    }
+    public required string LeaderRealmTag
+    {
+        get; init;
+    }
+    public required string TargetName
+    {
+        get; init;
+    }
+    public byte GroupType
+    {
+        get; init;
+    } // 0 party, 1 raid
 
     public byte[] Serialize()
     {
@@ -74,11 +95,26 @@ public sealed class GroupInviteEnvelope
 /// </summary>
 public sealed class GroupInviteResponseEnvelope
 {
-    public required long GroupId { get; init; }
-    public required uint TargetRealmId { get; init; }
-    public required ulong TargetGuid { get; init; }
-    public required string TargetName { get; init; }
-    public required GroupInviteResponse Decision { get; init; }
+    public required long GroupId
+    {
+        get; init;
+    }
+    public required uint TargetRealmId
+    {
+        get; init;
+    }
+    public required ulong TargetGuid
+    {
+        get; init;
+    }
+    public required string TargetName
+    {
+        get; init;
+    }
+    public required GroupInviteResponse Decision
+    {
+        get; init;
+    }
 
     public byte[] Serialize()
     {
@@ -123,10 +159,22 @@ public enum GroupInviteResponse : byte
 /// </summary>
 public sealed class GroupRosterUpdateEnvelope
 {
-    public required long GroupId { get; init; }
-    public required uint LeaderRealmId { get; init; }
-    public required ulong LeaderGuid { get; init; }
-    public byte GroupType { get; init; }
+    public required long GroupId
+    {
+        get; init;
+    }
+    public required uint LeaderRealmId
+    {
+        get; init;
+    }
+    public required ulong LeaderGuid
+    {
+        get; init;
+    }
+    public byte GroupType
+    {
+        get; init;
+    }
     public List<GroupMemberEntry> Members { get; init; } = new();
 
     public byte[] Serialize()
@@ -176,9 +224,21 @@ public sealed class GroupRosterUpdateEnvelope
 
 public sealed class GroupMemberEntry
 {
-    public required uint RealmId { get; init; }
-    public required ulong Guid { get; init; }
-    public required string Name { get; init; }
+    public required uint RealmId
+    {
+        get; init;
+    }
+    public required ulong Guid
+    {
+        get; init;
+    }
+    public required string Name
+    {
+        get; init;
+    }
     /// <summary>Bitfield: 1=leader, 2=assist, 4=mainTank, 8=mainAssist.</summary>
-    public byte Role { get; init; }
+    public byte Role
+    {
+        get; init;
+    }
 }

@@ -32,10 +32,22 @@ namespace Mangos.Cluster.Admin.Protocol;
 /// </summary>
 public sealed class PeerHello
 {
-    public required uint ClusterId { get; init; }
-    public required byte[] Nonce { get; init; }
-    public required byte[] Hmac { get; init; }
-    public required string DisplayTag { get; init; }
+    public required uint ClusterId
+    {
+        get; init;
+    }
+    public required byte[] Nonce
+    {
+        get; init;
+    }
+    public required byte[] Hmac
+    {
+        get; init;
+    }
+    public required string DisplayTag
+    {
+        get; init;
+    }
 
     public byte[] Serialize()
     {
@@ -73,8 +85,14 @@ public sealed class PeerHello
 /// <summary>Acknowledgement frame for a successful peer handshake.</summary>
 public sealed class PeerHelloAck
 {
-    public required uint ClusterId { get; init; }
-    public required string DisplayTag { get; init; }
+    public required uint ClusterId
+    {
+        get; init;
+    }
+    public required string DisplayTag
+    {
+        get; init;
+    }
 
     public byte[] Serialize()
     {

@@ -27,7 +27,10 @@ namespace Mangos.Cluster.Admin.Protocol;
 /// </summary>
 public sealed class PresenceQueryEnvelope
 {
-    public required string Name { get; init; }
+    public required string Name
+    {
+        get; init;
+    }
 
     public byte[] Serialize()
     {
@@ -47,11 +50,26 @@ public sealed class PresenceQueryEnvelope
 
 public sealed class PresenceReplyEnvelope
 {
-    public required string Name { get; init; }
-    public required bool Online { get; init; }
-    public ulong Guid { get; init; }
-    public uint MapId { get; init; }
-    public uint ZoneId { get; init; }
+    public required string Name
+    {
+        get; init;
+    }
+    public required bool Online
+    {
+        get; init;
+    }
+    public ulong Guid
+    {
+        get; init;
+    }
+    public uint MapId
+    {
+        get; init;
+    }
+    public uint ZoneId
+    {
+        get; init;
+    }
 
     public byte[] Serialize()
     {

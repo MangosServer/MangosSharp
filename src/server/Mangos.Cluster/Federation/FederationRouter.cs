@@ -70,10 +70,22 @@ public sealed class FederationRouter : IDisposable
     /// <summary>Information about a known peer cluster, populated from the realmlist DB.</summary>
     public sealed class FederationPeerInfo
     {
-        public required uint ClusterId { get; init; }
-        public required string Endpoint { get; init; }
-        public required string DisplayTag { get; init; }
-        public required string MarkerPosition { get; init; }
+        public required uint ClusterId
+        {
+            get; init;
+        }
+        public required string Endpoint
+        {
+            get; init;
+        }
+        public required string DisplayTag
+        {
+            get; init;
+        }
+        public required string MarkerPosition
+        {
+            get; init;
+        }
     }
 
     /// <summary>Snapshot of all peers discovered from the realmlist table.</summary>
@@ -83,13 +95,34 @@ public sealed class FederationRouter : IDisposable
     public IReadOnlyDictionary<uint, FederationLink> Peers => _outbound;
 
     /// <summary>Optional callbacks on inbound envelopes; bound by gameplay code.</summary>
-    public Action<ChatEnvelope>? OnChat { get; set; }
-    public Action<GroupInviteEnvelope>? OnGroupInvite { get; set; }
-    public Action<GroupInviteResponseEnvelope>? OnGroupInviteResponse { get; set; }
-    public Action<GroupRosterUpdateEnvelope>? OnGroupRosterUpdate { get; set; }
-    public Func<PresenceQueryEnvelope, PresenceReplyEnvelope>? OnPresenceQuery { get; set; }
-    public Action<ShardClaimEnvelope>? OnShardClaim { get; set; }
-    public Action<ShardReleaseEnvelope>? OnShardRelease { get; set; }
+    public Action<ChatEnvelope>? OnChat
+    {
+        get; set;
+    }
+    public Action<GroupInviteEnvelope>? OnGroupInvite
+    {
+        get; set;
+    }
+    public Action<GroupInviteResponseEnvelope>? OnGroupInviteResponse
+    {
+        get; set;
+    }
+    public Action<GroupRosterUpdateEnvelope>? OnGroupRosterUpdate
+    {
+        get; set;
+    }
+    public Func<PresenceQueryEnvelope, PresenceReplyEnvelope>? OnPresenceQuery
+    {
+        get; set;
+    }
+    public Action<ShardClaimEnvelope>? OnShardClaim
+    {
+        get; set;
+    }
+    public Action<ShardReleaseEnvelope>? OnShardRelease
+    {
+        get; set;
+    }
 
     /// <summary>Bind the outbound side's hooks onto a newly opened or accepted link.</summary>
     public void BindHandlers(FederationLink link)

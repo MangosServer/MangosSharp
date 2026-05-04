@@ -62,10 +62,16 @@ public sealed class WorldSupervisor : IAsyncDisposable
     public IReadOnlyDictionary<string, SupervisedWorld> Worlds => _worlds;
 
     /// <summary>Override hook for heartbeat behaviour. Default uses the stored IWorld proxy's GetServerInfo + Ping.</summary>
-    public Func<string, Task<ServerInfo?>>? PingWorld { get; set; }
+    public Func<string, Task<ServerInfo?>>? PingWorld
+    {
+        get; set;
+    }
 
     /// <summary>Override hook for graceful shutdown. Default has no built-in path; PR #4 adds a ControlShutdown envelope.</summary>
-    public Func<string, Task>? RequestGracefulShutdown { get; set; }
+    public Func<string, Task>? RequestGracefulShutdown
+    {
+        get; set;
+    }
 
     /// <summary>Cluster calls this when a world says hello on the IPC channel.</summary>
     public void OnWorldHello(string worldId, IWorld proxy, IReadOnlyList<uint> claimedMaps)

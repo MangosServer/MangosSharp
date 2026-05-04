@@ -31,34 +31,64 @@ namespace Mangos.Cluster.Admin.Protocol;
 public sealed class ChatEnvelope
 {
     /// <summary>Realm id the message originates from.</summary>
-    public required uint SenderRealmId { get; init; }
+    public required uint SenderRealmId
+    {
+        get; init;
+    }
 
     /// <summary>Display tag of the sender's realm (e.g. "WM").</summary>
-    public required string SenderRealmTag { get; init; }
+    public required string SenderRealmTag
+    {
+        get; init;
+    }
 
     /// <summary>Sender's character GUID (home realm).</summary>
-    public required ulong SenderGuid { get; init; }
+    public required ulong SenderGuid
+    {
+        get; init;
+    }
 
     /// <summary>Sender's character name.</summary>
-    public required string SenderName { get; init; }
+    public required string SenderName
+    {
+        get; init;
+    }
 
     /// <summary>Channel: whisper, party, raid, guild, system, etc.</summary>
-    public required ChatChannel Channel { get; init; }
+    public required ChatChannel Channel
+    {
+        get; init;
+    }
 
     /// <summary>Whisper: target name (host realm of recipient lives in TargetRealmId of the AdminCommand wrapper).</summary>
-    public string? RecipientName { get; init; }
+    public string? RecipientName
+    {
+        get; init;
+    }
 
     /// <summary>Whisper: target GUID if known. 0 means "look up by name".</summary>
-    public ulong RecipientGuid { get; init; }
+    public ulong RecipientGuid
+    {
+        get; init;
+    }
 
     /// <summary>Group/raid id when channel is Party/Raid.</summary>
-    public long GroupId { get; init; }
+    public long GroupId
+    {
+        get; init;
+    }
 
     /// <summary>Wire language id (matches WoW's LANG_* constants).</summary>
-    public uint Language { get; init; }
+    public uint Language
+    {
+        get; init;
+    }
 
     /// <summary>The message body.</summary>
-    public required string Body { get; init; }
+    public required string Body
+    {
+        get; init;
+    }
 
     public byte[] Serialize()
     {

@@ -28,7 +28,10 @@ namespace Mangos.Cluster.Admin.Commands;
 /// </summary>
 public sealed class AdminCommandReply
 {
-    public required AdminReplyStatus Status { get; init; }
+    public required AdminReplyStatus Status
+    {
+        get; init;
+    }
     public List<string> Lines { get; init; } = new();
 
     public byte[] Serialize()

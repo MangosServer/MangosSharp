@@ -25,10 +25,16 @@ namespace Mangos.Cluster.Interop;
 /// </summary>
 public sealed class ShardLookupResult
 {
-    public required ShardLookupKind Kind { get; init; }
+    public required ShardLookupKind Kind
+    {
+        get; init;
+    }
 
     /// <summary>Owning cluster id when Kind == Foreign; 0 otherwise.</summary>
-    public uint OwnerClusterId { get; init; }
+    public uint OwnerClusterId
+    {
+        get; init;
+    }
 
     /// <summary>Host:port of the foreign cluster's federation listener; empty when Kind != Foreign.</summary>
     public string OwnerEndpoint { get; init; } = string.Empty;

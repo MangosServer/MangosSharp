@@ -47,11 +47,26 @@ public sealed class ShardRegistry
 
     public sealed class ShardEntry
     {
-        public required long GroupId { get; init; }
-        public required uint OwnerClusterId { get; init; }
-        public required uint MapId { get; init; }
-        public required ulong ShardKey { get; init; }
-        public required string RelayEndpoint { get; init; }
+        public required long GroupId
+        {
+            get; init;
+        }
+        public required uint OwnerClusterId
+        {
+            get; init;
+        }
+        public required uint MapId
+        {
+            get; init;
+        }
+        public required ulong ShardKey
+        {
+            get; init;
+        }
+        public required string RelayEndpoint
+        {
+            get; init;
+        }
     }
 
     /// <summary>Look up the shard for the given (mapId, shardKey). Returns null if unknown.</summary>

@@ -30,19 +30,34 @@ namespace Mangos.Cluster.Admin.Protocol;
 public sealed class ShardClaimEnvelope
 {
     /// <summary>Owning cluster's group id (matches federation_group.groupId).</summary>
-    public required long GroupId { get; init; }
+    public required long GroupId
+    {
+        get; init;
+    }
 
     /// <summary>Cluster id that owns the shard (= the host).</summary>
-    public required uint OwnerClusterId { get; init; }
+    public required uint OwnerClusterId
+    {
+        get; init;
+    }
 
     /// <summary>WoW map id this shard covers.</summary>
-    public required uint MapId { get; init; }
+    public required uint MapId
+    {
+        get; init;
+    }
 
     /// <summary>Stable shard key; clients with the same key end up co-located.</summary>
-    public required ulong ShardKey { get; init; }
+    public required ulong ShardKey
+    {
+        get; init;
+    }
 
     /// <summary>Where to forward foreign-member world packets (host:port of host cluster's relay).</summary>
-    public required string RelayEndpoint { get; init; }
+    public required string RelayEndpoint
+    {
+        get; init;
+    }
 
     public byte[] Serialize()
     {
@@ -74,8 +89,14 @@ public sealed class ShardClaimEnvelope
 /// <summary>Counterpart to ShardClaimEnvelope; releases the shard when the group disbands or the leader logs off.</summary>
 public sealed class ShardReleaseEnvelope
 {
-    public required long GroupId { get; init; }
-    public required ulong ShardKey { get; init; }
+    public required long GroupId
+    {
+        get; init;
+    }
+    public required ulong ShardKey
+    {
+        get; init;
+    }
 
     public byte[] Serialize()
     {

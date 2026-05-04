@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
+using System.Collections.Concurrent;
+using System.Data;
 using Dapper;
 using Mangos.Logging;
 using MySqlConnector;
-using System.Collections.Concurrent;
-using System.Data;
 
 namespace Mangos.MySql.Connections;
 

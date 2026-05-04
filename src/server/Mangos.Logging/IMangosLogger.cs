@@ -29,7 +29,7 @@ public enum LogLevel
     Warning = 3,        // Warning messages
     Error = 4,          // Error messages
     Critical = 5,       // Critical errors
-    
+
     // Application-specific log types
     Network = 6,        // Network-related messages
     User = 7,           // User action messages

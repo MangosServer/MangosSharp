@@ -40,43 +40,76 @@ public sealed class FederationLink : IDisposable
     private readonly InteropConnection _connection;
 
     /// <summary>Remote cluster id, populated after a successful handshake.</summary>
-    public uint RemoteClusterId { get; private set; }
+    public uint RemoteClusterId
+    {
+        get; private set;
+    }
 
     /// <summary>Remote display tag (e.g. "WM"), populated after a successful handshake.</summary>
     public string RemoteDisplayTag { get; private set; } = string.Empty;
 
     /// <summary>True iff the handshake has completed.</summary>
-    public bool IsAuthenticated { get; private set; }
+    public bool IsAuthenticated
+    {
+        get; private set;
+    }
 
     /// <summary>Bound by the cluster: handles inbound admin commands.</summary>
-    public IAdminCommandHandler? AdminHandler { get; set; }
+    public IAdminCommandHandler? AdminHandler
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Bound by FederationServer on accept. Receives the incoming PeerHello,
     /// returns either the accepted (clusterId, displayTag) or null on reject.
     /// </summary>
-    public Func<PeerHello, (uint, string)?>? OnPeerHello { get; set; }
+    public Func<PeerHello, (uint, string)?>? OnPeerHello
+    {
+        get; set;
+    }
 
     /// <summary>Inbound cross-realm chat message (PR #6).</summary>
-    public Action<ChatEnvelope>? OnChatRoute { get; set; }
+    public Action<ChatEnvelope>? OnChatRoute
+    {
+        get; set;
+    }
 
     /// <summary>Inbound group invite from a peer cluster (PR #6).</summary>
-    public Action<GroupInviteEnvelope>? OnGroupInvite { get; set; }
+    public Action<GroupInviteEnvelope>? OnGroupInvite
+    {
+        get; set;
+    }
 
     /// <summary>Inbound group invite response from a peer cluster (PR #6).</summary>
-    public Action<GroupInviteResponseEnvelope>? OnGroupInviteResponse { get; set; }
+    public Action<GroupInviteResponseEnvelope>? OnGroupInviteResponse
+    {
+        get; set;
+    }
 
     /// <summary>Inbound roster update for a federated group (PR #6).</summary>
-    public Action<GroupRosterUpdateEnvelope>? OnGroupRosterUpdate { get; set; }
+    public Action<GroupRosterUpdateEnvelope>? OnGroupRosterUpdate
+    {
+        get; set;
+    }
 
     /// <summary>Inbound presence query - is the named character online here? (PR #6).</summary>
-    public Func<PresenceQueryEnvelope, PresenceReplyEnvelope>? OnPresenceQuery { get; set; }
+    public Func<PresenceQueryEnvelope, PresenceReplyEnvelope>? OnPresenceQuery
+    {
+        get; set;
+    }
 
     /// <summary>Inbound Phase B shard claim from a leader cluster (foreign member's home receives this).</summary>
-    public Action<ShardClaimEnvelope>? OnShardClaim { get; set; }
+    public Action<ShardClaimEnvelope>? OnShardClaim
+    {
+        get; set;
+    }
 
     /// <summary>Inbound Phase B shard release.</summary>
-    public Action<ShardReleaseEnvelope>? OnShardRelease { get; set; }
+    public Action<ShardReleaseEnvelope>? OnShardRelease
+    {
+        get; set;
+    }
 
     /// <summary>Fired when the underlying connection drops.</summary>
     public event Action? Disconnected;

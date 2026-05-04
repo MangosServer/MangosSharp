@@ -65,27 +65,45 @@ public class SQL : IDisposable
 
     // Gets or sets the SQL server type.
     [Description("SQL Server selection.")]
-    public DB_Type SQLTypeServer { get => _sqlType; set => _sqlType = value; }
+    public DB_Type SQLTypeServer
+    {
+        get => _sqlType; set => _sqlType = value;
+    }
 
     // Gets or sets the SQL host name.
     [Description("SQL Host name.")]
-    public string SQLHost { get => _sqlHost; set => _sqlHost = value ?? "localhost"; }
+    public string SQLHost
+    {
+        get => _sqlHost; set => _sqlHost = value ?? "localhost";
+    }
 
     // Gets or sets the SQL host port.
     [Description("SQL Host port.")]
-    public string SQLPort { get => _sqlPort; set => _sqlPort = value ?? "3306"; }
+    public string SQLPort
+    {
+        get => _sqlPort; set => _sqlPort = value ?? "3306";
+    }
 
     // Gets or sets the SQL user name.
     [Description("SQL User name.")]
-    public string SQLUser { get => _sqlUser; set => _sqlUser = value ?? string.Empty; }
+    public string SQLUser
+    {
+        get => _sqlUser; set => _sqlUser = value ?? string.Empty;
+    }
 
     // Gets or sets the SQL password.
     [Description("SQL Password.")]
-    public string SQLPass { get => _sqlPass; set => _sqlPass = value ?? string.Empty; }
+    public string SQLPass
+    {
+        get => _sqlPass; set => _sqlPass = value ?? string.Empty;
+    }
 
     // Gets or sets the SQL database name.
     [Description("SQL Database name.")]
-    public string SQLDBName { get => _sqlDBName; set => _sqlDBName = value ?? string.Empty; }
+    public string SQLDBName
+    {
+        get => _sqlDBName; set => _sqlDBName = value ?? string.Empty;
+    }
 
     // Establishes a connection to the SQL server.
     [Description("Start up the SQL connection.")]
@@ -128,20 +146,20 @@ public class SQL : IDisposable
             {
                 case DB_Type.MySQL:
                 case DB_Type.MariaDB:
-                {
-                    MySQLConn = new MySqlConnection(
-                        $"Server={SQLHost};Port={SQLPort};User ID={SQLUser};Password={SQLPass};Database={SQLDBName};Compress=false;Connection Timeout=1;");
-                    MySQLConn.Open();
-                    
-                    // Test the connection
-                    if (!TestConnection())
                     {
-                        return (int)ReturnState.FatalError;
+                        MySQLConn = new MySqlConnection(
+                            $"Server={SQLHost};Port={SQLPort};User ID={SQLUser};Password={SQLPass};Database={SQLDBName};Compress=false;Connection Timeout=1;");
+                        MySQLConn.Open();
+
+                        // Test the connection
+                        if (!TestConnection())
+                        {
+                            return (int)ReturnState.FatalError;
+                        }
+
+                        SQLMessage?.Invoke(EMessages.ID_Message, $"{_sqlType} Connection Opened Successfully [{SQLUser}@{SQLHost}]");
+                        break;
                     }
-                    
-                    SQLMessage?.Invoke(EMessages.ID_Message, $"{_sqlType} Connection Opened Successfully [{SQLUser}@{SQLHost}]");
-                    break;
-                }
 
                 default:
                     SQLMessage?.Invoke(EMessages.ID_Error, "Unsupported SQL server type.");
@@ -167,30 +185,30 @@ public class SQL : IDisposable
             {
                 case DB_Type.MySQL:
                 case DB_Type.MariaDB:
-                {
-                    MySQLConn?.Close();
-                    MySQLConn?.Dispose();
-                    MySQLConn = new MySqlConnection(
-                        $"Server={SQLHost};Port={SQLPort};User ID={SQLUser};Password={SQLPass};Database={SQLDBName};Compress=false;Connection Timeout=1;");
-                    MySQLConn.Open();
-                    if (MySQLConn.State == ConnectionState.Open)
                     {
-                        // Test the restarted connection
-                        if (!TestConnection())
+                        MySQLConn?.Close();
+                        MySQLConn?.Dispose();
+                        MySQLConn = new MySqlConnection(
+                            $"Server={SQLHost};Port={SQLPort};User ID={SQLUser};Password={SQLPass};Database={SQLDBName};Compress=false;Connection Timeout=1;");
+                        MySQLConn.Open();
+                        if (MySQLConn.State == ConnectionState.Open)
                         {
-                            SQLMessage?.Invoke(EMessages.ID_Error, $"{_sqlType} Connection restart failed: test failed");
-                            return;
-                        }
-                        
-                        SQLMessage?.Invoke(EMessages.ID_Message, $"{_sqlType} Connection restarted!");
-                    }
-                    else
-                    {
-                        SQLMessage?.Invoke(EMessages.ID_Error, $"Unable to restart {_sqlType} connection.");
-                    }
+                            // Test the restarted connection
+                            if (!TestConnection())
+                            {
+                                SQLMessage?.Invoke(EMessages.ID_Error, $"{_sqlType} Connection restart failed: test failed");
+                                return;
+                            }
 
-                    break;
-                }
+                            SQLMessage?.Invoke(EMessages.ID_Message, $"{_sqlType} Connection restarted!");
+                        }
+                        else
+                        {
+                            SQLMessage?.Invoke(EMessages.ID_Error, $"Unable to restart {_sqlType} connection.");
+                        }
+
+                        break;
+                    }
 
                 default:
                     SQLMessage?.Invoke(EMessages.ID_Error, "Unsupported SQL server type.");
@@ -220,11 +238,11 @@ public class SQL : IDisposable
                 {
                     case DB_Type.MySQL:
                     case DB_Type.MariaDB:
-                    {
-                        MySQLConn?.Close();
-                        MySQLConn?.Dispose();
-                        break;
-                    }
+                        {
+                            MySQLConn?.Close();
+                            MySQLConn?.Dispose();
+                            break;
+                        }
 
                     default:
                         break;
@@ -308,7 +326,7 @@ public class SQL : IDisposable
         }
 
         var result = new DataTable();
-        
+
         try
         {
             EnsureConnectionOpen();
@@ -647,7 +665,7 @@ public class SQL : IDisposable
                 SQLMessage?.Invoke(EMessages.ID_Error, "Connection test failed: unexpected result from test query");
                 return false;
             }
-            
+
             SQLMessage?.Invoke(EMessages.ID_Message, "Database connection test passed");
             return true;
         }
