@@ -163,38 +163,46 @@ public class SQL : IDisposable
     {
         try
         {
-            switch (_sqlType)
+            _connectionLock.Wait();
+            try
             {
-                case DB_Type.MySQL:
-                case DB_Type.MariaDB:
+                switch (_sqlType)
                 {
-                    MySQLConn?.Close();
-                    MySQLConn?.Dispose();
-                    MySQLConn = new MySqlConnection(
-                        $"Server={SQLHost};Port={SQLPort};User ID={SQLUser};Password={SQLPass};Database={SQLDBName};Compress=false;Connection Timeout=1;");
-                    MySQLConn.Open();
-                    if (MySQLConn.State == ConnectionState.Open)
+                    case DB_Type.MySQL:
+                    case DB_Type.MariaDB:
                     {
-                        // Test the restarted connection
-                        if (!TestConnection())
+                        MySQLConn?.Close();
+                        MySQLConn?.Dispose();
+                        MySQLConn = new MySqlConnection(
+                            $"Server={SQLHost};Port={SQLPort};User ID={SQLUser};Password={SQLPass};Database={SQLDBName};Compress=false;Connection Timeout=1;");
+                        MySQLConn.Open();
+                        if (MySQLConn.State == ConnectionState.Open)
                         {
-                            SQLMessage?.Invoke(EMessages.ID_Error, $"{_sqlType} Connection restart failed: test failed");
-                            return;
+                            // Test the restarted connection
+                            if (!TestConnection())
+                            {
+                                SQLMessage?.Invoke(EMessages.ID_Error, $"{_sqlType} Connection restart failed: test failed");
+                                return;
+                            }
+                            
+                            SQLMessage?.Invoke(EMessages.ID_Message, $"{_sqlType} Connection restarted!");
                         }
-                        
-                        SQLMessage?.Invoke(EMessages.ID_Message, $"{_sqlType} Connection restarted!");
-                    }
-                    else
-                    {
-                        SQLMessage?.Invoke(EMessages.ID_Error, $"Unable to restart {_sqlType} connection.");
+                        else
+                        {
+                            SQLMessage?.Invoke(EMessages.ID_Error, $"Unable to restart {_sqlType} connection.");
+                        }
+
+                        break;
                     }
 
-                    break;
+                    default:
+                        SQLMessage?.Invoke(EMessages.ID_Error, "Unsupported SQL server type.");
+                        break;
                 }
-
-                default:
-                    SQLMessage?.Invoke(EMessages.ID_Error, "Unsupported SQL server type.");
-                    break;
+            }
+            finally
+            {
+                _connectionLock.Release();
             }
         }
         catch (MySqlException ex)
@@ -316,7 +324,11 @@ public class SQL : IDisposable
             _connectionLock.Wait();
             try
             {
-                using var command = new MySqlCommand(sqlquery, MySQLConn);
+                using var command = new MySqlCommand(sqlquery, MySQLConn)
+                {
+                    CommandTimeout = 30
+                };
+
                 using var adapter = new MySqlDataAdapter(command);
                 adapter.Fill(result);
             }
@@ -368,7 +380,11 @@ public class SQL : IDisposable
             await _connectionLock.WaitAsync();
             try
             {
-                using var command = new MySqlCommand(sqlquery, MySQLConn);
+                using var command = new MySqlCommand(sqlquery, MySQLConn)
+                {
+                    CommandTimeout = 30
+                };
+
                 using var adapter = new MySqlDataAdapter(command);
                 await Task.Run(() => adapter.Fill(result));
             }
@@ -435,7 +451,11 @@ public class SQL : IDisposable
             try
             {
                 using var transaction = MySQLConn.BeginTransaction();
-                using var command = new MySqlCommand(sqlquery, MySQLConn, transaction);
+                using var command = new MySqlCommand(sqlquery, MySQLConn, transaction)
+                {
+                    CommandTimeout = 30
+                };
+
                 command.ExecuteNonQuery();
                 transaction.Commit();
             }
@@ -447,6 +467,7 @@ public class SQL : IDisposable
         catch (MySqlException ex)
         {
             SQLMessage?.Invoke(EMessages.ID_Error, $"Error executing insert: {ex.Message}");
+            throw;
         }
     }
 
@@ -554,10 +575,12 @@ public class SQL : IDisposable
             _connectionLock.Wait();
             try
             {
-                using var command = new MySqlCommand(sqlquery, MySQLConn);
-                using var adapter = new MySqlDataAdapter(command);
-                var result = new DataTable();
-                adapter.Fill(result);
+                using var command = new MySqlCommand(sqlquery, MySQLConn)
+                {
+                    CommandTimeout = 30
+                };
+
+                command.ExecuteNonQuery();
             }
             finally
             {
@@ -567,6 +590,7 @@ public class SQL : IDisposable
         catch (MySqlException ex)
         {
             SQLMessage?.Invoke(EMessages.ID_Error, $"Error executing update: {ex.Message}");
+            throw;
         }
     }
 
@@ -584,10 +608,12 @@ public class SQL : IDisposable
             await _connectionLock.WaitAsync();
             try
             {
-                using var command = new MySqlCommand(sqlquery, MySQLConn);
-                using var adapter = new MySqlDataAdapter(command);
-                var result = new DataTable();
-                await Task.Run(() => adapter.Fill(result));
+                using var command = new MySqlCommand(sqlquery, MySQLConn)
+                {
+                    CommandTimeout = 30
+                };
+
+                await command.ExecuteNonQueryAsync();
             }
             finally
             {
